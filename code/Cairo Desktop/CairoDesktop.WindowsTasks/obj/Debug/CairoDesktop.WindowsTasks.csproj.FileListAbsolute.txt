@@ -1,0 +1,10 @@
+C:\Users\Sam\Documents\cairoshell_cairo\code\Cairo Desktop\Build\Debug\CairoDesktop.WindowsTasks.dll
+C:\Users\Sam\Documents\cairoshell_cairo\code\Cairo Desktop\Build\Debug\CairoDesktop.WindowsTasks.pdb
+C:\Users\Sam\Documents\cairoshell_cairo\code\Cairo Desktop\CairoDesktop.WindowsTasks\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Sam\Documents\cairoshell_cairo\code\Cairo Desktop\CairoDesktop.WindowsTasks\obj\Debug\CairoDesktop.WindowsTasks.dll
+C:\Users\Sam\Documents\cairoshell_cairo\code\Cairo Desktop\CairoDesktop.WindowsTasks\obj\Debug\CairoDesktop.WindowsTasks.pdb
+C:\Users\Sam\cairoshell\code\Cairo Desktop\Build\Debug\CairoDesktop.WindowsTasks.dll
+C:\Users\Sam\cairoshell\code\Cairo Desktop\Build\Debug\CairoDesktop.WindowsTasks.pdb
+C:\Users\Sam\cairoshell\code\Cairo Desktop\CairoDesktop.WindowsTasks\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Sam\cairoshell\code\Cairo Desktop\CairoDesktop.WindowsTasks\obj\Debug\CairoDesktop.WindowsTasks.dll
+C:\Users\Sam\cairoshell\code\Cairo Desktop\CairoDesktop.WindowsTasks\obj\Debug\CairoDesktop.WindowsTasks.pdb

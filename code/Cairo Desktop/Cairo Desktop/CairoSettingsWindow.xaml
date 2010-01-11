@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="CairoDesktop.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:CairoDesktop.Properties"
+    Title="Cairo Settings"
+    Height="480"
+    Width="640"
+    WindowStartupLocation="CenterScreen"
+    Closing="Window_Closing" WindowStyle="SingleBorderWindow">
+    <Window.Resources>
+        <local:Settings x:Key="settings" />
+        <Style x:Key="CairoSettingsBarItemStyle"
+            TargetType="{x:Type TabItem}">
+            <Setter Property="Foreground"
+                Value="#000" />
+            <Setter Property="FontFamily"
+                Value="Segoe UI" />
+            <Setter Property="FontSize"
+                Value="14" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid>
+                            <Border Name="Border"
+                                Background="{x:Null}"
+                                BorderBrush="{x:Null}"
+                                BorderThickness="0,0,0,0"
+                                    Margin="0,2,4,0"
+                                CornerRadius="8,8,0,0">
+                                <ContentPresenter x:Name="ContentSite"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    ContentSource="Header"
+                                    Width="80"
+                                    Margin="5,6,5,6" />
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected"
+                                Value="True">
+                                <Setter TargetName="Border"
+                                    Property="Background"
+                                    Value="#FFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsSelected"
+                                Value="False">
+                                <Setter TargetName="Border"
+                                    Property="Background"
+                                    Value="{x:Null}" />
+                            </Trigger>
+                            <Trigger SourceName="ContentSite"
+                                Property="IsMouseOver"
+                                Value="True">
+                                <Setter TargetName="Border"
+                                    Property="Background"
+                                    Value="#d7d7d7" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled"
+                                Value="False">
+                                <Setter Property="Foreground"
+                                    Value="#b7b7b7" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="CairoSettingsBarRestartStyle"
+            TargetType="{x:Type TabItem}">
+            <Setter Property="Foreground"
+                Value="#ffffff" />
+            <Setter Property="FontFamily"
+                Value="Segoe UI" />
+            <Setter Property="FontSize"
+                Value="10" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Grid>
+                            <Border Name="Border"
+                                Background="#ff8000"
+                                BorderBrush="{x:Null}"
+                                BorderThickness="0,0,0,0"
+                                    Margin="25,4,4,4"
+                                CornerRadius="8">
+                                <ContentPresenter x:Name="ContentSite"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    ContentSource="Header"
+                                    Width="180"
+                                    Margin="5,6,5,6" />
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="ContentSite"
+                                Property="IsMouseOver"
+                                Value="True">
+                                <Setter TargetName="Border"
+                                    Property="Background"
+                                    Value="#ff973b" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type TabControl}">
+            <Setter Property="Foreground"
+                Value="#000" />
+            <Setter Property="FontFamily"
+                Value="Segoe UI" />
+            <Setter Property="FontSize"
+                Value="18" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabControl}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TabPanel Grid.Row="0"
+                                Panel.ZIndex="1"
+                                Margin="0,0,4,0"
+                                IsItemsHost="True"
+                                Background="Transparent" />
+                            <Border Grid.Row="1"
+                                BorderBrush="{x:Null}"
+                                BorderThickness="0,0,0,0"
+                                Padding="10,5,10,0"
+                                CornerRadius="0"
+                                Background="#FFF">
+                                <ContentPresenter ContentSource="SelectedContent" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type CheckBox}">
+            <Setter Property="Foreground"
+                Value="#000" />
+        </Style>
+        <Style TargetType="{x:Type RadioButton}">
+            <Setter Property="Foreground"
+                Value="#000" />
+        </Style>
+    </Window.Resources>
+    <Grid Background="#c7c7c7"
+        DataContext="{StaticResource settings}">
+        <TabControl>
+            <TabItem Style="{StaticResource CairoSettingsBarItemStyle}">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock TextAlignment="Center">Desktop</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="327*" />
+                        <ColumnDefinition Width="271*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock FontSize="28"
+                        FontWeight="Normal"
+                        Text="Desktop Settings"
+                        Margin="14,15,7,42"
+                        Grid.RowSpan="2" />
+                    <CheckBox Content="Enable Desktop"
+                        IsChecked="{Binding Path=Default.EnableDesktop}"
+                        Grid.Row="1"
+                        Click="EnableDesktop_Click"
+                        Margin="14,14,14,37"
+                        Grid.RowSpan="2" />
+                    <CheckBox Content="Enable Dynamic Desktop"
+                        IsChecked="{Binding Path=Default.EnableDynamicDesktop}"
+                        Grid.Row="2"
+                        Click="EnableDynamicDesktop_Click"
+                        Margin="14,14,14,37"
+                        Grid.RowSpan="2"
+                        IsEnabled="False"/>
+                </Grid>
+            </TabItem>
+            <TabItem Style="{StaticResource CairoSettingsBarItemStyle}">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock TextAlignment="Center">Taskbar</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock FontSize="28"
+                        FontWeight="Normal"
+                        Text="Taskbar Settings"
+                        Margin="14,15,7,42"
+                        Grid.RowSpan="2" />
+                    <CheckBox Content="Enable Taskbar"
+                        IsChecked="{Binding Path=Default.EnableTaskbar}"
+                        Margin="14,14,14,37"
+                        Grid.Row="1"
+                        Grid.RowSpan="2"
+                        Click="EnableTaskbar_Click" />
+                </Grid>
+            </TabItem>
+            <TabItem Style="{StaticResource CairoSettingsBarItemStyle}"
+                IsEnabled="False">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock TextAlignment="Center">Extensions</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock FontSize="28"
+                        FontWeight="Normal"
+                        Text="Extensions Settings"
+                        Margin="14,15,7,42"
+                        Grid.RowSpan="2" />
+                    <TextBlock FontStyle="Italic"
+                        Foreground="#000"
+                        Text="There are no settings for this category."
+                        Grid.Row="1"
+                        Margin="14,14,14,37"
+                        Grid.RowSpan="2" />
+                </Grid>
+            </TabItem>
+            <TabItem Style="{StaticResource CairoSettingsBarItemStyle}">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock TextAlignment="Center">Menu Bar</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock FontSize="28"
+                        FontWeight="Normal"
+                        Text="Menu Bar Settings"
+                        Margin="14,15,7,42"
+                        Grid.RowSpan="2" />
+                    <CheckBox Content="Enable Menu Bar Shadow"
+                        IsChecked="{Binding Path=Default.EnableMenuBarShadow}"
+                        Grid.Row="1"
+                        Margin="14,14,14,37"
+                        Grid.RowSpan="2"
+                        Click="EnableMenuBarShadow_Click" />
+                    <CheckBox Content="Enable Alternate Menu Bar Theme"
+                        IsChecked="{Binding Path=Default.MenuBarWhite}"
+                        Grid.Row="2"
+                        Margin="14,14,14,37"
+                        Grid.RowSpan="2"
+                        Click="MenuBarWhite_Click" />
+                    <CheckBox Content="Enable System Tray"
+                        IsChecked="{Binding Path=Default.EnableSysTray}"
+                        Grid.Row="3"
+                        Margin="14,14,14,37"
+                        Grid.RowSpan="2"
+                        Click="EnableSysTray_Click" />
+                    <StackPanel Grid.Row="4"
+                        Orientation="Horizontal">
+                        <TextBlock Text="Time Format: "
+                            Margin="14,0,10,0"
+                            VerticalAlignment="Center" />
+                        <TextBox Text="{Binding Path=Default.TimeFormat}"
+                            VerticalAlignment="Center"
+                            Width="160"
+                            Name="timeSetting" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="5"
+                        Orientation="Horizontal">
+                        <TextBlock Text="Date Format: "
+                            Margin="14,0,10,0"
+                            VerticalAlignment="Center" />
+                        <TextBox Text="{Binding Path=Default.DateFormat}"
+                            VerticalAlignment="Center"
+                            Width="160"
+                            Name="dateSetting" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}" Name="restartButton" MouseLeftButtonUp="restartCairo" Visibility="Hidden">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock TextAlignment="Center">Restart Cairo for changes to take effect.</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

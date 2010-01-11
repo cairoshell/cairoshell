@@ -1,0 +1,18 @@
+<!-- Default project used when PostSharp is detected according to project references. -->
+<Project xmlns="http://schemas.postsharp.org/1.0/configuration" ReferenceDirectory="{$ReferenceDirectory}">
+	
+	<SearchPath Directory="{$SearchPath}" />
+  
+	<!-- Set of tasks -->
+	<Tasks>
+		<!-- All other tasks should be automatically detected by this one. -->
+		<AutoDetect />
+
+		<!-- Compiles back the file. -->
+		<Compile TargetFile="{$Output}" 
+				 IntermediateDirectory="{$IntermediateDirectory}" 
+				 CleanIntermediate="{$CleanIntermediate}"
+				 SignAssembly="{$SignAssembly}"
+				 PrivateKeyLocation="{$PrivateKeyLocation}"/>
+	</Tasks>
+</Project>

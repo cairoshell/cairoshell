@@ -1,0 +1,12 @@
+LIBRARY	"Cairo.WindowsHooks"
+EXPORTS
+SetSystrayCallback
+SetTaskCallback
+InitializeSystray
+InitializeTask
+ShutdownSystray
+ShutdownTask
+ShutdownAll
+Run
+
+DllMain
