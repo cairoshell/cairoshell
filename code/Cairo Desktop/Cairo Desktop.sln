@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo.WindowsHooksWrapper",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.WindowsTasks", "CairoDesktop.WindowsTasks\CairoDesktop.WindowsTasks.csproj", "{5FABAD0F-D28C-4EE6-A826-77968087864E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo Explorer", "Cairo Explorer\Cairo Explorer.csproj", "{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{5FABAD0F-D28C-4EE6-A826-77968087864E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5FABAD0F-D28C-4EE6-A826-77968087864E}.Release|Win32.ActiveCfg = Release|Any CPU
 		{5FABAD0F-D28C-4EE6-A826-77968087864E}.Release|x86.ActiveCfg = Release|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Release|Win32.ActiveCfg = Release|Any CPU
+		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
