@@ -1,4 +1,3 @@
-
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -270,10 +269,11 @@ namespace CairoDesktop
         {
             CairoMessage.Show(
                 // Replace next line with the Version
-                "Version 0.0.1.9 - Milestone 2 Preview 1"
-                +"\nCopyright © 2007-2009 Cairo Development Team.  All rights reserved.\n" +
+                "Version 0.0.1.10 - Milestone 2 Preview 2"
+                +"\nCopyright © 2007-2010 Cairo Development Team and community contributors.  All rights reserved."
+                // +
                 // Replace next line with the ID Key
-"Not for redistribution."
+//"Not for redistribution."
                 , "Cairo Desktop Environment", MessageBoxButton.OK, MessageBoxImage.None);
         } 
         private void OpenLogoffBox(object sender, RoutedEventArgs e)
@@ -327,68 +327,37 @@ namespace CairoDesktop
         }
         private void OpenMyDocs(object sender, RoutedEventArgs e)
         {
-            string myDocspath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            System.Diagnostics.Process prc = new System.Diagnostics.Process();
-            prc.StartInfo.FileName = fileManger;
-            prc.StartInfo.Arguments = myDocspath;
-            prc.Start();
+            System.Diagnostics.Process.Start(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
         }
         private void OpenMyPics(object sender, RoutedEventArgs e)
         {
-            string myDocspath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-            System.Diagnostics.Process prc = new System.Diagnostics.Process();
-            prc.StartInfo.FileName = fileManger;
-            prc.StartInfo.Arguments = myDocspath;
-            prc.Start();
+            System.Diagnostics.Process.Start(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
         }
         private void OpenMyMusic(object sender, RoutedEventArgs e)
         {
-            string myDocspath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-            System.Diagnostics.Process prc = new System.Diagnostics.Process();
-            prc.StartInfo.FileName = fileManger;
-            prc.StartInfo.Arguments = myDocspath;
-            prc.Start();
+            System.Diagnostics.Process.Start(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyMusic));
         }
         private void OpenDownloads(object sender, RoutedEventArgs e)
         {
             string userprofile = System.Environment.GetEnvironmentVariable("USERPROFILE");
-            string myDocspath = userprofile + @"\Downloads\";
-            System.Diagnostics.Process prc = new System.Diagnostics.Process();
-            prc.StartInfo.FileName = fileManger;
-            prc.StartInfo.Arguments = myDocspath;
-            prc.Start();
+            string downloadsPath = userprofile + @"\Downloads\";
+            System.Diagnostics.Process.Start(fileManger, downloadsPath);
         }
         private void OpenMyComputer(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process prc = new System.Diagnostics.Process();
-            prc.StartInfo.FileName = fileManger;
-            prc.StartInfo.Arguments = @"::{20D04FE0-3AEA-1069-A2D8-08002B30309D}";
-            prc.Start();
-
+            System.Diagnostics.Process.Start(fileManger, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
         }
         private void OpenUserFolder(object sender, RoutedEventArgs e)
         {
-            string userprofile = System.Environment.GetEnvironmentVariable("USERPROFILE");
-            System.Diagnostics.Process prc = new System.Diagnostics.Process();
-            prc.StartInfo.FileName = fileManger;
-            prc.StartInfo.Arguments = userprofile;
-            prc.Start();
+            System.Diagnostics.Process.Start(fileManger, System.Environment.GetEnvironmentVariable("USERPROFILE"));
         }
         private void OpenProgramFiles(object sender, RoutedEventArgs e)
         {
-            string progfiles = System.Environment.GetEnvironmentVariable("ProgramFiles");
-            System.Diagnostics.Process prc = new System.Diagnostics.Process();
-            prc.StartInfo.FileName = fileManger;
-            prc.StartInfo.Arguments = progfiles;
-            prc.Start();
+            System.Diagnostics.Process.Start(fileManger, System.Environment.GetEnvironmentVariable("ProgramFiles"));
         }
         private void OpenRecycleBin(object sender, RoutedEventArgs e)
         {
-            string bin = @"::{645FF040-5081-101B-9F08-00AA002F954E}";
-            System.Diagnostics.Process prc = new System.Diagnostics.Process();
-            prc.StartInfo.FileName = fileManger;
-            prc.StartInfo.Arguments = bin;
-            prc.Start();
+            System.Diagnostics.Process.Start(fileManger, "::{645FF040-5081-101B-9F08-00AA002F954E}");
         }
         private void OpenControlPanel(object sender, RoutedEventArgs e)
         {

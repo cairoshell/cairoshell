@@ -15,7 +15,7 @@ namespace CairoDesktop.AppGrabber
 
     public class AppGrabber : DependencyObject
     {
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        //private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private static DependencyProperty programsListProperty = DependencyProperty.Register("ProgramsList", typeof(List<ApplicationInfo>), typeof(AppGrabber), new PropertyMetadata(new List<ApplicationInfo>()));
         
         private static AppGrabber _instance = new AppGrabber();
@@ -100,9 +100,9 @@ namespace CairoDesktop.AppGrabber
         }
 
         public void Load() {
-            _logger.Debug("Checking for category list config file: {0}", ConfigFile);
+            //_logger.Debug("Checking for category list config file: {0}", ConfigFile);
             if (System.IO.File.Exists(ConfigFile)) {
-                _logger.Debug("Loading category list config file: {0}", ConfigFile);
+                //_logger.Debug("Loading category list config file: {0}", ConfigFile);
                 this.CategoryList = CategoryList.Deserialize(ConfigFile);
             } else {
                 this.CategoryList = new CategoryList();
@@ -110,7 +110,7 @@ namespace CairoDesktop.AppGrabber
         }
 
         public void Save() {
-            _logger.Debug("Saving out categories config file");
+            //_logger.Debug("Saving out categories config file");
             this.CategoryList.Serialize(ConfigFile);
         }
 
@@ -118,23 +118,23 @@ namespace CairoDesktop.AppGrabber
 
         private List<ApplicationInfo> GetApps()
         {
-            _logger.Debug("Building index of applications.");
+            //_logger.Debug("Building index of applications.");
             List<List<ApplicationInfo>> listsToMerge = new List<List<ApplicationInfo>>();
             foreach (String location in searchLocations)
             {
-                _logger.Debug("Indexing {0} for applications", location);
+                //_logger.Debug("Indexing {0} for applications", location);
                 listsToMerge.Add(generateAppListRecursing(new DirectoryInfo(location)));
             }
             List<ApplicationInfo> rval = mergeLists(listsToMerge);
             rval.Sort();
             
-            _logger.Debug("Number of applications indexed: {0}", rval.Count);
+            //_logger.Debug("Number of applications indexed: {0}", rval.Count);
             return rval;
         }
 
         private List<ApplicationInfo> generateAppListRecursing(DirectoryInfo directory)
         {
-            _logger.Debug("Scanning directory {0}", directory.FullName);
+            //_logger.Debug("Scanning directory {0}", directory.FullName);
             List<ApplicationInfo> rval = new List<ApplicationInfo>();
             
             foreach (DirectoryInfo subfolder in directory.GetDirectories())
@@ -144,7 +144,7 @@ namespace CairoDesktop.AppGrabber
             
             foreach (FileInfo file in directory.GetFiles()) 
             {
-                _logger.Debug("Interrogating file {0}", file.FullName);
+                //_logger.Debug("Interrogating file {0}", file.FullName);
                 ApplicationInfo ai = new ApplicationInfo();
                 String ext = Path.GetExtension(file.FullName);
 
@@ -157,7 +157,7 @@ namespace CairoDesktop.AppGrabber
 
                         if (file.Extension.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
                         {
-                            _logger.Debug("Attempting to interrogate shortcut to application: {0}", file.FullName);
+                            //_logger.Debug("Attempting to interrogate shortcut to application: {0}", file.FullName);
                             Interop.Shell.Link link = new Interop.Shell.Link(file.FullName);
                             target = link.Target;
                         }
@@ -172,14 +172,14 @@ namespace CairoDesktop.AppGrabber
                             continue;
                         }
 
-                        _logger.Debug("Attempting to get associated icon for {0}", file.FullName);
+                        //_logger.Debug("Attempting to get associated icon for {0}", file.FullName);
                         ai.Icon = ai.GetAssociatedIcon();
                         rval.Add(ai);
                     }
                     catch (Exception ex)
                     {
                         //Output the reason to the debugger
-                        _logger.Debug("Error creating ApplicationInfo object in appgrabber. Details: {0}\n{1}", ex.Message, ex.StackTrace);
+                        //_logger.Debug("Error creating ApplicationInfo object in appgrabber. Details: {0}\n{1}", ex.Message, ex.StackTrace);
                     }
                 }
             }

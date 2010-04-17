@@ -29,11 +29,12 @@
                 return;
             }
 
+            // Causes crash?
             // If framework is not correct version then quit.
-            if (!FrameworkCheck())
-            {
-                return;
-            }
+            //if (!FrameworkCheck())
+            //{
+            //    return;
+            //}
 
             InitializeParentWindow();
 
