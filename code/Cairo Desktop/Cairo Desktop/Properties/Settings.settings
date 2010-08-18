@@ -14,9 +14,6 @@
     <Setting Name="IsFirstRun" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="MenuBarWhite" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="TimeFormat" Type="System.String" Scope="User">
       <Value Profile="(Default)">ddd h:mm tt</Value>
     </Setting>
@@ -26,11 +23,20 @@
     <Setting Name="FileManager" Type="System.String" Scope="User">
       <Value Profile="(Default)">%WINDIR%\explorer.exe</Value>
     </Setting>
-    <Setting Name="EnableDynamicDesktop" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="EnableSysTray" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="EnableDynamicDesktop" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CairoTheme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Cairo.xaml</Value>
+    </Setting>
+    <Setting Name="ThemeList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Cairo.xaml, White.xaml</Value>
+    </Setting>
+    <Setting Name="UseDarkIcons" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

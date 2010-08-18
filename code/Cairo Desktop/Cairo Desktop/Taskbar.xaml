@@ -18,7 +18,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="CairoStyles.xaml" />
+                <ResourceDictionary Source="Cairo.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <tasks:WindowsTasksService x:Key="tasksSvc" x:Name="tasksSvc" />
             <self:BoolTovisibilityConverter x:Key="BoolVisConverter" />

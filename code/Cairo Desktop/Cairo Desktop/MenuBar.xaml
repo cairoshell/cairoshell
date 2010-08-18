@@ -32,7 +32,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="CairoStyles.xaml" />
+                <ResourceDictionary Source="Cairo.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <local:Settings x:Key="settings" />
             <Style x:Key="InnerProgramsListStyle"

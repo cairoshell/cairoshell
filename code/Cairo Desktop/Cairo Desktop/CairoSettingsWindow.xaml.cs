@@ -4,6 +4,9 @@
     using System.Windows;
     using System.Resources;
     using System.Windows.Input;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Text.RegularExpressions;
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
     /// </summary>
@@ -12,6 +15,20 @@
         public CairoSettingsWindow()
         {
             InitializeComponent();
+            string themelist = Properties.Settings.Default.ThemeList;
+            StringBuilder sBuilder = new StringBuilder();
+            int id = 0;
+            foreach (string subStr in Regex.Split(themelist, " |, |,"))
+            {
+                if (subStr == Properties.Settings.Default.CairoTheme)
+                {
+                    int index = id;
+                    selectTheme.SelectedIndex = index;
+                }
+                selectTheme.Items.Add(subStr);
+                id++;
+            }
+
         }
 
         private void EnableDesktop_Click(object sender, RoutedEventArgs e)
@@ -87,9 +104,14 @@
             this.restartButton.Visibility = Visibility.Visible;
         }
 
-        private void MenuBarWhite_Click(object sender, RoutedEventArgs e)
+        private void UseDarkIcons_Click(object sender, RoutedEventArgs e)
         {
-            bool IsMenuBarWhite = Properties.Settings.Default.MenuBarWhite;
+            bool IsDarkIconsEnabled = Properties.Settings.Default.UseDarkIcons;
+            this.restartButton.Visibility = Visibility.Visible;
+        }
+
+        private void themeSetting_Changed(object sender, EventArgs e)
+        {
             this.restartButton.Visibility = Visibility.Visible;
         }
 
@@ -97,6 +119,9 @@
         {
             Properties.Settings.Default.TimeFormat = timeSetting.Text;
             Properties.Settings.Default.DateFormat = dateSetting.Text;
+            string s1 = selectTheme.SelectedValue.ToString();
+            s1.Replace("'", "");
+            Properties.Settings.Default.CairoTheme = s1;
             Properties.Settings.Default.Save();
             System.Windows.Forms.Application.Restart();
             Application.Current.Shutdown();
@@ -111,6 +136,9 @@
         {
             Properties.Settings.Default.TimeFormat = timeSetting.Text;
             Properties.Settings.Default.DateFormat = dateSetting.Text;
+            string s1 = selectTheme.SelectedValue.ToString();
+            s1.Replace("'", "");
+            Properties.Settings.Default.CairoTheme = s1;
             Properties.Settings.Default.Save();
         }
     }

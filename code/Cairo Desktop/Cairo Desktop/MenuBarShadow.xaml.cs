@@ -12,7 +12,9 @@ namespace CairoDesktop
         public MenuBarShadow()
         {
             InitializeComponent();
-            if (Properties.Settings.Default.MenuBarWhite)
+            // Sets the Theme for Cairo
+            string theme = Properties.Settings.Default.CairoTheme;
+            if (theme != "Cairo.xaml")
             {
                 this.Top = 22;
             }

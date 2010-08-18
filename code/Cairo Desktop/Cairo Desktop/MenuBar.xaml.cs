@@ -35,10 +35,14 @@ namespace CairoDesktop
         public MenuBar()
         {
             this.InitializeComponent();
-            if (Properties.Settings.Default.MenuBarWhite)
+            // Sets the Theme for Cairo
+            string theme = Properties.Settings.Default.CairoTheme;
+            if (theme != "Cairo.xaml")
             {
-                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "CairoStyles_alt.xaml"));
+                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme));
                 this.Resources.MergedDictionaries[0] = CairoDictionary;
+            }
+            if (Properties.Settings.Default.UseDarkIcons) {
                 SolidColorBrush borderBrushColor = new SolidColorBrush();
                 borderBrushColor.Color = Color.FromArgb(135, 0, 0, 0);
                 this.BorderBrush = borderBrushColor;

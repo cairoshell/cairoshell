@@ -7,7 +7,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="CairoStyles.xaml" />
+                <ResourceDictionary Source="Cairo.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <self:IconConverter x:Key="iconConverter" />
         </ResourceDictionary>

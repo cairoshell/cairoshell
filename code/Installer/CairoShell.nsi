@@ -9,7 +9,7 @@
 Name "Cairo Desktop Environment"
 
 ; The file to write
-OutFile "Cairo Desktop Installer M1_9.exe"
+OutFile "Cairo Desktop Installer Test.exe"
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES\Cairo Shell"

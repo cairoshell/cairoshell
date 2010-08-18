@@ -13,7 +13,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="CairoStyles.xaml" />
+                <ResourceDictionary Source="Cairo.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <self:MessageBoxImageConverter x:Key="MessageBoxImageConverter" />
             <self:MessageBoxButtonConverter x:Key="MessageBoxButtonConverter" />

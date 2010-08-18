@@ -17,9 +17,11 @@ namespace CairoDesktop
 		{
 			this.InitializeComponent();
 			// Insert code required on object creation below this point.
-            if (Properties.Settings.Default.MenuBarWhite)
+            // Sets the Theme for Cairo
+            string theme = Properties.Settings.Default.CairoTheme;
+            if (theme != "Cairo.xaml")
             {
-                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + "CairoStyles_alt.xaml"));
+                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme));
                 this.Resources.MergedDictionaries[0] = CairoDictionary;
             }
 		}

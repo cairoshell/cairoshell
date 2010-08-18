@@ -1,6 +1,6 @@
 CAIRO SHELL MILESTONE 2 PREVIEW RELEASE NOTES
 
-COPYRIGHT (C) 2007-2009 CAIRO DEVELOPMENT TEAM
+COPYRIGHT (C) 2007-2010 CAIRO DEVELOPMENT TEAM
 
 KNOWN ISSUES
  - Clicking an active taskbar button does not minimize it.
@@ -32,3 +32,4 @@ Thank you for testing!
    Sam Johnson
    Matthew Savage
    James Sudbury
+ - And Cairo Community Contributors
