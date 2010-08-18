@@ -4,12 +4,16 @@
     using System.Diagnostics;
     using System.Windows;
     using Microsoft.Win32;
+    using CairoDesktop.SupportingClasses;
+    using System.Windows.Interop;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
     /// </summary>
     public class Startup
     {
+        private static System.Threading.Mutex cairoMutex;
+
         private static System.Windows.Window _parentWindow;
 
         public static MenuBar MenuBarWindow { get; set; }
@@ -24,10 +28,37 @@
         [STAThread]
         public static void Main()
         {
-            if (!SingleInstanceCheck())
+            #region Single Instance Check
+            bool ok;
+            cairoMutex = new System.Threading.Mutex(true, "CairoShell", out ok);
+
+            if (!ok)
             {
+                // Another instance is already running.
                 return;
             }
+            #endregion
+
+            #region some real shell code
+            int hShellReadyEvent;
+
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major >= 5)
+                hShellReadyEvent = NativeMethods.OpenEvent(NativeMethods.EVENT_MODIFY_STATE, true, @"Global\msgina: ShellReadyEvent");
+            else
+                hShellReadyEvent = NativeMethods.OpenEvent(NativeMethods.EVENT_MODIFY_STATE, false, "msgina: ShellReadyEvent");
+
+            if (hShellReadyEvent != 0)
+            {
+                NativeMethods.SetEvent(hShellReadyEvent);
+                NativeMethods.CloseHandle(hShellReadyEvent);
+            }
+            #endregion
+
+            #region old code
+            //if (!SingleInstanceCheck())
+            //{
+            //    return;
+            //}
 
             // Causes crash?
             // If framework is not correct version then quit.
@@ -35,6 +66,7 @@
             //{
             //    return;
             //}
+            #endregion
 
             InitializeParentWindow();
 
@@ -48,6 +80,15 @@
             FirstRun(app);
 #endif
 
+            if (Properties.Settings.Default.EnableDesktop)
+            {
+                DesktopWindow = new Desktop() { Owner = _parentWindow };
+                DesktopWindow.Show();
+                WindowInteropHelper f = new WindowInteropHelper(DesktopWindow);
+                int result = NativeMethods.SetShellWindow(f.Handle);
+                DesktopWindow.ShowWindowBottomMost(f.Handle);
+            }
+
             if (Properties.Settings.Default.EnableMenuBarShadow)
             {
                 MenuBarShadowWindow = new MenuBarShadow() { Owner = _parentWindow };
@@ -58,12 +99,6 @@
             {
                 TaskbarWindow = new Taskbar() { Owner = _parentWindow };
                 TaskbarWindow.Show();
-            }
-
-            if (Properties.Settings.Default.EnableDesktop)
-            {
-                DesktopWindow = new Desktop() { Owner = _parentWindow };
-                DesktopWindow.Show();
             }
             
             app.Run();

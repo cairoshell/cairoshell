@@ -129,6 +129,10 @@ namespace CairoDesktop {
             subDirectories.Clear();
             foreach (DirectoryInfo subDir in dir.GetDirectories()) {
                 subDirectories.Add(subDir);
+                if (Properties.Settings.Default.EnableSubDirs)
+                {
+                    files.Add(new SystemFile(subDir.FullName, dispatcher));
+                }
             }
 
         }

@@ -62,6 +62,19 @@
             }
         }
 
+        private void EnableSubDirs_Click(object sender, RoutedEventArgs e)
+        {
+            bool IsSubDirsEnabled = Properties.Settings.Default.EnableSubDirs;
+            if (IsSubDirsEnabled == true)
+            {
+                this.restartButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.restartButton.Visibility = Visibility.Visible;
+            }
+        }
+
         private void EnableTaskbar_Click(object sender, RoutedEventArgs e)
         {
             bool IsTaskbarEnabled = Properties.Settings.Default.EnableTaskbar;

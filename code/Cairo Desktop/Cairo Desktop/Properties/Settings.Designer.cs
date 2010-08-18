@@ -166,5 +166,17 @@ namespace CairoDesktop.Properties {
                 this["UseDarkIcons"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableSubDirs {
+            get {
+                return ((bool)(this["EnableSubDirs"]));
+            }
+            set {
+                this["EnableSubDirs"] = value;
+            }
+        }
     }
 }

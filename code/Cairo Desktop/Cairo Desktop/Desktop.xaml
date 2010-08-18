@@ -10,7 +10,7 @@
     Left="0"
     AllowsTransparency="True"
     Focusable="False"
-    Background="{x:Null}" Topmost="False">
+    Background="{x:Null}" Topmost="False" Activated="Window_Activated">
     <Window.Resources>
         <Style x:Key="CairoDesktopNavItemStyle"
             TargetType="{x:Type Button}">
@@ -118,11 +118,11 @@
             Name="DesktopNavToolbar"
             AllowsTransparency="True"
             VerticalOffset="300"
-            Width="159"
+            Width="200"
             Height="54"
             PopupAnimation="Fade">
             <StackPanel Orientation="Horizontal"
-                Width="159"
+                Width="200"
                 Height="54">
                 <StackPanel.Background>
                     <ImageBrush ImageSource="Resources\desktopControlsBg.png" />
@@ -139,30 +139,14 @@
                         Width="21"
                         Height="19" />
                 </Button>
-                <Button Style="{StaticResource CairoDesktopNavItemStyle}"
-                    Margin="26,-4,0,0" Click="Fwd_Click">
-                    <Image Source="Resources\controlsForward.png"
-                        Width="16"
-                        Height="18" />
+                <Button Style="{StaticResource CairoDesktopNavItem2Style}"
+                    Margin="26,-5,0,0" Click="Browse_Click">
+                    <Image Source="Resources\controlsBrowse.png"
+                        Width="21"
+                        Height="19" />
                 </Button>
-            </StackPanel>
-        </Popup>
-        <Popup Placement="Center"
-            Name="DesktopAddressToolbar"
-            AllowsTransparency="True"
-            VerticalOffset="350"
-            Width="400"
-            Height="54"
-            PopupAnimation="Fade">
-            <StackPanel Orientation="Horizontal"
-                Width="400"
-                Height="54">
-                <StackPanel.Background>
-                    <ImageBrush ImageSource="Resources\desktopAddressBg.png" />
-                </StackPanel.Background>
-                <TextBox Name="DesktopLocAddress" Width="300" Height="20" Margin="30,-4,0,0" AcceptsReturn="False" AcceptsTab="False" />
                 <Button Style="{StaticResource CairoDesktopNavItemStyle}"
-                    Margin="26,-4,0,0" Click="GoChangeDesktopAddress">
+                    Margin="25,-4,0,0" Click="Fwd_Click">
                     <Image Source="Resources\controlsForward.png"
                         Width="16"
                         Height="18" />

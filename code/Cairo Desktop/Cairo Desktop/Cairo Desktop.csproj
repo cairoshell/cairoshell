@@ -199,6 +199,7 @@
     <Compile Include="SupportingClasses\BoolTovisibilityConverter.cs" />
     <Compile Include="SupportingClasses\IconConverter.cs" />
     <Compile Include="SupportingClasses\InvokingObservableCollection.cs" />
+    <Compile Include="SupportingClasses\NativeMethods.cs" />
     <Compile Include="SupportingClasses\SystemDirectory.cs" />
     <Compile Include="SupportingClasses\MessageBoxButtonConverter.cs" />
     <Compile Include="SupportingClasses\MessageBoxImageConverter.cs" />
@@ -331,9 +332,9 @@
     <Resource Include="Resources\cairoMenuBlack.png">
     </Resource>
     <Resource Include="Resources\searchBlack.png" />
-    <None Include="Resources\menubarWhite.png">
+    <Resource Include="Resources\menubarWhite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Resource>
     <Resource Include="Resources\nullIcon.png">
     </Resource>
     <Resource Include="Resources\taskListIcon.png">
@@ -341,7 +342,7 @@
     <None Include="Resources\stackShadow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Resource Include="Resources\desktopAddressBg.png" />
+    <Resource Include="Resources\controlsBrowse.png" />
     <Content Include="SearchAPILib.dll" />
   </ItemGroup>
   <ItemGroup>

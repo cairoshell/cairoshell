@@ -184,6 +184,12 @@
                         Click="EnableDynamicDesktop_Click"
                         Margin="14,14,14,37"
                         Grid.RowSpan="2" />
+                    <CheckBox Content="Show Sub-directories"
+                        IsChecked="{Binding Path=Default.EnableSubDirs}"
+                        Grid.Row="3"
+                        Click="EnableSubDirs_Click"
+                        Margin="14,14,14,37"
+                        Grid.RowSpan="2" />
                 </Grid>
             </TabItem>
             <TabItem Style="{StaticResource CairoSettingsBarItemStyle}">
