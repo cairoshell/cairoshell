@@ -95,7 +95,7 @@ namespace CairoDesktop.AppGrabber
             try
             {
                 img.BeginInit();
-                img.UriSource = new Uri("resources\\NullIcon.png", UriKind.RelativeOrAbsolute);
+                img.UriSource = new Uri("resources\\folderIcon.png", UriKind.RelativeOrAbsolute);
                 img.EndInit();
             }
             catch (Exception ex)

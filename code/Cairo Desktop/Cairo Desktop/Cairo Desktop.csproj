@@ -332,9 +332,9 @@
     <Resource Include="Resources\cairoMenuBlack.png">
     </Resource>
     <Resource Include="Resources\searchBlack.png" />
-    <Resource Include="Resources\menubarWhite.png">
+    <None Include="Resources\menubarWhite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </None>
     <Resource Include="Resources\nullIcon.png">
     </Resource>
     <Resource Include="Resources\taskListIcon.png">
@@ -343,6 +343,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Resource Include="Resources\controlsBrowse.png" />
+    <Resource Include="Resources\folderIcon.png" />
     <Content Include="SearchAPILib.dll" />
   </ItemGroup>
   <ItemGroup>

@@ -41,8 +41,8 @@
                                         Background="Transparent"
                                         Margin="5,3,5,3"
                                         Foreground="White" />
-                                    <Viewbox Stretch="Uniform">
-                                        <Image Source="{Binding Path=Icon}" />
+                                    <Viewbox Width="32" Height="32">
+                                        <Image Source="{Binding Path=Icon}" Stretch="Uniform" />
                                     </Viewbox>
                                 </DockPanel>
                                 <Button.ContextMenu>

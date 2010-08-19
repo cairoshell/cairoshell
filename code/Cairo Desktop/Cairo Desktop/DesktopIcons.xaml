@@ -48,8 +48,8 @@
                                         </TextBlock.BitmapEffect>
                                         <TextBlock.ToolTip><ToolTip Content="{Binding Path=Name}" /></TextBlock.ToolTip>
                                     </TextBlock>
-                                    <Viewbox Stretch="Uniform">
-                                        <Image Source="{Binding Path=Icon}" />
+                                    <Viewbox  Width="32" Height="32">
+                                        <Image Source="{Binding Path=Icon}" Stretch="Uniform" />
                                     </Viewbox>
                                 </DockPanel>
                                 <Button.ContextMenu>
