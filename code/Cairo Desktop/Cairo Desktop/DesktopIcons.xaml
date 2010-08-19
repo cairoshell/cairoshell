@@ -63,10 +63,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="GradBgBrush">
-                <GradientStop Color="#bf1a1a1a" Offset="0" />
-                <GradientStop Color="#df000000" Offset="1" />
-            </LinearGradientBrush>
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel Margin="0">

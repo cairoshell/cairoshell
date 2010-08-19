@@ -178,17 +178,38 @@
                         Click="EnableDesktop_Click"
                         Margin="14,14,14,37"
                         Grid.RowSpan="2" />
-                    <CheckBox Content="Enable Dynamic Desktop"
+                    <TextBlock Text="Disabling this will remove access to your desktop."
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Foreground="DarkGray"
+                        Grid.Row="1"
+                        Margin="32,34,0,0"
+                        Grid.RowSpan="2" />
+                    <CheckBox Content="Use Dynamic Desktop"
                         IsChecked="{Binding Path=Default.EnableDynamicDesktop}"
                         Grid.Row="2"
                         Click="EnableDynamicDesktop_Click"
                         Margin="14,14,14,37"
+                        Grid.RowSpan="2" />
+                    <TextBlock Text="This adds a toolbar which allows folder browsing."
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Foreground="DarkGray"
+                        Grid.Row="2"
+                        Margin="32,34,0,0"
                         Grid.RowSpan="2" />
                     <CheckBox Content="Show Sub-directories"
                         IsChecked="{Binding Path=Default.EnableSubDirs}"
                         Grid.Row="3"
                         Click="EnableSubDirs_Click"
                         Margin="14,14,14,37"
+                        Grid.RowSpan="2" />
+                    <TextBlock Text="This applies to both the desktop and stacks."
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Foreground="DarkGray"
+                        Grid.Row="3"
+                        Margin="32,34,0,0"
                         Grid.RowSpan="2" />
                 </Grid>
             </TabItem>
@@ -223,39 +244,12 @@
                         Grid.Row="1"
                         Grid.RowSpan="2"
                         Click="EnableTaskbar_Click" />
-                </Grid>
-            </TabItem>
-            <TabItem Style="{StaticResource CairoSettingsBarItemStyle}"
-                IsEnabled="False">
-                <TabItem.Header>
-                    <StackPanel>
-                        <TextBlock TextAlignment="Center">Extensions</TextBlock>
-                    </StackPanel>
-                </TabItem.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <TextBlock FontSize="28"
-                        FontWeight="Normal"
-                        Text="Extensions Settings"
-                        Margin="14,15,7,42"
-                        Grid.RowSpan="2" />
-                    <TextBlock FontStyle="Italic"
-                        Foreground="#000"
-                        Text="There are no settings for this category."
+                    <TextBlock Text="Disabling this will also remove Quick Launch."
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Foreground="DarkGray"
                         Grid.Row="1"
-                        Margin="14,14,14,37"
+                        Margin="32,34,0,0"
                         Grid.RowSpan="2" />
                 </Grid>
             </TabItem>
@@ -290,43 +284,125 @@
                         Margin="14,14,14,37"
                         Grid.RowSpan="2"
                         Click="EnableMenuBarShadow_Click" />
-                    <TextBlock Text="Theme:"
-                            Margin="14,0,24,0"
-                            VerticalAlignment="Top" Height="18.62" Grid.Row="2" />
-                    <ComboBox Name = "selectTheme" Margin="14,23,0,0" Grid.Row="2" DropDownClosed="themeSetting_Changed" IsDropDownOpen="False" IsEditable="False" VerticalAlignment="Top">
-                    </ComboBox>
+                    <StackPanel Grid.Row="2"
+                        Orientation="Horizontal">
+                        <TextBlock Text="Theme:"
+                            Margin="14,14,0,0"
+                            VerticalAlignment="Top" Width="60" />
+                        <ComboBox Name="selectTheme" Width="190" Margin="0,12,0,0" DropDownClosed="themeSetting_Changed" IsDropDownOpen="False" IsEditable="False" VerticalAlignment="Top">
+                        </ComboBox>
+                    </StackPanel>
+                    <TextBlock Text="Themes are installed into your Cairo directory."
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Foreground="DarkGray"
+                        Grid.Row="2"
+                        Margin="14,36,0,0"
+                        Grid.RowSpan="2" />
                     <CheckBox Content="Use Dark Icons"
                         IsChecked="{Binding Path=Default.UseDarkIcons}"
                         Grid.Row="3"
                         Margin="14,14,14,37"
                         Grid.RowSpan="2"
                         Click="UseDarkIcons_Click" />
+                    <TextBlock Text="Lighter themes may look better with this enabled."
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Foreground="DarkGray"
+                        Grid.Row="3"
+                        Margin="32,34,0,0"
+                        Grid.RowSpan="2" />
                     <CheckBox Content="Enable System Tray"
                         IsChecked="{Binding Path=Default.EnableSysTray}"
                         Grid.Row="4"
                         Margin="14,14,14,37"
                         Grid.RowSpan="2"
                         Click="EnableSysTray_Click" />
-                    <StackPanel Grid.Row="5"
-                        Orientation="Horizontal">
+                    <TextBlock Text="Many applications reside here."
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Foreground="DarkGray"
+                        Grid.Row="4"
+                        Margin="32,34,0,0"
+                        Grid.RowSpan="2" />
+                    <StackPanel Grid.Row="1"
+                        Orientation="Horizontal"
+                        Grid.Column="1">
                         <TextBlock Text="Time Format: "
-                            Margin="14,0,10,0"
-                            VerticalAlignment="Center" />
+                            Margin="14,14,10,0"
+                            VerticalAlignment="Top"
+                            Width="90" />
                         <TextBox Text="{Binding Path=Default.TimeFormat}"
-                            VerticalAlignment="Center"
+                            VerticalAlignment="Top"
                             Width="160"
+                            Margin="0,12,0,0"
+                            Foreground="Black"
                             Name="timeSetting" />
                     </StackPanel>
-                    <StackPanel Grid.Row="6"
-                        Orientation="Horizontal">
+                    <TextBlock Text="The clock on the menubar will follow this format."
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Foreground="DarkGray"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="14,36,0,0"
+                        Grid.RowSpan="2" />
+                    <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        Grid.Column="1">
                         <TextBlock Text="Date Format: "
-                            Margin="14,0,10,0"
-                            VerticalAlignment="Center" />
+                            Margin="14,14,10,0"
+                            VerticalAlignment="Top"
+                            Width="90" />
                         <TextBox Text="{Binding Path=Default.DateFormat}"
-                            VerticalAlignment="Center"
+                            VerticalAlignment="Top"
                             Width="160"
+                            Margin="0,12,0,0"
+                            Foreground="Black"
                             Name="dateSetting" />
                     </StackPanel>
+                    <TextBlock Text="Hovering the clock will follow this format."
+                        FontSize="12"
+                        FontStyle="Italic"
+                        Foreground="DarkGray"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Margin="14,36,0,0"
+                        Grid.RowSpan="2" />
+                </Grid>
+            </TabItem>
+            <TabItem Style="{StaticResource CairoSettingsBarItemStyle}"
+                IsEnabled="False">
+                <TabItem.Header>
+                    <StackPanel>
+                        <TextBlock TextAlignment="Center">Extensions</TextBlock>
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <TextBlock FontSize="28"
+                        FontWeight="Normal"
+                        Text="Extensions Settings"
+                        Margin="14,15,7,42"
+                        Grid.RowSpan="2" />
+                    <TextBlock FontStyle="Italic"
+                        Foreground="#000"
+                        Text="There are no settings for this category."
+                        Grid.Row="1"
+                        Margin="14,14,14,37"
+                        Grid.RowSpan="2" />
                 </Grid>
             </TabItem>
             <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}" Name="restartButton" MouseLeftButtonUp="restartCairo" Visibility="Hidden">
