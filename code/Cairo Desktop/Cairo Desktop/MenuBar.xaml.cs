@@ -273,7 +273,7 @@ namespace CairoDesktop
         {
             CairoMessage.Show(
                 // Replace next line with the Version
-                "Version 0.0.1.10 - Milestone 2 Preview 2"
+                "Version 0.0.1.11 - Milestone 2 Preview 3"
                 +"\nCopyright © 2007-2010 Cairo Development Team and community contributors.  All rights reserved."
                 // +
                 // Replace next line with the ID Key
