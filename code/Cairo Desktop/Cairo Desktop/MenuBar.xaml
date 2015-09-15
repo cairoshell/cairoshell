@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:CairoDesktop.Properties" xmlns:control="clr-namespace:CairoDesktop" xmlns:search="clr-namespace:VistaSearchProvider" xmlns:c="http://schemas.microsoft.com/wpf/2008/toolkit" x:Class="CairoDesktop.MenuBar"
+<Window xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:CairoDesktop.Properties" xmlns:control="clr-namespace:CairoDesktop" xmlns:search="clr-namespace:VistaSearchProvider" xmlns:c="http://schemas.microsoft.com/wpf/2008/toolkit" x:Class="CairoDesktop.MenuBar"
     x:Name="Window"
     Title=""
     WindowStyle="None"
@@ -21,6 +21,7 @@
     Initialized="OnWindowInitialized"
     Closing="OnWindowClosing"
     SizeChanged="OnWindowResize"
+        UseLayoutRounding="True"
     MaxHeight="23">
     <Window.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -56,11 +57,13 @@
             </Style>
             <control:BoolTovisibilityConverter x:Key="BoolToVisibilityConverter" />
             <DataTemplate x:Key="CairoSearchResultsItemTemplate">
-                <MenuItem Command="control:CustomCommands.OpenSearchResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-            CommandParameter="{Binding}">
-                    <MenuItem.Header>
-                        <TextBlock Text="{Binding Path=Name}"/>
-                    </MenuItem.Header>
+                <MenuItem Command="control:CustomCommands.OpenSearchResult" Width="338" BorderThickness="0" Background="{x:Null}"
+            CommandParameter="{Binding}" Header="{Binding Path=Name}">
+                    <MenuItem.Icon>
+                        <Viewbox  Width="16" Height="16">
+                            <Image Source="{Binding Path=Icon}" Stretch="Uniform" />
+                        </Viewbox>
+                    </MenuItem.Icon>
                 </MenuItem>
             </DataTemplate>
         </ResourceDictionary>

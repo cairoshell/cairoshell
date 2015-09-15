@@ -16,6 +16,8 @@
 
         private static System.Windows.Window _parentWindow;
 
+        private static System.Windows.Window _desktopWindow;
+
         public static MenuBar MenuBarWindow { get; set; }
         public static MenuBarShadow MenuBarShadowWindow { get; set; }
         public static Taskbar TaskbarWindow { get; set; }
@@ -68,7 +70,11 @@
             //}
             #endregion
 
-            InitializeParentWindow();
+            _parentWindow = new Window();
+            InitializeParentWindow(_parentWindow);
+
+            _desktopWindow = new Window();
+            InitializeParentWindow(_desktopWindow);
 
             App app = new App();
 
@@ -82,7 +88,7 @@
 
             if (Properties.Settings.Default.EnableDesktop)
             {
-                DesktopWindow = new Desktop() { Owner = _parentWindow };
+                DesktopWindow = new Desktop() { Owner = _desktopWindow };
                 DesktopWindow.Show();
                 WindowInteropHelper f = new WindowInteropHelper(DesktopWindow);
                 int result = NativeMethods.SetShellWindow(f.Handle);
@@ -91,7 +97,7 @@
 
             if (Properties.Settings.Default.EnableMenuBarShadow)
             {
-                MenuBarShadowWindow = new MenuBarShadow() { Owner = _parentWindow };
+                MenuBarShadowWindow = new MenuBarShadow() { Owner = _desktopWindow };
                 MenuBarShadowWindow.Show();
             }
 
@@ -204,9 +210,9 @@
         /// Initializes a new hidden toolwindow to be the owner for all other windows.
         /// This hides the applications icons from the task switcher.
         /// </summary>
-        private static void InitializeParentWindow()
+        private static void InitializeParentWindow(Window _parentWindow)
         {
-            _parentWindow = new Window();
+            
             _parentWindow.Top = -100; // Location of new window is outside of visible part of screen
             _parentWindow.Left = -100;
             _parentWindow.Width = 1; // size of window is enough small to avoid its appearance at the beginning

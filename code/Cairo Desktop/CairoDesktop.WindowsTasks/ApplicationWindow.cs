@@ -150,11 +150,22 @@ namespace CairoDesktop.WindowsTasks
         private uint GetIconForWindow()
         {
             uint hIco = 0;
-            SendMessageTimeout(this.Handle, 127, 2, 0, 2, 200, ref hIco);
+            SendMessageTimeout(this.Handle, 127, 0, 0, 2, 200, ref hIco);
             int GCL_HICONSM = -34;
-            if(hIco == 0)
+
+            if (hIco == 0)
+            {
+                SendMessageTimeout(this.Handle, 127, 2, 0, 2, 200, ref hIco);
+            }
+
+            if (hIco == 0)
             {
                 hIco = GetClassLong(this.Handle, GCL_HICONSM);
+            }
+
+            if (hIco == 0)
+            {
+                hIco = GetClassLong(this.Handle, -14);
             }
 
             return hIco;

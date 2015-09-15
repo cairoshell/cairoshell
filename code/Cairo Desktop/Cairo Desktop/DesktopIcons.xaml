@@ -22,9 +22,17 @@
                         <DataTemplate>
                             <Button MouseDoubleClick="File_Button_Click"
                                 CommandParameter="{Binding Path=FullName}"
-                                Style="{StaticResource CairoDesktopButtonStyle}">
+                                Style="{StaticResource CairoDesktopButtonStyle}" UseLayoutRounding="True">
                                 <DockPanel>
-                                    <TextBlock DockPanel.Dock="Bottom"
+                                    <Border DockPanel.Dock="Bottom">
+                                        <Border.Effect>
+                                                <DropShadowEffect Color="Black"
+                                                            ShadowDepth="2"
+                                                                  Direction="270"
+                                                            BlurRadius="4"
+                                                            Opacity="1" />
+                                            </Border.Effect>
+                                            <TextBlock
                                         Text="{Binding Path=Name}"
                                         TextAlignment="Center"
                                         TextTrimming="CharacterEllipsis"
@@ -32,23 +40,17 @@
                                         Background="Transparent"
                                         Margin="5,3,5,3"
                                         Foreground="White">
-                                        <TextBlock.BitmapEffect>
-                                            <BitmapEffectGroup>
-                                                <BitmapEffectGroup.Children>
-                                                    <DropShadowBitmapEffect Color="Black"
-                                                        Softness=".18"
+                                            <TextBlock.Effect>
+                                                <DropShadowEffect Color="Black"
                                                         ShadowDepth="1"
-                                                        Direction="270"
-                                                        Opacity="1" />
-                                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                                        GlowSize="1"
-                                                        Opacity=".8" />
-                                                </BitmapEffectGroup.Children>
-                                            </BitmapEffectGroup>
-                                        </TextBlock.BitmapEffect>
+                                                                  Direction="90"
+                                                        Opacity="0.3" BlurRadius="2" />
+                                            </TextBlock.Effect>
                                         <TextBlock.ToolTip><ToolTip Content="{Binding Path=Name}" /></TextBlock.ToolTip>
                                     </TextBlock>
-                                    <Viewbox  Width="32" Height="32">
+
+                                    </Border>
+                                    <Viewbox  Width="32" Height="32" DockPanel.Dock="Top">
                                         <Image Source="{Binding Path=Icon}" Stretch="Uniform" />
                                     </Viewbox>
                                 </DockPanel>

@@ -8,6 +8,7 @@ using System.Threading;
 using SearchAPILib;
 using System.Data.OleDb;
 using System.Data;
+using System.Windows.Media;
 
 namespace VistaSearchProvider
 {
@@ -19,6 +20,8 @@ namespace VistaSearchProvider
         static WaitCallback workerCallback;
         static bool ToAbortFlag = false;
         static bool IsWorkingFlag = false;
+
+        static int MAX_RESULT = 20;
 
         class SearchObjectState
         {
@@ -93,12 +96,17 @@ namespace VistaSearchProvider
                             {
                                 m_results.Clear();
                                 IsWorkingFlag = true;
+
+                                int count = 0;
             
-                                while (!reader.IsClosed && reader.Read())
+                                while (!reader.IsClosed && reader.Read() && count < MAX_RESULT)
                                 {
-                                    m_results.Add(new SearchResult() { Name = reader[0].ToString(), Path = reader[1].ToString() });
+                                    count++;
                                     if (ToAbortFlag)
                                         break;
+                                    
+                                    m_results.Add(new SearchResult() { Name = reader[0].ToString(), Path = reader[1].ToString() });
+                                    
                                 }
                                 reader.Close();
 
@@ -137,5 +145,13 @@ namespace VistaSearchProvider
     {
         public string Name { get; set; }
         public string Path { get; set; }
+
+        public ImageSource Icon
+        {
+            get
+            {
+                return CairoDesktop.AppGrabber.WpfWin32ImageConverter.GetImageFromAssociatedIcon(Path);
+            }
+        }
     }
 }

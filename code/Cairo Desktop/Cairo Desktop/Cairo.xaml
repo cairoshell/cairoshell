@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cairo="clr-namespace:CairoDesktop">
     <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" x:Key="CairoMenuItemHoverGradient">
         <GradientStop Color="#8F1A4DFF" Offset="0.0" />
@@ -590,8 +590,9 @@
     <!-- Search Results -->
     <Style x:Key="CairoSearchResultsItemStyle"
         TargetType="ListViewItem">
-        <Setter Property="MinHeight" Value="23"/>
+        <Setter Property="Height" Value="23"/>
         <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Focusable" Value="False"/>
         <Style.Triggers>
             <Trigger Property="ItemsControl.AlternationIndex"
                 Value="0">
@@ -607,10 +608,7 @@
     </Style>
     <DataTemplate x:Key="CairoSearchResultsItemTemplate">
         <MenuItem Command="cairo:CustomCommands.OpenSearchResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-            CommandParameter="{Binding}">
-            <MenuItem.Header>
-                <TextBlock Text="{Binding Path=Name}"/>
-            </MenuItem.Header>
+            CommandParameter="{Binding}" Header="{Binding Path=Name}">
         </MenuItem>
     </DataTemplate>
     <!-- CairoConfirmationBoxStyle -->
@@ -1703,12 +1701,12 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver"
                             Value="true">
-                            <Setter TargetName="Border"
-                                Property="BitmapEffect">
+                            <Setter Property="Button.Effect">
                                 <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="5"
-                                        Opacity=".5" />
+                                    <DropShadowEffect Color="Black"
+                                                        ShadowDepth="0"
+                                                        Direction="0"
+                                                        Opacity="1" BlurRadius="6" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>

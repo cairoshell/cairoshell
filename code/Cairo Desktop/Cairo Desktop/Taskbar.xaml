@@ -14,6 +14,7 @@
     SizeToContent="Width"
     Focusable="False"
     Background="{x:Null}"
+        Activated="Window_Activated"
     Topmost="True">
     <Window.Resources>
         <ResourceDictionary>
@@ -49,7 +50,7 @@
                                 x:Name="Bd"
                                 Background="{TemplateBinding Background}">
                                 <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                    MinHeight="29" />
+                                    MinHeight="29" Focusable="False" />
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled"
@@ -73,6 +74,12 @@
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
                     <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
                 </Style.Resources>
+                <Setter Property="Padding"
+                    Value="0" />
+                <Setter Property="BorderThickness"
+                    Value="0" />
+                <Setter Property="Background"
+                    Value="Transparent" />
             </Style>
         </ResourceDictionary>
     </Window.Resources>
@@ -106,13 +113,13 @@
                     Style="{DynamicResource ListViewStyle1}"
                     BorderThickness="0"
                     VerticalAlignment="Stretch">
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"
                                 Margin="0"></StackPanel>
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <ListView.ItemTemplate>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
                         <DataTemplate>
                             <self:QuickLaunchButton />
                         </DataTemplate>

@@ -22,7 +22,7 @@
     <Window.Background>
         <ImageBrush ImageSource="Resources\cairoDiag.png" />
     </Window.Background>
-    <Grid>
+    <Grid UseLayoutRounding="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="19" />
             <ColumnDefinition Width="98*" />

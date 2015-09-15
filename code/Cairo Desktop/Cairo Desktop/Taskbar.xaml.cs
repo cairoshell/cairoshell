@@ -59,5 +59,11 @@ namespace CairoDesktop
                 this.CairoTaskbarTaskList.StaysOpen = false;
             }
         }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            // Dodgy - set to top of task bar.
+            this.Top = SystemParameters.WorkArea.Bottom - this.Height;
+        }
     }
 }

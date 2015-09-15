@@ -271,10 +271,14 @@ namespace CairoDesktop
         
         private void AboutCairo(object sender, RoutedEventArgs e)
         {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+
             CairoMessage.Show(
                 // Replace next line with the Version
-                "Version 0.0.1.11 - Milestone 2 Preview 3"
-                +"\nCopyright © 2007-2010 Cairo Development Team and community contributors.  All rights reserved."
+                "Version " + version + " - Pre-release"
+                +"\nCopyright © 2007-2015 Cairo Development Team and community contributors.  All rights reserved."
                 // +
                 // Replace next line with the ID Key
 //"Not for redistribution."
