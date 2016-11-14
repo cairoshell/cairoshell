@@ -18,7 +18,7 @@ namespace CairoDesktop
     {
         //This file is from before r416
         public AppGrabber.AppGrabber appGrabber;
-        private int appbarMessageId = -1;
+        //private int appbarMessageId = -1;
 
         private String configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";
 
@@ -65,5 +65,26 @@ namespace CairoDesktop
             // Dodgy - set to top of task bar.
             this.Top = SystemParameters.WorkArea.Bottom - this.Height;
         }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            var source = PresentationSource.FromVisual(this) as System.Windows.Interop.HwndSource;
+            source.AddHook(WndProc);
+        }
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == WM_MOUSEACTIVATE)
+            {
+                handled = true;
+                return new IntPtr(MA_NOACTIVATE);
+            }
+            else
+            {
+                return IntPtr.Zero;
+            }
+        }
+        private const int WM_MOUSEACTIVATE = 0x0021;
+        private const int MA_NOACTIVATE = 0x0003;
     }
 }

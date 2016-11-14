@@ -163,15 +163,16 @@ namespace CairoDesktop.AppGrabber
         /// Gets an ImageSource object representing the associated icon of a file.
         /// </summary>
         public ImageSource GetAssociatedIcon() {
-            String ext = System.IO.Path.GetExtension(this.Path);
+            /*String ext = System.IO.Path.GetExtension(this.Path);
             if (ext.Equals(".lnk", StringComparison.OrdinalIgnoreCase)) {
                 Interop.Shell.Link link = new Interop.Shell.Link(this.Path);
                 IntPtr hIcon = Interop.Shell.GetHIcon(link.IconFile, link.IconIndex);
                 if (hIcon != IntPtr.Zero) {
                     return WpfWin32ImageConverter.GetImageFromHIcon(hIcon);
                 }
-            } 
-            return WpfWin32ImageConverter.GetImageFromAssociatedIcon(this.Path);
+            } */
+            
+            return WpfWin32ImageConverter.GetImageFromAssociatedIcon(this.Path, true);
         }
 
         /// <summary>

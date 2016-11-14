@@ -30,7 +30,7 @@ namespace CairoDesktop.AppGrabber {
         /// Add a Category object to this CategoryList.
         /// </summary>
         /// <param name="category">Category to add.</param>
-        public void Add(Category category) {
+        public new void Add(Category category) {
             base.Add(category);
             category.ParentCategoryList = this;
         }

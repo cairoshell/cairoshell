@@ -69,7 +69,19 @@ namespace CairoDesktop {
             proc.StartInfo.FileName = senderButton.CommandParameter as String;
             try 
             {
-                proc.Start();
+                // get the file attributes for file or directory
+                FileAttributes attr = File.GetAttributes(senderButton.CommandParameter as String);
+
+                //detect whether its a directory or file
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    ((this.Parent as Grid).Parent as Desktop).PathHistory.Push(((this.Parent as Grid).Parent as Desktop).Icons.Locations[0].DirectoryInfo.FullName);
+                    ((this.Parent as Grid).Parent as Desktop).Icons.Locations[0] = new SystemDirectory((senderButton.CommandParameter as String), Dispatcher.CurrentDispatcher);
+                }
+                else
+                {
+                    proc.Start();
+                }
             } 
             catch 
             {

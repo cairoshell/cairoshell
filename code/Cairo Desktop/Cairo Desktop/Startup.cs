@@ -133,7 +133,7 @@
                     return false;
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 CairoMessage.Show("Cairo requires .NET Framework 3.5 SP1 or newer to run.  You can visit microsoft.com to obtain it.", "Error", MessageBoxButton.OK, MessageBoxImage.Stop);
                 return false;

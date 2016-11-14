@@ -20,9 +20,9 @@
             VerticalAlignment="Stretch"
             Click="btnClick">
             <Button.Style>
-                <MultiBinding Converter="{StaticResource styleConverter}">
+                <MultiBinding Converter="{StaticResource styleConverter}" NotifyOnSourceUpdated="True">
                     <Binding RelativeSource="{RelativeSource Self}" />
-                    <Binding Path="State" />
+                    <Binding Path="State" UpdateSourceTrigger="PropertyChanged" />
                 </MultiBinding>
             </Button.Style>
             <Button.ContextMenu>

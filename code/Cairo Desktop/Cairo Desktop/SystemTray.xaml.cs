@@ -89,7 +89,7 @@ namespace CairoDesktop
         private bool SysTrayCallback(uint message, NOTIFYICONDATA nicData)
         {
             TrayIcon trayIcon = new TrayIcon(nicData.hWnd);
-            if(nicData.uID!=null) trayIcon.UID = nicData.uID;
+            trayIcon.UID = nicData.uID;
 
             lock (_lockObject)
             {

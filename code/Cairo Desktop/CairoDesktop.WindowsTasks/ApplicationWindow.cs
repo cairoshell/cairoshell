@@ -12,12 +12,12 @@ namespace CairoDesktop.WindowsTasks
     [DebuggerDisplay("Title: {Title}, Handle: {Handle}")]
     public class ApplicationWindow : IEquatable<ApplicationWindow>, ICairoNotifyPropertyChanged
     {
-        private bool _isActive;
+        //private bool _isActive;
 
         public ApplicationWindow(IntPtr handle, WindowsTasksService sourceService)
         {
             this.Handle = handle;
-            this.State = WindowState.Active;
+            this.State = WindowState.Inactive;
             if (sourceService != null)
             {
                 sourceService.Redraw += HandleRedraw;
@@ -77,7 +77,7 @@ namespace CairoDesktop.WindowsTasks
                 {
                     ico = Icon.FromHandle(new IntPtr(iconHandle));
                 }   
-                catch (Exception ex)
+                catch
                 {
                     ico = null;
                 }
@@ -86,11 +86,21 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
+        private WindowState _state;
+
         public WindowState State
         {
-            get;
+            get
+            {
+                return _state;
+            }
             [NotifyPropertyChangedAspect("State")]
-            set;
+
+            set
+            {
+                _state = value;
+                OnPropertyChanged("State");
+            }
         }
 
         public bool IsActive
@@ -111,7 +121,7 @@ namespace CairoDesktop.WindowsTasks
             set;
         }
 
-        // TODO: Implement show in taskbar property.
+        // Implement show in taskbar property.
         public bool ShowInTaskbar
         {
             get

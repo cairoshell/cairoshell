@@ -593,6 +593,7 @@
         <Setter Property="Height" Value="23"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="Focusable" Value="False"/>
+        <Setter Property="ToolTip" Value="{Binding Path=Path}"/>
         <Style.Triggers>
             <Trigger Property="ItemsControl.AlternationIndex"
                 Value="0">
@@ -791,7 +792,7 @@
         </Setter>
     </Style>
     <!-- Button Style for Taskbar -->
-    <Style x:Key="CairoTaskbarButtonActiveStyle"
+    <Style x:Key="CairoTaskbarButtonInactiveStyle"
         TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
@@ -921,7 +922,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="CairoTaskbarButtonInactiveStyle"
+    <Style x:Key="CairoTaskbarButtonActiveStyle"
         TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle"
             Value="true" />

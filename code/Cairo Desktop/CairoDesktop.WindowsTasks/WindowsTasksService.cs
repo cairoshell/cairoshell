@@ -126,9 +126,12 @@ namespace CairoDesktop.WindowsTasks
             {
                 var win = new ApplicationWindow(hand, this);
 
-                lock (this._windowsLock)
+                if (win.ShowInTaskbar)
                 {
-                    Windows.Add(win);
+                    lock (this._windowsLock)
+                    {
+                        Windows.Add(win);
+                    }
                 }
             }
             catch (Exception ex)
@@ -152,7 +155,7 @@ namespace CairoDesktop.WindowsTasks
                         {
                             case HSHELL_WINDOWCREATED:
                                 Trace.WriteLine("Created: " + msg.LParam.ToString());
-                                if(IsAppWindow(msg.LParam))
+                                if(/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
                                     Windows.Add(win);
                                 break;
 
@@ -175,7 +178,7 @@ namespace CairoDesktop.WindowsTasks
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Inactive;
-                                    if (IsAppWindow(msg.LParam))
+                                    if (/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
                                         Windows.Add(win);
                                 }
                                 break;
@@ -184,14 +187,14 @@ namespace CairoDesktop.WindowsTasks
                             case HSHELL_RUDEAPPACTIVATED:
                                 Trace.WriteLine("Activated: " + msg.LParam.ToString());
 
-                                foreach (var aWin in this.Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
-                                {
-                                    aWin.State = ApplicationWindow.WindowState.Inactive;
-                                }
-
                                 if (msg.LParam == IntPtr.Zero)
                                 {
                                     break;
+                                }
+
+                                foreach (var aWin in this.Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
+                                {
+                                    aWin.State = ApplicationWindow.WindowState.Inactive;
                                 }
 
                                 if (this.Windows.Contains(win))
@@ -202,7 +205,7 @@ namespace CairoDesktop.WindowsTasks
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Active;
-                                    if (IsAppWindow(msg.LParam))
+                                    if (/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
                                         Windows.Add(win);
                                 }
                                 break;
@@ -217,13 +220,13 @@ namespace CairoDesktop.WindowsTasks
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Flashing;
-                                    if (IsAppWindow(msg.LParam))
+                                    if (/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
                                         Windows.Add(win);
                                 }
                                 break;
 
                             case HSHELL_ACTIVATESHELLWINDOW:
-                                Trace.WriteLine("Activeate shell window called.");
+                                Trace.WriteLine("Activate shell window called.");
                                 break;
 
                             case HSHELL_ENDTASK:
@@ -252,7 +255,7 @@ namespace CairoDesktop.WindowsTasks
                             //     break;
 
                             default:
-                                Trace.WriteLine("Uknown called. " + msg.Msg.ToString());
+                                Trace.WriteLine("Unknown called. " + msg.Msg.ToString());
                                 break;
                         }
                     }
