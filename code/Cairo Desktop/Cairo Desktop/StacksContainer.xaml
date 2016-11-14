@@ -41,9 +41,7 @@
                                         Background="Transparent"
                                         Margin="5,3,5,3"
                                         Foreground="White" />
-                                    <Viewbox Width="32" Height="32">
-                                        <Image Source="{Binding Path=Icon}" Stretch="Uniform" />
-                                    </Viewbox>
+                                    <Image Source="{Binding Path=Icon}" Stretch="None" Width="32" Height="33" />
                                 </DockPanel>
                                 <Button.ContextMenu>
                                     <ContextMenu ItemsSource="{Binding Path=Verbs}"

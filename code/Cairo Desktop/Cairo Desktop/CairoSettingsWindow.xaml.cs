@@ -7,6 +7,9 @@
     using System.Collections.Generic;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Windows.Interop;
+    using SupportingClasses;
+
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
     /// </summary>
@@ -36,15 +39,18 @@
             bool IsDesktopEnabled = Properties.Settings.Default.EnableDesktop;
             if (IsDesktopEnabled == true)
             {
-                Desktop window = new Desktop();
-                window.Show();
-                Activate();
+                Startup.DesktopWindow = new Desktop() { Owner = Startup.DeskParent };
+                Startup.DesktopWindow.Show();
+                WindowInteropHelper f = new WindowInteropHelper(Startup.DesktopWindow);
+                int result = NativeMethods.SetShellWindow(f.Handle);
+                Startup.DesktopWindow.ShowWindowBottomMost(f.Handle);
             }
             else
             {
                 if (Startup.DesktopWindow != null)
                 {
                     Startup.DesktopWindow.Close();
+                    Startup.DesktopWindow = null;
                 }
             }
         }

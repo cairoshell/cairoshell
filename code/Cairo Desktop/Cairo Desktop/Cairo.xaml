@@ -1631,7 +1631,7 @@
         <Setter Property="FontSize"
             Value="12" />
         <Setter Property="Height"
-            Value="85" />
+            Value="87" />
         <Setter Property="MinWidth"
             Value="100" />
         <Setter Property="VerticalAlignment"
@@ -1684,7 +1684,7 @@
         <Setter Property="FontSize"
             Value="12" />
         <Setter Property="Height"
-            Value="85" />
+            Value="87" />
         <Setter Property="MinWidth"
             Value="100" />
         <Setter Property="VerticalAlignment"

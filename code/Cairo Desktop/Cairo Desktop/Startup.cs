@@ -23,6 +23,8 @@
         public static Taskbar TaskbarWindow { get; set; }
         public static Desktop DesktopWindow { get; set; }
 
+        public static Window DeskParent { get; set; }
+
 
         /// <summary>
         /// The main entry point for the application
@@ -75,6 +77,7 @@
 
             _desktopWindow = new Window();
             InitializeParentWindow(_desktopWindow);
+            DeskParent = _desktopWindow;
 
             App app = new App();
 

@@ -32,7 +32,7 @@
                                                             BlurRadius="4"
                                                             Opacity="1" />
                                             </Border.Effect>
-                                            <TextBlock
+                                        <TextBlock
                                         Text="{Binding Path=Name}"
                                         TextAlignment="Center"
                                         TextTrimming="CharacterEllipsis"
@@ -50,9 +50,9 @@
                                     </TextBlock>
 
                                     </Border>
-                                    <Viewbox  Width="32" Height="32" DockPanel.Dock="Top">
-                                        <Image Source="{Binding Path=Icon}" Stretch="Uniform" />
-                                    </Viewbox>
+                                    <!--<Viewbox  Width="32" Height="32" DockPanel.Dock="Top">-->
+                                        <Image Source="{Binding Path=Icon}" Stretch="None" Width="32" Height="32" DockPanel.Dock="Top" />
+                                    <!--</Viewbox>-->
                                 </DockPanel>
                                 <Button.ContextMenu>
                                     <ContextMenu ItemsSource="{Binding Path=Verbs}"
