@@ -26,12 +26,12 @@
                                 <DockPanel>
                                     <Border DockPanel.Dock="Bottom">
                                         <Border.Effect>
-                                                <DropShadowEffect Color="Black"
+                                            <DropShadowEffect Color="Black"
                                                             ShadowDepth="2"
                                                                   Direction="270"
                                                             BlurRadius="4"
                                                             Opacity="1" />
-                                            </Border.Effect>
+                                        </Border.Effect>
                                         <TextBlock
                                         Text="{Binding Path=Name}"
                                         TextAlignment="Center"
@@ -46,13 +46,13 @@
                                                                   Direction="90"
                                                         Opacity="0.3" BlurRadius="2" />
                                             </TextBlock.Effect>
-                                        <TextBlock.ToolTip><ToolTip Content="{Binding Path=Name}" /></TextBlock.ToolTip>
-                                    </TextBlock>
+                                            <TextBlock.ToolTip>
+                                                <ToolTip Content="{Binding Path=Name}" />
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
 
                                     </Border>
-                                    <!--<Viewbox  Width="32" Height="32" DockPanel.Dock="Top">-->
-                                        <Image Source="{Binding Path=Icon}" Stretch="None" Width="32" Height="32" DockPanel.Dock="Top" />
-                                    <!--</Viewbox>-->
+                                    <Image Source="{Binding Path=Icon}" Stretch="None" Width="32" Height="32" DockPanel.Dock="Top" />
                                 </DockPanel>
                                 <Button.ContextMenu>
                                     <ContextMenu ItemsSource="{Binding Path=Verbs}"
