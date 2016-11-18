@@ -24,6 +24,7 @@
                                 CommandParameter="{Binding Path=FullName}"
                                 Style="{StaticResource CairoDesktopButtonStyle}" UseLayoutRounding="True">
                                 <DockPanel>
+                                    <Image Source="{Binding Path=Icon}" Stretch="None" Width="32" Height="32" DockPanel.Dock="Top" />
                                     <Border DockPanel.Dock="Bottom">
                                         <Border.Effect>
                                             <DropShadowEffect Color="Black"
@@ -36,9 +37,11 @@
                                         Text="{Binding Path=Name}"
                                         TextAlignment="Center"
                                         TextTrimming="CharacterEllipsis"
-                                        Width="65"
+                                        TextWrapping="Wrap"
+                                        Height="35"
+                                        Width="80"
                                         Background="Transparent"
-                                        Margin="5,3,5,3"
+                                        Margin="5,0,5,3"
                                         Foreground="White">
                                             <TextBlock.Effect>
                                                 <DropShadowEffect Color="Black"
@@ -52,7 +55,6 @@
                                         </TextBlock>
 
                                     </Border>
-                                    <Image Source="{Binding Path=Icon}" Stretch="None" Width="32" Height="32" DockPanel.Dock="Top" />
                                 </DockPanel>
                                 <Button.ContextMenu>
                                     <ContextMenu ItemsSource="{Binding Path=Verbs}"

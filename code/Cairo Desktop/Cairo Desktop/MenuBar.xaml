@@ -56,20 +56,10 @@
                 </Setter>
             </Style>
             <control:BoolTovisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <DataTemplate x:Key="CairoSearchResultsItemTemplate">
-                <MenuItem Command="control:CustomCommands.OpenSearchResult" Width="338" BorderThickness="0" Background="{x:Null}"
-            CommandParameter="{Binding}" Header="{Binding Path=Name}">
-                    <MenuItem.Icon>
-                        <Viewbox  Width="16" Height="16">
-                            <Image Source="{Binding Path=Icon}" Stretch="Uniform" />
-                        </Viewbox>
-                    </MenuItem.Icon>
-                </MenuItem>
-            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel DataContext="{DynamicResource settings}"
-        x:Name="CairoMenuBarContainer" Style="{DynamicResource DockPanelStyle}">
+        x:Name="CairoMenuBarContainer">
         <StackPanel Orientation="Horizontal"
             VerticalAlignment="Top"
             Height="24"
@@ -287,7 +277,6 @@
                                     MaxHeight="600"
                                     Width="340"
                                     AlternationCount="2"
-                                    ItemTemplate="{DynamicResource CairoSearchResultsItemTemplate}"
                                     ItemContainerStyle="{DynamicResource CairoSearchResultsItemStyle}" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
                                 </Border>
                             </StackPanel>

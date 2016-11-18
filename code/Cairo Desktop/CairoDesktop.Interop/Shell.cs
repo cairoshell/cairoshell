@@ -169,7 +169,7 @@ namespace CairoDesktop.Interop
             if (System.IO.File.Exists(filename) && System.IO.Path.GetExtension(filename).Equals(".lnk", StringComparison.OrdinalIgnoreCase))
             {
                 Interop.Shell.Link link = new Interop.Shell.Link(filename);
-                IntPtr hIcon = Interop.Shell.GetHIcon(link.IconFile, link.IconIndex);
+                IntPtr hIcon = Interop.Shell.GetHIcon(link.IconFile, link.IconIndex, flags.HasFlag(SHGFI.SmallIcon));
                 if (hIcon != IntPtr.Zero)
                     return Icon.FromHandle(hIcon);
             }
@@ -236,9 +236,9 @@ namespace CairoDesktop.Interop
         }
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
-        public static extern int ExtractIconEx(string path, int i, IntPtr[] small, IntPtr[] big, int op);
+        public static extern int ExtractIconEx(string path, int i, IntPtr[] big, IntPtr[] small, int op);
         
-        public static IntPtr GetHIcon(string fileName, int iconIndex) {
+        public static IntPtr GetHIcon(string fileName, int iconIndex, bool isSmall = false) {
             if (string.IsNullOrEmpty(fileName))
             {
                 throw new ArgumentNullException("fileName");
@@ -262,8 +262,12 @@ namespace CairoDesktop.Interop
             }
             IntPtr[] largeIcons = new IntPtr[numIcons];
             IntPtr[] smallIcons = new IntPtr[numIcons];
-            ExtractIconEx(fileName, 0, smallIcons, largeIcons, numIcons);
-            return largeIcons[iconIndex];
+            ExtractIconEx(fileName, 0, largeIcons, smallIcons, numIcons);
+
+            if (isSmall)
+                return smallIcons[iconIndex];
+            else
+                return largeIcons[iconIndex];
         }
     }
 }

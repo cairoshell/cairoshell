@@ -29,11 +29,11 @@
             <Style x:Key="ListViewStyle1"
                 TargetType="{x:Type ListView}">
                 <Setter Property="Background"
-                    Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+                    Value="Transparent" />
                 <Setter Property="BorderBrush"
-                    Value="{StaticResource ListBorder}" />
+                    Value="Transparent" />
                 <Setter Property="BorderThickness"
-                    Value="1" />
+                    Value="0" />
                 <Setter Property="Foreground"
                     Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
                 <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
@@ -113,6 +113,7 @@
                     Foreground="{x:Null}"
                     Style="{DynamicResource ListViewStyle1}"
                     BorderThickness="0"
+                    Margin="0,0,4,0"
                     VerticalAlignment="Stretch">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -120,13 +121,20 @@
                                 Margin="0"></StackPanel>
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
-                        <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <self:QuickLaunchButton />
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-                <ListView HorizontalAlignment="Stretch"
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                            <self:QuickLaunchButton />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                    <ListView HorizontalAlignment="Stretch"
                     DataContext="{StaticResource tasksSvc}"
                     ItemsSource="{Binding Windows}"
                     Background="{x:Null}"
@@ -135,20 +143,27 @@
                     Style="{DynamicResource ListViewStyle1}"
                     BorderThickness="0,0,0,0"
                     VerticalAlignment="Stretch" x:Name="TasksList">
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"
                                 Margin="0"></StackPanel>
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="1,1,1,0" BorderBrush="#BF000000">
-                                <self:TaskButton Visibility="{Binding Path=ShowInTaskbar, Converter={StaticResource BoolVisConverter}}" />
-                            </Border>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                            <Border BorderThickness="1,1,1,0" BorderBrush="Transparent">
+                                                <self:TaskButton Visibility="{Binding Path=ShowInTaskbar, Converter={StaticResource BoolVisConverter}}" />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
                 </StackPanel>
                 
             </StackPanel>
@@ -185,27 +200,27 @@
                     Style="{DynamicResource ListViewStyle1}"
                     BorderThickness="0,0,0,0"
                     VerticalAlignment="Stretch" x:Name="TasksList2">
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical"
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"
                                 Margin="0"></StackPanel>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="Padding" Value="0" />
-                                <Style.Resources>
-                                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
-                                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
-                                </Style.Resources>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <self:TaskListButton Visibility="{Binding Path=ShowInTaskbar, Converter={StaticResource BoolVisConverter}}" />
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                <Border BorderThickness="0" BorderBrush="Transparent">
+                                                    <self:TaskListButton Visibility="{Binding Path=ShowInTaskbar, Converter={StaticResource BoolVisConverter}}" />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
                 </Border>
             </Popup>
                 </StackPanel>

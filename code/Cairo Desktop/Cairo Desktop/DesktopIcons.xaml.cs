@@ -75,8 +75,8 @@ namespace CairoDesktop {
                 //detect whether its a directory or file
                 if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                 {
-                    ((this.Parent as Grid).Parent as Desktop).PathHistory.Push(((this.Parent as Grid).Parent as Desktop).Icons.Locations[0].DirectoryInfo.FullName);
-                    ((this.Parent as Grid).Parent as Desktop).Icons.Locations[0] = new SystemDirectory((senderButton.CommandParameter as String), Dispatcher.CurrentDispatcher);
+                    ((this.Parent as Grid).Parent as Desktop).PathHistory.Push(this.Locations[0].DirectoryInfo.FullName);
+                    this.Locations[0] = new SystemDirectory((senderButton.CommandParameter as String), Dispatcher.CurrentDispatcher);
                 }
                 else
                 {

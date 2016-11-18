@@ -37,9 +37,11 @@
                                         Text="{Binding Path=Name}"
                                         TextAlignment="Center"
                                         TextTrimming="CharacterEllipsis"
-                                        Width="65"
+                                        TextWrapping="Wrap"
+                                        Height="35"
+                                        Width="80"
                                         Background="Transparent"
-                                        Margin="5,3,5,3"
+                                        Margin="5,0,5,3"
                                         Foreground="White" />
                                     <Image Source="{Binding Path=Icon}" Stretch="None" Width="32" Height="32" />
                                 </DockPanel>
@@ -90,7 +92,7 @@
                                             <ColumnDefinition Width="30" />
                                         </Grid.ColumnDefinitions>
                                         <Button Grid.Column="0" Style="{StaticResource StackScrollButton}" Command="ScrollBar.PageLeftCommand" CommandTarget="{Binding ElementName=Scroller}" Content="3" />
-                                        <ScrollViewer x:Name="Scroller" Grid.Column="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" Grid.ColumnSpan="1" FocusManager.IsFocusScope="True" Margin="-10,0,-10,0">
+                                        <ScrollViewer x:Name="Scroller" Grid.Column="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" Grid.ColumnSpan="1" FocusManager.IsFocusScope="True" Margin="-10,0,-10,-10">
                                             <ItemsControl Style="{StaticResource FolderViewStyle}" ItemsSource="{Binding Path=Files}" />
                                         </ScrollViewer>
                                         <Button Grid.Column="2" Style="{StaticResource StackScrollButton}" Command="ScrollBar.PageRightCommand" CommandTarget="{Binding ElementName=Scroller}" Content="4" />
