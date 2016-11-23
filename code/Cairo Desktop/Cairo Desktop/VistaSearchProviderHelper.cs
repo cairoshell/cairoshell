@@ -8,6 +8,7 @@ using System.Threading;
 using SearchAPILib;
 using System.Data.OleDb;
 using System.Data;
+using System.Windows.Media;
 
 namespace VistaSearchProvider
 {
@@ -15,10 +16,12 @@ namespace VistaSearchProvider
     {
         static CSearchManager cManager;
         static ISearchQueryHelper cHelper;
-        static OleDbConnection cConnection;
+        //static OleDbConnection cConnection;
         static WaitCallback workerCallback;
         static bool ToAbortFlag = false;
         static bool IsWorkingFlag = false;
+
+        static int MAX_RESULT = 8;
 
         class SearchObjectState
         {
@@ -53,15 +56,16 @@ namespace VistaSearchProvider
             //change
             ToAbortFlag = IsWorkingFlag;
 
-            if (workerCallback == null)
+            // removed async due to result duplication
+            /*if (workerCallback == null)
                 workerCallback = new WaitCallback(doSearch);
-
+                */
             searchObjState.SearchString = e.NewValue.ToString();
             //if (searchObjState.SearchString.Length > 2)
             {
-                workerCallback.BeginInvoke(searchObjState, null, null);
+                //ThreadPool.QueueUserWorkItem(workerCallback, searchObjState);
             }
-
+            doSearch(searchObjState);
         }
 
         static void doSearch(Object state)
@@ -74,6 +78,8 @@ namespace VistaSearchProvider
             }
             cHelper = cManager.GetCatalog("SYSTEMINDEX").GetQueryHelper();
             cHelper.QuerySelectColumns = "\"System.ItemNameDisplay\",\"System.ItemPathDisplay\"";
+
+            OleDbConnection cConnection;
 
             try
             {
@@ -94,11 +100,14 @@ namespace VistaSearchProvider
                                 m_results.Clear();
                                 IsWorkingFlag = true;
             
-                                while (!reader.IsClosed && reader.Read())
+                                while (!reader.IsClosed && reader.Read() && m_results.Count < MAX_RESULT)
                                 {
-                                    m_results.Add(new SearchResult() { Name = reader[0].ToString(), Path = reader[1].ToString() });
                                     if (ToAbortFlag)
                                         break;
+
+                                    SearchResult result = new SearchResult() { Name = reader[0].ToString(), Path = reader[1].ToString() };
+                                    m_results.Add(result);
+                                    
                                 }
                                 reader.Close();
 
@@ -137,5 +146,13 @@ namespace VistaSearchProvider
     {
         public string Name { get; set; }
         public string Path { get; set; }
+
+        public ImageSource Icon
+        {
+            get
+            {
+                return CairoDesktop.AppGrabber.WpfWin32ImageConverter.GetImageFromAssociatedIcon(Path, false);
+            }
+        }
     }
 }

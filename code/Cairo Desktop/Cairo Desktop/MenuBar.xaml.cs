@@ -35,32 +35,11 @@ namespace CairoDesktop
         public MenuBar()
         {
             this.InitializeComponent();
-            // Sets the Theme for Cairo
+
+            // Set custom theme if selected
             string theme = Properties.Settings.Default.CairoTheme;
-            if (theme != "Cairo.xaml")
-            {
-                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme));
-                this.Resources.MergedDictionaries[0] = CairoDictionary;
-            }
-            if (Properties.Settings.Default.UseDarkIcons) {
-                SolidColorBrush borderBrushColor = new SolidColorBrush();
-                borderBrushColor.Color = Color.FromArgb(135, 0, 0, 0);
-                this.BorderBrush = borderBrushColor;
-                this.BorderThickness = new Thickness(0, 0, 0, 0);
-                this.Height = 22;
-                this.MaxHeight = 22;
-                this.Background = Brushes.Transparent;
-                BitmapImage CairoMenuIconBlack = new BitmapImage();
-                CairoMenuIconBlack.BeginInit();
-                CairoMenuIconBlack.UriSource = new Uri("pack://application:,,,/Resources/cairoMenuBlack.png", UriKind.RelativeOrAbsolute);
-                CairoMenuIconBlack.EndInit();
-                CairoMenuIcon.Source = CairoMenuIconBlack;
-                BitmapImage CairoSearchMenuIconBlack = new BitmapImage();
-                CairoSearchMenuIconBlack.BeginInit();
-                CairoSearchMenuIconBlack.UriSource = new Uri("pack://application:,,,/Resources/searchBlack.png", UriKind.RelativeOrAbsolute);
-                CairoSearchMenuIconBlack.EndInit();
-                CairoSearchMenuIcon.Source = CairoSearchMenuIconBlack;
-            }
+            if (theme != "Default")
+                this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
             this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
 
@@ -271,10 +250,14 @@ namespace CairoDesktop
         
         private void AboutCairo(object sender, RoutedEventArgs e)
         {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+
             CairoMessage.Show(
                 // Replace next line with the Version
-                "Version 0.0.1.11 - Milestone 2 Preview 3"
-                +"\nCopyright © 2007-2010 Cairo Development Team and community contributors.  All rights reserved."
+                "Version " + version + " - Pre-release"
+                +"\nCopyright © 2007-2015 Cairo Development Team and community contributors.  All rights reserved."
                 // +
                 // Replace next line with the ID Key
 //"Not for redistribution."

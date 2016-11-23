@@ -117,21 +117,27 @@ namespace CairoDesktop {
         private void initialize()
         {
             files.Clear();
-            foreach (String file in Directory.GetFiles(this.DirectoryInfo.FullName)) {
-                
-            FileAttributes attributes = File.GetAttributes(file);
-            if ((attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
-            {
-                files.Add(new SystemFile(file, dispatcher));
-            }
-            }
-
             subDirectories.Clear();
-            foreach (DirectoryInfo subDir in dir.GetDirectories()) {
+            bool showSubs = false;
+            if (Properties.Settings.Default.EnableSubDirs)
+                showSubs = true;
+
+            foreach (DirectoryInfo subDir in dir.GetDirectories())
+            {
                 subDirectories.Add(subDir);
-                if (Properties.Settings.Default.EnableSubDirs)
+                FileAttributes attributes = subDir.Attributes;
+                if (showSubs && ((attributes & FileAttributes.Hidden) != FileAttributes.Hidden) && ((attributes & FileAttributes.System) != FileAttributes.System) && ((attributes & FileAttributes.Temporary) != FileAttributes.Temporary))
                 {
                     files.Add(new SystemFile(subDir.FullName, dispatcher));
+                }
+            }
+
+            foreach (String file in Directory.GetFiles(this.DirectoryInfo.FullName))
+            {
+                FileAttributes attributes = File.GetAttributes(file);
+                if (((attributes & FileAttributes.Hidden) != FileAttributes.Hidden) && ((attributes & FileAttributes.System) != FileAttributes.System) && ((attributes & FileAttributes.Temporary) != FileAttributes.Temporary))
+                {
+                    files.Add(new SystemFile(file, dispatcher));
                 }
             }
 

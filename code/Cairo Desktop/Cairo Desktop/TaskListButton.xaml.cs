@@ -32,15 +32,10 @@ namespace CairoDesktop
         public TaskListButton()
         {
             this.InitializeComponent();
-            // Insert code required on object creation below this point.
-            // Sets the Theme for Cairo
+            // Set custom theme if selected
             string theme = Properties.Settings.Default.CairoTheme;
-            if (theme != "Cairo.xaml")
-            {
-                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme));
-                this.Resources.MergedDictionaries[0] = CairoDictionary;
-            }
-
+            if (theme != "Default")
+                this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
         }
 
         private void btnClick(object sender, RoutedEventArgs e)

@@ -72,6 +72,13 @@ namespace CairoDesktop.WindowsTasks
                 SendMessage(new IntPtr(0xffff), msg, IntPtr.Zero, IntPtr.Zero);
                 SendMessage(GetDesktopWindow(), 0x0400, IntPtr.Zero, IntPtr.Zero);
 
+                EnumWindows(new CallBackPtr((hwnd, lParam) =>
+                {
+                    if(IsAppWindow(hwnd))
+                        AddWindow(hwnd);
+                    return true;
+                }), 0);
+
             }
             catch (Exception ex)
             {
@@ -113,6 +120,27 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
+        private void AddWindow(IntPtr hand)
+        {
+            try
+            {
+                var win = new ApplicationWindow(hand, this);
+
+                if (win.ShowInTaskbar)
+                {
+                    lock (this._windowsLock)
+                    {
+                        Windows.Add(win);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine("Exception: " + ex.ToString());
+                Debugger.Break();
+            }
+        }
+
         private void ShellWinProc(System.Windows.Forms.Message msg)
         {
             if (msg.Msg == WM_SHELLHOOKMESSAGE)
@@ -127,7 +155,8 @@ namespace CairoDesktop.WindowsTasks
                         {
                             case HSHELL_WINDOWCREATED:
                                 Trace.WriteLine("Created: " + msg.LParam.ToString());
-                                Windows.Add(win);
+                                if(/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
+                                    Windows.Add(win);
                                 break;
 
                             case HSHELL_WINDOWDESTROYED:
@@ -149,7 +178,8 @@ namespace CairoDesktop.WindowsTasks
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Inactive;
-                                    Windows.Add(win);
+                                    if (/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
+                                        Windows.Add(win);
                                 }
                                 break;
 
@@ -157,14 +187,14 @@ namespace CairoDesktop.WindowsTasks
                             case HSHELL_RUDEAPPACTIVATED:
                                 Trace.WriteLine("Activated: " + msg.LParam.ToString());
 
-                                foreach (var aWin in this.Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
-                                {
-                                    aWin.State = ApplicationWindow.WindowState.Inactive;
-                                }
-
                                 if (msg.LParam == IntPtr.Zero)
                                 {
                                     break;
+                                }
+
+                                foreach (var aWin in this.Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
+                                {
+                                    aWin.State = ApplicationWindow.WindowState.Inactive;
                                 }
 
                                 if (this.Windows.Contains(win))
@@ -175,7 +205,8 @@ namespace CairoDesktop.WindowsTasks
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Active;
-                                    Windows.Add(win);
+                                    if (/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
+                                        Windows.Add(win);
                                 }
                                 break;
 
@@ -189,12 +220,13 @@ namespace CairoDesktop.WindowsTasks
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Flashing;
-                                    Windows.Add(win);
+                                    if (/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
+                                        Windows.Add(win);
                                 }
                                 break;
 
                             case HSHELL_ACTIVATESHELLWINDOW:
-                                Trace.WriteLine("Activeate shell window called.");
+                                Trace.WriteLine("Activate shell window called.");
                                 break;
 
                             case HSHELL_ENDTASK:
@@ -223,7 +255,7 @@ namespace CairoDesktop.WindowsTasks
                             //     break;
 
                             default:
-                                Trace.WriteLine("Uknown called. " + msg.Msg.ToString());
+                                Trace.WriteLine("Unknown called. " + msg.Msg.ToString());
                                 break;
                         }
                     }
@@ -243,6 +275,23 @@ namespace CairoDesktop.WindowsTasks
                 this.Redraw(windowHandle);
             }
         }
+
+        public delegate bool CallBackPtr(IntPtr hwnd, int lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        static bool IsAppWindow(IntPtr hWnd)
+        {
+            int style = GetWindowLong(hWnd, -16); // GWL_STYLE
+
+            // check for WS_VISIBLE and WS_CAPTION flags
+            // (that the window is visible and has a title bar)
+            return (style & 0x10C00000) == 0x10C00000;
+        }
+
+        [DllImport("user32.dll")]
+        private static extern int EnumWindows(CallBackPtr callPtr, int lPar);
 
         [DllImport("user32.dll")]
         private static extern bool RegisterShellHookWindow(IntPtr hWnd);

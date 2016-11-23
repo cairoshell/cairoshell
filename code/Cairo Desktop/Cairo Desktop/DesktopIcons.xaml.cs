@@ -28,13 +28,10 @@ namespace CairoDesktop {
         public DesktopIcons() 
         {
             InitializeComponent();
-            // Sets the Theme for Cairo
+            // Set custom theme if selected
             string theme = Properties.Settings.Default.CairoTheme;
-            if (theme != "Cairo.xaml")
-            {
-                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme));
-                this.Resources.MergedDictionaries[0] = CairoDictionary;
-            }
+            if (theme != "Default")
+                this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
             String desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 if (Directory.Exists(desktopPath)) {
@@ -69,7 +66,19 @@ namespace CairoDesktop {
             proc.StartInfo.FileName = senderButton.CommandParameter as String;
             try 
             {
-                proc.Start();
+                // get the file attributes for file or directory
+                FileAttributes attr = File.GetAttributes(senderButton.CommandParameter as String);
+
+                //detect whether its a directory or file
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    ((this.Parent as Grid).Parent as Desktop).PathHistory.Push(this.Locations[0].DirectoryInfo.FullName);
+                    this.Locations[0] = new SystemDirectory((senderButton.CommandParameter as String), Dispatcher.CurrentDispatcher);
+                }
+                else
+                {
+                    proc.Start();
+                }
             } 
             catch 
             {

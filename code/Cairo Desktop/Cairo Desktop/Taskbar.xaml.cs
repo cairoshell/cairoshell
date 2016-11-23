@@ -18,20 +18,18 @@ namespace CairoDesktop
     {
         //This file is from before r416
         public AppGrabber.AppGrabber appGrabber;
-        private int appbarMessageId = -1;
+        //private int appbarMessageId = -1;
 
         private String configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";
 
         public Taskbar()
         {
             InitializeComponent();
-            // Sets the Theme for Cairo
+            // Set custom theme if selected
             string theme = Properties.Settings.Default.CairoTheme;
-            if (theme != "Cairo.xaml")
-            {
-                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme));
-                this.Resources.MergedDictionaries[0] = CairoDictionary;
-            }
+            if (theme != "Default")
+                this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
+
             appGrabber = AppGrabber.AppGrabber.Instance;
             this.quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
             this.TaskbarBorder.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth - 36;
@@ -59,5 +57,32 @@ namespace CairoDesktop
                 this.CairoTaskbarTaskList.StaysOpen = false;
             }
         }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            // Dodgy - set to top of task bar.
+            this.Top = SystemParameters.WorkArea.Bottom - this.Height;
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            var source = PresentationSource.FromVisual(this) as System.Windows.Interop.HwndSource;
+            source.AddHook(WndProc);
+        }
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == WM_MOUSEACTIVATE)
+            {
+                handled = true;
+                return new IntPtr(MA_NOACTIVATE);
+            }
+            else
+            {
+                return IntPtr.Zero;
+            }
+        }
+        private const int WM_MOUSEACTIVATE = 0x0021;
+        private const int MA_NOACTIVATE = 0x0003;
     }
 }

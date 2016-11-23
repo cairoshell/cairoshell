@@ -6,7 +6,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="EnableTaskbar" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="EnableMenuBarShadow" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
@@ -30,13 +30,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="CairoTheme" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Cairo.xaml</Value>
-    </Setting>
-    <Setting Name="ThemeList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Cairo.xaml, White.xaml</Value>
-    </Setting>
-    <Setting Name="UseDarkIcons" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">Default</Value>
     </Setting>
     <Setting Name="EnableSubDirs" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:CairoDesktop.Properties" xmlns:control="clr-namespace:CairoDesktop" xmlns:search="clr-namespace:VistaSearchProvider" xmlns:c="http://schemas.microsoft.com/wpf/2008/toolkit" x:Class="CairoDesktop.MenuBar"
+<Window xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:CairoDesktop.Properties" xmlns:control="clr-namespace:CairoDesktop" xmlns:search="clr-namespace:VistaSearchProvider" xmlns:c="http://schemas.microsoft.com/wpf/2008/toolkit" x:Class="CairoDesktop.MenuBar"
     x:Name="Window"
     Title=""
     WindowStyle="None"
@@ -21,6 +21,7 @@
     Initialized="OnWindowInitialized"
     Closing="OnWindowClosing"
     SizeChanged="OnWindowResize"
+        UseLayoutRounding="True"
     MaxHeight="23">
     <Window.Background>
         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
@@ -55,18 +56,10 @@
                 </Setter>
             </Style>
             <control:BoolTovisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <DataTemplate x:Key="CairoSearchResultsItemTemplate">
-                <MenuItem Command="control:CustomCommands.OpenSearchResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-            CommandParameter="{Binding}">
-                    <MenuItem.Header>
-                        <TextBlock Text="{Binding Path=Name}"/>
-                    </MenuItem.Header>
-                </MenuItem>
-            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
-    <DockPanel DataContext="{DynamicResource settings}"
-        x:Name="CairoMenuBarContainer" Style="{DynamicResource DockPanelStyle}">
+    <DockPanel DataContext="{DynamicResource settings}" Style="{DynamicResource MenuBarStyle}"
+        x:Name="CairoMenuBarContainer">
         <StackPanel Orientation="Horizontal"
             VerticalAlignment="Top"
             Height="24"
@@ -75,7 +68,7 @@
             <Menu Style="{DynamicResource CairoMenuBarMainContainerStyle}">
                 <MenuItem Style="{DynamicResource CairoMenuItemCairoMenuStyle}">
                     <MenuItem.Header>
-                        <Image Name="CairoMenuIcon" Source="Resources\cairoMenuDefault.png"
+                        <Image Name="CairoMenuIcon" Source="{DynamicResource CairoMenuIcon}"
                             Width="38"
                             Height="22"/>
                     </MenuItem.Header>
@@ -153,7 +146,7 @@
                                             <TextBlock Text="{Binding Path=Name}"
                                                 Foreground="White"
                                                 FontFamily="Segoe UI"
-                                                FontSize="12"
+                                                FontSize="10"
                                                 FontWeight="Bold"
                                                 Padding="5"
                                                 Background="Transparent" />
@@ -233,7 +226,7 @@
             <Menu Style="{DynamicResource CairoMenuBarMainContainerStyle}">
             <MenuItem x:Name="CairoSearchMenu" Style="{DynamicResource CairoMenuItemCairoSearchMenuStyle}" ItemContainerStyle="{DynamicResource CairoMenuItemContainerStyle}" MenuItem.SubmenuOpened="FocusSearchBox">
                     <MenuItem.Header>
-                        <Image Name="CairoSearchMenuIcon" Source="Resources\searchDefault.png"
+                        <Image Name="CairoSearchMenuIcon" Source="{DynamicResource CairoSearchIcon}"
                               Width="37"
                               Height="22" />
                     </MenuItem.Header>
@@ -251,9 +244,9 @@
                                         <LinearGradientBrush StartPoint="0,0"
                                         EndPoint="0,1">
                                             <LinearGradientBrush.GradientStops>
-                                                <GradientStop Color="#FF555555"
+                                                <GradientStop Color="#FF252326"
                                                 Offset="0" />
-                                                <GradientStop Color="#FF333333"
+                                                <GradientStop Color="#FF020200"
                                                 Offset="1" />
                                             </LinearGradientBrush.GradientStops>
                                         </LinearGradientBrush>
@@ -284,7 +277,6 @@
                                     MaxHeight="600"
                                     Width="340"
                                     AlternationCount="2"
-                                    ItemTemplate="{DynamicResource CairoSearchResultsItemTemplate}"
                                     ItemContainerStyle="{DynamicResource CairoSearchResultsItemStyle}" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
                                 </Border>
                             </StackPanel>

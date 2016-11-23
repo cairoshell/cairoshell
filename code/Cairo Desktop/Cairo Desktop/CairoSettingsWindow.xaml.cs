@@ -7,6 +7,11 @@
     using System.Collections.Generic;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Windows.Interop;
+    using SupportingClasses;
+    using System.IO;
+    using System.Linq;
+
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
     /// </summary>
@@ -15,18 +20,16 @@
         public CairoSettingsWindow()
         {
             InitializeComponent();
-            string themelist = Properties.Settings.Default.ThemeList;
-            StringBuilder sBuilder = new StringBuilder();
-            int id = 0;
-            foreach (string subStr in Regex.Split(themelist, " |, |,"))
+
+            selectTheme.Items.Add("Default");
+            selectTheme.SelectedIndex = 0;
+            foreach (string subStr in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory).Where(s => Path.GetExtension(s).Contains("xaml")))
             {
-                if (subStr == Properties.Settings.Default.CairoTheme)
-                {
-                    int index = id;
-                    selectTheme.SelectedIndex = index;
-                }
-                selectTheme.Items.Add(subStr);
-                id++;
+                string theme = Path.GetFileName(subStr);
+                selectTheme.Items.Add(theme);
+
+                if (theme == Properties.Settings.Default.CairoTheme)
+                    selectTheme.SelectedIndex = selectTheme.Items.Count - 1;
             }
 
         }
@@ -36,15 +39,18 @@
             bool IsDesktopEnabled = Properties.Settings.Default.EnableDesktop;
             if (IsDesktopEnabled == true)
             {
-                Desktop window = new Desktop();
-                window.Show();
-                Activate();
+                Startup.DesktopWindow = new Desktop() { Owner = Startup.DeskParent };
+                Startup.DesktopWindow.Show();
+                WindowInteropHelper f = new WindowInteropHelper(Startup.DesktopWindow);
+                int result = NativeMethods.SetShellWindow(f.Handle);
+                Startup.DesktopWindow.ShowWindowBottomMost(f.Handle);
             }
             else
             {
                 if (Startup.DesktopWindow != null)
                 {
                     Startup.DesktopWindow.Close();
+                    Startup.DesktopWindow = null;
                 }
             }
         }
@@ -114,12 +120,6 @@
         private void EnableSysTray_Click(object sender, RoutedEventArgs e)
         {
             bool IsSysTrayEnabled = Properties.Settings.Default.EnableSysTray;
-            this.restartButton.Visibility = Visibility.Visible;
-        }
-
-        private void UseDarkIcons_Click(object sender, RoutedEventArgs e)
-        {
-            bool IsDarkIconsEnabled = Properties.Settings.Default.UseDarkIcons;
             this.restartButton.Visibility = Visibility.Visible;
         }
 

@@ -19,7 +19,7 @@ namespace CairoDesktop.AppGrabber
         private static DependencyProperty programsListProperty = DependencyProperty.Register("ProgramsList", typeof(List<ApplicationInfo>), typeof(AppGrabber), new PropertyMetadata(new List<ApplicationInfo>()));
         
         private static AppGrabber _instance = new AppGrabber();
-        private List<ApplicationInfo> _programsList;
+        //private List<ApplicationInfo> _programsList;
 
         public static AppGrabber Instance
         {
@@ -114,7 +114,7 @@ namespace CairoDesktop.AppGrabber
             this.CategoryList.Serialize(ConfigFile);
         }
 
-        public event EventHandler StateChanged;
+        //public event EventHandler StateChanged;
 
         private List<ApplicationInfo> GetApps()
         {
@@ -166,7 +166,8 @@ namespace CairoDesktop.AppGrabber
                             target = file.FullName;
                         }
                         
-                        if (!executableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
+                        // remove items that we can't execute. also remove uninstallers
+                        if (!executableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase) || ai.Name == "Uninstall" || ai.Name.StartsWith("Uninstall "))
                         {
                             System.Diagnostics.Debug.WriteLine(file.Name + ": " + target);
                             continue;
@@ -176,7 +177,7 @@ namespace CairoDesktop.AppGrabber
                         ai.Icon = ai.GetAssociatedIcon();
                         rval.Add(ai);
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         //Output the reason to the debugger
                         //_logger.Debug("Error creating ApplicationInfo object in appgrabber. Details: {0}\n{1}", ex.Message, ex.StackTrace);

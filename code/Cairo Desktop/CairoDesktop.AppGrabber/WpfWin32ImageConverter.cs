@@ -18,14 +18,15 @@ namespace CairoDesktop.AppGrabber
         /// </summary>
         /// <param name="filename">The filename of the file to query the Icon for.</param>
         /// <returns>The icon as an ImageSource, otherwise a default image.</returns>
-        public static ImageSource GetImageFromAssociatedIcon(string filename) 
+        public static ImageSource GetImageFromAssociatedIcon(string filename, bool isSmall = false) 
         {
             BitmapSource bs = null;
             
             try
             {
                 // Disposes of icon automagically when done.
-                using (System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filename))
+                //using (System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filename))
+                using (System.Drawing.Icon icon = Interop.Shell.GetIconByFilename(filename, isSmall))
                 {
                     if (icon == null || icon.Handle == null)
                     {
@@ -35,7 +36,7 @@ namespace CairoDesktop.AppGrabber
                     bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 bs = GetDefaultIcon();
             }
@@ -57,7 +58,7 @@ namespace CairoDesktop.AppGrabber
                 {
                     bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 }
-                catch (Exception ex)
+                catch
                 {
                     bs = GetDefaultIcon();
                 }
@@ -95,10 +96,10 @@ namespace CairoDesktop.AppGrabber
             try
             {
                 img.BeginInit();
-                img.UriSource = new Uri("resources\\folderIcon.png", UriKind.RelativeOrAbsolute);
+                img.UriSource = new Uri("resources\\nullIcon.png", UriKind.RelativeOrAbsolute);
                 img.EndInit();
             }
-            catch (Exception ex)
+            catch
             {
                 return GenerateEmptyBitmapSource();
             }
