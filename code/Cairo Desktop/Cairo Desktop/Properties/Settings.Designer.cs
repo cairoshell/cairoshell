@@ -37,7 +37,7 @@ namespace CairoDesktop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool EnableTaskbar {
             get {
                 return ((bool)(this["EnableTaskbar"]));
@@ -133,37 +133,13 @@ namespace CairoDesktop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Cairo.xaml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Default")]
         public string CairoTheme {
             get {
                 return ((string)(this["CairoTheme"]));
             }
             set {
                 this["CairoTheme"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Cairo.xaml, White.xaml")]
-        public string ThemeList {
-            get {
-                return ((string)(this["ThemeList"]));
-            }
-            set {
-                this["ThemeList"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool UseDarkIcons {
-            get {
-                return ((bool)(this["UseDarkIcons"]));
-            }
-            set {
-                this["UseDarkIcons"] = value;
             }
         }
         

@@ -278,13 +278,7 @@
                         Text="Menu Bar Settings"
                         Margin="14,15,7,42"
                         Grid.RowSpan="2" />
-                    <CheckBox Content="Enable Menu Bar Shadow"
-                        IsChecked="{Binding Path=Default.EnableMenuBarShadow}"
-                        Grid.Row="1"
-                        Margin="14,14,14,37"
-                        Grid.RowSpan="2"
-                        Click="EnableMenuBarShadow_Click" />
-                    <StackPanel Grid.Row="2"
+                    <StackPanel Grid.Row="1"
                         Orientation="Horizontal">
                         <TextBlock Text="Theme:"
                             Margin="14,14,0,0"
@@ -296,25 +290,18 @@
                         FontSize="12"
                         FontStyle="Italic"
                         Foreground="DarkGray"
-                        Grid.Row="2"
+                        Grid.Row="1"
                         Margin="14,36,0,0"
                         Grid.RowSpan="2" />
-                    <CheckBox Content="Use Dark Icons"
-                        IsChecked="{Binding Path=Default.UseDarkIcons}"
-                        Grid.Row="3"
+                    <CheckBox Content="Enable Menu Bar Shadow"
+                        IsChecked="{Binding Path=Default.EnableMenuBarShadow}"
+                        Grid.Row="2"
                         Margin="14,14,14,37"
                         Grid.RowSpan="2"
-                        Click="UseDarkIcons_Click" />
-                    <TextBlock Text="Lighter themes may look better with this enabled."
-                        FontSize="12"
-                        FontStyle="Italic"
-                        Foreground="DarkGray"
-                        Grid.Row="3"
-                        Margin="32,34,0,0"
-                        Grid.RowSpan="2" />
+                        Click="EnableMenuBarShadow_Click" />
                     <CheckBox Content="Enable System Tray"
                         IsChecked="{Binding Path=Default.EnableSysTray}"
-                        Grid.Row="4"
+                        Grid.Row="3"
                         Margin="14,14,14,37"
                         Grid.RowSpan="2"
                         Click="EnableSysTray_Click" />
@@ -322,7 +309,7 @@
                         FontSize="12"
                         FontStyle="Italic"
                         Foreground="DarkGray"
-                        Grid.Row="4"
+                        Grid.Row="3"
                         Margin="32,34,0,0"
                         Grid.RowSpan="2" />
                     <StackPanel Grid.Row="1"

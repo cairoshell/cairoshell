@@ -5,6 +5,8 @@
         <GradientStop Color="#8F1A4DFF" Offset="0.0" />
         <GradientStop Color="#DF338FFF" Offset="1.0" />
     </LinearGradientBrush>
+    <BitmapImage x:Key="CairoMenuIcon" UriSource="Resources\cairoMenuDefault.png"></BitmapImage>
+    <BitmapImage x:Key="CairoSearchIcon" UriSource="Resources\searchDefault.png"></BitmapImage>
     <Style TargetType="{x:Type Control}">
         <Setter Property="Template">
             <Setter.Value>
@@ -590,7 +592,7 @@
     <!-- Search Results -->
     <Style x:Key="CairoSearchResultsItemStyle"
         TargetType="ListViewItem">
-        <Setter Property="Height" Value="24"/>
+        <Setter Property="Height" Value="60"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="ToolTip" Value="{Binding Path=Path}"/>
@@ -603,12 +605,26 @@
                                      BorderThickness="0"
                                      Background="{TemplateBinding Background}">
                         <MenuItem Command="cairo:CustomCommands.OpenSearchResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-            CommandParameter="{Binding}" Header="{Binding Path=Name}">
-                            <MenuItem.Icon>
-                                <Image Source="{Binding Path=Icon}"
-                                        Height="16"
-                                        Width="16" />
-                            </MenuItem.Icon>
+            CommandParameter="{Binding}" Header="{Binding}">
+                            <MenuItem.HeaderTemplate>
+                                <ItemContainerTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="-20,0,0,0">
+                                        <Image Source="{Binding Path=Icon}"
+                                        Height="32"
+                                        Width="32" Margin="0,0,10,0" />
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock 
+                                            FontSize="14"
+                                            FontFamily="Segoe UI" Text="{Binding Path=Name}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Width="270" />
+                                            <TextBlock 
+                                                Foreground="Gray"
+                                            FontSize="12"
+                                            FontFamily="Segoe UI" Text="{Binding Path=Path}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Width="270" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ItemContainerTemplate>
+
+                            </MenuItem.HeaderTemplate>
                         </MenuItem>
                     </Border>
                 </ControlTemplate>

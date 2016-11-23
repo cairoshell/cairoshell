@@ -140,14 +140,6 @@ namespace CairoDesktop.Interop
 
         }
 
-        public static Icon GetFolderIcon(bool isSmall = false)
-        {
-            if(isSmall)
-                return GetIcon("folder", SHGFI.SmallIcon | SHGFI.UseFileAttributes, true);
-            else
-                return GetIcon("folder", SHGFI.LargeIcon | SHGFI.UseFileAttributes, true);
-        }
-
         public static Icon GetIconByFilename(string fileName, bool isSmall = false)
         {
             if (isSmall)
@@ -180,7 +172,7 @@ namespace CairoDesktop.Interop
 
             Icon icon = (Icon)System.Drawing.Icon.FromHandle(shinfo.hIcon).Clone();
             Win32.DestroyIcon(shinfo.hIcon);
-            
+
             return icon;
         }
 

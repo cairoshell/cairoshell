@@ -58,7 +58,7 @@
             <control:BoolTovisibilityConverter x:Key="BoolToVisibilityConverter" />
         </ResourceDictionary>
     </Window.Resources>
-    <DockPanel DataContext="{DynamicResource settings}"
+    <DockPanel DataContext="{DynamicResource settings}" Style="{DynamicResource MenuBarStyle}"
         x:Name="CairoMenuBarContainer">
         <StackPanel Orientation="Horizontal"
             VerticalAlignment="Top"
@@ -68,7 +68,7 @@
             <Menu Style="{DynamicResource CairoMenuBarMainContainerStyle}">
                 <MenuItem Style="{DynamicResource CairoMenuItemCairoMenuStyle}">
                     <MenuItem.Header>
-                        <Image Name="CairoMenuIcon" Source="Resources\cairoMenuDefault.png"
+                        <Image Name="CairoMenuIcon" Source="{DynamicResource CairoMenuIcon}"
                             Width="38"
                             Height="22"/>
                     </MenuItem.Header>
@@ -226,7 +226,7 @@
             <Menu Style="{DynamicResource CairoMenuBarMainContainerStyle}">
             <MenuItem x:Name="CairoSearchMenu" Style="{DynamicResource CairoMenuItemCairoSearchMenuStyle}" ItemContainerStyle="{DynamicResource CairoMenuItemContainerStyle}" MenuItem.SubmenuOpened="FocusSearchBox">
                     <MenuItem.Header>
-                        <Image Name="CairoSearchMenuIcon" Source="Resources\searchDefault.png"
+                        <Image Name="CairoSearchMenuIcon" Source="{DynamicResource CairoSearchIcon}"
                               Width="37"
                               Height="22" />
                     </MenuItem.Header>
@@ -244,9 +244,9 @@
                                         <LinearGradientBrush StartPoint="0,0"
                                         EndPoint="0,1">
                                             <LinearGradientBrush.GradientStops>
-                                                <GradientStop Color="#FF555555"
+                                                <GradientStop Color="#FF252326"
                                                 Offset="0" />
-                                                <GradientStop Color="#FF333333"
+                                                <GradientStop Color="#FF020200"
                                                 Offset="1" />
                                             </LinearGradientBrush.GradientStops>
                                         </LinearGradientBrush>

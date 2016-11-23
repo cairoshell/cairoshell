@@ -25,13 +25,11 @@ namespace CairoDesktop
         public Taskbar()
         {
             InitializeComponent();
-            // Sets the Theme for Cairo
+            // Set custom theme if selected
             string theme = Properties.Settings.Default.CairoTheme;
-            if (theme != "Cairo.xaml")
-            {
-                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme));
-                this.Resources.MergedDictionaries[0] = CairoDictionary;
-            }
+            if (theme != "Default")
+                this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
+
             appGrabber = AppGrabber.AppGrabber.Instance;
             this.quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
             this.TaskbarBorder.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth - 36;

@@ -21,7 +21,7 @@ namespace VistaSearchProvider
         static bool ToAbortFlag = false;
         static bool IsWorkingFlag = false;
 
-        static int MAX_RESULT = 20;
+        static int MAX_RESULT = 8;
 
         class SearchObjectState
         {
@@ -151,7 +151,7 @@ namespace VistaSearchProvider
         {
             get
             {
-                return CairoDesktop.AppGrabber.WpfWin32ImageConverter.GetImageFromAssociatedIcon(Path, true);
+                return CairoDesktop.AppGrabber.WpfWin32ImageConverter.GetImageFromAssociatedIcon(Path, false);
             }
         }
     }
