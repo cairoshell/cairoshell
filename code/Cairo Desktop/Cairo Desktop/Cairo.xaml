@@ -595,7 +595,7 @@
         <Setter Property="Height" Value="60"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Focusable" Value="False"/>
-        <Setter Property="ToolTip" Value="{Binding Path=Path}"/>
+        <Setter Property="ToolTip" Value="{Binding Path=PathDisplay}"/>
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Template">
             <Setter.Value>
@@ -609,7 +609,7 @@
                             <MenuItem.HeaderTemplate>
                                 <ItemContainerTemplate>
                                     <StackPanel Orientation="Horizontal" Margin="-20,0,0,0">
-                                        <Image Source="{Binding Path=Icon}"
+                                        <Image Source="{Binding Path=Icon, Mode=OneWay}"
                                         Height="32"
                                         Width="32" Margin="0,0,10,0" />
                                         <StackPanel Orientation="Vertical">
@@ -619,7 +619,7 @@
                                             <TextBlock 
                                                 Foreground="Gray"
                                             FontSize="12"
-                                            FontFamily="Segoe UI" Text="{Binding Path=Path}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Width="270" />
+                                            FontFamily="Segoe UI" Text="{Binding Path=DateModifiedDisplay}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Width="270" />
                                         </StackPanel>
                                     </StackPanel>
                                 </ItemContainerTemplate>
@@ -738,6 +738,30 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <!-- Button Style for View All Results -->
+    <Style x:Key="CairoSearchResultsButtonStyle"
+        TargetType="{x:Type Button}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,1"
+                                EndPoint="0,0">
+                    <GradientStop Color="#FF569fd1"
+                                    Offset="1.0" />
+                    <GradientStop Color="#FF0073bc"
+                                    Offset="0.0" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0,5,0,5" />
+        <Setter Property="FontSize" Value="14" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="Black" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <!-- Button Style for Quick Launch -->
     <Style x:Key="CairoQuickLaunchButtonStyle"

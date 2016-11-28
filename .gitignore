@@ -10,3 +10,5 @@
 /code/Cairo Desktop/CairoDesktop.AppGrabber/obj
 /code/Cairo Desktop/CairoDesktop.Interop/obj
 /code/Cairo Desktop/CairoDesktop.WindowsTasks/obj
+/code/Dependencies/Cairo.WindowsHooks/.vs/Cairo.WindowsHooks/v14
+/code/Dependencies/Cairo.WindowsHooks/obj

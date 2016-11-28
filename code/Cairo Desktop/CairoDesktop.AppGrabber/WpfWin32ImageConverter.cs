@@ -22,10 +22,9 @@ namespace CairoDesktop.AppGrabber
         {
             BitmapSource bs = null;
             
-            try
+            if(Interop.Shell.Exists(filename))
             {
                 // Disposes of icon automagically when done.
-                //using (System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filename))
                 using (System.Drawing.Icon icon = Interop.Shell.GetIconByFilename(filename, isSmall))
                 {
                     if (icon == null || icon.Handle == null)
@@ -36,7 +35,7 @@ namespace CairoDesktop.AppGrabber
                     bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 }
             }
-            catch
+            else
             {
                 bs = GetDefaultIcon();
             }

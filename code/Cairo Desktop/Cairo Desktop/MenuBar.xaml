@@ -46,7 +46,7 @@
                                 CommandParameter="{Binding Path=Path}"
                                 Click="LaunchProgram">
                                 <MenuItem.Icon>
-                                    <Image Source="{Binding Path=Icon}"
+                                    <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}" Stretch="None"
                                         Height="16"
                                         Width="16" />
                                 </MenuItem.Icon>
@@ -264,20 +264,25 @@
                                         Background="#FFD9D9D9"
                                         BorderBrush="Black"
                                         Name="searchStr"
+                                        TextChanged="searchStr_TextChanged" PreviewKeyDown="searchStr_KeyDown"
                                         Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged }" />
                                     </StackPanel>
                                 </StackPanel>
                                 <Border BorderThickness="1,0,1,1"
                                 BorderBrush="#FF333333"
                                 CornerRadius="0,0,5,5">
-                                    <ListView ItemsSource="{Binding Path=Results}"
+                                    <StackPanel Orientation="Vertical">
+                                        <Button Style="{DynamicResource CairoSearchResultsButtonStyle}" Name="btnViewResults" Click="btnViewResults_Click" Visibility="Collapsed">View All Results</Button>
+                                        <ListView ItemsSource="{Binding Path=Results}"
                                     BorderThickness="0"
                                     Background="{x:Null}"
                                     MinHeight="5"
                                     MaxHeight="600"
                                     Width="340"
                                     AlternationCount="2"
+                                    Name="lstSearchResults"
                                     ItemContainerStyle="{DynamicResource CairoSearchResultsItemStyle}" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
+                                    </StackPanel>
                                 </Border>
                             </StackPanel>
                         </Border>

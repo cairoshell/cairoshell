@@ -101,7 +101,7 @@ namespace CairoDesktop.AppGrabber
 
         public void Load() {
             //_logger.Debug("Checking for category list config file: {0}", ConfigFile);
-            if (System.IO.File.Exists(ConfigFile)) {
+            if (Interop.Shell.Exists(ConfigFile)) {
                 //_logger.Debug("Loading category list config file: {0}", ConfigFile);
                 this.CategoryList = CategoryList.Deserialize(ConfigFile);
             } else {

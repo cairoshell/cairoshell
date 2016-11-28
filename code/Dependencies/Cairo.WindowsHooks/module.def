@@ -1,4 +1,4 @@
-LIBRARY	"Cairo.WindowsHooks"
+LIBRARY	"Cairo.WindowsHooks.dll"
 EXPORTS
 SetSystrayCallback
 SetTaskCallback

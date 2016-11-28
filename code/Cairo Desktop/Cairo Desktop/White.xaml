@@ -10,13 +10,15 @@
     <!-- Menu bar images -->
     <BitmapImage x:Key="CairoMenuIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/cairoMenuBlack.png"></BitmapImage>
     <BitmapImage x:Key="CairoSearchIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/searchBlack.png"></BitmapImage>
+    <BitmapImage x:Key="MenubarBackground" UriSource="pack://application:,,,/CairoDesktop;component/Resources/menubarWhite.png"></BitmapImage>
+    <BitmapImage x:Key="MenubarShadow" UriSource="pack://application:,,,/CairoDesktop;component/Resources/menubarShadow.png"></BitmapImage>
     
     <!-- Main menu bar background style -->
     <Style x:Key="MenuBarStyle"
         TargetType="{x:Type DockPanel}">
         <Setter Property="Background">
             <Setter.Value>
-                <ImageBrush ImageSource="Resources\menubarWhite.png" />
+                <ImageBrush ImageSource="{DynamicResource MenubarBackground}" />
             </Setter.Value>
         </Setter>
     </Style>
@@ -422,7 +424,7 @@
                                             </Grid>
                                         </Border>
                                     </Border>
-                                    <Image Source="Resources\menubarShadow.png" Stretch="Fill" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
+                                    <Image Source="{DynamicResource MenubarShadow}" Stretch="Fill" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
                                 </StackPanel>
                             </Popup>
                         </Grid>

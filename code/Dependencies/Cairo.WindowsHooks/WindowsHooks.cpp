@@ -7,6 +7,7 @@
 
 #include "stdafx.h"
 #include <ShellAPI.h>
+#include <Winuser.h>
 #include "WindowsHooks.h"
 
 	// Callbacks for the delegates
@@ -31,6 +32,9 @@
 BOOL WINAPI DllMain(HINSTANCE hInstDll, DWORD dwReason, LPVOID reserved)
 {
 	m_hInstance = hInstDll;
+	// use this to hide windows explorer elements if you so desire
+	/*ShowWindow(FindWindow(L"Shell_TrayWnd", NULL), SW_HIDE);
+	ShowWindow(FindWindow(NULL, L"Program Manager"), SW_HIDE);*/
 	return TRUE;
 }
 
@@ -179,8 +183,30 @@ LPWSTR GetWindowName(HWND windowHandle)
 
 HICON GetWindowIcon(HWND windowHandle)
 {
-	DWORD dwReturn = GetClassLong(windowHandle, GCL_HICON);
-	return (HICON)dwReturn;
+	DWORD_PTR hIco = 0;
+	int HICON1 = -14;
+	int HICONSM = -34;
+
+	SendMessageTimeout(windowHandle, 0x007f, 2, 0, 2, 200, (PDWORD_PTR)hIco);
+
+	if (hIco == 0)
+	{
+		SendMessageTimeout(windowHandle, 0x007f, 0, 0, 2, 200, (PDWORD_PTR)hIco);
+	}
+
+	if (hIco == 0)
+	{
+		hIco = GetClassLongPtr(windowHandle, HICONSM);
+	}
+
+	if (hIco == 0)
+	{
+		hIco = GetClassLongPtr(windowHandle, HICON1);
+	}
+
+	return (HICON)hIco;
+	//DWORD_PTR dwReturn = GetClassLongPtr(windowHandle, (-14));
+	//return (HICON)dwReturn;
 }
 
 void GetTaskinformationForWindowAction(TASKINFORMATION* taskInfo, int nCode, WPARAM wParam, LPARAM lParam)
@@ -257,15 +283,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				return FALSE;
 				break;
 			case 1:
-				{
-					NOTIFYICONDATA *nicData = (NOTIFYICONDATA *)(((BYTE *)copyData->lpData) + 8);
-					int TrayCmd = *(INT *) (((BYTE *)copyData->lpData) + 4);
+				int offset = 8;
 
-					BOOL result = CallSystrayDelegate(TrayCmd, *nicData);
-					if(result) OutputDebugString(L"Result is true.");
-					else OutputDebugString(L"Result is false");
-					return 0;
+				if (sizeof(void*) == 8)
+				{
+					offset = -4;
 				}
+
+				NOTIFYICONDATA *nicData = (NOTIFYICONDATA *)(((BYTE *)copyData->lpData) + offset);
+				int TrayCmd = *(INT *) (((BYTE *)copyData->lpData) + 4);
+
+				BOOL result = CallSystrayDelegate(TrayCmd, *nicData);
+				if(result) OutputDebugString(L"Result is true.");
+				else OutputDebugString(L"Result is false");
+				return 0;
 			}
 		}
 	}

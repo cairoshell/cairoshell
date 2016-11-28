@@ -1,5 +1,5 @@
 // The type of window action received by WH_SHELL
-typedef enum WindowActions
+enum WindowActions
 {
 	Activated,
 	Created,

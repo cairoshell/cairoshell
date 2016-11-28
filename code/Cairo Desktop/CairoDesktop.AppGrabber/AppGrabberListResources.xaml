@@ -56,7 +56,7 @@
             <Setter.Value>
                 <DataTemplate>
                     <DockPanel MinHeight="10">
-                        <Image Source="{Binding Path=Icon}"
+                        <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}"
                             Margin="16,0,0,0"
                             Width="16"
                             Height="16"
@@ -91,7 +91,7 @@
                 <DataTemplate>
                     <DockPanel MinHeight="20"
                         VerticalAlignment="Center" UseLayoutRounding="True">
-                        <Image Source="{Binding Path=Icon}"
+                        <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}"
                             Width="16"
                             Height="16"
                             Stretch="Uniform"

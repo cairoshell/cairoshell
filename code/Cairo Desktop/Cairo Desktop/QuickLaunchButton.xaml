@@ -9,7 +9,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Cairo.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <self:IconConverter x:Key="iconConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid x:Name="LayoutRoot">
@@ -19,7 +18,7 @@
             Margin="0,0,0,1"
             Style="{StaticResource CairoQuickLaunchButtonStyle}"
             ToolTip="{Binding Path=Name}">
-            <Image Source="{Binding Path=Icon}"
+            <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}"
                 Width="16"
                 Height="16" />
         </Button>

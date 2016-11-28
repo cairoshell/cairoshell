@@ -70,12 +70,12 @@ namespace CairoDesktop.WindowsTasks
         {
             get
             {
-                uint iconHandle = GetIconForWindow();
+                IntPtr iconHandle = GetIconForWindow(this.Handle);
 
                 Icon ico = null;
                 try
                 {
-                    ico = Icon.FromHandle(new IntPtr(iconHandle));
+                    ico = Icon.FromHandle(iconHandle);
                 }   
                 catch
                 {
@@ -157,25 +157,40 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        private uint GetIconForWindow()
+        public static IntPtr GetIconForWindow(IntPtr hWnd)
         {
-            uint hIco = 0;
-            SendMessageTimeout(this.Handle, 127, 0, 0, 2, 200, ref hIco);
+            IntPtr hIco = default(IntPtr);
+            uint WM_GETICON = 0x007f;
+            IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
+            int GCL_HICON = -14;
             int GCL_HICONSM = -34;
+            
+            SendMessageTimeout(hWnd, WM_GETICON, 2, 0, 2, 200, ref hIco);
 
-            if (hIco == 0)
+            if (hIco == IntPtr.Zero)
             {
-                SendMessageTimeout(this.Handle, 127, 2, 0, 2, 200, ref hIco);
+                SendMessageTimeout(hWnd, WM_GETICON, 0, 0, 2, 200, ref hIco);
             }
 
-            if (hIco == 0)
+            if (hIco == IntPtr.Zero)
             {
-                hIco = GetClassLong(this.Handle, GCL_HICONSM);
+                if(!Environment.Is64BitProcess)
+                    hIco = GetClassLong(hWnd, GCL_HICONSM);
+                else
+                    hIco = GetClassLongPtr(hWnd, GCL_HICONSM);
             }
 
-            if (hIco == 0)
+            if (hIco == IntPtr.Zero)
             {
-                hIco = GetClassLong(this.Handle, -14);
+                if (!Environment.Is64BitProcess)
+                    hIco = GetClassLong(hWnd, GCL_HICON);
+                else
+                    hIco = GetClassLongPtr(hWnd, GCL_HICON);
+            }
+
+            if (hIco == IntPtr.Zero)
+            {
+                hIco = LoadIcon(IntPtr.Zero, IDI_APPLICATION);
             }
 
             return hIco;
@@ -225,13 +240,16 @@ namespace CairoDesktop.WindowsTasks
         private static extern bool IsAppHungWindow(IntPtr handle);
 
         [DllImport("user32.dll")]
-        private static extern uint GetClassLong(IntPtr handle, int longClass);
+        private static extern IntPtr GetClassLong(IntPtr handle, int longClass);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetClassLongPtr(IntPtr handle, int longClass);
 
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
-        private static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, uint wparam, uint lparam, uint timeoutFlags, uint timeout, ref uint retval);
+        private static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, uint wparam, uint lparam, uint timeoutFlags, uint timeout, ref IntPtr retval);
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowLong(IntPtr handle, int nIndex);
@@ -241,6 +259,9 @@ namespace CairoDesktop.WindowsTasks
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetWindow(IntPtr handle, int wCmd);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr LoadIcon(IntPtr hInstance, IntPtr lpIconName);
 
         /// <summary>Shows a Window</summary>
         /// <remarks>

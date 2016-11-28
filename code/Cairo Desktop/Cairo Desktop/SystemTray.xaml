@@ -19,7 +19,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Image Source="{Binding Path=Icon}"
+                    <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}"
                         Width="16"
                         Height="16"
                         Margin="2,0,2,2"

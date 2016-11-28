@@ -61,6 +61,24 @@
     <DebugSymbols>true</DebugSymbols>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>..\Build\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;ENABLEFIRSTRUN</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\Build\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework.Aero">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -97,10 +115,6 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
-    <Reference Include="WPFToolkit, Version=3.5.31016.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\WPFToolkit\WPFToolkit.dll</HintPath>
-    </Reference>
     <Page Include="DesktopNavigationToolbar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,6 +143,10 @@
     <Compile Include="QuickLaunchButton.xaml.cs">
       <DependentUpon>QuickLaunchButton.xaml</DependentUpon>
     </Compile>
+    <Reference Include="WPFToolkit, Version=3.5.31016.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Dependencies\WPFToolkit\WPFToolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="App.xaml">
@@ -340,31 +358,25 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\menuArrow.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Resource Include="Resources\menuArrow.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\cairoMenuBlack.png">
     </Resource>
     <Resource Include="Resources\searchBlack.png" />
-    <None Include="Resources\menubarWhite.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Resource Include="Resources\menubarWhite.png" />
     <Resource Include="Resources\nullIcon.png">
     </Resource>
     <Resource Include="Resources\taskListIcon.png">
     </Resource>
-    <None Include="Resources\stackShadow.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Resource Include="Resources\stackShadow.png" />
     <Resource Include="Resources\controlsBrowse.png" />
     <Resource Include="Resources\folderIcon.png" />
     <Content Include="SearchAPILib.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Cairo.WindowsHooksWrapper\Cairo.WindowsHooksWrapper.csproj">
-      <Project>{79B5DDAC-5102-4B11-BFA1-B16D6F6FE661}</Project>
+      <Project>{79b5ddac-5102-4b11-bfa1-b16d6f6fe661}</Project>
       <Name>Cairo.WindowsHooksWrapper</Name>
     </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj">

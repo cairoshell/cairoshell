@@ -9,6 +9,7 @@ using SearchAPILib;
 using System.Data.OleDb;
 using System.Data;
 using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace VistaSearchProvider
 {
@@ -17,7 +18,7 @@ namespace VistaSearchProvider
         static CSearchManager cManager;
         static ISearchQueryHelper cHelper;
         //static OleDbConnection cConnection;
-        static WaitCallback workerCallback;
+        //static WaitCallback workerCallback;
         static bool ToAbortFlag = false;
         static bool IsWorkingFlag = false;
 
@@ -61,10 +62,10 @@ namespace VistaSearchProvider
                 workerCallback = new WaitCallback(doSearch);
                 */
             searchObjState.SearchString = e.NewValue.ToString();
-            //if (searchObjState.SearchString.Length > 2)
+            /*if (searchObjState.SearchString.Length > 2)
             {
-                //ThreadPool.QueueUserWorkItem(workerCallback, searchObjState);
-            }
+                ThreadPool.QueueUserWorkItem(workerCallback, searchObjState);
+            }*/
             doSearch(searchObjState);
         }
 
@@ -73,11 +74,15 @@ namespace VistaSearchProvider
             SearchObjectState sos = (SearchObjectState)state;
             if (sos.SearchString == string.Empty)
             {
+                m_results.Clear();
                 sos.Reset.Set();
                 return;
             }
             cHelper = cManager.GetCatalog("SYSTEMINDEX").GetQueryHelper();
-            cHelper.QuerySelectColumns = "\"System.ItemNameDisplay\",\"System.ItemPathDisplay\"";
+            //cHelper.QuerySelectColumns = "\"System.ItemNameDisplay\",\"System.ItemPathDisplay\"";
+            cHelper.QuerySelectColumns = "\"System.ItemNameDisplay\",\"System.ItemUrl\",\"System.ItemPathDisplay\",\"System.DateModified\"";
+            cHelper.QueryMaxResults = MAX_RESULT;
+            cHelper.QuerySorting = "System.Search.Rank desc";
 
             OleDbConnection cConnection;
 
@@ -100,12 +105,12 @@ namespace VistaSearchProvider
                                 m_results.Clear();
                                 IsWorkingFlag = true;
             
-                                while (!reader.IsClosed && reader.Read() && m_results.Count < MAX_RESULT)
+                                while (!reader.IsClosed && reader.Read())
                                 {
                                     if (ToAbortFlag)
                                         break;
 
-                                    SearchResult result = new SearchResult() { Name = reader[0].ToString(), Path = reader[1].ToString() };
+                                    SearchResult result = new SearchResult() { Name = reader[0].ToString(), Path = reader[1].ToString(), PathDisplay = reader[2].ToString(), DateModified = reader[3].ToString() };
                                     m_results.Add(result);
                                     
                                 }
@@ -146,12 +151,16 @@ namespace VistaSearchProvider
     {
         public string Name { get; set; }
         public string Path { get; set; }
+        public string PathDisplay { get; set; }
+        public string DateModified { get; set; }
+        public string DateModifiedDisplay { get { return "Last Modified: " + DateModified; } }
 
         public ImageSource Icon
         {
             get
             {
-                return CairoDesktop.AppGrabber.WpfWin32ImageConverter.GetImageFromAssociatedIcon(Path, false);
+                string iconPath = Path.Substring(Path.IndexOf(':') + 1).Replace("/", "\\");
+                return CairoDesktop.AppGrabber.WpfWin32ImageConverter.GetImageFromAssociatedIcon(iconPath, false);
             }
         }
     }

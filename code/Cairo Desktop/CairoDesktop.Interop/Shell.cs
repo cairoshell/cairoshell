@@ -138,6 +138,9 @@ namespace CairoDesktop.Interop
             [DllImport("shfolder.dll", CharSet = CharSet.Auto)]
             public static extern int SHGetFolderPath(IntPtr hwndOwner, int nFolder, IntPtr hToken, int dwFlags, StringBuilder lpszPath);
 
+            [DllImport("comctl32.dll", SetLastError = true)]
+            public static extern IntPtr ImageList_GetIcon(IntPtr himl, int i, int flags);
+
         }
 
         public static Icon GetIconByFilename(string fileName, bool isSmall = false)
@@ -158,19 +161,12 @@ namespace CairoDesktop.Interop
 
         private static Icon GetIcon(string filename, SHGFI flags, bool isFolder = false)
         {
-            if (System.IO.File.Exists(filename) && System.IO.Path.GetExtension(filename).Equals(".lnk", StringComparison.OrdinalIgnoreCase))
-            {
-                Interop.Shell.Link link = new Interop.Shell.Link(filename);
-                IntPtr hIcon = Interop.Shell.GetHIcon(link.IconFile, link.IconIndex, flags.HasFlag(SHGFI.SmallIcon));
-                if (hIcon != IntPtr.Zero)
-                    return Icon.FromHandle(hIcon);
-            }
-
             SHFILEINFO shinfo = new SHFILEINFO();
 
-            IntPtr hImgSmall = Win32.SHGetFileInfo(filename, isFolder ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.Icon | flags));
+            IntPtr hIconInfo = Win32.SHGetFileInfo(filename, isFolder ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex | flags));
 
-            Icon icon = (Icon)System.Drawing.Icon.FromHandle(shinfo.hIcon).Clone();
+            Icon icon = (Icon)System.Drawing.Icon.FromHandle(Win32.ImageList_GetIcon(hIconInfo, shinfo.iIcon.ToInt32(), (int)0x00000001)).Clone();
+
             Win32.DestroyIcon(shinfo.hIcon);
 
             return icon;
@@ -260,6 +256,36 @@ namespace CairoDesktop.Interop
                 return smallIcons[iconIndex];
             else
                 return largeIcons[iconIndex];
+        }
+
+        public static void StartProcess(string filename)
+        {
+            // TODO enhance this for lnk files
+            if (!Environment.Is64BitProcess)
+            {
+                filename.Replace("system32", "sysnative");
+            }
+
+            System.Diagnostics.Process.Start(filename);
+        }
+
+        public static void StartProcess(string filename, string args)
+        {
+            // TODO enhance this for lnk files
+            if (!Environment.Is64BitProcess)
+            {
+                filename.Replace("system32", "sysnative");
+            }
+
+            System.Diagnostics.Process.Start(filename, args);
+        }
+
+        public static bool Exists(string filename)
+        {
+            if (filename.StartsWith("\\\\"))
+                return false;
+            else
+                return (System.IO.File.Exists(filename) || System.IO.Directory.Exists(filename));
         }
     }
 }
