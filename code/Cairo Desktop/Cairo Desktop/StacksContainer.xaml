@@ -46,9 +46,17 @@
                                     <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}" Stretch="None" Width="32" Height="32" />
                                 </DockPanel>
                                 <Button.ContextMenu>
-                                    <ContextMenu ItemsSource="{Binding Path=Verbs}"
+                                    <ContextMenu Loaded="ContextMenu_Loaded"
                                         Tag="{Binding Path=FullName}"
-                                        Style="{StaticResource CairoContextMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemStyle}">
+                                        Style="{StaticResource CairoContextMenuStyle}">
+                                        <ContextMenu.Resources>
+                                            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
+                                                <EventSetter Event="Click" Handler="MenuItem_Click" />
+                                            </Style>
+                                            <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </Style>
+                                        </ContextMenu.Resources>
                                     </ContextMenu>
                                 </Button.ContextMenu>
                                 <Button.ToolTip>
@@ -59,10 +67,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="GradBgBrush">
-                <GradientStop Color="#bf1a1a1a" Offset="0" />
-                <GradientStop Color="#df000000" Offset="1" />
-            </LinearGradientBrush>
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel Margin="0">
@@ -83,7 +87,7 @@
                             </ContextMenu>
                         </Menu.ContextMenu>
                         <MenuItem Header="{Binding Path=Name}" CommandParameter="{Binding}" Style="{StaticResource CairoStacksStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Margin="0">
-                            <MenuItem Background="{StaticResource GradBgBrush}">
+                            <MenuItem Style="{StaticResource CairoStackViewStyle}">
                                 <MenuItem.Header>
                                     <Grid>
                                         <Grid.ColumnDefinitions>

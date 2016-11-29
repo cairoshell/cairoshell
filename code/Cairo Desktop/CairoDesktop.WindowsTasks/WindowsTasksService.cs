@@ -168,6 +168,12 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL_WINDOWREPLACING:
+                                Trace.WriteLine("Replacing: " + msg.LParam.ToString());
+                                if (this.Windows.Contains(win))
+                                {
+                                    this.Windows.Remove(win);
+                                }
+                                break;
                             case HSHELL_WINDOWREPLACED:
                                 Trace.WriteLine("Replaced: " + msg.LParam.ToString());
                                 if (this.Windows.Contains(win))
@@ -184,8 +190,33 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL_WINDOWACTIVATED:
-                            case HSHELL_RUDEAPPACTIVATED:
                                 Trace.WriteLine("Activated: " + msg.LParam.ToString());
+
+                                if (msg.LParam == IntPtr.Zero)
+                                {
+                                    break;
+                                }
+
+                                foreach (var aWin in this.Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
+                                {
+                                    aWin.State = ApplicationWindow.WindowState.Inactive;
+                                }
+
+                                if (this.Windows.Contains(win))
+                                {
+                                    win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
+                                    win.State = ApplicationWindow.WindowState.Active;
+                                }
+                                else
+                                {
+                                    win.State = ApplicationWindow.WindowState.Active;
+                                    if (/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
+                                        Windows.Add(win);
+                                }
+                                break;
+
+                            case HSHELL_RUDEAPPACTIVATED:
+                                Trace.WriteLine("RudeActivated: " + msg.LParam.ToString());
 
                                 if (msg.LParam == IntPtr.Zero)
                                 {
@@ -231,6 +262,10 @@ namespace CairoDesktop.WindowsTasks
 
                             case HSHELL_ENDTASK:
                                 Trace.WriteLine("EndTask called.");
+                                if (this.Windows.Contains(win))
+                                {
+                                    this.Windows.Remove(win);
+                                }
                                 break;
 
                             case HSHELL_GETMINRECT:

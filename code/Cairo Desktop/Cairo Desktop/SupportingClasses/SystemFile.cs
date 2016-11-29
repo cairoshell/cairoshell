@@ -48,7 +48,6 @@ namespace CairoDesktop
             refProc.StartInfo.FileName = this.FullName;
 
             this.Verbs.AddRange(refProc.StartInfo.Verbs);
-            this.Verbs.Add("Open With...");
 
             _dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() => GetDisplayIcon()));
         }

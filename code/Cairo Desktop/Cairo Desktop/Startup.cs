@@ -4,8 +4,8 @@
     using System.Diagnostics;
     using System.Windows;
     using Microsoft.Win32;
-    using CairoDesktop.SupportingClasses;
     using System.Windows.Interop;
+    using Interop;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
@@ -58,19 +58,9 @@
             }
             #endregion
 
-            #region old code
-            //if (!SingleInstanceCheck())
-            //{
-            //    return;
-            //}
-
-            // Causes crash?
-            // If framework is not correct version then quit.
-            //if (!FrameworkCheck())
-            //{
-            //    return;
-            //}
-            #endregion
+            // Before we do anything, check if settings need to be upgraded
+            if (Properties.Settings.Default.IsFirstRun == true)
+                Properties.Settings.Default.Upgrade();
 
             _parentWindow = new Window();
             InitializeParentWindow(_parentWindow);
@@ -85,17 +75,10 @@
             MenuBarWindow.Show();
             app.MainWindow = MenuBarWindow;
 
-#if (ENABLEFIRSTRUN)
-            FirstRun(app);
-#endif
-
             if (Properties.Settings.Default.EnableDesktop)
             {
                 DesktopWindow = new Desktop() { Owner = _desktopWindow };
                 DesktopWindow.Show();
-                WindowInteropHelper f = new WindowInteropHelper(DesktopWindow);
-                int result = NativeMethods.SetShellWindow(f.Handle);
-                DesktopWindow.ShowWindowBottomMost(f.Handle);
             }
 
             if (Properties.Settings.Default.EnableMenuBarShadow)
@@ -109,38 +92,12 @@
                 TaskbarWindow = new Taskbar() { Owner = _parentWindow };
                 TaskbarWindow.Show();
             }
-            
+
+#if (ENABLEFIRSTRUN)
+            FirstRun(app);
+#endif
+
             app.Run();
-
-        }
-
-        /// <summary>
-        /// Checks the version of the framework available on the machine. We require .NET 3.5SP1 for the WPFToolkit.
-        /// </summary>
-        /// <returns>Result of framework check.</returns>
-        private static bool FrameworkCheck()
-        {
-            try
-            {
-                var key = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\NET Framework Setup\\NDP\\v3.5", false);
-
-                int verValue = (key == null) ? 0 : (int)key.GetValue("SP", 0, RegistryValueOptions.None);
-
-                if (verValue != 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    CairoMessage.Show("Cairo requires .NET Framework 3.5 SP1 or newer to run.  You can visit microsoft.com to obtain it.", "Error", MessageBoxButton.OK, MessageBoxImage.Stop);
-                    return false;
-                }
-            }
-            catch
-            {
-                CairoMessage.Show("Cairo requires .NET Framework 3.5 SP1 or newer to run.  You can visit microsoft.com to obtain it.", "Error", MessageBoxButton.OK, MessageBoxImage.Stop);
-                return false;
-            }
         }
 
         /// <summary>
@@ -195,14 +152,13 @@
                 if (Properties.Settings.Default.IsFirstRun == true)
                 {
                     Properties.Settings.Default.IsFirstRun = false;
-                    Properties.Settings.Default.EnableTaskbar = true;
                     Properties.Settings.Default.Save();
                     AppGrabber.AppGrabber.Instance.ShowDialog();
                 }
             }
             catch (Exception ex)
             {
-                CairoMessage.Show(string.Format("Woops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex), 
+                CairoMessage.Show(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex), 
                     "Unexpected error!", 
                     MessageBoxButton.OK, 
                     MessageBoxImage.Error);

@@ -19,6 +19,8 @@ using System.Resources;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Markup;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace CairoDesktop
 {
@@ -108,24 +110,15 @@ namespace CairoDesktop
 
         public void ExecuteOpenSearchResult(object sender, ExecutedRoutedEventArgs e)
         {
-            // Get parameter (e.Parameter as T)
-            // Try shell execute...
-            // TODO: Determine which app to start the file as and boom!
             var searchObj = (VistaSearchProvider.SearchResult)e.Parameter;
-
-            /*Process p = new Process();
-            p.StartInfo.UseShellExecute = true;
-            p.StartInfo.FileName = searchObj.Path; // e.Parameter as T.x
-            p.StartInfo.Verb = "Open";*/
-
+            
             try
             {
-                //p.Start();
                 Shell.StartProcess(searchObj.Path);
             }
             catch (Exception ex)
             {
-                CairoMessage.Show("Woops, it seems we had some trouble opening the search result you chose.\n\n The error we received was: " + ex.Message, "Uh Oh!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show("Whoops, it seems we had some trouble opening the search result you chose.\n\n The error we received was: " + ex.Message, "Uh Oh!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -210,14 +203,11 @@ namespace CairoDesktop
             {
                 SysTray.InitializeSystemTray();
             }
-            else
-            {
-            }
         }
 
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            if (CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/cairoIcon.png", "Exit Cairo", "Cancel") == true)
+            if (CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/exitIcon.png", "Exit Cairo", "Cancel") == true)
             {
                 //SHAppBarMessageHelper.DeRegisterBar(handle);
                 System.Drawing.Size size = new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight);
@@ -258,7 +248,7 @@ namespace CairoDesktop
             CairoMessage.Show(
                 // Replace next line with the Version
                 "Version " + version + " - Pre-release"
-                +"\nCopyright © 2007-2015 Cairo Development Team and community contributors.  All rights reserved."
+                +"\nCopyright © 2007-" + DateTime.Now.Year.ToString() + " Cairo Development Team and community contributors.  All rights reserved."
                 // +
                 // Replace next line with the ID Key
 //"Not for redistribution."
@@ -299,7 +289,7 @@ namespace CairoDesktop
         }
         private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
         {
-            bool? CloseCairoChoice = CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/cairoIcon.png", "Exit Cairo", "Cancel");
+            bool? CloseCairoChoice = CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/exitIcon.png", "Exit Cairo", "Cancel");
             if (CloseCairoChoice.HasValue && CloseCairoChoice.Value)
             {
                 //SHAppBarMessageHelper.DeRegisterBar(handle);

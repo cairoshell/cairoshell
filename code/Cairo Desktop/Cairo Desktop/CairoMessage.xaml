@@ -70,7 +70,7 @@
                 Grid.Column="2"
                 Grid.ColumnSpan="3"
                 VerticalScrollBarVisibility="Auto"
-                HorizontalScrollBarVisibility="Disabled">
+                HorizontalScrollBarVisibility="Disabled" MaxHeight="86">
                 <TextBlock Margin="0"
                     TextWrapping="Wrap"
                     x:Name="MessageContent"

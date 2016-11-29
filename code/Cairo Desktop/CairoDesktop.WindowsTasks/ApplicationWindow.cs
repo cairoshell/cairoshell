@@ -109,11 +109,7 @@ namespace CairoDesktop.WindowsTasks
             [NotifyPropertyChangedAspect("IsActive")]
             set;
         }
-
-        /// <summary>
-        /// TODO: Implement the flash property - or should this be an event??
-        /// Perhaps we can bind to a wpf animation enabled property??
-        /// </summary>
+        
         public bool Flash
         {
             get;
@@ -121,12 +117,12 @@ namespace CairoDesktop.WindowsTasks
             set;
         }
 
-        // Implement show in taskbar property.
+        // True if this window should be shown in the taskbar
         public bool ShowInTaskbar
         {
             get
             {
-                if ((this.State != WindowState.Hidden) && (GetParent(this.Handle) != IntPtr.Zero))
+                if ((this.State == WindowState.Hidden) || (GetParent(this.Handle) != IntPtr.Zero))
                 {
                     return false;
                 }
@@ -137,16 +133,14 @@ namespace CairoDesktop.WindowsTasks
                     return false;
                 }
 
-                int GWL_EXSTYLE = -20;
-                int WS_EX_TOOLWINDOW = 0x00000080;
+                // Make sure this is a real application window and not a child or tool window
+                int GWL_EXSTYLE = -0x14;
                 int GW_Owner = 4;
 
                 int exStyles = GetWindowLong(this.Handle, GWL_EXSTYLE);
-
                 IntPtr ownerWin = GetWindow(this.Handle, GW_Owner);
-                // TODO: Add method to check that this isn't a child window...
-                if ((((exStyles & WS_EX_TOOLWINDOW) == 0) && (ownerWin == IntPtr.Zero)) ||
-                    (((exStyles & WS_EX_TOOLWINDOW) == 0) && (ownerWin != IntPtr.Zero)))
+
+                if (((exStyles & (int)ExtendedWindowStyles.WS_EX_APPWINDOW) != 0 || (exStyles & (int)ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0) && (ownerWin == IntPtr.Zero && (exStyles & (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW) == 0))
                 {
                     return true;
                 }

@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.IO;
 using System.Windows.Markup;
+using System.Globalization;
 
 namespace CairoDesktop {
     /// <summary>
@@ -34,10 +35,10 @@ namespace CairoDesktop {
                 this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
             String desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                if (Directory.Exists(desktopPath)) {
-                    SystemDirectory desktopSysDir = new SystemDirectory(desktopPath, Dispatcher.CurrentDispatcher);
-                    Locations.Add(desktopSysDir);
-                }
+            if (Directory.Exists(desktopPath)) {
+                SystemDirectory desktopSysDir = new SystemDirectory(desktopPath, Dispatcher.CurrentDispatcher);
+                Locations.Add(desktopSysDir);
+            }
         }
 
         public InvokingObservableCollection<SystemDirectory> Locations
@@ -70,7 +71,7 @@ namespace CairoDesktop {
                 FileAttributes attr = File.GetAttributes(senderButton.CommandParameter as String);
 
                 //detect whether its a directory or file
-                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory && Properties.Settings.Default.EnableDynamicDesktop)
                 {
                     ((this.Parent as Grid).Parent as Desktop).PathHistory.Push(this.Locations[0].DirectoryInfo.FullName);
                     this.Locations[0] = new SystemDirectory((senderButton.CommandParameter as String), Dispatcher.CurrentDispatcher);
@@ -83,46 +84,18 @@ namespace CairoDesktop {
             catch 
             {
                 // No 'Open' command associated with this filetype in the registry
-                ShowOpenWithDialog(proc.StartInfo.FileName);
+                Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
             }
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e) 
         {
-            MenuItem item = sender as MenuItem;
-            String fileName = item.CommandParameter as String;
-            if (item.Header as String == "Open with...")
-            {
-                ShowOpenWithDialog(fileName);
-                return;
-            }
-
-            System.Diagnostics.Process proc = new System.Diagnostics.Process();
-            proc.StartInfo.UseShellExecute = true;
-            proc.StartInfo.FileName = fileName;
-            proc.StartInfo.Verb = item.Header as String;
-            try 
-            {
-                proc.Start();
-            } 
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format("Error running the {0} verb on {1}. ({2})",item.Header,fileName,ex.Message));
-            }
+            CustomCommands.Icon_MenuItem_Click(sender, e);
         }
 
-        /// <summary>
-        /// Calls the Windows OpenWith dialog (shell32.dll) to open the file specified.
-        /// </summary>
-        /// <param name="fileName">Path to the file to open</param>
-        private void ShowOpenWithDialog(string fileName) 
+        private void ContextMenu_Loaded(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process owProc = new System.Diagnostics.Process();
-            owProc.StartInfo.UseShellExecute = true;
-            owProc.StartInfo.FileName = Environment.GetEnvironmentVariable("WINDIR") + @"\system32\rundll32.exe";
-            owProc.StartInfo.Arguments =
-                @"C:\WINDOWS\system32\shell32.dll,OpenAs_RunDLL " + fileName;
-            owProc.Start();
+            CustomCommands.Icon_ContextMenu_Loaded(sender, e);
         }
     }
 }

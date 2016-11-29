@@ -47,19 +47,7 @@
         </Setter>
     </Style>
     <Style x:Key="AppGrabberListBoxHeaderStyleGreen"
-        TargetType="{x:Type TextBlock}">
-        <Setter Property="TextAlignment"
-            Value="Center" />
-        <Setter Property="Padding"
-            Value="0,10,0,0" />
-        <Setter Property="Width"
-            Value="330" />
-        <Setter Property="FontFamily"
-            Value="Corbel" />
-        <Setter Property="FontSize"
-            Value="15" />
-        <Setter Property="Height"
-            Value="40" />
+        TargetType="{x:Type TextBlock}" BasedOn="{StaticResource AppGrabberListBoxHeaderStyle}">
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush StartPoint="0,0"

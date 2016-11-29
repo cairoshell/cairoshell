@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using Cairo.WindowsHooksWrapper;
 using System.Linq;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace CairoDesktop
 {

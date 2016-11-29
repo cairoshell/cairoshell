@@ -133,33 +133,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    
-                        <ContentPresenter Margin="0,0,0,0"
+                    <ContentPresenter Margin="0,0,0,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
-                    
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver"
-                            Value="true">
-                            <Setter Property="BitmapEffect">
-                                <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="White"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                        <Trigger Property="IsPressed"
-                            Value="true">
-                            <Setter Property="BitmapEffect">
-                                <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

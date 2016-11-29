@@ -72,6 +72,8 @@ namespace CairoDesktop.AppGrabber
         String[] searchLocations = {
                 Interop.Shell.UsersProgramsPath,
                 Interop.Shell.AllUsersProgramsPath,
+                Interop.Shell.UsersStartMenuPath,
+                Interop.Shell.AllUsersStartMenuPath
                 /*
                  * Sam doesn't like Desktop apps being found
                  */
@@ -89,7 +91,8 @@ namespace CairoDesktop.AppGrabber
                 ".bat",
                 ".com",
                 ".lnk",
-                ".msc"
+                ".msc",
+                ".appref-ms"
             });
 
             this.ConfigFile = configFile ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";
@@ -223,7 +226,7 @@ namespace CairoDesktop.AppGrabber
 
         public void ShowDialog() {
             try {
-                new AppGrabberUI(this).ShowDialog();
+                new AppGrabberUI(this).Show();
             } catch { }
         }
     }

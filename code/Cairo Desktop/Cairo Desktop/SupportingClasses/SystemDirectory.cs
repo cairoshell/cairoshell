@@ -37,14 +37,6 @@ namespace CairoDesktop {
             get { return files; }
         }
 
-        private InvokingObservableCollection<DirectoryInfo> subDirectories;
-        /// <summary>
-        /// Gets an ObservableCollection of subdidectories contained in this folder as DirectoryInfo objects.
-        /// </summary>
-        public InvokingObservableCollection<DirectoryInfo> SubDirectories {
-            get { return subDirectories; }
-        }
-
         public string Name {
             get { return dir.Name; }
         }
@@ -59,10 +51,10 @@ namespace CairoDesktop {
         public SystemDirectory(Dispatcher dispatcher) {
             this.dispatcher = dispatcher;
             files = new InvokingObservableCollection<SystemFile>(this.dispatcher);
-            subDirectories = new InvokingObservableCollection<DirectoryInfo>(this.dispatcher);
             this.DirectoryInfo = new DirectoryInfo(@"c:\");
             fileWatcher.IncludeSubdirectories = false;
-            fileWatcher.NotifyFilter = NotifyFilters.FileName;
+            fileWatcher.Filter = "";
+            fileWatcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName;
             fileWatcher.Created += new FileSystemEventHandler(fileWatcher_Created);
             fileWatcher.Deleted += new FileSystemEventHandler(fileWatcher_Deleted);
             fileWatcher.Renamed += new RenamedEventHandler(fileWatcher_Renamed);
@@ -75,10 +67,10 @@ namespace CairoDesktop {
         public SystemDirectory(string pathToDirectory, Dispatcher dispatcher) {
             this.dispatcher = dispatcher;
             files = new InvokingObservableCollection<SystemFile>(this.dispatcher);
-            subDirectories = new InvokingObservableCollection<DirectoryInfo>(this.dispatcher);
             this.DirectoryInfo = new DirectoryInfo(pathToDirectory);
             fileWatcher.IncludeSubdirectories = false;
-            fileWatcher.NotifyFilter = NotifyFilters.FileName;
+            fileWatcher.Filter = "";
+            fileWatcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName;
             fileWatcher.Created += new FileSystemEventHandler(fileWatcher_Created);
             fileWatcher.Deleted += new FileSystemEventHandler(fileWatcher_Deleted);
             fileWatcher.Renamed += new RenamedEventHandler(fileWatcher_Renamed);
@@ -86,12 +78,26 @@ namespace CairoDesktop {
         }
 
         void fileWatcher_Renamed(object sender, RenamedEventArgs e) {
-            this.removeFile(e.OldFullPath);
+            try
+            {
+                this.removeFile(e.OldFullPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             this.addFile(e.FullPath);
         }
 
         void fileWatcher_Deleted(object sender, FileSystemEventArgs e) {
-            this.removeFile(e.FullPath);
+            try
+            {
+                this.removeFile(e.FullPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         void fileWatcher_Created(object sender, FileSystemEventArgs e) {
@@ -117,14 +123,12 @@ namespace CairoDesktop {
         private void initialize()
         {
             files.Clear();
-            subDirectories.Clear();
             bool showSubs = false;
             if (Properties.Settings.Default.EnableSubDirs)
                 showSubs = true;
 
             foreach (DirectoryInfo subDir in dir.GetDirectories())
             {
-                subDirectories.Add(subDir);
                 FileAttributes attributes = subDir.Attributes;
                 if (showSubs && ((attributes & FileAttributes.Hidden) != FileAttributes.Hidden) && ((attributes & FileAttributes.System) != FileAttributes.System) && ((attributes & FileAttributes.Temporary) != FileAttributes.Temporary))
                 {

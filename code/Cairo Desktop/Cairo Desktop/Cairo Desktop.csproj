@@ -233,7 +233,6 @@
     <Compile Include="SupportingClasses\BoolTovisibilityConverter.cs" />
     <Compile Include="SupportingClasses\IconConverter.cs" />
     <Compile Include="SupportingClasses\InvokingObservableCollection.cs" />
-    <Compile Include="SupportingClasses\NativeMethods.cs" />
     <Compile Include="SupportingClasses\SystemDirectory.cs" />
     <Compile Include="SupportingClasses\MessageBoxButtonConverter.cs" />
     <Compile Include="SupportingClasses\MessageBoxImageConverter.cs" />
@@ -371,7 +370,7 @@
     </Resource>
     <Resource Include="Resources\stackShadow.png" />
     <Resource Include="Resources\controlsBrowse.png" />
-    <Resource Include="Resources\folderIcon.png" />
+    <Resource Include="Resources\exitIcon.png" />
     <Content Include="SearchAPILib.dll" />
   </ItemGroup>
   <ItemGroup>

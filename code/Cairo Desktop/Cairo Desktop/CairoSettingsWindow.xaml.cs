@@ -8,9 +8,9 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Windows.Interop;
-    using SupportingClasses;
     using System.IO;
     using System.Linq;
+    using Interop;
 
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
@@ -41,9 +41,6 @@
             {
                 Startup.DesktopWindow = new Desktop() { Owner = Startup.DeskParent };
                 Startup.DesktopWindow.Show();
-                WindowInteropHelper f = new WindowInteropHelper(Startup.DesktopWindow);
-                int result = NativeMethods.SetShellWindow(f.Handle);
-                Startup.DesktopWindow.ShowWindowBottomMost(f.Handle);
             }
             else
             {

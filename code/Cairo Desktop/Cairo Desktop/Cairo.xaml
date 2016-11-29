@@ -92,7 +92,14 @@
                                 Margin="{TemplateBinding Padding}"
                                 x:Name="HeaderHost"
                                 RecognizesAccessKey="True"
-                                ContentSource="Header" />
+                                ContentSource="Header">
+                                <ContentPresenter.Effect>
+                                    <DropShadowEffect Color="Black"
+                                                        ShadowDepth="1"
+                                                                  Direction="90"
+                                                        Opacity="0.6" BlurRadius="0" />
+                                </ContentPresenter.Effect>
+                            </ContentPresenter>
                             <!-- Content for the menu IGT -->
                             <ContentPresenter Grid.Column="2"
                                 Margin="8,1,8,1"
@@ -121,7 +128,7 @@
                                     <Border.Style>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="BorderBrush"
-                                                Value="#AF12367F" />
+                                                Value="#FF12367F" />
                                             <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
                                         </Style>
@@ -181,7 +188,7 @@
                                 TargetName="Col3" />
                             <Setter Property="Height"
                                 Value="22" />
-                            
+
                             <Setter Property="FontSize"
                                 Value="14" />
                             <Setter Property="Visibility"
@@ -196,33 +203,7 @@
                             <Setter Property="Visibility"
                                 Value="Collapsed"
                                 TargetName="ArrowPanel" />
-                            <Setter Property="BitmapEffect">
-                                <Setter.Value>
-                                    <DropShadowBitmapEffect Color="Black"
-                                        Softness="0"
-                                        ShadowDepth="1"
-                                        Direction="90"
-                                        Opacity=".5" />
-                                </Setter.Value>
-                            </Setter>
                         </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="Role"
-                                    Value="TopLevelHeader" />
-                                <Condition Property="IsMouseOver"
-                                    Value="True" />
-                                <Condition Property="IsPressed"
-                                    Value="False" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="BitmapEffect">
-                                <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                                </Setter.Value>
-                            </Setter>
-                        </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Role"
@@ -234,7 +215,7 @@
                                 TargetName="Border">
                                 <Setter.Value>
                                     <!-- Pressed Menubar State -->
-                                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
                                         <GradientStop Color="#8F1A4DB5" Offset="1.0" />
                                         <GradientStop Color="#DF338FFF" Offset="0.0" />
                                     </LinearGradientBrush>
@@ -350,28 +331,6 @@
     <Style x:Key="CairoMenuItemThinStyle"
         TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
         <Setter Property="FontFamily" Value="Segoe UI" />
-        <Style.Triggers>
-            <Trigger Property="Role"
-                            Value="TopLevelHeader">
-                <Setter Property="BitmapEffect">
-                    <Setter.Value>
-                        <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="2"
-                                        Opacity="1" />
-                    </Setter.Value>
-                </Setter>
-            </Trigger>
-            <Trigger Property="IsMouseOver"
-                            Value="True">
-                <Setter Property="BitmapEffect">
-                    <Setter.Value>
-                        <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                    </Setter.Value>
-                </Setter>
-            </Trigger>
-        </Style.Triggers>
     </Style>
     <Style x:Key="CairoMenuItemCairoMenuStyle"
         TargetType="{x:Type MenuItem}">
@@ -406,7 +365,7 @@
                                     <Border.Style>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="BorderBrush"
-                                                Value="#AF12367F" />
+                                                Value="#FF12367F" />
                                             <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
                                         </Style>
@@ -466,23 +425,6 @@
                             <MultiTrigger.Conditions>
                                 <Condition Property="Role"
                                     Value="TopLevelHeader" />
-                                <Condition Property="IsMouseOver"
-                                    Value="True" />
-                                <Condition Property="IsPressed"
-                                    Value="False" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="BitmapEffect">
-                                <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                                </Setter.Value>
-                            </Setter>
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="Role"
-                                    Value="TopLevelHeader" />
                                 <Condition Property="IsSubmenuOpen"
                                     Value="True" />
                             </MultiTrigger.Conditions>
@@ -537,36 +479,19 @@
                         <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
                         <ControlTemplate.Triggers>
                             <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
-                            <Trigger Property="Role"
+                        <Trigger Property="Role"
                             Value="TopLevelHeader">
-                                <Setter Property="Padding"
+                            <Setter Property="Padding"
                                 Value="0,0,0,0" />
-                                <Setter Property="Margin"
+                            <Setter Property="Margin"
                                 Value="0,-2,0,0" />
-                                <Setter Property="Placement"
+                            <Setter Property="Placement"
                                 Value="Bottom"
                                 TargetName="SubMenuPopup" />
-                                <Setter Property="Height"
+                            <Setter Property="Height"
                                 Value="22" />
-                            </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="Role"
-                                    Value="TopLevelHeader" />
-                                    <Condition Property="IsMouseOver"
-                                    Value="True" />
-                                    <Condition Property="IsPressed"
-                                    Value="False" />
-                                </MultiTrigger.Conditions>
-                                <Setter Property="BitmapEffect">
-                                    <Setter.Value>
-                                        <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                                    </Setter.Value>
-                                </Setter>
-                            </MultiTrigger>
-                            <MultiTrigger>
+                        </Trigger>
+                        <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="Role"
                                     Value="TopLevelHeader" />
@@ -1531,7 +1456,14 @@
                                 Margin="{TemplateBinding Padding}"
                                 x:Name="HeaderHost"
                                 RecognizesAccessKey="True"
-                                ContentSource="Header" />
+                                ContentSource="Header">
+                                <ContentPresenter.Effect>
+                                    <DropShadowEffect Color="Black"
+                                                            ShadowDepth="1"
+                                                                      Direction="90"
+                                                            Opacity="0.6" BlurRadius="0" />
+                                </ContentPresenter.Effect>
+                            </ContentPresenter>
                             <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
                             <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
                                 Placement="Right"
@@ -1544,7 +1476,7 @@
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="BorderBrush"
-                                                Value="#6F707070" />
+                                                Value="#FF12367F" />
                                                 <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
                                             </Style>
@@ -1602,31 +1534,7 @@
                                 Value="Segoe UI" />
                             <Setter Property="FontSize"
                                 Value="14" />
-                            <Setter Property="BitmapEffect">
-                                <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="2"
-                                        Opacity="1" />
-                                </Setter.Value>
-                            </Setter>
                         </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="Role"
-                                    Value="TopLevelHeader" />
-                                <Condition Property="IsMouseOver"
-                                    Value="True" />
-                                <Condition Property="IsPressed"
-                                    Value="False" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="BitmapEffect">
-                                <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                                </Setter.Value>
-                            </Setter>
-                        </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Role"
@@ -1676,6 +1584,18 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <!-- Dropdown Style for Stacks -->
+    <Style x:Key="CairoStackViewStyle"
+        TargetType="{x:Type MenuItem}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#bf1a1a1a" Offset="0" />
+                    <GradientStop Color="#df000000" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <!-- Button Style for Stacks -->
     <Style x:Key="CairoStackButtonStyle"
         TargetType="{x:Type Button}">
@@ -1697,30 +1617,6 @@
                     <ContentPresenter Margin="5,0,5,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
-                        <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver"
-                            Value="true">
-                            <Setter Property="Button.Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="Black"
-                                                        ShadowDepth="0"
-                                                        Direction="0"
-                                                        Opacity="1" BlurRadius="6" />
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                        <Trigger Property="IsPressed"
-                            Value="true">
-                            <Setter Property="Button.Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="Black"
-                                                        ShadowDepth="0"
-                                                        Direction="0"
-                                                        Opacity="1" BlurRadius="7" />
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

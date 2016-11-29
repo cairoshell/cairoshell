@@ -42,7 +42,14 @@
                            Width="180" Name="WinTitle"
                     Text="{Binding Path=Title}"
                     TextTrimming="CharacterEllipsis"
-                    Grid.Column="1" TextAlignment="Left"/>
+                    Grid.Column="1" TextAlignment="Left">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="Black"
+                                            ShadowDepth="1"
+                                                        Direction="90"
+                                            Opacity="0.6" BlurRadius="0" />
+                    </TextBlock.Effect>
+                </TextBlock>
             </Grid>
         </Button>
     </Grid>
