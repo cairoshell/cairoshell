@@ -79,7 +79,6 @@ namespace VistaSearchProvider
                 return;
             }
             cHelper = cManager.GetCatalog("SYSTEMINDEX").GetQueryHelper();
-            //cHelper.QuerySelectColumns = "\"System.ItemNameDisplay\",\"System.ItemPathDisplay\"";
             cHelper.QuerySelectColumns = "\"System.ItemNameDisplay\",\"System.ItemUrl\",\"System.ItemPathDisplay\",\"System.DateModified\"";
             cHelper.QueryMaxResults = MAX_RESULT;
             cHelper.QuerySorting = "System.Search.Rank desc";

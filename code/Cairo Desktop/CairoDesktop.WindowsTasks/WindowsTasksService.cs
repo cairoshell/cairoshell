@@ -74,8 +74,9 @@ namespace CairoDesktop.WindowsTasks
 
                 EnumWindows(new CallBackPtr((hwnd, lParam) =>
                 {
-                    if(IsAppWindow(hwnd))
-                        AddWindow(hwnd);
+                    ApplicationWindow win = new ApplicationWindow(hwnd, this);
+                    if(win.ShowInTaskbar)
+                        this.Windows.Add(win);
                     return true;
                 }), 0);
 
@@ -155,7 +156,7 @@ namespace CairoDesktop.WindowsTasks
                         {
                             case HSHELL_WINDOWCREATED:
                                 Trace.WriteLine("Created: " + msg.LParam.ToString());
-                                if(/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
+                                if(win.ShowInTaskbar)
                                     Windows.Add(win);
                                 break;
 
@@ -184,7 +185,7 @@ namespace CairoDesktop.WindowsTasks
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Inactive;
-                                    if (/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
+                                    if (win.ShowInTaskbar)
                                         Windows.Add(win);
                                 }
                                 break;
@@ -192,52 +193,50 @@ namespace CairoDesktop.WindowsTasks
                             case HSHELL_WINDOWACTIVATED:
                                 Trace.WriteLine("Activated: " + msg.LParam.ToString());
 
-                                if (msg.LParam == IntPtr.Zero)
-                                {
-                                    break;
-                                }
-
                                 foreach (var aWin in this.Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
                                 {
                                     aWin.State = ApplicationWindow.WindowState.Inactive;
                                 }
 
-                                if (this.Windows.Contains(win))
+                                if (msg.LParam != IntPtr.Zero)
                                 {
-                                    win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
-                                    win.State = ApplicationWindow.WindowState.Active;
-                                }
-                                else
-                                {
-                                    win.State = ApplicationWindow.WindowState.Active;
-                                    if (/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
-                                        Windows.Add(win);
+
+                                    if (this.Windows.Contains(win))
+                                    {
+                                        win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
+                                        win.State = ApplicationWindow.WindowState.Active;
+                                    }
+                                    else
+                                    {
+                                        win.State = ApplicationWindow.WindowState.Active;
+                                        if (win.ShowInTaskbar)
+                                            Windows.Add(win);
+                                    }
                                 }
                                 break;
 
                             case HSHELL_RUDEAPPACTIVATED:
-                                Trace.WriteLine("RudeActivated: " + msg.LParam.ToString());
-
-                                if (msg.LParam == IntPtr.Zero)
-                                {
-                                    break;
-                                }
+                                Trace.WriteLine("Activated: " + msg.LParam.ToString());
 
                                 foreach (var aWin in this.Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
                                 {
                                     aWin.State = ApplicationWindow.WindowState.Inactive;
                                 }
 
-                                if (this.Windows.Contains(win))
+                                if (msg.LParam != IntPtr.Zero)
                                 {
-                                    win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
-                                    win.State = ApplicationWindow.WindowState.Active;
-                                }
-                                else
-                                {
-                                    win.State = ApplicationWindow.WindowState.Active;
-                                    if (/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
-                                        Windows.Add(win);
+
+                                    if (this.Windows.Contains(win))
+                                    {
+                                        win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
+                                        win.State = ApplicationWindow.WindowState.Active;
+                                    }
+                                    else
+                                    {
+                                        win.State = ApplicationWindow.WindowState.Active;
+                                        if (win.ShowInTaskbar)
+                                            Windows.Add(win);
+                                    }
                                 }
                                 break;
 
@@ -251,7 +250,7 @@ namespace CairoDesktop.WindowsTasks
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Flashing;
-                                    if (/*IsAppWindow(msg.LParam)*/win.ShowInTaskbar)
+                                    if (win.ShowInTaskbar)
                                         Windows.Add(win);
                                 }
                                 break;
@@ -315,15 +314,6 @@ namespace CairoDesktop.WindowsTasks
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
-        static bool IsAppWindow(IntPtr hWnd)
-        {
-            int style = GetWindowLong(hWnd, -16); // GWL_STYLE
-
-            // check for WS_VISIBLE and WS_CAPTION flags
-            // (that the window is visible and has a title bar)
-            return (style & 0x10C00000) == 0x10C00000;
-        }
 
         [DllImport("user32.dll")]
         private static extern int EnumWindows(CallBackPtr callPtr, int lPar);

@@ -1,11 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cairo="clr-namespace:CairoDesktop">
-    <!-- Menu item hover gradient -->
+    <!-- Menu item common resources -->
     <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" x:Key="CairoMenuItemHoverGradient">
         <GradientStop Color="#8F1A4DFF" Offset="0.0" />
         <GradientStop Color="#DF338FFF" Offset="1.0" />
     </LinearGradientBrush>
+    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="CairoMenuBackgroundGradient">
+        <GradientStop Color="#cF0f0f0f" Offset="0" />
+        <GradientStop Color="#bf1a1a1a" Offset="0.8" />
+        <GradientStop Color="#cF0f0f0f" Offset="1" />
+    </LinearGradientBrush>
+    <DropShadowEffect x:Key="CairoMenuShadow" Color="Black" ShadowDepth="4" Direction="270" Opacity="0.6" BlurRadius="10" />
     
     <!-- Menu bar images -->
     <BitmapImage x:Key="CairoMenuIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/cairoMenuBlack.png"></BitmapImage>
@@ -104,24 +110,18 @@
                                                 Value="#FF12367F" />
                                             <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
+                                            <Setter Property="Margin"
+                                                    Value="5,0,5,11" />
+                                            <Setter Property="Effect"
+                                                Value="{StaticResource ResourceKey=CairoMenuShadow}" />
                                         </Style>
                                     </Border.Style>
                                     <Border>
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
-                                                <Setter Property="Background">
-                                                    <Setter.Value>
-                                                        <LinearGradientBrush StartPoint="0.5,0"
-                                                            EndPoint="0.5,1">
-                                                            <GradientStop Color="#bf1a1a1a"
-                                                                Offset="0" />
-                                                            <GradientStop Color="#cF000000"
-                                                                Offset="1" />
-                                                        </LinearGradientBrush>
-                                                    </Setter.Value>
-                                                </Setter>
+                                                <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
                                                 <Setter Property="BorderBrush"
-                                                    Value="#FF5b5b5b" />
+                                                    Value="#AF5b5b5b" />
                                                 <Setter Property="BorderThickness"
                                                     Value="1,0,1,1" />
                                                 <Setter Property="CornerRadius"
@@ -161,6 +161,7 @@
                                 TargetName="Col3" />
                             <Setter Property="Height"
                                 Value="22" />
+
                             <Setter Property="FontSize"
                                 Value="14" />
                             <Setter Property="Visibility"
@@ -335,14 +336,7 @@
                                 Margin="{TemplateBinding Padding}"
                                 x:Name="HeaderHost"
                                 RecognizesAccessKey="True"
-                                ContentSource="Header">
-                                <ContentPresenter.Effect>
-                                    <DropShadowEffect Color="White"
-                                                        ShadowDepth="1"
-                                                                  Direction="270"
-                                                        Opacity="0.3" BlurRadius="0" />
-                                </ContentPresenter.Effect>
-                            </ContentPresenter>
+                                ContentSource="Header" />
                             <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
                             <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
                                 Placement="Right"
@@ -363,19 +357,9 @@
                                         <Border>
                                             <Border.Style>
                                                 <Style TargetType="{x:Type Border}">
-                                                    <Setter Property="Background">
-                                                        <Setter.Value>
-                                                            <LinearGradientBrush StartPoint="0.5,0"
-                                                            EndPoint="0.5,1">
-                                                                <GradientStop Color="#bf1a1a1a"
-                                                                Offset="0" />
-                                                                <GradientStop Color="#cF000000"
-                                                                Offset="1" />
-                                                            </LinearGradientBrush>
-                                                        </Setter.Value>
-                                                    </Setter>
+                                                    <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
                                                     <Setter Property="BorderBrush"
-                                                    Value="#FF5b5b5b" />
+                                                    Value="#AF5b5b5b" />
                                                     <Setter Property="BorderThickness"
                                                     Value="0,0,0,1" />
                                                     <Setter Property="Padding"
@@ -413,6 +397,14 @@
                                 Value="Segoe UI" />
                             <Setter Property="FontSize"
                                 Value="14" />
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="White"
+                                                        ShadowDepth="1"
+                                                                  Direction="270"
+                                                        Opacity="0.3" BlurRadius="0" />
+                                </Setter.Value>
+                            </Setter>
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>

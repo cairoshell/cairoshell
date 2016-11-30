@@ -45,6 +45,9 @@ namespace CairoDesktop
 
             this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
 
+            // Set username
+            miUserName.Header = Environment.UserName.Replace("_", "__");
+
             // Show the search button only if the service is running
             if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
             {

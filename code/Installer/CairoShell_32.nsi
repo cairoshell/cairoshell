@@ -9,7 +9,7 @@
 Name "Cairo Desktop Environment"
 
 ; The file to write
-OutFile "Cairo Desktop Installer Test.exe"
+OutFile "CairoShellSetup_x86.exe"
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES\Cairo Shell"
@@ -67,6 +67,7 @@ Section "Cairo Shell (required)" cairo
   File "..\Cairo Desktop\Build\Release\CairoDesktop.AppGrabber.dll"
   File "..\Cairo Desktop\Build\Release\CairoDesktop.Interop.dll"
   File "..\Cairo Desktop\Build\Release\Interop.IWshRuntimeLibrary.dll"
+  File "..\Cairo Desktop\Build\Release\Interop.Shell32.dll"
   File "..\Cairo Desktop\Build\Release\WPFToolkit.dll"
   File "..\Cairo Desktop\Build\Release\SearchAPILib.dll"
   File "..\Cairo Desktop\Build\Release\UnhandledExceptionFilter.dll"
@@ -75,13 +76,8 @@ Section "Cairo Shell (required)" cairo
   File "..\Cairo Desktop\Build\Release\PostSharp.Laos.dll"
   File "..\Cairo Desktop\Build\Release\PostSharp.Public.dll"
   File "..\Cairo Desktop\Build\Release\PostSharp.Core.XmlSerializers.dll"
-  File "..\Cairo Desktop\Build\Release\CairoStyles_alt.xaml"
+  File "..\Cairo Desktop\Build\Release\White.xaml"
   File "ReleaseNotes.txt"
-  
-  SetOutPath "$INSTDIR\Resources"
-  File "..\Cairo Desktop\Build\Release\Resources\menuArrow.png"
-  File "..\Cairo Desktop\Build\Release\Resources\menubarWhite.png"
-  File "..\Cairo Desktop\Build\Release\Resources\stackShadow.png"
 
   ;Reboot just in case, some people seem to have issues for some reason.
   ; SetRebootFlag true
@@ -98,9 +94,9 @@ Section "Cairo Shell (required)" cairo
   ; Write the uninstall keys for Windows
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "DisplayName" "Cairo Desktop Environment"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "DisplayIcon" '"$INSTDIR\RemoveCairo.exe"'
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "DisplayVersion" "0.0.1.9"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "DisplayVersion" "0.2"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "UninstallString" '"$INSTDIR\RemoveCairo.exe"'
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "URLInfoAbout" "http://www.cairoshell.com"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "URLInfoAbout" "http://cairoshell.scj.me"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "Publisher" "Cairo Development Team"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "NoRepair" 1
@@ -156,6 +152,7 @@ Section "Uninstall"
   Delete "$INSTDIR\CairoDesktop.AppGrabber.dll"
   Delete "$INSTDIR\CairoDesktop.Interop.dll"
   Delete "$INSTDIR\Interop.IWshRuntimeLibrary.dll"
+  Delete "$INSTDIR\Interop.Shell32.dll"
   Delete "$INSTDIR\WPFToolkit.dll"
   Delete "$INSTDIR\ReleaseNotes.txt"
   Delete "$INSTDIR\SearchAPILib.dll"
@@ -167,13 +164,9 @@ Section "Uninstall"
   Delete "$INSTDIR\PostSharp.Laos.dll"
   Delete "$INSTDIR\PostSharp.Core.XmlSerializers.dll"
   Delete $INSTDIR\RemoveCairo.exe
-  Delete "$INSTDIR\CairoStyles_alt.xaml"
-  Delete "$INSTDIR\Resources\menuArrow.png"
-  Delete "$INSTDIR\Resources\menubarWhite.png"
-  Delete "$INSTDIR\Resources\stackShadow.png"
+  Delete "$INSTDIR\White.xaml"
 
   ; Remove directories used
-  RMDir "$INSTDIR\Resources"
   RMDir "$INSTDIR"
 
 SectionEnd

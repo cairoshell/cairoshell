@@ -86,8 +86,8 @@
                                 <MenuItem Header="Remove" Click="Remove_Click" CommandParameter="{Binding}" Style="{StaticResource CairoMenuItemStyle}" />
                             </ContextMenu>
                         </Menu.ContextMenu>
-                        <MenuItem Header="{Binding Path=Name}" CommandParameter="{Binding}" Style="{StaticResource CairoStacksStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Margin="0">
-                            <MenuItem Style="{StaticResource CairoStackViewStyle}">
+                        <MenuItem Header="{Binding Path=NameLabel}" CommandParameter="{Binding}" Style="{StaticResource CairoStacksStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Margin="0">
+                            <MenuItem>
                                 <MenuItem.Header>
                                     <Grid>
                                         <Grid.ColumnDefinitions>

@@ -73,13 +73,16 @@ namespace CairoDesktop.WindowsTasks
                 IntPtr iconHandle = GetIconForWindow(this.Handle);
 
                 Icon ico = null;
-                try
+                if (iconHandle != IntPtr.Zero)
                 {
-                    ico = Icon.FromHandle(iconHandle);
-                }   
-                catch
-                {
-                    ico = null;
+                    try
+                    {
+                        ico = Icon.FromHandle(iconHandle);
+                    }
+                    catch
+                    {
+                        ico = null;
+                    }
                 }
 
                 return ico;
@@ -101,6 +104,11 @@ namespace CairoDesktop.WindowsTasks
                 _state = value;
                 OnPropertyChanged("State");
             }
+        }
+
+        public int Placement
+        {
+            get { return GetWindowPlacement(this.Handle); }
         }
 
         public bool IsActive
@@ -135,12 +143,14 @@ namespace CairoDesktop.WindowsTasks
 
                 // Make sure this is a real application window and not a child or tool window
                 int GWL_EXSTYLE = -0x14;
+                int GWL_STYLE = -16;
                 int GW_Owner = 4;
 
                 int exStyles = GetWindowLong(this.Handle, GWL_EXSTYLE);
+                int style = GetWindowLong(this.Handle, GWL_STYLE);
                 IntPtr ownerWin = GetWindow(this.Handle, GW_Owner);
 
-                if (((exStyles & (int)ExtendedWindowStyles.WS_EX_APPWINDOW) != 0 || (exStyles & (int)ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0) && (ownerWin == IntPtr.Zero && (exStyles & (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW) == 0))
+                if (((exStyles & (int)ExtendedWindowStyles.WS_EX_APPWINDOW) != 0 || (exStyles & (int)ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0) && (ownerWin == IntPtr.Zero && (exStyles & (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW) == 0 && (style & 0x10C00000) == 0x10C00000))
                 {
                     return true;
                 }
@@ -182,24 +192,34 @@ namespace CairoDesktop.WindowsTasks
                     hIco = GetClassLongPtr(hWnd, GCL_HICON);
             }
 
-            if (hIco == IntPtr.Zero)
-            {
-                hIco = LoadIcon(IntPtr.Zero, IDI_APPLICATION);
-            }
-
             return hIco;
         }
 
         public void BringToFront()
         {
-            ShowWindow(this.Handle, WindowShowStyle.Restore);
+            // so that maximized windows stay that way
+            if(Placement == 3)
+                ShowWindow(this.Handle, WindowShowStyle.Show);
+            else
+                ShowWindow(this.Handle, WindowShowStyle.Restore);
+
             SetForegroundWindow(this.Handle);
         }
 
         public void Minimize()
         {
-            //...In your code some where: show a form, without making it active
             ShowWindow(this.Handle, WindowShowStyle.Minimize);
+        }
+
+        /// <summary>
+        /// Returns whether a window is normal (1), minimized (2), or maximized (3).
+        /// </summary>
+        /// <param name="hWnd">The handle of the window.</param>
+        public int GetWindowPlacement(IntPtr hWnd)
+        {
+            WINDOWPLACEMENT placement = new WINDOWPLACEMENT();
+            GetWindowPlacement(hWnd, ref placement);
+            return placement.showCmd;
         }
 
         /// <summary>
@@ -255,7 +275,21 @@ namespace CairoDesktop.WindowsTasks
         private static extern IntPtr GetWindow(IntPtr handle, int wCmd);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
+
+        [DllImport("user32.dll")]
         static extern IntPtr LoadIcon(IntPtr hInstance, IntPtr lpIconName);
+
+        private struct WINDOWPLACEMENT
+        {
+            public int length;
+            public int flags;
+            public int showCmd;
+            public System.Drawing.Point ptMinPosition;
+            public System.Drawing.Point ptMaxPosition;
+            public System.Drawing.Rectangle rcNormalPosition;
+        }
 
         /// <summary>Shows a Window</summary>
         /// <remarks>

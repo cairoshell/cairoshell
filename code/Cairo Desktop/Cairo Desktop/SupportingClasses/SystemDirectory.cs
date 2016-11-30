@@ -40,7 +40,12 @@ namespace CairoDesktop {
         public string Name {
             get { return dir.Name; }
         }
-        
+
+        public string NameLabel
+        {
+            get { return dir.Name.Replace("_", "__"); }
+        }
+
         public string FullName {
             get { return dir.FullName; }
         }

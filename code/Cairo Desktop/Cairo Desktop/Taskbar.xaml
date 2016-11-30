@@ -50,8 +50,7 @@
                             <Border SnapsToDevicePixels="true"
                                 x:Name="Bd"
                                 Background="{TemplateBinding Background}">
-                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                    MinHeight="29" Focusable="False" />
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Focusable="False" />
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled"
@@ -89,7 +88,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="36" />
+            <ColumnDefinition Width="32" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Border CornerRadius="8,0,0,0" BorderThickness="1,1,0,0" HorizontalAlignment="Center" Grid.Column="1" Padding="5,0,0,0" Name="TaskbarBorder">
@@ -112,6 +111,7 @@
                     Background="{x:Null}"
                     Foreground="{x:Null}"
                     Style="{DynamicResource ListViewStyle1}"
+                          MinHeight="29"
                     BorderThickness="0"
                     Margin="0,0,4,0"
                     VerticalAlignment="Stretch">
@@ -182,14 +182,14 @@
                 </LinearGradientBrush>
             </Border.BorderBrush>
             <StackPanel Orientation="Horizontal">
-            <Button Margin="2,0,1,0" Height="26" Style="{StaticResource CairoTaskbarButtonList}" Click="Button_Click">
+            <Button Margin="1,0,1,0" Height="26" Style="{StaticResource CairoTaskbarButtonList}" Click="Button_Click">
                 <Image Source="Resources\taskListIcon.png"
                            Width="15"
                            Height="12"
                            Opacity="0.3"
                            Margin="0,0,0,0"></Image>
             </Button>
-            <Popup Placement="MousePoint" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade">
+            <Popup Placement="Top"  Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade">
                 <Border Style="{StaticResource CairoTaskListPopupStyle}">
                     <ListView HorizontalAlignment="Stretch"
                     DataContext="{StaticResource tasksSvc}"
