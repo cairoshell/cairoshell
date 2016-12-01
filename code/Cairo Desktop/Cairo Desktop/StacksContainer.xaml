@@ -96,7 +96,7 @@
                                             <ColumnDefinition Width="30" />
                                         </Grid.ColumnDefinitions>
                                         <Button Grid.Column="0" Style="{StaticResource StackScrollButton}" Command="ScrollBar.PageLeftCommand" CommandTarget="{Binding ElementName=Scroller}" Content="3" />
-                                        <ScrollViewer x:Name="Scroller" Grid.Column="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" Grid.ColumnSpan="1" FocusManager.IsFocusScope="True" Margin="-10,0,-10,-10">
+                                        <ScrollViewer x:Name="Scroller" Grid.Column="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" Grid.ColumnSpan="1" FocusManager.IsFocusScope="True" Margin="-5,0,-5,-10">
                                             <ItemsControl Style="{StaticResource FolderViewStyle}" ItemsSource="{Binding Path=Files}" />
                                         </ScrollViewer>
                                         <Button Grid.Column="2" Style="{StaticResource StackScrollButton}" Command="ScrollBar.PageRightCommand" CommandTarget="{Binding ElementName=Scroller}" Content="4" />

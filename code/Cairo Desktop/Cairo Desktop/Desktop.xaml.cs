@@ -55,5 +55,11 @@ namespace CairoDesktop
                 }
             }
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // show the windows desktop
+            Interop.Shell.ToggleDesktopIcons(true);
+        }
     }
 }

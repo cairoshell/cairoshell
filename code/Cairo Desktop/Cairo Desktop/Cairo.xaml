@@ -29,6 +29,20 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- Main menu bar background style -->
+    <Style x:Key="MenuBarStyle"
+        TargetType="{x:Type DockPanel}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#8F4a4a4a" Offset="1.0" />
+                    <GradientStop Color="#CF000000" Offset="0.0" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <!-- New menu styles below, will be renamed later -->
     <Style x:Key="CairoMenuBarMainContainerStyle"
         TargetType="{x:Type Menu}">
@@ -455,29 +469,26 @@
                                 <ContentPresenter Grid.Column="0" Margin="{TemplateBinding Padding}" x:Name="HeaderHost" RecognizesAccessKey="True" ContentSource="Header" />
                                 <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
                                 <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
-                                Placement="Right"
+                                Placement="Left"
                                 x:Name="SubMenuPopup"
-                                Focusable="false"
+                                Focusable="False"
                                 PopupAnimation="Fade"
                                 AllowsTransparency="True">
-                                        <Grid x:Name="SubMenu"
-                                            Grid.IsSharedSizeScope="True">
-                                        <Border Margin="5,0,11,11">
-                                            <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
-                                            <StackPanel IsItemsHost="True"
+                                    <Border Margin="5,0,11,11">
+                                        <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
+                                        <StackPanel IsItemsHost="True"
                                                     KeyboardNavigation.DirectionalNavigation="Cycle" />
-                                            <Border.Style>
-                                                <Style TargetType="{x:Type Border}">
-                                                    <Setter Property="BorderBrush"
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="BorderBrush"
                                                 Value="#FF12367F" />
-                                                    <Setter Property="BorderThickness"
+                                                <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
-                                                    <Setter Property="Effect"
+                                                <Setter Property="Effect"
                                                 Value="{StaticResource ResourceKey=CairoMenuShadow}" />
-                                                </Style>
-                                            </Border.Style>
-                                        </Border>
-                                    </Grid>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
                                 </Popup>
                             </Grid>
                         </Border>
@@ -1150,8 +1161,8 @@
     <Style x:Key="CairoTaskListPopupStyle" TargetType="{x:Type Border}">
         <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
         <Setter Property="BorderBrush" Value="#AF5b5b5b"/>
-        <Setter Property="BorderThickness" Value="1,1,1,1"/>
-        <Setter Property="CornerRadius" Value="5,5,5,5"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Padding" Value="0,5,0,5"/>
         <Setter Property="Margin" Value="5,0,5,11" />
         <Setter Property="Effect" Value="{StaticResource ResourceKey=CairoMenuShadow}" />
@@ -1489,7 +1500,7 @@
                                             </Grid>
                                         </Border>
                                     </Border>
-                                    <Image Source="{DynamicResource MenubarBackground}" Stretch="Fill" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
+                                    <Image Source="{DynamicResource MenubarShadow}" Stretch="Fill" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
                                 </StackPanel>
                             </Popup>
                         </Grid>

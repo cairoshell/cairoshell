@@ -16,6 +16,7 @@
     Focusable="False"
     Background="{x:Null}"
         Activated="Window_Activated"
+        Closing="Taskbar_Closing"
     Topmost="True">
     <Window.Resources>
         <ResourceDictionary>
@@ -189,7 +190,7 @@
                            Opacity="0.3"
                            Margin="0,0,0,0"></Image>
             </Button>
-            <Popup Placement="Top"  Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade">
+            <Popup Placement="Top" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade">
                 <Border Style="{StaticResource CairoTaskListPopupStyle}">
                     <ListView HorizontalAlignment="Stretch"
                     DataContext="{StaticResource tasksSvc}"

@@ -134,6 +134,7 @@
     <Compile Include="DesktopNavigationToolbar.xaml.cs">
       <DependentUpon>DesktopNavigationToolbar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SupportingClasses\AppBarHelper.cs" />
     <Compile Include="SystemTray.xaml.cs">
       <DependentUpon>SystemTray.xaml</DependentUpon>
     </Compile>
@@ -226,7 +227,6 @@
     <Compile Include="MenuBarShadow.xaml.cs">
       <DependentUpon>MenuBarShadow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AppBar Helper\NativeMethods.cs" />
     <Compile Include="StacksContainer.xaml.cs">
       <DependentUpon>StacksContainer.xaml</DependentUpon>
     </Compile>
@@ -250,7 +250,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="AppBar Helper\SHAppBarMessageHelper.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="SupportingClasses\SystemFile.cs" />
     <Compile Include="SupportingClasses\TaskbuttonStyleConverter.cs" />

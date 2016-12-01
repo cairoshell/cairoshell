@@ -150,7 +150,7 @@ namespace CairoDesktop.WindowsTasks
                 int style = GetWindowLong(this.Handle, GWL_STYLE);
                 IntPtr ownerWin = GetWindow(this.Handle, GW_Owner);
 
-                if (((exStyles & (int)ExtendedWindowStyles.WS_EX_APPWINDOW) != 0 || (exStyles & (int)ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0) && (ownerWin == IntPtr.Zero && (exStyles & (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW) == 0 && (style & 0x10C00000) == 0x10C00000))
+                if (((exStyles & (int)ExtendedWindowStyles.WS_EX_APPWINDOW) != 0 || (exStyles & (int)ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0) && (ownerWin == IntPtr.Zero && (exStyles & (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW) == 0 && (style & (int)WindowStyles.WS_VISIBLE) == (int)WindowStyles.WS_VISIBLE))
                 {
                     return true;
                 }

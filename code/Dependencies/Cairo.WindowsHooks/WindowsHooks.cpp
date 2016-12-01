@@ -32,9 +32,6 @@
 BOOL WINAPI DllMain(HINSTANCE hInstDll, DWORD dwReason, LPVOID reserved)
 {
 	m_hInstance = hInstDll;
-	// use this to hide windows explorer elements if you so desire
-	/*ShowWindow(FindWindow(L"Shell_TrayWnd", NULL), SW_HIDE);
-	ShowWindow(FindWindow(NULL, L"Program Manager"), SW_HIDE);*/
 	return TRUE;
 }
 

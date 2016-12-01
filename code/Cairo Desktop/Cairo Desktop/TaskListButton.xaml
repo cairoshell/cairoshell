@@ -27,18 +27,15 @@
             </Button.ContextMenu>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="21" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Image Source="{Binding Path=Icon, Converter={StaticResource iconConverter}}"
                     Width="16"
                     Height="16"
-                    Grid.Column="0" Margin="0,0,5,0"/>
-                <!-- text block requires width to center text;
-                    should implement a dynamic width variable for when the buttons 
-                    resize when the taskbar is filled -->
+                    Grid.Column="0" Margin="3,0,6,0"/>
                 <TextBlock Padding="0,0,5,0"
-                           Width="180" Name="WinTitle"
+                           Name="WinTitle"
                     Text="{Binding Path=Title}"
                     TextTrimming="CharacterEllipsis"
                     Grid.Column="1" TextAlignment="Left">

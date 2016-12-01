@@ -62,6 +62,18 @@
             if (Properties.Settings.Default.IsFirstRun == true)
                 Properties.Settings.Default.Upgrade();
 
+            if (Properties.Settings.Default.EnableTaskbar)
+            {
+                // hide the windows taskbar
+                SupportingClasses.AppBarHelper.SetWinTaskbarState(SupportingClasses.AppBarHelper.WinTaskbarState.AutoHide);
+            }
+
+            if (Properties.Settings.Default.EnableDesktop)
+            {
+                // hide the windows desktop
+                Interop.Shell.ToggleDesktopIcons(false);
+            }
+
             _parentWindow = new Window();
             InitializeParentWindow(_parentWindow);
 

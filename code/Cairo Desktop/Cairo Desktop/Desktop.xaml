@@ -10,7 +10,7 @@
     Left="0"
     AllowsTransparency="True"
     Focusable="False"
-    Background="{x:Null}" Topmost="False" Activated="Window_Activated">
+    Background="{x:Null}" Topmost="False" Activated="Window_Activated" Closing="Window_Closing">
     <Grid Name="grid">
     </Grid>
 </Window>

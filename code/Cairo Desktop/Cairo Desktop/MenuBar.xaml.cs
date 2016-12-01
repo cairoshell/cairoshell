@@ -1,26 +1,16 @@
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Diagnostics;
-using System.Net;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Navigation;
 using System.Windows.Threading;
-using System.Windows.Controls.Primitives;
-// Helper code - thanks to Greg Franklin - MSFT
-using SHAppBarMessage1.Common;
 using CairoDesktop.Interop;
 using System.Resources;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Windows.Markup;
-using System.Threading.Tasks;
-using System.Threading;
+using CairoDesktop.SupportingClasses;
+using System.Windows.Interop;
 
 namespace CairoDesktop
 {
@@ -41,7 +31,7 @@ namespace CairoDesktop
             // Set custom theme if selected
             string theme = Properties.Settings.Default.CairoTheme;
             if (theme != "Default")
-                this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
+                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
             this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
 
@@ -80,7 +70,6 @@ namespace CairoDesktop
             {
                 PlacesDownloadsItem.Visibility = Visibility.Collapsed;
             }
-            // ---------------------------------------------------------------- //
 
             InitializeClock();
 
@@ -121,7 +110,7 @@ namespace CairoDesktop
             }
             catch (Exception ex)
             {
-                CairoMessage.Show("Whoops, it seems we had some trouble opening the search result you chose.\n\n The error we received was: " + ex.Message, "Uh Oh!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show("Sorry, this search result was unable to be opened, because: " + ex.Message, "Uh Oh!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -144,9 +133,6 @@ namespace CairoDesktop
                             System.Diagnostics.Trace.WriteLine("Repositioning menu bar to top of screen.");
                             this.Top = 0;
                         }
-                        /*SHAppBarMessageHelper.QuerySetPosition(hwnd, 
-                            new System.Drawing.Size() { Height = (int)this.ActualWidth, Width = (int)this.ActualWidth }, 
-                            SHAppBarMessage1.Win32.NativeMethods.ABEdge.ABE_TOP);*/
                         break;
                 }
                 handled = true;
@@ -197,10 +183,8 @@ namespace CairoDesktop
             source.AddHook(new HwndSourceHook(WndProc));
 
             handle = helper.Handle;
-            System.Drawing.Size size = new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight);
 
-            appbarMessageId = SHAppBarMessageHelper.RegisterBar(handle, size);
-            //SHAppBarMessageHelper.QuerySetPosition(handle, size, SHAppBarMessage1.Win32.NativeMethods.ABEdge.ABE_TOP);
+            appbarMessageId = AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
 
             if (Properties.Settings.Default.EnableSysTray == true)
             {
@@ -212,9 +196,7 @@ namespace CairoDesktop
         {
             if (CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/exitIcon.png", "Exit Cairo", "Cancel") == true)
             {
-                //SHAppBarMessageHelper.DeRegisterBar(handle);
-                System.Drawing.Size size = new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight);
-                SHAppBarMessageHelper.RegisterBar(handle, size);
+                AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight));
                 SysTray.DestroySystemTray();
                 Application.Current.Shutdown();
             }
@@ -226,10 +208,7 @@ namespace CairoDesktop
 
         private void OnWindowResize(object sender, RoutedEventArgs e)
         {
-            Trace.WriteLine("OnWindowResize raised...");
-            System.Drawing.Size size = new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight);
-            //SHAppBarMessageHelper.QuerySetPosition(handle, size, SHAppBarMessage1.Win32.NativeMethods.ABEdge.ABE_TOP);
-            SHAppBarMessageHelper.ABSetPos(handle, size);
+            AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
         }
 
         private void LaunchProgram(object sender, RoutedEventArgs e)
@@ -295,9 +274,7 @@ namespace CairoDesktop
             bool? CloseCairoChoice = CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/exitIcon.png", "Exit Cairo", "Cancel");
             if (CloseCairoChoice.HasValue && CloseCairoChoice.Value)
             {
-                //SHAppBarMessageHelper.DeRegisterBar(handle);
-                System.Drawing.Size size = new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight);
-                SHAppBarMessageHelper.RegisterBar(handle, size);
+                AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight));
                 SysTray.DestroySystemTray();
                 Application.Current.Shutdown();
                 // TODO: Will want to relaunch explorer.exe when we start disabling it

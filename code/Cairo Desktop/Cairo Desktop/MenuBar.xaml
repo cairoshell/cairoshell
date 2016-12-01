@@ -22,14 +22,8 @@
     Closing="OnWindowClosing"
     SizeChanged="OnWindowResize"
         UseLayoutRounding="True"
-    MaxHeight="23">
-    <Window.Background>
-        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#8F4a4a4a" Offset="1.0" />
-            <GradientStop Color="#CF000000" Offset="0.0" />
-        </LinearGradientBrush>
-        
-    </Window.Background>
+    MaxHeight="23"
+        Background="Transparent">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
