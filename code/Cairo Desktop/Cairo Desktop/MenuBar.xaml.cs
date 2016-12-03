@@ -202,16 +202,9 @@ namespace CairoDesktop
 
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            if (CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/exitIcon.png", "Exit Cairo", "Cancel") == true)
-            {
-                AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight));
-                SysTray.DestroySystemTray();
-                Application.Current.Shutdown();
-            }
-            else
-            {
-                e.Cancel = true;
-            }
+            AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight));
+            SysTray.DestroySystemTray();
+            Application.Current.Shutdown();
         }
 
         private void OnWindowResize(object sender, RoutedEventArgs e)
