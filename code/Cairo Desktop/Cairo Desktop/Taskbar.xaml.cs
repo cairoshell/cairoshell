@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Markup;
 using CairoDesktop.SupportingClasses;
+using System.Windows.Interop;
 
 namespace CairoDesktop
 {
@@ -10,6 +11,11 @@ namespace CairoDesktop
     /// </summary>
     public partial class Taskbar : Window
     {
+        // AppBar properties
+        private WindowInteropHelper helper;
+        private IntPtr handle;
+        private int appbarMessageId = -1;
+
         public AppGrabber.AppGrabber appGrabber;
 
         private String configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";
@@ -24,7 +30,8 @@ namespace CairoDesktop
 
             appGrabber = AppGrabber.AppGrabber.Instance;
             this.quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
-            this.TaskbarBorder.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth - 36;
+            this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
+            this.grdTaskbar.Width = AppBarHelper.PrimaryMonitorSize.Width;
 
             moveToBottom();
         }
@@ -64,26 +71,44 @@ namespace CairoDesktop
             this.Top = SystemParameters.WorkArea.Bottom - this.Height;
         }
 
-        protected override void OnSourceInitialized(EventArgs e)
-        {
-            base.OnSourceInitialized(e);
-            var source = PresentationSource.FromVisual(this) as System.Windows.Interop.HwndSource;
-            source.AddHook(WndProc);
-        }
-
-        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (msg == WM_MOUSEACTIVATE)
             {
                 handled = true;
                 return new IntPtr(MA_NOACTIVATE);
             }
-            else
+
+            if (msg == appbarMessageId)
             {
-                return IntPtr.Zero;
+                switch (wParam.ToInt32())
+                {
+                    case 1:
+                        // Reposition to the bottom of the screen.
+                        this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
+                        this.grdTaskbar.Width = AppBarHelper.PrimaryMonitorSize.Width;
+                        //AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_BOTTOM);
+                        break;
+                }
+                handled = true;
             }
+
+            return IntPtr.Zero;
         }
         private const int WM_MOUSEACTIVATE = 0x0021;
         private const int MA_NOACTIVATE = 0x0003;
+
+        private void TaskbarWindow_SourceInitialized(object sender, EventArgs e)
+        {
+            helper = new WindowInteropHelper(this);
+
+            HwndSource source = HwndSource.FromHwnd(helper.Handle);
+            source.AddHook(new HwndSourceHook(WndProc));
+
+            handle = helper.Handle;
+
+            // Windows bugs make this no bueno...
+            //appbarMessageId = AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_BOTTOM);
+        }
     }
 }

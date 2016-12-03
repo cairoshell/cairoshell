@@ -31,7 +31,8 @@ namespace CairoDesktop.SupportingClasses
 
             if (!appBars.Contains(handle))
             {
-                uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage" + Guid.NewGuid().ToString());
+                //uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage" + Guid.NewGuid().ToString());
+                uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage");
                 abd.uCallbackMessage = uCallBack;
 
                 uint ret = NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_NEW, ref abd);
@@ -101,6 +102,7 @@ namespace CairoDesktop.SupportingClasses
             }
 
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_QUERYPOS, ref abd);
+            NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_QUERYPOS, ref abd);
 
             switch (abd.uEdge)
             {
@@ -119,11 +121,15 @@ namespace CairoDesktop.SupportingClasses
             }
 
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETPOS, ref abd);
-            Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_TOP, "*** TOP EDGE - CX is: " + (abd.rc.bottom - abd.rc.top).ToString());
+
+            // tracing
+            Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_TOP, "Top AppBar height is " + (abd.rc.bottom - abd.rc.top).ToString());
+            Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_BOTTOM, "Bottom AppBar height is " + (abd.rc.bottom - abd.rc.top).ToString());
+
             NativeMethods.MoveWindow(abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top, true);
         }
 
-        private static Size PrimaryMonitorSize
+        public static Size PrimaryMonitorSize
         {
             get
             {

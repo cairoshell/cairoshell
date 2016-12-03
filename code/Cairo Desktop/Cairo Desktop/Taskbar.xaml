@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.Taskbar" xmlns:tasks="clr-namespace:CairoDesktop.WindowsTasks;assembly=CairoDesktop.WindowsTasks" xmlns:self="clr-namespace:CairoDesktop"
-    x:Name="Window"
+    x:Name="TaskbarWindow"
     Title=""
     Height="29"
     WindowStyle="None"
@@ -16,7 +16,7 @@
     Focusable="False"
     Background="{x:Null}"
         Activated="Window_Activated"
-        Closing="Taskbar_Closing"
+        Closing="Taskbar_Closing" SourceInitialized="TaskbarWindow_SourceInitialized"
     Topmost="True">
     <Window.Resources>
         <ResourceDictionary>
@@ -84,7 +84,7 @@
             </Style>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid Width="{x:Static SystemParameters.MaximizedPrimaryScreenWidth}"
+    <Grid x:Name="grdTaskbar"
         HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />

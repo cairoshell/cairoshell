@@ -16,10 +16,13 @@ namespace CairoDesktop
 {
     public partial class MenuBar
     {
+        // AppBar properties
         private WindowInteropHelper helper;
         private IntPtr handle;
-        public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
         private int appbarMessageId = -1;
+
+        // AppGrabber instance
+        public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
         private String configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+@"\CairoAppConfig.xml";
         private String fileManger = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.FileManager);
@@ -27,6 +30,8 @@ namespace CairoDesktop
         public MenuBar()
         {
             this.InitializeComponent();
+
+            this.Width = AppBarHelper.PrimaryMonitorSize.Width;
 
             // Set custom theme if selected
             string theme = Properties.Settings.Default.CairoTheme;
@@ -123,16 +128,11 @@ namespace CairoDesktop
 
             if (msg == appbarMessageId)
             {
-                System.Diagnostics.Trace.WriteLine("Callback on AppBarMessage: " + wparam.ToString());
                 switch (wparam.ToInt32())
                 {
                     case 1:
                         // Reposition to the top of the screen.
-                        if (this.Top != 0)
-                        {
-                            System.Diagnostics.Trace.WriteLine("Repositioning menu bar to top of screen.");
-                            this.Top = 0;
-                        }
+                        AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
                         break;
                 }
                 handled = true;
@@ -175,7 +175,7 @@ namespace CairoDesktop
             Visibility = Visibility.Visible;
         }
 
-        private void OnWindowLoaded(object sender, RoutedEventArgs e)
+        private void Window_SourceInitialized(object sender, EventArgs e)
         {
             helper = new WindowInteropHelper(this);
 
@@ -186,6 +186,11 @@ namespace CairoDesktop
 
             appbarMessageId = AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
 
+        }
+
+        private void OnWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            
             if (Properties.Settings.Default.EnableSysTray == true)
             {
                 SysTray.InitializeSystemTray();
@@ -208,7 +213,8 @@ namespace CairoDesktop
 
         private void OnWindowResize(object sender, RoutedEventArgs e)
         {
-            AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
+            // making sure this isn't necessary
+            //AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
         }
 
         private void LaunchProgram(object sender, RoutedEventArgs e)
