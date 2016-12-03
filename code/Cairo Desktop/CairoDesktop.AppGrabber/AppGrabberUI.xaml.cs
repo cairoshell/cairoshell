@@ -1,18 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 
 namespace CairoDesktop.AppGrabber
@@ -43,7 +32,7 @@ namespace CairoDesktop.AppGrabber
             // Create ObservableCollections to bind to the ListViews
 
             ObservableCollection<ApplicationInfo> installedAppsCollection = new ObservableCollection<ApplicationInfo>();
-            programsMenuAppsCollection = new ObservableCollection<ApplicationInfo>(appGrabber.CategoryList.FlatList.ToList());
+            programsMenuAppsCollection = appGrabber.CategoryList.FlatList;
             InstalledAppsView.ItemsSource = installedAppsCollection;
             ProgramsMenuAppsView.ItemsSource = programsMenuAppsCollection;
             // Need to use an event handler to remove Apps from categories when moved to the "Installed Applications" listing
@@ -78,7 +67,7 @@ namespace CairoDesktop.AppGrabber
 
         private void Button_Click(object sender, RoutedEventArgs e) {
             this.Visibility = Visibility.Hidden;
-            new AppGrabberUI_Page2(this.appGrabber, programsMenuAppsCollection).ShowDialog();
+            new AppGrabberUI_Page2(this.appGrabber, programsMenuAppsCollection).Show();
             this.Close();
         }
     }

@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Controls;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using CairoDesktop;
-using CairoDesktop.Interop;
-using System.Xml.Serialization;
 using System.Linq;
 
 namespace CairoDesktop.AppGrabber
@@ -58,7 +52,14 @@ namespace CairoDesktop.AppGrabber
         {
             get
             {
-                return this.CategoryList.GetCategory("Quick Launch") ?? new Category("Quick Launch");
+                Category quicklaunch = this.CategoryList.GetCategory("Quick Launch");
+                if (quicklaunch == null)
+                {
+                    this.CategoryList.Add(new Category("Quick Launch"));
+                    quicklaunch = this.CategoryList.GetCategory("Quick Launch");
+                    quicklaunch.ShowInMenu = false;
+                }
+                return quicklaunch;
             }
         }
 

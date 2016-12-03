@@ -31,8 +31,7 @@ namespace CairoDesktop.SupportingClasses
 
             if (!appBars.Contains(handle))
             {
-                //uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage" + Guid.NewGuid().ToString());
-                uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage");
+                uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage" + Guid.NewGuid().ToString());
                 abd.uCallbackMessage = uCallBack;
 
                 uint ret = NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_NEW, ref abd);
@@ -101,7 +100,6 @@ namespace CairoDesktop.SupportingClasses
                 }
             }
 
-            NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_QUERYPOS, ref abd);
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_QUERYPOS, ref abd);
 
             switch (abd.uEdge)

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Windows;
 using System.ComponentModel;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace CairoDesktop.AppGrabber {
 
@@ -25,7 +23,27 @@ namespace CairoDesktop.AppGrabber {
             }
         }
 
-        private List<ApplicationInfo> internalList;
+        private List<ApplicationInfo> appsList;
+
+        private List<ApplicationInfo> internalList
+        {
+            get
+            {
+                if (this.Name == "All")
+                {
+                    List<ApplicationInfo> list = this.ParentCategoryList.FlatList.ToList();
+                    list.Sort();
+                    return list;
+                }
+                else
+                    return appsList;
+            }
+
+            set
+            {
+                appsList = value;
+            }
+        }
 
         private String name;
         /// <summary>
@@ -50,7 +68,7 @@ namespace CairoDesktop.AppGrabber {
         public Category() {
             this.Name = "Unknown";
             this.ShowInMenu = true;
-            this.internalList = new List<ApplicationInfo>();
+            this.appsList = new List<ApplicationInfo>();
             AppViewSorter.Sort(this, "Name");
         }
 
@@ -62,9 +80,10 @@ namespace CairoDesktop.AppGrabber {
         public Category(String name, IList<ApplicationInfo> apps) {
             this.Name = name;
             this.ShowInMenu = true;
-            this.internalList = new List<ApplicationInfo>();
+            this.appsList = new List<ApplicationInfo>();
             this.AddRange(apps);
-            AppViewSorter.Sort(this, "Name");
+            if (this.Name != "All")
+                AppViewSorter.Sort(this, "Name");
         }
 
         /// <summary>
@@ -74,8 +93,9 @@ namespace CairoDesktop.AppGrabber {
         public Category(String name) {
             this.Name = name;
             this.ShowInMenu = true;
-            this.internalList = new List<ApplicationInfo>();
-            AppViewSorter.Sort(this, "Name");
+            this.appsList = new List<ApplicationInfo>();
+            if (this.Name != "All")
+                AppViewSorter.Sort(this, "Name");
         }
 
         /// <summary>

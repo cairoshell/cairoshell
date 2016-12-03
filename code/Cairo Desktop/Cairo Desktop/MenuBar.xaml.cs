@@ -84,6 +84,11 @@ namespace CairoDesktop
             {
                 ql.ShowInMenu = false;
             }
+            AppGrabber.Category uncat = appGrabber.CategoryList.GetCategory("Uncategorized");
+            if (uncat != null)
+            {
+                uncat.ShowInMenu = false;
+            }
 
             //Set Programs Menu to use appGrabber's ProgramList as its source
             categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
@@ -185,12 +190,10 @@ namespace CairoDesktop
             handle = helper.Handle;
 
             appbarMessageId = AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
-
         }
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            
             if (Properties.Settings.Default.EnableSysTray == true)
             {
                 SysTray.InitializeSystemTray();

@@ -104,54 +104,26 @@
                 </MenuItem>
                 <MenuItem Header="Programs"
                     Style="{DynamicResource CairoMenuItemStyle}"
-                    ItemContainerStyle="{DynamicResource CairoMenuItemContainerStyle}" TextBlock.FontFamily="./Resources/#Segoe UI Semibold">
-                    <ScrollViewer MaxHeight="600"
+                    ItemContainerStyle="{DynamicResource CairoMenuItemContainerStyle}" TextBlock.FontFamily="./Resources/#Segoe UI Semibold" StaysOpenOnClick="True">
+                    <MenuItem StaysOpenOnClick="True">
+                        <MenuItem.Header>
+                            <TabControl Name="categorizedProgramsList" TabStripPlacement="Right" Style="{StaticResource ProgramsTabControl}">
+                                <TabControl.Resources>
+                                    <Style TargetType="TabItem" BasedOn="{StaticResource ProgramsTabItem}">
+                                    </Style>
+                                </TabControl.Resources>
+                                <TabControl.ContentTemplate>
+                                    <DataTemplate>
+                                        <ScrollViewer MaxHeight="600" Width="240"
                         VerticalScrollBarVisibility="Auto">
-                        <ItemsControl Name="categorizedProgramsList">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <StackPanel.Resources>
-                                            <Style TargetType="{x:Type StackPanel}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Path=Count}"
-                                                        Value="0">
-                                                        <Setter Property="Visibility"
-                                                            Value="Collapsed" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=ShowInMenu}"
-                                                        Value="False">
-                                                        <Setter Property="Visibility"
-                                                            Value="Collapsed" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </StackPanel.Resources>
-                                        <Border BorderThickness="0,0,0,1">
-                                            <Border.BorderBrush>
-                                                <LinearGradientBrush StartPoint="0,0"
-                                                    EndPoint="1,0">
-                                                    <GradientStop Color="DarkGray"
-                                                        Offset="0" />
-                                                    <GradientStop Color="Transparent"
-                                                        Offset="1" />
-                                                </LinearGradientBrush>
-                                            </Border.BorderBrush>
-                                            <TextBlock Text="{Binding Path=Name}"
-                                                Foreground="White"
-                                                FontFamily="Segoe UI"
-                                                FontSize="10"
-                                                FontWeight="Bold"
-                                                Padding="5"
-                                                Background="Transparent" />
-                                        </Border>
-                                        <ItemsControl ItemsSource="{Binding}"
+                                            <ItemsControl ItemsSource="{Binding}"
                                             Style="{DynamicResource InnerProgramsListStyle}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
+                                        </ScrollViewer>
+                                    </DataTemplate>
+                                </TabControl.ContentTemplate>
+                            </TabControl>
+                            </MenuItem.Header>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Places"
                     Style="{DynamicResource CairoMenuItemStyle}" TextBlock.FontFamily="./Resources/#Segoe UI Semibold">

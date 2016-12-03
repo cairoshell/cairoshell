@@ -164,7 +164,7 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <DockPanel>
+                    <DockPanel Name="CategoryPanel">
                         <DockPanel DockPanel.Dock="Top">
                             <DockPanel.Background>
                                 <LinearGradientBrush StartPoint="0,0"
@@ -201,6 +201,11 @@
                             Style="{StaticResource ApplicationInfoListStyle}"
                             AlternationCount="2" />
                     </DockPanel>
+                    <DataTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=Name}" Value="All">
+                            <Setter TargetName="CategoryPanel" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </DataTemplate.Triggers>
                 </DataTemplate>
             </Setter.Value>
         </Setter>

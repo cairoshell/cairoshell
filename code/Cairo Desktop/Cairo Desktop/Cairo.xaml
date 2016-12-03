@@ -1913,4 +1913,109 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <!-- Programs menu styles -->
+    <Style x:Key="ProgramsTabControl" TargetType="{x:Type TabControl}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0,5" />
+        <Setter Property="Margin" Value="0,-5" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <Grid KeyboardNavigation.TabNavigation="Local">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TabPanel x:Name="HeaderPanel"
+                        Grid.Column="1"
+                        Panel.ZIndex="1"
+                        Margin="0,5"
+                        IsItemsHost="True"
+                        Background="Transparent" />
+                        <Border x:Name="Border"
+                      Grid.Column="0"
+                      BorderThickness="0,0,1,0"
+                                BorderBrush="#AF5b5b5b"
+                                Background="Transparent">
+                            <ContentPresenter
+                                  Margin="0,5"
+                                  ContentSource="SelectedContent" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ProgramsTabItem" TargetType="{x:Type TabItem}">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Width" Value="140" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Border Name="Tab" Background="Transparent">
+                        <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left"
+                                        ContentSource="Header"
+                                        Margin="10,0"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="Tab" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Tab" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#30FFFFFF" Offset="0.0" />
+                                        <GradientStop Color="#01FFFFFF" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected"
+                                    Value="False" />
+                                <Condition SourceName="Tab" Property="IsMouseOver"
+                                    Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Foreground" Value="#FF9a9a9a" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=Count}"
+                                                        Value="0">
+                <Setter Property="Visibility"
+                                                            Value="Collapsed" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=ShowInMenu}"
+                                                        Value="False">
+                <Setter Property="Visibility"
+                                                            Value="Collapsed" />
+            </DataTrigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="White" />
+            </Trigger>
+            <Trigger Property="IsSelected" Value="False">
+                <Setter Property="Foreground" Value="#FF9a9a9a" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="Red" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>
