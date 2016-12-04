@@ -1,15 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
-using VistaSearchProvider;
 using System.Collections.ObjectModel;
 using System.Threading;
 using SearchAPILib;
 using System.Data.OleDb;
 using System.Data;
 using System.Windows.Media;
-using System.Windows.Controls;
 
 namespace VistaSearchProvider
 {
