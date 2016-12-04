@@ -2,15 +2,8 @@
 {
     using System;
     using System.Windows;
-    using System.Resources;
-    using System.Windows.Input;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Windows.Interop;
     using System.IO;
     using System.Linq;
-    using Interop;
 
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml

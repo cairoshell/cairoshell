@@ -9,7 +9,7 @@
 Name "Cairo Desktop Environment"
 
 ; The file to write
-OutFile "CairoShellSetup_x64.exe"
+OutFile "CairoShellSetup_64bit.exe"
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES64\Cairo Shell"
@@ -77,7 +77,6 @@ Section "Cairo Shell (required)" cairo
   File "..\Cairo Desktop\Build\x64\Release\PostSharp.Public.dll"
   File "..\Cairo Desktop\Build\x64\Release\PostSharp.Core.XmlSerializers.dll"
   File "..\Cairo Desktop\Build\x64\Release\White.xaml"
-  File "ReleaseNotes.txt"
 
   ;Reboot just in case, some people seem to have issues for some reason.
   ; SetRebootFlag true
@@ -87,9 +86,6 @@ Section "Cairo Shell (required)" cairo
   
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\CairoShell "Install_Dir" "$INSTDIR"
-  
-  ; Show the Release Notes after the restart
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\RunOnce" "CairoShellReleaseNotes" "$INSTDIR\ReleaseNotes.txt"
   
   ; Write the uninstall keys for Windows
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "DisplayName" "Cairo Desktop Environment"
@@ -154,7 +150,6 @@ Section "Uninstall"
   Delete "$INSTDIR\Interop.IWshRuntimeLibrary.dll"
   Delete "$INSTDIR\Interop.Shell32.dll"
   Delete "$INSTDIR\WPFToolkit.dll"
-  Delete "$INSTDIR\ReleaseNotes.txt"
   Delete "$INSTDIR\SearchAPILib.dll"
   Delete "$SMPROGRAMS\Cairo Desktop.lnk"
   DELETE "$INSTDIR\UnhandledExceptionFilter.dll"

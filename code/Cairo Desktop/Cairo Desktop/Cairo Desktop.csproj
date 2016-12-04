@@ -223,7 +223,7 @@
     <Compile Include="Desktop.xaml.cs">
       <DependentUpon>Desktop.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DragDropHandler.cs" />
+    <Compile Include="SupportingClasses\DragDropHandler.cs" />
     <Compile Include="MenuBarShadow.xaml.cs">
       <DependentUpon>MenuBarShadow.xaml</DependentUpon>
     </Compile>
@@ -249,7 +249,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Settings.cs" />
+    <Compile Include="SupportingClasses\Settings.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="SupportingClasses\SystemFile.cs" />
     <Compile Include="SupportingClasses\TaskbuttonStyleConverter.cs" />
@@ -259,9 +259,9 @@
     <Compile Include="TaskListButton.xaml.cs">
       <DependentUpon>TaskListButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ThreadSafeObservableCollection.cs" />
+    <Compile Include="SupportingClasses\ThreadSafeObservableCollection.cs" />
     <Compile Include="SupportingClasses\TrayIcon.cs" />
-    <Compile Include="VistaSearchProviderHelper.cs" />
+    <Compile Include="SupportingClasses\VistaSearchProviderHelper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -272,12 +272,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="SearchAPI.tlb" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\cairoDiag.png">
-    </Resource>
     <Resource Include="Resources\cairoMenuDefault.png">
     </Resource>
     <Resource Include="Resources\searchDefault.png">
@@ -318,10 +315,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\dateTimeIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\warningIcon.png">
-    </Resource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -367,7 +360,6 @@
     </Resource>
     <Resource Include="Resources\taskListIcon.png">
     </Resource>
-    <Resource Include="Resources\stackShadow.png" />
     <Resource Include="Resources\controlsBrowse.png" />
     <Resource Include="Resources\exitIcon.png" />
     <Content Include="SearchAPILib.dll" />

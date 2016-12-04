@@ -89,7 +89,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="32" />
+            <ColumnDefinition Width="28" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Border CornerRadius="8,0,0,0" BorderThickness="1,1,0,0" HorizontalAlignment="Center" Grid.Column="1" Padding="5,0,0,0" Name="TaskbarBorder">

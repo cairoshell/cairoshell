@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
 using CairoDesktop.Interop;
-using System.Resources;
 using System.Windows.Input;
 using System.Windows.Markup;
 using CairoDesktop.SupportingClasses;
@@ -55,7 +54,6 @@ namespace CairoDesktop
                 CairoSearchMenu.Visibility = Visibility.Collapsed;
                 DispatcherTimer searchcheck = new DispatcherTimer(new TimeSpan(0, 0, 7), DispatcherPriority.Normal, delegate
                 {
-
                     if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
                     {
                         ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
@@ -69,8 +67,9 @@ namespace CairoDesktop
                     }
 
                 }, this.Dispatcher);
-
             }
+
+            // Only show Downloads folder on Vista or greater
             if (System.Environment.OSVersion.Version.Major < 6)
             {
                 PlacesDownloadsItem.Visibility = Visibility.Collapsed;
@@ -78,7 +77,7 @@ namespace CairoDesktop
 
             InitializeClock();
 
-            //Set Quick Launch category to not show in menu
+            // Set Quick Launch and Uncategorized categories to not show in menu
             AppGrabber.Category ql = appGrabber.CategoryList.GetCategory("Quick Launch");
             if (ql != null)
             {
@@ -90,62 +89,31 @@ namespace CairoDesktop
                 uncat.ShowInMenu = false;
             }
 
-            //Set Programs Menu to use appGrabber's ProgramList as its source
+            // Set Programs Menu to use appGrabber's ProgramList as its source
             categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
         }
 
-        ///
-        /// Focuses the specified UI element.
-        ///
-        /// The UI element.
-        public void FocusSearchBox(object sender, RoutedEventArgs e)
+        private void shutdown()
         {
-            searchStr.Dispatcher.BeginInvoke(
-            new Action(delegate
-            {
-                searchStr.Focusable = true;
-                searchStr.Focus();
-                Keyboard.Focus(searchStr);
-            }),
-            DispatcherPriority.Render);
+            AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight));
+            SysTray.DestroySystemTray();
+            Application.Current.Shutdown();
         }
 
-        public void ExecuteOpenSearchResult(object sender, ExecutedRoutedEventArgs e)
+        private void LaunchProgram(object sender, RoutedEventArgs e)
         {
-            var searchObj = (VistaSearchProvider.SearchResult)e.Parameter;
-            
+            MenuItem item = (MenuItem)sender;
             try
             {
-                Shell.StartProcess(searchObj.Path);
+                Shell.StartProcess(item.CommandParameter.ToString());
             }
-            catch (Exception ex)
+            catch
             {
-                CairoMessage.Show("Sorry, this search result was unable to be opened, because: " + ex.Message, "Uh Oh!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
-        {
-            if (appbarMessageId == -1)
-            {
-                return IntPtr.Zero;
-            }
-
-            if (msg == appbarMessageId)
-            {
-                switch (wparam.ToInt32())
-                {
-                    case 1:
-                        // Reposition to the top of the screen.
-                        AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
-                        break;
-                }
-                handled = true;
-            }
-
-            return IntPtr.Zero;
-        }
-
+        #region Date/time
         /// <summary>
         /// Initializes the dispatcher timers to updates the time and date bindings
         /// </summary>
@@ -175,6 +143,35 @@ namespace CairoDesktop
             }, this.Dispatcher);
         }
 
+        private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("timedate.cpl");
+        }
+        #endregion
+
+        #region Events
+        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
+        {
+            if (appbarMessageId == -1)
+            {
+                return IntPtr.Zero;
+            }
+
+            if (msg == appbarMessageId)
+            {
+                switch (wparam.ToInt32())
+                {
+                    case 1:
+                        // Reposition to the top of the screen.
+                        AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
+                        break;
+                }
+                handled = true;
+            }
+
+            return IntPtr.Zero;
+        }
+
         private void OnWindowInitialized(object sender, EventArgs e)
         {
             Visibility = Visibility.Visible;
@@ -202,9 +199,7 @@ namespace CairoDesktop
 
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight));
-            SysTray.DestroySystemTray();
-            Application.Current.Shutdown();
+            shutdown();
         }
 
         private void OnWindowResize(object sender, RoutedEventArgs e)
@@ -212,17 +207,9 @@ namespace CairoDesktop
             // making sure this isn't necessary
             //AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
         }
+        #endregion
 
-        private void LaunchProgram(object sender, RoutedEventArgs e)
-        {
-            MenuItem item = (MenuItem)sender;
-            try {
-                CairoDesktop.Interop.Shell.StartProcess(item.CommandParameter.ToString());
-            } catch {
-                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        
+        #region Cairo menu items
         private void AboutCairo(object sender, RoutedEventArgs e)
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
@@ -230,14 +217,10 @@ namespace CairoDesktop
             string version = fvi.FileVersion;
 
             CairoMessage.Show(
-                // Replace next line with the Version
                 "Version " + version + " - Pre-release"
-                +"\nCopyright © 2007-" + DateTime.Now.Year.ToString() + " Cairo Development Team and community contributors.  All rights reserved."
-                // +
-                // Replace next line with the ID Key
-//"Not for redistribution."
-                , "Cairo Desktop Environment", MessageBoxButton.OK, MessageBoxImage.None);
-        } 
+                +"\n\nCopyright © 2007-" + DateTime.Now.Year.ToString() + " Cairo Development Team and community contributors.  All rights reserved.", "Cairo Desktop Environment", MessageBoxButton.OK, MessageBoxImage.None);
+        }
+
         private void OpenLogoffBox(object sender, RoutedEventArgs e)
         {
             bool? LogoffChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and be logged off.", "Are you sure you want to log off now?", "Resources/logoffIcon.png", "Log Off", "Cancel");
@@ -245,10 +228,8 @@ namespace CairoDesktop
             {
                 NativeMethods.Logoff();
             }
-            else
-            {
-            }
         }
+
         private void OpenRebootBox(object sender, RoutedEventArgs e)
         {
             bool? RebootChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and your computer will restart.", "Are you sure you want to restart now?", "Resources/restartIcon.png", "Restart", "Cancel");
@@ -256,10 +237,8 @@ namespace CairoDesktop
             {
                 NativeMethods.Reboot();
             }
-            else
-            {
-            }
         }
+
         private void OpenShutDownBox(object sender, RoutedEventArgs e)
         {
             bool? ShutdownChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and your computer will turn off.", "Are you sure you want to shut down now?", "Resources/shutdownIcon.png", "Shut Down", "Cancel");
@@ -267,112 +246,89 @@ namespace CairoDesktop
             {
                 NativeMethods.Shutdown();
             }
-            else
-            {
-            }
         }
+
         private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
         {
             bool? CloseCairoChoice = CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/exitIcon.png", "Exit Cairo", "Cancel");
             if (CloseCairoChoice.HasValue && CloseCairoChoice.Value)
             {
-                AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight));
-                SysTray.DestroySystemTray();
-                Application.Current.Shutdown();
-                // TODO: Will want to relaunch explorer.exe when we start disabling it
-            }
-            else
-            {
+                shutdown();
             }
         }
-        private void OpenMyDocs(object sender, RoutedEventArgs e)
-        {
-            CairoDesktop.Interop.Shell.StartProcess(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-        }
-        private void OpenMyPics(object sender, RoutedEventArgs e)
-        {
-            CairoDesktop.Interop.Shell.StartProcess(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
-        }
-        private void OpenMyMusic(object sender, RoutedEventArgs e)
-        {
-            CairoDesktop.Interop.Shell.StartProcess(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyMusic));
-        }
-        private void OpenDownloads(object sender, RoutedEventArgs e)
-        {
-            string userprofile = System.Environment.GetEnvironmentVariable("USERPROFILE");
-            string downloadsPath = userprofile + @"\Downloads\";
-            CairoDesktop.Interop.Shell.StartProcess(fileManger, downloadsPath);
-        }
-        private void OpenMyComputer(object sender, RoutedEventArgs e)
-        {
-            CairoDesktop.Interop.Shell.StartProcess(fileManger, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
-        }
-        private void OpenUserFolder(object sender, RoutedEventArgs e)
-        {
-            CairoDesktop.Interop.Shell.StartProcess(fileManger, System.Environment.GetEnvironmentVariable("USERPROFILE"));
-        }
-        private void OpenProgramFiles(object sender, RoutedEventArgs e)
-        {
-            CairoDesktop.Interop.Shell.StartProcess(fileManger, System.Environment.GetEnvironmentVariable("ProgramFiles"));
-        }
-        private void OpenRecycleBin(object sender, RoutedEventArgs e)
-        {
-            CairoDesktop.Interop.Shell.StartProcess(fileManger, "::{645FF040-5081-101B-9F08-00AA002F954E}");
-        }
+
         private void OpenControlPanel(object sender, RoutedEventArgs e)
         {
-            CairoDesktop.Interop.Shell.StartProcess("control.exe");
+            Shell.StartProcess("control.exe");
         }
+
         private void OpenTaskManager(object sender, RoutedEventArgs e)
         {
-            CairoDesktop.Interop.Shell.StartProcess("taskmgr.exe");
+            Shell.StartProcess("taskmgr.exe");
         }
-        private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
-        {
-            CairoDesktop.Interop.Shell.StartProcess("timedate.cpl");
-        }
+
         private void SysSleep(object sender, RoutedEventArgs e)
         {
             NativeMethods.Sleep();
         }
+
         private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
         {
             CairoSettingsWindow window = new CairoSettingsWindow();
             window.Show();
         }
+
         private void InitAppGrabberWindow(object sender, RoutedEventArgs e)
         {
             appGrabber.ShowDialog();
         }
-        private void LaunchShortcut(object sender, RoutedEventArgs e)
-        {
-            Button item = (Button)sender;
-            string ItemLoc = item.CommandParameter.ToString();
-            CairoDesktop.Interop.Shell.StartProcess(ItemLoc);
-        }
-        
-        /// <summary>
-        /// Retrieves the users ID key from a compiled resources file.
-        /// </summary>
-        /// <returns>The users ID key.</returns>
-        private string GetUsersIdKey()
-        {
-            string idKey = "For internal use only.";
-            string resKey = null;
+        #endregion
 
-            try
-            {
-                var mgr = ResourceManager.CreateFileBasedResourceManager("cairo", Environment.CurrentDirectory, null);
-                resKey = mgr.GetString("ID-Key");
-            }
-            catch (Exception)
-            {
-                resKey = null;
-            }
-
-            return resKey ?? idKey;
+        #region Places menu items
+        private void OpenMyDocs(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
         }
 
+        private void OpenMyPics(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
+        }
+
+        private void OpenMyMusic(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyMusic));
+        }
+
+        private void OpenDownloads(object sender, RoutedEventArgs e)
+        {
+            string userprofile = System.Environment.GetEnvironmentVariable("USERPROFILE");
+            string downloadsPath = userprofile + @"\Downloads\";
+            Shell.StartProcess(fileManger, downloadsPath);
+        }
+
+        private void OpenMyComputer(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(fileManger, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
+        }
+
+        private void OpenUserFolder(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(fileManger, System.Environment.GetEnvironmentVariable("USERPROFILE"));
+        }
+
+        private void OpenProgramFiles(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(fileManger, System.Environment.GetEnvironmentVariable("ProgramFiles"));
+        }
+
+        private void OpenRecycleBin(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(fileManger, "::{645FF040-5081-101B-9F08-00AA002F954E}");
+        }
+        #endregion
+
+        #region Search menu
         private void btnViewResults_Click(object sender, RoutedEventArgs e)
         {
             Shell.StartProcess("search:query=" + searchStr.Text);
@@ -393,5 +349,32 @@ namespace CairoDesktop
                 Shell.StartProcess("search:query=" + searchStr.Text);
             }
         }
+
+        public void FocusSearchBox(object sender, RoutedEventArgs e)
+        {
+            searchStr.Dispatcher.BeginInvoke(
+            new Action(delegate
+            {
+                searchStr.Focusable = true;
+                searchStr.Focus();
+                Keyboard.Focus(searchStr);
+            }),
+            DispatcherPriority.Render);
+        }
+
+        public void ExecuteOpenSearchResult(object sender, ExecutedRoutedEventArgs e)
+        {
+            var searchObj = (VistaSearchProvider.SearchResult)e.Parameter;
+
+            try
+            {
+                Shell.StartProcess(searchObj.Path);
+            }
+            catch (Exception ex)
+            {
+                CairoMessage.Show("Sorry, this search result was unable to be opened, because: " + ex.Message, "Uh Oh!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        #endregion
     }
 }
