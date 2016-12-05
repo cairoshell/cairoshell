@@ -1500,7 +1500,7 @@
                                             </Grid>
                                         </Border>
                                     </Border>
-                                    <Image Source="{DynamicResource MenubarShadow}" Stretch="Fill" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
+                                    <Image Source="{StaticResource MenubarShadow}" Stretch="Fill" Width="{StaticResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
                                 </StackPanel>
                             </Popup>
                         </Grid>

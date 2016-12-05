@@ -36,7 +36,7 @@
                 <Setter Property="BorderThickness"
                     Value="0" />
                 <Setter Property="Foreground"
-                    Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                    Value="{StaticResource {x:Static SystemColors.ControlTextBrushKey}}" />
                 <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
                     Value="Auto" />
                 <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
@@ -58,7 +58,7 @@
                                     Value="false">
                                     <Setter Property="Background"
                                         TargetName="Bd"
-                                        Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+                                        Value="{StaticResource {x:Static SystemColors.ControlBrushKey}}" />
                                 </Trigger>
                                 <Trigger Property="IsGrouping"
                                     Value="true">
@@ -111,7 +111,7 @@
                     Name="quickLaunchList"
                     Background="{x:Null}"
                     Foreground="{x:Null}"
-                    Style="{DynamicResource ListViewStyle1}"
+                    Style="{StaticResource ListViewStyle1}"
                           MinHeight="29"
                     BorderThickness="0"
                     Margin="0,0,4,0"
@@ -141,7 +141,7 @@
                     Background="{x:Null}"
                     Foreground="{x:Null}"
                     BorderBrush="#FF908382"
-                    Style="{DynamicResource ListViewStyle1}"
+                    Style="{StaticResource ListViewStyle1}"
                     BorderThickness="0,0,0,0"
                     VerticalAlignment="Stretch" x:Name="TasksList">
                         <ListView.ItemsPanel>
@@ -198,7 +198,7 @@
                     Background="{x:Null}"
                     Foreground="{x:Null}"
                     BorderBrush="#FF908382"
-                    Style="{DynamicResource ListViewStyle1}"
+                    Style="{StaticResource ListViewStyle1}"
                     BorderThickness="0,0,0,0"
                     VerticalAlignment="Stretch" x:Name="TasksList2">
                             <ListView.ItemsPanel>

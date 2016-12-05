@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Markup;
-using System.Runtime.InteropServices;
 
 namespace CairoDesktop
 {
 	public partial class TaskButton
 	{
-        [DllImport("user32.dll")]
-        public static extern int FindWindow(string lpClassName, string lpWindowName);
-        [DllImport("user32.dll")]
-        public static extern int SendMessage(int hWnd, uint Msg, int wParam, int lParam);
-
         public WindowsTasks.ApplicationWindow Window;
-
-        public const int WM_COMMAND = 0x0112;
-        public const int WM_CLOSE = 0xF060; 
+        
 		public TaskButton()
 		{
 			this.InitializeComponent();
@@ -67,9 +59,9 @@ namespace CairoDesktop
             var Window = (this.DataContext as CairoDesktop.WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
-                int handle = FindWindow(null, WinTitle.Text);
+                IntPtr handle = WindowsTasks.NativeWindowEx.FindWindow(null, WinTitle.Text);
 
-                SendMessage(handle, WM_COMMAND, WM_CLOSE, 0);
+                WindowsTasks.NativeWindowEx.SendMessageTimeout(handle, WindowsTasks.WindowsTasksService.WM_COMMAND, WindowsTasks.WindowsTasksService.WM_CLOSE, 0, 2, 200, ref handle);
             }
         }
 	}

@@ -105,6 +105,9 @@
                 TaskbarWindow.Show();
             }
 
+            // Set desktop work area for when Explorer isn't running
+            SupportingClasses.AppBarHelper.SetWorkArea();
+
 #if (ENABLEFIRSTRUN)
             FirstRun(app);
 #endif

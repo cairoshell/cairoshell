@@ -138,6 +138,7 @@ namespace CairoDesktop
                     img.CacheOption = BitmapCacheOption.OnLoad;
                     img.StreamSource = imgStream;
                     img.EndInit();
+                    img.Freeze();
 
                     this.Icon = img;
                 }
@@ -150,7 +151,6 @@ namespace CairoDesktop
                     if (imgStream != null)
                     {
                         imgStream.Close();
-                        imgStream.Dispose();
                     }
                 }
             } 

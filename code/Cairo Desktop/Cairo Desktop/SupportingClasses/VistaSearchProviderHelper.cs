@@ -109,15 +109,12 @@ namespace VistaSearchProvider
                                     m_results.Add(result);
                                     
                                 }
-                                reader.Close();
 
                                 IsWorkingFlag = false;
                             }
                         }
 
-                    }
-                    // TODO: Investigate possible RaceOnRCWCleanup exception.
-                    cConnection.Close();    
+                    }  
                 }
             }
             catch (Exception ex)

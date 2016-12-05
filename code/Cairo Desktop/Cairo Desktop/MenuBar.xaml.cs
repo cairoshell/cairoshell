@@ -96,6 +96,7 @@ namespace CairoDesktop
         private void shutdown()
         {
             AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight));
+            AppBarHelper.ResetWorkArea();
             SysTray.DestroySystemTray();
             Application.Current.Shutdown();
         }

@@ -67,8 +67,18 @@ namespace CairoDesktop
 
         private void moveToBottom()
         {
-            // set to bottom of workspace
-            this.Top = SystemParameters.WorkArea.Bottom - this.Height;
+            double screen = AppBarHelper.PrimaryMonitorSize.Height;
+            double workArea = SystemParameters.WorkArea.Bottom;
+            // Crude? Yes.
+            if (screen - workArea == this.Height)
+            {
+                this.Top = screen - this.Height;
+            }
+            else
+            {
+                // set to bottom of workspace
+                this.Top = workArea - this.Height;
+            }
         }
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

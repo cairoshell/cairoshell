@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using CairoDesktop.Interop;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -133,6 +134,35 @@ namespace CairoDesktop.SupportingClasses
             {
                 return new Size(NativeMethods.GetSystemMetrics(0), NativeMethods.GetSystemMetrics(1));
             }
+        }
+        
+        private static WindowsTasks.RECT oldWorkArea;
+        
+        public static void SetWorkArea()
+        {
+            // Save current Working Area size
+            oldWorkArea.left = SystemInformation.WorkingArea.Left;
+            oldWorkArea.top = SystemInformation.WorkingArea.Top;
+            oldWorkArea.right = SystemInformation.WorkingArea.Right;
+            oldWorkArea.bottom = SystemInformation.WorkingArea.Bottom;
+            
+            WindowsTasks.RECT rc;
+            rc.left = SystemInformation.VirtualScreen.Left;
+            rc.top = SystemInformation.VirtualScreen.Top + 23; // allocate menu bar space
+            rc.right = SystemInformation.VirtualScreen.Right;
+
+            // only allocate space for taskbar if enabled
+            if (Properties.Settings.Default.EnableTaskbar)
+                rc.bottom = SystemInformation.VirtualScreen.Bottom - 29;
+            else
+                rc.bottom = SystemInformation.VirtualScreen.Bottom;
+
+            WindowsTasks.NativeWindowEx.SystemParametersInfo((int)WindowsTasks.NativeWindowEx.SPI.SPI_SETWORKAREA, 0, ref rc, (1 | 2));
+        }
+        
+        public static void ResetWorkArea()
+        {
+            WindowsTasks.NativeWindowEx.SystemParametersInfo((int)WindowsTasks.NativeWindowEx.SPI.SPI_SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
         }
     }
 }

@@ -21,7 +21,7 @@
                     <Setter.Value>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel Orientation="Horizontal"
-                                MinWidth="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}"
+                                MinWidth="{DynamicResource {x:Static SystemParameters.FullPrimaryScreenWidthKey}}"
                                 Background="Transparent" />
                         </ItemsPanelTemplate>
                     </Setter.Value>

@@ -24,7 +24,7 @@
         TargetType="{x:Type DockPanel}">
         <Setter Property="Background">
             <Setter.Value>
-                <ImageBrush ImageSource="{DynamicResource MenubarBackground}" />
+                <ImageBrush ImageSource="{StaticResource MenubarBackground}" />
             </Setter.Value>
         </Setter>
     </Style>
@@ -374,7 +374,7 @@
                                             </Grid>
                                         </Border>
                                     </Border>
-                                    <Image Source="{DynamicResource MenubarShadow}" Stretch="Fill" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
+                                    <Image Source="{StaticResource MenubarShadow}" Stretch="Fill" Width="{StaticResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
                                 </StackPanel>
                             </Popup>
                         </Grid>

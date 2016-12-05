@@ -25,15 +25,17 @@ namespace CairoDesktop.AppGrabber
             if(Interop.Shell.Exists(filename))
             {
                 // Disposes of icon automagically when done.
-                using (System.Drawing.Icon icon = Interop.Shell.GetIconByFilename(filename, isSmall))
+                //using (System.Drawing.Icon icon = Interop.Shell.GetIconByFilename(filename, isSmall))
+                // All we really need is the handle.
+                IntPtr hIcon = Interop.Shell.GetIconByFilename(filename, isSmall);
+                
+                if (hIcon == IntPtr.Zero || hIcon == null)
                 {
-                    if (icon == null || icon.Handle == null)
-                    {
-                        return GetDefaultIcon();
-                    }
-
-                    bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                    return GetDefaultIcon();
                 }
+
+                bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                Interop.Shell.Win32.DestroyIcon(hIcon);
             }
             else
             {
@@ -56,6 +58,7 @@ namespace CairoDesktop.AppGrabber
                 try
                 {
                     bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                    Interop.Shell.Win32.DestroyIcon(hIcon);
                 }
                 catch
                 {
@@ -66,6 +69,7 @@ namespace CairoDesktop.AppGrabber
             {
                 bs = GetDefaultIcon();
             }
+            bs.Freeze();
 
             return bs;
         }
@@ -95,7 +99,7 @@ namespace CairoDesktop.AppGrabber
             try
             {
                 img.BeginInit();
-                img.UriSource = new Uri("resources\\nullIcon.png", UriKind.RelativeOrAbsolute);
+                img.UriSource = new Uri("pack://application:,,/Resources/nullIcon.png", UriKind.RelativeOrAbsolute);
                 img.EndInit();
             }
             catch

@@ -44,6 +44,9 @@ namespace CairoDesktop.WindowsTasks
         private const int HSHELL_FLASH = (HSHELL_REDRAW | HSHELL_HIGHBIT);
         private const int HSHELL_RUDEAPPACTIVATED = (HSHELL_WINDOWACTIVATED | HSHELL_HIGHBIT);
 
+        public const int WM_COMMAND = 0x0112;
+        public const int WM_CLOSE = 0xF060;
+
         public WindowsTasksService()
         {
             this.Initialize();
@@ -58,7 +61,6 @@ namespace CairoDesktop.WindowsTasks
                 
                 SetTaskmanWindow(_HookWin.Handle);
                 //'Register to receive shell-related events
-                //SetTaskmanWindow(hookWin.Handle)
                 RegisterShellHookWindow(_HookWin.Handle);
 
                 //'Assume no error occurred

@@ -78,7 +78,7 @@ namespace CairoDesktop.Interop
         }//CSIDL
             
         [StructLayout(LayoutKind.Sequential)]
-        private struct SHFILEINFO
+        public struct SHFILEINFO
         {
             public IntPtr hIcon;
             public IntPtr iIcon;
@@ -130,7 +130,7 @@ namespace CairoDesktop.Interop
             OverlayIndex = 0x000000040,
         }
         
-        private class Win32
+        public class Win32
         {
             [DllImport("shell32.dll")]
             public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
@@ -146,7 +146,7 @@ namespace CairoDesktop.Interop
 
         }
 
-        public static Icon GetIconByFilename(string fileName, bool isSmall = false)
+        public static IntPtr GetIconByFilename(string fileName, bool isSmall = false)
         {
             if (isSmall)
                 return GetIcon(fileName, SHGFI.SmallIcon);
@@ -154,7 +154,7 @@ namespace CairoDesktop.Interop
                 return GetIcon(fileName, SHGFI.LargeIcon);
         }
 
-        public static Icon GetIconByExtension(string extension, bool isSmall = false)
+        public static IntPtr GetIconByExtension(string extension, bool isSmall = false)
         {
             if (isSmall)
                 return GetIcon(extension, SHGFI.SmallIcon | SHGFI.UseFileAttributes);
@@ -162,17 +162,20 @@ namespace CairoDesktop.Interop
                 return GetIcon(extension, SHGFI.LargeIcon | SHGFI.UseFileAttributes);
         }
 
-        private static Icon GetIcon(string filename, SHGFI flags, bool isFolder = false)
+        private static IntPtr GetIcon(string filename, SHGFI flags, bool isFolder = false)
         {
             SHFILEINFO shinfo = new SHFILEINFO();
 
             IntPtr hIconInfo = Win32.SHGetFileInfo(filename, isFolder ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex | flags));
 
-            Icon icon = (Icon)System.Drawing.Icon.FromHandle(Win32.ImageList_GetIcon(hIconInfo, shinfo.iIcon.ToInt32(), (int)0x00000001)).Clone();
+            //Icon icon = (Icon)System.Drawing.Icon.FromHandle(Win32.ImageList_GetIcon(hIconInfo, shinfo.iIcon.ToInt32(), (int)0x00000001)).Clone();
+
+            IntPtr hIcon = Win32.ImageList_GetIcon(hIconInfo, shinfo.iIcon.ToInt32(), (int)0x00000001);
 
             Win32.DestroyIcon(shinfo.hIcon);
 
-            return icon;
+            return hIcon;
+            //return icon;
         }
 
         public static string UsersProgramsPath 
@@ -228,38 +231,6 @@ namespace CairoDesktop.Interop
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
         public static extern int ExtractIconEx(string path, int i, IntPtr[] big, IntPtr[] small, int op);
-        
-        public static IntPtr GetHIcon(string fileName, int iconIndex, bool isSmall = false) {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                throw new ArgumentNullException("fileName");
-            }
-            if (!System.IO.File.Exists(fileName)) {
-                System.Diagnostics.Debug.WriteLine("File doesn't exist: " + fileName + " - Recovering");
-                return IntPtr.Zero;
-            }
-            if (iconIndex < 0) iconIndex = 0;
-            int numIcons = ExtractIconEx(fileName, -1, null, null, 0);
-            if (numIcons == 0) {
-                try {
-                    System.Drawing.Icon i = System.Drawing.Icon.ExtractAssociatedIcon(fileName);
-                    if (i == null) {
-                        return IntPtr.Zero;
-                    }
-                    return i.Handle;
-                } catch {
-                    return GetHIcon(System.Environment.SystemDirectory + @"\shell32.dll",0);
-                }
-            }
-            IntPtr[] largeIcons = new IntPtr[numIcons];
-            IntPtr[] smallIcons = new IntPtr[numIcons];
-            ExtractIconEx(fileName, 0, largeIcons, smallIcons, numIcons);
-
-            if (isSmall)
-                return smallIcons[iconIndex];
-            else
-                return largeIcons[iconIndex];
-        }
 
         public static void StartProcess(string filename)
         {

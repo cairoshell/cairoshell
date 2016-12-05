@@ -173,7 +173,7 @@ namespace CairoDesktop.AppGrabber
                         // remove items that we can't execute. also remove uninstallers
                         if (!executableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase) || ai.Name == "Uninstall" || ai.Name.StartsWith("Uninstall "))
                         {
-                            System.Diagnostics.Debug.WriteLine(file.Name + ": " + target);
+                            System.Diagnostics.Debug.WriteLine("Not an app: " + file.Name + ": " + target);
                             continue;
                         }
 
@@ -181,10 +181,11 @@ namespace CairoDesktop.AppGrabber
                         ai.Icon = ai.GetAssociatedIcon();
                         rval.Add(ai);
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         //Output the reason to the debugger
                         //_logger.Debug("Error creating ApplicationInfo object in appgrabber. Details: {0}\n{1}", ex.Message, ex.StackTrace);
+                        System.Diagnostics.Debug.WriteLine("Error creating ApplicationInfo object in appgrabber. " + ex.Message);
                     }
                 }
             }
