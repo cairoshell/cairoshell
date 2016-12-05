@@ -119,6 +119,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
+      <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
+      <Name>CairoDesktop.Interop</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <UsingTask AssemblyFile="..\..\Dependencies\PostSharp\PostSharp.MSBuild.dll" TaskName="PostSharp.MSBuild.PostSharp" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

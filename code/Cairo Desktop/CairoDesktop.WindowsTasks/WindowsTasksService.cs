@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Windows;
 using System.Collections.ObjectModel;
+using CairoDesktop.Interop;
 using DR = System.Drawing;
 
 namespace CairoDesktop.WindowsTasks
@@ -71,8 +72,10 @@ namespace CairoDesktop.WindowsTasks
                 
 
                 int msg = RegisterWindowMessage("TaskbarCreated");
-                SendMessage(new IntPtr(0xffff), msg, IntPtr.Zero, IntPtr.Zero);
-                SendMessage(GetDesktopWindow(), 0x0400, IntPtr.Zero, IntPtr.Zero);
+                IntPtr ptr = new IntPtr(0xffff);
+                IntPtr hDeskWnd = GetDesktopWindow();
+                Shell.SendMessageTimeout(ptr, (uint)msg, IntPtr.Zero, IntPtr.Zero, 2, 200, ref ptr);
+                Shell.SendMessageTimeout(hDeskWnd, 0x0400, IntPtr.Zero, IntPtr.Zero, 2, 200, ref hDeskWnd);
 
                 EnumWindows(new CallBackPtr((hwnd, lParam) =>
                 {
@@ -328,9 +331,6 @@ namespace CairoDesktop.WindowsTasks
 
         [DllImport("user32.dll")]
         private static extern bool SetTaskmanWindow(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr SendMessage(IntPtr hwnd, int message, IntPtr wparam, IntPtr lparam);
 
         [DllImport("user32.dll")]
         private static extern bool DeregisterShellHookWindow(IntPtr hWnd);

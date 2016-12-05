@@ -166,11 +166,11 @@ namespace CairoDesktop.WindowsTasks
             int GCL_HICON = -14;
             int GCL_HICONSM = -34;
 
-            NativeWindowEx.SendMessageTimeout(hWnd, WM_GETICON, 2, 0, 2, 200, ref hIco);
+            Interop.Shell.SendMessageTimeout(hWnd, WM_GETICON, 2, 0, 2, 200, ref hIco);
 
             if (hIco == IntPtr.Zero)
             {
-                NativeWindowEx.SendMessageTimeout(hWnd, WM_GETICON, 0, 0, 2, 200, ref hIco);
+                Interop.Shell.SendMessageTimeout(hWnd, WM_GETICON, 0, 0, 2, 200, ref hIco);
             }
 
             if (hIco == IntPtr.Zero)

@@ -468,9 +468,6 @@ namespace CairoDesktop.Interop
             GW_ENABLEDPOPUP = 6
         }
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
-
         private const int WM_COMMAND = 0x111;
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -482,12 +479,18 @@ namespace CairoDesktop.Interop
             IntPtr hWnd = GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD);
 
             if(IsDesktopVisible() != enable)
-                SendMessage(hWnd, WM_COMMAND, toggleDesktopCommand, IntPtr.Zero);
+                SendMessageTimeout(hWnd, WM_COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
         }
 
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
+
+        [DllImport("user32.dll")]
+        public static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, IntPtr wparam, IntPtr lparam, uint timeoutFlags, uint timeout, ref IntPtr retval);
+
+        [DllImport("user32.dll")]
+        public static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, uint wparam, uint lparam, uint timeoutFlags, uint timeout, ref IntPtr retval);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct RECT

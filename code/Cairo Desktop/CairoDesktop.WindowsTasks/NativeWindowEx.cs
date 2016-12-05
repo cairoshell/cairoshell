@@ -50,9 +50,6 @@ namespace CairoDesktop.WindowsTasks
         [DllImport("user32.dll")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        [DllImport("user32.dll")]
-        public static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, uint wparam, uint lparam, uint timeoutFlags, uint timeout, ref IntPtr retval);
-
         [DllImport("user32.dll", SetLastError = true)]
         public static extern int GetWindowLong(IntPtr handle, int nIndex);
 

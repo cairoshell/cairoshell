@@ -58,7 +58,7 @@ namespace CairoDesktop
             {
                 IntPtr handle = WindowsTasks.NativeWindowEx.FindWindow(null, WinTitle.Text);
 
-                WindowsTasks.NativeWindowEx.SendMessageTimeout(handle, WindowsTasks.WindowsTasksService.WM_COMMAND, WindowsTasks.WindowsTasksService.WM_CLOSE, 0, 2, 200, ref handle);
+                Interop.Shell.SendMessageTimeout(handle, WindowsTasks.WindowsTasksService.WM_COMMAND, WindowsTasks.WindowsTasksService.WM_CLOSE, 0, 2, 200, ref handle);
             }
         }
     }
