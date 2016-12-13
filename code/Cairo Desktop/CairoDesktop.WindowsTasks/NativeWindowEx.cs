@@ -74,6 +74,10 @@ namespace CairoDesktop.WindowsTasks
             SPI_GETWORKAREA = 0x0030
         }
 
+        public const int WM_MOUSEACTIVATE = 0x0021;
+        public const int MA_NOACTIVATE = 0x0003;
+        public const int WM_WINDOWPOSCHANGING = 0x0046;
+
         [DllImport("user32.dll")]
         public static extern IntPtr LoadIcon(IntPtr hInstance, IntPtr lpIconName);
 
@@ -251,6 +255,7 @@ namespace CairoDesktop.WindowsTasks
             this.AssignHandle(CreateWindowEx(cp.ExStyle, cp.ClassName, cp.Caption, cp.Style, cp.X, cp.Y, cp.Width, cp.Height, cp.Parent, IntPtr.Zero, cp.hInstance, (IntPtr)cp.Param));
         }
     }
+
     public class CreateParamsEx : System.Windows.Forms.CreateParams
     {
         IntPtr _hInstance = Marshal.GetHINSTANCE(typeof(NativeWindowEx).Module);

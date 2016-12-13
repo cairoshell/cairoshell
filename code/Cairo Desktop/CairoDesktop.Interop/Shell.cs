@@ -167,15 +167,12 @@ namespace CairoDesktop.Interop
             SHFILEINFO shinfo = new SHFILEINFO();
 
             IntPtr hIconInfo = Win32.SHGetFileInfo(filename, isFolder ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex | flags));
-
-            //Icon icon = (Icon)System.Drawing.Icon.FromHandle(Win32.ImageList_GetIcon(hIconInfo, shinfo.iIcon.ToInt32(), (int)0x00000001)).Clone();
-
+            
             IntPtr hIcon = Win32.ImageList_GetIcon(hIconInfo, shinfo.iIcon.ToInt32(), (int)0x00000001);
 
             Win32.DestroyIcon(shinfo.hIcon);
 
             return hIcon;
-            //return icon;
         }
 
         public static string UsersProgramsPath 
@@ -234,24 +231,22 @@ namespace CairoDesktop.Interop
 
         public static void StartProcess(string filename)
         {
-            // TODO enhance this for lnk files
             if (!Environment.Is64BitProcess)
             {
                 filename.Replace("system32", "sysnative");
             }
-
-            System.Diagnostics.Process.Start(filename);
+            
+            Process.Start(filename);
         }
 
         public static void StartProcess(string filename, string args)
         {
-            // TODO enhance this for lnk files
             if (!Environment.Is64BitProcess)
             {
                 filename.Replace("system32", "sysnative");
             }
 
-            System.Diagnostics.Process.Start(filename, args);
+            Process.Start(filename, args);
         }
 
         public static bool Exists(string filename)
@@ -271,7 +266,7 @@ namespace CairoDesktop.Interop
                 0,
                 0,
                 0,
-                NativeMethods.SWP_NOSIZE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_SHOWWINDOW);
+                NativeMethods.SWP_NOSIZE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOACTIVATE);
         }
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]

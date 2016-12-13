@@ -6,11 +6,25 @@
     Width="{DynamicResource {x:Static SystemParameters.FullPrimaryScreenWidthKey}}"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
-    Top="35"
+    Top="0"
     Left="0"
     AllowsTransparency="True"
     Focusable="False"
-    Background="{x:Null}" Topmost="False" Activated="Window_Activated" Closing="Window_Closing">
-    <Grid Name="grid">
+    Background="{x:Null}" Topmost="False" Activated="Window_Activated" Closing="Window_Closing" SourceInitialized="Window_SourceInitialized">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Cairo.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Name="grid" Margin="0,35,0,0">
     </Grid>
+    <Window.ContextMenu>
+        <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
+            <MenuItem Header="Paste" Style="{StaticResource CairoMenuItemStyle}" Click="miPaste_Click"  Name="miPaste" />
+            <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
+            <MenuItem Header="Personalization" Style="{StaticResource CairoMenuItemStyle}" Click="miPersonalization_Click"  Name="miPersonalization" />
+        </ContextMenu>
+    </Window.ContextMenu>
 </Window>

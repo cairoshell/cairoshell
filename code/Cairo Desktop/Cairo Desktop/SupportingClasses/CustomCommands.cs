@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Windows.Input;
 using System.Globalization;
+using System.Collections.Specialized;
 
 namespace CairoDesktop
 {
@@ -58,6 +59,13 @@ namespace CairoDesktop
                 Interop.Shell.ShowFileProperties(fileName);
                 return;
             }
+            else if (verb == "copy")
+            {
+                StringCollection scPath = new StringCollection();
+                scPath.Add(fileName);
+                System.Windows.Forms.Clipboard.SetFileDropList(scPath);
+                return;
+            }
 
             System.Diagnostics.Process proc = new System.Diagnostics.Process();
             proc.StartInfo.UseShellExecute = true;
@@ -91,6 +99,10 @@ namespace CairoDesktop
                     if (verb.ToLower() != "open")
                         menu.Items.Add(new MenuItem { Header = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(verb), Tag = verb + "|" + filePath });
                 }
+
+                menu.Items.Add(new Separator());
+
+                menu.Items.Add(new MenuItem { Header = "Copy", Tag = "copy|" + filePath });
 
                 menu.Items.Add(new Separator());
 

@@ -39,9 +39,9 @@ namespace CairoDesktop
                     fxStyle = fxElement.FindResource("CairoTaskbarButtonFlashingStyle");
                     break;
 
-                case ApplicationWindow.WindowState.Hidden:
+                /*case ApplicationWindow.WindowState.Hidden:
                     fxStyle = fxElement.FindResource("CairoTaskbarButtonHiddenStyle");
-                    break;
+                    break;*/
             }
 
             return fxStyle;

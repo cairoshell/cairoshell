@@ -93,7 +93,8 @@ namespace CairoDesktop.AppGrabber
                 ".com",
                 ".lnk",
                 ".msc",
-                ".appref-ms"
+                ".appref-ms",
+                ".url"
             });
 
             this.ConfigFile = configFile ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";

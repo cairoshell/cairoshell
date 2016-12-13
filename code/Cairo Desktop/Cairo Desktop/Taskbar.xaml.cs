@@ -32,8 +32,6 @@ namespace CairoDesktop
             this.quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
             this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
             this.grdTaskbar.Width = AppBarHelper.PrimaryMonitorSize.Width;
-
-            moveToBottom();
         }
 
         private void Taskbar_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -83,10 +81,10 @@ namespace CairoDesktop
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == WM_MOUSEACTIVATE)
+            if (msg == WindowsTasks.NativeWindowEx.WM_MOUSEACTIVATE)
             {
                 handled = true;
-                return new IntPtr(MA_NOACTIVATE);
+                return new IntPtr(WindowsTasks.NativeWindowEx.MA_NOACTIVATE);
             }
 
             if (msg == appbarMessageId)
@@ -105,8 +103,6 @@ namespace CairoDesktop
 
             return IntPtr.Zero;
         }
-        private const int WM_MOUSEACTIVATE = 0x0021;
-        private const int MA_NOACTIVATE = 0x0003;
 
         private void TaskbarWindow_SourceInitialized(object sender, EventArgs e)
         {
@@ -116,6 +112,8 @@ namespace CairoDesktop
             source.AddHook(new HwndSourceHook(WndProc));
 
             handle = helper.Handle;
+
+            moveToBottom();
 
             // Windows bugs make this no bueno...
             //appbarMessageId = AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_BOTTOM);

@@ -109,10 +109,11 @@ SectionEnd
   
 ; SectionEnd
 
-; This will only work if the person is running explorer because they are smoking something.
-Section "Start Automatically" startup
+; Replace explorer.
+Section "Set as shell (current user)" startup
   
-  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "CairoShell" "$INSTDIR\CairoDesktop.exe"
+  WriteRegStr HKCU "Software\Microsoft\Windows NT\CurrentVersion\Winlogon" "Shell" "$INSTDIR\CairoDesktop.exe"
+  DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "CairoShell"
   
 SectionEnd
 
@@ -139,6 +140,7 @@ Section "Uninstall"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell"
   DeleteRegKey HKLM SOFTWARE\CairoShell
   DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "CairoShell"
+  DeleteRegValue HKCU "Software\Microsoft\Windows NT\CurrentVersion\Winlogon" "Shell"
 
   ; Remove files and uninstaller
   Delete "$INSTDIR\CairoDesktop.exe"
