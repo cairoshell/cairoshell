@@ -7,6 +7,7 @@
     Height="550"
     MinWidth="690"
     MinHeight="400"
+    WindowStartupLocation="CenterScreen"        
     Background="#FF171717">
     <Window.Resources>
         <Style x:Key="CairoExplorerToolbar"
@@ -101,6 +102,12 @@
                 Value="Stretch" />
             <Setter Property="Margin"
                 Value="0" />
+        </Style>
+        <Style x:Key="CairoExplorerSidebarSectionHeaderOpenText" TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="5,5,0,0"/>
         </Style>
         <Style x:Key="CairoExplorerSidebarSectionHeaderClosed"
             TargetType="{x:Type StackPanel}">
@@ -690,62 +697,59 @@
             <RowDefinition Height="35" />
             <RowDefinition Height="25" />
         </Grid.RowDefinitions>
-        <StackPanel Name="Sidebar"
-            Style="{StaticResource CairoExplorerSidebar}"
-            Grid.Column="0"
-            Grid.RowSpan="3">
-            <StackPanel Style="{StaticResource CairoExplorerSidebarSectionHeaderOpen}">
-                <TextBlock Foreground="White"
+        <ScrollViewer Grid.Column="0" Grid.RowSpan="3" VerticalScrollBarVisibility="Auto">
+            <StackPanel Name="Sidebar"
+            Style="{StaticResource CairoExplorerSidebar}">
+                <StackPanel Style="{StaticResource CairoExplorerSidebarSectionHeaderOpen}">
+                    <TextBlock Foreground="White"
                     FontFamily="Segoe UI"
                     FontSize="12"
                     Padding="5,5,0,0">Favorites</TextBlock>
-            </StackPanel>
-            <ListView Name="FavoritesList">
-                <ListViewItem Content="Files (E)" />
-                <ListViewItem Content="Documents" />
-                <ListViewItem Content="Downloads" />
-                <ListViewItem Content="Network Storage" />
-                <ListViewItem Content="Backup" />
-            </ListView>
-            <StackPanel Style="{StaticResource CairoExplorerSidebarSectionHeaderOpen}">
-                <TextBlock Foreground="White"
-                    FontFamily="Segoe UI"
-                    FontSize="12"
-                    Padding="5,5,0,0">Vista (C:)</TextBlock>
-            </StackPanel>
-            <TreeView Name="DriveTreeView">
-                <TreeViewItem Header="Program Files">
-                    <TreeViewItem Header="CairoShell" />
-                    <TreeViewItem Header="Microsoft Office">
-                        <TreeViewItem Header="Office12" />
+                </StackPanel>
+                <ListView Name="FavoritesList">
+                    <ListViewItem Content="Files (E)" />
+                    <ListViewItem Content="Documents" />
+                    <ListViewItem Content="Downloads" />
+                    <ListViewItem Content="Network Storage" />
+                    <ListViewItem Content="Backup" />
+                </ListView>
+                <StackPanel Name="DrivesListSample" Style="{StaticResource CairoExplorerSidebarSectionHeaderOpen}">
+                    <TextBlock Style="{StaticResource CairoExplorerSidebarSectionHeaderOpenText}">Vista (C:)</TextBlock>
+                </StackPanel>
+                <TreeView Name="DriveTreeView">
+                    <TreeViewItem Header="Program Files">
+                        <TreeViewItem Header="CairoShell" />
+                        <TreeViewItem Header="Microsoft Office">
+                            <TreeViewItem Header="Office12" />
+                        </TreeViewItem>
+                        <TreeViewItem Header="Windows NT">
+                            <TreeViewItem Header="WordPad" />
+                        </TreeViewItem>
                     </TreeViewItem>
-                    <TreeViewItem Header="Windows NT">
-                        <TreeViewItem Header="WordPad" />
+                    <TreeViewItem Header="Users">
+                        <TreeViewItem Header="Public" />
+                        <TreeViewItem Header="CairoTester">
+                            <TreeViewItem Header="Desktop" />
+                            <TreeViewItem Header="Documents" />
+                            <TreeViewItem Header="Music" />
+                            <TreeViewItem Header="Pictures" />
+                        </TreeViewItem>
                     </TreeViewItem>
-                </TreeViewItem>
-                <TreeViewItem Header="Users">
-                    <TreeViewItem Header="Public" />
-                    <TreeViewItem Header="CairoTester">
-                        <TreeViewItem Header="Desktop" />
-                        <TreeViewItem Header="Documents" />
-                        <TreeViewItem Header="Music" />
-                        <TreeViewItem Header="Pictures" />
-                    </TreeViewItem>
-                </TreeViewItem>
-            </TreeView>
-            <StackPanel Style="{StaticResource CairoExplorerSidebarSectionHeaderClosed}">
-                <TextBlock Foreground="White"
+                </TreeView>
+                <StackPanel Style="{StaticResource CairoExplorerSidebarSectionHeaderClosed}">
+                    <TextBlock Foreground="White"
                     FontFamily="Segoe UI"
                     FontSize="12"
                     Padding="5,5,0,0">Devices</TextBlock>
-            </StackPanel>
-            <StackPanel Style="{StaticResource CairoExplorerSidebarSectionHeaderClosed}">
-                <TextBlock Foreground="White"
+                </StackPanel>
+                <StackPanel Style="{StaticResource CairoExplorerSidebarSectionHeaderClosed}">
+                    <TextBlock Foreground="White"
                     FontFamily="Segoe UI"
                     FontSize="12"
                     Padding="5,5,0,0">Shared</TextBlock>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
+        </ScrollViewer>
         <StackPanel Style="{StaticResource CairoExplorerToolbar}"
             Orientation="Horizontal"
             Grid.Row="0"
