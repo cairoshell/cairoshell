@@ -154,19 +154,19 @@ namespace CairoDesktop.Interop
                 return GetIcon(fileName, SHGFI.LargeIcon);
         }
 
-        public static IntPtr GetIconByExtension(string extension, bool isSmall = false)
-        {
-            if (isSmall)
-                return GetIcon(extension, SHGFI.SmallIcon | SHGFI.UseFileAttributes);
-            else
-                return GetIcon(extension, SHGFI.LargeIcon | SHGFI.UseFileAttributes);
-        }
-
-        private static IntPtr GetIcon(string filename, SHGFI flags, bool isFolder = false)
+        private static IntPtr GetIcon(string filename, SHGFI flags)
         {
             SHFILEINFO shinfo = new SHFILEINFO();
+            IntPtr hIconInfo;
 
-            IntPtr hIconInfo = Win32.SHGetFileInfo(filename, isFolder ? FILE_ATTRIBUTE_DIRECTORY : FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex | flags));
+            if ((File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                hIconInfo = Win32.SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex | flags));
+            }
+            else
+            {
+                hIconInfo = Win32.SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.UseFileAttributes | SHGFI.SysIconIndex | flags));
+            }
             
             IntPtr hIcon = Win32.ImageList_GetIcon(hIconInfo, shinfo.iIcon.ToInt32(), (int)0x00000001);
 

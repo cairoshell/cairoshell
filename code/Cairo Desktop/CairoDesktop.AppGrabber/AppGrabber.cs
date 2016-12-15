@@ -9,11 +9,9 @@ namespace CairoDesktop.AppGrabber
 
     public class AppGrabber : DependencyObject
     {
-        //private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private static DependencyProperty programsListProperty = DependencyProperty.Register("ProgramsList", typeof(List<ApplicationInfo>), typeof(AppGrabber), new PropertyMetadata(new List<ApplicationInfo>()));
         
         private static AppGrabber _instance = new AppGrabber();
-        //private List<ApplicationInfo> _programsList;
 
         public static AppGrabber Instance
         {
@@ -100,14 +98,11 @@ namespace CairoDesktop.AppGrabber
             this.ConfigFile = configFile ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";
 
             this.Load();
-            //this.ProgramList = this.GetApps();
             this.NewApps = new List<ApplicationInfo>();
         }
 
         public void Load() {
-            //_logger.Debug("Checking for category list config file: {0}", ConfigFile);
             if (Interop.Shell.Exists(ConfigFile)) {
-                //_logger.Debug("Loading category list config file: {0}", ConfigFile);
                 this.CategoryList = CategoryList.Deserialize(ConfigFile);
             } else {
                 this.CategoryList = new CategoryList();
@@ -115,45 +110,38 @@ namespace CairoDesktop.AppGrabber
         }
 
         public void Save() {
-            //_logger.Debug("Saving out categories config file");
             this.CategoryList.Serialize(ConfigFile);
         }
 
-        //public event EventHandler StateChanged;
-
         private List<ApplicationInfo> GetApps()
         {
-            //_logger.Debug("Building index of applications.");
             List<List<ApplicationInfo>> listsToMerge = new List<List<ApplicationInfo>>();
             foreach (String location in searchLocations)
             {
-                //_logger.Debug("Indexing {0} for applications", location);
-                listsToMerge.Add(generateAppListRecursing(new DirectoryInfo(location)));
+                listsToMerge.Add(generateAppListRecursing(location));
             }
             List<ApplicationInfo> rval = mergeLists(listsToMerge);
             rval.Sort();
             
-            //_logger.Debug("Number of applications indexed: {0}", rval.Count);
             return rval;
         }
 
-        private List<ApplicationInfo> generateAppListRecursing(DirectoryInfo directory)
+        /*private List<ApplicationInfo> generateAppListRecursing(DirectoryInfo directory)
         {
-            //_logger.Debug("Scanning directory {0}", directory.FullName);
             List<ApplicationInfo> rval = new List<ApplicationInfo>();
-            
+
             foreach (DirectoryInfo subfolder in directory.GetDirectories())
             {
                 rval.AddRange(generateAppListRecursing(subfolder));
             }
-            
-            foreach (FileInfo file in directory.GetFiles()) 
+
+            foreach (FileInfo file in directory.GetFiles())
             {
-                //_logger.Debug("Interrogating file {0}", file.FullName);
                 ApplicationInfo ai = new ApplicationInfo();
                 String ext = Path.GetExtension(file.FullName);
 
-                if (executableExtensions.Contains(ext, StringComparer.OrdinalIgnoreCase)) {
+                if (executableExtensions.Contains(ext, StringComparer.OrdinalIgnoreCase))
+                {
                     try
                     {
                         ai.Name = Path.GetFileNameWithoutExtension(file.FullName);
@@ -162,7 +150,6 @@ namespace CairoDesktop.AppGrabber
 
                         if (file.Extension.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
                         {
-                            //_logger.Debug("Attempting to interrogate shortcut to application: {0}", file.FullName);
                             Interop.Shell.Link link = new Interop.Shell.Link(file.FullName);
                             target = link.Target;
                         }
@@ -170,7 +157,7 @@ namespace CairoDesktop.AppGrabber
                         {
                             target = file.FullName;
                         }
-                        
+
                         // remove items that we can't execute. also remove uninstallers
                         if (!executableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase) || ai.Name == "Uninstall" || ai.Name.StartsWith("Uninstall "))
                         {
@@ -178,14 +165,59 @@ namespace CairoDesktop.AppGrabber
                             continue;
                         }
 
-                        //_logger.Debug("Attempting to get associated icon for {0}", file.FullName);
                         ai.Icon = ai.GetAssociatedIcon();
                         rval.Add(ai);
                     }
                     catch (Exception ex)
                     {
-                        //Output the reason to the debugger
-                        //_logger.Debug("Error creating ApplicationInfo object in appgrabber. Details: {0}\n{1}", ex.Message, ex.StackTrace);
+                        System.Diagnostics.Debug.WriteLine("Error creating ApplicationInfo object in appgrabber. " + ex.Message);
+                    }
+                }
+            }
+
+            return rval;
+        }*/
+
+        private List<ApplicationInfo> generateAppListRecursing(string directory)
+        {
+            List<ApplicationInfo> rval = new List<ApplicationInfo>();
+
+            foreach (string file in Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories))
+            {
+                ApplicationInfo ai = new ApplicationInfo();
+                String ext = Path.GetExtension(file);
+
+                if (executableExtensions.Contains(ext, StringComparer.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        ai.Name = Path.GetFileNameWithoutExtension(file);
+                        ai.Path = file;
+                        string target = string.Empty;
+                        string fileExt = Path.GetExtension(file);
+
+                        if (fileExt.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Interop.Shell.Link link = new Interop.Shell.Link(file);
+                            target = link.Target;
+                        }
+                        else
+                        {
+                            target = file;
+                        }
+
+                        // remove items that we can't execute. also remove uninstallers
+                        if (!executableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase) || ai.Name == "Uninstall" || ai.Name.StartsWith("Uninstall "))
+                        {
+                            System.Diagnostics.Debug.WriteLine("Not an app: " + file + ": " + target);
+                            continue;
+                        }
+
+                        ai.Icon = ai.GetAssociatedIcon();
+                        rval.Add(ai);
+                    }
+                    catch (Exception ex)
+                    {
                         System.Diagnostics.Debug.WriteLine("Error creating ApplicationInfo object in appgrabber. " + ex.Message);
                     }
                 }
@@ -202,7 +234,6 @@ namespace CairoDesktop.AppGrabber
             {
                 if (!rval.Contains(ai))
                 {
-                    //System.Diagnostics.Debug.WriteLine(ai);
                     rval.Add(ai);
                 }
             }
@@ -219,7 +250,6 @@ namespace CairoDesktop.AppGrabber
                 {
                     if (!rval.Contains(ai))
                     {
-                        //System.Diagnostics.Debug.WriteLine(ai);
                         rval.Add(ai);
                     }
                 }

@@ -13,11 +13,8 @@
 	Background="Transparent"
 	WindowStartupLocation="CenterScreen">
 	<Window.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="Cairo.xaml" />
-			</ResourceDictionary.MergedDictionaries>
-			<self:MessageBoxImageConverter x:Key="MessageBoxImageConverter" />
+        <ResourceDictionary>
+            <self:MessageBoxImageConverter x:Key="MessageBoxImageConverter" />
 			<self:MessageBoxButtonConverter x:Key="MessageBoxButtonConverter" />
 		</ResourceDictionary>
 	</Window.Resources>

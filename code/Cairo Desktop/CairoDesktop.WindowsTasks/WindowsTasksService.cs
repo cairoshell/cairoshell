@@ -57,6 +57,7 @@ namespace CairoDesktop.WindowsTasks
         {
             try
             {
+                Trace.WriteLine("Starting WindowsTasksService");
                 _HookWin = new NativeWindowEx();
                 _HookWin.CreateHandle(new CreateParams());
                 

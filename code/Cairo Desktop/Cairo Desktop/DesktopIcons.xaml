@@ -5,9 +5,6 @@
     x:Name="CairoDesktopIcons">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Cairo.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <Style x:Key="FolderViewStyle"
                 TargetType="ItemsControl">
                 <Setter Property="ItemsPanel">

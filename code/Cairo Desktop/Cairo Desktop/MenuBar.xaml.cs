@@ -32,11 +32,6 @@ namespace CairoDesktop
 
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
 
-            // Set custom theme if selected
-            string theme = Properties.Settings.Default.CairoTheme;
-            if (theme != "Default")
-                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
-
             this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
 
             // Set username

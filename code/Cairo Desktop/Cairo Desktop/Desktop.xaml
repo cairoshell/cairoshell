@@ -11,13 +11,6 @@
     AllowsTransparency="True"
     Focusable="False"
     Background="{x:Null}" Topmost="False" Activated="Window_Activated" Closing="Window_Closing" SourceInitialized="Window_SourceInitialized">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Cairo.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <Grid Name="grid" Margin="0,35,0,0">
     </Grid>
     <Window.ContextMenu>

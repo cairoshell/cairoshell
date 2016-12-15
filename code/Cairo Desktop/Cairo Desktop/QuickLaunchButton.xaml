@@ -4,13 +4,6 @@
     x:Name="UserControl"
     d:DesignWidth="24"
     d:DesignHeight="26" xmlns:self="clr-namespace:CairoDesktop">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Cairo.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <Grid x:Name="LayoutRoot">
         <Button x:Name="btn"
             CommandParameter="{Binding Path=Path}"

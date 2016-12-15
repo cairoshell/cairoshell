@@ -5,11 +5,7 @@
     d:DesignWidth="140"
     d:DesignHeight="29" xmlns:self="clr-namespace:CairoDesktop">
     <UserControl.Resources>
-
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Cairo.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <self:IconConverter x:Key="iconConverter" />
             <self:TaskbuttonStyleConverter x:Key="styleConverter" />
         </ResourceDictionary>

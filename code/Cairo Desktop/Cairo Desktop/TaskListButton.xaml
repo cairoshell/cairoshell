@@ -3,11 +3,7 @@
     x:Class="CairoDesktop.TaskListButton"
     x:Name="UserControl" xmlns:self="clr-namespace:CairoDesktop">
     <UserControl.Resources>
-
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Cairo.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <self:IconConverter x:Key="iconConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
