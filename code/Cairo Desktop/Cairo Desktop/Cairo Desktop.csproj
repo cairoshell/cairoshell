@@ -302,8 +302,7 @@
     </Resource>
     <Resource Include="Resources\controlsHome.png">
     </Resource>
-    <Resource Include="Resources\desktopControlsBg.png">
-    </Resource>
+    <Resource Include="Resources\desktopControlsBg.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\menubarShadow.png" />
@@ -360,6 +359,7 @@
     </Resource>
     <Resource Include="Resources\controlsBrowse.png" />
     <Resource Include="Resources\exitIcon.png" />
+    <SplashScreen Include="Resources\loadSplash.png" />
     <Content Include="SearchAPILib.dll" />
   </ItemGroup>
   <ItemGroup>

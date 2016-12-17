@@ -23,11 +23,10 @@ namespace CairoDesktop
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
-            //CairoMessage.Show("This will go back.", "Cairo Desktop", MessageBoxButton.OK, MessageBoxImage.Information);
             DirectoryInfo parent = (this.Owner as Desktop).Icons.Locations[0].DirectoryInfo.Parent;
             if (parent != null)
             {
-                (this.Owner as Desktop).PathHistory.Push((this.Owner as Desktop).Icons.Locations[0].DirectoryInfo.FullName);
+                (this.Owner as Desktop).PathHistory.Push((this.Owner as Desktop).Icons.Locations[0].FullName);
                 (this.Owner as Desktop).Icons.Locations[0] = new SystemDirectory(parent.FullName, Dispatcher.CurrentDispatcher);
             }
 
@@ -35,16 +34,13 @@ namespace CairoDesktop
 
         private void Home_Click(object sender, RoutedEventArgs e)
         {
-            //CairoMessage.Show("This will go to %USERPROFILE%\\Desktop.", "Cairo Desktop", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            (this.Owner as Desktop).PathHistory.Push((this.Owner as Desktop).Icons.Locations[0].DirectoryInfo.FullName);
+            (this.Owner as Desktop).PathHistory.Push((this.Owner as Desktop).Icons.Locations[0].FullName);
             (this.Owner as Desktop).Icons.Locations[0] = new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), Dispatcher.CurrentDispatcher);
 
         }
 
         private void Fwd_Click(object sender, RoutedEventArgs e)
         {
-            //CairoMessage.Show("This will go forward.", "Cairo Desktop", MessageBoxButton.OK, MessageBoxImage.Information);
             if ((this.Owner as Desktop).PathHistory.Count > 0)
                 (this.Owner as Desktop).Icons.Locations[0] = new SystemDirectory((this.Owner as Desktop).PathHistory.Pop(), Dispatcher.CurrentDispatcher);
         }
@@ -52,15 +48,16 @@ namespace CairoDesktop
         private void Browse_Click(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-
-            fbd.SelectedPath = (this.Owner as Desktop).Icons.Locations[0].DirectoryInfo.FullName;
+            fbd.Description = "Select a folder to display as your desktop:";
+            fbd.ShowNewFolderButton = false;
+            fbd.SelectedPath = (this.Owner as Desktop).Icons.Locations[0].FullName;
 
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 DirectoryInfo dir = new DirectoryInfo(fbd.SelectedPath);
                 if (dir != null)
                 {
-                    (this.Owner as Desktop).PathHistory.Push((this.Owner as Desktop).Icons.Locations[0].DirectoryInfo.FullName);
+                    (this.Owner as Desktop).PathHistory.Push((this.Owner as Desktop).Icons.Locations[0].FullName);
                     (this.Owner as Desktop).Icons.Locations[0] = new SystemDirectory(dir.FullName, Dispatcher.CurrentDispatcher);
                 }
             }

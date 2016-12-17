@@ -22,25 +22,15 @@ namespace CairoDesktop.AppGrabber
         {
             BitmapSource bs = null;
             
-            if(Interop.Shell.Exists(filename))
-            {
-                // Disposes of icon automagically when done.
-                //using (System.Drawing.Icon icon = Interop.Shell.GetIconByFilename(filename, isSmall))
-                // All we really need is the handle.
-                IntPtr hIcon = Interop.Shell.GetIconByFilename(filename, isSmall);
+            IntPtr hIcon = Interop.Shell.GetIconByFilename(filename, isSmall);
                 
-                if (hIcon == IntPtr.Zero || hIcon == null)
-                {
-                    return GetDefaultIcon();
-                }
-
-                bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                Interop.Shell.Win32.DestroyIcon(hIcon);
-            }
-            else
+            if (hIcon == IntPtr.Zero || hIcon == null)
             {
-                bs = GetDefaultIcon();
+                return GetDefaultIcon();
             }
+
+            bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            Interop.Shell.Win32.DestroyIcon(hIcon);
 
             return bs;
         }

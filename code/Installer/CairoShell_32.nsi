@@ -35,6 +35,8 @@ InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
   !define MUI_HEADERIMAGE_BITMAP header_img.bmp
   !define MUI_UNICON inst_icon.ico
   !define MUI_WELCOMEFINISHPAGE_BITMAP left_img.bmp
+  !define MUI_FINISHPAGE_RUN "$INSTDIR\CairoDesktop.exe"
+  !define MUI_FINISHPAGE_RUN_TEXT "Start Cairo Desktop Environment"
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE "License.txt"
   !insertmacro MUI_PAGE_COMPONENTS
@@ -55,6 +57,12 @@ InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
 Section "Cairo Shell (required)" cairo
 
   SectionIn RO
+
+  ; Get .NET directory so we can ngen, error if not found
+  Push "v4.0"
+  Call GetDotNetDir
+  Pop $R0
+  StrCmpS "" $R0 err_dot_net_not_found
   
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
@@ -97,6 +105,19 @@ Section "Cairo Shell (required)" cairo
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "NoRepair" 1
   WriteUninstaller "RemoveCairo.exe"
+  
+  ; ngen to improve first start performance
+  SetDetailsPrint both
+  DetailPrint "Generating native image..."
+  SetDetailsPrint none
+  ExecWait '"$R0\ngen.exe" install "$INSTDIR\CairoDesktop.exe"'
+  SetDetailsPrint both
+
+  Return
+ 
+  err_dot_net_not_found:
+    Abort "Cairo requires .NET Framework 4.5.2 or higher to be installed. Please install .NET Framework 4.5.2 or greater from Microsoft and try again."
+
 SectionEnd
 
 ; The wallpaper contest winner deserves to have their wallpaper put out in to the real world, don't you think?
@@ -167,3 +188,41 @@ Section "Uninstall"
   RMDir "$INSTDIR"
 
 SectionEnd
+
+;--------------------------------
+
+; Functions
+
+; Given a .NET version number, this function returns that .NET framework's
+; install directory. Returns "" if the given .NET version is not installed.
+; Params: [version] (eg. "v2.0")
+; Return: [dir] (eg. "C:\WINNT\Microsoft.NET\Framework\v2.0.50727")
+Function GetDotNetDir
+  Exch $R0 ; Set R0 to .net version major
+  Push $R1
+  Push $R2
+
+  ; set R1 to minor version number of the installed .NET runtime
+  EnumRegValue $R1 HKLM \
+    "Software\Microsoft\.NetFramework\policy\$R0" 0
+  IfErrors getdotnetdir_err
+ 
+  ; set R2 to .NET install dir root
+  ReadRegStr $R2 HKLM \
+    "Software\Microsoft\.NetFramework" "InstallRoot"
+  IfErrors getdotnetdir_err
+ 
+  ; set R0 to the .NET install dir full
+  StrCpy $R0 "$R2$R0.$R1"
+ 
+  getdotnetdir_end:
+    Pop $R2
+    Pop $R1
+    Exch $R0 ; return .net install dir full
+    Return
+ 
+  getdotnetdir_err:
+    StrCpy $R0 ""
+    Goto getdotnetdir_end
+ 
+FunctionEnd

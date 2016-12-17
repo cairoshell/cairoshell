@@ -56,6 +56,10 @@
             }
             #endregion
 
+            // Show a splash screen while WPF inits
+            SplashScreen splash = new SplashScreen("Resources/loadSplash.png");
+            splash.Show(false, true);
+
             #region some real shell code
             int hShellReadyEvent;
 
@@ -112,8 +116,8 @@
 
 
             MenuBarWindow = new MenuBar() { Owner = _parentWindow };
-            MenuBarWindow.Show();
             app.MainWindow = MenuBarWindow;
+            MenuBarWindow.Show();
 
             if (Properties.Settings.Default.EnableDesktop)
             {
@@ -145,6 +149,9 @@
             {
                 RunStartupApps();
             }
+
+            // Close the splash screen
+            splash.Close(new TimeSpan(0, 0, 0, 0, 800));
 
             app.Run();
         }

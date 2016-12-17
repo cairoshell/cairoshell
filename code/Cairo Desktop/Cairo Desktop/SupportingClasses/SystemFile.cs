@@ -44,12 +44,14 @@ namespace CairoDesktop
         /// </summary>
         private void Initialize()
         {
-            System.Diagnostics.Process refProc = new System.Diagnostics.Process();
+            Process refProc = new Process();
             refProc.StartInfo.FileName = this.FullName;
 
             this.Verbs.AddRange(refProc.StartInfo.Verbs);
 
-            _dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() => GetDisplayIcon()));
+            refProc.Dispose();
+
+            _dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() => GetDisplayIcon()));
         }
 
         /// <summary>
@@ -127,7 +129,7 @@ namespace CairoDesktop
         /// </summary>
         private void GetDisplayIcon()
         {
-            if (GetFileIsImage(this.FullName)) 
+            if (GetFileIsImage(this.FullName))
             {
                 var img = new BitmapImage();
                 Stream imgStream = null;

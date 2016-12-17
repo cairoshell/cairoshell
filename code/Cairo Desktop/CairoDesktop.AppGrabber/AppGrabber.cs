@@ -118,7 +118,7 @@ namespace CairoDesktop.AppGrabber
             List<List<ApplicationInfo>> listsToMerge = new List<List<ApplicationInfo>>();
             foreach (String location in searchLocations)
             {
-                listsToMerge.Add(generateAppListRecursing(location));
+                listsToMerge.Add(generateAppList(location));
             }
             List<ApplicationInfo> rval = mergeLists(listsToMerge);
             rval.Sort();
@@ -178,7 +178,7 @@ namespace CairoDesktop.AppGrabber
             return rval;
         }*/
 
-        private List<ApplicationInfo> generateAppListRecursing(string directory)
+        private List<ApplicationInfo> generateAppList(string directory)
         {
             List<ApplicationInfo> rval = new List<ApplicationInfo>();
 

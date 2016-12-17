@@ -47,7 +47,7 @@ namespace CairoDesktop
             }
             else if (verb == "delete")
             {
-                bool? deleteChoice = CairoMessage.ShowOkCancel("The file will be sent to the Recycle Bin.", "Are you sure you want to delete this file?", "Resources/cairoIcon.png", "Delete", "Cancel");
+                bool? deleteChoice = CairoMessage.ShowOkCancel("\"" + Path.GetFileName(fileName) + "\" will be sent to the Recycle Bin.", "Are you sure you want to delete this?", "Resources/cairoIcon.png", "Delete", "Cancel");
                 if (deleteChoice.HasValue && deleteChoice.Value)
                 {
                     Interop.Shell.SendToRecycleBin(fileName);

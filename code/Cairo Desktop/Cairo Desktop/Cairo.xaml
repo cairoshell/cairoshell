@@ -585,29 +585,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <!-- CairoConfirmationBoxStyle -->
-    <Style x:Key="CairoConfirmationBoxStyle"
-        TargetType="{x:Type StackPanel}">
-        <Setter Property="Width"
-            Value="588" />
-        <Setter Property="Height"
-            Value="239" />
-        <Setter Property="Background">
-            <Setter.Value>
-                <ImageBrush ImageSource="Resources\cairoDiag.png" />
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <!-- CairoConfirmationBoxImageStyle -->
-    <Style x:Key="CairoConfirmationBoxImageStyle"
-        TargetType="{x:Type Image}">
-        <Setter Property="Width"
-            Value="73" />
-        <Setter Property="Height"
-            Value="73" />
-        <Setter Property="Margin"
-            Value="40,40,20,0" />
-    </Style>
     <!-- Style for menus that have something other than menuitems -->
     <Style x:Key="CairoMenuItemContainerStyle" TargetType="{x:Type MenuItem}">
         <Setter Property="Template">
@@ -1375,14 +1352,14 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
                         BorderThickness="1"
-                        CornerRadius="3"
-                        BorderBrush="#FF999999">
+                        CornerRadius="5"
+                        BorderBrush="#402e2e2e">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0"
                                 EndPoint="0,1">
                                 <GradientStop Color="#FFFFFFFF"
                                     Offset="0" />
-                                <GradientStop Color="#FFD9D9D9"
+                                <GradientStop Color="#FFDFDFDF"
                                     Offset="1" />
                             </LinearGradientBrush>
                         </Border.Background>
@@ -1413,13 +1390,14 @@
                                 <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,0"
                                         EndPoint="0,1">
-                                        <GradientStop Color="#FFE9E9E9"
+                                        <GradientStop Color="#FFDCE1E6"
                                             Offset="0" />
-                                        <GradientStop Color="#FFB1B1B1"
+                                        <GradientStop Color="#FFC0C5C9"
                                             Offset="1" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
                             </Setter>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#4028292a" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
@@ -1428,13 +1406,14 @@
                                 <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,0"
                                         EndPoint="0,1">
-                                        <GradientStop Color="#FFD1D1D1"
+                                        <GradientStop Color="#FFc6cbcf"
                                             Offset="0" />
-                                        <GradientStop Color="#FF999999"
+                                        <GradientStop Color="#FFadb2b5"
                                             Offset="1" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
                             </Setter>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#40242525" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
