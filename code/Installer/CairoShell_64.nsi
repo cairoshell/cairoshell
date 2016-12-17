@@ -110,7 +110,7 @@ Section "Cairo Shell (required)" cairo
   SetDetailsPrint both
   DetailPrint "Generating native image..."
   SetDetailsPrint none
-  ExecWait '"$R0\ngen.exe" install "$INSTDIR\CairoDesktop.exe" /silent'
+  ExecWait '"$R0\ngen.exe" install "$INSTDIR\CairoDesktop.exe"'
   SetDetailsPrint both
 
   Return
