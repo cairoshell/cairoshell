@@ -655,26 +655,64 @@
     <!-- Button Style for View All Results -->
     <Style x:Key="CairoSearchResultsButtonStyle"
         TargetType="{x:Type Button}">
-        <Setter Property="Background">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Height" Value="26" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
             <Setter.Value>
-                <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                    <GradientStop Color="#FF569fd1"
-                                    Offset="1.0" />
-                    <GradientStop Color="#FF0073bc"
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border"
+                        BorderThickness="0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                <GradientStop Color="#FF569fd1"
                                     Offset="0.0" />
-                </LinearGradientBrush>
+                                <GradientStop Color="#FF0073bc"
+                                    Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <ContentPresenter Margin="0,0,0,1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                        <GradientStop Color="#ff5fb1ea"
+                                    Offset="0.0" />
+                                        <GradientStop Color="#ff0185d7"
+                                    Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                        <GradientStop Color="#ff4b8bb8"
+                                    Offset="0.0" />
+                                        <GradientStop Color="#ff0164a2"
+                                    Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Padding" Value="0,5,0,5" />
-        <Setter Property="FontSize" Value="14" />
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="Black" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
     <!-- Button Style for Quick Launch -->
     <Style x:Key="CairoQuickLaunchButtonStyle"
