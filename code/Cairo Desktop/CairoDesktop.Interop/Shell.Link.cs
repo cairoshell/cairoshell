@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using IWshRuntimeLibrary;
 using io = System.IO;
 
@@ -60,7 +58,6 @@ namespace CairoDesktop.Interop {
                 int.TryParse(iconParts[1], out index);
                 IconIndex = index;
             }
-
         }
 
     }

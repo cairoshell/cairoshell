@@ -1,6 +1,6 @@
-﻿using System;
+﻿using CairoDesktop.Interop;
+using System;
 using System.Windows;
-using System.Windows.Markup;
 
 namespace CairoDesktop
 {
@@ -15,13 +15,13 @@ namespace CairoDesktop
 
         private void btnClick(object sender, RoutedEventArgs e)
         {
-            var Window = (this.DataContext as CairoDesktop.WindowsTasks.ApplicationWindow);
+            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
-                if (Window.State == CairoDesktop.WindowsTasks.ApplicationWindow.WindowState.Active)
+                if (Window.State == WindowsTasks.ApplicationWindow.WindowState.Active)
                 {
                     Window.Minimize();
-                    Window.State = CairoDesktop.WindowsTasks.ApplicationWindow.WindowState.Inactive;
+                    Window.State = WindowsTasks.ApplicationWindow.WindowState.Inactive;
                 }
                 else
                 {
@@ -32,17 +32,17 @@ namespace CairoDesktop
 
         private void Min_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (this.DataContext as CairoDesktop.WindowsTasks.ApplicationWindow);
+            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Window.Minimize();
-                Window.State = CairoDesktop.WindowsTasks.ApplicationWindow.WindowState.Inactive;
+                Window.State = WindowsTasks.ApplicationWindow.WindowState.Inactive;
             }
         }
 
         private void Max_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (this.DataContext as CairoDesktop.WindowsTasks.ApplicationWindow);
+            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Window.BringToFront();
@@ -51,12 +51,16 @@ namespace CairoDesktop
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (this.DataContext as CairoDesktop.WindowsTasks.ApplicationWindow);
+            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
-                IntPtr handle = WindowsTasks.NativeWindowEx.FindWindow(null, WinTitle.Text);
+                IntPtr handle = NativeMethods.FindWindow(null, WinTitle.Text);
 
-                Interop.Shell.SendMessageTimeout(handle, WindowsTasks.WindowsTasksService.WM_COMMAND, WindowsTasks.WindowsTasksService.WM_CLOSE, 0, 2, 200, ref handle);
+                // if the window exists, send close, otherwise remove from the collection
+                if (handle != IntPtr.Zero)
+                    NativeMethods.SendMessageTimeout(handle, WindowsTasks.WindowsTasksService.WM_COMMAND, WindowsTasks.WindowsTasksService.WM_CLOSE, 0, 2, 200, ref handle);
+                else
+                    Window.TasksService.Windows.Remove(Window);
             }
         }
 	}

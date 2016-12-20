@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using System.Collections.ObjectModel;
 using System.Windows.Threading;
 
 namespace CairoDesktop {
@@ -155,6 +151,11 @@ namespace CairoDesktop {
         public override bool Equals(object other) {
             if (!(other is SystemDirectory)) return false;
             return this.FullName.Equals((other as SystemDirectory).FullName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.FullName.GetHashCode();
         }
 
         #region IEquatable<T> Members

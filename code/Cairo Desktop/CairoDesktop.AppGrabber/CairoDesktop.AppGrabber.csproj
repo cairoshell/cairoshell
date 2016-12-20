@@ -101,13 +101,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppGrabberListResources.xaml.cs">
-      <DependentUpon>AppGrabberListResources.xaml</DependentUpon>
-    </Compile>
     <Compile Include="AppGrabberUI.xaml.cs">
       <DependentUpon>AppGrabberUI.xaml</DependentUpon>
     </Compile>
     <Compile Include="AppGrabber.cs" />
+    <Compile Include="AppGrabberUIResources.xaml.cs">
+      <DependentUpon>AppGrabberUIResources.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="AppViewSorter.cs" />
     <Compile Include="BindingCollection.cs" />
@@ -120,10 +120,6 @@
     <Compile Include="WpfWin32ImageConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="AppGrabberListResources.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="AppGrabberUI.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

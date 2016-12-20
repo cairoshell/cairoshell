@@ -8,12 +8,7 @@
     Background="Transparent"
     WindowStartupLocation="CenterScreen">
     <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="AppGrabberUIResources.xaml" />
-                <ResourceDictionary Source="AppGrabberListResources.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <ResourceDictionary Source="AppGrabberUIResources.xaml" />
     </Window.Resources>
     <Grid>
         <Border BorderThickness="0" Margin="12,7,12,17">
@@ -156,11 +151,11 @@
                 BorderBrush="#FF888888"
                 Grid.Row="2"
                 Grid.Column="3">
-                    <ScrollViewer x:Name="scrollViewer"
+                    <ScrollViewer x:Name="scrollViewer" UseLayoutRounding="True"
                     HorizontalScrollBarVisibility="Auto"
                     VerticalScrollBarVisibility="Auto"
                     CanContentScroll="True"
-                    Background="DarkGray"
+                    Background="White"
                     DragOver="ScrollViewer_DragOver">
                         <ItemsControl x:Name="categoryView"
                         Style="{StaticResource CategoryDisplayStyle}" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />

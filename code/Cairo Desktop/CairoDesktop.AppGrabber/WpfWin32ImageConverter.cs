@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Media;
-using System.Text;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -30,7 +28,7 @@ namespace CairoDesktop.AppGrabber
             }
 
             bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-            Interop.Shell.Win32.DestroyIcon(hIcon);
+            NativeMethods.DestroyIcon(hIcon);
 
             return bs;
         }
@@ -48,7 +46,7 @@ namespace CairoDesktop.AppGrabber
                 try
                 {
                     bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                    Interop.Shell.Win32.DestroyIcon(hIcon);
+                    NativeMethods.DestroyIcon(hIcon);
                 }
                 catch
                 {

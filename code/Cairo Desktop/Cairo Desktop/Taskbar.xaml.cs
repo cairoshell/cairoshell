@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Markup;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop
 {
@@ -81,10 +82,10 @@ namespace CairoDesktop
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == WindowsTasks.NativeWindowEx.WM_MOUSEACTIVATE)
+            if (msg == NativeMethods.WM_MOUSEACTIVATE)
             {
                 handled = true;
-                return new IntPtr(WindowsTasks.NativeWindowEx.MA_NOACTIVATE);
+                return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
 
             if (msg == appbarMessageId)

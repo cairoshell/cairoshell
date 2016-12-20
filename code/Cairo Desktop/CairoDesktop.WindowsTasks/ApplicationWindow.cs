@@ -3,6 +3,7 @@ using System.Text;
 using System.Drawing;
 using System.Diagnostics;
 using System.ComponentModel;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop.WindowsTasks
 {
@@ -17,6 +18,7 @@ namespace CairoDesktop.WindowsTasks
             this.State = WindowState.Inactive;
             if (sourceService != null)
             {
+                TasksService = sourceService;
                 sourceService.Redraw += HandleRedraw;
             }
         }
@@ -33,23 +35,17 @@ namespace CairoDesktop.WindowsTasks
 
         public WindowsTasksService TasksService
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
         public string Title
         {
             get
             {
-                int len = NativeWindowEx.GetWindowTextLength(this.Handle);
+                int len = NativeMethods.GetWindowTextLength(this.Handle);
                 StringBuilder sb = new StringBuilder(len);
-                NativeWindowEx.GetWindowText(this.Handle, sb, len + 1);
+                NativeMethods.GetWindowText(this.Handle, sb, len + 1);
 
                 return sb.ToString();
             }
@@ -59,7 +55,7 @@ namespace CairoDesktop.WindowsTasks
         {
             get
             {
-                return NativeWindowEx.IsAppHungWindow(this.Handle);
+                return NativeMethods.IsAppHungWindow(this.Handle);
             }
         }
 
@@ -127,7 +123,7 @@ namespace CairoDesktop.WindowsTasks
         {
             get
             {
-                if ((this.State == WindowState.Hidden) || (NativeWindowEx.GetParent(this.Handle) != IntPtr.Zero))
+                if ((this.State == WindowState.Hidden) || (NativeMethods.GetParent(this.Handle) != IntPtr.Zero))
                 {
                     return false;
                 }
@@ -143,11 +139,11 @@ namespace CairoDesktop.WindowsTasks
                 int GWL_STYLE = -16;
                 int GW_Owner = 4;
 
-                int exStyles = NativeWindowEx.GetWindowLong(this.Handle, GWL_EXSTYLE);
-                int style = NativeWindowEx.GetWindowLong(this.Handle, GWL_STYLE);
-                IntPtr ownerWin = NativeWindowEx.GetWindow(this.Handle, GW_Owner);
+                int exStyles = NativeMethods.GetWindowLong(this.Handle, GWL_EXSTYLE);
+                int style = NativeMethods.GetWindowLong(this.Handle, GWL_STYLE);
+                IntPtr ownerWin = NativeMethods.GetWindow(this.Handle, GW_Owner);
 
-                if (((exStyles & (int)ExtendedWindowStyles.WS_EX_APPWINDOW) != 0 || (exStyles & (int)ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0) && (ownerWin == IntPtr.Zero && (exStyles & (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW) == 0 && (style & (int)WindowStyles.WS_VISIBLE) == (int)WindowStyles.WS_VISIBLE))
+                if (((exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0 || (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0) && (ownerWin == IntPtr.Zero && (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) == 0 && (style & (int)NativeMethods.WindowStyles.WS_VISIBLE) == (int)NativeMethods.WindowStyles.WS_VISIBLE))
                 {
                     return true;
                 }
@@ -166,27 +162,27 @@ namespace CairoDesktop.WindowsTasks
             int GCL_HICON = -14;
             int GCL_HICONSM = -34;
 
-            Interop.Shell.SendMessageTimeout(hWnd, WM_GETICON, 2, 0, 2, 200, ref hIco);
+            NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 2, 0, 2, 200, ref hIco);
 
             if (hIco == IntPtr.Zero)
             {
-                Interop.Shell.SendMessageTimeout(hWnd, WM_GETICON, 0, 0, 2, 200, ref hIco);
+                NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 0, 0, 2, 200, ref hIco);
             }
 
             if (hIco == IntPtr.Zero)
             {
                 if(!Environment.Is64BitProcess)
-                    hIco = NativeWindowEx.GetClassLong(hWnd, GCL_HICONSM);
+                    hIco = NativeMethods.GetClassLong(hWnd, GCL_HICONSM);
                 else
-                    hIco = NativeWindowEx.GetClassLongPtr(hWnd, GCL_HICONSM);
+                    hIco = NativeMethods.GetClassLongPtr(hWnd, GCL_HICONSM);
             }
 
             if (hIco == IntPtr.Zero)
             {
                 if (!Environment.Is64BitProcess)
-                    hIco = NativeWindowEx.GetClassLong(hWnd, GCL_HICON);
+                    hIco = NativeMethods.GetClassLong(hWnd, GCL_HICON);
                 else
-                    hIco = NativeWindowEx.GetClassLongPtr(hWnd, GCL_HICON);
+                    hIco = NativeMethods.GetClassLongPtr(hWnd, GCL_HICON);
             }
 
             return hIco;
@@ -196,16 +192,16 @@ namespace CairoDesktop.WindowsTasks
         {
             // so that maximized windows stay that way
             if(Placement == 3)
-                NativeWindowEx.ShowWindow(this.Handle, NativeWindowEx.WindowShowStyle.Show);
+                NativeMethods.ShowWindow(this.Handle, NativeMethods.WindowShowStyle.Show);
             else
-                NativeWindowEx.ShowWindow(this.Handle, NativeWindowEx.WindowShowStyle.Restore);
+                NativeMethods.ShowWindow(this.Handle, NativeMethods.WindowShowStyle.Restore);
 
-            NativeWindowEx.SetForegroundWindow(this.Handle);
+            NativeMethods.SetForegroundWindow(this.Handle);
         }
 
         public void Minimize()
         {
-            NativeWindowEx.ShowWindow(this.Handle, NativeWindowEx.WindowShowStyle.Minimize);
+            NativeMethods.ShowWindow(this.Handle, NativeMethods.WindowShowStyle.Minimize);
         }
 
         /// <summary>
@@ -214,8 +210,8 @@ namespace CairoDesktop.WindowsTasks
         /// <param name="hWnd">The handle of the window.</param>
         public int GetWindowPlacement(IntPtr hWnd)
         {
-            NativeWindowEx.WINDOWPLACEMENT placement = new NativeWindowEx.WINDOWPLACEMENT();
-            NativeWindowEx.GetWindowPlacement(hWnd, ref placement);
+            NativeMethods.WINDOWPLACEMENT placement = new NativeMethods.WINDOWPLACEMENT();
+            NativeMethods.GetWindowPlacement(hWnd, ref placement);
             return placement.showCmd;
         }
 
@@ -236,10 +232,6 @@ namespace CairoDesktop.WindowsTasks
             OnPropertyChanged("Icon");
             OnPropertyChanged("ShowInTaskbar");
         }
-
-        #region P/Invoke Declarations
-        
-        #endregion
 
         #region IEquatable<Window> Members
 

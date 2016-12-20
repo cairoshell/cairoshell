@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.IO;
-using System.Windows.Markup;
 
 namespace CairoDesktop {
     /// <summary>
@@ -119,7 +118,7 @@ namespace CairoDesktop {
                 foreach (String fileName in fileNames)
                 {
                     // Only add if the 'file' is a Directory
-                    if (System.IO.Directory.Exists(fileName))
+                    if (Directory.Exists(fileName))
                     {
                         Locations.Add(new SystemDirectory(fileName, Dispatcher.CurrentDispatcher));
                     }

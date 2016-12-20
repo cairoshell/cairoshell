@@ -7,7 +7,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
-using System.Windows.Markup;
 using System.IO;
 
 namespace CairoDesktop
@@ -36,15 +35,15 @@ namespace CairoDesktop
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == WindowsTasks.NativeWindowEx.WM_MOUSEACTIVATE)
+            if (msg == NativeMethods.WM_MOUSEACTIVATE)
             {
                 handled = true;
-                return new IntPtr(WindowsTasks.NativeWindowEx.MA_NOACTIVATE);
+                return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
-            else if (msg == WindowsTasks.NativeWindowEx.WM_WINDOWPOSCHANGING)
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
             {
                 handled = true;
-                return new IntPtr(WindowsTasks.NativeWindowEx.MA_NOACTIVATE);
+                return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
 
             return IntPtr.Zero;

@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.IO;
-using System.Windows.Markup;
 
 namespace CairoDesktop {
     /// <summary>

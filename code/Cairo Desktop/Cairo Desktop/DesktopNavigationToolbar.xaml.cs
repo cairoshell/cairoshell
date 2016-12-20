@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using System.Windows.Interop;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop
 {
@@ -65,15 +66,15 @@ namespace CairoDesktop
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == WindowsTasks.NativeWindowEx.WM_MOUSEACTIVATE)
+            if (msg == NativeMethods.WM_MOUSEACTIVATE)
             {
                 handled = true;
-                return new IntPtr(WindowsTasks.NativeWindowEx.MA_NOACTIVATE);
+                return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
-            else if (msg == WindowsTasks.NativeWindowEx.WM_WINDOWPOSCHANGING)
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
             {
                 handled = true;
-                return new IntPtr(WindowsTasks.NativeWindowEx.MA_NOACTIVATE);
+                return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
 
             return IntPtr.Zero;

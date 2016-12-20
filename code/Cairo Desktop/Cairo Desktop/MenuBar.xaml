@@ -18,12 +18,12 @@
     AllowDrop="True"
     Loaded="OnWindowLoaded"
     Initialized="OnWindowInitialized"
-        SourceInitialized="Window_SourceInitialized"
+    SourceInitialized="Window_SourceInitialized"
     Closing="OnWindowClosing"
     SizeChanged="OnWindowResize"
-        UseLayoutRounding="True"
+    UseLayoutRounding="True"
     MaxHeight="23"
-        Background="Transparent">
+    Background="Transparent">
     <Window.Resources>
         <ResourceDictionary>
             <local:Settings x:Key="settings" />
@@ -119,7 +119,7 @@
                                     </DataTemplate>
                                 </TabControl.ContentTemplate>
                             </TabControl>
-                            </MenuItem.Header>
+                        </MenuItem.Header>
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Places"
@@ -187,7 +187,7 @@
                 </MenuItem>
             </Menu>
             <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
-            <MenuItem x:Name="CairoSearchMenu" Style="{StaticResource CairoMenuItemCairoSearchMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" MenuItem.SubmenuOpened="FocusSearchBox">
+                <MenuItem x:Name="CairoSearchMenu" Style="{StaticResource CairoMenuItemCairoSearchMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" MenuItem.SubmenuOpened="FocusSearchBox">
                     <MenuItem.Header>
                         <Image Name="CairoSearchMenuIcon" Source="{StaticResource CairoSearchIcon}"
                               Width="37"

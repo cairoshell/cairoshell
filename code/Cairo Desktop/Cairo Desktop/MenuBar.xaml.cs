@@ -7,7 +7,6 @@ using System.Windows.Data;
 using System.Windows.Threading;
 using CairoDesktop.Interop;
 using System.Windows.Input;
-using System.Windows.Markup;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 

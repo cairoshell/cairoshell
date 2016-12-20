@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Data;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,7 +8,7 @@ namespace CairoDesktop
     {
         private FrameworkElement dragElement = null;
         private bool dragging = false;
-        private bool inDragDrop = false;
+        //private bool inDragDrop = false;
         private Point dragStart;
         private DataObject dataObject = null;
 
@@ -41,9 +40,9 @@ namespace CairoDesktop
                 {
                     dragElement.CaptureMouse();
 
-                    inDragDrop = true;
+                    //inDragDrop = true;
                     DragDropEffects de = DragDrop.DoDragDrop(dragElement, dataObject, DragDropEffects.Move);
-                    inDragDrop = false;
+                    //inDragDrop = false;
                     dragging = false;
                     dragElement.ReleaseMouseCapture();
                 }

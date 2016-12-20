@@ -1,4 +1,3 @@
-
 namespace CairoDesktop
 {
     using System;

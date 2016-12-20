@@ -136,7 +136,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
         
-        private static WindowsTasks.RECT oldWorkArea;
+        private static NativeMethods.RECT oldWorkArea;
         
         public static void SetWorkArea()
         {
@@ -145,8 +145,8 @@ namespace CairoDesktop.SupportingClasses
             oldWorkArea.top = SystemInformation.WorkingArea.Top;
             oldWorkArea.right = SystemInformation.WorkingArea.Right;
             oldWorkArea.bottom = SystemInformation.WorkingArea.Bottom;
-            
-            WindowsTasks.RECT rc;
+
+            NativeMethods.RECT rc;
             rc.left = SystemInformation.VirtualScreen.Left;
             rc.top = SystemInformation.VirtualScreen.Top + 23; // allocate menu bar space
             rc.right = SystemInformation.VirtualScreen.Right;
@@ -157,12 +157,12 @@ namespace CairoDesktop.SupportingClasses
             else
                 rc.bottom = SystemInformation.VirtualScreen.Bottom;
 
-            WindowsTasks.NativeWindowEx.SystemParametersInfo((int)WindowsTasks.NativeWindowEx.SPI.SPI_SETWORKAREA, 0, ref rc, (1 | 2));
+            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref rc, (1 | 2));
         }
         
         public static void ResetWorkArea()
         {
-            WindowsTasks.NativeWindowEx.SystemParametersInfo((int)WindowsTasks.NativeWindowEx.SPI.SPI_SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
+            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
         }
     }
 }
