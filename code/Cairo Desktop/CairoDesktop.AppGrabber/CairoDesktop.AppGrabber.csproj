@@ -117,7 +117,7 @@
       <DependentUpon>AppGrabberUI_Page2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WpfWin32ImageConverter.cs" />
+    <Compile Include="IconImageConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="AppGrabberUI.xaml">

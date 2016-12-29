@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 
-
 namespace CairoDesktop.AppGrabber
 {
     /// <summary>
@@ -19,7 +18,7 @@ namespace CairoDesktop.AppGrabber
             : this(new AppGrabber(), new ObservableCollection<ApplicationInfo>())
         {
         }
-        public bool ShowInMenu{ get; set; }
+        
         public AppGrabberUI_Page2(AppGrabber appGrabber, ObservableCollection<ApplicationInfo> selectedApps)
         {
             this.appGrabber = appGrabber;
@@ -43,6 +42,7 @@ namespace CairoDesktop.AppGrabber
                 quicklaunch.ShowInMenu = false;
                 catList.Add(quicklaunch);
             }
+
             // Add Apps to uncat if they haven't been added to a category yet.
             foreach (ApplicationInfo app in selectedApps) {
                 if (app.Category == null) {
@@ -58,7 +58,7 @@ namespace CairoDesktop.AppGrabber
             this.Close();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) {
+        private void btnAdd_Click(object sender, RoutedEventArgs e) {
             appGrabber.CategoryList.Add(new Category("New"));
             scrollViewer.ScrollToEnd();
         }
@@ -75,7 +75,7 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e) {
+        private void btnSave_Click(object sender, RoutedEventArgs e) {
             appGrabber.Save();
             this.Close();
         }

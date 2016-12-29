@@ -23,12 +23,13 @@ namespace CairoDesktop.AppGrabber
         { 
             get
             {
-                var retObject = GetValue(programsListProperty) as List<ApplicationInfo>;
-                if (retObject.Count == 0)
-                {
+                // always get updated list
+                //var retObject = GetValue(programsListProperty) as List<ApplicationInfo>;
+                //if (retObject.Count == 0)
+                //{
                     this.ProgramList = GetApps();
-                    retObject = GetValue(programsListProperty) as List<ApplicationInfo>;
-                }
+                    var retObject = GetValue(programsListProperty) as List<ApplicationInfo>;
+                //}
 
                 return retObject;
             }

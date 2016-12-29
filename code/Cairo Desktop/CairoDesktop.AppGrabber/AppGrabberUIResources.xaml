@@ -207,7 +207,7 @@
         <Setter Property="BorderThickness"
             Value="0" />
         <Setter Property="MinHeight"
-            Value="20" />
+            Value="0" />
         <Setter Property="AllowDrop"
             Value="True" />
         <Setter Property="SelectionMode"

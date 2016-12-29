@@ -9,7 +9,7 @@ namespace CairoDesktop.AppGrabber
     /// <summary>
     /// Provides static conversion methods to change Win32 Icons into ImageSources.
     /// </summary>
-    public class WpfWin32ImageConverter
+    public class IconImageConverter
     {
         /// <summary>
         /// Retrieves the Icon for the file name as an ImageSource

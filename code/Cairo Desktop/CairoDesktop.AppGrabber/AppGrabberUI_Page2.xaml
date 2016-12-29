@@ -132,7 +132,7 @@
                                 </LinearGradientBrush>
                             </DockPanel.Background>
                             <Button DockPanel.Dock="Left"
-                            Click="Button_Click"
+                            Click="btnAdd_Click"
                             FontSize="18"
                             FontFamily="Tahoma"
                             Style="{StaticResource AppGrabberListBoxHeaderButtonStyle}"
@@ -171,7 +171,7 @@
                 Grid.Row="4"
                 Grid.Column="3">
                     <Button Style="{StaticResource CairoButtonStyle}"
-                    Click="Button_Click_1">Finish</Button>
+                    Click="btnSave_Click">Finish</Button>
                 </StackPanel>
             </Grid>
         </Border>

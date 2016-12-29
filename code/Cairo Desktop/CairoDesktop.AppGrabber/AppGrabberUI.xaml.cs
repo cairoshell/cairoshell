@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
-
 
 namespace CairoDesktop.AppGrabber
 {
@@ -24,10 +22,6 @@ namespace CairoDesktop.AppGrabber
             this.appGrabber = appGrabber;
             InitializeComponent();
 
-
-            // Grab the Programs
-            List<ApplicationInfo> apps = appGrabber.ProgramList;
-
             // Now to add them to the list on the AppGrabber
             // Create ObservableCollections to bind to the ListViews
 
@@ -37,6 +31,9 @@ namespace CairoDesktop.AppGrabber
             ProgramsMenuAppsView.ItemsSource = programsMenuAppsCollection;
             // Need to use an event handler to remove Apps from categories when moved to the "Installed Applications" listing
             programsMenuAppsCollection.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(programsMenuAppsCollection_CollectionChanged);
+            
+            // Grab the Programs
+            List<ApplicationInfo> apps = appGrabber.ProgramList;
 
             // Iterate thru the apps, creating ApplicationInfoPanels and
             // add them to the installedAppsCollection

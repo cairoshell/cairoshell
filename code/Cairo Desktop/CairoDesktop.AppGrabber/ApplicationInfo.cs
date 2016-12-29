@@ -163,7 +163,7 @@ namespace CairoDesktop.AppGrabber
         /// Gets an ImageSource object representing the associated icon of a file.
         /// </summary>
         public ImageSource GetAssociatedIcon() {
-            return WpfWin32ImageConverter.GetImageFromAssociatedIcon(this.Path, true);
+            return IconImageConverter.GetImageFromAssociatedIcon(this.Path, true);
         }
 
         /// <summary>

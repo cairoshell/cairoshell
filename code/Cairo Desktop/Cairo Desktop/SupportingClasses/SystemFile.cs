@@ -105,19 +105,23 @@ namespace CairoDesktop
         /// <returns>Indication of if the file is an image or not.</returns>
         public static bool GetFileIsImage(string path)
         {
-            if (!File.Exists(path))
+            try
             {
-                return false;
-            }
-
-            string ext = Path.GetExtension(path);
-            foreach (string fileType in ImageFileTypes)
-            {
-                if (ext.Equals(fileType, StringComparison.OrdinalIgnoreCase))
+                if (!File.Exists(path))
                 {
-                    return true;
+                    return false;
+                }
+
+                string ext = Path.GetExtension(path);
+                foreach (string fileType in ImageFileTypes)
+                {
+                    if (ext.Equals(fileType, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
                 }
             }
+            catch { }
 
             return false;
         }
@@ -145,7 +149,7 @@ namespace CairoDesktop
                 }
                 catch
                 {
-                    this.Icon = AppGrabber.WpfWin32ImageConverter.GetImageFromAssociatedIcon(this.FullName);
+                    this.Icon = AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
                 }
                 finally
                 {
@@ -158,7 +162,7 @@ namespace CairoDesktop
             else 
             {
                 // This will attempts to get the icon via AppGrabber - if it fails the default icon will be returned.
-                this.Icon = AppGrabber.WpfWin32ImageConverter.GetImageFromAssociatedIcon(this.FullName);
+                this.Icon = AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
             }
         }
 

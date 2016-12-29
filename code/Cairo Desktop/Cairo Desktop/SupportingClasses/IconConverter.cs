@@ -13,10 +13,10 @@ namespace CairoDesktop
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value == null) return AppGrabber.WpfWin32ImageConverter.GetImageFromHIcon(IntPtr.Zero);
+            if (value == null) return AppGrabber.IconImageConverter.GetImageFromHIcon(IntPtr.Zero);
 
             ImageSource newIcon = null;
-            newIcon = AppGrabber.WpfWin32ImageConverter.GetImageFromHIcon((value as Icon).Handle);
+            newIcon = AppGrabber.IconImageConverter.GetImageFromHIcon((value as Icon).Handle);
 
             return newIcon;
         }
