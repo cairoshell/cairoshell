@@ -4,7 +4,7 @@
     Height="480"
     Width="640"
     WindowStartupLocation="CenterScreen"
-    Closing="Window_Closing" WindowStyle="SingleBorderWindow" Icon="Application.ico">
+    Closing="Window_Closing" WindowStyle="SingleBorderWindow" Icon="Application.ico" SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
         <local:Settings x:Key="settings" />
         <Style x:Key="CairoSettingsBarItemStyle"

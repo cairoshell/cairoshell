@@ -142,10 +142,6 @@
     <Compile Include="QuickLaunchButton.xaml.cs">
       <DependentUpon>QuickLaunchButton.xaml</DependentUpon>
     </Compile>
-    <Reference Include="WPFToolkit, Version=3.5.31016.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\WPFToolkit\WPFToolkit.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

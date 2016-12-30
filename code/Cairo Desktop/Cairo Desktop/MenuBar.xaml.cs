@@ -209,14 +209,6 @@ namespace CairoDesktop
             // making sure this isn't necessary
             //AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
         }
-
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-            //Set the window style to noactivate.
-            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
-                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
-        }
         #endregion
 
         #region Cairo menu items

@@ -11,7 +11,7 @@
     Topmost="True"
 	AllowsTransparency="True"
 	Background="Transparent"
-	WindowStartupLocation="CenterScreen">
+	WindowStartupLocation="CenterScreen" SourceInitialized="messageWindow_SourceInitialized">
 	<Window.Resources>
         <ResourceDictionary>
             <self:MessageBoxImageConverter x:Key="MessageBoxImageConverter" />

@@ -76,7 +76,6 @@ Section "Cairo Shell (required)" cairo
   File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.Interop.dll"
   File "..\Cairo Desktop\Build\x64\Release\Interop.IWshRuntimeLibrary.dll"
   File "..\Cairo Desktop\Build\x64\Release\Interop.Shell32.dll"
-  File "..\Cairo Desktop\Build\x64\Release\WPFToolkit.dll"
   File "..\Cairo Desktop\Build\x64\Release\SearchAPILib.dll"
   File "..\Cairo Desktop\Build\x64\Release\UnhandledExceptionFilter.dll"
   File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.WindowsTasks.dll"

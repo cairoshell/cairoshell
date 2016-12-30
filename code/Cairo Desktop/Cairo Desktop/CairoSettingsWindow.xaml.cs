@@ -5,6 +5,8 @@
     using System.IO;
     using System.Linq;
     using System.Diagnostics;
+    using Interop;
+    using System.Windows.Interop;
 
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
@@ -169,6 +171,11 @@
             s1.Replace("'", "");
             Properties.Settings.Default.CairoTheme = s1;
             Properties.Settings.Default.Save();
+        }
+
+        private void Window_SourceInitialized(object sender, EventArgs e)
+        {
+            NativeMethods.SetForegroundWindow(new WindowInteropHelper(this).Handle);
         }
     }
 }

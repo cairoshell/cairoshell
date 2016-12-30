@@ -1,6 +1,8 @@
 ﻿namespace CairoDesktop
 {
+    using Interop;
     using System.Windows;
+    using System.Windows.Interop;
     using System.Windows.Media.Imaging;
 
     /// <summary>
@@ -156,6 +158,11 @@
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
+        }
+
+        private void messageWindow_SourceInitialized(object sender, System.EventArgs e)
+        {
+            NativeMethods.SetForegroundWindow(new WindowInteropHelper(this).Handle);
         }
     }
 }

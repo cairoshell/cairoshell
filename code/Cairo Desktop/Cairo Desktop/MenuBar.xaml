@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:CairoDesktop.Properties" xmlns:control="clr-namespace:CairoDesktop" xmlns:search="clr-namespace:VistaSearchProvider" xmlns:c="http://schemas.microsoft.com/wpf/2008/toolkit" x:Class="CairoDesktop.MenuBar"
+<Window xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:CairoDesktop.Properties" xmlns:control="clr-namespace:CairoDesktop" xmlns:search="clr-namespace:VistaSearchProvider" x:Class="CairoDesktop.MenuBar"
     x:Name="Window"
     Title=""
     WindowStyle="None"
@@ -170,7 +170,7 @@
                         <TextBlock Name="dateText" />
                     </MenuItem.Header>
                     <StackPanel>
-                        <c:Calendar Name="monthCalendar"
+                        <Calendar Name="monthCalendar" Style="{StaticResource CairoCalendarStyle}"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
                         <MenuItem Style="{StaticResource CairoMenuItemStyle}"
