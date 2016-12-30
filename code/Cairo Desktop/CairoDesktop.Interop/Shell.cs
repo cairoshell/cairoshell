@@ -136,7 +136,7 @@ namespace CairoDesktop.Interop
                 0,
                 0,
                 0,
-                SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
+                SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOOWNERZORDER);
         }
 
         public static bool ShowFileProperties(string Filename)

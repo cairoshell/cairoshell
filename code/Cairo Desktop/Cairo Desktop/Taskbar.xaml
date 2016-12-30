@@ -15,7 +15,6 @@
     SizeToContent="Width"
     Focusable="False"
     Background="{x:Null}"
-        Activated="Window_Activated"
         Closing="Taskbar_Closing" SourceInitialized="TaskbarWindow_SourceInitialized" UseLayoutRounding="True"
     Topmost="True">
     <Window.Resources>

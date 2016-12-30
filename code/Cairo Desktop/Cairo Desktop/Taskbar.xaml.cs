@@ -4,6 +4,7 @@ using System.Windows.Markup;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
+using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -59,16 +60,11 @@ namespace CairoDesktop
             }
         }
 
-        private void Window_Activated(object sender, EventArgs e)
-        {
-            moveToBottom();
-        }
-
-        private void moveToBottom()
+        private void setPosition()
         {
             double screen = AppBarHelper.PrimaryMonitorSize.Height;
             double workArea = SystemParameters.WorkArea.Bottom;
-            // Crude? Yes.
+            
             if (screen - workArea == this.Height)
             {
                 this.Top = screen - this.Height;
@@ -78,6 +74,8 @@ namespace CairoDesktop
                 // set to bottom of workspace
                 this.Top = workArea - this.Height;
             }
+            this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
+            this.grdTaskbar.Width = AppBarHelper.PrimaryMonitorSize.Width;
         }
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -105,6 +103,14 @@ namespace CairoDesktop
             return IntPtr.Zero;
         }
 
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+            //Set the window style to noactivate.
+            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
+                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
+        }
+
         private void TaskbarWindow_SourceInitialized(object sender, EventArgs e)
         {
             helper = new WindowInteropHelper(this);
@@ -114,7 +120,12 @@ namespace CairoDesktop
 
             handle = helper.Handle;
 
-            moveToBottom();
+            setPosition();
+
+            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 5), DispatcherPriority.Normal, delegate
+            {
+                setPosition();
+            }, this.Dispatcher);
 
             // Windows bugs make this no bueno...
             //appbarMessageId = AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_BOTTOM);

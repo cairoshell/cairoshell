@@ -86,6 +86,20 @@ namespace CairoDesktop
 
             HwndSource source = HwndSource.FromHwnd(helper.Handle);
             source.AddHook(new HwndSourceHook(WndProc));
+
+            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 5), DispatcherPriority.Normal, delegate
+            {
+                this.Top = SystemParameters.WorkArea.Bottom - this.Height - 150;
+                this.Left = (SystemParameters.WorkArea.Width / 2) - (this.Width / 2);
+            }, this.Dispatcher);
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+            //Set the window style to noactivate.
+            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
+                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
         }
     }
 }

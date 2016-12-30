@@ -8,6 +8,8 @@ using System.Windows.Media.Imaging;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using System.IO;
+using System.Windows.Threading;
+using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop
 {
@@ -22,7 +24,10 @@ namespace CairoDesktop
         public Desktop()
         {
             InitializeComponent();
-            
+
+            this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+            this.Height = AppBarHelper.PrimaryMonitorSize.Height;
+
             if (Startup.IsCairoUserShell)
             {
                 // draw wallpaper
@@ -53,18 +58,14 @@ namespace CairoDesktop
         {
             int result = NativeMethods.SetShellWindow(helper.Handle);
             Shell.ShowWindowBottomMost(helper.Handle);
+        }
 
-            if (Properties.Settings.Default.EnableDesktop && Icons == null)
-            {
-                Icons = new DesktopIcons();
-                grid.Children.Add(Icons);
-
-                if (Properties.Settings.Default.EnableDynamicDesktop)
-                {
-                    DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this };
-                    nav.Show();
-                }
-            }
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+            //Set the window style to noactivate.
+            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
+                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -81,6 +82,26 @@ namespace CairoDesktop
 
             HwndSource source = HwndSource.FromHwnd(helper.Handle);
             source.AddHook(new HwndSourceHook(WndProc));
+
+            if (Properties.Settings.Default.EnableDesktop && Icons == null)
+            {
+                Icons = new DesktopIcons();
+                grid.Children.Add(Icons);
+
+                if (Properties.Settings.Default.EnableDynamicDesktop)
+                {
+                    DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this };
+                    nav.Show();
+                }
+            }
+
+            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 5), DispatcherPriority.Normal, delegate
+            {
+                this.Top = 0;
+                this.Left = 0;
+                this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+                this.Height = AppBarHelper.PrimaryMonitorSize.Height;
+            }, this.Dispatcher);
         }
 
         private void pasteFromClipboard()

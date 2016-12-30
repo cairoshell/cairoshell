@@ -182,6 +182,13 @@ namespace CairoDesktop
             handle = helper.Handle;
 
             appbarMessageId = AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
+
+            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 5), DispatcherPriority.Normal, delegate
+            {
+                this.Top = 0;
+                this.Left = 0;
+                this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+            }, this.Dispatcher);
         }
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
@@ -201,6 +208,14 @@ namespace CairoDesktop
         {
             // making sure this isn't necessary
             //AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+            //Set the window style to noactivate.
+            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
+                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
         }
         #endregion
 

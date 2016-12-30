@@ -1,6 +1,8 @@
-﻿using System;
+﻿using CairoDesktop.SupportingClasses;
+using System;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -12,6 +14,14 @@ namespace CairoDesktop
         public MenuBarShadow()
         {
             InitializeComponent();
+
+            this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+
+            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 5), DispatcherPriority.Normal, delegate
+            {
+                this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+                this.Top = 23;
+            }, this.Dispatcher);
         }
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)

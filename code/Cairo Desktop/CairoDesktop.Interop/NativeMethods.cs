@@ -83,10 +83,11 @@
 
         public const int HWND_TOPMOST = -1; // 0xffff 
         public const int HWND_BOTTOMMOST = 1;
-        public const int SWP_NOSIZE = 1; // 0x0001  
-        public const int SWP_NOMOVE = 2; // 0x0002  
-        public const int SWP_NOZORDER = 4; // 0x0004  
-        public const int SWP_NOACTIVATE = 16; // 0x0010  
+        public const int SWP_NOSIZE = 0x0001; // 0x0001  
+        public const int SWP_NOMOVE = 0x0002; // 0x0002  
+        public const int SWP_NOZORDER = 0x0004; // 0x0004
+        public const int SWP_NOOWNERZORDER = 0x0200;
+        public const int SWP_NOACTIVATE = 0x0010; // 0x0010  
         public const int SWP_SHOWWINDOW = 64; // 0x0040  
         public const int SWP_HIDEWINDOW = 128; // 0x0080  
         public const int SWP_DRAWFRAME = 32; // 0x0020 
@@ -777,6 +778,15 @@
 
         [DllImport("user32.dll")]
         public static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, IntPtr pvParam, SPIF fWinIni);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+
+        public const int GWL_EXSTYLE = -20;
+        public const int WS_EX_NOACTIVATE = 0x08000000;
+        
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         [Flags]
         public enum SPIF
