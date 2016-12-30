@@ -31,7 +31,7 @@
                                 Style="{StaticResource CairoStackButtonStyle}">
                                 <DockPanel>
                                     <TextBlock DockPanel.Dock="Bottom"
-                                        Text="{Binding Path=Name}"
+                                        Text="{Binding Path=FriendlyName}"
                                         TextAlignment="Center"
                                         TextTrimming="CharacterEllipsis"
                                         TextWrapping="Wrap"

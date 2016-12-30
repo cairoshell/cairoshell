@@ -4,6 +4,7 @@
     using System.Windows;
     using System.IO;
     using System.Linq;
+    using System.Diagnostics;
 
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
@@ -71,6 +72,19 @@
             }
         }
 
+        private void ShowFileExtensions_Click(object sender, RoutedEventArgs e)
+        {
+            bool IsShowFileExtensions = Properties.Settings.Default.ShowFileExtensions;
+            if (IsShowFileExtensions == true)
+            {
+                this.restartButton.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.restartButton.Visibility = Visibility.Visible;
+            }
+        }
+
         private void EnableTaskbar_Click(object sender, RoutedEventArgs e)
         {
             bool IsTaskbarEnabled = Properties.Settings.Default.EnableTaskbar;
@@ -126,8 +140,19 @@
             s1.Replace("'", "");
             Properties.Settings.Default.CairoTheme = s1;
             Properties.Settings.Default.Save();
-            System.Windows.Forms.Application.Restart();
-            Application.Current.Shutdown();
+            try
+            {
+                //run the program again and close this one
+                Process current = new Process();
+                current.StartInfo.FileName = AppDomain.CurrentDomain.BaseDirectory + "CairoDesktop.exe";
+                current.StartInfo.Arguments = "/restart";
+                current.Start();
+
+                //close this one
+                Process.GetCurrentProcess().Kill();
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -139,6 +164,7 @@
         {
             Properties.Settings.Default.TimeFormat = timeSetting.Text;
             Properties.Settings.Default.DateFormat = dateSetting.Text;
+            Properties.Settings.Default.DesktopDirectory = desktopHome.Text;
             string s1 = selectTheme.SelectedValue.ToString();
             s1.Replace("'", "");
             Properties.Settings.Default.CairoTheme = s1;

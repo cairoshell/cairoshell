@@ -34,6 +34,12 @@ namespace CairoDesktop
             string tag = item.Tag as string;
             string verb = tag.Substring(0, tag.IndexOf('|'));
             string fileName = tag.Substring(tag.IndexOf('|') + 1);
+            string displayName;
+
+            if (Properties.Settings.Default.ShowFileExtensions)
+                displayName = Path.GetFileName(fileName);
+            else
+                displayName = Path.GetFileNameWithoutExtension(fileName);
 
             if (verb == "open")
             {
@@ -47,7 +53,7 @@ namespace CairoDesktop
             }
             else if (verb == "delete")
             {
-                bool? deleteChoice = CairoMessage.ShowOkCancel("\"" + Path.GetFileName(fileName) + "\" will be sent to the Recycle Bin.", "Are you sure you want to delete this?", "Resources/cairoIcon.png", "Delete", "Cancel");
+                bool? deleteChoice = CairoMessage.ShowOkCancel("\"" + displayName + "\" will be sent to the Recycle Bin.", "Are you sure you want to delete this?", "Resources/cairoIcon.png", "Delete", "Cancel");
                 if (deleteChoice.HasValue && deleteChoice.Value)
                 {
                     Interop.Shell.SendToRecycleBin(fileName);

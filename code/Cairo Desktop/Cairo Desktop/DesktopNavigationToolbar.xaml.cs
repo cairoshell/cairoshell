@@ -36,8 +36,18 @@ namespace CairoDesktop
         private void Home_Click(object sender, RoutedEventArgs e)
         {
             (this.Owner as Desktop).PathHistory.Push((this.Owner as Desktop).Icons.Locations[0].FullName);
-            (this.Owner as Desktop).Icons.Locations[0] = new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), Dispatcher.CurrentDispatcher);
 
+            string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string userDesktopPath = Properties.Settings.Default.DesktopDirectory;
+
+            if (Directory.Exists(userDesktopPath))
+            {
+                (this.Owner as Desktop).Icons.Locations[0] = new SystemDirectory(userDesktopPath, Dispatcher.CurrentDispatcher);
+            }
+            else if (Directory.Exists(defaultDesktopPath))
+            {
+                (this.Owner as Desktop).Icons.Locations[0] = new SystemDirectory(defaultDesktopPath, Dispatcher.CurrentDispatcher);
+            }
         }
 
         private void Fwd_Click(object sender, RoutedEventArgs e)

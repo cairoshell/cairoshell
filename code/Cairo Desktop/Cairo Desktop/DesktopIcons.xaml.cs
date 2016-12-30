@@ -15,12 +15,32 @@ namespace CairoDesktop {
         public DesktopIcons() 
         {
             InitializeComponent();
-            
-            String desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            if (Directory.Exists(desktopPath)) {
-                SystemDirectory desktopSysDir = new SystemDirectory(desktopPath, Dispatcher.CurrentDispatcher);
-                Locations.Add(desktopSysDir);
+
+            string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string userDesktopPath = Properties.Settings.Default.DesktopDirectory;
+
+            if (userDesktopPath == "")
+            {
+                // first run won't have desktop directory set
+                Properties.Settings.Default.DesktopDirectory = defaultDesktopPath;
+                Properties.Settings.Default.Save();
+                userDesktopPath = defaultDesktopPath;
             }
+
+            if (Directory.Exists(userDesktopPath))
+            {
+                setDesktopDir(userDesktopPath);
+            }
+            else if (Directory.Exists(defaultDesktopPath))
+            {
+                setDesktopDir(defaultDesktopPath);
+            }
+        }
+
+        private void setDesktopDir(string desktopDir)
+        {
+            SystemDirectory desktop = new SystemDirectory(desktopDir, Dispatcher.CurrentDispatcher);
+            Locations.Add(desktop);
         }
 
         public InvokingObservableCollection<SystemDirectory> Locations

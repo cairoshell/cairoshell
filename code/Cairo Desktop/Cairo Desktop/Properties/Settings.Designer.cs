@@ -154,5 +154,29 @@ namespace CairoDesktop.Properties {
                 this["EnableSubDirs"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DesktopDirectory {
+            get {
+                return ((string)(this["DesktopDirectory"]));
+            }
+            set {
+                this["DesktopDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowFileExtensions {
+            get {
+                return ((bool)(this["ShowFileExtensions"]));
+            }
+            set {
+                this["ShowFileExtensions"] = value;
+            }
+        }
     }
 }

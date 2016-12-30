@@ -43,13 +43,13 @@
         /// The main entry point for the application
         /// </summary>
         [STAThread]
-        public static void Main()
+        public static void Main(string[] args)
         {
             #region Single Instance Check
             bool ok;
             cairoMutex = new System.Threading.Mutex(true, "CairoShell", out ok);
 
-            if (!ok)
+            if (!ok && args[0] != "/restart")
             {
                 // Another instance is already running.
                 return;

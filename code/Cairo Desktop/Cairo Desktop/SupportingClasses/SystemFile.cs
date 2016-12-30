@@ -34,6 +34,11 @@ namespace CairoDesktop
         {
             this.FullName = filePath;
             this.Name = Path.GetFileName(filePath);
+
+            if (Properties.Settings.Default.ShowFileExtensions)
+                this.FriendlyName = this.Name;
+            else
+                this.FriendlyName = Path.GetFileNameWithoutExtension(filePath);
             this._dispatcher = dispatcher;
             Initialize();
         }
@@ -57,6 +62,11 @@ namespace CairoDesktop
         /// Gets or sets the name of the file.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the file, without extension depending on user preference.
+        /// </summary>
+        public string FriendlyName { get; set; }
 
         /// <summary>
         /// Gets or sets the FullName of the System File.
