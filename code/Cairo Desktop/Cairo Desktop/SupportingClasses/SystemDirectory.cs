@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Threading;
+using CairoDesktop.Configuration;
 
 namespace CairoDesktop {
 
@@ -44,22 +45,6 @@ namespace CairoDesktop {
 
         public string FullName {
             get { return dir.FullName; }
-        }
-
-        /// <summary>
-        /// Creates a new SystemDirectory object for C:\.
-        /// </summary>
-        public SystemDirectory(Dispatcher dispatcher) {
-            this.dispatcher = dispatcher;
-            files = new InvokingObservableCollection<SystemFile>(this.dispatcher);
-            this.DirectoryInfo = new DirectoryInfo(@"c:\");
-            fileWatcher.IncludeSubdirectories = false;
-            fileWatcher.Filter = "";
-            fileWatcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName;
-            fileWatcher.Created += new FileSystemEventHandler(fileWatcher_Created);
-            fileWatcher.Deleted += new FileSystemEventHandler(fileWatcher_Deleted);
-            fileWatcher.Renamed += new RenamedEventHandler(fileWatcher_Renamed);
-            fileWatcher.EnableRaisingEvents = true;
         }
 
         /// <summary>
@@ -125,7 +110,7 @@ namespace CairoDesktop {
         {
             files.Clear();
             bool showSubs = false;
-            if (Properties.Settings.Default.EnableSubDirs)
+            if (Settings.EnableSubDirs)
                 showSubs = true;
 
             foreach (DirectoryInfo subDir in dir.GetDirectories())

@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using System.Windows.Input;
 using System.Globalization;
 using System.Collections.Specialized;
+using CairoDesktop.Configuration;
 
 namespace CairoDesktop
 {
@@ -36,7 +37,7 @@ namespace CairoDesktop
             string fileName = tag.Substring(tag.IndexOf('|') + 1);
             string displayName;
 
-            if (Properties.Settings.Default.ShowFileExtensions)
+            if (Settings.ShowFileExtensions)
                 displayName = Path.GetFileName(fileName);
             else
                 displayName = Path.GetFileNameWithoutExtension(fileName);

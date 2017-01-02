@@ -10,6 +10,7 @@ using Microsoft.Win32;
 using System.IO;
 using System.Windows.Threading;
 using CairoDesktop.SupportingClasses;
+using CairoDesktop.Configuration;
 
 namespace CairoDesktop
 {
@@ -83,12 +84,12 @@ namespace CairoDesktop
             HwndSource source = HwndSource.FromHwnd(helper.Handle);
             source.AddHook(new HwndSourceHook(WndProc));
 
-            if (Properties.Settings.Default.EnableDesktop && Icons == null)
+            if (Settings.EnableDesktop && Icons == null)
             {
                 Icons = new DesktopIcons();
                 grid.Children.Add(Icons);
 
-                if (Properties.Settings.Default.EnableDynamicDesktop)
+                if (Settings.EnableDynamicDesktop)
                 {
                     DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this };
                     nav.Show();

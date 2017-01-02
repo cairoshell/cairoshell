@@ -6,6 +6,7 @@ using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System.Diagnostics;
+using CairoDesktop.Configuration;
 
 namespace CairoDesktop
 {
@@ -35,7 +36,7 @@ namespace CairoDesktop
             this.FullName = filePath;
             this.Name = Path.GetFileName(filePath);
 
-            if (Properties.Settings.Default.ShowFileExtensions)
+            if (Settings.ShowFileExtensions)
                 this.FriendlyName = this.Name;
             else
                 this.FriendlyName = Path.GetFileNameWithoutExtension(filePath);
@@ -144,14 +145,12 @@ namespace CairoDesktop
         {
             if (GetFileIsImage(this.FullName))
             {
-                var img = new BitmapImage();
-                Stream imgStream = null;
                 try
                 {
-                    imgStream = File.Open(this.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+                    BitmapImage img = new BitmapImage();
                     img.BeginInit();
+                    img.UriSource = new Uri(this.FullName);
                     img.CacheOption = BitmapCacheOption.OnLoad;
-                    img.StreamSource = imgStream;
                     img.EndInit();
                     img.Freeze();
 
@@ -160,13 +159,6 @@ namespace CairoDesktop
                 catch
                 {
                     this.Icon = AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
-                }
-                finally
-                {
-                    if (imgStream != null)
-                    {
-                        imgStream.Close();
-                    }
                 }
             } 
             else 

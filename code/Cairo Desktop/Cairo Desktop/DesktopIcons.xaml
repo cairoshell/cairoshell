@@ -21,7 +21,7 @@
                                 CommandParameter="{Binding Path=FullName}"
                                 Style="{StaticResource CairoDesktopButtonStyle}" UseLayoutRounding="True">
                                 <DockPanel>
-                                    <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}" Stretch="Uniform" Width="32" Height="32" DockPanel.Dock="Top" />
+                                    <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}" Stretch="Uniform" Width="32" Height="32" DockPanel.Dock="Top" RenderOptions.BitmapScalingMode="LowQuality" />
                                     <Border DockPanel.Dock="Bottom">
                                         <Border.Effect>
                                             <DropShadowEffect Color="Black"

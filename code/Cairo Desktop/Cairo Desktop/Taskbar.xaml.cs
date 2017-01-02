@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Markup;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
@@ -25,11 +24,7 @@ namespace CairoDesktop
         public Taskbar()
         {
             InitializeComponent();
-            // Set custom theme if selected
-            string theme = Properties.Settings.Default.CairoTheme;
-            if (theme != "Default")
-                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) this.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
-
+            
             appGrabber = AppGrabber.AppGrabber.Instance;
             this.quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
             this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;

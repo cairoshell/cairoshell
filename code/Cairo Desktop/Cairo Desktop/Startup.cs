@@ -9,6 +9,7 @@
     using System.Windows.Threading;
     using System.Windows.Markup;
     using System.Threading.Tasks;
+    using CairoDesktop.Configuration;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
@@ -92,19 +93,19 @@
                 IsCairoUserShell = false;
 
             // Before we do anything, check if settings need to be upgraded
-            if (Properties.Settings.Default.IsFirstRun == true)
-                Properties.Settings.Default.Upgrade();
+            if (Settings.IsFirstRun == true)
+                Settings.Upgrade();
 
-            if (Properties.Settings.Default.EnableTaskbar)
+            if (Settings.EnableTaskbar)
             {
                 // hide the windows taskbar
                 SupportingClasses.AppBarHelper.SetWinTaskbarState(SupportingClasses.AppBarHelper.WinTaskbarState.AutoHide);
             }
 
-            if (Properties.Settings.Default.EnableDesktop)
+            if (Settings.EnableDesktop)
             {
                 // hide the windows desktop
-                Interop.Shell.ToggleDesktopIcons(false);
+                Shell.ToggleDesktopIcons(false);
             }
 
             _parentWindow = new Window();
@@ -118,7 +119,7 @@
             app.InitializeComponent();
 
             // Set custom theme if selected
-            string theme = CairoDesktop.Properties.Settings.Default.CairoTheme;
+            string theme = Settings.CairoTheme;
             if (theme != "Default")
                 if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
@@ -127,19 +128,19 @@
             app.MainWindow = MenuBarWindow;
             MenuBarWindow.Show();
 
-            if (Properties.Settings.Default.EnableDesktop)
+            if (Settings.EnableDesktop)
             {
                 DesktopWindow = new Desktop() { Owner = _desktopWindow };
                 DesktopWindow.Show();
             }
 
-            if (Properties.Settings.Default.EnableMenuBarShadow)
+            if (Settings.EnableMenuBarShadow)
             {
                 MenuBarShadowWindow = new MenuBarShadow() { Owner = _desktopWindow };
                 MenuBarShadowWindow.Show();
             }
 
-            if (Properties.Settings.Default.EnableTaskbar)
+            if (Settings.EnableTaskbar)
             {
                 TaskbarWindow = new Taskbar() { Owner = _parentWindow };
                 TaskbarWindow.Show();
@@ -211,10 +212,9 @@
         {
             try
             {
-                if (Properties.Settings.Default.IsFirstRun == true)
+                if (Settings.IsFirstRun == true)
                 {
-                    Properties.Settings.Default.IsFirstRun = false;
-                    Properties.Settings.Default.Save();
+                    Settings.IsFirstRun = false;
                     AppGrabber.AppGrabber.Instance.ShowDialog();
                 }
             }

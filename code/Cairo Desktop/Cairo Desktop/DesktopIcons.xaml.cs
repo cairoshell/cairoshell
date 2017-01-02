@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.IO;
+using CairoDesktop.Configuration;
 
 namespace CairoDesktop {
     /// <summary>
@@ -17,13 +18,12 @@ namespace CairoDesktop {
             InitializeComponent();
 
             string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string userDesktopPath = Properties.Settings.Default.DesktopDirectory;
+            string userDesktopPath = Settings.DesktopDirectory;
 
             if (userDesktopPath == "")
             {
                 // first run won't have desktop directory set
-                Properties.Settings.Default.DesktopDirectory = defaultDesktopPath;
-                Properties.Settings.Default.Save();
+                Settings.DesktopDirectory = defaultDesktopPath;
                 userDesktopPath = defaultDesktopPath;
             }
 
@@ -73,7 +73,7 @@ namespace CairoDesktop {
                 FileAttributes attr = File.GetAttributes(senderButton.CommandParameter as String);
 
                 //detect whether its a directory or file
-                if ((attr & FileAttributes.Directory) == FileAttributes.Directory && Properties.Settings.Default.EnableDynamicDesktop)
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory && Settings.EnableDynamicDesktop)
                 {
                     ((this.Parent as Grid).Parent as Desktop).PathHistory.Push(this.Locations[0].DirectoryInfo.FullName);
                     this.Locations[0] = new SystemDirectory((senderButton.CommandParameter as String), Dispatcher.CurrentDispatcher);

@@ -5,6 +5,7 @@ using CairoDesktop.Interop;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using CairoDesktop.Configuration;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -152,7 +153,7 @@ namespace CairoDesktop.SupportingClasses
             rc.right = SystemInformation.VirtualScreen.Right;
 
             // only allocate space for taskbar if enabled
-            if (Properties.Settings.Default.EnableTaskbar)
+            if (Settings.EnableTaskbar)
                 rc.bottom = SystemInformation.VirtualScreen.Bottom - 29;
             else
                 rc.bottom = SystemInformation.VirtualScreen.Bottom;

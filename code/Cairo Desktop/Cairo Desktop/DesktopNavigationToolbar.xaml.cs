@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Windows.Threading;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
+using CairoDesktop.Configuration;
 
 namespace CairoDesktop
 {
@@ -18,6 +19,11 @@ namespace CairoDesktop
         {
             InitializeComponent();
 
+            setLocation();
+        }
+
+        private void setLocation()
+        {
             this.Top = SystemParameters.WorkArea.Bottom - this.Height - 150;
             this.Left = (SystemParameters.WorkArea.Width / 2) - (this.Width / 2);
         }
@@ -38,7 +44,7 @@ namespace CairoDesktop
             (this.Owner as Desktop).PathHistory.Push((this.Owner as Desktop).Icons.Locations[0].FullName);
 
             string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string userDesktopPath = Properties.Settings.Default.DesktopDirectory;
+            string userDesktopPath = Settings.DesktopDirectory;
 
             if (Directory.Exists(userDesktopPath))
             {
@@ -99,8 +105,7 @@ namespace CairoDesktop
 
             DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 5), DispatcherPriority.Normal, delegate
             {
-                this.Top = SystemParameters.WorkArea.Bottom - this.Height - 150;
-                this.Left = (SystemParameters.WorkArea.Width / 2) - (this.Width / 2);
+                setLocation();
             }, this.Dispatcher);
         }
 

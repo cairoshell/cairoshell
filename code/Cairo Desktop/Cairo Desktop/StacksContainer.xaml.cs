@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.IO;
+using CairoDesktop.Configuration;
 
 namespace CairoDesktop {
     /// <summary>
@@ -28,7 +29,7 @@ namespace CairoDesktop {
             Locations.CollectionChanged += new NotifyCollectionChangedEventHandler(locations_CollectionChanged);
 
             // Add some default folders on FirstRun
-            if (Properties.Settings.Default.IsFirstRun == true) 
+            if (Settings.IsFirstRun == true) 
             {
                 // Check for Documents Folder
                 String myDocsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -173,7 +174,7 @@ namespace CairoDesktop {
         private void openDir(String directoryPath) 
         {
             System.Diagnostics.Process prc = new System.Diagnostics.Process();
-            prc.StartInfo.FileName = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.FileManager);
+            prc.StartInfo.FileName = Environment.ExpandEnvironmentVariables(Settings.FileManager);
             prc.StartInfo.Arguments = directoryPath;
             prc.Start();
         }

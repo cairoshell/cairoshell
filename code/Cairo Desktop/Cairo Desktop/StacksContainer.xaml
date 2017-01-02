@@ -40,7 +40,7 @@
                                         Background="Transparent"
                                         Margin="5,0,5,3"
                                         Foreground="White" />
-                                    <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}" Stretch="Uniform" Width="32" Height="32" />
+                                    <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}" Stretch="Uniform" Width="32" Height="32" RenderOptions.BitmapScalingMode="LowQuality" />
                                 </DockPanel>
                                 <Button.ContextMenu>
                                     <ContextMenu Loaded="ContextMenu_Loaded"

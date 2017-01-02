@@ -9,6 +9,7 @@ using CairoDesktop.Interop;
 using System.Windows.Input;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
+using CairoDesktop.Configuration;
 
 namespace CairoDesktop
 {
@@ -23,7 +24,7 @@ namespace CairoDesktop
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
         private String configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+@"\CairoAppConfig.xml";
-        private String fileManger = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.FileManager);
+        private String fileManger = Environment.ExpandEnvironmentVariables(Settings.FileManager);
 
         public MenuBar()
         {
@@ -117,7 +118,7 @@ namespace CairoDesktop
             // Create our timer for clock
             DispatcherTimer timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
             {
-                string timeFormat = Properties.Settings.Default.TimeFormat;
+                string timeFormat = Settings.TimeFormat;
                 if (string.IsNullOrEmpty(timeFormat))
                 {
                     timeFormat = "T"; /// culturally safe long time pattern
@@ -128,7 +129,7 @@ namespace CairoDesktop
 
             DispatcherTimer fulldatetimer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
             {
-                string dateFormat = Properties.Settings.Default.DateFormat;
+                string dateFormat = Settings.DateFormat;
                 if (string.IsNullOrEmpty(dateFormat))
                 {
                     dateFormat = "D"; // Culturally safe Long Date Pattern
@@ -193,7 +194,7 @@ namespace CairoDesktop
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            if (Properties.Settings.Default.EnableSysTray == true)
+            if (Settings.EnableSysTray == true)
             {
                 SysTray.InitializeSystemTray();
             }
