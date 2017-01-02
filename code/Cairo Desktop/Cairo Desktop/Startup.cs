@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.Windows.Threading;
     using System.Windows.Markup;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
@@ -16,9 +17,9 @@
     {
         private static System.Threading.Mutex cairoMutex;
 
-        private static System.Windows.Window _parentWindow;
+        private static Window _parentWindow;
 
-        private static System.Windows.Window _desktopWindow;
+        private static Window _desktopWindow;
 
         public static MenuBar MenuBarWindow { get; set; }
 
@@ -31,6 +32,8 @@
         public static Window DeskParent { get; set; }
 
         public static bool IsCairoUserShell;
+
+        private static bool isRestart;
 
         private static string procName;
 
@@ -45,11 +48,16 @@
         [STAThread]
         public static void Main(string[] args)
         {
+            if (args.Length > 0 && args[0] == "/restart")
+                isRestart = true;
+            else
+                isRestart = false;
+
             #region Single Instance Check
             bool ok;
             cairoMutex = new System.Threading.Mutex(true, "CairoShell", out ok);
 
-            if (!ok && args[0] != "/restart")
+            if (!ok && !isRestart)
             {
                 // Another instance is already running.
                 return;
@@ -76,7 +84,7 @@
             #endregion
 
             // check if we are the current user's shell
-            object userShell = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell");
+            object userShell = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell");
             procName = Process.GetCurrentProcess().ProcessName;
             if (userShell != null)
                 IsCairoUserShell = userShell.ToString().ToLower().Contains("cairodesktop");
@@ -143,15 +151,15 @@
 #if (ENABLEFIRSTRUN)
             FirstRun(app);
 #endif
-            
-            // If explorer isn't shell, run startup apps.
-            if(IsCairoUserShell)
-            {
-                RunStartupApps();
-            }
 
             // Close the splash screen
             splash.Close(new TimeSpan(0, 0, 0, 0, 800));
+
+            // login items only necessary if Explorer didn't start them
+            if (IsCairoUserShell && !isRestart)
+            {
+                RunStartupApps();
+            }
 
             app.Run();
         }
@@ -337,9 +345,14 @@
             return procInfo;
         }
 
-        private static void RunStartupApps()
+        private async static void RunStartupApps()
         {
-            foreach(string app in FetchStartupApps())
+            await Task.Run(() => LoopStartupApps());
+        }
+
+        private static void LoopStartupApps()
+        {
+            foreach (string app in FetchStartupApps())
             {
                 string[] procInfo = expandArgs(app);
 
