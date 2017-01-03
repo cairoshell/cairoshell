@@ -21,6 +21,7 @@ namespace CairoDesktop
             {
                 this.Width = AppBarHelper.PrimaryMonitorSize.Width;
                 this.Top = 23;
+                this.Left = 0;
             }, this.Dispatcher);
         }
 

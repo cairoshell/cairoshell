@@ -27,8 +27,8 @@ namespace CairoDesktop
             
             appGrabber = AppGrabber.AppGrabber.Instance;
             this.quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
-            this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
-            this.grdTaskbar.Width = AppBarHelper.PrimaryMonitorSize.Width;
+            this.TaskbarBorder.MaxWidth = SystemParameters.WorkArea.Width - 36;
+            this.grdTaskbar.Width = SystemParameters.WorkArea.Width;
         }
 
         private void Taskbar_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -69,8 +69,9 @@ namespace CairoDesktop
                 // set to bottom of workspace
                 this.Top = workArea - this.Height;
             }
-            this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
-            this.grdTaskbar.Width = AppBarHelper.PrimaryMonitorSize.Width;
+            this.Left = 0;
+            this.TaskbarBorder.MaxWidth = SystemParameters.WorkArea.Width - 36;
+            this.grdTaskbar.Width = SystemParameters.WorkArea.Width;
         }
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -87,8 +88,7 @@ namespace CairoDesktop
                 {
                     case 1:
                         // Reposition to the bottom of the screen.
-                        this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
-                        this.grdTaskbar.Width = AppBarHelper.PrimaryMonitorSize.Width;
+                        setPosition();
                         //AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_BOTTOM);
                         break;
                 }
