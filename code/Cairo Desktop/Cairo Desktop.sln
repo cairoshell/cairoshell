@@ -5,6 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo Desktop", "Cairo Desktop\Cairo Desktop.csproj", "{F0383E91-6ADC-4016-9E21-D3DC0FFC55FF}"
 	ProjectSection(ProjectDependencies) = postProject
+		{8E50FC68-8BF3-44F2-9229-708500625757} = {8E50FC68-8BF3-44F2-9229-708500625757}
 		{0F1F5673-02B2-4E89-A61D-90F56D368C3F} = {0F1F5673-02B2-4E89-A61D-90F56D368C3F}
 	EndProjectSection
 EndProject

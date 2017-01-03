@@ -150,7 +150,7 @@
             SupportingClasses.AppBarHelper.SetWorkArea();
 
 #if (ENABLEFIRSTRUN)
-            FirstRun(app);
+            FirstRun();
 #endif
 
             // Close the splash screen
@@ -207,8 +207,7 @@
         /// <summary>
         /// Executes the first run sequence.
         /// </summary>
-        /// <param name="app">References to the app object.</param>
-        private static void FirstRun(App app)
+        private static void FirstRun()
         {
             try
             {
