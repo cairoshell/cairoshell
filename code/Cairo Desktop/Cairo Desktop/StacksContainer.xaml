@@ -7,7 +7,7 @@
     DragEnter="locationDisplay_DragEnter"
     Drop="locationDisplay_Drop"
     Background="Transparent"
-    ToolTip="Drag directories here for easy access."
+    ToolTip="Drag directories here for easy access." ToolTipService.ShowDuration="1000"
     ToolTipService.InitialShowDelay="1000" MinWidth="600"
     x:Name="CairoStacksContainer">
     <UserControl.Resources>
