@@ -38,7 +38,7 @@ namespace CairoDesktop
             (TasksList2.DataContext as WindowsTasks.WindowsTasksService).Dispose();
 
             // show the windows taskbar again
-            AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.OnTop);
+            AppBarHelper.SetWinTaskbarState(NativeMethods.SWP_SHOWWINDOW);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -67,7 +67,7 @@ namespace CairoDesktop
             else
             {
                 // set to bottom of workspace
-                this.Top = workArea - this.Height;
+                this.Top = screen - this.Height;
             }
             this.Left = 0;
             this.TaskbarBorder.MaxWidth = SystemParameters.WorkArea.Width - 36;

@@ -10,6 +10,7 @@
     using System.Windows.Markup;
     using System.Threading.Tasks;
     using CairoDesktop.Configuration;
+    using SupportingClasses;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
@@ -99,7 +100,11 @@
             if (Settings.EnableTaskbar)
             {
                 // hide the windows taskbar
-                SupportingClasses.AppBarHelper.SetWinTaskbarState(SupportingClasses.AppBarHelper.WinTaskbarState.AutoHide);
+                //SupportingClasses.AppBarHelper.SetWinTaskbarState(SupportingClasses.AppBarHelper.WinTaskbarState.AutoHide);
+                
+                //IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_traywnd", "");
+                //NativeMethods.SetWindowPos(taskbarHwnd, IntPtr.Zero, 0, 0, 0, 0, NativeMethods.SWP_HIDEWINDOW);
+                AppBarHelper.SetWinTaskbarState(NativeMethods.SWP_HIDEWINDOW);
             }
 
             if (Settings.EnableDesktop)

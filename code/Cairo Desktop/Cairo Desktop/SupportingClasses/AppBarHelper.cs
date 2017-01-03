@@ -54,13 +54,15 @@ namespace CairoDesktop.SupportingClasses
 
         private static int uCallBack = 0;
 
-        public static void SetWinTaskbarState(WinTaskbarState state)
+        public static void SetWinTaskbarState(int swp)
         {
-            NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
+            /*NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = (int)Marshal.SizeOf(abd);
             abd.hWnd = NativeMethods.FindWindow("System_TrayWnd");
             abd.lParam = (IntPtr)state;
-            NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETSTATE, ref abd);
+            NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETSTATE, ref abd);*/
+            IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_traywnd", "");
+            NativeMethods.SetWindowPos(taskbarHwnd, IntPtr.Zero, 0, 0, 0, 0, swp);
         }
 
         public static void ABSetPos(IntPtr handle, Size size, ABEdge edge)

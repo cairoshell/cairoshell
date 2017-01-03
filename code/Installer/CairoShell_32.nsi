@@ -126,8 +126,15 @@ SectionEnd
   
 ; SectionEnd
 
-; Replace explorer.
-Section /o "Set as shell (current user)" startupCU
+; Run at startup
+Section /o "Run at startup (current user)" startupCU
+  
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "CairoShell" "$INSTDIR\CairoDesktop.exe"
+  
+SectionEnd
+
+; Replace explorer
+Section /o "Replace Explorer (current user)" shellCU
   
   WriteRegStr HKCU "Software\Microsoft\Windows NT\CurrentVersion\Winlogon" "Shell" "$INSTDIR\CairoDesktop.exe"
   DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "CairoShell"
@@ -138,12 +145,14 @@ SectionEnd
   LangString DESC_cairo ${LANG_ENGLISH} "Installs Cairo and its required components."
   ; LangString DESC_wall ${LANG_ENGLISH} "Sets the Cairo wallpaper as your default desktop background."
   LangString DESC_startupCU ${LANG_ENGLISH} "Makes Cairo start up when you log in."
+  LangString DESC_shellCU ${LANG_ENGLISH} "Makes Cairo run instead of Windows Explorer. Note this also disables some new features in Windows 10."
 
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${cairo} $(DESC_cairo)
    ; !insertmacro MUI_DESCRIPTION_TEXT ${wall} $(DESC_wall)
     !insertmacro MUI_DESCRIPTION_TEXT ${startupCU} $(DESC_startupCU)
+    !insertmacro MUI_DESCRIPTION_TEXT ${shellCU} $(DESC_shellCU)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ;--------------------------------
