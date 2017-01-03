@@ -90,7 +90,6 @@ namespace CairoDesktop.WindowsTasks
             {
                 return _state;
             }
-            [NotifyPropertyChangedAspect("State")]
 
             set
             {
@@ -102,20 +101,6 @@ namespace CairoDesktop.WindowsTasks
         public int Placement
         {
             get { return GetWindowPlacement(this.Handle); }
-        }
-
-        public bool IsActive
-        {
-            get;
-            [NotifyPropertyChangedAspect("IsActive")]
-            set;
-        }
-        
-        public bool Flash
-        {
-            get;
-            [NotifyPropertyChangedAspect("Flash")]
-            set;
         }
 
         // True if this window should be shown in the taskbar

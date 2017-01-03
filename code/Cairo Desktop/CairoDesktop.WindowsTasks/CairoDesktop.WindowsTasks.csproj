@@ -74,18 +74,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PostSharp.Core, Version=1.0.11.424, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\PostSharp\PostSharp.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="PostSharp.Laos, Version=1.0.11.424, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\PostSharp\PostSharp.Laos.dll</HintPath>
-    </Reference>
-    <Reference Include="PostSharp.Public, Version=1.0.11.424, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\PostSharp\PostSharp.Public.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -107,7 +95,6 @@
   <ItemGroup>
     <Compile Include="ICairoNotifyPropertyChanged.cs" />
     <Compile Include="NativeWindowEx.cs" />
-    <Compile Include="NotifyPropertyChangedAspect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApplicationWindow.cs" />
     <Compile Include="WindowsTasksService.cs" />
