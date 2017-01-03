@@ -1,5 +1,5 @@
-Cairo Shell
-===========
-Welcome to my branch of the Cairo Shell project. Here I have continued on our work from the old repository.
+A customizable, intuitive desktop environment for Windows.
+---
+Cairo is a desktop environment for Windows. Our goal is to develop a desktop experience that increases productivity and advances current technology standards. With a focus on stability, performance, and productivity, Cairo aims to deliver an interface that exceeds expectations and delivers superior ease of use.
 
-To download the latest compiled build, [view the Releases page](https://github.com/dremin/cairoshell/releases).
+Shiny new Cairo Shell Milestone 2 builds are available [on the Releases page](https://github.com/dremin/cairoshell/releases).
