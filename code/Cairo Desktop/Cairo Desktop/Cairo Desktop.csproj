@@ -217,7 +217,6 @@
     <Compile Include="StacksContainer.xaml.cs">
       <DependentUpon>StacksContainer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SupportingClasses\BoolTovisibilityConverter.cs" />
     <Compile Include="SupportingClasses\IconConverter.cs" />
     <Compile Include="SupportingClasses\InvokingObservableCollection.cs" />
     <Compile Include="SupportingClasses\SystemDirectory.cs" />

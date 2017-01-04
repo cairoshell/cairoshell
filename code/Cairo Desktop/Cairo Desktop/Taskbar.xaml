@@ -20,7 +20,6 @@
     <Window.Resources>
         <ResourceDictionary>
             <tasks:WindowsTasksService x:Key="tasksSvc" x:Name="tasksSvc" />
-            <self:BoolTovisibilityConverter x:Key="BoolVisConverter" />
             <SolidColorBrush x:Key="ListBorder"
                 Color="#828790" />
             <Style x:Key="ListViewStyle1"
@@ -153,7 +152,24 @@
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type ListViewItem}">
                                             <Border BorderThickness="1,1,1,0" BorderBrush="Transparent">
-                                                <self:TaskButton Visibility="{Binding Path=ShowInTaskbar, Converter={StaticResource BoolVisConverter}}" />
+                                                <self:TaskButton />
+                                                <Border.Style>
+                                                    <Style TargetType="{x:Type Border}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Path=ShowInTaskbar}" Value="True">
+                                                                <DataTrigger.EnterActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation Storyboard.TargetProperty="Width" From="0" To="142" Duration="0:0:0.2"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </DataTrigger.EnterActions>
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
                                             </Border>
                                         </ControlTemplate>
                                     </Setter.Value>
@@ -210,7 +226,18 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ListViewItem}">
                                                 <Border BorderThickness="0" BorderBrush="Transparent">
-                                                    <self:TaskListButton Visibility="{Binding Path=ShowInTaskbar, Converter={StaticResource BoolVisConverter}}" />
+                                                    <self:TaskListButton>
+                                                        <self:TaskListButton.Style>
+                                                            <Style TargetType="self:TaskListButton">
+                                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Path=ShowInTaskbar}" Value="True">
+                                                                        <Setter Property="Visibility" Value="Visible" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </self:TaskListButton.Style>
+                                                    </self:TaskListButton>
                                                 </Border>
                                             </ControlTemplate>
                                         </Setter.Value>

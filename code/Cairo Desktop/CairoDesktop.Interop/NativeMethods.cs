@@ -610,9 +610,6 @@
         public static extern int GetWindowText(IntPtr hwnd, StringBuilder sb, int Length);
 
         [DllImport("user32.dll")]
-        public static extern bool IsAppHungWindow(IntPtr handle);
-
-        [DllImport("user32.dll")]
         public static extern IntPtr GetClassLong(IntPtr handle, int longClass);
 
         [DllImport("user32.dll")]

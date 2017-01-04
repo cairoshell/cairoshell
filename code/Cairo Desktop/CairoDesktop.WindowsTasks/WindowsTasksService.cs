@@ -80,7 +80,7 @@ namespace CairoDesktop.WindowsTasks
                 NativeMethods.EnumWindows(new NativeMethods.CallBackPtr((hwnd, lParam) =>
                 {
                     ApplicationWindow win = new ApplicationWindow(hwnd, this);
-                    if(win.ShowInTaskbar)
+                    if(win.ShowInTaskbar && !Windows.Contains(win))
                         this.Windows.Add(win);
                     return true;
                 }), 0);
@@ -132,7 +132,7 @@ namespace CairoDesktop.WindowsTasks
             {
                 var win = new ApplicationWindow(hand, this);
 
-                if (win.ShowInTaskbar)
+                if (win.ShowInTaskbar && !Windows.Contains(win))
                 {
                     lock (this._windowsLock)
                     {
@@ -161,7 +161,7 @@ namespace CairoDesktop.WindowsTasks
                         {
                             case HSHELL_WINDOWCREATED:
                                 Trace.WriteLine("Created: " + msg.LParam.ToString());
-                                if(win.ShowInTaskbar)
+                                if(win.ShowInTaskbar && !Windows.Contains(win))
                                     Windows.Add(win);
                                 break;
 
@@ -181,21 +181,21 @@ namespace CairoDesktop.WindowsTasks
                                 Trace.WriteLine("Replacing: " + msg.LParam.ToString());
                                 if (this.Windows.Contains(win))
                                 {
-                                    this.Windows.Remove(win);
-                                }
-                                break;
-                            case HSHELL_WINDOWREPLACED:
-                                Trace.WriteLine("Replaced: " + msg.LParam.ToString());
-                                if (this.Windows.Contains(win))
-                                {
                                     win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
                                     win.State = ApplicationWindow.WindowState.Inactive;
                                 }
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Inactive;
-                                    if (win.ShowInTaskbar)
+                                    if (win.ShowInTaskbar && !Windows.Contains(win))
                                         Windows.Add(win);
+                                }
+                                break;
+                            case HSHELL_WINDOWREPLACED:
+                                Trace.WriteLine("Replaced: " + msg.LParam.ToString());
+                                if (this.Windows.Contains(win))
+                                {
+                                    this.Windows.Remove(win);
                                 }
                                 break;
 
@@ -218,7 +218,7 @@ namespace CairoDesktop.WindowsTasks
                                     else
                                     {
                                         win.State = ApplicationWindow.WindowState.Active;
-                                        if (win.ShowInTaskbar)
+                                        if (win.ShowInTaskbar && !Windows.Contains(win))
                                             Windows.Add(win);
                                     }
                                 }
@@ -243,7 +243,7 @@ namespace CairoDesktop.WindowsTasks
                                     else
                                     {
                                         win.State = ApplicationWindow.WindowState.Active;
-                                        if (win.ShowInTaskbar)
+                                        if (win.ShowInTaskbar && !Windows.Contains(win))
                                             Windows.Add(win);
                                     }
                                 }
@@ -259,7 +259,7 @@ namespace CairoDesktop.WindowsTasks
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Flashing;
-                                    if (win.ShowInTaskbar)
+                                    if (win.ShowInTaskbar && !Windows.Contains(win))
                                         Windows.Add(win);
                                 }
                                 break;
@@ -269,7 +269,7 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL_ENDTASK:
-                                Trace.WriteLine("EndTask called.");
+                                Trace.WriteLine("EndTask called: " + msg.LParam.ToString());
                                 if (this.Windows.Contains(win))
                                 {
                                     this.Windows.Remove(win);
@@ -277,7 +277,7 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL_GETMINRECT:
-                                Trace.WriteLine("GetMinRect called.");
+                                Trace.WriteLine("GetMinRect called: " + msg.LParam.ToString());
                                 NativeMethods.SHELLHOOKINFO winHandle = (NativeMethods.SHELLHOOKINFO)Marshal.PtrToStructure(msg.LParam, typeof(NativeMethods.SHELLHOOKINFO));
                                 winHandle.rc = new NativeMethods.RECT { bottom = 100, left = 0, right = 100, top = 0 };
                                 Marshal.StructureToPtr(winHandle, msg.LParam, true);
@@ -285,7 +285,7 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL_REDRAW:
-                                Trace.WriteLine("Redraw called.");
+                                Trace.WriteLine("Redraw called: " + msg.LParam.ToString());
                                 this.OnRedraw(msg.LParam);
                                 break;
 
@@ -295,7 +295,7 @@ namespace CairoDesktop.WindowsTasks
                             //     break;
 
                             default:
-                                Trace.WriteLine("Unknown called. " + msg.Msg.ToString());
+                                Trace.WriteLine("Unknown called: " + msg.LParam.ToString() + " Message " + msg.Msg.ToString());
                                 break;
                         }
                     }

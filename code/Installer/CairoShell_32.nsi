@@ -69,7 +69,7 @@ Section "Cairo Shell (required)" cairo
   
   ; Put file there
   File "..\Cairo Desktop\Build\Release\CairoDesktop.exe"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.exe.config"
+  File "..\Cairo Desktop\Build\Release\CairoDesktop.Configuration.dll.config"
   File "..\Cairo Desktop\Build\Release\Cairo.WindowsHooks.dll"
   File "..\Cairo Desktop\Build\Release\Cairo.WindowsHooksWrapper.dll"
   File "..\Cairo Desktop\Build\Release\CairoDesktop.AppGrabber.dll"
@@ -171,6 +171,7 @@ Section "Uninstall"
   ; Remove files and uninstaller
   Delete "$INSTDIR\CairoDesktop.exe"
   Delete "$INSTDIR\CairoDesktop.exe.config"
+  Delete "$INSTDIR\CairoDesktop.Configuration.dll.config"
   Delete "$INSTDIR\Cairo.WindowsHooks.dll"
   Delete "$INSTDIR\Cairo.WindowsHooksWrapper.dll"
   Delete "$INSTDIR\CairoDesktop.AppGrabber.dll"

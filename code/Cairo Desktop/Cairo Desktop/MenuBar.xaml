@@ -13,7 +13,6 @@
     Topmost="True"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
-    Visibility="Hidden"
     Focusable="False"
     AllowDrop="True"
     Loaded="OnWindowLoaded"
@@ -46,7 +45,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            <control:BoolTovisibilityConverter x:Key="BoolToVisibilityConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel DataContext="{StaticResource settings}" Style="{StaticResource MenuBarStyle}"

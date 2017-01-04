@@ -10,8 +10,6 @@ namespace CairoDesktop.WindowsTasks
     [DebuggerDisplay("Title: {Title}, Handle: {Handle}")]
     public class ApplicationWindow : IEquatable<ApplicationWindow>, ICairoNotifyPropertyChanged
     {
-        //private bool _isActive;
-
         public ApplicationWindow(IntPtr handle, WindowsTasksService sourceService)
         {
             this.Handle = handle;
@@ -51,14 +49,6 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        public bool IsAppResponding
-        {
-            get
-            {
-                return NativeMethods.IsAppHungWindow(this.Handle);
-            }
-        }
-
         public Icon Icon
         {
             get
@@ -95,6 +85,11 @@ namespace CairoDesktop.WindowsTasks
             {
                 _state = value;
                 OnPropertyChanged("State");
+
+                // some windows don't send a redraw notification after a property changes, try to catch those cases here
+                OnPropertyChanged("Title");
+                OnPropertyChanged("Icon");
+                OnPropertyChanged("ShowInTaskbar");
             }
         }
 
@@ -108,13 +103,13 @@ namespace CairoDesktop.WindowsTasks
         {
             get
             {
-                if ((this.State == WindowState.Hidden) || (NativeMethods.GetParent(this.Handle) != IntPtr.Zero))
+                // Don't show empty buttons.
+                if (string.IsNullOrEmpty(this.Title))
                 {
                     return false;
                 }
 
-                // Don't show empty buttons.
-                if (string.IsNullOrEmpty(this.Title))
+                if ((this.State == WindowState.Hidden) || (NativeMethods.GetParent(this.Handle) != IntPtr.Zero))
                 {
                     return false;
                 }
@@ -211,7 +206,8 @@ namespace CairoDesktop.WindowsTasks
                 return;
             }
 
-            Trace.WriteLine("Handling redraw call for handle " + handle.ToString());
+            //this trace spams the debugger into oblivion during file copy
+            //Trace.WriteLine("Handling redraw call for handle " + handle.ToString());
 
             OnPropertyChanged("Title");
             OnPropertyChanged("Icon");
