@@ -19,6 +19,31 @@
             InitializeComponent();
 
             loadThemes();
+            loadTaskbarMode();
+        }
+
+        private void loadTaskbarMode()
+        {
+            switch (Settings.WindowsTaskbarMode)
+            {
+                case 0:
+                    radTaskbarMode0.IsChecked = true;
+                    radTaskbarMode1.IsChecked = false;
+                    radTaskbarMode2.IsChecked = false;
+                    break;
+                case 1:
+                    radTaskbarMode0.IsChecked = false;
+                    radTaskbarMode1.IsChecked = true;
+                    radTaskbarMode2.IsChecked = false;
+                    break;
+                case 2:
+                    radTaskbarMode0.IsChecked = false;
+                    radTaskbarMode1.IsChecked = false;
+                    radTaskbarMode2.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void loadThemes()
@@ -98,7 +123,7 @@
                 current.Start();
 
                 //close this one
-                Process.GetCurrentProcess().Kill();
+                System.Windows.Application.Current.Shutdown();
             }
             catch
             { }
@@ -142,6 +167,24 @@
                     txtDesktopHome.Text = fbd.SelectedPath;
                 }
             }
+        }
+
+        private void radTaskbarMode0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.WindowsTaskbarMode = 0;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTaskbarMode1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.WindowsTaskbarMode = 1;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTaskbarMode2_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.WindowsTaskbarMode = 2;
+            this.btnRestart.Visibility = Visibility.Visible;
         }
     }
 }

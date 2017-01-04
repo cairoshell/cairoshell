@@ -178,5 +178,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["ShowFileExtensions"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int WindowsTaskbarMode {
+            get {
+                return ((int)(this["WindowsTaskbarMode"]));
+            }
+            set {
+                this["WindowsTaskbarMode"] = value;
+            }
+        }
     }
 }

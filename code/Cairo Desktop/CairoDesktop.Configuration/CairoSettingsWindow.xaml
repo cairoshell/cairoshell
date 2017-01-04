@@ -123,9 +123,14 @@
             <Setter Property="Margin" Value="5,8" />
             <Setter Property="Padding" Value="0" />
         </Style>
+        <Style TargetType="{x:Type RadioButton}">
+            <Setter Property="Foreground" Value="#ffe9ecf4" />
+            <Setter Property="Margin" Value="0,4" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground" Value="#ffe9ecf4" />
-            <Setter Property="Margin" Value="5,0,0,0" />
+            <Setter Property="Margin" Value="5,4,0,4" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Width" Value="100" />
         </Style>
@@ -197,6 +202,14 @@
                     <CheckBox Content="Enable Taskbar"
                         IsChecked="{Binding Path=EnableTaskbar}"
                         Click="EnableTaskbar_Click" Name="chkEnableTaskbar" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Mode:" VerticalAlignment="Top" />
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton Content="Completely hide Windows taskbar" GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click" />
+                            <RadioButton Content="Auto-hide Windows taskbar" GroupName="rdoTaskbarMode" Name="radTaskbarMode1" Click="radTaskbarMode1_Click" />
+                            <RadioButton Content="Show Windows taskbar" GroupName="rdoTaskbarMode" Name="radTaskbarMode2" Click="radTaskbarMode2_Click" />
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Menu Bar">

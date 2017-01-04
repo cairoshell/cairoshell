@@ -29,23 +29,30 @@ namespace CairoDesktop.Interop
 
         private static IntPtr GetIcon(string filename, SHGFI flags)
         {
-            SHFILEINFO shinfo = new SHFILEINFO();
-            IntPtr hIconInfo;
-
-            if ((File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory && !filename.StartsWith("\\"))
+            try
             {
-                hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex | flags));
+                SHFILEINFO shinfo = new SHFILEINFO();
+                IntPtr hIconInfo;
+
+                if ((File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory && !filename.StartsWith("\\"))
+                {
+                    hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex | flags));
+                }
+                else
+                {
+                    hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.UseFileAttributes | SHGFI.SysIconIndex | flags));
+                }
+
+                IntPtr hIcon = ImageList_GetIcon(hIconInfo, shinfo.iIcon.ToInt32(), (int)0x00000001);
+
+                DestroyIcon(shinfo.hIcon);
+
+                return hIcon;
             }
-            else
+            catch
             {
-                hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.UseFileAttributes | SHGFI.SysIconIndex | flags));
+                return IntPtr.Zero;
             }
-            
-            IntPtr hIcon = ImageList_GetIcon(hIconInfo, shinfo.iIcon.ToInt32(), (int)0x00000001);
-
-            DestroyIcon(shinfo.hIcon);
-
-            return hIcon;
         }
 
         public static string UsersProgramsPath 

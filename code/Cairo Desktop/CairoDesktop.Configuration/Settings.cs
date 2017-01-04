@@ -20,6 +20,7 @@
 
         // Taskbar
         private static bool? _EnableTaskbar;
+        private static int? _WindowsTaskbarMode;
 
         // Menu Bar
         private static bool? _EnableMenuBarShadow;
@@ -215,6 +216,23 @@
             {
                 _EnableTaskbar = value;
                 Properties.Settings.Default.EnableTaskbar = (bool)_EnableTaskbar;
+                Save();
+            }
+        }
+
+        public static int WindowsTaskbarMode
+        {
+            get
+            {
+                if (_WindowsTaskbarMode == null)
+                    _WindowsTaskbarMode = Properties.Settings.Default.WindowsTaskbarMode;
+
+                return (int)_WindowsTaskbarMode;
+            }
+            set
+            {
+                _WindowsTaskbarMode = value;
+                Properties.Settings.Default.WindowsTaskbarMode = (int)_WindowsTaskbarMode;
                 Save();
             }
         }

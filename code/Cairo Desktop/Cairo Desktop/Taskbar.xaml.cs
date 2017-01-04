@@ -38,7 +38,8 @@ namespace CairoDesktop
             (TasksList2.DataContext as WindowsTasks.WindowsTasksService).Dispose();
 
             // show the windows taskbar again
-            AppBarHelper.SetWinTaskbarState(NativeMethods.SWP_SHOWWINDOW);
+            AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.OnTop);
+            AppBarHelper.SetWinTaskbarPos(NativeMethods.SWP_SHOWWINDOW);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -117,7 +118,7 @@ namespace CairoDesktop
 
             setPosition();
 
-            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 5), DispatcherPriority.Normal, delegate
+            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Normal, delegate
             {
                 setPosition();
             }, this.Dispatcher);

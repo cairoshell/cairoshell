@@ -64,6 +64,11 @@
                 // Another instance is already running.
                 return;
             }
+            else if (!ok && isRestart)
+            {
+                // this is a restart so let's wait for the old instance to end
+                System.Threading.Thread.Sleep(2000);
+            }
             #endregion
 
             // Show a splash screen while WPF inits
@@ -99,12 +104,20 @@
 
             if (Settings.EnableTaskbar)
             {
-                // hide the windows taskbar
-                //SupportingClasses.AppBarHelper.SetWinTaskbarState(SupportingClasses.AppBarHelper.WinTaskbarState.AutoHide);
-                
-                //IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_traywnd", "");
-                //NativeMethods.SetWindowPos(taskbarHwnd, IntPtr.Zero, 0, 0, 0, 0, NativeMethods.SWP_HIDEWINDOW);
-                AppBarHelper.SetWinTaskbarState(NativeMethods.SWP_HIDEWINDOW);
+                // hide the windows taskbar according to user prefs
+                switch (Settings.WindowsTaskbarMode)
+                {
+                    case 0:
+                        AppBarHelper.SetWinTaskbarPos(NativeMethods.SWP_HIDEWINDOW);
+                        break;
+                    case 1:
+                        AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
+                        break;
+                    case 2:
+                        break;
+                    default:
+                        break;
+                }
             }
 
             if (Settings.EnableDesktop)
