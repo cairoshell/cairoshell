@@ -1,8 +1,6 @@
-; CairoShell.nsi
-;
-; It's time to celebrate!  Cairo will go out to the masses =)
-
 ;--------------------------------
+; CairoShell_32.nsi
+
 !include "MUI.nsh"
 
 ; The name of the installer
@@ -20,21 +18,16 @@ InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
 !define MUI_ABORTWARNING
 
 ;--------------------------------
-
 ; Pages
 
-; Page components
-; Page directory
-; Page instfiles
-
-; UninstPage uninstConfirm
-; UninstPage instfiles
   !define MUI_ICON inst_icon.ico
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_RIGHT
   !define MUI_HEADERIMAGE_BITMAP header_img.bmp
   !define MUI_UNICON inst_icon.ico
+  !define MUI_COMPONENTSPAGE_SMALLDESC
   !define MUI_WELCOMEFINISHPAGE_BITMAP left_img.bmp
+  !define MUI_WELCOMEPAGE_TEXT "This installer will guide you through the installation of Cairo.\r\n\r\nBefore installing, please ensure .NET Framework 4.5.2 or higher is installed, and that any running instance of Cairo is ended.\r\n\r\nClick Next to continue."
   !define MUI_FINISHPAGE_RUN "$INSTDIR\CairoDesktop.exe"
   !define MUI_FINISHPAGE_RUN_TEXT "Start Cairo Desktop Environment"
   !insertmacro MUI_PAGE_WELCOME
@@ -50,6 +43,7 @@ InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
   !insertmacro MUI_UNPAGE_FINISH
 
 ;--------------------------------
+; Components
 
 !insertmacro MUI_LANGUAGE "English"
 
@@ -62,7 +56,7 @@ Section "Cairo Shell (required)" cairo
   Push "v4.0"
   Call GetDotNetDir
   Pop $R0
-  StrCmpS "" $R0 err_dot_net_not_found
+  StrCmpS "" $R0 noDotNetFound
   
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
@@ -81,9 +75,6 @@ Section "Cairo Shell (required)" cairo
   File "..\Cairo Desktop\Build\Release\UnhandledExceptionFilter.dll"
   File "..\Cairo Desktop\Build\Release\CairoDesktop.WindowsTasks.dll"
   File "..\Cairo Desktop\Build\Release\White.xaml"
-
-  ;Reboot just in case, some people seem to have issues for some reason.
-  ; SetRebootFlag true
 
   ; Start menu shortcuts
   createShortCut "$SMPROGRAMS\Cairo Desktop.lnk" "$INSTDIR\CairoDesktop.exe"
@@ -111,30 +102,20 @@ Section "Cairo Shell (required)" cairo
 
   Return
  
-  err_dot_net_not_found:
-    Abort "Cairo requires .NET Framework 4.5.2 or higher to be installed. Please install .NET Framework 4.5.2 or greater from Microsoft and try again."
+  noDotNetFound:
+    Abort "Error: Cairo requires .NET Framework 4.5.2 or higher to be installed."
 
 SectionEnd
 
-; The wallpaper contest winner deserves to have their wallpaper put out in to the real world, don't you think?
-; Section "Wallpaper" wall
-
- ; SetOutPath "C:\Windows\Web\Wallpaper\"
- ; File "CairoWallpaper1.jpg"
- ; File "CairoWallpaper2.jpg"
- ; WriteRegStr HKCU "Control Panel\Desktop" "WallPaper" "C:\Windows\Web\Wallpaper\CairoWallpaper2.jpg"
-  
-; SectionEnd
-
 ; Run at startup
-Section /o "Run at startup (current user)" startupCU
+Section "Run at startup (current user)" startupCU
   
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "CairoShell" "$INSTDIR\CairoDesktop.exe"
   
 SectionEnd
 
 ; Replace explorer
-Section /o "Replace Explorer (current user)" shellCU
+Section /o "Advanced users only: Replace Explorer (current user)" shellCU
   
   WriteRegStr HKCU "Software\Microsoft\Windows NT\CurrentVersion\Winlogon" "Shell" "$INSTDIR\CairoDesktop.exe"
   DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "CairoShell"
@@ -143,20 +124,17 @@ SectionEnd
 
   ;Language strings
   LangString DESC_cairo ${LANG_ENGLISH} "Installs Cairo and its required components."
-  ; LangString DESC_wall ${LANG_ENGLISH} "Sets the Cairo wallpaper as your default desktop background."
   LangString DESC_startupCU ${LANG_ENGLISH} "Makes Cairo start up when you log in."
-  LangString DESC_shellCU ${LANG_ENGLISH} "Makes Cairo run instead of Windows Explorer. Note this also disables some new features in Windows 10."
+  LangString DESC_shellCU ${LANG_ENGLISH} "Run Cairo instead of Windows Explorer. Note this also disables many new features in Windows."
 
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${cairo} $(DESC_cairo)
-   ; !insertmacro MUI_DESCRIPTION_TEXT ${wall} $(DESC_wall)
     !insertmacro MUI_DESCRIPTION_TEXT ${startupCU} $(DESC_startupCU)
     !insertmacro MUI_DESCRIPTION_TEXT ${shellCU} $(DESC_shellCU)
   !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ;--------------------------------
-
 ; Uninstaller
 
 
@@ -168,7 +146,7 @@ Section "Uninstall"
   DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "CairoShell"
   DeleteRegValue HKCU "Software\Microsoft\Windows NT\CurrentVersion\Winlogon" "Shell"
 
-  ; Remove files and uninstaller
+  ; Remove files and uninstaller. Includes historical files
   Delete "$INSTDIR\CairoDesktop.exe"
   Delete "$INSTDIR\CairoDesktop.exe.config"
   Delete "$INSTDIR\CairoDesktop.Configuration.dll.config"
@@ -182,13 +160,13 @@ Section "Uninstall"
   Delete "$INSTDIR\WPFToolkit.dll"
   Delete "$INSTDIR\SearchAPILib.dll"
   Delete "$SMPROGRAMS\Cairo Desktop.lnk"
-  DELETE "$INSTDIR\UnhandledExceptionFilter.dll"
+  Delete "$INSTDIR\UnhandledExceptionFilter.dll"
   Delete "$INSTDIR\CairoDesktop.WindowsTasks.dll"
   Delete "$INSTDIR\PostSharp.Core.dll"
   Delete "$INSTDIR\PostSharp.Public.dll"
   Delete "$INSTDIR\PostSharp.Laos.dll"
   Delete "$INSTDIR\PostSharp.Core.XmlSerializers.dll"
-  Delete $INSTDIR\RemoveCairo.exe
+  Delete "$INSTDIR\RemoveCairo.exe"
   Delete "$INSTDIR\White.xaml"
 
   ; Remove directories used
@@ -197,7 +175,6 @@ Section "Uninstall"
 SectionEnd
 
 ;--------------------------------
-
 ; Functions
 
 ; Given a .NET version number, this function returns that .NET framework's

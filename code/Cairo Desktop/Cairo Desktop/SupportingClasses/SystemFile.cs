@@ -151,6 +151,7 @@ namespace CairoDesktop
                     img.BeginInit();
                     img.UriSource = new Uri(this.FullName);
                     img.CacheOption = BitmapCacheOption.OnLoad;
+                    img.DecodePixelWidth = 32;
                     img.EndInit();
                     img.Freeze();
 
