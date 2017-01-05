@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Linq;
+using System.Diagnostics;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -12,6 +13,8 @@ namespace CairoDesktop.AppGrabber
         private static DependencyProperty programsListProperty = DependencyProperty.Register("ProgramsList", typeof(List<ApplicationInfo>), typeof(AppGrabber), new PropertyMetadata(new List<ApplicationInfo>()));
         
         private static AppGrabber _instance = new AppGrabber();
+
+        private static string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new" };
 
         public static AppGrabber Instance
         {
@@ -70,8 +73,6 @@ namespace CairoDesktop.AppGrabber
         List<String> executableExtensions = new List<string>();
 
         String[] searchLocations = {
-                Interop.Shell.UsersProgramsPath,
-                Interop.Shell.AllUsersProgramsPath,
                 Interop.Shell.UsersStartMenuPath,
                 Interop.Shell.AllUsersStartMenuPath
                 /*
@@ -183,7 +184,9 @@ namespace CairoDesktop.AppGrabber
         {
             List<ApplicationInfo> rval = new List<ApplicationInfo>();
 
-            foreach (string file in Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories))
+            IEnumerable<string> files = Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories);
+
+            foreach (string file in files)
             {
                 ApplicationInfo ai = new ApplicationInfo();
                 String ext = Path.GetExtension(file);
@@ -207,12 +210,27 @@ namespace CairoDesktop.AppGrabber
                             target = file;
                         }
 
-                        // remove items that we can't execute. also remove uninstallers
-                        if (!executableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase) || ai.Name == "Uninstall" || ai.Name.StartsWith("Uninstall "))
+                        // remove items that we can't execute.
+                        if (!executableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
                         {
                             System.Diagnostics.Debug.WriteLine("Not an app: " + file + ": " + target);
                             continue;
                         }
+
+                        // remove things that aren't apps (help, uninstallers, etc)
+                        bool exclude = false;
+                        foreach(string word in excludedNames)
+                        {
+                            if(ai.Name.ToLower().Contains(word))
+                            {
+                                Debug.WriteLine("Excluded item: " + file + ": " + target);
+                                exclude = true;
+                                break;
+                            }
+                        }
+
+                        if (exclude)
+                            continue;
 
                         ai.Icon = ai.GetAssociatedIcon();
                         rval.Add(ai);
