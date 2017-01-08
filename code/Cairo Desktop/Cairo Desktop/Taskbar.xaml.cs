@@ -4,6 +4,7 @@ using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
 using System.Windows.Threading;
+using System.Threading.Tasks;
 
 namespace CairoDesktop
 {
@@ -17,18 +18,28 @@ namespace CairoDesktop
         private IntPtr handle;
         private int appbarMessageId = -1;
 
-        public AppGrabber.AppGrabber appGrabber;
-
-        private String configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";
+        public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
         public Taskbar()
         {
             InitializeComponent();
-            
-            appGrabber = AppGrabber.AppGrabber.Instance;
-            this.quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
-            this.TaskbarBorder.MaxWidth = SystemParameters.WorkArea.Width - 36;
-            this.grdTaskbar.Width = SystemParameters.WorkArea.Width;
+
+            setupTaskbar();
+        }
+
+        private async void setupTaskbar()
+        {
+            await Task.Run(() =>
+            {
+                AppGrabber.Category quickLaunch = appGrabber.QuickLaunch;
+
+                Dispatcher.Invoke((Action)(() =>
+                {
+                    this.quickLaunchList.ItemsSource = quickLaunch;
+                    this.TaskbarBorder.MaxWidth = SystemParameters.WorkArea.Width - 36;
+                    this.grdTaskbar.Width = SystemParameters.WorkArea.Width;
+                }), null);
+            });
         }
 
         private void Taskbar_Closing(object sender, System.ComponentModel.CancelEventArgs e)

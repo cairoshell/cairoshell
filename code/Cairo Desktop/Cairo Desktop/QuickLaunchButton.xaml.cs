@@ -10,7 +10,7 @@ namespace CairoDesktop
 			this.InitializeComponent();
         }
 
-private void LaunchProgram(object sender, RoutedEventArgs e)
+        private void LaunchProgram(object sender, RoutedEventArgs e)
         {
             Button item = (Button)sender;
             try {

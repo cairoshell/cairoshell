@@ -10,6 +10,7 @@ using System.Windows.Input;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Configuration;
+using System.Threading.Tasks;
 
 namespace CairoDesktop
 {
@@ -23,69 +24,98 @@ namespace CairoDesktop
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
-        private String configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+@"\CairoAppConfig.xml";
         private String fileManger = Environment.ExpandEnvironmentVariables(Settings.FileManager);
 
         public MenuBar()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
-            this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+            Width = AppBarHelper.PrimaryMonitorSize.Width;
 
-            this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
+            setupPlaces();
 
-            // Set username
-            miUserName.Header = Environment.UserName.Replace("_", "__");
+            setupSearch();
 
-            // Show the search button only if the service is running
-            if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
+            initializeClock();
+
+            setupPrograms();
+        }
+
+        private async void setupPrograms()
+        {
+            await Task.Run(() =>
             {
-                ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
-                vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
-                CairoSearchMenu.DataContext = vistaSearchProvider;
-            } 
-            else
-            {
-                CairoSearchMenu.Visibility = Visibility.Collapsed;
-                DispatcherTimer searchcheck = new DispatcherTimer(new TimeSpan(0, 0, 7), DispatcherPriority.Normal, delegate
+                // Set Quick Launch and Uncategorized categories to not show in menu
+                AppGrabber.Category ql = appGrabber.CategoryList.GetCategory("Quick Launch");
+                if (ql != null)
                 {
-                    if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
+                    ql.ShowInMenu = false;
+                }
+                AppGrabber.Category uncat = appGrabber.CategoryList.GetCategory("Uncategorized");
+                if (uncat != null)
+                {
+                    uncat.ShowInMenu = false;
+                }
+
+                // Set Programs Menu to use appGrabber's ProgramList as its source
+                Dispatcher.Invoke((Action)(() => categorizedProgramsList.ItemsSource = appGrabber.CategoryList), null);
+            });
+        }
+
+        private async void setupPlaces()
+        {
+            await Task.Run(() =>
+            {
+                // Set username
+                string username = Environment.UserName.Replace("_", "__");
+                Dispatcher.Invoke((Action)(() => miUserName.Header = username), null);
+
+                // Only show Downloads folder on Vista or greater
+                if (Environment.OSVersion.Version.Major < 6)
+                {
+                    Dispatcher.Invoke((Action)(() => PlacesDownloadsItem.Visibility = Visibility.Collapsed), null);
+                }
+            });
+        }
+
+        private async void setupSearch()
+        {
+            await Task.Run(() =>
+            {
+                Dispatcher.Invoke((Action)(() => this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult))), null);
+
+                // Show the search button only if the service is running
+                if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
+                {
+                    Dispatcher.Invoke((Action)(() =>
                     {
                         ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
                         vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
                         CairoSearchMenu.DataContext = vistaSearchProvider;
-                        CairoSearchMenu.Visibility = Visibility.Visible;
-                    }
-                    else
+                    }), null);
+                }
+                else
+                {
+                    Dispatcher.Invoke((Action)(() => CairoSearchMenu.Visibility = Visibility.Collapsed), null);
+                    DispatcherTimer searchcheck = new DispatcherTimer(new TimeSpan(0, 0, 7), DispatcherPriority.Normal, delegate
                     {
-                        CairoSearchMenu.Visibility = Visibility.Collapsed;
-                    }
+                        if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
+                        {
+                            Dispatcher.Invoke((Action)(() => {
+                                ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
+                                vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
+                                CairoSearchMenu.DataContext = vistaSearchProvider;
+                                CairoSearchMenu.Visibility = Visibility.Visible;
+                            }), null);
+                        }
+                        else
+                        {
+                            Dispatcher.Invoke((Action)(() => CairoSearchMenu.Visibility = Visibility.Collapsed), null);
+                        }
 
-                }, this.Dispatcher);
-            }
-
-            // Only show Downloads folder on Vista or greater
-            if (System.Environment.OSVersion.Version.Major < 6)
-            {
-                PlacesDownloadsItem.Visibility = Visibility.Collapsed;
-            }
-
-            InitializeClock();
-
-            // Set Quick Launch and Uncategorized categories to not show in menu
-            AppGrabber.Category ql = appGrabber.CategoryList.GetCategory("Quick Launch");
-            if (ql != null)
-            {
-                ql.ShowInMenu = false;
-            }
-            AppGrabber.Category uncat = appGrabber.CategoryList.GetCategory("Uncategorized");
-            if (uncat != null)
-            {
-                uncat.ShowInMenu = false;
-            }
-
-            // Set Programs Menu to use appGrabber's ProgramList as its source
-            categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
+                    }, this.Dispatcher);
+                }
+            });
         }
 
         private void shutdown()
@@ -113,30 +143,33 @@ namespace CairoDesktop
         /// <summary>
         /// Initializes the dispatcher timers to updates the time and date bindings
         /// </summary>
-        private void InitializeClock()
+        private async void initializeClock()
         {
-            // Create our timer for clock
-            DispatcherTimer timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
+            await Task.Run(() => 
             {
-                string timeFormat = Settings.TimeFormat;
-                if (string.IsNullOrEmpty(timeFormat))
+                // Create our timer for clock
+                DispatcherTimer timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
                 {
-                    timeFormat = "T"; /// culturally safe long time pattern
-                }
+                    string timeFormat = Settings.TimeFormat;
+                    if (string.IsNullOrEmpty(timeFormat))
+                    {
+                        timeFormat = "T"; /// culturally safe long time pattern
+                    }
 
-                dateText.Text = DateTime.Now.ToString(timeFormat);
-            }, this.Dispatcher);
+                    dateText.Text = DateTime.Now.ToString(timeFormat);
+                }, this.Dispatcher);
 
-            DispatcherTimer fulldatetimer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
-            {
-                string dateFormat = Settings.DateFormat;
-                if (string.IsNullOrEmpty(dateFormat))
+                DispatcherTimer fulldatetimer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
                 {
-                    dateFormat = "D"; // Culturally safe Long Date Pattern
-                }
+                    string dateFormat = Settings.DateFormat;
+                    if (string.IsNullOrEmpty(dateFormat))
+                    {
+                        dateFormat = "D"; // Culturally safe Long Date Pattern
+                    }
 
-                dateText.ToolTip = DateTime.Now.ToString(dateFormat);
-            }, this.Dispatcher);
+                    dateText.ToolTip = DateTime.Now.ToString(dateFormat);
+                }, this.Dispatcher);
+            });
         }
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
@@ -203,12 +236,6 @@ namespace CairoDesktop
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
             shutdown();
-        }
-
-        private void OnWindowResize(object sender, RoutedEventArgs e)
-        {
-            // making sure this isn't necessary
-            //AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
         }
         #endregion
 

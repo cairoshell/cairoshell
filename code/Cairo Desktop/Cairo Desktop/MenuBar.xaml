@@ -19,7 +19,6 @@
     Initialized="OnWindowInitialized"
     SourceInitialized="Window_SourceInitialized"
     Closing="OnWindowClosing"
-    SizeChanged="OnWindowResize"
     UseLayoutRounding="True"
     MaxHeight="23"
     Background="Transparent">
