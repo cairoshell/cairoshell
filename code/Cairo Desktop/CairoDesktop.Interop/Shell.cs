@@ -112,8 +112,11 @@ namespace CairoDesktop.Interop
             {
                 filename.Replace("system32", "sysnative");
             }
-            
-            Process.Start(filename);
+
+            if (filename.StartsWith("appx:"))
+                Process.Start("LaunchWinApp.exe", "shell:appsFolder\\" + filename.Substring(5));
+            else
+                Process.Start(filename);
         }
 
         public static void StartProcess(string filename, string args)

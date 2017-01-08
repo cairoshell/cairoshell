@@ -94,8 +94,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
-    <Reference Include="Windows.ApplicationModel" />
-    <Reference Include="Windows.Management" />
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -137,6 +135,10 @@
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
       <Project>{233781C8-83E4-47A6-847E-FA7A31B1CC51}</Project>
       <Name>CairoDesktop.Interop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.UWPInterop\CairoDesktop.UWPInterop.csproj">
+      <Project>{52a795c9-3c28-487a-b7b8-aab324da7305}</Project>
+      <Name>CairoDesktop.UWPInterop</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

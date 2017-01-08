@@ -274,13 +274,14 @@
 
                 key = Registry.LocalMachine.OpenSubKey(keyString, false);
 
-                if(key.ValueCount > 0)
+                if(key != null && key.ValueCount > 0)
                 {
                     foreach(string valueName in key.GetValueNames())
                         startupApps.Add(((string)key.GetValue(valueName)).Replace("\"", ""));
                 }
 
-                key.Close();
+                if (key != null)
+                    key.Close();
             }
 
             // HKCU Run
@@ -293,7 +294,7 @@
                 else
                     key = Registry.CurrentUser.OpenSubKey(keyString, false);
 
-                if (key.ValueCount > 0)
+                if (key != null && key.ValueCount > 0)
                 {
                     foreach (string valueName in key.GetValueNames())
                     {
@@ -311,7 +312,8 @@
                     }
                 }
 
-                key.Close();
+                if (key != null)
+                    key.Close();
             }
 
             // Common Start Menu - Startup folder

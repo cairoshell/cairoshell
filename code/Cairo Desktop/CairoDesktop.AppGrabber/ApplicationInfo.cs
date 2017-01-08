@@ -24,12 +24,14 @@ namespace CairoDesktop.AppGrabber
         /// This object holds the basic information necessary for identifying an application.
         /// </summary>
         /// <param name="name">The friendly name of this application.</param>
-        /// <param name="path">Path to the executable.</param>
+        /// <param name="path">Path to the shortcut.</param>
+        /// <param name="target">Path to the executable.</param>
         /// <param name="icon">ImageSource used to denote the application's icon in a graphical environment.</param>
-        public ApplicationInfo(string name, string path, ImageSource icon)
+        public ApplicationInfo(string name, string path, string target, ImageSource icon)
 		{
 			this.Name = name;
 			this.Path = path;
+            this.Target = target;
             this.Icon = icon;
 		}
 
@@ -50,7 +52,7 @@ namespace CairoDesktop.AppGrabber
         
         private string path;
 		/// <summary>
-        /// Path to the executable.
+        /// Path to the shortcut.
 		/// </summary>
         public string Path {
             get { return path; }
@@ -59,6 +61,24 @@ namespace CairoDesktop.AppGrabber
                 // Notify Databindings of property change
                 if (PropertyChanged != null) {
                     PropertyChanged(this, new PropertyChangedEventArgs("Path"));
+                }
+            }
+        }
+
+        private string target;
+        /// <summary>
+        /// Path to the executable.
+        /// </summary>
+        public string Target
+        {
+            get { return target; }
+            set
+            {
+                target = value;
+                // Notify Databindings of property change
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("Target"));
                 }
             }
         }
@@ -163,7 +183,10 @@ namespace CairoDesktop.AppGrabber
         /// Gets an ImageSource object representing the associated icon of a file.
         /// </summary>
         public ImageSource GetAssociatedIcon() {
-            return IconImageConverter.GetImageFromAssociatedIcon(this.Path, true);
+            if (this.path.StartsWith("appx:"))
+                return IconImageConverter.GetDefaultIcon();
+            else
+                return IconImageConverter.GetImageFromAssociatedIcon(this.Path, true);
         }
 
         /// <summary>
@@ -171,7 +194,7 @@ namespace CairoDesktop.AppGrabber
         /// </summary>
         /// <returns>A new ApplicationInfo object with the same data as this object, not bound to a Category.</returns>
         internal ApplicationInfo Clone() {
-            ApplicationInfo rval = new ApplicationInfo(this.Name, this.Path, this.Icon);
+            ApplicationInfo rval = new ApplicationInfo(this.Name, this.Path, this.Target, this.Icon);
             return rval;
         }
     }

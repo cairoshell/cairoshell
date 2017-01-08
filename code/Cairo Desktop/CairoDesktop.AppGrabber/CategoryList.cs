@@ -86,6 +86,9 @@ namespace CairoDesktop.AppGrabber {
                         XmlElement pathElement = doc.CreateElement("Path");
                         pathElement.InnerText = app.Path;
                         appElement.AppendChild(pathElement);
+                        XmlElement targetElement = doc.CreateElement("Target");
+                        targetElement.InnerText = app.Target;
+                        appElement.AppendChild(targetElement);
                     }
                 }
             }
@@ -105,7 +108,9 @@ namespace CairoDesktop.AppGrabber {
                     ApplicationInfo app = new ApplicationInfo();
                     app.Name = appElement.ChildNodes[0].InnerText;
                     app.Path = appElement.ChildNodes[1].InnerText;
-                    if (!Interop.Shell.Exists(app.Path)) {
+                    if(appElement.ChildNodes.Count > 2)
+                        app.Target = appElement.ChildNodes[2].InnerText;
+                    if (!app.Path.StartsWith("appx:") && !Interop.Shell.Exists(app.Path)) {
                         System.Diagnostics.Debug.WriteLine(app.Path + " does not exist");
                         continue;
                     }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Linq;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -123,9 +124,31 @@ namespace CairoDesktop.AppGrabber
                 listsToMerge.Add(generateAppList(location));
             }
             List<ApplicationInfo> rval = mergeLists(listsToMerge);
-            rval.Sort();
-            
+            //rval.Sort();
+            if(Environment.OSVersion.Version.Major > 6 || (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2))
+                rval.AddRange(getStoreApps());
             return rval;
+        }
+        
+        private List<ApplicationInfo> getStoreApps()
+        {
+            List<ApplicationInfo> storeApps = new List<ApplicationInfo>();
+
+            foreach (string[] app in UWPInterop.StoreAppHelper.GetStoreApps())
+            {
+                string id = app[0];
+                string path = app[1];
+
+                ApplicationInfo ai = new ApplicationInfo();
+                ai.Name = UWPInterop.StoreAppHelper.GetAppName(id);
+                ai.Path = "appx:" + path;
+                ai.Target = path;
+                ai.Icon = ai.GetAssociatedIcon();
+
+                storeApps.Add(ai);
+            }
+
+            return storeApps;
         }
 
         /*private List<ApplicationInfo> generateAppListRecursing(DirectoryInfo directory)
@@ -210,8 +233,10 @@ namespace CairoDesktop.AppGrabber
                             target = file;
                         }
 
+                        ai.Target = target;
+
                         // remove items that we can't execute.
-                        if (!executableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
+                        if (!String.IsNullOrEmpty(target) && !executableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
                         {
                             System.Diagnostics.Debug.WriteLine("Not an app: " + file + ": " + target);
                             continue;

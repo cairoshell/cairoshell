@@ -61,14 +61,6 @@ namespace CairoDesktop
             Shell.ShowWindowBottomMost(helper.Handle);
         }
 
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-            //Set the window style to noactivate.
-            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
-                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // show the windows desktop
