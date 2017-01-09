@@ -10,7 +10,6 @@ using System.Windows.Input;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Configuration;
-using System.Threading.Tasks;
 
 namespace CairoDesktop
 {

@@ -4,8 +4,6 @@ using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
 using System.Windows.Threading;
-using System.Threading.Tasks;
-using System.Windows.Data;
 
 namespace CairoDesktop
 {
@@ -28,19 +26,13 @@ namespace CairoDesktop
             setupTaskbar();
         }
 
-        private async void setupTaskbar()
+        private void setupTaskbar()
         {
-            await Task.Run(() =>
-            {
-                AppGrabber.Category quickLaunch = appGrabber.QuickLaunch;
-
-                Dispatcher.Invoke((Action)(() =>
-                {
-                    this.quickLaunchList.ItemsSource = quickLaunch;
-                    this.TaskbarBorder.MaxWidth = SystemParameters.WorkArea.Width - 36;
-                    this.grdTaskbar.Width = SystemParameters.WorkArea.Width;
-                }), null);
-            });
+            AppGrabber.Category quickLaunch = appGrabber.QuickLaunch;
+            
+            this.quickLaunchList.ItemsSource = quickLaunch;
+            this.TaskbarBorder.MaxWidth = SystemParameters.WorkArea.Width - 36;
+            this.grdTaskbar.Width = SystemParameters.WorkArea.Width;
         }
 
         private void Taskbar_Closing(object sender, System.ComponentModel.CancelEventArgs e)
