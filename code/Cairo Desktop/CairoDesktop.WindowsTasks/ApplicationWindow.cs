@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Diagnostics;
 using System.ComponentModel;
 using CairoDesktop.Interop;
+using CairoDesktop.AppGrabber;
 
 namespace CairoDesktop.WindowsTasks
 {
@@ -35,6 +36,45 @@ namespace CairoDesktop.WindowsTasks
         {
             get;
             set;
+        }
+
+        private string _category;
+
+        public string Category
+        {
+            get
+            {
+                if(_category == null)
+                {
+                    // get process id
+                    uint procId;
+                    NativeMethods.GetWindowThreadProcessId(this.Handle, out procId);
+
+                    // open process
+                    IntPtr hProc = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryInformation | NativeMethods.ProcessAccessFlags.VirtualMemoryRead, false, (int)procId);
+
+                    // get filename
+                    StringBuilder outFileName = new StringBuilder(1024);
+                    NativeMethods.GetModuleFileNameEx(hProc, IntPtr.Zero, outFileName, outFileName.Capacity);
+
+                    foreach(ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
+                    {
+                        if(ai.Target == outFileName.ToString())
+                        {
+                            _category = ai.Category.Name;
+                            break;
+                        }
+                    }
+
+                    if (_category == null)
+                        _category = "Uncategorized";
+                }
+                return _category;
+            }
+            set
+            {
+                _category = value;
+            }
         }
 
         public string Title

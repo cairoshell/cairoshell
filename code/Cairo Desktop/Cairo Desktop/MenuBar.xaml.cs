@@ -41,81 +41,67 @@ namespace CairoDesktop
             setupPrograms();
         }
 
-        private async void setupPrograms()
+        private void setupPrograms()
         {
-            await Task.Run(() =>
+            // Set Quick Launch and Uncategorized categories to not show in menu
+            AppGrabber.Category ql = appGrabber.CategoryList.GetCategory("Quick Launch");
+            if (ql != null)
             {
-                // Set Quick Launch and Uncategorized categories to not show in menu
-                AppGrabber.Category ql = appGrabber.CategoryList.GetCategory("Quick Launch");
-                if (ql != null)
-                {
-                    ql.ShowInMenu = false;
-                }
-                AppGrabber.Category uncat = appGrabber.CategoryList.GetCategory("Uncategorized");
-                if (uncat != null)
-                {
-                    uncat.ShowInMenu = false;
-                }
+                ql.ShowInMenu = false;
+            }
+            AppGrabber.Category uncat = appGrabber.CategoryList.GetCategory("Uncategorized");
+            if (uncat != null)
+            {
+                uncat.ShowInMenu = false;
+            }
 
-                // Set Programs Menu to use appGrabber's ProgramList as its source
-                Dispatcher.Invoke((Action)(() => categorizedProgramsList.ItemsSource = appGrabber.CategoryList), null);
-            });
+            // Set Programs Menu to use appGrabber's ProgramList as its source
+            categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
         }
 
-        private async void setupPlaces()
+        private void setupPlaces()
         {
-            await Task.Run(() =>
-            {
-                // Set username
-                string username = Environment.UserName.Replace("_", "__");
-                Dispatcher.Invoke((Action)(() => miUserName.Header = username), null);
+            // Set username
+            string username = Environment.UserName.Replace("_", "__");
+            Dispatcher.Invoke((Action)(() => miUserName.Header = username), null);
 
-                // Only show Downloads folder on Vista or greater
-                if (Environment.OSVersion.Version.Major < 6)
-                {
-                    Dispatcher.Invoke((Action)(() => PlacesDownloadsItem.Visibility = Visibility.Collapsed), null);
-                }
-            });
+            // Only show Downloads folder on Vista or greater
+            if (Environment.OSVersion.Version.Major < 6)
+            {
+                PlacesDownloadsItem.Visibility = Visibility.Collapsed;
+            }
         }
 
-        private async void setupSearch()
+        private void setupSearch()
         {
-            await Task.Run(() =>
-            {
-                Dispatcher.Invoke((Action)(() => this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult))), null);
+            this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
 
-                // Show the search button only if the service is running
-                if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
+            // Show the search button only if the service is running
+            if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
+            {
+                ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
+                vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
+                CairoSearchMenu.DataContext = vistaSearchProvider;
+            }
+            else
+            {
+                Dispatcher.Invoke((Action)(() => CairoSearchMenu.Visibility = Visibility.Collapsed), null);
+                DispatcherTimer searchcheck = new DispatcherTimer(new TimeSpan(0, 0, 7), DispatcherPriority.Normal, delegate
                 {
-                    Dispatcher.Invoke((Action)(() =>
+                    if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
                     {
                         ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
                         vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
                         CairoSearchMenu.DataContext = vistaSearchProvider;
-                    }), null);
-                }
-                else
-                {
-                    Dispatcher.Invoke((Action)(() => CairoSearchMenu.Visibility = Visibility.Collapsed), null);
-                    DispatcherTimer searchcheck = new DispatcherTimer(new TimeSpan(0, 0, 7), DispatcherPriority.Normal, delegate
+                        CairoSearchMenu.Visibility = Visibility.Visible;
+                    }
+                    else
                     {
-                        if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
-                        {
-                            Dispatcher.Invoke((Action)(() => {
-                                ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
-                                vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
-                                CairoSearchMenu.DataContext = vistaSearchProvider;
-                                CairoSearchMenu.Visibility = Visibility.Visible;
-                            }), null);
-                        }
-                        else
-                        {
-                            Dispatcher.Invoke((Action)(() => CairoSearchMenu.Visibility = Visibility.Collapsed), null);
-                        }
+                        CairoSearchMenu.Visibility = Visibility.Collapsed;
+                    }
 
-                    }, this.Dispatcher);
-                }
-            });
+                }, this.Dispatcher);
+            }
         }
 
         private void shutdown()
@@ -143,33 +129,30 @@ namespace CairoDesktop
         /// <summary>
         /// Initializes the dispatcher timers to updates the time and date bindings
         /// </summary>
-        private async void initializeClock()
+        private void initializeClock()
         {
-            await Task.Run(() => 
+            // Create our timer for clock
+            DispatcherTimer timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
             {
-                // Create our timer for clock
-                DispatcherTimer timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
+                string timeFormat = Settings.TimeFormat;
+                if (string.IsNullOrEmpty(timeFormat))
                 {
-                    string timeFormat = Settings.TimeFormat;
-                    if (string.IsNullOrEmpty(timeFormat))
-                    {
-                        timeFormat = "T"; /// culturally safe long time pattern
-                    }
+                    timeFormat = "T"; /// culturally safe long time pattern
+                }
 
-                    dateText.Text = DateTime.Now.ToString(timeFormat);
-                }, this.Dispatcher);
+                dateText.Text = DateTime.Now.ToString(timeFormat);
+            }, this.Dispatcher);
 
-                DispatcherTimer fulldatetimer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
+            DispatcherTimer fulldatetimer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
+            {
+                string dateFormat = Settings.DateFormat;
+                if (string.IsNullOrEmpty(dateFormat))
                 {
-                    string dateFormat = Settings.DateFormat;
-                    if (string.IsNullOrEmpty(dateFormat))
-                    {
-                        dateFormat = "D"; // Culturally safe Long Date Pattern
-                    }
+                    dateFormat = "D"; // Culturally safe Long Date Pattern
+                }
 
-                    dateText.ToolTip = DateTime.Now.ToString(dateFormat);
-                }, this.Dispatcher);
-            });
+                dateText.ToolTip = DateTime.Now.ToString(dateFormat);
+            }, this.Dispatcher);
         }
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)

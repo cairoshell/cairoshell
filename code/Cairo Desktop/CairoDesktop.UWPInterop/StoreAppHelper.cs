@@ -63,7 +63,12 @@ namespace CairoDesktop.UWPInterop
             Windows.Management.Deployment.PackageManager pman = new Windows.Management.Deployment.PackageManager();
             Windows.ApplicationModel.Package pkg = pman.FindPackageForUser(System.Security.Principal.WindowsIdentity.GetCurrent().User.ToString(), id);
 
-            return pkg.Id.Name;
+            string name = pkg.Id.Name;
+
+            if (name.IndexOf('.') > 0)
+                name = name.Substring(name.IndexOf('.') + 1);
+
+            return name;
         }
     }
 }

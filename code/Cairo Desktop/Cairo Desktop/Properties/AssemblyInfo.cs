@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -12,7 +11,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cairo Development Team")]
 [assembly: AssemblyProduct("Cairo Desktop Environment")]
-[assembly: AssemblyCopyright("Copyright © 2016 Cairo Development Team")]
+[assembly: AssemblyCopyright("Copyright © 2017 Cairo Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

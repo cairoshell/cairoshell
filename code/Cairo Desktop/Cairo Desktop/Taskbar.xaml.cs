@@ -5,6 +5,7 @@ using System.Windows.Interop;
 using CairoDesktop.Interop;
 using System.Windows.Threading;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace CairoDesktop
 {
@@ -46,7 +47,6 @@ namespace CairoDesktop
         {
             // Manually call dispose on window close...
             (TasksList.DataContext as WindowsTasks.WindowsTasksService).Dispose();
-            (TasksList2.DataContext as WindowsTasks.WindowsTasksService).Dispose();
 
             // show the windows taskbar again
             AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.OnTop);

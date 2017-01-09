@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -10,9 +9,9 @@ using System.Windows;
 [assembly: AssemblyTitle("Cairo Explorer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Cairo")]
-[assembly: AssemblyProduct("Cairo Explorer")]
-[assembly: AssemblyCopyright("Copyright © 2008 Cairo Development Team")]
+[assembly: AssemblyCompany("Cairo Development Team")]
+[assembly: AssemblyProduct("Cairo Desktop Environment")]
+[assembly: AssemblyCopyright("Copyright © 2017 Cairo Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,5 +50,4 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.2")]
-[assembly: AssemblyFileVersion("1.0.0.2")]
+[assembly: AssemblyVersion("0.2.*")]

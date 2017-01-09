@@ -23,7 +23,7 @@
             </Button.ContextMenu>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="25" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Image Source="{Binding Path=Icon, Converter={StaticResource iconConverter}}"

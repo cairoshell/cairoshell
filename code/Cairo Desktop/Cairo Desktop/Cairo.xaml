@@ -722,7 +722,7 @@
         <Setter Property="Width"
             Value="26" />
         <Setter Property="Height"
-            Value="26" />
+            Value="29" />
         <Setter Property="VerticalAlignment"
             Value="Center" />
         <Setter Property="Template">
@@ -730,10 +730,11 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
                         BorderThickness="1"
-                        Margin="0"
+                        CornerRadius="1"
+                        Margin="0,0,0,0"
                         Background="Transparent"
                         BorderBrush="Transparent">
-                        <ContentPresenter Margin="2,2,2,0"
+                        <ContentPresenter Margin="2,1,2,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
                     </Border>
@@ -811,17 +812,16 @@
         <Setter Property="Width"
             Value="140" />
         <Setter Property="Height"
-            Value="28" />
+            Value="29" />
         <Setter Property="VerticalAlignment"
             Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
-                
                 <!-- this is the style that loads on default buttons -->
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
                         BorderThickness="1"
-                        CornerRadius="1"
+                        CornerRadius="1,1,0,0"
                         Margin="0,0,0,0">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0"
@@ -847,7 +847,7 @@
                                     Offset="0" />
                             </LinearGradientBrush>
                         </Border.BorderBrush>
-                        <ContentPresenter Margin="5,0,5,0"
+                        <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" />
                     </Border>
@@ -941,7 +941,7 @@
         <Setter Property="Width"
             Value="140" />
         <Setter Property="Height"
-            Value="28" />
+            Value="29" />
         <Setter Property="VerticalAlignment"
             Value="Center" />
         <Setter Property="Template">
@@ -949,7 +949,7 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
                         BorderThickness="1"
-                        CornerRadius="1"
+                        CornerRadius="1,1,0,0"
                         Margin="0,0,0,0">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,1"
@@ -975,7 +975,7 @@
                                     Offset="0" />
                             </LinearGradientBrush>
                         </Border.BorderBrush>
-                        <ContentPresenter Margin="5,0,5,0"
+                        <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" />
                     </Border>
@@ -1049,7 +1049,7 @@
         <Setter Property="Width"
             Value="140" />
         <Setter Property="Height"
-            Value="28" />
+            Value="29" />
         <Setter Property="VerticalAlignment"
             Value="Center" />
         <Setter Property="Template">
@@ -1073,7 +1073,7 @@
                 	</ControlTemplate.Resources>
                     <Border x:Name="Border"
                         BorderThickness="1"
-                        CornerRadius="1"
+                        CornerRadius="1,1,0,0"
                         Margin="0,0,0,0">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,1"
@@ -1103,7 +1103,7 @@
                                     Offset="0.0" />
                             </LinearGradientBrush>
                         </Border.BorderBrush>
-                        <ContentPresenter Margin="5,0,5,0"
+                        <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" />
                     </Border>
@@ -1193,7 +1193,7 @@
         <Setter Property="Foreground"
             Value="White" />
         <Setter Property="Width"
-            Value="206" />
+            Value="350" />
         <Setter Property="Height"
             Value="24" />
         <Setter Property="VerticalAlignment"
@@ -1239,7 +1239,7 @@
         <Setter Property="Width"
             Value="24" />
         <Setter Property="Height"
-            Value="28" />
+            Value="29" />
         <Setter Property="VerticalAlignment"
             Value="Center" />
         <Setter Property="Template">
@@ -1275,7 +1275,7 @@
                                     Offset="0" />
                             </LinearGradientBrush>
                         </Border.BorderBrush>
-                        <ContentPresenter Margin="5,0,5,0"
+                        <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" />
                     </Border>
