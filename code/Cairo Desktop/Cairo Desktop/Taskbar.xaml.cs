@@ -129,5 +129,15 @@ namespace CairoDesktop
             // Windows bugs make this no bueno...
             //appbarMessageId = AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_BOTTOM);
         }
+
+        private void CollectionViewSource_Filter(object sender, System.Windows.Data.FilterEventArgs e)
+        {
+            WindowsTasks.ApplicationWindow window = e.Item as WindowsTasks.ApplicationWindow;
+
+            if (window.ShowInTaskbar)
+                e.Accepted = true;
+            else
+                e.Accepted = false;
+        }
     }
 }
