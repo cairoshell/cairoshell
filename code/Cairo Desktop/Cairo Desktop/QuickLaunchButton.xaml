@@ -11,7 +11,7 @@
             Margin="0,0,0,1"
             Style="{StaticResource CairoQuickLaunchButtonStyle}"
             ToolTip="{Binding Path=Name}">
-            <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}"
+            <Image Source="{Binding Path=Icon, Mode=OneWay}"
                 Width="16"
                 Height="16" />
         </Button>
