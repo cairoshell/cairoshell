@@ -143,7 +143,7 @@ namespace CairoDesktop.AppGrabber
                 ai.Name = UWPInterop.StoreAppHelper.GetAppName(id);
                 ai.Path = "appx:" + path;
                 ai.Target = path;
-                ai.Icon = ai.GetAssociatedIcon();
+                //ai.Icon = ai.GetAssociatedIcon();
 
                 storeApps.Add(ai);
             }
@@ -257,7 +257,7 @@ namespace CairoDesktop.AppGrabber
                         if (exclude)
                             continue;
 
-                        ai.Icon = ai.GetAssociatedIcon();
+                        //ai.Icon = ai.GetAssociatedIcon();
                         rval.Add(ai);
                     }
                     catch (Exception ex)

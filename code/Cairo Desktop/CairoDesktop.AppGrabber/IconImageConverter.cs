@@ -28,8 +28,9 @@ namespace CairoDesktop.AppGrabber
             }
 
             bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            bs.Freeze();
             NativeMethods.DestroyIcon(hIcon);
-
+            
             return bs;
         }
 

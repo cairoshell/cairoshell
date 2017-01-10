@@ -82,7 +82,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <ItemsControl Style="{StaticResource FolderViewStyle}" ItemsSource="{Binding Path=Files}" />
+                    <ItemsControl Style="{StaticResource FolderViewStyle}" ItemsSource="{Binding Path=Files, IsAsync=True}" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

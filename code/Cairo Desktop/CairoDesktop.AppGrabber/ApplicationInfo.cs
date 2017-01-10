@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.ComponentModel;
 
@@ -88,7 +84,16 @@ namespace CairoDesktop.AppGrabber
         /// ImageSource used to denote the application's icon in a graphical environment.
         /// </summary>
         public ImageSource Icon {
-            get { return icon; }
+            get
+            {
+                if (icon == null)
+                {
+                    icon = GetAssociatedIcon();
+                    icon.Freeze();
+                }
+
+                return icon;
+            }
             set {
                 icon = value;
                 // Notify Databindings of property change

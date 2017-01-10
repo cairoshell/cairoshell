@@ -114,7 +114,7 @@ namespace CairoDesktop.AppGrabber {
                         System.Diagnostics.Debug.WriteLine(app.Path + " does not exist");
                         continue;
                     }
-                    app.Icon = app.GetAssociatedIcon();
+                    //app.Icon = app.GetAssociatedIcon();
                     cat.Add(app);
                 }
             }

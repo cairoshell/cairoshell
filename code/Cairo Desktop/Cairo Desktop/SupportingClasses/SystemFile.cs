@@ -56,7 +56,7 @@ namespace CairoDesktop
 
             refProc.Dispose();
 
-            _dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() => GetDisplayIcon()));
+            //_dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() => Icon = GetDisplayIcon()));
         }
 
         /// <summary>
@@ -82,6 +82,12 @@ namespace CairoDesktop
         {
             get
             {
+                if (_icon == null)
+                {
+                    _icon = GetDisplayIcon();
+                    _icon.Freeze();
+                }
+
                 return _icon;
             }
             set
@@ -141,7 +147,7 @@ namespace CairoDesktop
         /// Retrieves the display icon of the file.
         /// If the file is an image then it will return the image its self (e.g. preview).
         /// </summary>
-        private void GetDisplayIcon()
+        private ImageSource GetDisplayIcon()
         {
             if (GetFileIsImage(this.FullName))
             {
@@ -155,17 +161,17 @@ namespace CairoDesktop
                     img.EndInit();
                     img.Freeze();
 
-                    this.Icon = img;
+                    return img;
                 }
                 catch
                 {
-                    this.Icon = AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
+                    return AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
                 }
             } 
             else 
             {
                 // This will attempts to get the icon via AppGrabber - if it fails the default icon will be returned.
-                this.Icon = AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
+                return AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
             }
         }
 
