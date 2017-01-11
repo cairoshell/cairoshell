@@ -20,7 +20,7 @@ namespace CairoDesktop
             DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Normal, delegate
             {
                 this.Width = AppBarHelper.PrimaryMonitorSize.Width;
-                this.Top = 23;
+                this.Top = Startup.MenuBarWindow.ActualHeight;
                 this.Left = 0;
             }, this.Dispatcher);
         }

@@ -220,7 +220,6 @@
                         <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}"
                             Width="16"
                             Height="16"
-                            Stretch="None"
                             DockPanel.Dock="Left" />
                         <TextBlock Text="{Binding Path=Name}"
                             Margin="3"

@@ -25,7 +25,7 @@ namespace CairoDesktop.SupportingClasses
             OnTop = 0
         }
 
-        public static int RegisterBar(IntPtr handle, Size size, ABEdge edge = ABEdge.ABE_TOP)
+        public static int RegisterBar(IntPtr handle, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = Marshal.SizeOf(abd);
@@ -39,7 +39,7 @@ namespace CairoDesktop.SupportingClasses
                 uint ret = NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_NEW, ref abd);
                 appBars.Add(handle);
 
-                ABSetPos(handle, size, edge);
+                ABSetPos(handle, width, height, edge);
             }
             else
             {
@@ -69,42 +69,47 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETSTATE, ref abd);
         }
 
-        public static void ABSetPos(IntPtr handle, Size size, ABEdge edge)
+        public static void ABSetPos(IntPtr handle, double width, double height, ABEdge edge)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = Marshal.SizeOf(abd);
             abd.hWnd = handle;
             abd.uEdge = (int)edge;
+            int sWidth;
+            int sHeight;
+
+            // adjust size for dpi
+            TransformToPixels(width, height, out sWidth, out sHeight);
 
             if (abd.uEdge == (int)ABEdge.ABE_LEFT || abd.uEdge == (int)ABEdge.ABE_RIGHT)
             {
                 abd.rc.top = 0;
-                abd.rc.bottom = PrimaryMonitorSize.Height;
+                abd.rc.bottom = PrimaryMonitorDeviceSize.Height;
                 if (abd.uEdge == (int)ABEdge.ABE_LEFT)
                 {
                     abd.rc.left = 0;
-                    abd.rc.right = size.Width;
+                    abd.rc.right = sWidth;
                 }
                 else
                 {
-                    abd.rc.right = PrimaryMonitorSize.Width;
-                    abd.rc.left = abd.rc.right - size.Width;
+                    abd.rc.right = PrimaryMonitorDeviceSize.Width;
+                    abd.rc.left = abd.rc.right - sWidth;
                 }
 
             }
             else
             {
                 abd.rc.left = 0;
-                abd.rc.right = PrimaryMonitorSize.Width;
+                abd.rc.right = PrimaryMonitorDeviceSize.Width;
                 if (abd.uEdge == (int)ABEdge.ABE_TOP)
                 {
                     abd.rc.top = 0;
-                    abd.rc.bottom = size.Height;
+                    abd.rc.bottom = sHeight;
                 }
                 else
                 {
-                    abd.rc.bottom = PrimaryMonitorSize.Height;
-                    abd.rc.top = abd.rc.bottom - size.Height;
+                    abd.rc.bottom = PrimaryMonitorDeviceSize.Height;
+                    abd.rc.top = abd.rc.bottom - sHeight;
                 }
             }
 
@@ -113,16 +118,16 @@ namespace CairoDesktop.SupportingClasses
             switch (abd.uEdge)
             {
                 case (int)ABEdge.ABE_LEFT:
-                    abd.rc.right = abd.rc.left + size.Width;
+                    abd.rc.right = abd.rc.left + sWidth;
                     break;
                 case (int)ABEdge.ABE_RIGHT:
-                    abd.rc.left = abd.rc.right - size.Width;
+                    abd.rc.left = abd.rc.right - sWidth;
                     break;
                 case (int)ABEdge.ABE_TOP:
-                    abd.rc.bottom = abd.rc.top + size.Height;
+                    abd.rc.bottom = abd.rc.top + sHeight;
                     break;
                 case (int)ABEdge.ABE_BOTTOM:
-                    abd.rc.top = abd.rc.bottom - size.Height;
+                    abd.rc.top = abd.rc.bottom - sHeight;
                     break;
             }
 
@@ -139,10 +144,18 @@ namespace CairoDesktop.SupportingClasses
         {
             get
             {
+                return new Size(Convert.ToInt32(System.Windows.SystemParameters.VirtualScreenWidth), Convert.ToInt32(System.Windows.SystemParameters.VirtualScreenHeight));
+            }
+        }
+
+        public static Size PrimaryMonitorDeviceSize
+        {
+            get
+            {
                 return new Size(NativeMethods.GetSystemMetrics(0), NativeMethods.GetSystemMetrics(1));
             }
         }
-        
+
         private static NativeMethods.RECT oldWorkArea;
         
         public static void SetWorkArea()
@@ -170,6 +183,23 @@ namespace CairoDesktop.SupportingClasses
         public static void ResetWorkArea()
         {
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
+        }
+
+        /// <summary>
+        /// Transforms device independent units (1/96 of an inch)
+        /// to pixels
+        /// </summary>
+        /// <param name="unitX">a device independent unit value X</param>
+        /// <param name="unitY">a device independent unit value Y</param>
+        /// <param name="pixelX">returns the X value in pixels</param>
+        /// <param name="pixelY">returns the Y value in pixels</param>
+        public static void TransformToPixels(double unitX, double unitY, out int pixelX, out int pixelY)
+        {
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                pixelX = (int)((g.DpiX / 96) * unitX);
+                pixelY = (int)((g.DpiY / 96) * unitY);
+            }
         }
     }
 }

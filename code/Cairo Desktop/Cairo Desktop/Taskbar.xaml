@@ -43,10 +43,10 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListView}">
-                            <Border SnapsToDevicePixels="true"
+                            <Border UseLayoutRounding="true"
                                 x:Name="Bd"
                                 Background="{TemplateBinding Background}">
-                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Focusable="False" />
+                                <ItemsPresenter UseLayoutRounding="{TemplateBinding UseLayoutRounding}" Focusable="False" />
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled"

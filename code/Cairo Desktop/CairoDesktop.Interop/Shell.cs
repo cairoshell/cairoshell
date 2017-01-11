@@ -43,9 +43,7 @@ namespace CairoDesktop.Interop
                     hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.UseFileAttributes | SHGFI.SysIconIndex | flags));
                 }
 
-                IntPtr hIcon = ImageList_GetIcon(hIconInfo, shinfo.iIcon.ToInt32(), (int)0x00000001);
-
-                DestroyIcon(shinfo.hIcon);
+                IntPtr hIcon = ImageList_GetIcon(hIconInfo, shinfo.iIcon, (int)0x00000001);
 
                 return hIcon;
             }

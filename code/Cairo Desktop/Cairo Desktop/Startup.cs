@@ -72,8 +72,9 @@
             #endregion
 
             // Show a splash screen while WPF inits
-            SplashScreen splash = new SplashScreen("Resources/loadSplash.png");
-            splash.Show(false, true);
+            // not needed any more
+            //SplashScreen splash = new SplashScreen("Resources/loadSplash.png");
+            //splash.Show(false, true);
 
             #region some real shell code
             int hShellReadyEvent;
@@ -172,7 +173,7 @@
 #endif
 
             // Close the splash screen
-            splash.Close(new TimeSpan(0, 0, 0, 0, 800));
+            //splash.Close(new TimeSpan(0, 0, 0, 0, 800));
 
             // login items only necessary if Explorer didn't start them
             if (IsCairoUserShell && !isRestart)

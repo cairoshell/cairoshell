@@ -48,7 +48,7 @@
         TargetType="{x:Type Menu}">
         <Setter Property="OverridesDefaultStyle"
             Value="True" />
-        <Setter Property="SnapsToDevicePixels"
+        <Setter Property="UseLayoutRounding"
             Value="True" />
         <Setter Property="Template">
             <Setter.Value>
@@ -1675,7 +1675,7 @@
     <!-- Scrollbars -->
     <Style x:Key="ScrollBarPageButton"
         TargetType="{x:Type RepeatButton}">
-        <Setter Property="SnapsToDevicePixels"
+        <Setter Property="UseLayoutRounding"
             Value="True" />
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
@@ -1693,7 +1693,7 @@
     </Style>
     <Style x:Key="ScrollBarThumb"
         TargetType="{x:Type Thumb}">
-        <Setter Property="SnapsToDevicePixels"
+        <Setter Property="UseLayoutRounding"
             Value="True" />
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
@@ -1767,7 +1767,7 @@
     </ControlTemplate>
     <Style x:Key="{x:Type ScrollBar}"
         TargetType="{x:Type ScrollBar}">
-        <Setter Property="SnapsToDevicePixels"
+        <Setter Property="UseLayoutRounding"
             Value="True" />
         <Setter Property="OverridesDefaultStyle"
             Value="True" />
@@ -1863,7 +1863,7 @@
         <Setter Property="Padding" Value="0,5" />
         <Setter Property="Margin" Value="0,-5" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabControl}">
@@ -2400,7 +2400,7 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="CalendarButtonStyle" Value="{DynamicResource CairoCalendarButtonStyle}"/>
         <Setter Property="CalendarDayButtonStyle" Value="{DynamicResource CairoCalendarDayButtonStyle}"/>
-        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
 

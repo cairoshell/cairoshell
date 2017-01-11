@@ -105,7 +105,7 @@ namespace CairoDesktop
 
         private void shutdown()
         {
-            AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight));
+            AppBarHelper.RegisterBar(handle, this.ActualWidth, this.ActualHeight);
             AppBarHelper.ResetWorkArea();
             SysTray.DestroySystemTray();
             Application.Current.Shutdown();
@@ -174,7 +174,8 @@ namespace CairoDesktop
                 {
                     case 1:
                         // Reposition to the top of the screen.
-                        AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
+                        // this doesn't appear to be necessary
+                        AppBarHelper.ABSetPos(handle, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
                         break;
                 }
                 handled = true;
@@ -197,7 +198,7 @@ namespace CairoDesktop
 
             handle = helper.Handle;
 
-            appbarMessageId = AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_TOP);
+            appbarMessageId = AppBarHelper.RegisterBar(handle, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
 
             DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Normal, delegate
             {

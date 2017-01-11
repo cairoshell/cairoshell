@@ -2,7 +2,7 @@
 <UserControl x:Class="CairoDesktop.DesktopIcons"
  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    x:Name="CairoDesktopIcons">
+    x:Name="CairoDesktopIcons" UseLayoutRounding="True">
     <UserControl.Resources>
         <ResourceDictionary>
             <Style x:Key="FolderViewStyle"
@@ -19,7 +19,7 @@
                         <DataTemplate>
                             <Button MouseDoubleClick="File_Button_Click"
                                 CommandParameter="{Binding Path=FullName}"
-                                Style="{StaticResource CairoDesktopButtonStyle}" UseLayoutRounding="True">
+                                Style="{StaticResource CairoDesktopButtonStyle}">
                                 <DockPanel>
                                     <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}" Stretch="Uniform" Width="32" Height="32" DockPanel.Dock="Top" RenderOptions.BitmapScalingMode="LowQuality" />
                                     <Border DockPanel.Dock="Bottom">

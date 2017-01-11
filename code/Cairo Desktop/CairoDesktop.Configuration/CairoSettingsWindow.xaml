@@ -52,7 +52,7 @@
         </Style>
         <Style x:Key="SettingsTabControl" TargetType="{x:Type TabControl}">
             <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="UseLayoutRounding" Value="True" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TabControl}">

@@ -90,6 +90,7 @@ namespace CairoDesktop.AppGrabber
                 img.BeginInit();
                 img.UriSource = new Uri("pack://application:,,/Resources/nullIcon.png", UriKind.RelativeOrAbsolute);
                 img.EndInit();
+                img.Freeze();
             }
             catch
             {

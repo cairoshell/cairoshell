@@ -10,7 +10,7 @@
 	x:Name="messageWindow"
     Topmost="True"
 	AllowsTransparency="True"
-	Background="Transparent"
+	Background="Transparent" UseLayoutRounding="True"
 	WindowStartupLocation="CenterScreen" SourceInitialized="messageWindow_SourceInitialized">
 	<Window.Resources>
         <ResourceDictionary>

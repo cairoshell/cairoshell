@@ -6,7 +6,7 @@
     AllowsTransparency="True"
     WindowStyle="None"
     Background="Transparent"
-    WindowStartupLocation="CenterScreen">
+    WindowStartupLocation="CenterScreen" UseLayoutRounding="True">
     <Window.Resources>
         <ResourceDictionary Source="AppGrabberUIResources.xaml" />
     </Window.Resources>
