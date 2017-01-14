@@ -14,6 +14,7 @@
     <BitmapImage x:Key="CairoMenuIcon" UriSource="Resources\cairoMenuDefault.png"></BitmapImage>
     <BitmapImage x:Key="CairoSearchIcon" UriSource="Resources\searchDefault.png"></BitmapImage>
     <BitmapImage x:Key="MenubarShadow" UriSource="Resources\menubarShadow.png"></BitmapImage>
+    <BitmapImage x:Key="NullIcon" UriSource="Resources\nullIcon.png"></BitmapImage>
     <Style TargetType="{x:Type Control}">
         <Setter Property="Template">
             <Setter.Value>
@@ -551,7 +552,7 @@
                             <MenuItem.HeaderTemplate>
                                 <ItemContainerTemplate>
                                     <StackPanel Orientation="Horizontal" Margin="-20,0,0,0">
-                                        <Image Source="{Binding Path=Icon, Mode=OneWay}"
+                                        <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                                         Height="32"
                                         Width="32" Margin="0,0,10,0" />
                                         <StackPanel Orientation="Vertical">

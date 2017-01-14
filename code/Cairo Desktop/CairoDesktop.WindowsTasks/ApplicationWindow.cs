@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using CairoDesktop.Interop;
 using CairoDesktop.AppGrabber;
+using System.Windows.Threading;
 
 namespace CairoDesktop.WindowsTasks
 {
@@ -20,6 +21,14 @@ namespace CairoDesktop.WindowsTasks
                 TasksService = sourceService;
                 sourceService.Redraw += HandleRedraw;
             }
+
+            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Normal, delegate
+            {
+                // some windows don't send a redraw notification after a property changes, try to catch those cases here
+                OnPropertyChanged("Title");
+                OnPropertyChanged("Icon");
+                OnPropertyChanged("ShowInTaskbar");
+            }, System.Windows.Application.Current.Dispatcher);
         }
 
         public ApplicationWindow(IntPtr handle) : this(handle, null)
@@ -125,11 +134,6 @@ namespace CairoDesktop.WindowsTasks
             {
                 _state = value;
                 OnPropertyChanged("State");
-
-                // some windows don't send a redraw notification after a property changes, try to catch those cases here
-                OnPropertyChanged("Title");
-                OnPropertyChanged("Icon");
-                OnPropertyChanged("ShowInTaskbar");
             }
         }
 

@@ -16,6 +16,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <BitmapImage x:Key="NullIcon" UriSource="pack://application:,,/Resources/nullIcon.png"></BitmapImage>
     <Style x:Key="AppGrabberListBoxHeaderStyle"
         TargetType="{x:Type TextBlock}">
         <Setter Property="TextAlignment"
@@ -217,7 +218,7 @@
                 <DataTemplate>
                     <DockPanel MinHeight="20"
                         VerticalAlignment="Center">
-                        <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}"
+                        <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                             Width="16"
                             Height="16"
                             DockPanel.Dock="Left" />

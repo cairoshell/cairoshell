@@ -2,6 +2,23 @@
 {
     public class Settings
     {
+        private static Settings instance;
+
+        public Settings() { }
+
+        public static Settings Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Settings();
+                }
+
+                return instance;
+            }
+        }
+
         #region Private properties for caching
 
         // General

@@ -116,25 +116,25 @@
             <ImageBrush ImageSource="Resources\desktopControlsBg.png" />
         </StackPanel.Background>
         <Button Style="{StaticResource CairoDesktopNavItemStyle}"
-                    Margin="27,-4,0,0" Click="Back_Click">
+                    Margin="29,-4,0,0" Click="Back_Click">
             <Image Source="Resources\controlsBack.png"
                         Width="16"
                         Height="18" />
         </Button>
         <Button Style="{StaticResource CairoDesktopNavItem2Style}"
-                    Margin="26,-5,0,0" Click="Home_Click">
+                    Margin="23,-5,0,0" Click="Home_Click">
             <Image Source="Resources\controlsHome.png"
                         Width="21"
                         Height="19" />
         </Button>
         <Button Style="{StaticResource CairoDesktopNavItem2Style}"
-                    Margin="26,-5,0,0" Click="Browse_Click">
+                    Margin="22,-5,0,0" Click="Browse_Click">
             <Image Source="Resources\controlsBrowse.png"
                         Width="21"
                         Height="19" />
         </Button>
         <Button Style="{StaticResource CairoDesktopNavItemStyle}"
-                    Margin="25,-4,0,0" Click="Fwd_Click">
+                    Margin="23,-4,0,0" Click="Fwd_Click">
             <Image Source="Resources\controlsForward.png"
                         Width="16"
                         Height="18" />

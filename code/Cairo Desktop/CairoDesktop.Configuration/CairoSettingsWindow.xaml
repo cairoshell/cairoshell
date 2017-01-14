@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="CairoDesktop.Configuration.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration.Properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+<Window x:Class="CairoDesktop.Configuration.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Cairo Settings"
     Height="245"
     Width="520"
@@ -159,7 +159,7 @@
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Theme:" ToolTip="Place themes into your Cairo installation directory." />
-                        <ComboBox Name="cboThemeSelect" DropDownClosed="themeSetting_Changed" IsDropDownOpen="False" IsEditable="False" />
+                        <ComboBox Name="cboThemeSelect" DropDownClosed="themeSetting_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=CairoTheme}" />
                     </StackPanel>
                     <CheckBox Content="Show sub-directories"
                         IsChecked="{Binding Path=EnableSubDirs}"

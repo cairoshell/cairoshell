@@ -35,7 +35,7 @@
                                 CommandParameter="{Binding Path=Path}"
                                 Click="LaunchProgram">
                                 <MenuItem.Icon>
-                                    <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}"
+                                    <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                                         Height="16"
                                         Width="16" />
                                 </MenuItem.Icon>

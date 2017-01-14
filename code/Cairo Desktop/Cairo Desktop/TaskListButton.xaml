@@ -26,7 +26,7 @@
                     <ColumnDefinition Width="25" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image Source="{Binding Path=Icon, Converter={StaticResource iconConverter}, Mode=OneWay, IsAsync=True}"
+                <Image Source="{Binding Path=Icon, Converter={StaticResource iconConverter}, Mode=OneWay}"
                     Width="16"
                     Height="16"
                     Grid.Column="0" Margin="3,0,6,0"/>

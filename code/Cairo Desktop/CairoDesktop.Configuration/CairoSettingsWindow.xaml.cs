@@ -49,64 +49,51 @@
         private void loadThemes()
         {
             cboThemeSelect.Items.Add("Default");
-            cboThemeSelect.SelectedIndex = 0;
+            
             foreach (string subStr in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory).Where(s => Path.GetExtension(s).Contains("xaml")))
             {
                 string theme = Path.GetFileName(subStr);
                 cboThemeSelect.Items.Add(theme);
-
-                if (theme == Settings.CairoTheme)
-                    cboThemeSelect.SelectedIndex = cboThemeSelect.Items.Count - 1;
             }
         }
 
         private void EnableDesktop_Click(object sender, RoutedEventArgs e)
         {
-            Settings.EnableDesktop = (bool)chkEnableDesktop.IsChecked;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void EnableDynamicDesktop_Click(object sender, RoutedEventArgs e)
         {
-            Settings.EnableDynamicDesktop = (bool)chkEnableDynamicDesktop.IsChecked;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void EnableSubDirs_Click(object sender, RoutedEventArgs e)
         {
-            Settings.EnableSubDirs = (bool)chkEnableSubDirs.IsChecked;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void ShowFileExtensions_Click(object sender, RoutedEventArgs e)
         {
-            Settings.ShowFileExtensions = (bool)chkShowFileExtensions.IsChecked;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void EnableTaskbar_Click(object sender, RoutedEventArgs e)
         {
-            Settings.EnableTaskbar = (bool)chkEnableTaskbar.IsChecked;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void EnableMenuBarShadow_Click(object sender, RoutedEventArgs e)
         {
-            Settings.EnableMenuBarShadow = (bool)chkEnableMenuBarShadow.IsChecked;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void EnableSysTray_Click(object sender, RoutedEventArgs e)
         {
-            Settings.EnableSysTray = (bool)chkEnableSysTray.IsChecked;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void themeSetting_Changed(object sender, EventArgs e)
         {
-            string s1 = cboThemeSelect.SelectedValue.ToString();
-            s1.Replace("'", "");
-            Settings.CairoTheme = s1;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 
@@ -141,9 +128,7 @@
 
         private void saveChanges()
         {
-            Settings.TimeFormat = timeSetting.Text;
-            Settings.DateFormat = dateSetting.Text;
-            Settings.DesktopDirectory = txtDesktopHome.Text;
+            // placeholder in case we need to do extra work in the future
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)
