@@ -12,6 +12,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Interop", "CairoDesktop.Interop\CairoDesktop.Interop.csproj", "{233781C8-83E4-47A6-847E-FA7A31B1CC51}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.AppGrabber", "CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj", "{DE9674CC-507E-4049-9152-5C899B9F0939}"
+	ProjectSection(ProjectDependencies) = postProject
+		{52A795C9-3C28-487A-B7B8-AAB324DA7305} = {52A795C9-3C28-487A-B7B8-AAB324DA7305}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo.WindowsHooksWrapper", "Cairo.WindowsHooksWrapper\Cairo.WindowsHooksWrapper.csproj", "{79B5DDAC-5102-4B11-BFA1-B16D6F6FE661}"
 EndProject

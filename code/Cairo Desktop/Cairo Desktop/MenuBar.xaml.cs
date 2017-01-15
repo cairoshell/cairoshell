@@ -29,7 +29,7 @@ namespace CairoDesktop
         {
             InitializeComponent();
 
-            Width = AppBarHelper.PrimaryMonitorSize.Width;
+            Width = SystemParameters.WorkArea.Width;
 
             setupPlaces();
 
@@ -204,7 +204,7 @@ namespace CairoDesktop
             {
                 this.Top = 0;
                 this.Left = 0;
-                this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+                this.Width = SystemParameters.WorkArea.Width;
             }, this.Dispatcher);
         }
 
