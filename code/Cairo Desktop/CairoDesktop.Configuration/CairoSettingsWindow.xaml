@@ -157,10 +157,6 @@
             </TabControl.Resources>
             <TabItem Header="General">
                 <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Theme:" ToolTip="Place themes into your Cairo installation directory." />
-                        <ComboBox Name="cboThemeSelect" DropDownClosed="themeSetting_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=CairoTheme}" />
-                    </StackPanel>
                     <CheckBox Content="Show sub-directories"
                         IsChecked="{Binding Path=EnableSubDirs}"
                         Click="EnableSubDirs_Click"
@@ -169,6 +165,10 @@
                         IsChecked="{Binding Path=ShowFileExtensions}"
                         Click="ShowFileExtensions_Click"
                         Name="chkShowFileExtensions" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Theme:" ToolTip="Place themes into your Cairo installation directory." />
+                        <ComboBox Name="cboThemeSelect" DropDownClosed="themeSetting_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=CairoTheme}" />
+                    </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Time format:" />
                         <TextBox Text="{Binding Path=TimeFormat}"
@@ -228,6 +228,7 @@
                         <TextBlock TextAlignment="Center" TextWrapping="Wrap">Restart Cairo to apply</TextBlock>
                     </StackPanel>
                 </TabItem.Header>
+                <TextBlock Foreground="#55FFFFFF" FontSize="14">Restarting...</TextBlock>
             </TabItem>
         </TabControl>
     </Grid>
