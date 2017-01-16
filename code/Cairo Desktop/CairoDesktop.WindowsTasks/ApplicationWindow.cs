@@ -26,7 +26,7 @@ namespace CairoDesktop.WindowsTasks
             {
                 // some windows don't send a redraw notification after a property changes, try to catch those cases here
                 OnPropertyChanged("Title");
-                OnPropertyChanged("Icon");
+                //OnPropertyChanged("Icon");
                 OnPropertyChanged("ShowInTaskbar");
             }, System.Windows.Application.Current.Dispatcher);
         }
@@ -55,20 +55,12 @@ namespace CairoDesktop.WindowsTasks
             {
                 if(_category == null)
                 {
-                    // get process id
-                    uint procId;
-                    NativeMethods.GetWindowThreadProcessId(this.Handle, out procId);
-
-                    // open process
-                    IntPtr hProc = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryInformation | NativeMethods.ProcessAccessFlags.VirtualMemoryRead, false, (int)procId);
-
-                    // get filename
-                    StringBuilder outFileName = new StringBuilder(1024);
-                    NativeMethods.GetModuleFileNameEx(hProc, IntPtr.Zero, outFileName, outFileName.Capacity);
+                    // get file
+                    string winFileName = GetFileNameForWindow(this.Handle);
 
                     foreach(ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
                     {
-                        if(ai.Target == outFileName.ToString())
+                        if(ai.Target == winFileName)
                         {
                             _category = ai.Category.Name;
                             break;
@@ -84,6 +76,25 @@ namespace CairoDesktop.WindowsTasks
             {
                 _category = value;
             }
+        }
+
+        public static string GetFileNameForWindow(IntPtr hWnd)
+        {
+            // get process id
+            uint procId;
+            NativeMethods.GetWindowThreadProcessId(hWnd, out procId);
+
+            // open process
+            IntPtr hProc = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryInformation | NativeMethods.ProcessAccessFlags.VirtualMemoryRead, false, (int)procId);
+
+            // get filename
+            StringBuilder outFileName = new StringBuilder(1024);
+            NativeMethods.GetModuleFileNameEx(hProc, IntPtr.Zero, outFileName, outFileName.Capacity);
+
+            outFileName.Replace("Excluded,", "");
+            outFileName.Replace(",SFC protected", "");
+
+            return outFileName.ToString();
         }
 
         public string Title
@@ -186,11 +197,11 @@ namespace CairoDesktop.WindowsTasks
             int GCL_HICON = -14;
             int GCL_HICONSM = -34;
 
-            NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 2, 0, 2, 200, ref hIco);
+            NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 2, 0, 2, 1000, ref hIco);
 
             if (hIco == IntPtr.Zero)
             {
-                NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 0, 0, 2, 200, ref hIco);
+                NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 0, 0, 2, 1000, ref hIco);
             }
 
             if (hIco == IntPtr.Zero)
@@ -207,6 +218,13 @@ namespace CairoDesktop.WindowsTasks
                     hIco = NativeMethods.GetClassLong(hWnd, GCL_HICON);
                 else
                     hIco = NativeMethods.GetClassLongPtr(hWnd, GCL_HICON);
+            }
+
+            if (hIco == IntPtr.Zero)
+            {
+                string winFileName = GetFileNameForWindow(hWnd);
+                if (Shell.Exists(winFileName))
+                    hIco = Shell.GetIconByFilename(winFileName, true);
             }
 
             return hIco;
