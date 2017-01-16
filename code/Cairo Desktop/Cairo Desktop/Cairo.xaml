@@ -1189,7 +1189,7 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Padding" Value="0,5,0,5"/>
-        <Setter Property="Margin" Value="5,0,5,11" />
+        <Setter Property="Margin" Value="5,0,5,28" />
         <Setter Property="Effect" Value="{StaticResource ResourceKey=CairoMenuShadow}" />
     </Style>
     <Style x:Key="CairoTaskListButtonStyle"
@@ -1237,7 +1237,7 @@
     </Style>
     <!-- Style for list button on taskbar -->
     <Style x:Key="CairoTaskbarButtonList"
-        TargetType="{x:Type Button}">
+        TargetType="{x:Type ToggleButton}">
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
         <Setter Property="FontFamily"
@@ -1256,7 +1256,7 @@
             <Setter.Value>
 
                 <!-- this is the style that loads on default buttons -->
-                <ControlTemplate TargetType="{x:Type Button}">
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border x:Name="Border"
                         BorderThickness="1"
                         CornerRadius="0,8,0,0"
@@ -1326,12 +1326,8 @@
                                     Offset="1.0" />
                                         <GradientStop Color="#1fFFFFFF"
                                     Offset="0.0" />
-
                                     </LinearGradientBrush>
-                                    
-                                    
                                 </Setter.Value>
-                                
                             </Setter>
                             <Setter TargetName="Border"
                                 Property="BorderBrush">
@@ -1371,6 +1367,33 @@
                                     Offset="1" />
                                         <GradientStop Color="#8F005A78"
                                     Offset="0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsChecked"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                        <GradientStop Color="#44FFFFFF"
+                                    Offset="0.0" />
+                                        <GradientStop Color="#22FFFFFF"
+                                    Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Border"
+                                Property="BorderBrush">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                        <GradientStop Color="#66FFFFFF"
+                                    Offset="0" />
+                                        <GradientStop Color="#44FFFFFF"
+                                    Offset="1" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
                             </Setter>

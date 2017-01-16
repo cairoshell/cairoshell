@@ -45,20 +45,6 @@ namespace CairoDesktop
             AppBarHelper.SetWinTaskbarPos(NativeMethods.SWP_SHOWWINDOW);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.CairoTaskbarTaskList.IsOpen == false)
-            {
-                this.CairoTaskbarTaskList.IsOpen = true;
-                this.CairoTaskbarTaskList.StaysOpen = false;
-            }
-            else
-            {
-                this.CairoTaskbarTaskList.IsOpen = false;
-                this.CairoTaskbarTaskList.StaysOpen = false;
-            }
-        }
-
         private void setPosition()
         {
             double screen = AppBarHelper.PrimaryMonitorSize.Height;

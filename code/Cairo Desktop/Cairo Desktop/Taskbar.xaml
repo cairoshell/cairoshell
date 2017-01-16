@@ -160,7 +160,7 @@
                                             <ControlTemplate>
                                                 <Border BorderThickness="3,0,1,0" BorderBrush="Transparent">
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="#77000000">
-                                                    <ItemsPresenter />
+                                                        <ItemsPresenter />
                                                     </Border>
                                                 </Border>
                                             </ControlTemplate>
@@ -223,16 +223,16 @@
                 </LinearGradientBrush>
             </Border.BorderBrush>
             <StackPanel Orientation="Horizontal">
-                <Button Margin="1,-1,-1,0" Style="{StaticResource CairoTaskbarButtonList}" Click="Button_Click">
+                <ToggleButton x:Name="btnTaskList" Margin="1,-1,-1,0" Style="{StaticResource CairoTaskbarButtonList}">
                     <Image Source="Resources\taskListIcon.png"
                            Width="15"
                            Height="12"
                            Opacity="0.3"
                            Margin="0,0,0,0"></Image>
-                </Button>
-                <Popup Placement="Top" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade">
-                <Border Style="{StaticResource CairoTaskListPopupStyle}">
-                    <ListView HorizontalAlignment="Stretch"
+                </ToggleButton>
+                <Popup Placement="Relative" PlacementTarget="{Binding ElementName=btnTaskList}" HorizontalOffset="-428" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{Binding ElementName=btnTaskList, Path=IsChecked}">
+                    <Border Style="{StaticResource CairoTaskListPopupStyle}">
+                        <ListView HorizontalAlignment="Stretch"
                     ItemsSource="{Binding Source={StaticResource groupedWindows}}"
                     Background="{x:Null}"
                     BorderBrush="#FF908382"
@@ -292,10 +292,9 @@
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
-                </Border>
-            </Popup>
-                </StackPanel>
+                    </Border>
+                </Popup>
+            </StackPanel>
         </Border>
     </Grid>
-    
 </Window>
