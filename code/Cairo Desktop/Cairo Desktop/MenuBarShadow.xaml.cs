@@ -15,13 +15,16 @@ namespace CairoDesktop
         {
             InitializeComponent();
 
-            this.Width = Startup.MenuBarWindow.ActualWidth;
+            SetPosition();
         }
 
         public void SetPosition()
         {
-            this.Width = Startup.MenuBarWindow.ActualWidth;
-            this.Top = Startup.MenuBarWindow.ActualHeight;
+            if (Startup.MenuBarWindow != null)
+            {
+                this.Width = Startup.MenuBarWindow.ActualWidth;
+                this.Top = Startup.MenuBarWindow.ActualHeight;
+            }
             this.Left = 0;
         }
 

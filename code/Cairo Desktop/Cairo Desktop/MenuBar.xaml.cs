@@ -161,7 +161,7 @@ namespace CairoDesktop
         #endregion
 
         #region Events
-        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
+        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (appbarMessageId == -1)
             {
@@ -170,7 +170,7 @@ namespace CairoDesktop
 
             if (msg == appbarMessageId)
             {
-                switch (wparam.ToInt32())
+                switch (wParam.ToInt32())
                 {
                     case 1:
                         // Reposition to the top of the screen.
@@ -183,7 +183,26 @@ namespace CairoDesktop
                 handled = true;
             }
 
+            if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            {
+                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                handled = true;
+            }
+
             return IntPtr.Zero;
+        }
+
+        private void setPosition(uint x, uint y)
+        {
+            int sWidth;
+            int sHeight;
+            // adjust size for dpi
+            AppBarHelper.TransformFromPixels(x, y, out sWidth, out sHeight);
+            this.Top = 0;
+            this.Left = 0;
+            this.Width = sWidth;
+            if (Startup.MenuBarShadowWindow != null)
+                Startup.MenuBarShadowWindow.SetPosition();
         }
 
         private void OnWindowInitialized(object sender, EventArgs e)

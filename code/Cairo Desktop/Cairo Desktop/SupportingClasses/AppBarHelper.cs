@@ -203,5 +203,14 @@ namespace CairoDesktop.SupportingClasses
                 pixelY = (int)((g.DpiY / 96) * unitY);
             }
         }
+
+        public static void TransformFromPixels(double unitX, double unitY, out int pixelX, out int pixelY)
+        {
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                pixelX = (int)(unitX / (g.DpiX / 96));
+                pixelY = (int)(unitY / (g.DpiY / 96));
+            }
+        }
     }
 }

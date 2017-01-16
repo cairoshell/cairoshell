@@ -67,21 +67,15 @@ namespace CairoDesktop
         private void setPosition(uint x, uint y)
         {
             displayChanged = true;
-            double screen = y;
-            double workArea = SystemParameters.WorkArea.Bottom;
-
-            if (screen - workArea == this.Height)
-            {
-                this.Top = screen - this.Height;
-            }
-            else
-            {
-                // set to bottom of workspace
-                this.Top = screen - this.Height;
-            }
+            int sWidth;
+            int sHeight;
+            // adjust size for dpi
+            AppBarHelper.TransformFromPixels(x, y, out sWidth, out sHeight);
+            
+            this.Top = sHeight - this.Height;
             this.Left = 0;
-            this.TaskbarBorder.MaxWidth = x - 36;
-            this.Width = x;
+            this.TaskbarBorder.MaxWidth =sWidth - 36;
+            this.Width = sWidth;
         }
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

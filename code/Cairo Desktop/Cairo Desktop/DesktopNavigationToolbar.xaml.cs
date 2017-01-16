@@ -20,19 +20,24 @@ namespace CairoDesktop
         {
             InitializeComponent();
 
-            setLocation();
+            setPosition();
         }
 
-        private void setLocation()
+        private void setPosition()
         {
             this.Top = AppBarHelper.PrimaryMonitorSize.Height - this.Height - 150;
             this.Left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (this.Width / 2);
         }
 
-        private void setLocation(uint x, uint y)
+        private void setPosition(uint x, uint y)
         {
-            this.Top = y - this.Height - 150;
-            this.Left = (x / 2) - (this.Width / 2);
+            int sWidth;
+            int sHeight;
+            // adjust size for dpi
+            AppBarHelper.TransformFromPixels(x, y, out sWidth, out sHeight);
+
+            this.Top = sHeight - this.Height - 150;
+            this.Left = (sWidth / 2) - (this.Width / 2);
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
@@ -101,7 +106,7 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
-                setLocation(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;
             }
 
