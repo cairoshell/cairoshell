@@ -51,8 +51,21 @@ namespace CairoDesktop
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
+            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            {
+                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                handled = true;
+            }
 
             return IntPtr.Zero;
+        }
+
+        private void setPosition(uint x, uint y)
+        {
+            this.Top = 0;
+            this.Left = 0;
+            this.Width = x;
+            this.Height = y;
         }
 
         private void Window_Activated(object sender, EventArgs e)
@@ -88,13 +101,13 @@ namespace CairoDesktop
                 }
             }
 
-            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 5), DispatcherPriority.Normal, delegate
+            /*DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 5), DispatcherPriority.Normal, delegate
             {
                 this.Top = 0;
                 this.Left = 0;
                 this.Width = AppBarHelper.PrimaryMonitorSize.Width;
                 this.Height = AppBarHelper.PrimaryMonitorSize.Height;
-            }, this.Dispatcher);
+            }, this.Dispatcher);*/
         }
 
         private void pasteFromClipboard()

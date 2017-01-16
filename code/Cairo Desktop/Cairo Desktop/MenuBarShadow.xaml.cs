@@ -16,13 +16,13 @@ namespace CairoDesktop
             InitializeComponent();
 
             this.Width = Startup.MenuBarWindow.ActualWidth;
+        }
 
-            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Normal, delegate
-            {
-                this.Width = Startup.MenuBarWindow.ActualWidth;
-                this.Top = Startup.MenuBarWindow.ActualHeight;
-                this.Left = 0;
-            }, this.Dispatcher);
+        public void SetPosition()
+        {
+            this.Width = Startup.MenuBarWindow.ActualWidth;
+            this.Top = Startup.MenuBarWindow.ActualHeight;
+            this.Left = 0;
         }
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
@@ -49,6 +49,4 @@ namespace CairoDesktop
             source.AddHook(new HwndSourceHook(WndProc));
         }
     }
-
-
 }

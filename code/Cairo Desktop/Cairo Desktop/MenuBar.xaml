@@ -19,6 +19,7 @@
     Initialized="OnWindowInitialized"
     SourceInitialized="Window_SourceInitialized"
     Closing="OnWindowClosing"
+    LocationChanged="Window_LocationChanged"
     UseLayoutRounding="True"
     MaxHeight="23"
     Background="Transparent">

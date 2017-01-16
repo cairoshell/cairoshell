@@ -57,7 +57,9 @@ namespace CairoDesktop.SupportingClasses
         public static void SetWinTaskbarPos(int swp)
         {
             IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_traywnd", "");
+            IntPtr startButtonHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
             NativeMethods.SetWindowPos(taskbarHwnd, IntPtr.Zero, 0, 0, 0, 0, swp);
+            NativeMethods.SetWindowPos(startButtonHwnd, IntPtr.Zero, 0, 0, 0, 0, swp);
         }
 
         public static void SetWinTaskbarState(WinTaskbarState state)

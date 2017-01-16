@@ -641,6 +641,7 @@
             SPI_SETMINIMIZEDMETRICS = 0x002C
         }
 
+        public const int WM_DISPLAYCHANGE = 0x007e;
         public const int WM_MOUSEACTIVATE = 0x0021;
         public const int MA_NOACTIVATE = 0x0003;
         public const int WM_WINDOWPOSCHANGING = 0x0046;
@@ -811,6 +812,9 @@
 
         [DllImport("psapi.dll")]
         public static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, IntPtr className, string windowTitle);
 
         [Flags]
         public enum SPIF

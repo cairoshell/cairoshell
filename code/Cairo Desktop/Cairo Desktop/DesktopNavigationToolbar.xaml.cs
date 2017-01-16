@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
 using CairoDesktop.Configuration;
+using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop
 {
@@ -24,8 +25,14 @@ namespace CairoDesktop
 
         private void setLocation()
         {
-            this.Top = SystemParameters.WorkArea.Bottom - this.Height - 150;
-            this.Left = (SystemParameters.WorkArea.Width / 2) - (this.Width / 2);
+            this.Top = AppBarHelper.PrimaryMonitorSize.Height - this.Height - 150;
+            this.Left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (this.Width / 2);
+        }
+
+        private void setLocation(uint x, uint y)
+        {
+            this.Top = y - this.Height - 150;
+            this.Left = (x / 2) - (this.Width / 2);
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
@@ -92,6 +99,11 @@ namespace CairoDesktop
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
+            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            {
+                setLocation(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                handled = true;
+            }
 
             return IntPtr.Zero;
         }
@@ -102,11 +114,6 @@ namespace CairoDesktop
 
             HwndSource source = HwndSource.FromHwnd(helper.Handle);
             source.AddHook(new HwndSourceHook(WndProc));
-
-            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Normal, delegate
-            {
-                setLocation();
-            }, this.Dispatcher);
         }
 
         protected override void OnActivated(EventArgs e)

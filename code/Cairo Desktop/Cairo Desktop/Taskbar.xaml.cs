@@ -3,7 +3,6 @@ using System.Windows;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
-using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -16,6 +15,7 @@ namespace CairoDesktop
         private WindowInteropHelper helper;
         private IntPtr handle;
         private int appbarMessageId = -1;
+        private bool displayChanged = false;
 
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
@@ -31,8 +31,8 @@ namespace CairoDesktop
             AppGrabber.Category quickLaunch = appGrabber.QuickLaunch;
             
             this.quickLaunchList.ItemsSource = quickLaunch;
-            this.TaskbarBorder.MaxWidth = SystemParameters.WorkArea.Width - 36;
-            this.grdTaskbar.Width = SystemParameters.WorkArea.Width;
+            this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
+            this.Width = AppBarHelper.PrimaryMonitorSize.Width;
         }
 
         private void Taskbar_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -60,8 +60,28 @@ namespace CairoDesktop
                 this.Top = screen - this.Height;
             }
             this.Left = 0;
-            this.TaskbarBorder.MaxWidth = SystemParameters.WorkArea.Width - 36;
-            this.grdTaskbar.Width = SystemParameters.WorkArea.Width;
+            this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
+            this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+        }
+
+        private void setPosition(uint x, uint y)
+        {
+            displayChanged = true;
+            double screen = y;
+            double workArea = SystemParameters.WorkArea.Bottom;
+
+            if (screen - workArea == this.Height)
+            {
+                this.Top = screen - this.Height;
+            }
+            else
+            {
+                // set to bottom of workspace
+                this.Top = screen - this.Height;
+            }
+            this.Left = 0;
+            this.TaskbarBorder.MaxWidth = x - 36;
+            this.Width = x;
         }
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -72,13 +92,18 @@ namespace CairoDesktop
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
 
+            if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            {
+                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                handled = true;
+            }
+
             if (msg == appbarMessageId)
             {
                 switch (wParam.ToInt32())
                 {
                     case 1:
                         // Reposition to the bottom of the screen.
-                        setPosition();
                         //AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_BOTTOM);
                         break;
                 }
@@ -107,11 +132,6 @@ namespace CairoDesktop
 
             setPosition();
 
-            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Normal, delegate
-            {
-                setPosition();
-            }, this.Dispatcher);
-
             // Windows bugs make this no bueno...
             //appbarMessageId = AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_BOTTOM);
         }
@@ -124,6 +144,15 @@ namespace CairoDesktop
                 e.Accepted = true;
             else
                 e.Accepted = false;
+        }
+
+        private void TaskbarWindow_LocationChanged(object sender, EventArgs e)
+        {
+            // this variable is set when the display size is changed, since that event handles this function. if we run here too, wrong position is set
+            if (!displayChanged)
+                setPosition();
+            else
+                displayChanged = false;
         }
     }
 }

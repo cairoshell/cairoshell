@@ -176,6 +176,8 @@ namespace CairoDesktop
                         // Reposition to the top of the screen.
                         // this doesn't appear to be necessary
                         AppBarHelper.ABSetPos(handle, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+                        if (Startup.MenuBarShadowWindow != null)
+                            Startup.MenuBarShadowWindow.SetPosition();
                         break;
                 }
                 handled = true;
@@ -199,13 +201,16 @@ namespace CairoDesktop
             handle = helper.Handle;
 
             appbarMessageId = AppBarHelper.RegisterBar(handle, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+        }
 
-            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Normal, delegate
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            if (this.Top != 0)
             {
                 this.Top = 0;
-                this.Left = 0;
-                this.Width = SystemParameters.WorkArea.Width;
-            }, this.Dispatcher);
+                if (Startup.MenuBarShadowWindow != null)
+                    Startup.MenuBarShadowWindow.SetPosition();
+            }
         }
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)

@@ -9,13 +9,12 @@
     Margin="0,0,0,0"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
-        ShowActivated="False"
+    ShowActivated="False"
     AllowDrop="True"
     Visibility="Visible"
-    SizeToContent="Width"
     Focusable="False"
     Background="{x:Null}"
-        Closing="Taskbar_Closing" SourceInitialized="TaskbarWindow_SourceInitialized" UseLayoutRounding="True"
+    Closing="Taskbar_Closing" SourceInitialized="TaskbarWindow_SourceInitialized" LocationChanged="TaskbarWindow_LocationChanged"  UseLayoutRounding="True" HorizontalAlignment="Center"
     Topmost="True">
     <Window.Resources>
         <ResourceDictionary>
@@ -87,15 +86,8 @@
             </CollectionViewSource>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid x:Name="grdTaskbar"
-        HorizontalAlignment="Center">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="28" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Border CornerRadius="8,0,0,0" BorderThickness="1,1,0,0" HorizontalAlignment="Center" Grid.Column="1" Padding="7,0,0,0" Name="TaskbarBorder">
+    <StackPanel Orientation="Horizontal" x:Name="grdTaskbar" HorizontalAlignment="Center">
+        <Border CornerRadius="8,0,0,0" BorderThickness="1,1,0,0" HorizontalAlignment="Center" Padding="7,0,0,0" Name="TaskbarBorder">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Color="#AF1d1d1d" Offset="0.0" />
@@ -209,7 +201,7 @@
                 </ListView>
             </StackPanel>
         </Border>
-        <Border CornerRadius="0,8,0,0" BorderThickness="0,1,1,0" HorizontalAlignment="Left" Grid.Column="2">
+        <Border CornerRadius="0,8,0,0" BorderThickness="0,1,1,0" HorizontalAlignment="Left">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                     <GradientStop Color="#AF1d1d1d" Offset="0.0" />
@@ -230,7 +222,7 @@
                            Opacity="0.3"
                            Margin="0,0,0,0"></Image>
                 </ToggleButton>
-                <Popup Placement="Relative" PlacementTarget="{Binding ElementName=btnTaskList}" HorizontalOffset="-428" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{Binding ElementName=btnTaskList, Path=IsChecked}">
+                <Popup Placement="Relative" PlacementTarget="{Binding ElementName=btnTaskList}" HorizontalOffset="-428" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{Binding ElementName=btnTaskList, Path=IsChecked}" StaysOpen="False">
                     <Border Style="{StaticResource CairoTaskListPopupStyle}">
                         <ListView HorizontalAlignment="Stretch"
                     ItemsSource="{Binding Source={StaticResource groupedWindows}}"
@@ -296,5 +288,5 @@
                 </Popup>
             </StackPanel>
         </Border>
-    </Grid>
+    </StackPanel>
 </Window>
