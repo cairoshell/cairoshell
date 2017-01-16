@@ -97,15 +97,15 @@
         </Grid.ColumnDefinitions>
         <Border CornerRadius="8,0,0,0" BorderThickness="1,1,0,0" HorizontalAlignment="Center" Grid.Column="1" Padding="7,0,0,0" Name="TaskbarBorder">
             <Border.Background>
-                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                    <GradientStop Color="#CF1a1a1a" Offset="1.0" />
-                    <GradientStop Color="#DF000000" Offset="0.7" />
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#AF1d1d1d" Offset="0.0" />
+                    <GradientStop Color="#DF050505" Offset="1.0" />
                 </LinearGradientBrush>
             </Border.Background>
             <Border.BorderBrush>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#CF1a1a1a" Offset="1.0" />
-                    <GradientStop Color="#8F606060" Offset="0.0" />
+                    <GradientStop Color="#C07b7b7b" Offset="0.0" />
+                    <GradientStop Color="#C0595959" Offset="1.0" />
                 </LinearGradientBrush>
             </Border.BorderBrush>
             <StackPanel Orientation="Horizontal">
@@ -211,15 +211,15 @@
         </Border>
         <Border CornerRadius="0,8,0,0" BorderThickness="0,1,1,0" HorizontalAlignment="Left" Grid.Column="2">
             <Border.Background>
-                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                    <GradientStop Color="#CF1a1a1a" Offset="1.0" />
-                    <GradientStop Color="#DF000000" Offset="0.7" />
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#AF1d1d1d" Offset="0.0" />
+                    <GradientStop Color="#DF050505" Offset="1.0" />
                 </LinearGradientBrush>
             </Border.Background>
             <Border.BorderBrush>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#CF1a1a1a" Offset="1.0" />
-                    <GradientStop Color="#8F606060" Offset="0.0" />
+                    <GradientStop Color="#C07b7b7b" Offset="0.0" />
+                    <GradientStop Color="#C0595959" Offset="1.0" />
                 </LinearGradientBrush>
             </Border.BorderBrush>
             <StackPanel Orientation="Horizontal">

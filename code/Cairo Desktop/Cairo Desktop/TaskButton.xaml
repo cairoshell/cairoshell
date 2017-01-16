@@ -22,6 +22,8 @@
             </Button.Style>
             <Button.ContextMenu>
                 <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
+                    <MenuItem Header="Task Manager" Style="{StaticResource CairoMenuItemStyle}" Click="miTaskMan_Click" />
+                    <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="Minimize" Style="{StaticResource CairoMenuItemStyle}" Click="Min_Click" Name="MinItem" />
                     <MenuItem Header="Restore" Style="{StaticResource CairoMenuItemStyle}" Click="Max_Click" Name="MaxItem" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />

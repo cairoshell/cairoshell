@@ -63,5 +63,10 @@ namespace CairoDesktop
                     Window.TasksService.Windows.Remove(Window);
             }
         }
-	}
+
+        private void miTaskMan_Click(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("taskmgr.exe");
+        }
+    }
 }
