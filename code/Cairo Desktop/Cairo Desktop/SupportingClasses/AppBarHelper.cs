@@ -146,7 +146,7 @@ namespace CairoDesktop.SupportingClasses
         {
             get
             {
-                return new Size(Convert.ToInt32(System.Windows.SystemParameters.VirtualScreenWidth), Convert.ToInt32(System.Windows.SystemParameters.VirtualScreenHeight));
+                return new Size(Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenWidth), Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenHeight));
             }
         }
 
