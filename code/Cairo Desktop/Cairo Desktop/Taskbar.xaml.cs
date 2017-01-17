@@ -3,6 +3,8 @@ using System.Windows;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -146,7 +148,17 @@ namespace CairoDesktop
             if (!displayChanged)
                 setPosition();
             else
+            {
                 displayChanged = false;
+                
+                // set position after 2 seconds anyway in case we missed something
+                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+                timer.Start();
+                timer.Tick += (sender1, args) =>
+                {
+                    setPosition();
+                };
+            }
         }
     }
 }
