@@ -51,5 +51,10 @@ namespace CairoDesktop
 
             source.AddHook(new HwndSourceHook(WndProc));
         }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            SetPosition();
+        }
     }
 }

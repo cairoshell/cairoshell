@@ -13,7 +13,7 @@
     Visibility="Visible"
     Focusable="False"
     Topmost="False"
-    Loaded="MenuBarShadow_Loaded">
+    Loaded="MenuBarShadow_Loaded" LocationChanged="Window_LocationChanged">
     <Window.Background>
         <ImageBrush ImageSource="Resources\menubarShadow.png" />
     </Window.Background>
