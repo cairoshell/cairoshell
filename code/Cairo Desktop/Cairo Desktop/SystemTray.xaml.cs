@@ -68,6 +68,7 @@ namespace CairoDesktop
                 hooksWrapper.SetSystrayCallback(trayDelegate);
                 hooksWrapper.InitializeSystray();
                 hooksWrapper.Run();
+                btnToggle.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
@@ -77,7 +78,8 @@ namespace CairoDesktop
 
         public void DestroySystemTray()
         {
-            hooksWrapper.ShutdownSystray();
+            if(trayDelegate != null)
+                hooksWrapper.ShutdownSystray();
         }
 
         private bool SysTrayCallback(uint message, NOTIFYICONDATA nicData)
@@ -216,5 +218,19 @@ namespace CairoDesktop
 
             Trace.WriteLine("Mouse up ("+ e.ChangedButton.ToString() +") on trayicon " + trayIcon.Title);
         }
-	}
+
+        private void btnToggle_Click(object sender, RoutedEventArgs e)
+        {
+            if (LayoutRoot.Visibility == Visibility.Visible)
+            {
+                LayoutRoot.Visibility = Visibility.Collapsed;
+                btnToggle.Content = "\u25c0";
+            }
+            else
+            {
+                LayoutRoot.Visibility = Visibility.Visible;
+                btnToggle.Content = "\u25b6";
+            }
+        }
+    }
 }

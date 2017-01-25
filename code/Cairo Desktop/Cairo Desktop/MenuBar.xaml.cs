@@ -126,7 +126,12 @@ namespace CairoDesktop
         {
             AppBarHelper.RegisterBar(handle, this.ActualWidth, this.ActualHeight);
             AppBarHelper.ResetWorkArea();
+
             SysTray.DestroySystemTray();
+
+            if(Startup.IsCairoUserShell)
+                Shell.StartProcess("explorer.exe");
+
             Application.Current.Shutdown();
         }
 

@@ -2447,4 +2447,58 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <!-- Button Style for Systray Expander -->
+    <Style x:Key="CairoSystrayExpanderStyle"
+        TargetType="{x:Type Button}">
+        <Setter Property="OverridesDefaultStyle"
+            Value="true" />
+        <Setter Property="Height"
+            Value="22" />
+        <Setter Property="Foreground"
+            Value="White" />
+        <Setter Property="FontSize"
+            Value="11" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border"
+                        BorderThickness="0"
+                        Margin="0,0,0,0"
+                        Background="Transparent"
+                        BorderBrush="Transparent" Opacity="0.7">
+                        <ContentPresenter Margin="5,-2,9,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                    Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="White"
+                                            ShadowDepth="0"
+                                            Opacity="0.5" BlurRadius="7" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Border" Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                    Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="White"
+                                            ShadowDepth="0"
+                                            Opacity="1" BlurRadius="7" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Border" Property="Opacity" Value="1" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
