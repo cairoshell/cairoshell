@@ -219,8 +219,7 @@
                                         BorderBrush="Transparent"
                                         Padding="7,1,7,1"
                                         Name="searchStr"
-                                        TextChanged="searchStr_TextChanged" PreviewKeyDown="searchStr_KeyDown"
-                                        Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged }">
+                                        TextChanged="searchStr_TextChanged" PreviewKeyDown="searchStr_KeyDown">
                                     <TextBox.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="10"/>
@@ -231,8 +230,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Vertical">
                             <Button Style="{StaticResource CairoSearchResultsButtonStyle}" Name="btnViewResults" Click="btnViewResults_Click" Visibility="Collapsed">View All Results</Button>
-                            <ListView ItemsSource="{Binding Path=Results}"
-                                    BorderThickness="0"
+                            <ListView BorderThickness="0"
                                     Background="{x:Null}"
                                     MinHeight="0"
                                     MaxHeight="600"

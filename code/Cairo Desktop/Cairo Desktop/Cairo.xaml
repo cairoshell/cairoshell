@@ -977,7 +977,7 @@
                                 EndPoint="0,0">
                                 <GradientStop Color="#8FFFFFFF"
                                     Offset="1" />
-                                <GradientStop Color="#4FFFFFFF"
+                                <GradientStop Color="#5FFFFFFF"
                                     Offset="0" />
                             </LinearGradientBrush>
                         </Border.BorderBrush>

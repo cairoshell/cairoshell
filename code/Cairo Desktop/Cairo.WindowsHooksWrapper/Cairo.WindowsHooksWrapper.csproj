@@ -78,24 +78,12 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Delegates.cs" />
     <Compile Include="InteropCalls.cs" />
     <Compile Include="IWindowsHooksWrapper.cs" />
-    <Compile Include="NIM.cs" />
-    <Compile Include="NOTIFYICONDATA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TASKINFORMATION.cs" />
-    <Compile Include="WindowActions.cs" />
     <Compile Include="WindowsHooksWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -104,6 +92,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
+      <Project>{233781C8-83E4-47A6-847E-FA7A31B1CC51}</Project>
+      <Name>CairoDesktop.Interop</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

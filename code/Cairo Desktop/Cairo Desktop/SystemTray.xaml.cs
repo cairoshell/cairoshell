@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using Cairo.WindowsHooksWrapper;
 using System.Linq;
 using System.Diagnostics;
+using static CairoDesktop.Interop.NativeMethods;
 
 namespace CairoDesktop
 {
@@ -76,12 +77,12 @@ namespace CairoDesktop
 
         public void DestroySystemTray()
         {
-            hooksWrapper.ShutdownAll();
+            hooksWrapper.ShutdownSystray();
         }
 
         private bool SysTrayCallback(uint message, NOTIFYICONDATA nicData)
         {
-            TrayIcon trayIcon = new TrayIcon(nicData.hWnd);
+            TrayIcon trayIcon = new TrayIcon((IntPtr)nicData.hWnd);
             trayIcon.UID = nicData.uID;
 
             lock (_lockObject)
@@ -92,21 +93,24 @@ namespace CairoDesktop
                         // Ensure the icon doesn't already exist.
                         if (TrayIcons.Contains(trayIcon)) return false;
 
-                        // Add the icon.
-                        trayIcon.Title = nicData.szTip;
-                        try
+                        if (nicData.dwState != 1)
                         {
-                            trayIcon.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-                        }
-                        catch
-                        {
-                            trayIcon.Icon = null;
-                        }
-                        trayIcon.HWnd = nicData.hWnd;
-                        trayIcon.UID = nicData.uID;
-                        trayIcon.CallbackMessage = nicData.uCallbackMessage;
+                            // Add the icon.
+                            trayIcon.Title = nicData.szTip;
+                            try
+                            {
+                                trayIcon.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon((IntPtr)nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                            }
+                            catch
+                            {
+                                trayIcon.Icon = AppGrabber.IconImageConverter.GetDefaultIcon();
+                            }
+                            trayIcon.HWnd = (IntPtr)nicData.hWnd;
+                            trayIcon.UID = nicData.uID;
+                            trayIcon.CallbackMessage = nicData.uCallbackMessage;
 
-                        TrayIcons.Add(trayIcon);
+                            TrayIcons.Add(trayIcon);
+                        }
                         break;
 
                     case NIM.NIM_DELETE:
@@ -131,21 +135,32 @@ namespace CairoDesktop
                         try
                         {
                             bool exists = false;
-                            if (TrayIcons.Contains(trayIcon))
-                            {
-                                exists = true;
-                                trayIcon = TrayIcons.Single(i => i.HWnd == nicData.hWnd && i.UID == nicData.uID);
-                            }
 
-                            trayIcon.Title = nicData.szTip;
-                            trayIcon.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-                            trayIcon.HWnd = nicData.hWnd;
-                            trayIcon.UID = nicData.uID;
-                            trayIcon.CallbackMessage = nicData.uCallbackMessage;
-
-                            if (!exists)
+                            if (nicData.dwState != 1)
                             {
-                                TrayIcons.Add(trayIcon);
+                                if (TrayIcons.Contains(trayIcon))
+                                {
+                                    exists = true;
+                                    trayIcon = TrayIcons.Single(i => i.HWnd == (IntPtr)nicData.hWnd && i.UID == nicData.uID);
+                                }
+
+                                trayIcon.Title = nicData.szTip;
+                                try
+                                {
+                                    trayIcon.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon((IntPtr)nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                                }
+                                catch
+                                {
+                                    trayIcon.Icon = AppGrabber.IconImageConverter.GetDefaultIcon();
+                                }
+                                trayIcon.HWnd = (IntPtr)nicData.hWnd;
+                                trayIcon.UID = nicData.uID;
+                                trayIcon.CallbackMessage = nicData.uCallbackMessage;
+
+                                if (!exists)
+                                {
+                                    TrayIcons.Add(trayIcon);
+                                }
                             }
                         }
                         catch (Exception ex)
@@ -161,8 +176,10 @@ namespace CairoDesktop
 
         private void Image_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            uint WM_LBUTTONDOWN = 0x201;
             uint WM_LBUTTONUP = 0x202;
             uint WM_LBUTTONDBLCLK = 0x203;
+            uint WM_RBUTTONDOWN = 0x204;
             uint WM_RBUTTONUP = 0x205;
             uint WM_RBUTTONDBLCLK = 0x206;
 
@@ -172,11 +189,13 @@ namespace CairoDesktop
             {
                 if (DateTime.Now.Subtract(_lastLClick).TotalSeconds < 1)
                 {
-                    Interop.NativeMethods.PostWindowsMessage(trayIcon.HWnd, trayIcon.CallbackMessage, trayIcon.UID, WM_LBUTTONDBLCLK);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONDBLCLK);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONUP);
                 }
                 else
                 {
-                    Interop.NativeMethods.PostWindowsMessage(trayIcon.HWnd, trayIcon.CallbackMessage, trayIcon.UID, WM_LBUTTONUP);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONDOWN);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONUP);
                 }
                 _lastLClick = DateTime.Now;
             }
@@ -184,11 +203,13 @@ namespace CairoDesktop
             {
                 if (DateTime.Now.Subtract(_lastRClick).TotalSeconds < 1)
                 {
-                    Interop.NativeMethods.PostWindowsMessage(trayIcon.HWnd, trayIcon.CallbackMessage, trayIcon.UID, WM_RBUTTONDBLCLK);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONDBLCLK);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONUP);
                 }
                 else
                 {
-                    Interop.NativeMethods.PostWindowsMessage(trayIcon.HWnd, trayIcon.CallbackMessage, trayIcon.UID, WM_RBUTTONUP);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONDOWN);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONUP);
                 }
                 _lastRClick = DateTime.Now;
             }

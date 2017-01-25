@@ -2,28 +2,26 @@
 namespace Cairo.WindowsHooksWrapper
 {
     using System;
+    using System.Runtime.InteropServices;
+    using static CairoDesktop.Interop.NativeMethods;
 
     /// <summary>
     /// The wrapper class the for C++ Windows Hooks library.
     /// </summary>
     public class WindowsHooksWrapper : IWindowsHooksWrapper
     {
+        //private SystrayDelegate trayDelegate;
+        //private WndProcDelegate wndProcDelegate;
+
         /// <summary>
         /// Sets the delegate for the system tray callback.
         /// </summary>
         /// <param name="theDelegate">The system tray callback delegate.</param>
-        public void SetSystrayCallback(Delegate theDelegate)
+        public void SetSystrayCallback(SystrayDelegate theDelegate)
         {
             InteropCalls.SetSystrayCallback(theDelegate);
-        }
 
-        /// <summary>
-        /// Sets the delegate for the task callback.
-        /// </summary>
-        /// <param name="theDelegate">The task callback delegate.</param>
-        public void SetTaskCallback(Delegate theDelegate)
-        {
-            InteropCalls.SetTaskCallback(theDelegate);
+            //trayDelegate = theDelegate;
         }
 
         /// <summary>
@@ -32,14 +30,55 @@ namespace Cairo.WindowsHooksWrapper
         public void InitializeSystray()
         {
             InteropCalls.InitializeSystray();
-        }
 
-        /// <summary>
-        /// Initializes the task hooks.
-        /// </summary>
-        public void InitializeTask()
-        {
-            InteropCalls.InitializeTask();
+            /*IntPtr hInstance = Marshal.GetHINSTANCE(typeof(WindowsHooksWrapper).Module);
+
+            wndProcDelegate = WndProc;
+
+            // create Shell_TrayWnd
+
+            WNDCLASSEX trayClass = new WNDCLASSEX();
+            trayClass.cbSize = Marshal.SizeOf(trayClass);
+            trayClass.lpszClassName = "Shell_TrayWnd";
+            trayClass.lpfnWndProc = wndProcDelegate;
+            trayClass.style = 0x8;
+            trayClass.hInstance = hInstance;
+            UInt16 trayClassReg = RegisterClassEx(ref trayClass);
+            if (trayClassReg == 0)
+            {
+                // error
+                System.Diagnostics.Trace.WriteLine(Marshal.GetLastWin32Error());
+            }
+
+            IntPtr hWndTray = CreateWindowEx(WindowStylesEx.WS_EX_TOPMOST | WindowStylesEx.WS_EX_TOOLWINDOW, trayClassReg, "", WindowStyles.WS_POPUP, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, hInstance, IntPtr.Zero);
+
+            if(hWndTray == IntPtr.Zero)
+            {
+                // error
+                System.Diagnostics.Trace.WriteLine(Marshal.GetLastWin32Error());
+            }
+
+            // create TrayNotifyWnd
+            WNDCLASSEX trayNotifyClass = new WNDCLASSEX();
+            trayNotifyClass.cbSize = Marshal.SizeOf(trayNotifyClass);
+            trayNotifyClass.lpszClassName = "TrayNotifyWnd";
+            trayNotifyClass.lpfnWndProc = wndProcDelegate;
+            trayNotifyClass.style = 0x8;
+            trayNotifyClass.hInstance = hInstance;
+            UInt16 trayNotifyClassReg = RegisterClassEx(ref trayNotifyClass);
+            if (trayNotifyClassReg == 0)
+            {
+                // error
+                System.Diagnostics.Trace.WriteLine(Marshal.GetLastWin32Error());
+            }
+
+            IntPtr hWndNotify = CreateWindowEx(0, trayNotifyClassReg, null, WindowStyles.WS_CHILD, 0, 0, 0, 0, hWndTray, IntPtr.Zero, hInstance, IntPtr.Zero);
+
+            if (hWndNotify == IntPtr.Zero)
+            {
+                // error
+                System.Diagnostics.Trace.WriteLine(Marshal.GetLastWin32Error());
+            }*/
         }
 
         /// <summary>
@@ -48,22 +87,7 @@ namespace Cairo.WindowsHooksWrapper
         public void Run()
         {
             InteropCalls.Run();
-        }
-
-        /// <summary>
-        /// Shuts down all the tasks.
-        /// </summary>
-        public void ShutdownAll()
-        {
-            InteropCalls.ShutdownAll();
-        }
-
-        /// <summary>
-        /// Shuts down the task hooks.
-        /// </summary>
-        public void ShutdownTask()
-        {
-            InteropCalls.ShutdownTask();
+            //RegisterWindowMessage("TaskbarCreated");
         }
 
         /// <summary>
@@ -73,5 +97,24 @@ namespace Cairo.WindowsHooksWrapper
         {
             InteropCalls.ShutdownSystray();
         }
+
+        /*public IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
+        {
+            System.Diagnostics.Trace.WriteLine(msg);
+            if (msg == WM_COPYDATA)
+            {
+                COPYDATASTRUCT copyData = (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT));
+
+                if ((int)copyData.dwData == 1)
+                {
+                    NOTIFYICONDATA nicData = (NOTIFYICONDATA)Marshal.PtrToStructure(copyData.lpData, typeof(NOTIFYICONDATA));
+                    uint TrayCmd = (byte)copyData.lpData;
+
+                    trayDelegate(TrayCmd, nicData);
+                }
+            }
+
+            return DefWindowProc(hWnd, msg, wParam, lParam);
+        }*/
     }
 }

@@ -63,7 +63,7 @@ namespace CairoDesktop
         /// <summary>
         /// Gets or sets the callback message id.
         /// </summary>
-        public uint CallbackMessage
+        public int CallbackMessage
         {
             get;
             set;
@@ -72,7 +72,7 @@ namespace CairoDesktop
         /// <summary>
         /// Gets or sets the UID of the Icon.
         /// </summary>
-        public uint UID
+        public int UID
         {
             get;
             set;

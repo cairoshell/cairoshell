@@ -12,7 +12,6 @@
 
 	// Callbacks for the delegates
 	CALLBACK_NOTIFYICON_FUNCTION pSystrayFunction;
-	CALLBACK_TASK_FUNCTION pTaskFunction;
 	
 	// Member variables&
 	WNDCLASS	   m_TrayClass;
@@ -20,13 +19,11 @@
  	WNDCLASS	   m_NotifyClass;
  	HWND		   m_hWndNotify;
 	HINSTANCE	   m_hInstance;
-	HHOOK		   m_ShellHook;
 
 	// Forward declaration for WndProc
 	extern "C" 
 	{
 		LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-		LRESULT CALLBACK ShellProc(int, WPARAM, LPARAM);
 	}
 
 BOOL WINAPI DllMain(HINSTANCE hInstDll, DWORD dwReason, LPVOID reserved)
@@ -39,12 +36,6 @@ void SetSystrayCallback(LPVOID theCallbackFunctionAddress)
 {
 	pSystrayFunction = (CALLBACK_NOTIFYICON_FUNCTION)theCallbackFunctionAddress;
 	ODS("Systray callback set.\n");
-}
-
-void SetTaskCallback(LPVOID taskCallbackAddress)
-{
-	pTaskFunction = (CALLBACK_TASK_FUNCTION)taskCallbackAddress;
-	ODS("Task callback set.\n");
 }
 
 void InitializeSystray()
@@ -93,25 +84,10 @@ void InitializeSystray()
 }
 
 
-void InitializeTask()
-{
-	m_ShellHook = SetWindowsHookEx(WH_SHELL, (HOOKPROC)ShellProc, m_hInstance, 0);
-	if(m_ShellHook != NULL)
-	{
-		ODS("Shell hook created\n");
-	}
-}
 void Run()
 {
 	SendNotifyMessage(HWND_BROADCAST, RegisterWindowMessage(L"TaskbarCreated"), 0, 0);
 	ODS("Sent TaskbarCreated message.\n");
-}
-
-void ShutdownAll()
-{
-	ODS("Shutting down SysTray and Tasks.\n");
-	ShutdownSystray();
-	ShutdownTask();
 }
 
 void ShutdownSystray()
@@ -131,16 +107,6 @@ void ShutdownSystray()
 	}
 }
 
-
-void ShutdownTask()
-{
-	if(m_ShellHook != NULL)
-	{
-		UnhookWindowsHookEx(m_ShellHook);
-		ODS("ShellHook unhooked.");
-	}
-}
-
 BOOL CallSystrayDelegate(int message, NOTIFYICONDATA nicData)
 {
 	if(pSystrayFunction != NULL)
@@ -152,108 +118,6 @@ BOOL CallSystrayDelegate(int message, NOTIFYICONDATA nicData)
 	{
 		ODS("Attempted to call the Systray Delegate, however the pointer is null");
 		return FALSE;
-	}
-}
-
-BOOL CallTaskDelegate(int nCode, TASKINFORMATION* taskInfo)
-{
-	if(pTaskFunction != NULL)
-	{
-		ODS("Calling Task Delegate");
-		return (pTaskFunction)(nCode, taskInfo);
-	}
-	else
-	{
-		ODS("Attempted to call the Task Delegate, however the pointer is null");
-		return FALSE;
-	}
-
-}
-
-LPWSTR GetWindowName(HWND windowHandle)
-{
-	LPWSTR windowTitle = new wchar_t[128];
-	GetWindowText(windowHandle, windowTitle, 128);
-
-	return windowTitle;
-}
-
-HICON GetWindowIcon(HWND windowHandle)
-{
-	DWORD_PTR hIco = 0;
-	int HICON1 = -14;
-	int HICONSM = -34;
-
-	SendMessageTimeout(windowHandle, 0x007f, 2, 0, 2, 200, (PDWORD_PTR)hIco);
-
-	if (hIco == 0)
-	{
-		SendMessageTimeout(windowHandle, 0x007f, 0, 0, 2, 200, (PDWORD_PTR)hIco);
-	}
-
-	if (hIco == 0)
-	{
-		hIco = GetClassLongPtr(windowHandle, HICONSM);
-	}
-
-	if (hIco == 0)
-	{
-		hIco = GetClassLongPtr(windowHandle, HICON1);
-	}
-
-	return (HICON)hIco;
-	//DWORD_PTR dwReturn = GetClassLongPtr(windowHandle, (-14));
-	//return (HICON)dwReturn;
-}
-
-void GetTaskinformationForWindowAction(TASKINFORMATION* taskInfo, int nCode, WPARAM wParam, LPARAM lParam)
-{
-		taskInfo->WindowName = GetWindowName((HWND)wParam);
-		taskInfo->WindowHandle = (HWND)wParam;
-		taskInfo->SystemMenu = GetSystemMenu(taskInfo->WindowHandle, TRUE);
-		taskInfo->WindowIcon = GetWindowIcon((HWND)wParam);
-		if(nCode == HSHELL_WINDOWREPLACED)
-		{
-			taskInfo->NewWindowHandle = (HWND)lParam;
-		}
-}
-
-LRESULT CALLBACK ShellProc(int nCode, WPARAM wParam, LPARAM lParam)
-{
-	TASKINFORMATION *taskInfo = new TASKINFORMATION;
-
-	switch(nCode)
-	{
-	case HSHELL_WINDOWACTIVATED:
-		GetTaskinformationForWindowAction(taskInfo, nCode, wParam, lParam);
-		taskInfo->WindowAction = Activated;
-		break;
-
-	case HSHELL_WINDOWCREATED:
-		GetTaskinformationForWindowAction(taskInfo, nCode, wParam, lParam);
-		taskInfo->WindowAction = Created;
-		break;
-
-	case HSHELL_WINDOWDESTROYED:
-		GetTaskinformationForWindowAction(taskInfo, nCode, wParam, lParam);
-		taskInfo->WindowAction = Destroyed;
-		break;
-
-	case HSHELL_WINDOWREPLACED:
-		GetTaskinformationForWindowAction(taskInfo, nCode, wParam, lParam);
-		taskInfo->WindowAction = Replaced;
-		break;
-	}
-
-	if(CallTaskDelegate(nCode, taskInfo))
-	{
-		delete taskInfo;
-		return 0;
-	}
-	else
-	{
-		delete taskInfo;
-		return CallNextHookEx(m_ShellHook, nCode, wParam, lParam);
 	}
 }
 
@@ -280,14 +144,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				return FALSE;
 				break;
 			case 1:
-				int offset = 8;
-
-				if (sizeof(void*) == 8)
-				{
-					offset = -4;
-				}
-
-				NOTIFYICONDATA *nicData = (NOTIFYICONDATA *)(((BYTE *)copyData->lpData) + offset);
+				NOTIFYICONDATA *nicData = (NOTIFYICONDATA *)(((BYTE *)copyData->lpData) + 8);
 				int TrayCmd = *(INT *) (((BYTE *)copyData->lpData) + 4);
 
 				BOOL result = CallSystrayDelegate(TrayCmd, *nicData);

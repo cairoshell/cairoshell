@@ -34,7 +34,7 @@ namespace CairoDesktop.Interop
                 SHFILEINFO shinfo = new SHFILEINFO();
                 IntPtr hIconInfo;
 
-                if ((File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory && !filename.StartsWith("\\"))
+                if (!filename.StartsWith("\\") && (File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
                 {
                     hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex | flags));
                 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Media;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -88,8 +90,16 @@ namespace CairoDesktop.AppGrabber
             {
                 if (icon == null)
                 {
-                    icon = GetAssociatedIcon();
-                    icon.Freeze();
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => {
+
+                        icon = GetAssociatedIcon();
+                        icon.Freeze();
+                        // Notify Databindings of property change
+                        if (PropertyChanged != null)
+                        {
+                            PropertyChanged(this, new PropertyChangedEventArgs("Icon"));
+                        }
+                    }));
                 }
 
                 return icon;

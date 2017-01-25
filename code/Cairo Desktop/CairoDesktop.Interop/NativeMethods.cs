@@ -1,9 +1,10 @@
-﻿namespace CairoDesktop.Interop
+﻿using System;
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Text;
+
+namespace CairoDesktop.Interop
 {
-    using System;
-    using System.Drawing;
-    using System.Runtime.InteropServices;
-    using System.Text;
 
     /// <summary>
     /// Container class for Win32 Native methods used within the desktop application (e.g. shutdown, sleep, et al).
@@ -69,11 +70,6 @@
         public static void Sleep()
         {
             SetSuspendState(false, false, false);
-        }
-
-        public static void PostWindowsMessage(IntPtr hWnd, uint callback, uint uid, uint messageId)
-        {
-            PostMessage(hWnd, callback, uid, messageId);
         }
 
         public static IntPtr FindWindow(string className)
@@ -185,7 +181,7 @@
         private static extern bool LookupPrivilegeValue(string host, string name, ref long pluid);
 
         [DllImport("user32.dll")]
-        private static extern bool PostMessage(IntPtr hWnd, uint callback, uint wParam, uint lParam);
+        public static extern bool PostMessage(IntPtr hWnd, uint callback, uint wParam, uint lParam);
 
         #endregion
 
@@ -641,6 +637,7 @@
             SPI_SETMINIMIZEDMETRICS = 0x002C
         }
 
+        public const int WM_COPYDATA = 0x004a;
         public const int WM_DISPLAYCHANGE = 0x007e;
         public const int WM_MOUSEACTIVATE = 0x0021;
         public const int MA_NOACTIVATE = 0x0003;
@@ -855,5 +852,212 @@
             public IntPtr hwnd;
             public RECT rc;
         }
+
+        /// <summary>
+        /// Numerical values of the NIM_* messages represented as an enumeration.
+        /// </summary>
+        public enum NIM : uint
+        {
+            /// <summary>
+            /// Add a new icon.
+            /// </summary>
+            NIM_ADD = 0,
+
+            /// <summary>
+            /// Modify an existing icon.
+            /// </summary>
+            NIM_MODIFY = 1,
+
+            /// <summary>
+            /// Delete an icon.
+            /// </summary>
+            NIM_DELETE = 2,
+
+            /// <summary>
+            /// Shell v5 and above - Return focus to the notification area.
+            /// </summary>
+            NIM_SETFOCUS = 3,
+
+            /// <summary>
+            /// Shell v4 and above - Instructs the taskbar to behave accordingly based on the version (uVersion) set in the notifiyicondata struct.
+            /// </summary>
+            NIM_SETVERSION = 4
+        }
+
+        /// <summary>
+        /// Notify icon data structure type
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct NOTIFYICONDATA
+        {
+            public int cbSize;
+            public int hWnd;
+            public int uID;
+            public int uFlags;
+            public int uCallbackMessage;
+            public int hIcon;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
+            public string szTip;
+            public int dwState;
+            public int dwStateMask;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string szInfo;
+            public uint uVersion;  // used with NIM_SETVERSION, values 0, 3 and 4
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
+            public string szInfoTitle;
+            public int dwInfoFlags;
+            public Guid guidItem;
+            public IntPtr hBalloonIcon;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct TASKINFORMATION
+        {
+            public string WindowName;
+            public IntPtr WindowHandle;
+            public IntPtr NewWindowHandle;
+            public IntPtr WindowIcon;
+            public WindowActions WindowAction; // Enum
+            public IntPtr SystemMenu;
+        }
+
+        /// <summary>
+        /// The window actions enumerations for the action of a task event.
+        /// </summary>
+        public enum WindowActions
+        {
+            /// <summary>
+            /// The window has been activated.
+            /// </summary>
+            Activated,
+
+            /// <summary>
+            /// The window has been created.
+            /// </summary>
+            Created,
+
+            /// <summary>
+            /// The window has been destroyed.
+            /// </summary>
+            Destroyed,
+
+            /// <summary>
+            /// The window has been replaced.
+            /// </summary>
+            Replaced
+        }
+
+        /*/// <summary>
+        /// Unregisters a window class, freeing the memory required for the class.
+        /// </summary>
+        /// <param name="lpClassName">
+        /// Type: LPCTSTR
+        /// A null-terminated string or a class atom. If lpClassName is a string, it specifies the window class name. 
+        /// This class name must have been registered by a previous call to the RegisterClass or RegisterClassEx function. 
+        /// System classes, such as dialog box controls, cannot be unregistered. If this parameter is an atom, 
+        ///   it must be a class atom created by a previous call to the RegisterClass or RegisterClassEx function. 
+        /// The atom must be in the low-order word of lpClassName; the high-order word must be zero.
+        /// 
+        /// </param>
+        /// <param name="hInstance">
+        /// A handle to the instance of the module that created the class.
+        /// 
+        /// </param>
+        /// <returns>
+        /// Type: BOOL
+        /// If the function succeeds, the return value is nonzero.
+        /// If the class could not be found or if a window still exists that was created with the class, the return value is zero. 
+        /// To get extended error information, call GetLastError.
+        /// 
+        /// </returns>
+        [DllImport("user32.dll")]
+        public static extern bool UnregisterClass(string lpClassName, IntPtr hInstance);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.U2)]
+        public static extern UInt16 RegisterClassEx([In] ref WNDCLASSEX lpwcx);
+
+        /// <summary>
+        /// The CreateWindowEx function creates an overlapped, pop-up, or child window with an extended window style; otherwise, this function is identical to the CreateWindow function. 
+        /// </summary>
+        /// <param name="dwExStyle">Specifies the extended window style of the window being created.</param>
+        /// <param name="lpClassName">Pointer to a null-terminated string or a class atom created by a previous call to the RegisterClass or RegisterClassEx function. The atom must be in the low-order word of lpClassName; the high-order word must be zero. If lpClassName is a string, it specifies the window class name. The class name can be any name registered with RegisterClass or RegisterClassEx, provided that the module that registers the class is also the module that creates the window. The class name can also be any of the predefined system class names.</param>
+        /// <param name="lpWindowName">Pointer to a null-terminated string that specifies the window name. If the window style specifies a title bar, the window title pointed to by lpWindowName is displayed in the title bar. When using CreateWindow to create controls, such as buttons, check boxes, and static controls, use lpWindowName to specify the text of the control. When creating a static control with the SS_ICON style, use lpWindowName to specify the icon name or identifier. To specify an identifier, use the syntax "#num". </param>
+        /// <param name="dwStyle">Specifies the style of the window being created. This parameter can be a combination of window styles, plus the control styles indicated in the Remarks section.</param>
+        /// <param name="x">Specifies the initial horizontal position of the window. For an overlapped or pop-up window, the x parameter is the initial x-coordinate of the window's upper-left corner, in screen coordinates. For a child window, x is the x-coordinate of the upper-left corner of the window relative to the upper-left corner of the parent window's client area. If x is set to CW_USEDEFAULT, the system selects the default position for the window's upper-left corner and ignores the y parameter. CW_USEDEFAULT is valid only for overlapped windows; if it is specified for a pop-up or child window, the x and y parameters are set to zero.</param>
+        /// <param name="y">Specifies the initial vertical position of the window. For an overlapped or pop-up window, the y parameter is the initial y-coordinate of the window's upper-left corner, in screen coordinates. For a child window, y is the initial y-coordinate of the upper-left corner of the child window relative to the upper-left corner of the parent window's client area. For a list box y is the initial y-coordinate of the upper-left corner of the list box's client area relative to the upper-left corner of the parent window's client area.
+        /// <para>If an overlapped window is created with the WS_VISIBLE style bit set and the x parameter is set to CW_USEDEFAULT, then the y parameter determines how the window is shown. If the y parameter is CW_USEDEFAULT, then the window manager calls ShowWindow with the SW_SHOW flag after the window has been created. If the y parameter is some other value, then the window manager calls ShowWindow with that value as the nCmdShow parameter.</para></param>
+        /// <param name="nWidth">Specifies the width, in device units, of the window. For overlapped windows, nWidth is the window's width, in screen coordinates, or CW_USEDEFAULT. If nWidth is CW_USEDEFAULT, the system selects a default width and height for the window; the default width extends from the initial x-coordinates to the right edge of the screen; the default height extends from the initial y-coordinate to the top of the icon area. CW_USEDEFAULT is valid only for overlapped windows; if CW_USEDEFAULT is specified for a pop-up or child window, the nWidth and nHeight parameter are set to zero.</param>
+        /// <param name="nHeight">Specifies the height, in device units, of the window. For overlapped windows, nHeight is the window's height, in screen coordinates. If the nWidth parameter is set to CW_USEDEFAULT, the system ignores nHeight.</param> <param name="hWndParent">Handle to the parent or owner window of the window being created. To create a child window or an owned window, supply a valid window handle. This parameter is optional for pop-up windows.
+        /// <para>Windows 2000/XP: To create a message-only window, supply HWND_MESSAGE or a handle to an existing message-only window.</para></param>
+        /// <param name="hMenu">Handle to a menu, or specifies a child-window identifier, depending on the window style. For an overlapped or pop-up window, hMenu identifies the menu to be used with the window; it can be NULL if the class menu is to be used. For a child window, hMenu specifies the child-window identifier, an integer value used by a dialog box control to notify its parent about events. The application determines the child-window identifier; it must be unique for all child windows with the same parent window.</param>
+        /// <param name="hInstance">Handle to the instance of the module to be associated with the window.</param> <param name="lpParam">Pointer to a value to be passed to the window through the CREATESTRUCT structure (lpCreateParams member) pointed to by the lParam param of the WM_CREATE message. This message is sent to the created window by this function before it returns.
+        /// <para>If an application calls CreateWindow to create a MDI client window, lpParam should point to a CLIENTCREATESTRUCT structure. If an MDI client window calls CreateWindow to create an MDI child window, lpParam should point to a MDICREATESTRUCT structure. lpParam may be NULL if no additional data is needed.</para></param>
+        /// <returns>If the function succeeds, the return value is a handle to the new window.
+        /// <para>If the function fails, the return value is NULL. To get extended error information, call GetLastError.</para>
+        /// <para>This function typically fails for one of the following reasons:</para>
+        /// <list type="">
+        /// <item>an invalid parameter value</item>
+        /// <item>the system class was registered by a different module</item>
+        /// <item>The WH_CBT hook is installed and returns a failure code</item>
+        /// <item>if one of the controls in the dialog template is not registered, or its window window procedure fails WM_CREATE or WM_NCCREATE</item>
+        /// </list></returns>
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr CreateWindowEx(
+           WindowStylesEx dwExStyle,
+           UInt16 lpClassName,
+           [MarshalAs(UnmanagedType.LPStr)] string lpWindowName,
+           WindowStyles dwStyle,
+           int x,
+           int y,
+           int nWidth,
+           int nHeight,
+           IntPtr hWndParent,
+           IntPtr hMenu,
+           IntPtr hInstance,
+           IntPtr lpParam);
+
+        [Flags]
+        public enum WindowStylesEx : uint
+        {
+            WS_EX_ACCEPTFILES = 0x00000010,
+            WS_EX_APPWINDOW = 0x00040000,
+            WS_EX_CLIENTEDGE = 0x00000200,
+            WS_EX_COMPOSITED = 0x02000000,
+            WS_EX_CONTEXTHELP = 0x00000400,
+            WS_EX_CONTROLPARENT = 0x00010000,
+            WS_EX_DLGMODALFRAME = 0x00000001,
+            WS_EX_LAYERED = 0x00080000,
+            WS_EX_LAYOUTRTL = 0x00400000,
+            WS_EX_LEFT = 0x00000000,
+            WS_EX_LEFTSCROLLBAR = 0x00004000,
+            WS_EX_LTRREADING = 0x00000000,
+            WS_EX_MDICHILD = 0x00000040,
+            WS_EX_NOACTIVATE = 0x08000000,
+            WS_EX_NOINHERITLAYOUT = 0x00100000,
+            WS_EX_NOPARENTNOTIFY = 0x00000004,
+            WS_EX_OVERLAPPEDWINDOW = WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE,
+            WS_EX_PALETTEWINDOW = WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST,
+            WS_EX_RIGHT = 0x00001000,
+            WS_EX_RIGHTSCROLLBAR = 0x00000000,
+            WS_EX_RTLREADING = 0x00002000,
+            WS_EX_STATICEDGE = 0x00020000,
+            WS_EX_TOOLWINDOW = 0x00000080,
+            WS_EX_TOPMOST = 0x00000008,
+            WS_EX_TRANSPARENT = 0x00000020,
+            WS_EX_WINDOWEDGE = 0x00000100
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct COPYDATASTRUCT
+        {
+            public IntPtr dwData;    // Any value the sender chooses.  Perhaps its main window handle?
+            public int cbData;       // The count of bytes in the message.
+            public IntPtr lpData;    // The address of the message.
+        }
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr DefWindowProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);*/
     }
 }

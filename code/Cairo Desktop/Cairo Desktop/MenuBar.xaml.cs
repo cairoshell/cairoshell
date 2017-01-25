@@ -78,29 +78,48 @@ namespace CairoDesktop
             // Show the search button only if the service is running
             if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
             {
-                ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
-                vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
-                CairoSearchMenu.DataContext = vistaSearchProvider;
+                setSearchProvider();
             }
             else
             {
-                Dispatcher.Invoke((Action)(() => CairoSearchMenu.Visibility = Visibility.Collapsed), null);
-                DispatcherTimer searchcheck = new DispatcherTimer(new TimeSpan(0, 0, 7), DispatcherPriority.Normal, delegate
-                {
-                    if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
-                    {
-                        ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
-                        vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
-                        CairoSearchMenu.DataContext = vistaSearchProvider;
-                        CairoSearchMenu.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        CairoSearchMenu.Visibility = Visibility.Collapsed;
-                    }
-
-                }, this.Dispatcher);
+                CairoSearchMenu.Visibility = Visibility.Collapsed;
+                DispatcherTimer searchcheck = new DispatcherTimer(DispatcherPriority.Normal, this.Dispatcher);
+                searchcheck.Interval = new TimeSpan(0, 0, 7);
+                searchcheck.Tick += searchcheck_Tick;
+                searchcheck.Start();
             }
+        }
+
+        private void searchcheck_Tick(object sender, EventArgs e)
+        {
+            if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
+            {
+                setSearchProvider();
+                CairoSearchMenu.Visibility = Visibility.Visible;
+                (sender as DispatcherTimer).Stop();
+            }
+            else
+            {
+                CairoSearchMenu.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void setSearchProvider()
+        {
+            ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
+            vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
+            CairoSearchMenu.DataContext = vistaSearchProvider;
+
+            Binding bSearchText = new Binding("SearchText");
+            bSearchText.Mode = BindingMode.Default;
+            bSearchText.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+
+            Binding bSearchResults = new Binding("Results");
+            bSearchResults.Mode = BindingMode.Default;
+            bSearchResults.IsAsync = true;
+
+            searchStr.SetBinding(TextBox.TextProperty, bSearchText);
+            lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
         }
 
         private void shutdown()
@@ -130,28 +149,33 @@ namespace CairoDesktop
         /// </summary>
         private void initializeClock()
         {
+            // initial display
+            clock_Tick();
+
             // Create our timer for clock
-            DispatcherTimer timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
+            DispatcherTimer clock = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
             {
-                string timeFormat = Settings.TimeFormat;
-                if (string.IsNullOrEmpty(timeFormat))
-                {
-                    timeFormat = "T"; /// culturally safe long time pattern
-                }
-
-                dateText.Text = DateTime.Now.ToString(timeFormat);
+                clock_Tick();
             }, this.Dispatcher);
+        }
 
-            DispatcherTimer fulldatetimer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
+        private void clock_Tick()
+        {
+            string timeFormat = Settings.TimeFormat;
+            if (string.IsNullOrEmpty(timeFormat))
             {
-                string dateFormat = Settings.DateFormat;
-                if (string.IsNullOrEmpty(dateFormat))
-                {
-                    dateFormat = "D"; // Culturally safe Long Date Pattern
-                }
+                timeFormat = "T"; // culturally safe long time pattern
+            }
 
-                dateText.ToolTip = DateTime.Now.ToString(dateFormat);
-            }, this.Dispatcher);
+            dateText.Text = DateTime.Now.ToString(timeFormat);
+
+            string dateFormat = Settings.DateFormat;
+            if (string.IsNullOrEmpty(dateFormat))
+            {
+                dateFormat = "D"; // culturally safe long date pattern
+            }
+
+            dateText.ToolTip = DateTime.Now.ToString(dateFormat);
         }
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)

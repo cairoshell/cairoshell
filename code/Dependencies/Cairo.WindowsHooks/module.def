@@ -1,12 +1,8 @@
 LIBRARY	"Cairo.WindowsHooks.dll"
 EXPORTS
 SetSystrayCallback
-SetTaskCallback
 InitializeSystray
-InitializeTask
 ShutdownSystray
-ShutdownTask
-ShutdownAll
 Run
 
 DllMain
