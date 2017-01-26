@@ -62,7 +62,7 @@ namespace CairoDesktop
         {
             // Set username
             string username = Environment.UserName.Replace("_", "__");
-            Dispatcher.Invoke((Action)(() => miUserName.Header = username), null);
+            miUserName.Header = username;
 
             // Only show Downloads folder on Vista or greater
             if (Environment.OSVersion.Version.Major < 6)
