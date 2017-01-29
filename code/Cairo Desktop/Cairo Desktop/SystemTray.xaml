@@ -29,6 +29,6 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </Grid>
-        <Button Name="btnToggle" Click="btnToggle_Click" Visibility="Collapsed" ToolTip="Toggle system tray icons" Style="{StaticResource CairoSystrayExpanderStyle}">&#x25c0;</Button>
+        <ToggleButton Name="btnToggle" Click="btnToggle_Click" Visibility="Collapsed" ToolTip="Toggle system tray icons" Style="{StaticResource CairoSystrayExpanderStyle}" />
     </StackPanel>
 </UserControl>

@@ -172,6 +172,18 @@ namespace CairoDesktop.Interop
             owProc.Start();
         }
 
+        public static void ShowRunDialog()
+        {
+            Shell32.Shell shell = new Shell32.Shell();
+            shell.FileRun();
+        }
+
+        public static void ShowWindowSwitcher()
+        {
+            Shell32.Shell shell = new Shell32.Shell();
+            shell.WindowSwitcher();
+        }
+
         /// <summary>
         /// Send file to recycle bin
         /// </summary>

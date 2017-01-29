@@ -68,7 +68,6 @@ namespace CairoDesktop
                 hooksWrapper.SetSystrayCallback(trayDelegate);
                 hooksWrapper.InitializeSystray();
                 hooksWrapper.Run();
-                btnToggle.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
@@ -112,6 +111,8 @@ namespace CairoDesktop
                             trayIcon.CallbackMessage = nicData.uCallbackMessage;
 
                             TrayIcons.Add(trayIcon);
+
+                            btnToggle.Visibility = Visibility.Visible;
                         }
                         break;
 
@@ -126,6 +127,9 @@ namespace CairoDesktop
 
                             // Woo! Using Linq to avoid iterating!
                             TrayIcons.Remove(trayIcon);
+
+                            if (TrayIcons.Count < 1)
+                                btnToggle.Visibility = Visibility.Collapsed;
                         }
                         catch (Exception ex)
                         {
@@ -224,12 +228,10 @@ namespace CairoDesktop
             if (LayoutRoot.Visibility == Visibility.Visible)
             {
                 LayoutRoot.Visibility = Visibility.Collapsed;
-                btnToggle.Content = "\u25c0";
             }
             else
             {
                 LayoutRoot.Visibility = Visibility.Visible;
-                btnToggle.Content = "\u25b6";
             }
         }
     }

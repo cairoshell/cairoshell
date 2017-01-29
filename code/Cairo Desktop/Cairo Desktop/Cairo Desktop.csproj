@@ -338,6 +338,7 @@
     <Resource Include="Resources\controlsBrowse.png" />
     <Resource Include="Resources\exitIcon.png" />
     <SplashScreen Include="Resources\loadSplash.png" />
+    <Resource Include="Resources\taskViewIcon.png" />
     <Content Include="SearchAPILib.dll" />
   </ItemGroup>
   <ItemGroup>

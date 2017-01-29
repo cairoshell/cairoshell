@@ -314,6 +314,11 @@ namespace CairoDesktop
             }
         }
 
+        private void OpenRunWindow(object sender, RoutedEventArgs e)
+        {
+            Interop.Shell.ShowRunDialog();
+        }
+
         private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
         {
             bool? CloseCairoChoice = CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/exitIcon.png", "Exit Cairo", "Cancel");

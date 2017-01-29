@@ -45,7 +45,7 @@
                             <Border UseLayoutRounding="true"
                                 x:Name="Bd"
                                 Background="{TemplateBinding Background}">
-                                <ItemsPresenter UseLayoutRounding="{TemplateBinding UseLayoutRounding}" Focusable="False" />
+                                <ItemsPresenter Focusable="False" />
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled"
@@ -224,13 +224,14 @@
                 </ToggleButton>
                 <Popup Placement="Relative" PlacementTarget="{Binding ElementName=btnTaskList}" HorizontalOffset="-428" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{Binding ElementName=btnTaskList, Path=IsChecked}" StaysOpen="False">
                     <Border Style="{StaticResource CairoTaskListPopupStyle}">
+                        <StackPanel Orientation="Vertical">
                         <ListView HorizontalAlignment="Stretch"
                     ItemsSource="{Binding Source={StaticResource groupedWindows}}"
                     Background="{x:Null}"
                     BorderBrush="#FF908382"
                     Style="{StaticResource ListViewStyle1}"
                     BorderThickness="0,0,0,0"
-                              Margin="0,-5"
+                              Margin="0,-5,0,5"
                     VerticalAlignment="Stretch" x:Name="TasksList2">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -284,6 +285,17 @@
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
+                            <Border Margin="99,-5,0,-5" Padding="0,5" Width="351" BorderThickness="1,0,0,0" BorderBrush="#AF5b5b5b">
+                                <MenuItem Header="Task View" Style="{StaticResource CairoMenuItemStyle}" Click="TaskView_Click">
+                                    <MenuItem.Icon>
+                                        <Image Source="Resources\taskViewIcon.png"
+                                        Width="16"
+                                        Height="16"
+                                        Margin="0,-1,0,0" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </Border>
+                        </StackPanel>
                     </Border>
                 </Popup>
             </StackPanel>

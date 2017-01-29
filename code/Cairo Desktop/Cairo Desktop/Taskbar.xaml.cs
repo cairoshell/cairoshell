@@ -160,5 +160,10 @@ namespace CairoDesktop
                 };
             }
         }
+
+        private void TaskView_Click(object sender, RoutedEventArgs e)
+        {
+            Interop.Shell.ShowWindowSwitcher();
+        }
     }
 }
