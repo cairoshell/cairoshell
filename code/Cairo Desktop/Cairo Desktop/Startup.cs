@@ -11,6 +11,7 @@
     using System.Threading.Tasks;
     using CairoDesktop.Configuration;
     using SupportingClasses;
+    using Common;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.

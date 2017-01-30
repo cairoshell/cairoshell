@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Threading;
 
-namespace CairoDesktop {
+namespace CairoDesktop.Common {
     // Code lifted from here: http://www.beacosta.com/blog/?m=200609
 
     /// <summary>

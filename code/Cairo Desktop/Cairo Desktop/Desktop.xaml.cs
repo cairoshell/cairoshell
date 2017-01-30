@@ -8,7 +8,6 @@ using System.Windows.Media.Imaging;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using System.IO;
-using System.Windows.Threading;
 using CairoDesktop.SupportingClasses;
 using CairoDesktop.Configuration;
 

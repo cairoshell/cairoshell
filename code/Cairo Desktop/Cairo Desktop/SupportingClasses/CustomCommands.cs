@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Globalization;
 using System.Collections.Specialized;
 using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 
 namespace CairoDesktop
 {

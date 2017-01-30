@@ -8,7 +8,7 @@ using System.Windows.Threading;
 using System.Diagnostics;
 using CairoDesktop.Configuration;
 
-namespace CairoDesktop
+namespace CairoDesktop.Common
 {
     public class SystemFile : INotifyPropertyChanged
     {

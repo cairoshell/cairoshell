@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Configuration"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.UWPInterop", "CairoDesktop.UWPInterop\CairoDesktop.UWPInterop.csproj", "{52A795C9-3C28-487A-B7B8-AAB324DA7305}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Common", "CairoDesktop.Common\CairoDesktop.Common.csproj", "{963EB868-7672-4557-8FE9-6A1A388AA5FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -104,6 +106,14 @@ Global
 		{52A795C9-3C28-487A-B7B8-AAB324DA7305}.Release|x64.Build.0 = Release|x64
 		{52A795C9-3C28-487A-B7B8-AAB324DA7305}.Release|x86.ActiveCfg = Release|Any CPU
 		{52A795C9-3C28-487A-B7B8-AAB324DA7305}.Release|x86.Build.0 = Release|Any CPU
+		{963EB868-7672-4557-8FE9-6A1A388AA5FF}.Debug|x64.ActiveCfg = Debug|x64
+		{963EB868-7672-4557-8FE9-6A1A388AA5FF}.Debug|x64.Build.0 = Debug|x64
+		{963EB868-7672-4557-8FE9-6A1A388AA5FF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{963EB868-7672-4557-8FE9-6A1A388AA5FF}.Debug|x86.Build.0 = Debug|Any CPU
+		{963EB868-7672-4557-8FE9-6A1A388AA5FF}.Release|x64.ActiveCfg = Release|x64
+		{963EB868-7672-4557-8FE9-6A1A388AA5FF}.Release|x64.Build.0 = Release|x64
+		{963EB868-7672-4557-8FE9-6A1A388AA5FF}.Release|x86.ActiveCfg = Release|Any CPU
+		{963EB868-7672-4557-8FE9-6A1A388AA5FF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

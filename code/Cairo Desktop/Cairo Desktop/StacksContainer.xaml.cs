@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using System.IO;
 using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 
 namespace CairoDesktop {
     /// <summary>

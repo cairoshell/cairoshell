@@ -7,6 +7,7 @@ using System.Windows.Interop;
 using CairoDesktop.Interop;
 using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
+using CairoDesktop.Common;
 
 namespace CairoDesktop
 {

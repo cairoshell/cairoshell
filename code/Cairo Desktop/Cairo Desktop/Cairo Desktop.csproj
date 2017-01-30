@@ -218,8 +218,6 @@
       <DependentUpon>StacksContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportingClasses\IconConverter.cs" />
-    <Compile Include="SupportingClasses\InvokingObservableCollection.cs" />
-    <Compile Include="SupportingClasses\SystemDirectory.cs" />
     <Compile Include="SupportingClasses\MessageBoxButtonConverter.cs" />
     <Compile Include="SupportingClasses\MessageBoxImageConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -232,7 +230,6 @@
     </Compile>
     <Compile Include="SupportingClasses\Settings.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="SupportingClasses\SystemFile.cs" />
     <Compile Include="SupportingClasses\TaskbuttonStyleConverter.cs" />
     <Compile Include="Taskbar.xaml.cs">
       <DependentUpon>Taskbar.xaml</DependentUpon>
@@ -342,6 +339,10 @@
     <Content Include="SearchAPILib.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">
+      <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
+      <Name>CairoDesktop.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.WindowsTray\CairoDesktop.WindowsTray.csproj">
       <Project>{79b5ddac-5102-4b11-bfa1-b16d6f6fe661}</Project>
       <Name>CairoDesktop.WindowsTray</Name>

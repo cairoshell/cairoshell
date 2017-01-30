@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Threading;
 using CairoDesktop.Configuration;
 
-namespace CairoDesktop {
+namespace CairoDesktop.Common {
 
     /// <summary>
     /// A wrapper for System.IO.DirectoryInfo which exposes File and Directory list calls as properties
