@@ -1,5 +1,5 @@
 
-namespace Cairo.WindowsHooksWrapper
+namespace CairoDesktop.WindowsTray
 {
     using System;
     using System.Runtime.InteropServices;

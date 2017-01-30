@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Collections.ObjectModel;
-using Cairo.WindowsHooksWrapper;
+using CairoDesktop.WindowsTray;
 using System.Linq;
 using System.Diagnostics;
 using static CairoDesktop.Interop.NativeMethods;

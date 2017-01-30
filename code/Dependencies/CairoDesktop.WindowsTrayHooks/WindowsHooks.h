@@ -27,16 +27,11 @@ typedef BOOL (__stdcall *CALLBACK_TASK_FUNCTION)(INT, TASKINFORMATION*);
 void SetSystrayCallback(LPVOID);
 void SetTaskCallback(LPVOID);
 void InitializeSystray();
-void InitializeTask();
 void Run();
-void ShutdownAll();
 void ShutdownSystray();
-void ShutdownTask();
 BOOL CallSystrayDelegate(int, NOTIFYICONDATA);
-BOOL CallTaskDelegate(int, TASKINFORMATION);
 LPWSTR GetWindowName(HWND);
 HICON GetWindowIcon(HWND);
-void GetTaskinformationForWindowAction(TASKINFORMATION *, int, WPARAM, LPARAM);
 
 // Shortcut for debug text
 #define ODS(data) OutputDebugString(TEXT(data))

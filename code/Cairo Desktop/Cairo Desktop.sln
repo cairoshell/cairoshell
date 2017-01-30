@@ -16,13 +16,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.AppGrabber", "
 		{52A795C9-3C28-487A-B7B8-AAB324DA7305} = {52A795C9-3C28-487A-B7B8-AAB324DA7305}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo.WindowsHooksWrapper", "Cairo.WindowsHooksWrapper\Cairo.WindowsHooksWrapper.csproj", "{79B5DDAC-5102-4B11-BFA1-B16D6F6FE661}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.WindowsTray", "CairoDesktop.WindowsTray\CairoDesktop.WindowsTray.csproj", "{79B5DDAC-5102-4B11-BFA1-B16D6F6FE661}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.WindowsTasks", "CairoDesktop.WindowsTasks\CairoDesktop.WindowsTasks.csproj", "{5FABAD0F-D28C-4EE6-A826-77968087864E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo Explorer", "Cairo Explorer\Cairo Explorer.csproj", "{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cairo.WindowsHooks", "..\Dependencies\Cairo.WindowsHooks\Cairo.WindowsHooks.vcxproj", "{0F1F5673-02B2-4E89-A61D-90F56D368C3F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CairoDesktop.WindowsTrayHooks", "..\Dependencies\CairoDesktop.WindowsTrayHooks\CairoDesktop.WindowsTrayHooks.vcxproj", "{0F1F5673-02B2-4E89-A61D-90F56D368C3F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Configuration", "CairoDesktop.Configuration\CairoDesktop.Configuration.csproj", "{8E50FC68-8BF3-44F2-9229-708500625757}"
 EndProject

@@ -1,6 +1,6 @@
 ﻿using static CairoDesktop.Interop.NativeMethods;
 
-namespace Cairo.WindowsHooksWrapper
+namespace CairoDesktop.WindowsTray
 {
     /// <summary>
     /// Delegate signature for the system tray callback.

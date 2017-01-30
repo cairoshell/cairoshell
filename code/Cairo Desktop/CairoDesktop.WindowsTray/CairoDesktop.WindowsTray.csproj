@@ -8,8 +8,8 @@
     <ProjectGuid>{79B5DDAC-5102-4B11-BFA1-B16D6F6FE661}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cairo.WindowsHooksWrapper</RootNamespace>
-    <AssemblyName>Cairo.WindowsHooksWrapper</AssemblyName>
+    <RootNamespace>CairoDesktop.WindowsTray</RootNamespace>
+    <AssemblyName>CairoDesktop.WindowsTray</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>

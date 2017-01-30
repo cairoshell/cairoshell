@@ -342,9 +342,9 @@
     <Content Include="SearchAPILib.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cairo.WindowsHooksWrapper\Cairo.WindowsHooksWrapper.csproj">
+    <ProjectReference Include="..\CairoDesktop.WindowsTray\CairoDesktop.WindowsTray.csproj">
       <Project>{79b5ddac-5102-4b11-bfa1-b16d6f6fe661}</Project>
-      <Name>Cairo.WindowsHooksWrapper</Name>
+      <Name>CairoDesktop.WindowsTray</Name>
     </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj">
       <Project>{DE9674CC-507E-4049-9152-5C899B9F0939}</Project>
