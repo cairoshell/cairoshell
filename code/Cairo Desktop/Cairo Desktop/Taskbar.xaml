@@ -174,7 +174,7 @@
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type ListViewItem}">
                                         <Border BorderThickness="0" Margin="0,-1,-1,0" BorderBrush="Transparent">
-                                            <self:TaskButton />
+                                            <self:TaskButton MouseRightButtonUp="TaskButton_MouseRightButtonUp" />
                                             <Border.Style>
                                                 <Style TargetType="{x:Type Border}">
                                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -215,7 +215,7 @@
                 </LinearGradientBrush>
             </Border.BorderBrush>
             <StackPanel Orientation="Horizontal">
-                <ToggleButton x:Name="btnTaskList" Margin="1,-1,-1,0" Style="{StaticResource CairoTaskbarButtonList}">
+                <ToggleButton x:Name="btnTaskList" Margin="1,-1,-1,0" Style="{StaticResource CairoTaskbarButtonList}" Click="btnTaskList_Click">
                     <Image Source="Resources\taskListIcon.png"
                            Width="15"
                            Height="12"

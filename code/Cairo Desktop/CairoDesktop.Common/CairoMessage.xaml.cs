@@ -1,8 +1,8 @@
-﻿namespace CairoDesktop
+﻿namespace CairoDesktop.Common
 {
-    using Interop;
+    using System;
+    using System.Reflection;
     using System.Windows;
-    using System.Windows.Interop;
     using System.Windows.Media.Imaging;
 
     /// <summary>
@@ -113,6 +113,27 @@
         }
 
         /// <summary>
+        /// Displays the Cairo Message as an alert with implicit settings.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="title">The title of the dialog.</param>
+        /// <param name="image">The image to display.</param>
+        /// <returns>void</returns>
+        [STAThread]
+        public static void ShowAlert(string message, string title, MessageBoxImage image)
+        {
+            CairoMessage msgDialog = new CairoMessage();
+            msgDialog.Message = message;
+            msgDialog.Title = title;
+            msgDialog.Image = image;
+            msgDialog.Buttons = MessageBoxButton.OK;
+
+            msgDialog.Show();
+
+            return;
+        }
+
+        /// <summary>
         /// Displays the Cairo Message Dialog with OK/Cancel buttons, implicit settings, custom image and button text.
         /// </summary>
         /// <param name="message">The message to display.</param>
@@ -150,19 +171,22 @@
         }
         #endregion
 
+        private bool IsModal()
+        {
+            return (bool)typeof(Window).GetField("_showingAsDialog", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(this);
+        }
+
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
+            if (IsModal())
+                this.DialogResult = true;
+            else
+                this.Close();
         }
 
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
-        }
-
-        private void messageWindow_SourceInitialized(object sender, System.EventArgs e)
-        {
-            NativeMethods.SetForegroundWindow(new WindowInteropHelper(this).Handle);
         }
     }
 }

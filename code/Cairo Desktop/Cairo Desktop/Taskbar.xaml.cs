@@ -163,7 +163,23 @@ namespace CairoDesktop
 
         private void TaskView_Click(object sender, RoutedEventArgs e)
         {
-            Interop.Shell.ShowWindowSwitcher();
+            Shell.ShowWindowSwitcher();
+        }
+
+        private void takeFocus()
+        {
+            // because we are setting WS_EX_NOACTIVATE, popups won't go away when clicked outside, since they are not losing focus (they never got it). calling this fixes that.
+            NativeMethods.SetForegroundWindow(helper.Handle);
+        }
+
+        private void btnTaskList_Click(object sender, RoutedEventArgs e)
+        {
+            takeFocus();
+        }
+
+        private void TaskButton_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            takeFocus();
         }
     }
 }

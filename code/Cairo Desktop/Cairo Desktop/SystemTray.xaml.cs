@@ -5,6 +5,7 @@ using CairoDesktop.WindowsTray;
 using System.Linq;
 using System.Diagnostics;
 using static CairoDesktop.Interop.NativeMethods;
+using CairoDesktop.Common;
 
 namespace CairoDesktop
 {
@@ -71,7 +72,7 @@ namespace CairoDesktop
             }
             catch (Exception ex)
             {
-                CairoMessage.Show("Error initializing the system tray component.\n\n" + ex.ToString() + "\n\nIf this error continues please report it (including a screen shot of this message) to the Cairo Development Team. \nThank you.", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                CairoMessage.ShowAlert("Error initializing the system tray component.\n\n" + ex.ToString() + "\n\nIf this error continues please report it (including a screen shot of this message) to the Cairo Development Team. \nThank you.", "Error", MessageBoxImage.Asterisk);
             }
         }
 

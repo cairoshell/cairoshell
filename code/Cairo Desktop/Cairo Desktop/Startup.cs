@@ -205,7 +205,7 @@
                     Process[] processes3 = Process.GetProcessesByName(procName);
                     if (processes3.Length > 1)
                     {
-                        CairoMessage.Show("If it's not responding, end it from Task Manager before trying to run Cairo again.", "Cairo is already running!", MessageBoxButton.OK, MessageBoxImage.Stop);
+                        CairoMessage.ShowAlert("If it's not responding, end it from Task Manager before trying to run Cairo again.", "Cairo is already running!", MessageBoxImage.Stop);
                         return false;
                     }
                     else
@@ -239,9 +239,8 @@
             }
             catch (Exception ex)
             {
-                CairoMessage.Show(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex), 
+                CairoMessage.ShowAlert(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex), 
                     "Unexpected error!", 
-                    MessageBoxButton.OK, 
                     MessageBoxImage.Error);
             }
         }

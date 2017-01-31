@@ -10,6 +10,7 @@ using System.Windows.Input;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 
 namespace CairoDesktop
 {
@@ -144,7 +145,7 @@ namespace CairoDesktop
             }
             catch
             {
-                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.ShowAlert("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxImage.Error);
             }
         }
 
@@ -282,9 +283,9 @@ namespace CairoDesktop
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = fvi.FileVersion;
 
-            CairoMessage.Show(
+            CairoMessage.ShowAlert(
                 "Version " + version + " - Pre-release"
-                +"\n\nCopyright © 2007-" + DateTime.Now.Year.ToString() + " Cairo Development Team and community contributors.  All rights reserved.", "Cairo Desktop Environment", MessageBoxButton.OK, MessageBoxImage.None);
+                +"\n\nCopyright © 2007-" + DateTime.Now.Year.ToString() + " Cairo Development Team and community contributors.  All rights reserved.", "Cairo Desktop Environment", MessageBoxImage.None);
         }
 
         private void OpenLogoffBox(object sender, RoutedEventArgs e)

@@ -113,6 +113,8 @@ namespace CairoDesktop.Interop
 
             if (filename.StartsWith("appx:"))
                 Process.Start("LaunchWinApp.exe", "shell:appsFolder\\" + filename.Substring(5));
+            else if (filename.Contains("://"))
+                Process.Start("explorer.exe", filename);
             else
                 Process.Start(filename);
         }

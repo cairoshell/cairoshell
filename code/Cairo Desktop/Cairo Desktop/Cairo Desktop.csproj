@@ -148,10 +148,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="CairoMessage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Cairo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -200,9 +196,6 @@
     <Compile Include="SupportingClasses\WindowsServices.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CairoMessage.xaml.cs">
-      <DependentUpon>CairoMessage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DesktopIcons.xaml.cs">
       <DependentUpon>DesktopIcons.xaml</DependentUpon>
     </Compile>
@@ -218,8 +211,6 @@
       <DependentUpon>StacksContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportingClasses\IconConverter.cs" />
-    <Compile Include="SupportingClasses\MessageBoxButtonConverter.cs" />
-    <Compile Include="SupportingClasses\MessageBoxImageConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -255,20 +246,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Application.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\restartIcon.png">
-    </Resource>
-    <Resource Include="Resources\shutdownIcon.png">
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\logoffIcon.png">
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\cairoIcon.png">
-    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\controlsBack.png">
@@ -333,7 +310,6 @@
     <Resource Include="Resources\taskListIcon.png">
     </Resource>
     <Resource Include="Resources\controlsBrowse.png" />
-    <Resource Include="Resources\exitIcon.png" />
     <SplashScreen Include="Resources\loadSplash.png" />
     <Resource Include="Resources\taskViewIcon.png" />
     <Content Include="SearchAPILib.dll" />

@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using CairoDesktop.Common;
 
 namespace CairoDesktop
 {
@@ -16,7 +17,7 @@ namespace CairoDesktop
             try {
                 Interop.Shell.StartProcess(item.CommandParameter.ToString());
             } catch {
-                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.ShowAlert("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxImage.Error);
             }
         }
 	}

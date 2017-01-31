@@ -1,4 +1,4 @@
-namespace CairoDesktop
+namespace CairoDesktop.Common
 {
     using System;
     using System.Windows;
