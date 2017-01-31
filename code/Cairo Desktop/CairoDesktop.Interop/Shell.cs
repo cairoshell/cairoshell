@@ -176,13 +176,17 @@ namespace CairoDesktop.Interop
 
         public static void ShowRunDialog()
         {
-            Shell32.Shell shell = new Shell32.Shell();
+            Type t = Type.GetTypeFromProgID("Shell.Application");
+
+            dynamic shell = Activator.CreateInstance(t);
             shell.FileRun();
         }
 
         public static void ShowWindowSwitcher()
         {
-            Shell32.Shell shell = new Shell32.Shell();
+            Type t = Type.GetTypeFromProgID("Shell.Application");
+
+            dynamic shell = Activator.CreateInstance(t);
             shell.WindowSwitcher();
         }
 
