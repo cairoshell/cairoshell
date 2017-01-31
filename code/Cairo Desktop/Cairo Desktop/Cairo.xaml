@@ -2469,7 +2469,7 @@
                         BorderBrush="Transparent" Opacity="0.7">
                         <Path x:Name="Path" Margin="5,-2,9,0"
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M 4 0 L 4 8 L 0 4 Z" />
+                            VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M 6 0 L 6 8 L 0 4 Z" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver"
@@ -2498,7 +2498,7 @@
                         </Trigger>
                         <Trigger Property="IsChecked"
                             Value="true">
-                            <Setter TargetName="Path" Property="Data" Value="M 0 0 L 4 4 L 0 8 Z" />
+                            <Setter TargetName="Path" Property="Data" Value="M 0 0 L 6 4 L 0 8 Z" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
