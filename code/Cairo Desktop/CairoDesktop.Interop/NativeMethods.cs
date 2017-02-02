@@ -691,7 +691,7 @@ namespace CairoDesktop.Interop
         /// If the window was previously hidden, the return value is zero.
         /// </returns>
         [DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
+        public static extern bool ShowWindowAsync(IntPtr hWnd, WindowShowStyle nCmdShow);
 
         /// <summary>Enumeration of the different ways of showing a window using 
         /// ShowWindow</summary>

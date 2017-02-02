@@ -234,16 +234,16 @@ namespace CairoDesktop.WindowsTasks
         {
             // so that maximized windows stay that way
             if(Placement == 3)
-                NativeMethods.ShowWindow(this.Handle, NativeMethods.WindowShowStyle.Show);
+                NativeMethods.ShowWindowAsync(this.Handle, NativeMethods.WindowShowStyle.Show);
             else
-                NativeMethods.ShowWindow(this.Handle, NativeMethods.WindowShowStyle.Restore);
+                NativeMethods.ShowWindowAsync(this.Handle, NativeMethods.WindowShowStyle.Restore);
 
             NativeMethods.SetForegroundWindow(this.Handle);
         }
 
         public void Minimize()
         {
-            NativeMethods.ShowWindow(this.Handle, NativeMethods.WindowShowStyle.Minimize);
+            NativeMethods.ShowWindowAsync(this.Handle, NativeMethods.WindowShowStyle.Minimize);
         }
 
         /// <summary>
