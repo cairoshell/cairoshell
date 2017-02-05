@@ -2,8 +2,7 @@
 namespace CairoDesktop.WindowsTray
 {
     using System;
-    using System.Runtime.InteropServices;
-    using static CairoDesktop.Interop.NativeMethods;
+    using static Interop.NativeMethods;
 
     /// <summary>
     /// The wrapper class the for C++ Windows Hooks library.
@@ -86,8 +85,7 @@ namespace CairoDesktop.WindowsTray
         /// </summary>
         public void Run()
         {
-            InteropCalls.Run();
-            //RegisterWindowMessage("TaskbarCreated");
+            InteropCalls.Run();            
         }
 
         /// <summary>

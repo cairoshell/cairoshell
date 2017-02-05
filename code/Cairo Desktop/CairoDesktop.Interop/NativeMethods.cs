@@ -813,6 +813,68 @@ namespace CairoDesktop.Interop
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, IntPtr className, string windowTitle);
 
+        [Flags()]
+        public enum SetWindowPosFlags
+        {
+            SWP_NOSIZE = 0x1,
+            SWP_NOMOVE = 0x2,
+            SWP_NOZORDER = 0x4,
+            SWP_NOREDRAW = 0x8,
+            SWP_NOACTIVATE = 0x10,
+            SWP_FRAMECHANGED = 0x20,
+            SWP_DRAWFRAME = SWP_FRAMECHANGED,
+            SWP_SHOWWINDOW = 0x40,
+            SWP_HIDEWINDOW = 0x80,
+            SWP_NOCOPYBITS = 0x100,
+            SWP_NOOWNERZORDER = 0x200,
+            SWP_NOREPOSITION = SWP_NOOWNERZORDER,
+            SWP_NOSENDCHANGING = 0x400,
+            SWP_DEFERERASE = 0x2000,
+            SWP_ASYNCWINDOWPOS = 0x4000,
+        }
+
+        public enum WindowZOrder
+        {
+            HWND_TOP = 0,
+            HWND_BOTTOM = 1,
+            HWND_TOPMOST = -1,
+            HWND_NOTOPMOST = -2,
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WINDOWPOS
+        {
+            public IntPtr hWnd;
+            public IntPtr hwndInsertAfter;
+            public int x;
+            public int y;
+            public int cx;
+            public int cy;
+            public SetWindowPosFlags flags;
+
+            // Returns the WINDOWPOS structure pointed to by the lParam parameter
+            // of a WM_WINDOWPOSCHANGING or WM_WINDOWPOSCHANGED message.
+            public static WINDOWPOS FromMessage(IntPtr lParam)
+            {
+                // Marshal the lParam parameter to an WINDOWPOS structure,
+                // and return the new structure
+                return (WINDOWPOS)Marshal.PtrToStructure(lParam, typeof(WINDOWPOS));
+            }
+
+            // Replaces the original WINDOWPOS structure pointed to by the lParam
+            // parameter of a WM_WINDOWPOSCHANGING or WM_WINDOWPSCHANGING message
+            // with this one, so that the native window will be able to see any
+            // changes that we have made to its values.
+            public void UpdateMessage(IntPtr lParam)
+            {
+                // Marshal this updated structure back to lParam so the native
+                // window can respond to our changes.
+                // The old structure that it points to should be deleted, too.
+                Marshal.StructureToPtr(this, lParam, true);
+            }
+        }
+
+
         [Flags]
         public enum SPIF
         {
@@ -1059,5 +1121,9 @@ namespace CairoDesktop.Interop
 
         [DllImport("user32.dll")]
         public static extern IntPtr DefWindowProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);*/
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWindow(IntPtr hWnd);
     }
 }

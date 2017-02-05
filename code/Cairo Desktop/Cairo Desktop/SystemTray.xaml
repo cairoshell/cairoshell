@@ -19,12 +19,12 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}"
+                        <Image Source="{Binding Path=Icon, Mode=OneWay}"
                             Width="16"
                             Height="16"
                             Margin="5,0,5,2"
                             ToolTip="{Binding Path=Title}"
-                            MouseUp="Image_MouseUp" />
+                            MouseUp="Image_MouseUp" MouseEnter="Image_MouseEnter" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

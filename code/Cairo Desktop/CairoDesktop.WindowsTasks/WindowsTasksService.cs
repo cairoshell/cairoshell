@@ -71,11 +71,11 @@ namespace CairoDesktop.WindowsTasks
                 SetMinimizedMetrics();
                 
 
-                int msg = NativeMethods.RegisterWindowMessage("TaskbarCreated");
+                //int msg = NativeMethods.RegisterWindowMessage("TaskbarCreated");
                 IntPtr ptr = new IntPtr(0xffff);
-                IntPtr hDeskWnd = NativeMethods.GetDesktopWindow();
-                NativeMethods.SendMessageTimeout(ptr, (uint)msg, IntPtr.Zero, IntPtr.Zero, 2, 200, ref ptr);
-                NativeMethods.SendMessageTimeout(hDeskWnd, 0x0400, IntPtr.Zero, IntPtr.Zero, 2, 200, ref hDeskWnd);
+                //IntPtr hDeskWnd = NativeMethods.GetDesktopWindow();
+                //NativeMethods.SendMessageTimeout(ptr, (uint)msg, IntPtr.Zero, IntPtr.Zero, 2, 200, ref ptr);
+                //NativeMethods.SendMessageTimeout(hDeskWnd, 0x0400, IntPtr.Zero, IntPtr.Zero, 2, 200, ref hDeskWnd);
 
                 NativeMethods.EnumWindows(new NativeMethods.CallBackPtr((hwnd, lParam) =>
                 {

@@ -178,7 +178,7 @@ namespace CairoDesktop.WindowsTasks
                 int style = NativeMethods.GetWindowLong(this.Handle, GWL_STYLE);
                 IntPtr ownerWin = NativeMethods.GetWindow(this.Handle, GW_Owner);
 
-                if (((exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0 || (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0 || (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST) != 0) && (ownerWin == IntPtr.Zero && (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) == 0 && (style & (int)NativeMethods.WindowStyles.WS_VISIBLE) == (int)NativeMethods.WindowStyles.WS_VISIBLE))
+                if (((exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0 || (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0 || (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST) != 0 || exStyles == 0) && (ownerWin == IntPtr.Zero && (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) == 0 && (style & (int)NativeMethods.WindowStyles.WS_VISIBLE) == (int)NativeMethods.WindowStyles.WS_VISIBLE))
                 {
                     return true;
                 }

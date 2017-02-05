@@ -40,6 +40,8 @@ void SetSystrayCallback(LPVOID theCallbackFunctionAddress)
 
 void InitializeSystray()
 {
+	ShutdownSystray();
+
 	memset(&m_TrayClass, 0, sizeof(m_TrayClass));
 	
 	m_TrayClass.lpszClassName = L"Shell_TrayWnd";

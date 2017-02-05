@@ -47,6 +47,17 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
             {
+                // Extract the WINDOWPOS structure corresponding to this message
+                NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
+
+                // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
+                if (!((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == NativeMethods.SetWindowPosFlags.SWP_NOZORDER))
+                {
+                    // add the SWP_NOZORDER flag
+                    wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOZORDER;
+                    wndPos.UpdateMessage(lParam);
+                }
+
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
@@ -59,7 +70,7 @@ namespace CairoDesktop
             return IntPtr.Zero;
         }
 
-        private void setPosition(uint x, uint y)
+            private void setPosition(uint x, uint y)
         {
             this.Top = 0;
             this.Left = 0;
@@ -76,7 +87,7 @@ namespace CairoDesktop
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // show the windows desktop
-            Interop.Shell.ToggleDesktopIcons(true);
+            Shell.ToggleDesktopIcons(true);
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)
@@ -99,14 +110,6 @@ namespace CairoDesktop
                     nav.Show();
                 }
             }
-
-            /*DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 5), DispatcherPriority.Normal, delegate
-            {
-                this.Top = 0;
-                this.Left = 0;
-                this.Width = AppBarHelper.PrimaryMonitorSize.Width;
-                this.Height = AppBarHelper.PrimaryMonitorSize.Height;
-            }, this.Dispatcher);*/
         }
 
         private void pasteFromClipboard()
@@ -148,6 +151,11 @@ namespace CairoDesktop
                 Shell.StartProcess("desk.cpl");
             }
             catch { }
+        }
+
+        private void grid_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            NativeMethods.SetForegroundWindow(helper.Handle);
         }
     }
 }
