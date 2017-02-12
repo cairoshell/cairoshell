@@ -57,6 +57,10 @@ namespace CairoDesktop
 
             // Set Programs Menu to use appGrabber's ProgramList as its source
             categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
+
+            // set tab based on user preference
+            int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.DefaultProgramsCategory));
+            categorizedProgramsList.SelectedIndex = i;
         }
 
         private void setupPlaces()

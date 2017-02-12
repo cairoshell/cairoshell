@@ -47,5 +47,8 @@
     <Setting Name="SysTrayAlwaysExpanded" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="DefaultProgramsCategory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">All</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

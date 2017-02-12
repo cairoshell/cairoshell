@@ -40,6 +40,7 @@
         private static int? _WindowsTaskbarMode;
 
         // Menu Bar
+        private static string _DefaultProgramsCategory;
         private static bool? _EnableMenuBarShadow;
         private static bool? _EnableSysTray;
         private static bool? _SysTrayAlwaysExpanded;
@@ -256,6 +257,23 @@
         }
 
         // Menu Bar
+        public static string DefaultProgramsCategory
+        {
+            get
+            {
+                if (_DefaultProgramsCategory == null)
+                    _DefaultProgramsCategory = Properties.Settings.Default.DefaultProgramsCategory;
+
+                return _DefaultProgramsCategory;
+            }
+            set
+            {
+                _DefaultProgramsCategory = value;
+                Properties.Settings.Default.DefaultProgramsCategory = _DefaultProgramsCategory;
+                Save();
+            }
+        }
+
         public static bool EnableMenuBarShadow
         {
             get

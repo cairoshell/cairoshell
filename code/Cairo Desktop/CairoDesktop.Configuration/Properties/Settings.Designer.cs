@@ -202,5 +202,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["SysTrayAlwaysExpanded"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("All")]
+        public string DefaultProgramsCategory {
+            get {
+                return ((string)(this["DefaultProgramsCategory"]));
+            }
+            set {
+                this["DefaultProgramsCategory"] = value;
+            }
+        }
     }
 }

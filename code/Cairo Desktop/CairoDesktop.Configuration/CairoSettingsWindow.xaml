@@ -214,6 +214,11 @@
             </TabItem>
             <TabItem Header="Menu Bar">
                 <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Default programs category:" Width="160" />
+                        <TextBox Text="{Binding Path=DefaultProgramsCategory}"
+                            Name="txtDefaultProgramsCategory" Width="170" />
+                    </StackPanel>
                     <CheckBox Content="Enable Menu Bar shadow"
                         IsChecked="{Binding Path=EnableMenuBarShadow}"
                         Click="EnableMenuBarShadow_Click" Name="chkEnableMenuBarShadow" />
