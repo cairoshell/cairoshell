@@ -220,6 +220,13 @@
                     <CheckBox Content="Enable system tray"
                         IsChecked="{Binding Path=EnableSysTray}"
                         Click="EnableSysTray_Click" Name="chkEnableSysTray" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Show Tray Icons:" VerticalAlignment="Top" />
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton Content="Collapsed" GroupName="rdoTrayMode" Name="radTrayMode0" Click="radTrayMode0_Click" />
+                            <RadioButton Content="Always" GroupName="rdoTrayMode" Name="radTrayMode1" Click="radTrayMode1_Click" />
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
             <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}" Name="btnRestart" MouseLeftButtonUp="restartCairo" Visibility="Hidden">

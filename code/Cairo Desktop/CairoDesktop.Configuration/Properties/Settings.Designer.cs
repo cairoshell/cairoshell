@@ -190,5 +190,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["WindowsTaskbarMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SysTrayAlwaysExpanded {
+            get {
+                return ((bool)(this["SysTrayAlwaysExpanded"]));
+            }
+            set {
+                this["SysTrayAlwaysExpanded"] = value;
+            }
+        }
     }
 }

@@ -19,10 +19,10 @@
             InitializeComponent();
 
             loadThemes();
-            loadTaskbarMode();
+            loadRadioGroups();
         }
 
-        private void loadTaskbarMode()
+        private void loadRadioGroups()
         {
             switch (Settings.WindowsTaskbarMode)
             {
@@ -40,6 +40,20 @@
                     radTaskbarMode0.IsChecked = false;
                     radTaskbarMode1.IsChecked = false;
                     radTaskbarMode2.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (Settings.SysTrayAlwaysExpanded)
+            {
+                case false:
+                    radTrayMode0.IsChecked = true;
+                    radTrayMode1.IsChecked = false;
+                    break;
+                case true:
+                    radTrayMode0.IsChecked = false;
+                    radTrayMode1.IsChecked = true;
                     break;
                 default:
                     break;
@@ -169,6 +183,18 @@
         private void radTaskbarMode2_Click(object sender, RoutedEventArgs e)
         {
             Settings.WindowsTaskbarMode = 2;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTrayMode0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.SysTrayAlwaysExpanded = false;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTrayMode1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.SysTrayAlwaysExpanded = true;
             this.btnRestart.Visibility = Visibility.Visible;
         }
     }

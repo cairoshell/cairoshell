@@ -84,7 +84,11 @@
     <Reference Include="PresentationFramework.Aero">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="SearchAPILib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="SearchAPILib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\..\Dependencies\SearchAPILib\SearchAPILib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -312,7 +316,6 @@
     <Resource Include="Resources\controlsBrowse.png" />
     <SplashScreen Include="Resources\loadSplash.png" />
     <Resource Include="Resources\taskViewIcon.png" />
-    <Content Include="SearchAPILib.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">

@@ -42,6 +42,7 @@
         // Menu Bar
         private static bool? _EnableMenuBarShadow;
         private static bool? _EnableSysTray;
+        private static bool? _SysTrayAlwaysExpanded;
 
         #endregion
 
@@ -285,6 +286,23 @@
             {
                 _EnableSysTray = value;
                 Properties.Settings.Default.EnableSysTray = (bool)_EnableSysTray;
+                Save();
+            }
+        }
+
+        public static bool SysTrayAlwaysExpanded
+        {
+            get
+            {
+                if (_SysTrayAlwaysExpanded == null)
+                    _SysTrayAlwaysExpanded = Properties.Settings.Default.SysTrayAlwaysExpanded;
+
+                return (bool)_SysTrayAlwaysExpanded;
+            }
+            set
+            {
+                _SysTrayAlwaysExpanded = value;
+                Properties.Settings.Default.SysTrayAlwaysExpanded = (bool)_SysTrayAlwaysExpanded;
                 Save();
             }
         }

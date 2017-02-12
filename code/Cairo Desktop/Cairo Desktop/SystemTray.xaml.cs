@@ -111,7 +111,11 @@ namespace CairoDesktop
 
                             if (!exists)
                             {
-                                btnToggle.Visibility = Visibility.Visible;
+                                if(!Configuration.Settings.SysTrayAlwaysExpanded)
+                                    btnToggle.Visibility = Visibility.Visible;
+                                else
+                                    LayoutRoot.Visibility = Visibility.Visible;
+
                                 TrayIcons.Add(trayIcon);
                                 Trace.WriteLine("Added tray icon: " + trayIcon.Title);
                             }
@@ -139,7 +143,7 @@ namespace CairoDesktop
 
                         Trace.WriteLine("Removed tray icon: " + nicData.szTip);
 
-                        if (TrayIcons.Count < 1)
+                        if (TrayIcons.Count < 1 && !Configuration.Settings.SysTrayAlwaysExpanded)
                             btnToggle.Visibility = Visibility.Collapsed;
                     }
                     catch (Exception ex)
