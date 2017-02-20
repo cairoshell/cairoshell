@@ -72,6 +72,8 @@
             Value="#FFFFFFFF" />
         <Setter Property="FontFamily"
                                 Value="./Resources/#Segoe UI Semibold" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type MenuItem}">

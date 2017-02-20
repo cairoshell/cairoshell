@@ -12,6 +12,7 @@ namespace CairoDesktop.SupportingClasses
     {
         private static bool isInitialized = false;
         private static string stackConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoStacksConfig.xml";
+        private static System.Xml.Serialization.XmlSerializer serializer;
 
         private static InvokingObservableCollection<SystemDirectory> _stackLocations = new InvokingObservableCollection<SystemDirectory>(Application.Current.Dispatcher);
 
@@ -44,6 +45,11 @@ namespace CairoDesktop.SupportingClasses
         private static void initialize()
         {
             isInitialized = true;
+
+            // this causes an exception, thanks MS!
+            //serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<String>));
+
+            serializer = System.Xml.Serialization.XmlSerializer.FromTypes(new[] { typeof(List<String>) })[0];
 
             try
             {
@@ -81,7 +87,6 @@ namespace CairoDesktop.SupportingClasses
             settings.Indent = true;
             settings.IndentChars = "    ";
             System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(stackConfigFile, settings);
-            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<String>));
             serializer.Serialize(writer, locationPaths);
             writer.Close();
         }
@@ -90,7 +95,6 @@ namespace CairoDesktop.SupportingClasses
         {
             if (Interop.Shell.Exists(stackConfigFile))
             {
-                System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<String>));
                 System.Xml.XmlReader reader = System.Xml.XmlReader.Create(stackConfigFile);
                 List<String> locationPaths = serializer.Deserialize(reader) as List<String>;
                 foreach (String path in locationPaths)
