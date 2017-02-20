@@ -137,6 +137,7 @@
       <DependentUpon>DesktopNavigationToolbar.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportingClasses\AppBarHelper.cs" />
+    <Compile Include="SupportingClasses\StacksManager.cs" />
     <Compile Include="SystemTray.xaml.cs">
       <DependentUpon>SystemTray.xaml</DependentUpon>
     </Compile>

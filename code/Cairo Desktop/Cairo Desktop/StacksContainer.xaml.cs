@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.IO;
 using CairoDesktop.Configuration;
 using CairoDesktop.Common;
+using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop {
     /// <summary>
@@ -14,91 +13,9 @@ namespace CairoDesktop {
     /// </summary>
     public partial class StacksContainer : UserControl 
     {
-        private static DependencyProperty locationsProperty = DependencyProperty.Register("Locations", typeof(InvokingObservableCollection<SystemDirectory>), typeof(StacksContainer), new PropertyMetadata(new InvokingObservableCollection<SystemDirectory>(Dispatcher.CurrentDispatcher)));
-        private string configFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoStacksConfig.xml";
-
         public StacksContainer() 
         {
             InitializeComponent();
-
-            try 
-            {
-                this.deserialize();
-            } 
-            catch {}
-
-            Locations.CollectionChanged += new NotifyCollectionChangedEventHandler(locations_CollectionChanged);
-
-            // Add some default folders on FirstRun
-            if (Settings.IsFirstRun == true) 
-            {
-                // Check for Documents Folder
-                String myDocsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                if (Directory.Exists(myDocsPath)) {
-                    SystemDirectory myDocsSysDir = new SystemDirectory(myDocsPath, Dispatcher.CurrentDispatcher);
-                    // Don't duplicate defaults
-                    if (!Locations.Contains(myDocsSysDir)) {
-                        Locations.Add(myDocsSysDir);
-                    }
-                }
-                // Check for Downloads folder
-                String downloadsPath = System.Environment.GetEnvironmentVariable("USERPROFILE") +@"\Downloads";
-                if (Directory.Exists(downloadsPath)) {
-                    SystemDirectory downloadsSysDir = new SystemDirectory(downloadsPath, Dispatcher.CurrentDispatcher);
-                    // Don't duplicate defaults
-                    if (!Locations.Contains(downloadsSysDir)) {
-                        Locations.Add(downloadsSysDir);
-                    }
-                }
-            }
-        }
-
-        public InvokingObservableCollection<SystemDirectory> Locations
-        {
-            get
-            {
-                return GetValue(locationsProperty) as InvokingObservableCollection<SystemDirectory>;
-            }
-            set
-            {
-                if (!this.Dispatcher.CheckAccess())
-                {
-                    this.Dispatcher.Invoke((Action)(() => this.Locations = value), null);
-                    return;
-                }
-
-                SetValue(locationsProperty, value);
-            }
-        }
-
-        void locations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            this.serialize();
-        }
-        
-        private void serialize() {
-            List<String> locationPaths = new List<String>();
-            foreach (SystemDirectory dir in Locations) {
-                locationPaths.Add(dir.FullName);
-            }
-            System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings();
-            settings.Indent = true;
-            settings.IndentChars = "    ";
-            System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(configFile, settings);
-            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<String>));
-            serializer.Serialize(writer, locationPaths);
-            writer.Close();
-        }
-        
-        private void deserialize() {
-            Locations.Clear();
-            System.Xml.Serialization.XmlSerializer serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<String>));
-            System.Xml.XmlReader reader = System.Xml.XmlReader.Create(configFile);
-            List<String> locationPaths = serializer.Deserialize(reader) as List<String>;
-            foreach (String path in locationPaths) {
-                Locations.Add(new SystemDirectory(path, this.Dispatcher));
-            }
-            reader.Close();
         }
 
         private void locationDisplay_DragEnter(object sender, DragEventArgs e)
@@ -119,11 +36,7 @@ namespace CairoDesktop {
             {
                 foreach (String fileName in fileNames)
                 {
-                    // Only add if the 'file' is a Directory
-                    if (Directory.Exists(fileName))
-                    {
-                        Locations.Add(new SystemDirectory(fileName, Dispatcher.CurrentDispatcher));
-                    }
+                    StacksManager.AddLocation(fileName);
                 }
             }
 
@@ -159,7 +72,7 @@ namespace CairoDesktop {
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-            Locations.Remove((sender as MenuItem).CommandParameter as SystemDirectory);
+            StacksManager.StackLocations.Remove((sender as MenuItem).CommandParameter as SystemDirectory);
         }
         
         private void Open_Click(object sender, RoutedEventArgs e)

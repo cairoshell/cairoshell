@@ -8,10 +8,11 @@
     Drop="locationDisplay_Drop"
     Background="Transparent"
     ToolTip="Drag directories here for easy access." ToolTipService.ShowDuration="1000"
-    ToolTipService.InitialShowDelay="1000" MinWidth="600"
+    ToolTipService.InitialShowDelay="1000" MinWidth="600" xmlns:stacksManager="clr-namespace:CairoDesktop.SupportingClasses"
     x:Name="CairoStacksContainer">
     <UserControl.Resources>
         <ResourceDictionary>
+            <stacksManager:StacksManager x:Key="StacksManager" x:Name="StacksManager" />
             <Style x:Key="FolderViewStyle"
                 TargetType="ItemsControl">
                 <Setter Property="ItemsPanel">
@@ -67,7 +68,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel Margin="0">
-        <ItemsControl ItemsSource="{Binding ElementName=CairoStacksContainer, Path=Locations}">
+        <ItemsControl ItemsSource="{Binding Source={StaticResource StacksManager}, Path=StackLocations}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel Orientation="Horizontal" />

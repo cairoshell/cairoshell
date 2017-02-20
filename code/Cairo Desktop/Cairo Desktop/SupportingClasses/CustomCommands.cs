@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Collections.Specialized;
 using CairoDesktop.Configuration;
 using CairoDesktop.Common;
+using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop
 {
@@ -74,6 +75,11 @@ namespace CairoDesktop
                 System.Windows.Forms.Clipboard.SetFileDropList(scPath);
                 return;
             }
+            else if (verb == "addStack")
+            {
+                StacksManager.AddLocation(fileName);
+                return;
+            }
 
             System.Diagnostics.Process proc = new System.Diagnostics.Process();
             proc.StartInfo.UseShellExecute = true;
@@ -101,6 +107,8 @@ namespace CairoDesktop
 
                 if ((File.GetAttributes(filePath) & FileAttributes.Directory) != FileAttributes.Directory)
                     menu.Items.Add(new MenuItem { Header = "Open With...", Tag = "openwith|" + filePath });
+                else
+                    menu.Items.Add(new MenuItem { Header = "Add to Stacks", Tag = "addStack|" + filePath });
 
                 foreach (string verb in ((menu.PlacementTarget as Button).DataContext as SystemFile).Verbs)
                 {
