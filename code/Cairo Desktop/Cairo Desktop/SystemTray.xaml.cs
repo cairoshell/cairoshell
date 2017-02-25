@@ -39,7 +39,7 @@ namespace CairoDesktop
                 // Synchronised!
                 if (this.Dispatcher.Thread != System.Threading.Thread.CurrentThread)
                 {
-                    this.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate { this.TrayIcons = value; });
+                    this.Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate { this.TrayIcons = value; });
                     return;
                 }
                 SetValue(iconListProperty, value);
@@ -55,7 +55,7 @@ namespace CairoDesktop
                 hooksWrapper.InitializeSystray();
                 hooksWrapper.Run();
 
-                DispatcherTimer autoRestart = new DispatcherTimer(new TimeSpan(0, 0, 10), DispatcherPriority.Normal, delegate
+                DispatcherTimer autoRestart = new DispatcherTimer(new TimeSpan(0, 0, 10), DispatcherPriority.Background, delegate
                 {
                     // for some reason some apps stop us from receiving messages so we need to do this
                     hooksWrapper.InitializeSystray();

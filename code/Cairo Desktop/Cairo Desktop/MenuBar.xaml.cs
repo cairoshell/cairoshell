@@ -88,8 +88,8 @@ namespace CairoDesktop
             else
             {
                 CairoSearchMenu.Visibility = Visibility.Collapsed;
-                DispatcherTimer searchcheck = new DispatcherTimer(DispatcherPriority.Normal, this.Dispatcher);
-                searchcheck.Interval = new TimeSpan(0, 0, 7);
+                DispatcherTimer searchcheck = new DispatcherTimer(DispatcherPriority.Background, this.Dispatcher);
+                searchcheck.Interval = new TimeSpan(0, 0, 5);
                 searchcheck.Tick += searchcheck_Tick;
                 searchcheck.Start();
             }
@@ -163,7 +163,7 @@ namespace CairoDesktop
             clock_Tick();
 
             // Create our timer for clock
-            DispatcherTimer clock = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
+            DispatcherTimer clock = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 500), DispatcherPriority.Background, delegate
             {
                 clock_Tick();
             }, this.Dispatcher);

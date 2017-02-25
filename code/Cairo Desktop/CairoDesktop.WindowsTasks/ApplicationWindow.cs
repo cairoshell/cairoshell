@@ -22,7 +22,7 @@ namespace CairoDesktop.WindowsTasks
                 sourceService.Redraw += HandleRedraw;
             }
 
-            DispatcherTimer autoResize = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Normal, delegate
+            DispatcherTimer visCheck = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Background, delegate
             {
                 // some windows don't send a redraw notification after a property changes, try to catch those cases here
                 OnPropertyChanged("Title");

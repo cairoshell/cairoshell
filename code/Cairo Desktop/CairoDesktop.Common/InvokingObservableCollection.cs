@@ -24,7 +24,7 @@ namespace CairoDesktop.Common {
             if (dispatcherUIThread.CheckAccess()) {
                 base.SetItem(index, item);
             } else {
-                dispatcherUIThread.Invoke(DispatcherPriority.Send,
+                dispatcherUIThread.Invoke(DispatcherPriority.Background,
                     new SetItemCallback(SetItem), index, new object[] { item });
             }
         }
@@ -33,7 +33,7 @@ namespace CairoDesktop.Common {
             if (dispatcherUIThread.CheckAccess()) {
                 base.RemoveItem(index);
             } else {
-                dispatcherUIThread.Invoke(DispatcherPriority.Send,
+                dispatcherUIThread.Invoke(DispatcherPriority.Background,
                     new RemoveItemCallback(RemoveItem), index);
             }
         }
@@ -42,7 +42,7 @@ namespace CairoDesktop.Common {
             if (dispatcherUIThread.CheckAccess()) {
                 base.ClearItems();
             } else {
-                dispatcherUIThread.Invoke(DispatcherPriority.Send,
+                dispatcherUIThread.Invoke(DispatcherPriority.Background,
                     new ClearItemsCallback(ClearItems));
             }
         }
@@ -51,7 +51,7 @@ namespace CairoDesktop.Common {
             if (dispatcherUIThread.CheckAccess()) {
                 base.InsertItem(index, item);
             } else {
-                dispatcherUIThread.Invoke(DispatcherPriority.Send,
+                dispatcherUIThread.Invoke(DispatcherPriority.Background,
                     new InsertItemCallback(InsertItem), index, new object[] { item });
             }
         }
@@ -60,7 +60,7 @@ namespace CairoDesktop.Common {
             if (dispatcherUIThread.CheckAccess()) {
                 base.MoveItem(oldIndex, newIndex);
             } else {
-                dispatcherUIThread.Invoke(DispatcherPriority.Send,
+                dispatcherUIThread.Invoke(DispatcherPriority.Background,
                     new MoveItemCallback(MoveItem), oldIndex, new object[] { newIndex });
             }
         }

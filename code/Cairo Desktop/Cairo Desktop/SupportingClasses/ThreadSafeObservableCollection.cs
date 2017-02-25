@@ -25,7 +25,7 @@ namespace VistaSearchProvider
             }
             else
             {
-                _dispatcher.Invoke(DispatcherPriority.DataBind, (SendOrPostCallback)delegate { Clear(); },null);
+                _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { Clear(); },null);
             }
         }
         protected override void InsertItem(int index, T item)
@@ -41,7 +41,7 @@ namespace VistaSearchProvider
             else
             {
                 object[] e = new object[] { index, item };
-                _dispatcher.Invoke(DispatcherPriority.DataBind, (SendOrPostCallback)delegate { InsertItemImpl(e); }, e);
+                _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { InsertItemImpl(e); }, e);
             }
         }
         void InsertItemImpl(object[] e)
@@ -52,7 +52,7 @@ namespace VistaSearchProvider
             }
             else
             {
-                _dispatcher.Invoke(DispatcherPriority.DataBind, (SendOrPostCallback)delegate { InsertItemImpl(e); });
+                _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { InsertItemImpl(e); });
             }
         }
         protected override void MoveItem(int oldIndex, int newIndex)
@@ -68,7 +68,7 @@ namespace VistaSearchProvider
             else
             {
                 object[] e = new object[] { oldIndex, newIndex };
-                _dispatcher.Invoke(DispatcherPriority.DataBind, (SendOrPostCallback)delegate { MoveItemImpl(e); }, e);
+                _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { MoveItemImpl(e); }, e);
             }
         }
         void MoveItemImpl(object[] e)
@@ -79,7 +79,7 @@ namespace VistaSearchProvider
             }
             else
             {
-                _dispatcher.Invoke(DispatcherPriority.DataBind, (SendOrPostCallback)delegate { MoveItemImpl(e); });
+                _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { MoveItemImpl(e); });
             }
         }
         protected override void RemoveItem(int index)
@@ -94,7 +94,7 @@ namespace VistaSearchProvider
             }
             else
             {
-                _dispatcher.Invoke(DispatcherPriority.DataBind, (SendOrPostCallback)delegate { RemoveItem(index); }, index);
+                _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { RemoveItem(index); }, index);
             }
         }
         protected override void SetItem(int index, T item)
@@ -108,7 +108,7 @@ namespace VistaSearchProvider
             else
             {
                 object[] e = new object[] { index, item };
-                _dispatcher.Invoke(DispatcherPriority.DataBind, (SendOrPostCallback)delegate { SetItemImpl(e); }, e);
+                _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { SetItemImpl(e); }, e);
             }
         }
         void SetItemImpl(object[] e)
@@ -119,7 +119,7 @@ namespace VistaSearchProvider
             }
             else
             {
-                _dispatcher.Invoke(DispatcherPriority.DataBind, (SendOrPostCallback)delegate { SetItemImpl(e); });
+                _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { SetItemImpl(e); });
             }
         }
     }
