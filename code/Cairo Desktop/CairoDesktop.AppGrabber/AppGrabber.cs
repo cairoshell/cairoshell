@@ -4,7 +4,6 @@ using System.IO;
 using System.Windows;
 using System.Linq;
 using System.Diagnostics;
-using Microsoft.Win32;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -139,13 +138,17 @@ namespace CairoDesktop.AppGrabber
                 string id = app[0];
                 string path = app[1];
 
+                string[] appInfo = UWPInterop.StoreAppHelper.GetAppInfo(id);
+
                 ApplicationInfo ai = new ApplicationInfo();
-                ai.Name = UWPInterop.StoreAppHelper.GetAppName(id);
+                ai.Name = appInfo[0];
                 ai.Path = "appx:" + path;
                 ai.Target = path;
-                //ai.Icon = ai.GetAssociatedIcon();
+                ai.IconPath = appInfo[1];
+                ai.IconColor = appInfo[2];
 
-                storeApps.Add(ai);
+                if (ai.Name != "")
+                    storeApps.Add(ai);
             }
 
             return storeApps;

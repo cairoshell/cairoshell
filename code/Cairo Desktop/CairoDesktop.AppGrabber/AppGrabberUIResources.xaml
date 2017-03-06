@@ -218,10 +218,12 @@
                 <DataTemplate>
                     <DockPanel MinHeight="20"
                         VerticalAlignment="Center">
-                        <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
+                        <Grid Background="{Binding Path=IconColor, Mode=OneWay, IsAsync=True}" Height="16">
+                            <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                             Width="16"
                             Height="16"
                             DockPanel.Dock="Left" />
+                        </Grid>
                         <TextBlock Text="{Binding Path=Name}"
                             Margin="3"
                             FontFamily="Corbel"

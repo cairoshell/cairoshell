@@ -3,6 +3,7 @@ using System.Windows.Media;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
+using System.Windows.Media.Imaging;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -25,13 +26,15 @@ namespace CairoDesktop.AppGrabber
         /// <param name="path">Path to the shortcut.</param>
         /// <param name="target">Path to the executable.</param>
         /// <param name="icon">ImageSource used to denote the application's icon in a graphical environment.</param>
-        public ApplicationInfo(string name, string path, string target, ImageSource icon)
+        public ApplicationInfo(string name, string path, string target, ImageSource icon, string iconColor, string iconPath)
 		{
 			this.Name = name;
 			this.Path = path;
             this.Target = target;
             this.Icon = icon;
-		}
+            this.IconColor = iconColor;
+            this.IconPath = iconPath;
+        }
 
         private string name;
         /// <summary>
@@ -77,6 +80,47 @@ namespace CairoDesktop.AppGrabber
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs("Target"));
+                }
+            }
+        }
+
+        private string iconColor;
+        /// <summary>
+        /// Path to the executable.
+        /// </summary>
+        public string IconColor
+        {
+            get {
+                if (!string.IsNullOrEmpty(iconColor))
+                    return iconColor;
+                else
+                    return "Transparent";
+            }
+            set
+            {
+                iconColor = value;
+                // Notify Databindings of property change
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("IconColor"));
+                }
+            }
+        }
+
+        private string iconPath;
+        /// <summary>
+        /// Path to the executable.
+        /// </summary>
+        public string IconPath
+        {
+            get { return iconPath; }
+            set
+            {
+                iconPath = value;
+                // Notify Databindings of property change
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("IconPath"));
                 }
             }
         }
@@ -198,7 +242,23 @@ namespace CairoDesktop.AppGrabber
         /// Gets an ImageSource object representing the associated icon of a file.
         /// </summary>
         public ImageSource GetAssociatedIcon() {
-            if (this.path.StartsWith("appx:"))
+            if (this.path.StartsWith("appx:") && !string.IsNullOrEmpty(this.IconPath))
+            {
+                BitmapImage img = new BitmapImage();
+                try
+                {
+                    img.BeginInit();
+                    img.UriSource = new Uri(this.IconPath, UriKind.Absolute);
+                    img.EndInit();
+                    img.Freeze();
+                    return img;
+                }
+                catch
+                {
+                    return IconImageConverter.GetDefaultIcon();
+                }
+            }
+            else if (this.path.StartsWith("appx:"))
                 return IconImageConverter.GetDefaultIcon();
             else
                 return IconImageConverter.GetImageFromAssociatedIcon(this.Path, true);
@@ -209,7 +269,7 @@ namespace CairoDesktop.AppGrabber
         /// </summary>
         /// <returns>A new ApplicationInfo object with the same data as this object, not bound to a Category.</returns>
         internal ApplicationInfo Clone() {
-            ApplicationInfo rval = new ApplicationInfo(this.Name, this.Path, this.Target, this.Icon);
+            ApplicationInfo rval = new ApplicationInfo(this.Name, this.Path, this.Target, this.Icon, this.IconColor, this.IconPath);
             return rval;
         }
     }
