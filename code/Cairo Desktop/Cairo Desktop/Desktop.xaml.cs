@@ -30,11 +30,16 @@ namespace CairoDesktop
 
             if (Startup.IsCairoUserShell)
             {
-                // draw wallpaper
-                ImageBrush bgBrush = new ImageBrush();
-                bgBrush.ImageSource = new BitmapImage(new Uri((string)Registry.GetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop", "Wallpaper", ""), UriKind.Absolute));
+                string regWallpaper = (string)Registry.GetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop", "Wallpaper", "");
 
-                this.Background = bgBrush;
+                if (regWallpaper != string.Empty && Shell.Exists(regWallpaper))
+                {
+                    // draw wallpaper
+                    ImageBrush bgBrush = new ImageBrush();
+                    bgBrush.ImageSource = new BitmapImage(new Uri(regWallpaper, UriKind.Absolute));
+
+                    this.Background = bgBrush;
+                }
             }
         }
 
@@ -47,7 +52,7 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
             {
-                // Extract the WINDOWPOS structure corresponding to this message
+                /*// Extract the WINDOWPOS structure corresponding to this message
                 NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
 
                 // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
@@ -56,7 +61,7 @@ namespace CairoDesktop
                     // add the SWP_NOZORDER flag
                     wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOZORDER;
                     wndPos.UpdateMessage(lParam);
-                }
+                }*/
 
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
