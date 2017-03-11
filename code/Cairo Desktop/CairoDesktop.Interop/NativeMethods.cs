@@ -778,8 +778,13 @@ namespace CairoDesktop.Interop
         public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
         public const int GWL_EXSTYLE = -20;
+        public const int GW_OWNER = 4;
         public const int WS_EX_NOACTIVATE = 0x08000000;
-        
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWindowVisible(IntPtr hWnd);
+
         [DllImport("user32.dll")]
         public static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 

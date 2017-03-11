@@ -170,15 +170,16 @@ namespace CairoDesktop.WindowsTasks
                 }
 
                 // Make sure this is a real application window and not a child or tool window
-                int GWL_EXSTYLE = -0x14;
-                int GWL_STYLE = -16;
-                int GW_Owner = 4;
+                int exStyles = NativeMethods.GetWindowLong(this.Handle, NativeMethods.GWL_EXSTYLE);
+                IntPtr ownerWin = NativeMethods.GetWindow(this.Handle, NativeMethods.GW_OWNER);
 
-                int exStyles = NativeMethods.GetWindowLong(this.Handle, GWL_EXSTYLE);
-                int style = NativeMethods.GetWindowLong(this.Handle, GWL_STYLE);
-                IntPtr ownerWin = NativeMethods.GetWindow(this.Handle, GW_Owner);
+                bool isAppWindow = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
+                bool hasEdge = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0;
+                bool isTopmostOnly = exStyles == (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST;
+                bool isToolWindow = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
+                bool isVisible = NativeMethods.IsWindowVisible(this.Handle);
 
-                if (((exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0 || (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0 || (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST) != 0 || exStyles == 0) && (ownerWin == IntPtr.Zero && (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) == 0 && (style & (int)NativeMethods.WindowStyles.WS_VISIBLE) == (int)NativeMethods.WindowStyles.WS_VISIBLE))
+                if ((isAppWindow || hasEdge || isTopmostOnly || exStyles == 0) && ownerWin == IntPtr.Zero && !isToolWindow && isVisible)
                 {
                     return true;
                 }
