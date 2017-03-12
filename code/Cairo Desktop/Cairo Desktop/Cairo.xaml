@@ -56,7 +56,7 @@
                 <ControlTemplate TargetType="{x:Type Menu}">
                     <Border Background="Transparent"
                         BorderThickness="0"
-                        Margin="-2"
+                        Margin="0"
                         Padding="0">
                         <StackPanel ClipToBounds="True"
                             Orientation="Horizontal"
@@ -165,7 +165,7 @@
                                                 <Setter Property="CornerRadius"
                                                     Value="0,0,5,5" />
                                                 <Setter Property="Padding"
-                                                    Value="0,5,0,5" />
+                                                    Value="0,3,0,3" />
                                             </Style>
                                         </Border.Style>
                                         <Grid x:Name="SubMenu"
@@ -402,7 +402,7 @@
                                                 <Setter Property="CornerRadius"
                                                     Value="0,0,5,5" />
                                                 <Setter Property="Padding"
-                                                    Value="0,5,0,5" />
+                                                    Value="0,3,0,3" />
                                             </Style>
                                         </Border.Style>
                                         <Grid x:Name="SubMenu"
@@ -423,7 +423,7 @@
                         <Trigger Property="Role"
                             Value="TopLevelHeader">
                             <Setter Property="Padding"
-                                Value="0,0,0,0" />
+                                Value="2,0,2,0" />
                             <Setter Property="Margin"
                                 Value="0,-2,0,0" />
                             <Setter Property="Placement"
@@ -502,7 +502,7 @@
                         <Trigger Property="Role"
                             Value="TopLevelHeader">
                             <Setter Property="Padding"
-                                Value="0,0,0,0" />
+                                Value="2,0,2,0" />
                             <Setter Property="Margin"
                                 Value="0,-2,0,0" />
                             <Setter Property="Placement"
@@ -617,7 +617,7 @@
                                 <Setter Property="CornerRadius"
                                                     Value="5" />
                                 <Setter Property="Padding"
-                                                    Value="0,5,0,5" />
+                                                    Value="0,3,0,3" />
                                 <Setter Property="Margin"
                                                     Value="5,0,5,11" />
                                 <Setter Property="Effect"
@@ -1083,7 +1083,7 @@
         <Setter Property="BorderBrush" Value="#AF5b5b5b"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="5"/>
-        <Setter Property="Padding" Value="0,5,0,5"/>
+        <Setter Property="Padding" Value="0,3,0,3"/>
         <Setter Property="Margin" Value="5,0,5,28" />
         <Setter Property="Effect" Value="{StaticResource ResourceKey=CairoMenuShadow}" />
     </Style>
@@ -1747,8 +1747,8 @@
     <!-- Programs menu styles -->
     <Style x:Key="ProgramsTabControl" TargetType="{x:Type TabControl}">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Padding" Value="0,5" />
-        <Setter Property="Margin" Value="0,-5" />
+        <Setter Property="Padding" Value="0,3" />
+        <Setter Property="Margin" Value="0,-3" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="UseLayoutRounding" Value="True" />
         <Setter Property="Template">
@@ -1762,7 +1762,7 @@
                         <TabPanel x:Name="HeaderPanel"
                         Grid.Column="1"
                         Panel.ZIndex="1"
-                        Margin="0,5"
+                        Margin="0,3"
                         IsItemsHost="True"
                         Background="Transparent" />
                         <Border x:Name="Border"
@@ -1771,7 +1771,7 @@
                                 BorderBrush="#AF5b5b5b"
                                 Background="Transparent">
                             <ContentPresenter
-                                  Margin="0,5"
+                                  Margin="0,3"
                                   ContentSource="SelectedContent" />
                         </Border>
                     </Grid>
@@ -2321,7 +2321,7 @@
                         Margin="0,0,0,0"
                         Background="Transparent"
                         BorderBrush="Transparent" Opacity="0.7">
-                        <Path x:Name="Path" Margin="5,-2,9,0"
+                        <Path x:Name="Path" Margin="5,-2,13,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M 6 0 L 6 8 L 0 4 Z" />
                     </Border>

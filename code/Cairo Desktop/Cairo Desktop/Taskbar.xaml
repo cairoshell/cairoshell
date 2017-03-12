@@ -231,7 +231,7 @@
                     BorderBrush="#FF908382"
                     Style="{StaticResource ListViewStyle1}"
                     BorderThickness="0,0,0,0"
-                              Margin="0,-5,0,5"
+                              Margin="0,-3,0,3"
                     VerticalAlignment="Stretch" x:Name="TasksList2">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -246,9 +246,9 @@
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate>
-                                                        <StackPanel Orientation="Horizontal" Margin="0,5">
-                                                            <Border BorderThickness="0,0,1,0" BorderBrush="#AF5b5b5b" Width="100" Margin="0,-5">
-                                                                <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="White" Padding="6,9,6,0" />
+                                                        <StackPanel Orientation="Horizontal" Margin="0,3">
+                                                            <Border BorderThickness="0,0,1,0" BorderBrush="#AF5b5b5b" Width="100" Margin="0,-3">
+                                                                <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="White" Padding="6,7,6,0" />
                                                             </Border>
                                                             <ItemsPresenter />
                                                         </StackPanel>
@@ -285,7 +285,7 @@
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
-                            <Border Margin="99,-5,0,-5" Padding="0,5" Width="351" BorderThickness="1,0,0,0" BorderBrush="#AF5b5b5b">
+                            <Border Margin="99,-3,0,-3" Padding="0,3" Width="351" BorderThickness="1,0,0,0" BorderBrush="#AF5b5b5b">
                                 <MenuItem Header="Task View" Style="{StaticResource CairoMenuItemStyle}" Click="TaskView_Click">
                                     <MenuItem.Icon>
                                         <Image Source="Resources\taskViewIcon.png"
