@@ -135,17 +135,14 @@ namespace CairoDesktop.AppGrabber
 
             foreach (string[] app in UWPInterop.StoreAppHelper.GetStoreApps())
             {
-                string id = app[0];
-                string path = app[1];
-
-                string[] appInfo = UWPInterop.StoreAppHelper.GetAppInfo(id);
+                string path = app[0];
 
                 ApplicationInfo ai = new ApplicationInfo();
-                ai.Name = appInfo[0];
+                ai.Name = app[1];
                 ai.Path = "appx:" + path;
-                ai.Target = id;
-                ai.IconPath = appInfo[1];
-                ai.IconColor = appInfo[2];
+                ai.Target = path;
+                ai.IconPath = app[2];
+                ai.IconColor = app[3];
 
                 if (ai.Name != "")
                     storeApps.Add(ai);

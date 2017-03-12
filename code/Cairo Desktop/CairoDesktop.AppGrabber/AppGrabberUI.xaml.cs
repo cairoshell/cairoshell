@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -21,30 +22,6 @@ namespace CairoDesktop.AppGrabber
         {
             this.appGrabber = appGrabber;
             InitializeComponent();
-
-            // Now to add them to the list on the AppGrabber
-            // Create ObservableCollections to bind to the ListViews
-
-            ObservableCollection<ApplicationInfo> installedAppsCollection = new ObservableCollection<ApplicationInfo>();
-            programsMenuAppsCollection = appGrabber.CategoryList.FlatList;
-            InstalledAppsView.ItemsSource = installedAppsCollection;
-            ProgramsMenuAppsView.ItemsSource = programsMenuAppsCollection;
-            // Need to use an event handler to remove Apps from categories when moved to the "Installed Applications" listing
-            programsMenuAppsCollection.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(programsMenuAppsCollection_CollectionChanged);
-            
-            // Grab the Programs
-            List<ApplicationInfo> apps = appGrabber.ProgramList;
-
-            // Iterate thru the apps, creating ApplicationInfoPanels and
-            // add them to the installedAppsCollection
-            foreach (ApplicationInfo app in apps)
-            {
-                if (!programsMenuAppsCollection.Contains(app)) {
-                    installedAppsCollection.Add(app);
-                }
-            }
-            AppViewSorter.Sort(installedAppsCollection, "Name");
-            AppViewSorter.Sort(programsMenuAppsCollection, "Name");
         }
 
         void programsMenuAppsCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
@@ -66,6 +43,38 @@ namespace CairoDesktop.AppGrabber
             this.Visibility = Visibility.Hidden;
             new AppGrabberUI_Page2(this.appGrabber, programsMenuAppsCollection).Show();
             this.Close();
+        }
+
+        private void Window_ContentRendered(object sender, EventArgs e)
+        {
+            // Now to add them to the list on the AppGrabber
+            // Create ObservableCollections to bind to the ListViews
+
+            ObservableCollection<ApplicationInfo> installedAppsCollection = new ObservableCollection<ApplicationInfo>();
+            programsMenuAppsCollection = appGrabber.CategoryList.FlatList;
+            InstalledAppsView.ItemsSource = installedAppsCollection;
+            ProgramsMenuAppsView.ItemsSource = programsMenuAppsCollection;
+            // Need to use an event handler to remove Apps from categories when moved to the "Installed Applications" listing
+            programsMenuAppsCollection.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(programsMenuAppsCollection_CollectionChanged);
+
+            // Grab the Programs
+            List<ApplicationInfo> apps = appGrabber.ProgramList;
+
+            // Iterate thru the apps, creating ApplicationInfoPanels and
+            // add them to the installedAppsCollection
+            foreach (ApplicationInfo app in apps)
+            {
+                if (!programsMenuAppsCollection.Contains(app))
+                {
+                    installedAppsCollection.Add(app);
+                }
+            }
+            AppViewSorter.Sort(installedAppsCollection, "Name");
+            AppViewSorter.Sort(programsMenuAppsCollection, "Name");
+
+            // show content
+            bdrLoad.Visibility = Visibility.Collapsed;
+            bdrMain.Visibility = Visibility.Visible;
         }
     }
 }

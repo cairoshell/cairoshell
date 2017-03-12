@@ -6,7 +6,7 @@
     AllowsTransparency="True"
     WindowStyle="None"
     Background="Transparent"
-    WindowStartupLocation="CenterScreen" UseLayoutRounding="True">
+    WindowStartupLocation="CenterScreen" UseLayoutRounding="True" ContentRendered="Window_ContentRendered">
     <Window.Resources>
         <ResourceDictionary Source="AppGrabberUIResources.xaml" />
     </Window.Resources>
@@ -14,20 +14,30 @@
         <Border BorderThickness="0" Margin="12,7,12,17">
             <Border.Effect>
                 <DropShadowEffect Color="Black" ShadowDepth="6" Direction="270" Opacity="0.5" BlurRadius="15" />
-                </Border.Effect>
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0"
-                EndPoint="0,1">
-                        <LinearGradientBrush.GradientStops>
-                            <GradientStop Color="#FFFFFFFF"
-                        Offset="0" />
-                            <GradientStop Color="#FFF0F0F0"
-                        Offset="1" />
-                        </LinearGradientBrush.GradientStops>
-                    </LinearGradientBrush>
-                </Border.Background>
-            </Border>
-        <Border Margin="12,7,12,17">
+            </Border.Effect>
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0"
+            EndPoint="0,1">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Color="#FFFFFFFF"
+                    Offset="0" />
+                        <GradientStop Color="#FFF0F0F0"
+                    Offset="1" />
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+        <Border Margin="12,7,12,17" Name="bdrLoad">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical">
+                <Image Source="Resources\cairoIcon.png" Width="107" Height="105" Margin="0,0,0,20" />
+                <TextBlock FontFamily="Corbel"
+                            Foreground="#FF000000"
+                            FontSize="22"
+                            HorizontalAlignment="Center"
+                            FontWeight="Bold">Please wait while Cairo finds your apps...</TextBlock>
+            </StackPanel>
+        </Border>
+        <Border Margin="12,7,12,17" Name="bdrMain" Visibility="Collapsed">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32" />
@@ -66,7 +76,7 @@
                         FontSize="14"
                         Margin="0,10,0,0"
                         Width="690"
-                        TextWrapping="Wrap">Cairo has pre-selected applications that might be useful for your Programs menu.  To add or remove applications from this menu at any time, run the App Grabber from the Cairo menu or simply drag items in or out of the menu.</TextBlock>
+                        TextWrapping="Wrap"><!--Cairo has pre-selected applications that might be useful for your Programs menu.  -->To add or remove applications from this menu at any time, run the App Grabber from the Cairo menu or simply drag items in or out of the menu.</TextBlock>
                 </StackPanel>
                 <Border Grid.Row="3"
                     Grid.Column="1"
