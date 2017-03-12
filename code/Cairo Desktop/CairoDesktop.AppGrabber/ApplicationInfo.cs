@@ -242,8 +242,20 @@ namespace CairoDesktop.AppGrabber
         /// Gets an ImageSource object representing the associated icon of a file.
         /// </summary>
         public ImageSource GetAssociatedIcon() {
-            if (this.path.StartsWith("appx:") && !string.IsNullOrEmpty(this.IconPath))
+            if (this.path.StartsWith("appx:"))
             {
+                if (string.IsNullOrEmpty(this.IconPath) || !Interop.Shell.Exists(this.IconPath))
+                {
+                    try
+                    {
+                        this.IconPath = UWPInterop.StoreAppHelper.GetAppInfo(this.Target, true)[1];
+                    }
+                    catch
+                    {
+                        return IconImageConverter.GetDefaultIcon();
+                    }
+                }
+
                 BitmapImage img = new BitmapImage();
                 try
                 {

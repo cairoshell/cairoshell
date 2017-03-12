@@ -65,11 +65,11 @@ namespace CairoDesktop.UWPInterop
         }
 
         // returns [name,icon,color]
-        public static string[] GetAppInfo(string id)
+        public static string[] GetAppInfo(string id, bool iconOnly = false)
         {
             string returnName = "";
             string returnIcon = "";
-            string returnColor = "#000000";
+            string returnColor = "#555555";
             Windows.Management.Deployment.PackageManager pman = new Windows.Management.Deployment.PackageManager();
             Windows.ApplicationModel.Package pkg = pman.FindPackageForUser(System.Security.Principal.WindowsIdentity.GetCurrent().User.ToString(), id);
             
@@ -86,46 +86,66 @@ namespace CairoDesktop.UWPInterop
                 XmlNode showEntry = app.SelectSingleNode("uap:VisualElements/@AppListEntry", xmlnsManager);
                 if (showEntry == null || showEntry.Value == "true")
                 {
-                    Uri nameUri;
-                    string nameKey = app.SelectSingleNode("uap:VisualElements/@DisplayName", xmlnsManager).Value;
-
-                    if (!Uri.TryCreate(nameKey, UriKind.Absolute, out nameUri))
-                        returnName = nameKey;
-                    else
+                    if (!iconOnly)
                     {
-                        var resourceKey = string.Format("ms-resource://{0}/resources/{1}", pkg.Id.Name, nameUri.Segments.Last());
-                        string name = ExtractStringFromPRIFile(path + "\\resources.pri", resourceKey);
-                        if (!string.IsNullOrEmpty(name))
-                            returnName = name;
+                        Uri nameUri;
+                        string nameKey = app.SelectSingleNode("uap:VisualElements/@DisplayName", xmlnsManager).Value;
+
+                        if (!Uri.TryCreate(nameKey, UriKind.Absolute, out nameUri))
+                            returnName = nameKey;
                         else
                         {
-                            resourceKey = string.Format("ms-resource://{0}/{1}", pkg.Id.Name, nameUri.Segments.Last());
-                            returnName = ExtractStringFromPRIFile(path + "\\resources.pri", resourceKey);
+                            var resourceKey = string.Format("ms-resource://{0}/resources/{1}", pkg.Id.Name, nameUri.Segments.Last());
+                            string name = ExtractStringFromPRIFile(path + "\\resources.pri", resourceKey);
+                            if (!string.IsNullOrEmpty(name))
+                                returnName = name;
+                            else
+                            {
+                                resourceKey = string.Format("ms-resource://{0}/{1}", pkg.Id.Name, nameUri.Segments.Last());
+                                returnName = ExtractStringFromPRIFile(path + "\\resources.pri", resourceKey);
+                            }
                         }
+
+                        XmlNode colorKey = app.SelectSingleNode("uap:VisualElements/@BackgroundColor", xmlnsManager);
+
+                        if (colorKey != null && !string.IsNullOrEmpty(colorKey.Value) && colorKey.Value.ToLower() != "transparent")
+                            returnColor = colorKey.Value;
+
                     }
-
-                    XmlNode colorKey = app.SelectSingleNode("uap:VisualElements/@BackgroundColor", xmlnsManager);
-
-                    if (colorKey != null && !string.IsNullOrEmpty(colorKey.Value) && colorKey.Value.ToLower() != "transparent")
-                        returnColor = colorKey.Value;
 
                     string iconPath = path + "\\" + (app.SelectSingleNode("uap:VisualElements/@Square44x44Logo", xmlnsManager).Value).Replace(".png", "");
 
-                    // ugh....
-                    if (File.Exists(iconPath + ".targetsize-32.png"))
-                        returnIcon = iconPath + ".targetsize-32.png";
-                    else if (File.Exists(iconPath + ".targetsize-16.png"))
-                        returnIcon = iconPath + ".targetsize-16.png";
-                    else if (File.Exists(iconPath + ".targetsize-24.png"))
-                        returnIcon = iconPath + ".targetsize-24.png";
-                    else if (File.Exists(iconPath + ".scale-100.png"))
-                        returnIcon = iconPath + ".scale-100.png";
-                    else if (File.Exists(iconPath + ".scale-200.png"))
-                        returnIcon = iconPath + ".scale-200.png";
-                    else if (File.Exists(iconPath + ".targetsize-256.png"))
-                        returnIcon = iconPath + ".targetsize-256.png";
-                    else if (File.Exists(iconPath + ".png"))
-                        returnIcon = iconPath + ".png";
+                    string[] iconAssets = new string[] {
+                        ".targetsize-32_altform-unplated.png",
+                        ".targetsize-36_altform-unplated.png",
+                        ".targetsize-40_altform-unplated.png",
+                        ".targetsize-48_altform-unplated.png",
+                        ".targetsize-32.png",
+                        ".targetsize-36.png",
+                        ".targetsize-40.png",
+                        ".targetsize-48.png",
+                        ".scale-200.png",
+                        ".targetsize-24_altform-unplated.png",
+                        ".targetsize-16_altform-unplated.png",
+                        ".targetsize-24.png",
+                        ".targetsize-16.png",
+                        ".scale-100.png",
+                        ".targetsize-256_altform-unplated.png",
+                        ".targetsize-256.png"
+                    };
+                    
+                    foreach (string iconName in iconAssets)
+                    {
+                        if (File.Exists(iconPath + iconName))
+                        {
+                            returnIcon = iconPath + iconName;
+
+                            if (iconName.EndsWith("_altform-unplated.png"))
+                                returnColor = "#555555";
+
+                            break;
+                        }
+                    }
                 }
             }
 

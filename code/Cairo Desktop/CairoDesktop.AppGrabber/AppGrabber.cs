@@ -143,7 +143,7 @@ namespace CairoDesktop.AppGrabber
                 ApplicationInfo ai = new ApplicationInfo();
                 ai.Name = appInfo[0];
                 ai.Path = "appx:" + path;
-                ai.Target = path;
+                ai.Target = id;
                 ai.IconPath = appInfo[1];
                 ai.IconColor = appInfo[2];
 
