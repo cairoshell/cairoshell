@@ -74,6 +74,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -115,6 +116,10 @@
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
       <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
       <Name>CairoDesktop.Interop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.UWPInterop\CairoDesktop.UWPInterop.csproj">
+      <Project>{52a795c9-3c28-487a-b7b8-aab324da7305}</Project>
+      <Name>CairoDesktop.UWPInterop</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

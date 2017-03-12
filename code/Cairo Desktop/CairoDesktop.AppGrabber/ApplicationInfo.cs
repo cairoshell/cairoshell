@@ -261,6 +261,7 @@ namespace CairoDesktop.AppGrabber
                 {
                     img.BeginInit();
                     img.UriSource = new Uri(this.IconPath, UriKind.Absolute);
+                    img.CacheOption = BitmapCacheOption.OnLoad;
                     img.EndInit();
                     img.Freeze();
                     return img;

@@ -6,6 +6,8 @@ using System.ComponentModel;
 using CairoDesktop.Interop;
 using CairoDesktop.AppGrabber;
 using System.Windows.Threading;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace CairoDesktop.WindowsTasks
 {
@@ -26,7 +28,6 @@ namespace CairoDesktop.WindowsTasks
             {
                 // some windows don't send a redraw notification after a property changes, try to catch those cases here
                 OnPropertyChanged("Title");
-                //OnPropertyChanged("Icon");
                 OnPropertyChanged("ShowInTaskbar");
             }, System.Windows.Application.Current.Dispatcher);
         }
@@ -47,6 +48,51 @@ namespace CairoDesktop.WindowsTasks
             set;
         }
 
+        private string _appUserModelId = "";
+
+        public string AppUserModelID
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_appUserModelId))
+                {
+                    uint cchLen = 256;
+                    StringBuilder appUserModelID = new StringBuilder((int)cchLen);
+
+                    NativeMethods.IPropertyStore propStore;
+                    var g = new Guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99");
+                    int result = NativeMethods.SHGetPropertyStoreForWindow(this.Handle, ref g, out propStore);
+
+                    NativeMethods.PropVariant prop;
+
+                    NativeMethods.PROPERTYKEY PKEY_AppUserModel_ID = new NativeMethods.PROPERTYKEY();
+                    PKEY_AppUserModel_ID.fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3");
+                    PKEY_AppUserModel_ID.pid = 5;
+
+                    propStore.GetValue(PKEY_AppUserModel_ID, out prop);
+
+                    _appUserModelId = prop.Value.ToString();
+                }
+
+                return _appUserModelId;
+            }
+        }
+
+        private string _winFileName = "";
+
+        public string WinFileName
+        {
+            get
+            {
+                if(string.IsNullOrEmpty(_winFileName))
+                {
+                    _winFileName = GetFileNameForWindow(this.Handle);
+                }
+
+                return _winFileName;
+            }
+        }
+
         private string _category;
 
         public string Category
@@ -55,12 +101,9 @@ namespace CairoDesktop.WindowsTasks
             {
                 if(_category == null)
                 {
-                    // get file
-                    string winFileName = GetFileNameForWindow(this.Handle);
-
-                    foreach(ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
+                    foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
                     {
-                        if(ai.Target == winFileName)
+                        if(ai.Target == WinFileName || (WinFileName.Contains("ApplicationFrameHost.exe") && ai.Target == AppUserModelID))
                         {
                             _category = ai.Category.Name;
                             break;
@@ -109,18 +152,52 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        public Icon Icon
+        public ImageSource Icon
+        {
+            get
+            {
+                if (WinFileName.Contains("ApplicationFrameHost.exe") && !string.IsNullOrEmpty(AppUserModelID))
+                {
+                    BitmapImage img = new BitmapImage();
+                    try
+                    {
+                        img.BeginInit();
+                        img.UriSource = new Uri(UWPInterop.StoreAppHelper.GetAppIcon(AppUserModelID)[0], UriKind.Absolute);
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        img.EndInit();
+                        img.Freeze();
+                        return img;
+                    }
+                    catch
+                    {
+                        return IconImageConverter.GetDefaultIcon();
+                    }
+                }
+
+                if (this._icon != null)
+                {
+                    ImageSource icon = IconImageConverter.GetImageFromHIcon(this._icon.Handle);
+                    icon.Freeze();
+                    return icon;
+                }
+
+                return IconImageConverter.GetDefaultIcon();
+            }
+        }
+
+        private Icon _icon
         {
             get
             {
                 IntPtr iconHandle = GetIconForWindow(this.Handle);
 
                 Icon ico = null;
+
                 if (iconHandle != IntPtr.Zero)
                 {
                     try
                     {
-                        ico = Icon.FromHandle(iconHandle);
+                        ico = System.Drawing.Icon.FromHandle(iconHandle);
                     }
                     catch
                     {
