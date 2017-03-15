@@ -10,6 +10,8 @@ namespace CairoDesktop.UWPInterop
 {
     public class StoreAppHelper
     {
+        const string defaultColor = "#111111";
+
         public static List<string[]> GetStoreApps()
         {
             List<string[]> ret = new List<string[]>();
@@ -50,7 +52,7 @@ namespace CairoDesktop.UWPInterop
                         string returnColor = "";
 
                         if (returnIcon.EndsWith("_altform-unplated.png"))
-                            returnColor = "#555555";
+                            returnColor = defaultColor;
                         else
                             returnColor = getPlateColor(app, xmlnsManager);
 
@@ -125,7 +127,7 @@ namespace CairoDesktop.UWPInterop
             if (colorKey != null && !string.IsNullOrEmpty(colorKey.Value) && colorKey.Value.ToLower() != "transparent")
                 return colorKey.Value;
             else
-                return "#555555";
+                return defaultColor;
         }
 
         private static string getIconPath(string path, XmlNode app, XmlNamespaceManager xmlnsManager)
@@ -202,7 +204,7 @@ namespace CairoDesktop.UWPInterop
                         returnIcon = getIconPath(path, app, xmlnsManager);
 
                         if (returnIcon.EndsWith("_altform-unplated.png"))
-                            returnColor = "#555555";
+                            returnColor = defaultColor;
                         else
                             returnColor = getPlateColor(app, xmlnsManager);
 

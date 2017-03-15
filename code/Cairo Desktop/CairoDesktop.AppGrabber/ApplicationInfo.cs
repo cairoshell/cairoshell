@@ -248,7 +248,9 @@ namespace CairoDesktop.AppGrabber
                 {
                     try
                     {
-                        this.IconPath = UWPInterop.StoreAppHelper.GetAppIcon(this.Target)[0];
+                        string[] icon = UWPInterop.StoreAppHelper.GetAppIcon(this.Target);
+                        this.IconPath = icon[0];
+                        this.IconColor = icon[1];
                     }
                     catch
                     {

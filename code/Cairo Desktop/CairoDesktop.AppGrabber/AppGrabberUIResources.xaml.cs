@@ -160,8 +160,8 @@ namespace CairoDesktop.AppGrabber
                 {
                     dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.Count - 1]);
                 }
-                sourceView = null;
             }
+            sourceView = null;
             isDragging = false;
         }
 
