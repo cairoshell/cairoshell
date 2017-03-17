@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using Microsoft.Win32;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -75,6 +76,28 @@ namespace CairoDesktop.AppGrabber
             // show content
             bdrLoad.Visibility = Visibility.Collapsed;
             bdrMain.Visibility = Visibility.Visible;
+        }
+
+        private void btnBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "Programs and shortcuts|";
+
+            foreach(string ext in appGrabber.ExecutableExtensions)
+            {
+                dlg.Filter += "*" + ext + ";";
+            }
+
+            dlg.Filter = dlg.Filter.Substring(0, dlg.Filter.Length - 2);
+
+            bool? result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                ApplicationInfo customApp = appGrabber.PathToApp(dlg.FileName, true);
+                if (!object.ReferenceEquals(customApp, null))
+                    programsMenuAppsCollection.Add(customApp);
+            }
         }
     }
 }

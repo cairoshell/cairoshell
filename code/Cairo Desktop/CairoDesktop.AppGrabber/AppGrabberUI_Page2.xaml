@@ -116,22 +116,8 @@
                 BorderBrush="#FF888888"
                 Grid.Row="1"
                 Grid.Column="3">
-                    <DockPanel Width="330">
-                        <DockPanel DockPanel.Dock="Top">
-                            <DockPanel.Background>
-                                <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                    <LinearGradientBrush.GradientStops>
-                                        <GradientStop Color="#FFFFFFFF"
-                                        Offset="0" />
-                                        <GradientStop Color="#FFeaf0f6"
-                                        Offset="0.03" />
-                                        <GradientStop Color="#FFc0c5ca"
-                                        Offset="1" />
-                                    </LinearGradientBrush.GradientStops>
-                                </LinearGradientBrush>
-                            </DockPanel.Background>
-                            <Button DockPanel.Dock="Left"
+                    <DockPanel Width="330" DockPanel.Dock="Top" Style="{StaticResource AppGrabberListBoxHeaderStyle}">
+                        <Button DockPanel.Dock="Left"
                             Click="btnAdd_Click"
                             FontSize="18"
                             FontFamily="Tahoma"
@@ -139,12 +125,10 @@
                             Margin="5,0,0,0">
                                 +
                             </Button>
-                            <TextBlock Style="{StaticResource AppGrabberListBoxHeaderStyle}"
-                            Width="Auto"
+                        <TextBlock Style="{StaticResource AppGrabberListBoxHeaderTextStyle}"
                             DockPanel.Dock="Top">
                                         Program Categories
-                            </TextBlock>
-                        </DockPanel>
+                        </TextBlock>
                     </DockPanel>
                 </Border>
                 <Border BorderThickness="1,0,1,1"

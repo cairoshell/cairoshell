@@ -70,7 +70,7 @@ namespace CairoDesktop.AppGrabber
         // TODO: Need to handle the setter so we can re-load the config file...
         public String ConfigFile { get; set; }
 
-        List<String> executableExtensions = new List<string>();
+        public List<String> ExecutableExtensions = new List<string>();
 
         String[] searchLocations = {
                 Interop.Shell.UsersStartMenuPath,
@@ -87,7 +87,7 @@ namespace CairoDesktop.AppGrabber
 
         public AppGrabber(String configFile)
         {
-            executableExtensions.AddRange(new String[]{
+            ExecutableExtensions.AddRange(new String[]{
                 ".exe",
                 ".bat",
                 ".com",
@@ -151,58 +151,6 @@ namespace CairoDesktop.AppGrabber
             return storeApps;
         }
 
-        /*private List<ApplicationInfo> generateAppListRecursing(DirectoryInfo directory)
-        {
-            List<ApplicationInfo> rval = new List<ApplicationInfo>();
-
-            foreach (DirectoryInfo subfolder in directory.GetDirectories())
-            {
-                rval.AddRange(generateAppListRecursing(subfolder));
-            }
-
-            foreach (FileInfo file in directory.GetFiles())
-            {
-                ApplicationInfo ai = new ApplicationInfo();
-                String ext = Path.GetExtension(file.FullName);
-
-                if (executableExtensions.Contains(ext, StringComparer.OrdinalIgnoreCase))
-                {
-                    try
-                    {
-                        ai.Name = Path.GetFileNameWithoutExtension(file.FullName);
-                        ai.Path = file.FullName;
-                        string target = string.Empty;
-
-                        if (file.Extension.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
-                        {
-                            Interop.Shell.Link link = new Interop.Shell.Link(file.FullName);
-                            target = link.Target;
-                        }
-                        else
-                        {
-                            target = file.FullName;
-                        }
-
-                        // remove items that we can't execute. also remove uninstallers
-                        if (!executableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase) || ai.Name == "Uninstall" || ai.Name.StartsWith("Uninstall "))
-                        {
-                            System.Diagnostics.Debug.WriteLine("Not an app: " + file.Name + ": " + target);
-                            continue;
-                        }
-
-                        ai.Icon = ai.GetAssociatedIcon();
-                        rval.Add(ai);
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine("Error creating ApplicationInfo object in appgrabber. " + ex.Message);
-                    }
-                }
-            }
-
-            return rval;
-        }*/
-
         private List<ApplicationInfo> generateAppList(string directory)
         {
             List<ApplicationInfo> rval = new List<ApplicationInfo>();
@@ -211,63 +159,69 @@ namespace CairoDesktop.AppGrabber
 
             foreach (string file in files)
             {
-                ApplicationInfo ai = new ApplicationInfo();
-                String ext = Path.GetExtension(file);
-
-                if (executableExtensions.Contains(ext, StringComparer.OrdinalIgnoreCase))
-                {
-                    try
-                    {
-                        ai.Name = Path.GetFileNameWithoutExtension(file);
-                        ai.Path = file;
-                        string target = string.Empty;
-                        string fileExt = Path.GetExtension(file);
-
-                        if (fileExt.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
-                        {
-                            Interop.Shell.Link link = new Interop.Shell.Link(file);
-                            target = link.Target;
-                        }
-                        else
-                        {
-                            target = file;
-                        }
-
-                        ai.Target = target;
-
-                        // remove items that we can't execute.
-                        if (!String.IsNullOrEmpty(target) && !executableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
-                        {
-                            System.Diagnostics.Debug.WriteLine("Not an app: " + file + ": " + target);
-                            continue;
-                        }
-
-                        // remove things that aren't apps (help, uninstallers, etc)
-                        bool exclude = false;
-                        foreach(string word in excludedNames)
-                        {
-                            if(ai.Name.ToLower().Contains(word))
-                            {
-                                Debug.WriteLine("Excluded item: " + file + ": " + target);
-                                exclude = true;
-                                break;
-                            }
-                        }
-
-                        if (exclude)
-                            continue;
-
-                        //ai.Icon = ai.GetAssociatedIcon();
-                        rval.Add(ai);
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine("Error creating ApplicationInfo object in appgrabber. " + ex.Message);
-                    }
-                }
+                ApplicationInfo app = PathToApp(file, false);
+                if (!object.ReferenceEquals(app, null))
+                    rval.Add(app);
             }
 
             return rval;
+        }
+
+        public ApplicationInfo PathToApp(string file, bool allowNonApps)
+        {
+            ApplicationInfo ai = new ApplicationInfo();
+            string fileExt = Path.GetExtension(file);
+
+            if (allowNonApps || ExecutableExtensions.Contains(fileExt, StringComparer.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    ai.Name = Path.GetFileNameWithoutExtension(file);
+                    ai.Path = file;
+                    string target = string.Empty;
+
+                    if (fileExt.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Interop.Shell.Link link = new Interop.Shell.Link(file);
+                        target = link.Target;
+                    }
+                    else
+                    {
+                        target = file;
+                    }
+
+                    ai.Target = target;
+
+                    // remove items that we can't execute.
+                    if (!allowNonApps)
+                    {
+                        if (!String.IsNullOrEmpty(target) && !ExecutableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
+                        {
+                            Debug.WriteLine("Not an app: " + file + ": " + target);
+                            return null;
+                        }
+
+                        // remove things that aren't apps (help, uninstallers, etc)
+                        foreach (string word in excludedNames)
+                        {
+                            if (ai.Name.ToLower().Contains(word))
+                            {
+                                Debug.WriteLine("Excluded item: " + file + ": " + target);
+                                return null;
+                            }
+                        }
+                    }
+                    
+                    return ai;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Error creating ApplicationInfo object in appgrabber. " + ex.Message);
+                    return null;
+                }
+            }
+
+            return null;
         }
 
         private List<ApplicationInfo> mergeLists(List<ApplicationInfo> a, List<ApplicationInfo> b)

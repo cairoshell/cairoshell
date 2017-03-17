@@ -18,19 +18,9 @@
     </Style>
     <BitmapImage x:Key="NullIcon" UriSource="pack://application:,,/Resources/nullIcon.png"></BitmapImage>
     <Style x:Key="AppGrabberListBoxHeaderStyle"
-        TargetType="{x:Type TextBlock}">
-        <Setter Property="TextAlignment"
-            Value="Center" />
-        <Setter Property="Padding"
-            Value="0,10,0,0" />
+        TargetType="{x:Type DockPanel}">
         <Setter Property="Width"
             Value="330" />
-        <Setter Property="FontFamily"
-            Value="Corbel" />
-        <Setter Property="FontSize"
-            Value="15" />
-        <Setter Property="Height"
-            Value="40" />
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush StartPoint="0,0"
@@ -47,8 +37,21 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="AppGrabberListBoxHeaderTextStyle"
+        TargetType="{x:Type TextBlock}">
+        <Setter Property="TextAlignment"
+            Value="Center" />
+        <Setter Property="Padding"
+            Value="0,10,0,0" />
+        <Setter Property="FontFamily"
+            Value="Corbel" />
+        <Setter Property="FontSize"
+            Value="15" />
+        <Setter Property="Height"
+            Value="40" />
+    </Style>
     <Style x:Key="AppGrabberListBoxHeaderStyleGreen"
-        TargetType="{x:Type TextBlock}" BasedOn="{StaticResource AppGrabberListBoxHeaderStyle}">
+        TargetType="{x:Type DockPanel}" BasedOn="{StaticResource AppGrabberListBoxHeaderStyle}">
         <Setter Property="Background">
             <Setter.Value>
                 <LinearGradientBrush StartPoint="0,0"
@@ -77,6 +80,7 @@
             Value="30" />
         <Setter Property="Height"
             Value="30" />
+        <Setter Property="Padding" Value="0,-4,0,0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -95,7 +99,7 @@
                                 </LinearGradientBrush.GradientStops>
                             </LinearGradientBrush>
                         </Border.Background>
-                        <ContentPresenter Margin="0,-4,0,0"
+                        <ContentPresenter Margin="{TemplateBinding Padding}"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
                     </Border>
@@ -138,6 +142,10 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style x:Key="AppGrabberListBoxHeaderTextButtonStyle"
+        TargetType="{x:Type Button}" BasedOn="{StaticResource AppGrabberListBoxHeaderButtonStyle}">
+        <Setter Property="Padding" Value="10,0" />
     </Style>
     <Style x:Key="AppGrabberListBoxItem"
         TargetType="{x:Type ListBoxItem}">

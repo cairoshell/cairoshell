@@ -82,7 +82,15 @@
                     Grid.Column="1"
                     BorderThickness="1"
                     BorderBrush="#FF888888">
-                    <TextBlock Style="{StaticResource AppGrabberListBoxHeaderStyle}">Programs Menu Items</TextBlock>
+                    <DockPanel DockPanel.Dock="Top" Style="{StaticResource AppGrabberListBoxHeaderStyle}">
+                        <Button DockPanel.Dock="Right" Name="btnBrowse" Click="btnBrowse_Click"
+                            Style="{StaticResource AppGrabberListBoxHeaderTextButtonStyle}"
+                            Margin="0,0,5,0">
+                            Browse...
+                        </Button>
+                        <TextBlock Style="{StaticResource AppGrabberListBoxHeaderTextStyle}"
+                            DockPanel.Dock="Top">Programs Menu Items</TextBlock>
+                    </DockPanel>
                 </Border>
                 <Border Grid.Row="4"
                     Grid.Column="1"
@@ -98,7 +106,9 @@
                     Grid.Column="3"
                     BorderThickness="1"
                     BorderBrush="#FF888888">
-                    <TextBlock Style="{StaticResource AppGrabberListBoxHeaderStyleGreen}">Installed Applications</TextBlock>
+                    <DockPanel DockPanel.Dock="Top" Style="{StaticResource AppGrabberListBoxHeaderStyleGreen}">
+                        <TextBlock Style="{StaticResource AppGrabberListBoxHeaderTextStyle}">Installed Applications</TextBlock>
+                    </DockPanel>
                 </Border>
                 <Border Grid.Row="4"
                     Grid.Column="3"

@@ -226,7 +226,7 @@ namespace CairoDesktop.AppGrabber
 		}
 		
 		public static bool operator ==(ApplicationInfo x, ApplicationInfo y) {
-			return x.Equals(y);
+            return x.Equals(y);
 		}
 
 		public static bool operator !=(ApplicationInfo x, ApplicationInfo y) {
