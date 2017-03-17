@@ -103,7 +103,7 @@ namespace CairoDesktop.WindowsTasks
                 {
                     foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
                     {
-                        if(ai.Target == WinFileName || (WinFileName.Contains("ApplicationFrameHost.exe") && ai.Target == AppUserModelID))
+                        if(ai.Target == WinFileName || (WinFileName.Contains("ApplicationFrameHost.exe") && ai.Target == AppUserModelID) || this.Title.Contains(ai.Name))
                         {
                             _category = ai.Category.Name;
                             break;
@@ -256,7 +256,7 @@ namespace CairoDesktop.WindowsTasks
                 bool isToolWindow = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
                 bool isVisible = NativeMethods.IsWindowVisible(this.Handle);
 
-                if ((isAppWindow || hasEdge || isTopmostOnly || exStyles == 0) && ownerWin == IntPtr.Zero && !isToolWindow && isVisible)
+                if ((isAppWindow || ((hasEdge || isTopmostOnly || exStyles == 0) && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
                 {
                     return true;
                 }
