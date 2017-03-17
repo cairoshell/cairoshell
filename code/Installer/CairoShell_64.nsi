@@ -7,7 +7,7 @@
 Name "Cairo Desktop Environment"
 
 ; The file to write
-OutFile "CairoShellSetup_64bit.exe"
+OutFile "CairoSetup_64bit.exe"
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES64\Cairo Shell"
