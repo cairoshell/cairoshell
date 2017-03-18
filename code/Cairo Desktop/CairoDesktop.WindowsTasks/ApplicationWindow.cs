@@ -101,16 +101,23 @@ namespace CairoDesktop.WindowsTasks
             {
                 if(_category == null)
                 {
+                    string backupCategory = "";
                     foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
                     {
-                        if(ai.Target == WinFileName || (WinFileName.Contains("ApplicationFrameHost.exe") && ai.Target == AppUserModelID) || this.Title.Contains(ai.Name))
+                        if (ai.Target == WinFileName || (WinFileName.Contains("ApplicationFrameHost.exe") && ai.Target == AppUserModelID))
                         {
                             _category = ai.Category.Name;
                             break;
                         }
+                        else if (this.Title.Contains(ai.Name))
+                        {
+                            backupCategory = ai.Category.Name;
+                        }
                     }
 
-                    if (_category == null)
+                    if (_category == null && !string.IsNullOrEmpty(backupCategory))
+                        _category = backupCategory;
+                    else if (_category == null)
                         _category = "Uncategorized";
                 }
                 return _category;
