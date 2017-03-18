@@ -11,21 +11,7 @@
         <ResourceDictionary Source="AppGrabberUIResources.xaml" />
     </Window.Resources>
     <Grid>
-        <Border BorderThickness="0" Margin="12,7,12,17">
-            <Border.Effect>
-                <DropShadowEffect Color="Black" ShadowDepth="6" Direction="270" Opacity="0.5" BlurRadius="15" />
-            </Border.Effect>
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0,0"
-            EndPoint="0,1">
-                    <LinearGradientBrush.GradientStops>
-                        <GradientStop Color="#FFFFFFFF"
-                    Offset="0" />
-                        <GradientStop Color="#FFF0F0F0"
-                    Offset="1" />
-                    </LinearGradientBrush.GradientStops>
-                </LinearGradientBrush>
-            </Border.Background>
+        <Border Style="{StaticResource AppGrabberWindowStyle}">
         </Border>
         <Border Margin="12,7,12,17" Name="bdrLoad">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical">
@@ -44,7 +30,7 @@
                     <RowDefinition Height="116" />
                     <RowDefinition Height="32" />
                     <RowDefinition Height="40" />
-                    <RowDefinition Height="182*" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="32" />
                     <RowDefinition Height="30" />
                     <RowDefinition Height="32" />

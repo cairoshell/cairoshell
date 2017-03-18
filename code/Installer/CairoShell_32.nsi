@@ -48,7 +48,7 @@ InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
 !insertmacro MUI_LANGUAGE "English"
 
 ; The stuff to install
-Section "Cairo Shell (required)" cairo
+Section "Cairo Desktop (required)" cairo
 
   SectionIn RO
 
@@ -60,6 +60,14 @@ Section "Cairo Shell (required)" cairo
   
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
+
+  System::Call 'kernel32::OpenMutex(i 0x100000, b 0, t "CairoShell") i .R1'
+  IntCmp $R1 0 notRunning
+    System::Call 'kernel32::CloseHandle(i $R1)'
+    MessageBox MB_OK|MB_ICONEXCLAMATION "Cairo is currently running. Please exit Cairo from the Cairo menu and run this installer again." /SD IDOK
+    Quit
+  
+  notRunning:
   
   ; Put file there
   File "..\Cairo Desktop\Build\Release\CairoDesktop.exe"
@@ -104,7 +112,8 @@ Section "Cairo Shell (required)" cairo
   Return
  
   noDotNetFound:
-    Abort "Error: Cairo requires .NET Framework 4.5.2 or higher to be installed."
+    MessageBox MB_OK|MB_ICONSTOP "Cairo requires Microsoft .NET Framework 4.5.2 or higher. Please install this from the Microsoft web site and install Cairo again." /SD IDOK
+    Quit
 
 SectionEnd
 

@@ -23,6 +23,8 @@ namespace CairoDesktop.AppGrabber
         {
             this.appGrabber = appGrabber;
             InitializeComponent();
+
+            Height = SystemParameters.MaximizedPrimaryScreenHeight - 100;
         }
 
         void programsMenuAppsCollection_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {

@@ -23,7 +23,9 @@ namespace CairoDesktop.AppGrabber
         {
             this.appGrabber = appGrabber;
             InitializeComponent();
-            
+
+            Height = SystemParameters.MaximizedPrimaryScreenHeight - 100;
+
             // Grab the Programs
             CategoryList catList = appGrabber.CategoryList;
 
