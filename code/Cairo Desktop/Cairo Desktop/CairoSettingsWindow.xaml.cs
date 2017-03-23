@@ -1,4 +1,4 @@
-﻿namespace CairoDesktop.Configuration
+﻿namespace CairoDesktop
 {
     using System;
     using System.Windows;
@@ -8,6 +8,8 @@
     using Interop;
     using System.Windows.Interop;
     using System.Windows.Forms;
+    using Configuration;
+    using AppGrabber;
 
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
@@ -20,6 +22,7 @@
 
             loadThemes();
             loadRadioGroups();
+            loadCategories();
         }
 
         private void loadRadioGroups()
@@ -68,6 +71,18 @@
             {
                 string theme = Path.GetFileName(subStr);
                 cboThemeSelect.Items.Add(theme);
+            }
+        }
+
+        private void loadCategories()
+        {
+            foreach (Category cat in AppGrabber.AppGrabber.Instance.CategoryList)
+            {
+                if (cat.ShowInMenu)
+                {
+                    string theme = cat.Name;
+                    cboDefaultProgramsCategory.Items.Add(theme);
+                }
             }
         }
 
@@ -195,6 +210,11 @@
         private void radTrayMode1_Click(object sender, RoutedEventArgs e)
         {
             Settings.SysTrayAlwaysExpanded = true;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void chkEnableSysTrayRehook_Click(object sender, RoutedEventArgs e)
+        {
             this.btnRestart.Visibility = Visibility.Visible;
         }
     }

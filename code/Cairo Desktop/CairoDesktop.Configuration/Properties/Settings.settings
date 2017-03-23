@@ -50,5 +50,8 @@
     <Setting Name="DefaultProgramsCategory" Type="System.String" Scope="User">
       <Value Profile="(Default)">All</Value>
     </Setting>
+    <Setting Name="EnableSysTrayRehook" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

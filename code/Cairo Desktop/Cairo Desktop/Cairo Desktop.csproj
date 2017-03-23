@@ -117,6 +117,10 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
+    <Page Include="CairoSettingsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="DesktopNavigationToolbar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -133,6 +137,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="CairoSettingsWindow.xaml.cs">
+      <DependentUpon>CairoSettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DesktopNavigationToolbar.xaml.cs">
       <DependentUpon>DesktopNavigationToolbar.xaml</DependentUpon>
     </Compile>

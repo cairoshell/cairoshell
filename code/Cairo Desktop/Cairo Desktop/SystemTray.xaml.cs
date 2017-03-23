@@ -55,17 +55,31 @@ namespace CairoDesktop
                 hooksWrapper.InitializeSystray();
                 hooksWrapper.Run();
 
-                DispatcherTimer autoRestart = new DispatcherTimer(new TimeSpan(0, 0, 10), DispatcherPriority.Background, delegate
+                if (Configuration.Settings.EnableSysTrayRehook)
                 {
-                    // for some reason some apps stop us from receiving messages so we need to do this
-                    hooksWrapper.InitializeSystray();
-                    hooksWrapper.Run();
-                    
-                }, Application.Current.Dispatcher);
+                    DispatcherTimer trayRehook = new DispatcherTimer(DispatcherPriority.Background, this.Dispatcher);
+                    trayRehook.Interval = new TimeSpan(0, 0, 10);
+                    trayRehook.Tick += trayRehook_Tick;
+                    trayRehook.Start();
+                }
             }
             catch (Exception ex)
             {
                 CairoMessage.ShowAlert("Error initializing the system tray component.\n\n" + ex.ToString() + "\n\nIf this error continues please report it (including a screen shot of this message) to the Cairo Development Team. \nThank you.", "Error", MessageBoxImage.Asterisk);
+            }
+        }
+
+        private void trayRehook_Tick(object sender, EventArgs e)
+        {
+            // check if setting has changed
+            if (Configuration.Settings.EnableSysTrayRehook)
+            {
+                hooksWrapper.InitializeSystray();
+                hooksWrapper.Run();
+            }
+            else
+            {
+                (sender as DispatcherTimer).Stop();
             }
         }
 

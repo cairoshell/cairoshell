@@ -214,5 +214,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["DefaultProgramsCategory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableSysTrayRehook {
+            get {
+                return ((bool)(this["EnableSysTrayRehook"]));
+            }
+            set {
+                this["EnableSysTrayRehook"] = value;
+            }
+        }
     }
 }

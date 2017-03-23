@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="CairoDesktop.Configuration.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+<Window x:Class="CairoDesktop.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Cairo Settings"
     Height="245"
     Width="520"
@@ -216,8 +216,7 @@
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Default programs category:" Width="160" />
-                        <TextBox Text="{Binding Path=DefaultProgramsCategory}"
-                            Name="txtDefaultProgramsCategory" Width="170" />
+                        <ComboBox Name="cboDefaultProgramsCategory" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=DefaultProgramsCategory}" Width="170" />
                     </StackPanel>
                     <CheckBox Content="Enable Menu Bar shadow"
                         IsChecked="{Binding Path=EnableMenuBarShadow}"
@@ -232,6 +231,8 @@
                             <RadioButton Content="Always" GroupName="rdoTrayMode" Name="radTrayMode1" Click="radTrayMode1_Click" />
                         </StackPanel>
                     </StackPanel>
+                    <CheckBox Content="Periodically re-establish tray hook"
+                        IsChecked="{Binding Path=EnableSysTrayRehook}" Click="chkEnableSysTrayRehook_Click" Name="chkEnableSysTrayRehook" />
                 </StackPanel>
             </TabItem>
             <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}" Name="btnRestart" MouseLeftButtonUp="restartCairo" Visibility="Hidden">

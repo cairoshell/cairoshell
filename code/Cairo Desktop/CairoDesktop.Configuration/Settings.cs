@@ -44,6 +44,7 @@
         private static bool? _EnableMenuBarShadow;
         private static bool? _EnableSysTray;
         private static bool? _SysTrayAlwaysExpanded;
+        private static bool? _EnableSysTrayRehook;
 
         #endregion
 
@@ -321,6 +322,23 @@
             {
                 _SysTrayAlwaysExpanded = value;
                 Properties.Settings.Default.SysTrayAlwaysExpanded = (bool)_SysTrayAlwaysExpanded;
+                Save();
+            }
+        }
+
+        public static bool EnableSysTrayRehook
+        {
+            get
+            {
+                if (_EnableSysTrayRehook == null)
+                    _EnableSysTrayRehook = Properties.Settings.Default.EnableSysTrayRehook;
+
+                return (bool)_EnableSysTrayRehook;
+            }
+            set
+            {
+                _EnableSysTrayRehook = value;
+                Properties.Settings.Default.EnableSysTrayRehook = (bool)_EnableSysTrayRehook;
                 Save();
             }
         }
