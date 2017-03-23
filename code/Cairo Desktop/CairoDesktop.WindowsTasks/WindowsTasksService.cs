@@ -11,9 +11,6 @@ namespace CairoDesktop.WindowsTasks
 {
     public class WindowsTasksService : DependencyObject, IDisposable
     {
-        public delegate void RedrawHandler(IntPtr windowHandle);
-        public event RedrawHandler Redraw;
-
         private NativeWindowEx _HookWin;
         private object _windowsLock = new object();
 
@@ -126,24 +123,22 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        private void AddWindow(IntPtr hand)
+        private void addWindow(ApplicationWindow win)
         {
-            try
-            {
-                var win = new ApplicationWindow(hand, this);
+            if (win.ShowInTaskbar && !Windows.Contains(win))
+                Windows.Add(win);
+        }
 
-                if (win.ShowInTaskbar && !Windows.Contains(win))
-                {
-                    lock (this._windowsLock)
-                    {
-                        Windows.Add(win);
-                    }
-                }
-            }
-            catch (Exception ex)
+        private void removeWindow(ApplicationWindow win)
+        {
+            if (this.Windows.Contains(win))
             {
-                Trace.WriteLine("Exception: " + ex.ToString());
-                Debugger.Break();
+                do
+                {
+                    win.VisCheck.Stop();
+                    this.Windows.Remove(win);
+                }
+                while (this.Windows.Contains(win));
             }
         }
 
@@ -161,20 +156,12 @@ namespace CairoDesktop.WindowsTasks
                         {
                             case HSHELL_WINDOWCREATED:
                                 Trace.WriteLine("Created: " + msg.LParam.ToString());
-                                if(win.ShowInTaskbar && !Windows.Contains(win))
-                                    Windows.Add(win);
+                                addWindow(win);
                                 break;
 
                             case HSHELL_WINDOWDESTROYED:
                                 Trace.WriteLine("Destroyed: " + msg.LParam.ToString());
-                                if (this.Windows.Contains(win))
-                                {
-                                    do
-                                    {
-                                        this.Windows.Remove(win);
-                                    }
-                                    while (this.Windows.Contains(win));
-                                }
+                                removeWindow(win);
                                 break;
 
                             case HSHELL_WINDOWREPLACING:
@@ -183,20 +170,17 @@ namespace CairoDesktop.WindowsTasks
                                 {
                                     win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
                                     win.State = ApplicationWindow.WindowState.Inactive;
+                                    win.OnPropertyChanged("ShowInTaskbar");
                                 }
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Inactive;
-                                    if (win.ShowInTaskbar && !Windows.Contains(win))
-                                        Windows.Add(win);
+                                    addWindow(win);
                                 }
                                 break;
                             case HSHELL_WINDOWREPLACED:
                                 Trace.WriteLine("Replaced: " + msg.LParam.ToString());
-                                if (this.Windows.Contains(win))
-                                {
-                                    this.Windows.Remove(win);
-                                }
+                                removeWindow(win);
                                 break;
 
                             case HSHELL_WINDOWACTIVATED:
@@ -214,12 +198,12 @@ namespace CairoDesktop.WindowsTasks
                                     {
                                         win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
                                         win.State = ApplicationWindow.WindowState.Active;
+                                        win.OnPropertyChanged("ShowInTaskbar");
                                     }
                                     else
                                     {
                                         win.State = ApplicationWindow.WindowState.Active;
-                                        if (win.ShowInTaskbar && !Windows.Contains(win))
-                                            Windows.Add(win);
+                                        addWindow(win);
                                     }
                                 }
                                 break;
@@ -239,12 +223,12 @@ namespace CairoDesktop.WindowsTasks
                                     {
                                         win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
                                         win.State = ApplicationWindow.WindowState.Active;
+                                        win.OnPropertyChanged("ShowInTaskbar");
                                     }
                                     else
                                     {
                                         win.State = ApplicationWindow.WindowState.Active;
-                                        if (win.ShowInTaskbar && !Windows.Contains(win))
-                                            Windows.Add(win);
+                                        addWindow(win);
                                     }
                                 }
                                 break;
@@ -259,8 +243,7 @@ namespace CairoDesktop.WindowsTasks
                                 else
                                 {
                                     win.State = ApplicationWindow.WindowState.Flashing;
-                                    if (win.ShowInTaskbar && !Windows.Contains(win))
-                                        Windows.Add(win);
+                                    addWindow(win);
                                 }
                                 break;
 
@@ -270,10 +253,7 @@ namespace CairoDesktop.WindowsTasks
 
                             case HSHELL_ENDTASK:
                                 Trace.WriteLine("EndTask called: " + msg.LParam.ToString());
-                                if (this.Windows.Contains(win))
-                                {
-                                    this.Windows.Remove(win);
-                                }
+                                removeWindow(win);
                                 break;
 
                             case HSHELL_GETMINRECT:
@@ -286,7 +266,13 @@ namespace CairoDesktop.WindowsTasks
 
                             case HSHELL_REDRAW:
                                 Trace.WriteLine("Redraw called: " + msg.LParam.ToString());
-                                this.OnRedraw(msg.LParam);
+                                if (this.Windows.Contains(win))
+                                {
+                                    win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
+                                    win.OnPropertyChanged("ShowInTaskbar");
+                                    win.OnPropertyChanged("Title");
+                                    win.OnPropertyChanged("Icon");
+                                }
                                 break;
 
                             // TaskMan needs to return true if we provide our own task manager to prevent explorers.
@@ -305,14 +291,6 @@ namespace CairoDesktop.WindowsTasks
                     Trace.WriteLine("Exception: " + ex.ToString());
                     Debugger.Break();
                 }
-            }
-        }
-
-        private void OnRedraw(IntPtr windowHandle)
-        {
-            if (this.Redraw != null)
-            {
-                this.Redraw(windowHandle);
             }
         }
 

@@ -8,12 +8,15 @@ using CairoDesktop.AppGrabber;
 using System.Windows.Threading;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using System.Windows;
 
 namespace CairoDesktop.WindowsTasks
 {
     [DebuggerDisplay("Title: {Title}, Handle: {Handle}")]
     public class ApplicationWindow : IEquatable<ApplicationWindow>, ICairoNotifyPropertyChanged
     {
+        public DispatcherTimer VisCheck;
+
         public ApplicationWindow(IntPtr handle, WindowsTasksService sourceService)
         {
             this.Handle = handle;
@@ -21,15 +24,14 @@ namespace CairoDesktop.WindowsTasks
             if (sourceService != null)
             {
                 TasksService = sourceService;
-                sourceService.Redraw += HandleRedraw;
             }
 
-            DispatcherTimer visCheck = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Background, delegate
+            VisCheck = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Background, delegate
             {
                 // some windows don't send a redraw notification after a property changes, try to catch those cases here
                 OnPropertyChanged("Title");
                 OnPropertyChanged("ShowInTaskbar");
-            }, System.Windows.Application.Current.Dispatcher);
+            }, Application.Current.Dispatcher);
         }
 
         public ApplicationWindow(IntPtr handle) : this(handle, null)
@@ -183,9 +185,21 @@ namespace CairoDesktop.WindowsTasks
 
                 if (this._icon != null)
                 {
-                    ImageSource icon = IconImageConverter.GetImageFromHIcon(this._icon.Handle);
-                    icon.Freeze();
-                    return icon;
+                    IntPtr hIcon = this._icon.Handle;
+                    if (hIcon != null)
+                    {
+                        ImageSource icon = IconImageConverter.GetImageFromHIcon(this._icon.Handle);
+                        icon.Freeze();
+                        return icon;
+                    }
+                    else
+                    {
+                        iconTries = 0;
+                        DispatcherTimer getIcon = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
+                        getIcon.Interval = new TimeSpan(0, 0, 2);
+                        getIcon.Tick += getIcon_Tick;
+                        getIcon.Start();
+                    }
                 }
 
                 return IconImageConverter.GetDefaultIcon();
@@ -274,6 +288,19 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
+        int iconTries = 0;
+
+        private void getIcon_Tick(object sender, EventArgs e)
+        {
+            if (this._icon.Handle != null || iconTries > 5)
+            {
+                OnPropertyChanged("Icon");
+                (sender as DispatcherTimer).Stop();
+            }
+            else
+                iconTries++;
+        }
+
         public static IntPtr GetIconForWindow(IntPtr hWnd)
         {
             IntPtr hIco = default(IntPtr);
@@ -340,25 +367,6 @@ namespace CairoDesktop.WindowsTasks
             NativeMethods.WINDOWPLACEMENT placement = new NativeMethods.WINDOWPLACEMENT();
             NativeMethods.GetWindowPlacement(hWnd, ref placement);
             return placement.showCmd;
-        }
-
-        /// <summary>
-        /// Handles calls to the refresh event of the source for this handle and notifies subscribers that the property has changed.
-        /// </summary>
-        /// <param name="handle">The handle of the window.</param>
-        private void HandleRedraw(IntPtr handle)
-        {
-            if (!this.Handle.Equals(handle))
-            {
-                return;
-            }
-
-            //this trace spams the debugger into oblivion during file copy
-            //Trace.WriteLine("Handling redraw call for handle " + handle.ToString());
-
-            OnPropertyChanged("Title");
-            OnPropertyChanged("Icon");
-            OnPropertyChanged("ShowInTaskbar");
         }
 
         #region IEquatable<Window> Members
