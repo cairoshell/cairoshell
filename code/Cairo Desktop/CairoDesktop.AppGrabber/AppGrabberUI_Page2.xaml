@@ -110,7 +110,10 @@
                             Style="{StaticResource AppGrabberListBoxHeaderButtonStyle}"
                             Margin="5,0,0,0">
                                 +
-                            </Button>
+                        </Button>
+                        <ToggleButton DockPanel.Dock="Right" Name="tglHide" Click="tglHide_Click" Style="{StaticResource AppGrabberListBoxHeaderTextToggleButtonStyle}" Margin="0,0,6,0" IsChecked="{Binding bAppsHidden, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, UpdateSourceTrigger=PropertyChanged}">
+                            Hide
+                        </ToggleButton>
                         <TextBlock Style="{StaticResource AppGrabberListBoxHeaderTextStyle}"
                             DockPanel.Dock="Top">
                                         Program Categories

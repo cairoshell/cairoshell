@@ -154,6 +154,98 @@
         TargetType="{x:Type Button}" BasedOn="{StaticResource AppGrabberListBoxHeaderButtonStyle}">
         <Setter Property="Padding" Value="10,0" />
     </Style>
+    <Style x:Key="AppGrabberListBoxHeaderTextToggleButtonStyle"
+        TargetType="{x:Type ToggleButton}">
+        <Setter Property="OverridesDefaultStyle"
+            Value="true" />
+        <Setter Property="FontFamily"
+            Value="Corbel" />
+        <Setter Property="FontSize"
+            Value="14" />
+        <Setter Property="MinWidth"
+            Value="30" />
+        <Setter Property="Height"
+            Value="30" />
+        <Setter Property="Padding" Value="10,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Border"
+                        BorderThickness="1"
+                        CornerRadius="3"
+                        BorderBrush="#FF999999">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                <LinearGradientBrush.GradientStops>
+                                    <GradientStop Color="#FFFFFFFF"
+                                        Offset="0" />
+                                    <GradientStop Color="#FFD9D9D9"
+                                        Offset="1" />
+                                </LinearGradientBrush.GradientStops>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <ContentPresenter Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                        EndPoint="0,1">
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStop Color="#FFFFFFFF"
+                                                Offset="0" />
+                                            <GradientStop Color="#FFEFEFEF"
+                                                Offset="1" />
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                        EndPoint="0,1">
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStop Color="#FFD1D1D1"
+                                                Offset="0" />
+                                            <GradientStop Color="#FF999999"
+                                                Offset="1" />
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsChecked"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                        EndPoint="0,1">
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStop Color="#FFD1D1D1"
+                                                Offset="0" />
+                                            <GradientStop Color="#FFEFEFEF"
+                                                Offset="1" />
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="AppGrabberListBoxItem"
         TargetType="{x:Type ListBoxItem}">
         <Setter Property="Padding"
@@ -175,13 +267,13 @@
         <Setter Property="FontFamily"
             Value="Corbel" />
         <Setter Property="FontSize"
-            Value="14" />
+            Value="15" />
         <Setter Property="FontWeight"
             Value="Bold" />
         <Setter Property="Margin"
             Value="0" />
         <Setter Property="Padding"
-            Value="3,4,3,3" />
+            Value="3,5,3,4" />
         <Setter Property="BorderThickness"
             Value="0" />
         <Setter Property="Background"
@@ -196,13 +288,13 @@
         <Setter Property="FontFamily"
             Value="Corbel" />
         <Setter Property="FontSize"
-            Value="14" />
+            Value="15" />
         <Setter Property="FontWeight"
             Value="Bold" />
         <Setter Property="Margin"
             Value="0" />
         <Setter Property="Padding"
-            Value="3,4,3,3" />
+            Value="3,5,3,4" />
         <Setter Property="Background"
             Value="{x:Null}" />
         <Setter Property="Foreground"
@@ -273,10 +365,12 @@
             Value="true" />
         <Setter Property="Foreground"
             Value="White" />
+        <Setter Property="FontSize"
+            Value="15" />
         <Setter Property="Width"
-            Value="23" />
+            Value="26" />
         <Setter Property="Height"
-            Value="23" />
+            Value="26" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -312,38 +406,40 @@
             <Setter.Value>
                 <DataTemplate>
                     <DockPanel Name="CategoryPanel">
-                        <DockPanel DockPanel.Dock="Top" Height="23">
-                            <DockPanel.Background>
-                                <LinearGradientBrush StartPoint="0,0"
-                                    EndPoint="0,1">
-                                    <LinearGradientBrush.GradientStops>
-                                        <GradientStop Color="#FF555555"
-                                            Offset="0" />
-                                        <GradientStop Color="#FF777777"
-                                            Offset="1" />
-                                    </LinearGradientBrush.GradientStops>
-                                </LinearGradientBrush>
-                            </DockPanel.Background>
-                            <Button DockPanel.Dock="Right"
-                                Style="{StaticResource CategoryManipulationButtonStyle}"
-                                CommandParameter="{Binding}" Name="CatDelButton" Initialized="DelCatButtonShown">X</Button>
-                            <TextBox DockPanel.Dock="Left"
-                                Visibility="Collapsed"
-                                Text="{Binding Path=Name}"
-                                Style="{StaticResource CategoryEditStyle}"
-                                LostFocus="Category_Label_Edit_End"
-                                KeyUp="TextBox_KeyUp" />
-                            <TextBlock DockPanel.Dock="Left"
-                                Visibility="Visible"
-                                Text="{Binding Path=Name}"
-                                Style="{StaticResource CategoryLabelStyle}"
-                                AllowDrop="True"
-                                PreviewDragEnter="TextBlock_PreviewDragEnter"
-                                Drop="TextBlock_Drop"
-                                PreviewMouseMove="TextBlock_PreviewMouseMove"
-                                MouseDown="Category_Block_DoubleClick" />
-                        </DockPanel>
-                        <ListView ItemsSource="{Binding}"
+                        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="#FF333333">
+                            <DockPanel Height="26">
+                                <DockPanel.Background>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                        EndPoint="0,1">
+                                        <LinearGradientBrush.GradientStops>
+                                            <GradientStop Color="#FF555555"
+                                                Offset="0" />
+                                            <GradientStop Color="#FF777777"
+                                                Offset="1" />
+                                        </LinearGradientBrush.GradientStops>
+                                    </LinearGradientBrush>
+                                </DockPanel.Background>
+                                <Button DockPanel.Dock="Right"
+                                    Style="{StaticResource CategoryManipulationButtonStyle}"
+                                    CommandParameter="{Binding}" Name="CatDelButton" Initialized="DelCatButtonShown">X</Button>
+                                <TextBox DockPanel.Dock="Left"
+                                    Visibility="Collapsed"
+                                    Text="{Binding Path=Name}"
+                                    Style="{StaticResource CategoryEditStyle}"
+                                    LostFocus="Category_Label_Edit_End"
+                                    KeyUp="TextBox_KeyUp" />
+                                <TextBlock DockPanel.Dock="Left"
+                                    Visibility="Visible"
+                                    Text="{Binding Path=Name}"
+                                    Style="{StaticResource CategoryLabelStyle}"
+                                    AllowDrop="True"
+                                    PreviewDragEnter="TextBlock_PreviewDragEnter"
+                                    Drop="TextBlock_Drop"
+                                    PreviewMouseMove="TextBlock_PreviewMouseMove"
+                                    MouseDown="Category_Block_DoubleClick" />
+                            </DockPanel>
+                        </Border>
+                        <ListView ItemsSource="{Binding}" Visibility="{Binding AppVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, UpdateSourceTrigger=PropertyChanged}"
                             ItemContainerStyle="{StaticResource ApplicationInfoListItemStyle}"
                             Style="{StaticResource ApplicationInfoListStyle}"
                             AlternationCount="2" >

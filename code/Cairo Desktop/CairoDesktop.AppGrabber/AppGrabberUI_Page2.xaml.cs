@@ -10,6 +10,32 @@ namespace CairoDesktop.AppGrabber
     public partial class AppGrabberUI_Page2 : Window
     {
         private AppGrabber appGrabber;
+        
+        public Visibility AppVisibility
+        {
+            get { return (Visibility)GetValue(AppVisibilityProperty); }
+            set { SetValue(AppVisibilityProperty, value); }
+        }
+
+        private bool bAppsHidden
+        {
+            get { return (AppVisibility != Visibility.Visible); }
+            set {
+                if (value)
+                {
+                    SetValue(AppVisibilityProperty, Visibility.Collapsed);
+                    SetValue(bAppsHiddenProperty, true);
+                }
+                else
+                {
+                    SetValue(AppVisibilityProperty, Visibility.Visible);
+                    SetValue(bAppsHiddenProperty, false);
+                }
+            }
+        }
+        
+        public static readonly DependencyProperty AppVisibilityProperty = DependencyProperty.Register("AppVisibility", typeof(Visibility), typeof(AppGrabberUI_Page2), new PropertyMetadata(null));
+        private static readonly DependencyProperty bAppsHiddenProperty = DependencyProperty.Register("bAppsHidden", typeof(bool), typeof(AppGrabberUI_Page2), new PropertyMetadata(null));
 
         /// <summary>
         /// Default constructor never gets called.
@@ -22,6 +48,7 @@ namespace CairoDesktop.AppGrabber
         public AppGrabberUI_Page2(AppGrabber appGrabber, ObservableCollection<ApplicationInfo> selectedApps)
         {
             this.appGrabber = appGrabber;
+            bAppsHidden = false;
             InitializeComponent();
 
             Height = SystemParameters.MaximizedPrimaryScreenHeight - 100;
@@ -80,6 +107,14 @@ namespace CairoDesktop.AppGrabber
         private void btnSave_Click(object sender, RoutedEventArgs e) {
             appGrabber.Save();
             this.Close();
+        }
+
+        private void tglHide_Click(object sender, RoutedEventArgs e)
+        {
+            if (!bAppsHidden)
+                bAppsHidden = true;
+            else
+                bAppsHidden = false;
         }
     }
 }
