@@ -61,44 +61,5 @@ namespace CairoDesktop {
                 SetValue(locationsProperty, value);
             }
         }
-
-        private void File_Button_Click(object sender, RoutedEventArgs e)
-        {
-            Button senderButton = sender as Button;
-            System.Diagnostics.Process proc = new System.Diagnostics.Process();
-            proc.StartInfo.UseShellExecute = true;
-            proc.StartInfo.FileName = senderButton.CommandParameter as String;
-            try 
-            {
-                // get the file attributes for file or directory
-                FileAttributes attr = File.GetAttributes(senderButton.CommandParameter as String);
-
-                //detect whether its a directory or file
-                if ((attr & FileAttributes.Directory) == FileAttributes.Directory && Settings.EnableDynamicDesktop)
-                {
-                    ((this.Parent as Grid).Parent as Desktop).PathHistory.Push(this.Locations[0].DirectoryInfo.FullName);
-                    this.Locations[0] = new SystemDirectory((senderButton.CommandParameter as String), Dispatcher.CurrentDispatcher);
-                }
-                else
-                {
-                    proc.Start();
-                }
-            } 
-            catch 
-            {
-                // No 'Open' command associated with this filetype in the registry
-                Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
-            }
-        }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e) 
-        {
-            CustomCommands.Icon_MenuItem_Click(sender, e);
-        }
-
-        private void ContextMenu_Loaded(object sender, RoutedEventArgs e)
-        {
-            CustomCommands.Icon_ContextMenu_Loaded(sender, e);
-        }
     }
 }

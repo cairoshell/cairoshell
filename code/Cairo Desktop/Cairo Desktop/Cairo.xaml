@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.Cairo"
     xmlns:cairo="clr-namespace:CairoDesktop">
     <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" x:Key="CairoMenuItemHoverGradient">
         <GradientStop Color="#8F1A4DFF" Offset="0.0" />
@@ -1485,8 +1485,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!-- Button Style for Stacks -->
-    <Style x:Key="CairoStackButtonStyle"
+    <!-- Button Style for icons -->
+    <Style x:Key="CairoFileButtonStyle"
         TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
@@ -1510,21 +1510,9 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!-- Button Style for Desktop -->
+    <!-- Button Style for Desktop icons -->
     <Style x:Key="CairoDesktopButtonStyle"
-        TargetType="{x:Type Button}">
-        <Setter Property="OverridesDefaultStyle"
-            Value="true" />
-        <Setter Property="FontFamily"
-            Value="Segoe UI" />
-        <Setter Property="FontSize"
-            Value="12" />
-        <Setter Property="Height"
-            Value="85" />
-        <Setter Property="MinWidth"
-            Value="100" />
-        <Setter Property="VerticalAlignment"
-            Value="Center" />
+        TargetType="{x:Type Button}" BasedOn="{StaticResource CairoFileButtonStyle}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -1556,6 +1544,131 @@
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- Files -->
+    <Style x:Key="DesktopFolderViewStyle" TargetType="ItemsControl">
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Button MouseDoubleClick="btnFile_Click"
+                                CommandParameter="{Binding Path=FullName}"
+                                Style="{StaticResource CairoDesktopButtonStyle}">
+                        <DockPanel>
+                            <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="32" Height="32" DockPanel.Dock="Top" RenderOptions.BitmapScalingMode="LowQuality" />
+                            <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
+                            <Border DockPanel.Dock="Bottom" Name="bdrFilename">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black"
+                                                            ShadowDepth="2"
+                                                                  Direction="270"
+                                                            BlurRadius="4"
+                                                            Opacity="1" />
+                                </Border.Effect>
+                                <TextBlock
+                                        Text="{Binding Path=FriendlyName}"
+                                        TextAlignment="Center"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap"
+                                        Height="35"
+                                        Width="80"
+                                        Background="Transparent"
+                                        Margin="5,0,5,3"
+                                        Foreground="White">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="Black"
+                                                        ShadowDepth="1"
+                                                                  Direction="90"
+                                                        Opacity="0.3" BlurRadius="2" />
+                                    </TextBlock.Effect>
+                                    <TextBlock.ToolTip>
+                                        <ToolTip Content="{Binding Path=Name}" />
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </Border>
+                        </DockPanel>
+                        <Button.ContextMenu>
+                            <ContextMenu Loaded="ctxFile_Loaded"
+                                        Tag="{Binding Path=FullName}"
+                                        Style="{StaticResource CairoContextMenuStyle}">
+                                <ContextMenu.Resources>
+                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
+                                        <EventSetter Event="Click" Handler="miVerb_Click" />
+                                    </Style>
+                                    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </Style>
+                                </ContextMenu.Resources>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="FolderViewStyle" TargetType="ItemsControl">
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Horizontal"
+                                MinWidth="{DynamicResource {x:Static SystemParameters.FullPrimaryScreenWidthKey}}"
+                                Background="Transparent" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Button Click="btnFile_Click"
+                                CommandParameter="{Binding Path=FullName}"
+                                Style="{StaticResource CairoFileButtonStyle}">
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
+                            <Border DockPanel.Dock="Bottom" Name="bdrFilename">
+                                <TextBlock
+                                        Text="{Binding Path=FriendlyName}"
+                                        TextAlignment="Center"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap"
+                                        Height="35"
+                                        Width="80"
+                                        Background="Transparent"
+                                        Margin="5,0,5,3"
+                                        Foreground="White">
+                                    <TextBlock.ToolTip>
+                                        <ToolTip Content="{Binding Path=Name}" />
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </Border>
+                            <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="32" Height="32" RenderOptions.BitmapScalingMode="LowQuality" />
+                        </DockPanel>
+                        <Button.ContextMenu>
+                            <ContextMenu Loaded="ctxFile_Loaded"
+                                        Tag="{Binding Path=FullName}"
+                                        Style="{StaticResource CairoContextMenuStyle}">
+                                <ContextMenu.Resources>
+                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
+                                        <EventSetter Event="Click" Handler="miVerb_Click" />
+                                    </Style>
+                                    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </Style>
+                                </ContextMenu.Resources>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                        <Button.ToolTip>
+                            <ToolTip Content="{Binding Path=Name}" />
+                        </Button.ToolTip>
+                    </Button>
+                </DataTemplate>
             </Setter.Value>
         </Setter>
     </Style>

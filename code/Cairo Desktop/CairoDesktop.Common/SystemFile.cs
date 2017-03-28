@@ -143,6 +143,31 @@ namespace CairoDesktop.Common
             return false;
         }
 
+        public static bool RenameFile(string oldFilePathName, string newFilename)
+        {
+            try
+            {
+                // get the file attributes for file or directory
+                FileAttributes attr = File.GetAttributes(oldFilePathName);
+                string newFilePathName = Path.GetDirectoryName(oldFilePathName) + "\\" + newFilename;
+
+                if (newFilePathName != oldFilePathName)
+                {
+                    //detect whether its a directory or file
+                    if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                        Directory.Move(oldFilePathName, newFilePathName);
+                    else
+                        File.Move(oldFilePathName, newFilePathName);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CairoMessage.Show("The file was unable to be renamed because: " + ex.Message, "Unable to rename", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                return false;
+            }
+        }
+
         /// <summary>
         /// Retrieves the display icon of the file.
         /// If the file is an image then it will return the image its self (e.g. preview).

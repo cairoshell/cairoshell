@@ -7,7 +7,7 @@
     Top="0"
     Left="0"
     AllowsTransparency="True"
-    Focusable="False" UseLayoutRounding="True"
+    Focusable="False" UseLayoutRounding="True" Name="CairoDesktopWindow"
     Background="{x:Null}" Topmost="False" Activated="Window_Activated" Closing="Window_Closing" SourceInitialized="Window_SourceInitialized">
     <Grid Name="grid" Margin="0,35,0,0" MouseRightButtonDown="grid_MouseRightButtonDown">
     </Grid>

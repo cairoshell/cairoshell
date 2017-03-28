@@ -46,26 +46,23 @@ namespace CairoDesktop
             DirectoryInfo parent = (this.Owner as Desktop).Icons.Locations[0].DirectoryInfo.Parent;
             if (parent != null)
             {
-                (this.Owner as Desktop).PathHistory.Push((this.Owner as Desktop).Icons.Locations[0].FullName);
-                (this.Owner as Desktop).Icons.Locations[0] = new SystemDirectory(parent.FullName, Dispatcher.CurrentDispatcher);
+                (this.Owner as Desktop).Navigate(parent.FullName);
             }
 
         }
 
         private void Home_Click(object sender, RoutedEventArgs e)
         {
-            (this.Owner as Desktop).PathHistory.Push((this.Owner as Desktop).Icons.Locations[0].FullName);
-
             string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string userDesktopPath = Settings.DesktopDirectory;
 
             if (Directory.Exists(userDesktopPath))
             {
-                (this.Owner as Desktop).Icons.Locations[0] = new SystemDirectory(userDesktopPath, Dispatcher.CurrentDispatcher);
+                (this.Owner as Desktop).Navigate(userDesktopPath);
             }
             else if (Directory.Exists(defaultDesktopPath))
             {
-                (this.Owner as Desktop).Icons.Locations[0] = new SystemDirectory(defaultDesktopPath, Dispatcher.CurrentDispatcher);
+                (this.Owner as Desktop).Navigate(defaultDesktopPath);
             }
         }
 
@@ -87,8 +84,7 @@ namespace CairoDesktop
                 DirectoryInfo dir = new DirectoryInfo(fbd.SelectedPath);
                 if (dir != null)
                 {
-                    (this.Owner as Desktop).PathHistory.Push((this.Owner as Desktop).Icons.Locations[0].FullName);
-                    (this.Owner as Desktop).Icons.Locations[0] = new SystemDirectory(dir.FullName, Dispatcher.CurrentDispatcher);
+                    (this.Owner as Desktop).Navigate(dir.FullName);
                 }
             }
         }

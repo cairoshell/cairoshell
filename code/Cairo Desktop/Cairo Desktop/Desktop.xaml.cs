@@ -10,6 +10,8 @@ using Microsoft.Win32;
 using System.IO;
 using CairoDesktop.SupportingClasses;
 using CairoDesktop.Configuration;
+using CairoDesktop.Common;
+using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -75,7 +77,7 @@ namespace CairoDesktop
             return IntPtr.Zero;
         }
 
-            private void setPosition(uint x, uint y)
+        private void setPosition(uint x, uint y)
         {
             this.Top = 0;
             this.Left = 0;
@@ -161,6 +163,12 @@ namespace CairoDesktop
         private void grid_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             NativeMethods.SetForegroundWindow(helper.Handle);
+        }
+
+        public void Navigate(string newLocation)
+        {
+            PathHistory.Push(Icons.Locations[0].FullName);
+            Icons.Locations[0] = new SystemDirectory(newLocation, Dispatcher.CurrentDispatcher);
         }
     }
 }

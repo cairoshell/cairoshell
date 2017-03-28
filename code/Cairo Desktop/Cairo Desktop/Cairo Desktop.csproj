@@ -137,6 +137,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Cairo.xaml.cs">
+      <DependentUpon>Cairo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CairoSettingsWindow.xaml.cs">
       <DependentUpon>CairoSettingsWindow.xaml</DependentUpon>
     </Compile>

@@ -80,6 +80,17 @@ namespace CairoDesktop
                 StacksManager.AddLocation(fileName);
                 return;
             }
+            else if (verb == "rename")
+            {
+                DockPanel parent = ((Button)((ContextMenu)item.Parent).PlacementTarget).Content as DockPanel;
+                TextBox rename = parent.FindName("txtRename") as TextBox;
+                Border label = parent.FindName("bdrFilename") as Border;
+
+                rename.Visibility = Visibility.Visible;
+                label.Visibility = Visibility.Collapsed;
+                rename.Focus();
+                return;
+            }
 
             System.Diagnostics.Process proc = new System.Diagnostics.Process();
             proc.StartInfo.UseShellExecute = true;
@@ -123,6 +134,10 @@ namespace CairoDesktop
                 menu.Items.Add(new Separator());
 
                 menu.Items.Add(new MenuItem { Header = "Delete", Tag = "delete|" + filePath });
+                menu.Items.Add(new MenuItem { Header = "Rename", Tag = "rename|" + filePath });
+
+                menu.Items.Add(new Separator());
+
                 menu.Items.Add(new MenuItem { Header = "Properties", Tag = "properties|" + filePath });
             }
         }
