@@ -14,7 +14,7 @@ namespace CairoDesktop.AppGrabber
         
         private static AppGrabber _instance = new AppGrabber();
 
-        private static string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new" };
+        private static string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web" };
 
         public static AppGrabber Instance
         {
