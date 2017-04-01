@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
-using System.IO;
 using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
+using System.Windows.Input;
 
 namespace CairoDesktop {
     /// <summary>
@@ -38,6 +37,13 @@ namespace CairoDesktop {
                 {
                     StacksManager.AddLocation(fileName);
                 }
+            }
+            else if (e.Data.GetDataPresent(typeof(SystemDirectory)))
+            {
+                SystemDirectory dropData = e.Data.GetData(typeof(SystemDirectory)) as SystemDirectory;
+
+                int initialIndex = StacksManager.StackLocations.IndexOf(dropData);
+                StacksManager.StackLocations.Move(initialIndex, StacksManager.StackLocations.Count - 1);
             }
 
             e.Handled = true;
@@ -92,5 +98,72 @@ namespace CairoDesktop {
             prc.StartInfo.Arguments = directoryPath;
             prc.Start();
         }
+
+        #region Drag and drop reordering
+
+        private Point? startPoint = null;
+
+        private void StackMenu_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Store the mouse position
+            startPoint = e.GetPosition(null);
+        }
+
+        private void StackMenu_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (startPoint != null)
+            {
+                Point mousePos = e.GetPosition(null);
+                Vector diff = (Point)startPoint - mousePos;
+
+                if (mousePos.Y <= this.ActualHeight && ((Point)startPoint).Y <= this.ActualHeight && e.LeftButton == MouseButtonState.Pressed && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
+                {
+                    Menu menu = sender as Menu;
+                    SystemDirectory selectedDir = menu.DataContext as SystemDirectory;
+                    
+                    DragDrop.DoDragDrop(menu, selectedDir, DragDropEffects.Move);
+
+                    // reset the stored mouse position
+                    startPoint = null;
+                }
+            }
+        }
+
+        private void StackMenu_Drop(object sender, DragEventArgs e)
+        {
+            Menu dropContainer = sender as Menu;
+            SystemDirectory replacedDir = dropContainer.DataContext as SystemDirectory;
+
+            String[] fileNames = e.Data.GetData(DataFormats.FileDrop) as String[];
+            if (fileNames != null)
+            {
+                foreach (String fileName in fileNames)
+                {
+                    if (StacksManager.AddLocation(fileName))
+                    {
+                        int dropIndex = StacksManager.StackLocations.IndexOf(replacedDir);
+                        StacksManager.StackLocations.Move(StacksManager.StackLocations.Count - 1, dropIndex);
+                    }
+                }
+            }
+            else if (e.Data.GetDataPresent(typeof(SystemDirectory)))
+            {
+                SystemDirectory dropData = e.Data.GetData(typeof(SystemDirectory)) as SystemDirectory;
+
+                int initialIndex = StacksManager.StackLocations.IndexOf(dropData);
+                int dropIndex = StacksManager.StackLocations.IndexOf(replacedDir);
+                StacksManager.StackLocations.Move(initialIndex, dropIndex);
+            }
+
+            e.Handled = true;
+        }
+
+        private void StackMenu_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            // reset the stored mouse position
+            startPoint = null;
+        }
+
+        #endregion
     }
 }

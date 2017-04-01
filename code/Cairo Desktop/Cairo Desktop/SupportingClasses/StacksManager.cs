@@ -65,15 +65,20 @@ namespace CairoDesktop.SupportingClasses
             serializeStacks();
         }
 
-        public static void AddLocation(string path)
+        public static bool AddLocation(string path)
         {
             if (Directory.Exists(path))
             {
                 SystemDirectory dir = new SystemDirectory(path, Dispatcher.CurrentDispatcher);
 
                 if (!StackLocations.Contains(dir))
+                {
                     StackLocations.Add(dir);
+                    return true;
+                }
             }
+
+            return false;
         }
 
         private static void serializeStacks()

@@ -24,7 +24,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}" DataContext="{Binding}">
+                    <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}" DataContext="{Binding}" Drop="StackMenu_Drop"  PreviewMouseLeftButtonDown="StackMenu_PreviewMouseLeftButtonDown" PreviewMouseMove="StackMenu_PreviewMouseMove" Name="StackMenu" PreviewMouseLeftButtonUp="StackMenu_PreviewMouseLeftButtonUp">
                         <Menu.ContextMenu>
                             <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
                                 <MenuItem Header="Open in new window" Click="Open_Click" CommandParameter="{Binding Path=FullName}" Style="{StaticResource CairoMenuItemStyle}" />
