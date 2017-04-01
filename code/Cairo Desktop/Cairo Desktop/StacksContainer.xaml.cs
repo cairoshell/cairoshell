@@ -49,33 +49,6 @@ namespace CairoDesktop {
             e.Handled = true;
         }
 
-        private void File_Button_Click(object sender, RoutedEventArgs e)
-        {
-            Button senderButton = sender as Button;
-            System.Diagnostics.Process proc = new System.Diagnostics.Process();
-            proc.StartInfo.UseShellExecute = true;
-            proc.StartInfo.FileName = senderButton.CommandParameter as String;
-            try 
-            {
-                proc.Start();
-            } 
-            catch 
-            {
-                // No 'Open' command associated with this filetype in the registry
-                Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
-            }
-        }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            CustomCommands.Icon_MenuItem_Click(sender, e);
-        }
-
-        private void ContextMenu_Loaded(object sender, RoutedEventArgs e)
-        {
-            CustomCommands.Icon_ContextMenu_Loaded(sender, e);
-        }
-
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
             StacksManager.StackLocations.Remove((sender as MenuItem).CommandParameter as SystemDirectory);
@@ -102,16 +75,20 @@ namespace CairoDesktop {
         #region Drag and drop reordering
 
         private Point? startPoint = null;
+        private bool ctxOpen = false;
 
         private void StackMenu_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Store the mouse position
-            startPoint = e.GetPosition(null);
+            if (!ctxOpen)
+            {
+                // Store the mouse position
+                startPoint = e.GetPosition(null);
+            }
         }
 
         private void StackMenu_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (startPoint != null)
+            if (startPoint != null && !ctxOpen)
             {
                 Point mousePos = e.GetPosition(null);
                 Vector diff = (Point)startPoint - mousePos;
@@ -127,6 +104,8 @@ namespace CairoDesktop {
                     startPoint = null;
                 }
             }
+
+            e.Handled = true;
         }
 
         private void StackMenu_Drop(object sender, DragEventArgs e)
@@ -165,5 +144,16 @@ namespace CairoDesktop {
         }
 
         #endregion
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            startPoint = null;
+            ctxOpen = true;
+        }
+
+        private void ContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            ctxOpen = false;
+        }
     }
 }
