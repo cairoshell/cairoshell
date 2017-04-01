@@ -89,6 +89,7 @@ namespace CairoDesktop
                 rename.Visibility = Visibility.Visible;
                 label.Visibility = Visibility.Collapsed;
                 rename.Focus();
+                rename.SelectAll();
                 return;
             }
 
