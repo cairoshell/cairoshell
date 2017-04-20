@@ -52,9 +52,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Runtime">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETCore\v4.5.1\System.Runtime.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Runtime" />
     <Reference Include="System.Xml" />
     <Reference Include="Windows.ApplicationModel" />
     <Reference Include="Windows.Management" />

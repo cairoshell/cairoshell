@@ -12,7 +12,7 @@
     <Button x:Name="btn"
             BorderThickness="0"
             VerticalAlignment="Stretch"
-            Click="btnClick" ToolTip="{Binding Path=Title}">
+            Click="btnClick" ToolTip="{Binding Path=Title}" MouseUp="btn_MouseUp">
             <Button.Style>
                 <MultiBinding Converter="{StaticResource styleConverter}" NotifyOnSourceUpdated="True">
                     <Binding RelativeSource="{RelativeSource Self}" />
