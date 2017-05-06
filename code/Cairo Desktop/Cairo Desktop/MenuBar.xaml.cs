@@ -129,14 +129,6 @@ namespace CairoDesktop
 
         private void shutdown()
         {
-            AppBarHelper.RegisterBar(handle, this.ActualWidth, this.ActualHeight);
-            AppBarHelper.ResetWorkArea();
-
-            SysTray.DestroySystemTray();
-
-            if(Startup.IsCairoUserShell)
-                Shell.StartProcess("explorer.exe");
-
             Application.Current.Shutdown();
         }
 
@@ -197,19 +189,14 @@ namespace CairoDesktop
         #region Events
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (appbarMessageId == -1)
-            {
-                return IntPtr.Zero;
-            }
-
-            if (msg == appbarMessageId)
+            if (msg == appbarMessageId && appbarMessageId != -1)
             {
                 switch (wParam.ToInt32())
                 {
                     case 1:
                         // Reposition to the top of the screen.
-                        // this doesn't appear to be necessary
-                        AppBarHelper.ABSetPos(handle, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+                        // this doesn't appear to be the right thing to do AppBarHelper.ABSetPos(handle, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+                        // should respond to messages like this: https://www.codeproject.com/Articles/3728/C-does-Shell-Part this should fix issues with full screen apps!
                         if (Startup.MenuBarShadowWindow != null)
                             Startup.MenuBarShadowWindow.SetPosition();
                         break;
@@ -276,7 +263,14 @@ namespace CairoDesktop
 
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            shutdown();
+            this.Height = 0;
+            AppBarHelper.ResetWorkArea();
+            AppBarHelper.RegisterBar(handle, this.ActualWidth, this.ActualHeight);
+
+            SysTray.DestroySystemTray();
+
+            if (Startup.IsCairoUserShell)
+                Shell.StartProcess("explorer.exe");
         }
         #endregion
 

@@ -136,10 +136,14 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETPOS, ref abd);
 
             // tracing
-            Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_TOP, "Top AppBar height is " + (abd.rc.bottom - abd.rc.top).ToString());
-            Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_BOTTOM, "Bottom AppBar height is " + (abd.rc.bottom - abd.rc.top).ToString());
+            int h = abd.rc.bottom - abd.rc.top;
+            Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_TOP, "Top AppBar height is " + h.ToString());
+            Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_BOTTOM, "Bottom AppBar height is " + h.ToString());
 
             NativeMethods.MoveWindow(abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top, true);
+
+            if (h < sHeight)
+                ABSetPos(handle, width, height, edge);
         }
 
         public static Size PrimaryMonitorSize
