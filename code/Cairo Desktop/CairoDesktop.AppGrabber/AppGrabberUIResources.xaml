@@ -331,8 +331,8 @@
                 </DataTemplate>
             </Setter.Value>
         </Setter>
-        <EventSetter Event="LostFocus"
-            Handler="ListView_Focus_Lost" />
+        <!--<EventSetter Event="LostFocus"
+            Handler="ListView_Focus_Lost" />-->
         <EventSetter Event="PreviewDragEnter"
             Handler="ListView_DragEnter" />
         <EventSetter Event="Drop"

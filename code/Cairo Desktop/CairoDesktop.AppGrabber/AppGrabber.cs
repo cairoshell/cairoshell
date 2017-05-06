@@ -75,11 +75,6 @@ namespace CairoDesktop.AppGrabber
         String[] searchLocations = {
                 Interop.Shell.UsersStartMenuPath,
                 Interop.Shell.AllUsersStartMenuPath
-                /*
-                 * Sam doesn't like Desktop apps being found
-                 */
-                //Interop.Shell.UsersDesktopPath,
-                //Interop.Shell.AllUsersDesktopPath,
         };
 
         public AppGrabber()

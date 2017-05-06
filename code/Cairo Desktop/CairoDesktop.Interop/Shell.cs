@@ -52,53 +52,23 @@ namespace CairoDesktop.Interop
                 return IntPtr.Zero;
             }
         }
-
-        public static string UsersProgramsPath 
-        {
-            get {
-                return GetSpecialFolderPath((int)CSIDL.CSIDL_PROGRAMS);
-            }
-        }
+        
         public static string UsersStartMenuPath
         {
             get {
                 return GetSpecialFolderPath((int)CSIDL.CSIDL_STARTMENU);
             }
         }
-        public static string UsersDesktopPath
-        {
-            get {
-                return GetSpecialFolderPath((int)CSIDL.CSIDL_DESKTOPDIRECTORY);
-            }
-        }
-        public static string AllUsersProgramsPath
-        {
-            get {
-                return GetSpecialFolderPath((int)CSIDL.CSIDL_COMMON_PROGRAMS);
-            }
-        }
+
         public static string AllUsersStartMenuPath
         {
             get {
                 return GetSpecialFolderPath((int)CSIDL.CSIDL_COMMON_STARTMENU);
             }
         }
-        public static string AllUsersDesktopPath
-        {
-            get {
-                return GetSpecialFolderPath((int)CSIDL.CSIDL_COMMON_DESKTOPDIRECTORY);
-            }
-        }
+
         public static string GetSpecialFolderPath(int FOLDER)
         {
-            // Need to test these locations in Vista
-            // CSIDL_PROGRAMS
-            // CSIDL_STARTMENU
-            // CSIDL_DESKTOPDIRECTORY
-            // CSIDL_COMMON_STARTMENU
-            // CSIDL_COMMON_PROGRAMS
-            // CSIDL_COMMON_DESKTOPDIRECTORY
-
             StringBuilder sbPath = new StringBuilder(MAX_PATH);
             SHGetFolderPath(IntPtr.Zero, FOLDER, IntPtr.Zero, 0, sbPath);
             return sbPath.ToString();

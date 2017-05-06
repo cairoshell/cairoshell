@@ -188,7 +188,7 @@ namespace CairoDesktop.WindowsTasks
                     IntPtr hIcon = this._icon.Handle;
                     if (hIcon != null)
                     {
-                        ImageSource icon = IconImageConverter.GetImageFromHIcon(this._icon.Handle);
+                        ImageSource icon = IconImageConverter.GetImageFromHIcon(hIcon);
                         icon.Freeze();
                         return icon;
                     }

@@ -111,9 +111,9 @@ namespace CairoDesktop.SupportingClasses
             else
             {
                 // Add some default folders on FirstRun
-                
+
                 // Check for Documents Folder
-                String myDocsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                String myDocsPath = Interop.KnownFolders.GetPath(Interop.KnownFolder.Documents);
                 if (Directory.Exists(myDocsPath))
                 {
                     SystemDirectory myDocsSysDir = new SystemDirectory(myDocsPath, Dispatcher.CurrentDispatcher);
@@ -124,7 +124,7 @@ namespace CairoDesktop.SupportingClasses
                     }
                 }
                 // Check for Downloads folder
-                String downloadsPath = Environment.GetEnvironmentVariable("USERPROFILE") + @"\Downloads";
+                String downloadsPath = Interop.KnownFolders.GetPath(Interop.KnownFolder.Downloads);
                 if (Directory.Exists(downloadsPath))
                 {
                     SystemDirectory downloadsSysDir = new SystemDirectory(downloadsPath, Dispatcher.CurrentDispatcher);

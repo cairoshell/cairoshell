@@ -363,24 +363,22 @@ namespace CairoDesktop
         #region Places menu items
         private void OpenMyDocs(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+            Shell.StartProcess(fileManger, KnownFolders.GetPath(KnownFolder.Documents));
         }
 
         private void OpenMyPics(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
+            Shell.StartProcess(fileManger, KnownFolders.GetPath(KnownFolder.Pictures));
         }
 
         private void OpenMyMusic(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyMusic));
+            Shell.StartProcess(fileManger, KnownFolders.GetPath(KnownFolder.Music));
         }
 
         private void OpenDownloads(object sender, RoutedEventArgs e)
         {
-            string userprofile = System.Environment.GetEnvironmentVariable("USERPROFILE");
-            string downloadsPath = userprofile + @"\Downloads\";
-            Shell.StartProcess(fileManger, downloadsPath);
+            Shell.StartProcess(fileManger, KnownFolders.GetPath(KnownFolder.Downloads));
         }
 
         private void OpenMyComputer(object sender, RoutedEventArgs e)
