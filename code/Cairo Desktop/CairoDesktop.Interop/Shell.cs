@@ -119,6 +119,18 @@ namespace CairoDesktop.Interop
                 SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
         }
 
+        public static void ShowWindowTopMost(IntPtr handle)
+        {
+            SetWindowPos(
+                handle,
+                (IntPtr)HWND_TOPMOST,
+                0,
+                0,
+                0,
+                0,
+                SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
+        }
+
         public static bool ShowFileProperties(string Filename)
         {
             SHELLEXECUTEINFO info = new SHELLEXECUTEINFO();

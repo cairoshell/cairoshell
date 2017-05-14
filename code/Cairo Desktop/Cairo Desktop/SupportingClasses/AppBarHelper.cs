@@ -71,6 +71,22 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETSTATE, ref abd);
         }
 
+        public static void AppBarActivate(IntPtr hwnd)
+        {
+            NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
+            abd.cbSize = (int)Marshal.SizeOf(abd);
+            abd.hWnd = hwnd;
+            NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_ACTIVATE, ref abd);
+        }
+
+        public static void AppBarWindowPosChanged(IntPtr hwnd)
+        {
+            NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
+            abd.cbSize = (int)Marshal.SizeOf(abd);
+            abd.hWnd = hwnd;
+            NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
+        }
+
         public static void ABSetPos(IntPtr handle, double width, double height, ABEdge edge)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();

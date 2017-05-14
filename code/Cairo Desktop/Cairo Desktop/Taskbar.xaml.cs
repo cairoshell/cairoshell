@@ -15,7 +15,7 @@ namespace CairoDesktop
     {
         // AppBar properties
         private WindowInteropHelper helper;
-        private IntPtr handle;
+        public IntPtr handle;
         private int appbarMessageId = -1;
         private bool displayChanged = false;
 

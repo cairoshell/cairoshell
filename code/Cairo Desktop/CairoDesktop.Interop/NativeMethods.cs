@@ -638,11 +638,36 @@ namespace CairoDesktop.Interop
             SPI_SETMINIMIZEDMETRICS = 0x002C
         }
 
+        public enum AppBarNotifications
+        {
+            // Notifies an appbar that the taskbar's autohide or 
+            // always-on-top state has changed—that is, the user has selected 
+            // or cleared the "Always on top" or "Auto hide" check box on the
+            // taskbar's property sheet. 
+            StateChange = 0x00000000,
+            // Notifies an appbar when an event has occurred that may affect 
+            // the appbar's size and position. Events include changes in the
+            // taskbar's size, position, and visibility state, as well as the
+            // addition, removal, or resizing of another appbar on the same 
+            // side of the screen.
+            PosChanged = 0x00000001,
+            // Notifies an appbar when a full-screen application is opening or
+            // closing. This notification is sent in the form of an 
+            // application-defined message that is set by the ABM_NEW message. 
+            FullScreenApp = 0x00000002,
+            // Notifies an appbar that the user has selected the Cascade, 
+            // Tile Horizontally, or Tile Vertically command from the 
+            // taskbar's shortcut menu.
+            WindowArrange = 0x00000003
+        }
+
         public const int WM_COPYDATA = 0x004a;
         public const int WM_DISPLAYCHANGE = 0x007e;
         public const int WM_MOUSEACTIVATE = 0x0021;
         public const int MA_NOACTIVATE = 0x0003;
         public const int WM_WINDOWPOSCHANGING = 0x0046;
+        public const int WM_WINDOWPOSCHANGED = 0x0047;
+        public const int WM_ACTIVATE = 0x0006;
 
         public struct WINDOWPLACEMENT
         {

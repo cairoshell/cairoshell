@@ -191,20 +191,60 @@ namespace CairoDesktop
         {
             if (msg == appbarMessageId && appbarMessageId != -1)
             {
-                switch (wParam.ToInt32())
+                switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
                 {
-                    case 1:
+                    case NativeMethods.AppBarNotifications.PosChanged:
                         // Reposition to the top of the screen.
-                        // this doesn't appear to be the right thing to do AppBarHelper.ABSetPos(handle, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
-                        // should respond to messages like this: https://www.codeproject.com/Articles/3728/C-does-Shell-Part this should fix issues with full screen apps!
+                        AppBarHelper.ABSetPos(handle, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
                         if (Startup.MenuBarShadowWindow != null)
                             Startup.MenuBarShadowWindow.SetPosition();
+                        break;
+
+                    case NativeMethods.AppBarNotifications.FullScreenApp:
+                        if ((int)lParam == 1)
+                        {
+                            this.Topmost = false;
+                            Shell.ShowWindowBottomMost(hwnd);
+
+                            if (Settings.EnableTaskbar)
+                            {
+                                Startup.TaskbarWindow.Topmost = false;
+                                Shell.ShowWindowBottomMost(Startup.TaskbarWindow.handle);
+                            }
+                        }
+                        else
+                        {
+                            this.Topmost = true;
+                            Shell.ShowWindowTopMost(hwnd);
+
+                            if (Settings.EnableTaskbar)
+                            {
+                                Startup.TaskbarWindow.Topmost = true;
+                                Shell.ShowWindowTopMost(Startup.TaskbarWindow.handle);
+                            }
+                        }
+
+                        break;
+
+                    case NativeMethods.AppBarNotifications.WindowArrange:
+                        if ((int)lParam != 0)    // before
+                            this.Visibility = Visibility.Collapsed;
+                        else                         // after
+                            this.Visibility = Visibility.Visible;
+
                         break;
                 }
                 handled = true;
             }
-
-            if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            else if (msg == NativeMethods.WM_ACTIVATE)
+            {
+                AppBarHelper.AppBarActivate(hwnd);
+            }
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED)
+            {
+                AppBarHelper.AppBarWindowPosChanged(hwnd);
+            }
+            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
                 setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;
