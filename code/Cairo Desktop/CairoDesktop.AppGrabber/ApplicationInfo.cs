@@ -157,6 +157,14 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
+        public bool IsStoreApp
+        {
+            get
+            {
+                return this.path.StartsWith("appx:");
+            }
+        }
+
         private Category category;
         /// <summary>
         /// The Category object to which this ApplicationInfo object belongs.
@@ -184,7 +192,7 @@ namespace CairoDesktop.AppGrabber
                 return true;
             }
             if (System.IO.Path.GetExtension(this.Path).Equals(".lnk", StringComparison.OrdinalIgnoreCase)) {
-                if (new Interop.Shell.Link(this.Path).Target == new Interop.Shell.Link(other.Path).Target) {
+                if (this.Target == other.Target) {
                     return true;
                 }
             }
@@ -242,7 +250,7 @@ namespace CairoDesktop.AppGrabber
         /// Gets an ImageSource object representing the associated icon of a file.
         /// </summary>
         public ImageSource GetAssociatedIcon() {
-            if (this.path.StartsWith("appx:"))
+            if (this.IsStoreApp)
             {
                 if (string.IsNullOrEmpty(this.IconPath) || !Interop.Shell.Exists(this.IconPath))
                 {
@@ -273,7 +281,7 @@ namespace CairoDesktop.AppGrabber
                     return IconImageConverter.GetDefaultIcon();
                 }
             }
-            else if (this.path.StartsWith("appx:"))
+            else if (this.IsStoreApp)
                 return IconImageConverter.GetDefaultIcon();
             else
                 return IconImageConverter.GetImageFromAssociatedIcon(this.Path, true);

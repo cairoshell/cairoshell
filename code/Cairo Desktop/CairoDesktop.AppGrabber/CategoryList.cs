@@ -110,7 +110,7 @@ namespace CairoDesktop.AppGrabber {
                     app.Path = appElement.ChildNodes[1].InnerText;
                     if(appElement.ChildNodes.Count > 2)
                         app.Target = appElement.ChildNodes[2].InnerText;
-                    if (!app.Path.StartsWith("appx:") && !Interop.Shell.Exists(app.Path)) {
+                    if (!app.IsStoreApp && !Interop.Shell.Exists(app.Path)) {
                         System.Diagnostics.Debug.WriteLine(app.Path + " does not exist");
                         continue;
                     }
