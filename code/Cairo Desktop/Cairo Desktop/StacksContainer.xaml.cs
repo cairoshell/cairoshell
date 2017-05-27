@@ -68,7 +68,7 @@ namespace CairoDesktop {
         {
             System.Diagnostics.Process prc = new System.Diagnostics.Process();
             prc.StartInfo.FileName = Environment.ExpandEnvironmentVariables(Settings.FileManager);
-            prc.StartInfo.Arguments = directoryPath;
+            prc.StartInfo.Arguments = "\"" + directoryPath + "\"";
             prc.Start();
         }
 
