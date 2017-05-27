@@ -17,6 +17,14 @@ namespace CairoDesktop.Common
         private ImageSource _icon;
         private List<string> _verbs = new List<string>();
 
+        public bool IsDirectory
+        {
+            get
+            {
+                return (File.GetAttributes(this.FullName) & FileAttributes.Directory) == FileAttributes.Directory;
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the SystemFile class using the CurrentDispatcher.
         /// </summary>
@@ -36,7 +44,7 @@ namespace CairoDesktop.Common
             this.FullName = filePath;
             this.Name = Path.GetFileName(filePath);
 
-            if (Settings.ShowFileExtensions)
+            if (Settings.ShowFileExtensions || IsDirectory)
                 this.FriendlyName = this.Name;
             else
                 this.FriendlyName = Path.GetFileNameWithoutExtension(filePath);
