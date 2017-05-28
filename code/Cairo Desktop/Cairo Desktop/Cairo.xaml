@@ -70,8 +70,8 @@
         TargetType="{x:Type MenuItem}">
         <Setter Property="Foreground"
             Value="#FFFFFFFF" />
-        <Setter Property="FontFamily"
-                                Value="./Resources/#Segoe UI Semibold" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
@@ -346,10 +346,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
-    <Style x:Key="CairoMenuItemThinStyle"
-        TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
-        <Setter Property="FontFamily" Value="Segoe UI" />
     </Style>
     <Style x:Key="CairoMenuItemCairoMenuStyle"
         TargetType="{x:Type MenuItem}">
@@ -1897,6 +1893,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Height" Value="24" />
         <Setter Property="Width" Value="140" />
@@ -1924,7 +1921,7 @@
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Foreground" Value="White" />
-                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>

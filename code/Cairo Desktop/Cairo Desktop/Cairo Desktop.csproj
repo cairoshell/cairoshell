@@ -274,9 +274,6 @@
     <Resource Include="Resources\menubarShadow.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\SEGUISB.TTF" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\dateTimeIcon.png" />
   </ItemGroup>
   <ItemGroup>
