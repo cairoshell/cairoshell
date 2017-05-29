@@ -1852,7 +1852,12 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style x:Key="StackTopButton"
+        TargetType="{x:Type Button}" BasedOn="{StaticResource StackScrollButton}">
+        <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+
     <!-- Programs menu styles -->
     <Style x:Key="ProgramsTabControl" TargetType="{x:Type TabControl}">
         <Setter Property="Background" Value="Transparent" />

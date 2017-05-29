@@ -56,8 +56,7 @@ namespace CairoDesktop {
         
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(sender.GetType().ToString());
-            openDir((sender as MenuItem).CommandParameter.ToString());
+            openDir((sender as ICommandSource).CommandParameter.ToString());
         }
         
         /// <summary>
