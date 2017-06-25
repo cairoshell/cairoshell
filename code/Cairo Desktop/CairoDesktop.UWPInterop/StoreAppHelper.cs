@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop.UWPInterop
 {
@@ -79,7 +80,10 @@ namespace CairoDesktop.UWPInterop
         private static XmlDocument getManifest(string path)
         {
             XmlDocument manifest = new XmlDocument();
-            manifest.Load(path + "\\AppxManifest.xml");
+            string manPath = path + "\\AppxManifest.xml";
+
+            if (Shell.Exists(manPath))
+                manifest.Load(manPath);
 
             return manifest;
         }
