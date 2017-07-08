@@ -23,6 +23,8 @@
             loadThemes();
             loadRadioGroups();
             loadCategories();
+
+            checkTrayStatus();
         }
 
         private void loadRadioGroups()
@@ -83,6 +85,20 @@
                     string theme = cat.Name;
                     cboDefaultProgramsCategory.Items.Add(theme);
                 }
+            }
+        }
+
+        private void checkTrayStatus()
+        {
+            if (Startup.MenuBarWindow.SystemTrayFailure)
+            {
+                // adjust settings window to alert user they need to install vc_redist
+
+                chkEnableSysTray.IsEnabled = false;
+                pnlTraySettings.Visibility = Visibility.Collapsed;
+                chkEnableSysTrayRehook.Visibility = Visibility.Collapsed;
+
+                lblTrayWarning.Visibility = Visibility.Visible;
             }
         }
 

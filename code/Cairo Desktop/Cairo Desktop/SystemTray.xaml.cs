@@ -63,9 +63,10 @@ namespace CairoDesktop
                     trayRehook.Start();
                 }
             }
-            catch (Exception ex)
+            catch /*(Exception ex)*/
             {
-                CairoMessage.ShowAlert("Error initializing the system tray component.\n\n" + ex.ToString() + "\n\nIf this error continues please report it (including a screen shot of this message) to the Cairo Development Team. \nThank you.", "Error", MessageBoxImage.Asterisk);
+                Startup.MenuBarWindow.SystemTrayFailure = true;
+                //CairoMessage.ShowAlert("Error initializing the system tray component.\n\n" + ex.ToString() + "\n\nIf this error continues please report it (including a screen shot of this message) to the Cairo Development Team. \nThank you.", "Error", MessageBoxImage.Asterisk);
             }
         }
 
@@ -85,7 +86,7 @@ namespace CairoDesktop
 
         public void DestroySystemTray()
         {
-            if(trayDelegate != null)
+            if(!Startup.MenuBarWindow.SystemTrayFailure && trayDelegate != null)
                 hooksWrapper.ShutdownSystray();
         }
 

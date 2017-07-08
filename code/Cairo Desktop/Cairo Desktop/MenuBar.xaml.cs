@@ -24,6 +24,9 @@ namespace CairoDesktop
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
+        // True if system tray failed to load
+        public bool SystemTrayFailure = false;
+
         private String fileManger = Environment.ExpandEnvironmentVariables(Settings.FileManager);
 
         public MenuBar()

@@ -239,7 +239,8 @@
                         Click="EnableSysTray_Click" Name="chkEnableSysTray">
                         <Label>Enable system tray</Label>
                     </CheckBox>
-                    <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="lblTrayWarning" Visibility="Collapsed" Width="300" TextWrapping="Wrap" Text="The system tray component could not be loaded. Please install the Microsoft Visual C++ 2015 Redistributable."/>
+                    <StackPanel Orientation="Horizontal" Name="pnlTraySettings">
                         <TextBlock Text="Show Tray Icons:" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTrayMode" Name="radTrayMode0" Click="radTrayMode0_Click">
