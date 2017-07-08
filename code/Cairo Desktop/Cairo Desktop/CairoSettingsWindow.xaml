@@ -119,12 +119,10 @@
             </Setter>
         </Style>
         <Style TargetType="{x:Type CheckBox}">
-            <Setter Property="Foreground" Value="#ffe9ecf4" />
             <Setter Property="Margin" Value="5,8" />
             <Setter Property="Padding" Value="0" />
         </Style>
         <Style TargetType="{x:Type RadioButton}">
-            <Setter Property="Foreground" Value="#ffe9ecf4" />
             <Setter Property="Margin" Value="0,4" />
             <Setter Property="Padding" Value="0" />
         </Style>
@@ -133,6 +131,10 @@
             <Setter Property="Margin" Value="5,4,0,4" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Width" Value="100" />
+        </Style>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="#ffe9ecf4" />
+            <Setter Property="Padding" Value="0" />
         </Style>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="Foreground" Value="#ffe9ecf4" />
@@ -157,14 +159,16 @@
             </TabControl.Resources>
             <TabItem Header="General">
                 <StackPanel Orientation="Vertical">
-                    <CheckBox Content="Show sub-directories"
-                        IsChecked="{Binding Path=EnableSubDirs}"
+                    <CheckBox IsChecked="{Binding Path=EnableSubDirs}"
                         Click="EnableSubDirs_Click"
-                        Name="chkEnableSubDirs" />
-                    <CheckBox Content="Show file extensions"
-                        IsChecked="{Binding Path=ShowFileExtensions}"
+                        Name="chkEnableSubDirs">
+                        <Label>Show sub-directories</Label>
+                    </CheckBox>
+                    <CheckBox IsChecked="{Binding Path=ShowFileExtensions}"
                         Click="ShowFileExtensions_Click"
-                        Name="chkShowFileExtensions" />
+                        Name="chkShowFileExtensions">
+                        <Label>Show file extensions</Label>
+                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Theme:" ToolTip="Place themes into your Cairo installation directory." />
                         <ComboBox Name="cboThemeSelect" DropDownClosed="themeSetting_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=CairoTheme}" />
@@ -183,12 +187,14 @@
             </TabItem>
             <TabItem Header="Desktop">
                 <StackPanel Orientation="Vertical">
-                    <CheckBox Content="Enable Desktop"
-                        IsChecked="{Binding Path=EnableDesktop}"
-                        Click="EnableDesktop_Click" Name="chkEnableDesktop" />
-                    <CheckBox Content="Use Dynamic Desktop"
-                        IsChecked="{Binding Path=EnableDynamicDesktop}"
-                        Click="EnableDynamicDesktop_Click" Name="chkEnableDynamicDesktop" />
+                    <CheckBox IsChecked="{Binding Path=EnableDesktop}"
+                        Click="EnableDesktop_Click" Name="chkEnableDesktop">
+                        <Label>Enable Desktop</Label>
+                    </CheckBox>
+                    <CheckBox IsChecked="{Binding Path=EnableDynamicDesktop}"
+                        Click="EnableDynamicDesktop_Click" Name="chkEnableDynamicDesktop">
+                        <Label>Use Dynamic Desktop</Label>
+                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Desktop home:" />
                         <TextBox Text="{Binding Path=DesktopDirectory}"
@@ -199,15 +205,22 @@
             </TabItem>
             <TabItem Header="Taskbar">
                 <StackPanel Orientation="Vertical">
-                    <CheckBox Content="Enable Taskbar"
-                        IsChecked="{Binding Path=EnableTaskbar}"
-                        Click="EnableTaskbar_Click" Name="chkEnableTaskbar" />
+                    <CheckBox IsChecked="{Binding Path=EnableTaskbar}"
+                        Click="EnableTaskbar_Click" Name="chkEnableTaskbar">
+                        <Label>Enable Taskbar</Label>
+                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Mode:" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton Content="Completely hide Windows taskbar" GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click" />
-                            <RadioButton Content="Auto-hide Windows taskbar" GroupName="rdoTaskbarMode" Name="radTaskbarMode1" Click="radTaskbarMode1_Click" />
-                            <RadioButton Content="Show Windows taskbar" GroupName="rdoTaskbarMode" Name="radTaskbarMode2" Click="radTaskbarMode2_Click" />
+                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click">
+                                <Label>Completely hide Windows taskbar</Label>
+                            </RadioButton>
+                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode1" Click="radTaskbarMode1_Click">
+                                <Label>Auto-hide Windows taskbar</Label>
+                            </RadioButton>
+                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode2" Click="radTaskbarMode2_Click">
+                                <Label>Show Windows taskbar</Label>
+                            </RadioButton>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
@@ -218,21 +231,28 @@
                         <TextBlock Text="Default programs category:" Width="160" />
                         <ComboBox Name="cboDefaultProgramsCategory" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=DefaultProgramsCategory}" Width="170" />
                     </StackPanel>
-                    <CheckBox Content="Enable Menu Bar shadow"
-                        IsChecked="{Binding Path=EnableMenuBarShadow}"
-                        Click="EnableMenuBarShadow_Click" Name="chkEnableMenuBarShadow" />
-                    <CheckBox Content="Enable system tray"
-                        IsChecked="{Binding Path=EnableSysTray}"
-                        Click="EnableSysTray_Click" Name="chkEnableSysTray" />
+                    <CheckBox IsChecked="{Binding Path=EnableMenuBarShadow}"
+                        Click="EnableMenuBarShadow_Click" Name="chkEnableMenuBarShadow">
+                        <Label>Enable Menu Bar shadow</Label>
+                    </CheckBox>
+                    <CheckBox IsChecked="{Binding Path=EnableSysTray}"
+                        Click="EnableSysTray_Click" Name="chkEnableSysTray">
+                        <Label>Enable system tray</Label>
+                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Show Tray Icons:" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton Content="Collapsed" GroupName="rdoTrayMode" Name="radTrayMode0" Click="radTrayMode0_Click" />
-                            <RadioButton Content="Always" GroupName="rdoTrayMode" Name="radTrayMode1" Click="radTrayMode1_Click" />
+                            <RadioButton GroupName="rdoTrayMode" Name="radTrayMode0" Click="radTrayMode0_Click">
+                                <Label>Collapsed</Label>
+                            </RadioButton>
+                            <RadioButton GroupName="rdoTrayMode" Name="radTrayMode1" Click="radTrayMode1_Click">
+                                <Label>Always</Label>
+                            </RadioButton>
                         </StackPanel>
                     </StackPanel>
-                    <CheckBox Content="Periodically re-establish tray hook"
-                        IsChecked="{Binding Path=EnableSysTrayRehook}" Click="chkEnableSysTrayRehook_Click" Name="chkEnableSysTrayRehook" />
+                    <CheckBox IsChecked="{Binding Path=EnableSysTrayRehook}" Click="chkEnableSysTrayRehook_Click" Name="chkEnableSysTrayRehook">
+                        <Label>Periodically re-establish tray hook</Label>
+                    </CheckBox>
                 </StackPanel>
             </TabItem>
             <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}" Name="btnRestart" MouseLeftButtonUp="restartCairo" Visibility="Hidden">

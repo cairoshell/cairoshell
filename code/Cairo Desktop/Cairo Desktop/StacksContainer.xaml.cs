@@ -65,10 +65,17 @@ namespace CairoDesktop {
         /// <param name="directoryPath">Directory to open.</param>
         private void openDir(String directoryPath) 
         {
-            System.Diagnostics.Process prc = new System.Diagnostics.Process();
-            prc.StartInfo.FileName = Environment.ExpandEnvironmentVariables(Settings.FileManager);
-            prc.StartInfo.Arguments = "\"" + directoryPath + "\"";
-            prc.Start();
+            try
+            {
+                System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                prc.StartInfo.FileName = Environment.ExpandEnvironmentVariables(Settings.FileManager);
+                prc.StartInfo.Arguments = "\"" + directoryPath + "\"";
+                prc.Start();
+            }
+            catch (Exception ex)
+            {
+                CairoMessage.Show("Unable to open the file browser: " + ex.Message, "Error");
+            }
         }
 
         #region Drag and drop reordering
