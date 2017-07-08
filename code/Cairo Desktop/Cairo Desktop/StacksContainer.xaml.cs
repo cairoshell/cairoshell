@@ -65,16 +65,9 @@ namespace CairoDesktop {
         /// <param name="directoryPath">Directory to open.</param>
         private void openDir(String directoryPath) 
         {
-            try
+            if (!Interop.Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), "\"" + directoryPath + "\""))
             {
-                System.Diagnostics.Process prc = new System.Diagnostics.Process();
-                prc.StartInfo.FileName = Environment.ExpandEnvironmentVariables(Settings.FileManager);
-                prc.StartInfo.Arguments = "\"" + directoryPath + "\"";
-                prc.Start();
-            }
-            catch (Exception ex)
-            {
-                CairoMessage.Show("Unable to open the file browser: " + ex.Message, "Error");
+                CairoMessage.Show("Unable to open the file browser.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

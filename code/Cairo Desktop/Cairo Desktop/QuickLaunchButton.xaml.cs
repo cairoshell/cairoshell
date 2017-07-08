@@ -14,10 +14,9 @@ namespace CairoDesktop
         private void LaunchProgram(object sender, RoutedEventArgs e)
         {
             Button item = (Button)sender;
-            try {
-                Interop.Shell.StartProcess(item.CommandParameter.ToString());
-            } catch {
-                CairoMessage.ShowAlert("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxImage.Error);
+            if (!Interop.Shell.StartProcess(item.CommandParameter.ToString()))
+            {
+                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 	}

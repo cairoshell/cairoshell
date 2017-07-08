@@ -135,13 +135,9 @@ namespace CairoDesktop
         private void LaunchProgram(object sender, RoutedEventArgs e)
         {
             MenuItem item = (MenuItem)sender;
-            try
+            if (!Shell.StartProcess(item.CommandParameter.ToString()))
             {
-                Shell.StartProcess(item.CommandParameter.ToString());
-            }
-            catch
-            {
-                CairoMessage.ShowAlert("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxImage.Error);
+                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -474,13 +470,9 @@ namespace CairoDesktop
         {
             var searchObj = (VistaSearchProvider.SearchResult)e.Parameter;
 
-            try
+            if (!Shell.StartProcess(searchObj.Path))
             {
-                Shell.StartProcess(searchObj.Path);
-            }
-            catch (Exception ex)
-            {
-                CairoMessage.Show("Sorry, this search result was unable to be opened, because: " + ex.Message, "Uh Oh!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show("We were unable to open the search result.", "Uh Oh!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         #endregion

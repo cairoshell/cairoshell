@@ -153,11 +153,10 @@ namespace CairoDesktop
         private void miPersonalization_Click(object sender, RoutedEventArgs e)
         {
             // doesn't work because Settings app requires Explorer :(
-            try
+            if (!Shell.StartProcess("desk.cpl"))
             {
-                Shell.StartProcess("desk.cpl");
+                CairoMessage.Show("Unable to open the Display control panel.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            catch { }
         }
 
         private void grid_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

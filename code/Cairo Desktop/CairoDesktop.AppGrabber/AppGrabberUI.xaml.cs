@@ -82,24 +82,28 @@ namespace CairoDesktop.AppGrabber
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Programs and shortcuts|";
-
-            foreach(string ext in appGrabber.ExecutableExtensions)
+            try
             {
-                dlg.Filter += "*" + ext + ";";
+                OpenFileDialog dlg = new OpenFileDialog();
+                dlg.Filter = "Programs and shortcuts|";
+
+                foreach (string ext in appGrabber.ExecutableExtensions)
+                {
+                    dlg.Filter += "*" + ext + ";";
+                }
+
+                dlg.Filter = dlg.Filter.Substring(0, dlg.Filter.Length - 2);
+
+                bool? result = dlg.ShowDialog();
+
+                if (result == true)
+                {
+                    ApplicationInfo customApp = appGrabber.PathToApp(dlg.FileName, true);
+                    if (!object.ReferenceEquals(customApp, null))
+                        programsMenuAppsCollection.Add(customApp);
+                }
             }
-
-            dlg.Filter = dlg.Filter.Substring(0, dlg.Filter.Length - 2);
-
-            bool? result = dlg.ShowDialog();
-
-            if (result == true)
-            {
-                ApplicationInfo customApp = appGrabber.PathToApp(dlg.FileName, true);
-                if (!object.ReferenceEquals(customApp, null))
-                    programsMenuAppsCollection.Add(customApp);
-            }
+            catch { }
         }
     }
 }

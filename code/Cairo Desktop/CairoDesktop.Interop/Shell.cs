@@ -74,29 +74,47 @@ namespace CairoDesktop.Interop
             return sbPath.ToString();
         }
 
-        public static void StartProcess(string filename)
+        public static bool StartProcess(string filename)
         {
-            if (!Environment.Is64BitProcess)
+            try
             {
-                filename.Replace("system32", "sysnative");
-            }
+                if (!Environment.Is64BitProcess)
+                {
+                    filename.Replace("system32", "sysnative");
+                }
 
-            if (filename.StartsWith("appx:"))
-                Process.Start("LaunchWinApp.exe", "shell:appsFolder\\" + filename.Substring(5));
-            else if (filename.Contains("://"))
-                Process.Start("explorer.exe", filename);
-            else
-                Process.Start(filename);
+                if (filename.StartsWith("appx:"))
+                    Process.Start("LaunchWinApp.exe", "shell:appsFolder\\" + filename.Substring(5));
+                else if (filename.Contains("://"))
+                    Process.Start("explorer.exe", filename);
+                else
+                    Process.Start(filename);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public static void StartProcess(string filename, string args)
+        public static bool StartProcess(string filename, string args)
         {
-            if (!Environment.Is64BitProcess)
+            try
             {
-                filename.Replace("system32", "sysnative");
-            }
+                if (!Environment.Is64BitProcess)
+                {
+                    filename.Replace("system32", "sysnative");
+                }
 
-            Process.Start(filename, args);
+                Process.Start(filename, args);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public static bool Exists(string filename)
