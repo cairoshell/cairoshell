@@ -96,8 +96,12 @@ namespace CairoDesktop {
                 {
                     Menu menu = sender as Menu;
                     SystemDirectory selectedDir = menu.DataContext as SystemDirectory;
-                    
-                    DragDrop.DoDragDrop(menu, selectedDir, DragDropEffects.Move);
+
+                    try
+                    {
+                        DragDrop.DoDragDrop(menu, selectedDir, DragDropEffects.Move);
+                    }
+                    catch { }
 
                     // reset the stored mouse position
                     startPoint = null;
