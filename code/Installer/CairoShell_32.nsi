@@ -71,7 +71,6 @@ Section "Cairo Desktop (required)" cairo
   
   ; Put file there
   File "..\Cairo Desktop\Build\Release\CairoDesktop.exe"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.Configuration.dll.config"
   File "..\Cairo Desktop\Build\Release\CairoDesktop.WindowsTray.dll"
   File "..\Cairo Desktop\Build\Release\CairoDesktop.WindowsTrayHooks.dll"
   File "..\Cairo Desktop\Build\Release\CairoDesktop.Common.dll"
