@@ -167,9 +167,9 @@ namespace CairoDesktop.WindowsTasks
             {
                 if (WinFileName.Contains("ApplicationFrameHost.exe") && !string.IsNullOrEmpty(AppUserModelID))
                 {
-                    BitmapImage img = new BitmapImage();
                     try
                     {
+                        BitmapImage img = new BitmapImage();
                         img.BeginInit();
                         img.UriSource = new Uri(UWPInterop.StoreAppHelper.GetAppIcon(AppUserModelID)[0], UriKind.Absolute);
                         img.CacheOption = BitmapCacheOption.OnLoad;

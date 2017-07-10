@@ -37,10 +37,13 @@ namespace CairoDesktop
                 if (regWallpaper != string.Empty && Shell.Exists(regWallpaper))
                 {
                     // draw wallpaper
-                    ImageBrush bgBrush = new ImageBrush();
-                    bgBrush.ImageSource = new BitmapImage(new Uri(regWallpaper, UriKind.Absolute));
+                    try
+                    {
+                        ImageBrush bgBrush = new ImageBrush();
+                        bgBrush.ImageSource = new BitmapImage(new Uri(regWallpaper, UriKind.Absolute));
 
-                    this.Background = bgBrush;
+                        this.Background = bgBrush;
+                    } catch { }
                 }
             }
         }
@@ -113,8 +116,12 @@ namespace CairoDesktop
 
                 if (Settings.EnableDynamicDesktop)
                 {
-                    DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this };
-                    nav.Show();
+                    try
+                    {
+                        DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this };
+                        nav.Show();
+                    }
+                    catch { }
                 }
             }
         }

@@ -12,10 +12,7 @@
     AllowDrop="False"
     Visibility="Visible"
     Focusable="False"
-    Topmost="False"
+    Topmost="False" Background="Transparent"
     Loaded="MenuBarShadow_Loaded" LocationChanged="Window_LocationChanged">
-    <Window.Background>
-        <ImageBrush ImageSource="Resources\menubarShadow.png" />
-    </Window.Background>
-    <Grid></Grid>
+    <Image Source="{StaticResource MenubarShadow}" Stretch="Fill" />
 </Window>

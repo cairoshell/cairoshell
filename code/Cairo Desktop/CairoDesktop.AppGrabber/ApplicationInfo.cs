@@ -266,9 +266,9 @@ namespace CairoDesktop.AppGrabber
                     }
                 }
 
-                BitmapImage img = new BitmapImage();
                 try
                 {
+                    BitmapImage img = new BitmapImage();
                     img.BeginInit();
                     img.UriSource = new Uri(this.IconPath, UriKind.Absolute);
                     img.CacheOption = BitmapCacheOption.OnLoad;
@@ -281,8 +281,6 @@ namespace CairoDesktop.AppGrabber
                     return IconImageConverter.GetDefaultIcon();
                 }
             }
-            else if (this.IsStoreApp)
-                return IconImageConverter.GetDefaultIcon();
             else
                 return IconImageConverter.GetImageFromAssociatedIcon(this.Path, true);
         }

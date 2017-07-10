@@ -84,20 +84,20 @@ namespace CairoDesktop.AppGrabber
         /// <returns>The default icon as a BitmapSource.</returns>
         public static BitmapSource GetDefaultIcon()
         {
-            BitmapImage img = new BitmapImage();
             try
             {
+                BitmapImage img = new BitmapImage();
                 img.BeginInit();
                 img.UriSource = new Uri("pack://application:,,/Resources/nullIcon.png", UriKind.RelativeOrAbsolute);
                 img.EndInit();
                 img.Freeze();
+
+                return img;
             }
             catch
             {
                 return GenerateEmptyBitmapSource();
             }
-
-            return img;
         }
     }
 }
