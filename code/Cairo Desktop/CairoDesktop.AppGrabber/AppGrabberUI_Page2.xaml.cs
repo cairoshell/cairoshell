@@ -10,7 +10,8 @@ namespace CairoDesktop.AppGrabber
     public partial class AppGrabberUI_Page2 : Window
     {
         private AppGrabber appGrabber;
-        
+        private ObservableCollection<ApplicationInfo> selectedApps;
+
         public Visibility AppVisibility
         {
             get { return (Visibility)GetValue(AppVisibilityProperty); }
@@ -48,38 +49,11 @@ namespace CairoDesktop.AppGrabber
         public AppGrabberUI_Page2(AppGrabber appGrabber, ObservableCollection<ApplicationInfo> selectedApps)
         {
             this.appGrabber = appGrabber;
+            this.selectedApps = selectedApps;
             bAppsHidden = false;
             InitializeComponent();
 
             Height = SystemParameters.MaximizedPrimaryScreenHeight - 100;
-
-            // Grab the Programs
-            CategoryList catList = appGrabber.CategoryList;
-
-            // Get the Uncategorized category - create it if it doesn't exist.
-            Category uncat = catList.GetCategory("Uncategorized");
-            if (uncat == null) {
-                uncat = new Category("Uncategorized");
-                uncat.ShowInMenu = false;
-                catList.Add(uncat);
-            }
-
-            // Get the Quick Launch category - create it if it doesn't exist.
-            Category quicklaunch = catList.GetCategory("Quick Launch");
-            if (quicklaunch == null) {
-                quicklaunch = new Category("Quick Launch");
-                quicklaunch.ShowInMenu = false;
-                catList.Add(quicklaunch);
-            }
-
-            // Add Apps to uncat if they haven't been added to a category yet.
-            foreach (ApplicationInfo app in selectedApps) {
-                if (app.Category == null) {
-                    uncat.Add(app);
-                }
-            }
-
-            categoryView.ItemsSource = catList;
         }
 
         private void SkipWizard(object sender, RoutedEventArgs e)
@@ -115,6 +89,42 @@ namespace CairoDesktop.AppGrabber
                 bAppsHidden = true;
             else
                 bAppsHidden = false;
+        }
+
+        private void Window_ContentRendered(object sender, System.EventArgs e)
+        {
+            // Grab the Programs
+            CategoryList catList = appGrabber.CategoryList;
+
+            // Get the Uncategorized category - create it if it doesn't exist.
+            Category uncat = catList.GetCategory("Uncategorized");
+            if (uncat == null)
+            {
+                uncat = new Category("Uncategorized");
+                uncat.ShowInMenu = false;
+                catList.Add(uncat);
+            }
+
+            // Get the Quick Launch category - create it if it doesn't exist.
+            Category quicklaunch = catList.GetCategory("Quick Launch");
+            if (quicklaunch == null)
+            {
+                quicklaunch = new Category("Quick Launch");
+                quicklaunch.ShowInMenu = false;
+                catList.Add(quicklaunch);
+            }
+
+            // Add Apps to uncat if they haven't been added to a category yet.
+            foreach (ApplicationInfo app in selectedApps)
+            {
+                if (app.Category == null)
+                {
+                    uncat.Add(app);
+                }
+            }
+
+            categoryView.ItemsSource = catList;
+            categoryView.Visibility = Visibility.Visible;
         }
     }
 }

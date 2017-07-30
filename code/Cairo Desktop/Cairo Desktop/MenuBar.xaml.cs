@@ -27,8 +27,6 @@ namespace CairoDesktop
         // True if system tray failed to load
         public bool SystemTrayFailure = false;
 
-        private String fileManger = Environment.ExpandEnvironmentVariables(Settings.FileManager);
-
         public MenuBar()
         {
             InitializeComponent();
@@ -396,42 +394,42 @@ namespace CairoDesktop
         #region Places menu items
         private void OpenMyDocs(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(fileManger, KnownFolders.GetPath(KnownFolder.Documents));
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Documents));
         }
 
         private void OpenMyPics(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(fileManger, KnownFolders.GetPath(KnownFolder.Pictures));
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Pictures));
         }
 
         private void OpenMyMusic(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(fileManger, KnownFolders.GetPath(KnownFolder.Music));
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Music));
         }
 
         private void OpenDownloads(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(fileManger, KnownFolders.GetPath(KnownFolder.Downloads));
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Downloads));
         }
 
         private void OpenMyComputer(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(fileManger, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
         }
 
         private void OpenUserFolder(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(fileManger, System.Environment.GetEnvironmentVariable("USERPROFILE"));
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), System.Environment.GetEnvironmentVariable("USERPROFILE"));
         }
 
         private void OpenProgramFiles(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(fileManger, System.Environment.GetEnvironmentVariable("ProgramFiles"));
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), System.Environment.GetEnvironmentVariable("ProgramFiles"));
         }
 
         private void OpenRecycleBin(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(fileManger, "::{645FF040-5081-101B-9F08-00AA002F954E}");
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), "::{645FF040-5081-101B-9F08-00AA002F954E}");
         }
         #endregion
 

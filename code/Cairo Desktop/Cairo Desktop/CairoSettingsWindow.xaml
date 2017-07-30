@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Window x:Class="CairoDesktop.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Cairo Settings"
-    Height="245"
+    SizeToContent="Height"
     Width="520"
     WindowStartupLocation="CenterScreen"
     Closing="Window_Closing" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" SourceInitialized="Window_SourceInitialized">
@@ -182,6 +182,11 @@
                         <TextBlock Text="Date format:" />
                         <TextBox Text="{Binding Path=DateFormat}"
                             Name="dateSetting" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="File manager:" />
+                        <TextBox Text="{Binding Path=FileManager}"
+                            Name="fileManager" />
                     </StackPanel>
                 </StackPanel>
             </TabItem>

@@ -6,7 +6,7 @@
     AllowsTransparency="True"
     WindowStyle="None"
     Background="Transparent"
-    WindowStartupLocation="CenterScreen" UseLayoutRounding="True">
+    WindowStartupLocation="CenterScreen" UseLayoutRounding="True" ContentRendered="Window_ContentRendered">
     <Window.Resources>
         <ResourceDictionary Source="AppGrabberUIResources.xaml" />
     </Window.Resources>
@@ -139,7 +139,7 @@
                     Background="White"
                     DragOver="ScrollViewer_DragOver">
                         <ItemsControl x:Name="categoryView"
-                        Style="{StaticResource CategoryDisplayStyle}" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
+                        Style="{StaticResource CategoryDisplayStyle}" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Visibility="Hidden" />
                     </ScrollViewer>
                 </Border>
                 <StackPanel HorizontalAlignment="Right"

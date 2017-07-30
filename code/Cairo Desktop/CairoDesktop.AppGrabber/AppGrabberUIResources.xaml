@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.AppGrabber.AppGrabberUIResources">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.AppGrabber.AppGrabberUIResources">
     <Style x:Key="AppGrabberWindowStyle"
         TargetType="{x:Type Border}">
         <Setter Property="BorderThickness" Value="0" />
@@ -23,7 +23,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <BitmapImage x:Key="NullIcon" UriSource="pack://application:,,/Resources/nullIcon.png"></BitmapImage>
+    <BitmapImage x:Key="NullIcon" UriSource="Resources/nullIcon.png"></BitmapImage>
     <Style x:Key="AppGrabberListBoxHeaderStyle"
         TargetType="{x:Type DockPanel}">
         <Setter Property="Width"
