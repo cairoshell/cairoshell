@@ -77,6 +77,10 @@
       <Project>{8e50fc68-8bf3-44f2-9229-708500625757}</Project>
       <Name>CairoDesktop.Configuration</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
+      <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
+      <Name>CairoDesktop.Interop</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="CairoMessage.xaml">

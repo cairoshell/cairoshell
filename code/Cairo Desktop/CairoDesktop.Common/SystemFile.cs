@@ -21,7 +21,7 @@ namespace CairoDesktop.Common
         {
             get
             {
-                return (File.GetAttributes(this.FullName) & FileAttributes.Directory) == FileAttributes.Directory;
+                return Interop.Shell.Exists(FullName) && (File.GetAttributes(this.FullName) & FileAttributes.Directory) == FileAttributes.Directory;
             }
         }
 
@@ -42,14 +42,17 @@ namespace CairoDesktop.Common
         public SystemFile(string filePath, Dispatcher dispatcher)
         {
             this.FullName = filePath;
-            this.Name = Path.GetFileName(filePath);
+            if (Interop.Shell.Exists(FullName))
+            {
+                this.Name = Path.GetFileName(filePath);
 
-            if (Settings.ShowFileExtensions || IsDirectory)
-                this.FriendlyName = this.Name;
-            else
-                this.FriendlyName = Path.GetFileNameWithoutExtension(filePath);
-            this._dispatcher = dispatcher;
-            Initialize();
+                if (Settings.ShowFileExtensions || IsDirectory)
+                    this.FriendlyName = this.Name;
+                else
+                    this.FriendlyName = Path.GetFileNameWithoutExtension(filePath);
+                this._dispatcher = dispatcher;
+                Initialize();
+            }
         }
 
         /// <summary>

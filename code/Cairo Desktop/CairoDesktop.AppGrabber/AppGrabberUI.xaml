@@ -85,6 +85,7 @@
                     <ListView x:Name="ProgramsMenuAppsView"
                         ItemContainerStyle="{StaticResource ApplicationInfoListItemStyle}"
                         Style="{StaticResource ApplicationInfoListStyle}"
+                        MouseDoubleClick="ProgramsMenuAppsView_MouseDoubleClick"
                         Width="330"
                         AlternationCount="2" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" UseLayoutRounding="True" />
                 </Border>
@@ -103,6 +104,7 @@
                     <ListView x:Name="InstalledAppsView"
                         ItemContainerStyle="{StaticResource ApplicationInfoListItemStyle}"
                         Style="{StaticResource ApplicationInfoListStyle}"
+                        MouseDoubleClick="InstalledAppsView_MouseDoubleClick"
                         Width="330"
                         AlternationCount="2" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" UseLayoutRounding="True" />
                 </Border>

@@ -92,7 +92,9 @@ namespace CairoDesktop.Common {
 
         private void addFile(String filePath) {
             SystemFile newFile = new SystemFile(filePath, dispatcher);
-            files.Add(newFile);
+
+            if(newFile.Name != null)
+                files.Add(newFile);
         }
 
         private void removeFile(String filePath) {

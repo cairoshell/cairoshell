@@ -176,10 +176,8 @@ namespace CairoDesktop.AppGrabber
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                if (sourceView == null)
-                {
-                    sourceView = sender as ListView;
-                }
+                sourceView = sender as ListView;
+                
                 if (sourceView.SelectedItem != null)
                 {
                     isDragging = true;
@@ -281,6 +279,5 @@ namespace CairoDesktop.AppGrabber
                 }
             }
         }
-
     }
 }

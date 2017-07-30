@@ -119,10 +119,7 @@ namespace CairoDesktop.Interop
 
         public static bool Exists(string filename)
         {
-            if (filename.StartsWith("\\\\"))
-                return false;
-            else
-                return (System.IO.File.Exists(filename) || System.IO.Directory.Exists(filename));
+            return !filename.StartsWith("\\\\") && (File.Exists(filename) || Directory.Exists(filename));
         }
 
         public static void ShowWindowBottomMost(IntPtr handle)
