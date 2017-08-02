@@ -439,15 +439,30 @@
                                     MouseDown="Category_Block_DoubleClick" />
                             </DockPanel>
                         </Border>
-                        <ListView ItemsSource="{Binding}" Visibility="{Binding AppVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, UpdateSourceTrigger=PropertyChanged}"
+                        <ListView ItemsSource="{Binding}"
                             ItemContainerStyle="{StaticResource ApplicationInfoListItemStyle}"
-                            Style="{StaticResource ApplicationInfoListStyle}"
                             AlternationCount="2" >
                             <ListView.Template>
                                 <ControlTemplate>
                                     <ItemsPresenter />
                                 </ControlTemplate>
                             </ListView.Template>
+                            <ListView.Style>
+                                <Style BasedOn="{StaticResource ApplicationInfoListStyle}" TargetType="ListView">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding AppVisibility, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, UpdateSourceTrigger=PropertyChanged}"
+                                                        Value="Collapsed">
+                                            <Setter Property="Visibility"
+                                                            Value="Collapsed" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Path=Name}"
+                                                        Value="Uncategorized">
+                                            <Setter Property="Visibility"
+                                                            Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListView.Style>
                         </ListView>
                     </DockPanel>
                     <DataTemplate.Triggers>
