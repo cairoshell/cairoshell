@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
-using Microsoft.Win32;
+using System.Windows.Forms;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -82,28 +82,35 @@ namespace CairoDesktop.AppGrabber
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "Programs and shortcuts|";
+
+            foreach (string ext in appGrabber.ExecutableExtensions)
+            {
+                dlg.Filter += "*" + ext + ";";
+            }
+
+            dlg.Filter = dlg.Filter.Substring(0, dlg.Filter.Length - 2);
+
+            System.Windows.Forms.DialogResult result;
+
             try
             {
-                OpenFileDialog dlg = new OpenFileDialog();
-                dlg.Filter = "Programs and shortcuts|";
-
-                foreach (string ext in appGrabber.ExecutableExtensions)
-                {
-                    dlg.Filter += "*" + ext + ";";
-                }
-
-                dlg.Filter = dlg.Filter.Substring(0, dlg.Filter.Length - 2);
-
-                bool? result = dlg.ShowDialog();
-
-                if (result == true)
-                {
-                    ApplicationInfo customApp = appGrabber.PathToApp(dlg.FileName, true);
-                    if (!object.ReferenceEquals(customApp, null))
-                        programsMenuAppsCollection.Add(customApp);
-                }
+                result = dlg.ShowDialog();
             }
-            catch { }
+            catch
+            {
+                // show retro dialog if the better one fails to load
+                dlg.AutoUpgradeEnabled = false;
+                result = dlg.ShowDialog();
+            }
+
+            if (result == System.Windows.Forms.DialogResult.OK && Interop.Shell.Exists(dlg.FileName))
+            {
+                ApplicationInfo customApp = appGrabber.PathToApp(dlg.FileName, true);
+                if (!object.ReferenceEquals(customApp, null))
+                    programsMenuAppsCollection.Add(customApp);
+            }
         }
 
         private void ProgramsMenuAppsView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
