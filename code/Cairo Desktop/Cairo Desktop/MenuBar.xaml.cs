@@ -137,10 +137,60 @@ namespace CairoDesktop
         private void LaunchProgram(object sender, RoutedEventArgs e)
         {
             MenuItem item = (MenuItem)sender;
-            if (!Shell.StartProcess(item.CommandParameter.ToString()))
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            if (!Shell.StartProcess(app.Path))
             {
                 CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void LaunchProgramAdmin(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            if (!app.IsStoreApp)
+                Shell.StartProcess(app.Path, "", "runas");
+            else
+                LaunchProgram(sender, e);
+        }
+
+        private void programsMenu_Rename(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            DockPanel parent = ((MenuItem)((ContextMenu)item.Parent).PlacementTarget).Header as DockPanel;
+            TextBox rename = parent.FindName("txtProgramRename") as TextBox;
+            TextBlock label = parent.FindName("lblProgramName") as TextBlock;
+
+            rename.Visibility = Visibility.Visible;
+            label.Visibility = Visibility.Collapsed;
+            rename.Focus();
+            rename.SelectAll();
+        }
+
+        private void programsMenu_Remove(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+            bool? deleteChoice = CairoMessage.ShowOkCancel("\"" + app.Name + "\" will be removed from the Programs menu. This will not uninstall the program.", "Remove this app from the menu?", "Resources/cairoIcon.png", "Remove", "Cancel");
+            if (deleteChoice.HasValue && deleteChoice.Value)
+            {
+                app.Category.Remove(app);
+                appGrabber.Save();
+            }
+        }
+
+        private void programsMenu_Properties(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+
+            if (app.IsStoreApp)
+                CairoMessage.ShowAlert("This is a Universal Windows Platform (UWP) application.", app.Name, MessageBoxImage.None);
+            else
+                Shell.ShowFileProperties(app.Path);
         }
 
         #region Date/time
@@ -316,16 +366,61 @@ namespace CairoDesktop
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
+                int count = 0;
                 foreach (String fileName in fileNames)
                 {
                     if (Shell.Exists(fileName))
                     {
                         ApplicationInfo customApp = appGrabber.PathToApp(fileName, false);
                         if (!object.ReferenceEquals(customApp, null))
+                        {
                             appGrabber.CategoryList.GetCategory("Uncategorized").Add(customApp);
+                            count++;
+                        }
                     }
                 }
+
+                if (count > 0)
+                    appGrabber.Save();
             }
+        }
+
+        private void txtProgramRename_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox box = e.OriginalSource as TextBox;
+            ApplicationInfo app = ((box.Parent as DockPanel).Parent as MenuItem).DataContext as ApplicationInfo;
+
+            if (!object.ReferenceEquals(app, null))
+            {
+                app.Name = box.Text;
+                appGrabber.Save();
+                AppViewSorter.Sort(appGrabber.CategoryList.GetCategory("All"), "Name");
+                AppViewSorter.Sort(app.Category, "Name");
+            }
+
+            foreach (UIElement peer in (box.Parent as DockPanel).Children)
+            {
+                if (peer is TextBlock)
+                {
+                    peer.Visibility = Visibility.Visible;
+                }
+            }
+            box.Visibility = Visibility.Collapsed;
+        }
+
+        private void txtProgramRename_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Keyboard.ClearFocus();
+                e.Handled = true;
+            }
+        }
+
+        private void txtProgramRename_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (ProgramsMenu.IsKeyboardFocusWithin && !(e.NewFocus is TextBox))
+                e.Handled = true;
         }
         #endregion
 

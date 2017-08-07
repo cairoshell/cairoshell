@@ -31,15 +31,36 @@
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <MenuItem Style="{StaticResource CairoMenuItemStyle}"
-                                Header="{Binding Path=Name}"
-                                CommandParameter="{Binding Path=Path}"
-                                Click="LaunchProgram">
+                            <MenuItem Style="{StaticResource CairoMenuItemStyle}" Click="LaunchProgram">
                                 <MenuItem.Icon>
                                     <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                                         Height="16"
                                         Width="16" />
                                 </MenuItem.Icon>
+                                <MenuItem.ContextMenu>
+                                    <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
+                                        <ContextMenu.Resources>
+                                            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
+                                                
+                                            </Style>
+                                            <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </Style>
+                                        </ContextMenu.Resources>
+                                        <MenuItem Header="Open" Click="LaunchProgram" />
+                                        <MenuItem Header="Open as administrator" Click="LaunchProgramAdmin" />
+                                        <Separator />
+                                        <MenuItem Header="Rename" Click="programsMenu_Rename" />
+                                        <MenuItem Header="Remove from menu" Click="programsMenu_Remove" />
+                                        <MenuItem Header="Properties" Click="programsMenu_Properties" />
+                                    </ContextMenu>
+                                </MenuItem.ContextMenu>
+                                <MenuItem.Header>
+                                    <DockPanel>
+                                        <TextBlock Text="{Binding Path=Name}" Name="lblProgramName" />
+                                        <TextBox Visibility="Collapsed" Text="{Binding Path=Name}" Name="txtProgramRename" LostFocus="txtProgramRename_LostFocus" PreviewKeyDown="txtProgramRename_PreviewKeyDown" TextWrapping="WrapWithOverflow" PreviewLostKeyboardFocus="txtProgramRename_PreviewLostKeyboardFocus" />
+                                    </DockPanel>
+                                </MenuItem.Header>
                             </MenuItem>
                         </DataTemplate>
                     </Setter.Value>
@@ -100,7 +121,7 @@
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenLogoffBox" />
                 </MenuItem>
-                <MenuItem Header="Programs"
+                <MenuItem Header="Programs" Name="ProgramsMenu"
                     Style="{StaticResource CairoMenuItemStyle}" Drop="Programs_Drop"
                     ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" TextBlock.FontWeight="SemiBold" StaysOpenOnClick="True">
                     <MenuItem StaysOpenOnClick="True">

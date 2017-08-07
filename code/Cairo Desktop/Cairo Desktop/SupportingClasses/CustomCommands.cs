@@ -93,18 +93,7 @@ namespace CairoDesktop
                 return;
             }
 
-            System.Diagnostics.Process proc = new System.Diagnostics.Process();
-            proc.StartInfo.UseShellExecute = true;
-            proc.StartInfo.FileName = fileName;
-            proc.StartInfo.Verb = verb;
-            try
-            {
-                proc.Start();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(String.Format("Error running the {0} verb on {1}. ({2})", item.Header, fileName, ex.Message));
-            }
+            Interop.Shell.StartProcess(fileName, "", verb);
         }
 
         public static void Icon_ContextMenu_Loaded(object sender, RoutedEventArgs e)

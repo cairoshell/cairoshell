@@ -117,6 +117,37 @@ namespace CairoDesktop.Interop
             }
         }
 
+        public static bool StartProcess(string filename, string args, string verb)
+        {
+            try
+            {
+                if (!Environment.Is64BitProcess)
+                {
+                    filename.Replace("system32", "sysnative");
+                }
+
+                Process proc = new Process();
+                proc.StartInfo.UseShellExecute = true;
+                proc.StartInfo.FileName = filename;
+                proc.StartInfo.Verb = verb;
+                try
+                {
+                    proc.Start();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(String.Format("Error running the {0} verb on {1}. ({2})", verb, filename, ex.Message));
+                    return false;
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public static bool Exists(string filename)
         {
             return !filename.StartsWith("\\\\") && (File.Exists(filename) || Directory.Exists(filename));
