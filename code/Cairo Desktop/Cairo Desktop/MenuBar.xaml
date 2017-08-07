@@ -101,7 +101,7 @@
                         Click="OpenLogoffBox" />
                 </MenuItem>
                 <MenuItem Header="Programs"
-                    Style="{StaticResource CairoMenuItemStyle}"
+                    Style="{StaticResource CairoMenuItemStyle}" Drop="Programs_Drop"
                     ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" TextBlock.FontWeight="SemiBold" StaysOpenOnClick="True">
                     <MenuItem StaysOpenOnClick="True">
                         <MenuItem.Header>

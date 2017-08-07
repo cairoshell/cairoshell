@@ -11,6 +11,7 @@ using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Configuration;
 using CairoDesktop.Common;
+using CairoDesktop.AppGrabber;
 
 namespace CairoDesktop
 {
@@ -308,6 +309,23 @@ namespace CairoDesktop
 
             if (Startup.IsCairoUserShell)
                 Shell.StartProcess("explorer.exe");
+        }
+
+        private void Programs_Drop(object sender, DragEventArgs e)
+        {
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (fileNames != null)
+            {
+                foreach (String fileName in fileNames)
+                {
+                    if (Shell.Exists(fileName))
+                    {
+                        ApplicationInfo customApp = appGrabber.PathToApp(fileName, false);
+                        if (!object.ReferenceEquals(customApp, null))
+                            appGrabber.CategoryList.GetCategory("Uncategorized").Add(customApp);
+                    }
+                }
+            }
         }
         #endregion
 
