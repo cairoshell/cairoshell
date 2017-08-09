@@ -1859,6 +1859,44 @@
     </Style>
 
     <!-- Programs menu styles -->
+    <Style x:Key="ProgramsMenuButton" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="#FF9a9a9a" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Width" Value="140" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border" BorderThickness="0">
+                        <ContentPresenter Margin="10,0,0,2"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="Border" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#30FFFFFF" Offset="0.0" />
+                                        <GradientStop Color="#01FFFFFF" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource ResourceKey=CairoMenuItemHoverGradient}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="ProgramsTabControl" TargetType="{x:Type TabControl}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Padding" Value="0,3" />
@@ -1873,12 +1911,18 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TabPanel x:Name="HeaderPanel"
-                        Grid.Column="1"
-                        Panel.ZIndex="1"
-                        Margin="0,3"
-                        IsItemsHost="True"
-                        Background="Transparent" />
+                        <DockPanel Grid.Column="1">
+                            <TabPanel x:Name="HeaderPanel"
+                            DockPanel.Dock="Top"
+                            Panel.ZIndex="1"
+                            Margin="0,3"
+                            IsItemsHost="True"
+                            Background="Transparent" />
+                            <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom" Margin="0,12,0,3" VerticalAlignment="Bottom">
+                                <Button Style="{StaticResource ProgramsMenuButton}" Name="btnAppGrabber" Click="btnAppGrabber_Click">App Grabber</Button>
+                                <Button Style="{StaticResource ProgramsMenuButton}" Name="btnUninstallApps" Click="btnUninstallApps_Click">Uninstall a Program</Button>
+                            </StackPanel>
+                        </DockPanel>
                         <Border x:Name="Border"
                       Grid.Column="0"
                       BorderThickness="0,0,1,0"
@@ -1963,7 +2007,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!-- Calendar -->
     <Style x:Key="CairoCalendarItemStyle" TargetType="{x:Type CalendarItem}">
         <Setter Property="Template">

@@ -74,5 +74,19 @@ namespace CairoDesktop
                 (sender as TextBox).MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             }
         }
+
+        private void btnAppGrabber_Click(object sender, RoutedEventArgs e)
+        {
+            Startup.MenuBarWindow.ProgramsMenu.IsSubmenuOpen = false;
+            Startup.MenuBarWindow.appGrabber.ShowDialog();
+        }
+
+        private void btnUninstallApps_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Interop.Shell.StartProcess("appwiz.cpl"))
+            {
+                CairoMessage.Show("Unable to open the Programs and Features control panel.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }
