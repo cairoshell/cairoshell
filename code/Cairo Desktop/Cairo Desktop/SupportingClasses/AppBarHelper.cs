@@ -44,6 +44,7 @@ namespace CairoDesktop.SupportingClasses
             else
             {
                 NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_REMOVE, ref abd);
+                NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_REMOVE, ref abd); // sometimes this helps?
                 appBars.Remove(handle);
             }
 

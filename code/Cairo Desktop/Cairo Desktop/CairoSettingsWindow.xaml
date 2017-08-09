@@ -242,11 +242,11 @@
                     </CheckBox>
                     <CheckBox IsChecked="{Binding Path=EnableSysTray}"
                         Click="EnableSysTray_Click" Name="chkEnableSysTray">
-                        <Label>Enable system tray</Label>
+                        <Label>Enable notification area</Label>
                     </CheckBox>
-                    <TextBlock Name="lblTrayWarning" Visibility="Collapsed" Width="300" TextWrapping="Wrap" Text="The system tray component could not be loaded. Please install the Microsoft Visual C++ 2015 Redistributable."/>
+                    <TextBlock Name="lblTrayWarning" Visibility="Collapsed" Width="300" TextWrapping="Wrap" Text="The notification area component could not be loaded. Please install the Microsoft Visual C++ 2015 Redistributable."/>
                     <StackPanel Orientation="Horizontal" Name="pnlTraySettings">
-                        <TextBlock Text="Show Tray Icons:" VerticalAlignment="Top" />
+                        <TextBlock Text="Show notification area icons:" Width="165" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTrayMode" Name="radTrayMode0" Click="radTrayMode0_Click">
                                 <Label>Collapsed</Label>
@@ -257,7 +257,7 @@
                         </StackPanel>
                     </StackPanel>
                     <CheckBox IsChecked="{Binding Path=EnableSysTrayRehook}" Click="chkEnableSysTrayRehook_Click" Name="chkEnableSysTrayRehook">
-                        <Label>Periodically re-establish tray hook</Label>
+                        <Label>Periodically re-establish notification area hook</Label>
                     </CheckBox>
                 </StackPanel>
             </TabItem>
