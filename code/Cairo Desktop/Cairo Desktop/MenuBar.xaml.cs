@@ -141,7 +141,7 @@ namespace CairoDesktop
 
             if (!Shell.StartProcess(app.Path))
             {
-                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it using the right-click menu to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
