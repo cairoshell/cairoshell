@@ -82,6 +82,7 @@ Section "Cairo Desktop (required)" cairo
   File "..\Cairo Desktop\Build\Release\SearchAPILib.dll"
   File "..\Cairo Desktop\Build\Release\CairoDesktop.WindowsTasks.dll"
   File "..\Cairo Desktop\Build\Release\White.xaml"
+  File "..\Cairo Desktop\Build\Release\WinSparkle.dll"
 
   ; Start menu shortcuts
   createShortCut "$SMPROGRAMS\Cairo Desktop.lnk" "$INSTDIR\CairoDesktop.exe"
@@ -180,6 +181,7 @@ Section "Uninstall"
   Delete "$INSTDIR\PostSharp.Core.XmlSerializers.dll"
   Delete "$INSTDIR\RemoveCairo.exe"
   Delete "$INSTDIR\White.xaml"
+  Delete "$INSTDIR\WinSparkle.dll"
 
   ; Remove directories used
   RMDir "$INSTDIR"

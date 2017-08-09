@@ -86,6 +86,10 @@
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="AboutCairo"
                         Name="OpenAboutCairo" />
+                    <MenuItem Header="Check for updates"
+                        Style="{StaticResource CairoMenuItemStyle}"
+                        Click="CheckForUpdates"
+                        Name="OpenCheckForUpdates" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="App Grabber"
                         Style="{StaticResource CairoMenuItemStyle}"

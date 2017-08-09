@@ -24,6 +24,7 @@
             loadRadioGroups();
             loadCategories();
 
+            checkUpdateConfig();
             checkTrayStatus();
         }
 
@@ -88,6 +89,11 @@
             }
         }
 
+        private void checkUpdateConfig()
+        {
+            chkEnableAutoUpdates.IsChecked = Convert.ToBoolean(SupportingClasses.WinSparkle.win_sparkle_get_automatic_check_for_updates());
+        }
+
         private void checkTrayStatus()
         {
             if (Startup.MenuBarWindow.SystemTrayFailure)
@@ -100,6 +106,11 @@
 
                 lblTrayWarning.Visibility = Visibility.Visible;
             }
+        }
+
+        private void EnableAutoUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            SupportingClasses.WinSparkle.win_sparkle_set_automatic_check_for_updates(Convert.ToInt32(chkEnableAutoUpdates.IsChecked));
         }
 
         private void EnableDesktop_Click(object sender, RoutedEventArgs e)

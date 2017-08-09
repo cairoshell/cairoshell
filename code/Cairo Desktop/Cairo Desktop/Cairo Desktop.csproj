@@ -144,6 +144,7 @@
     </Compile>
     <Compile Include="SupportingClasses\AppBarHelper.cs" />
     <Compile Include="SupportingClasses\StacksManager.cs" />
+    <Compile Include="SupportingClasses\WinSparkle.cs" />
     <Compile Include="SystemTray.xaml.cs">
       <DependentUpon>SystemTray.xaml</DependentUpon>
     </Compile>
@@ -345,6 +346,16 @@
       <Project>{5FABAD0F-D28C-4EE6-A826-77968087864E}</Project>
       <Name>CairoDesktop.WindowsTasks</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'x64' ">
+    <Content Include="..\..\Dependencies\WinSparkle\x64\WinSparkle.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <Content Include="..\..\Dependencies\WinSparkle\x86\WinSparkle.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

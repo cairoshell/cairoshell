@@ -159,6 +159,10 @@
             </TabControl.Resources>
             <TabItem Header="General">
                 <StackPanel Orientation="Vertical">
+                    <CheckBox Click="EnableAutoUpdates_Click"
+                        Name="chkEnableAutoUpdates">
+                        <Label>Automatically check for updates</Label>
+                    </CheckBox>
                     <CheckBox IsChecked="{Binding Path=EnableSubDirs}"
                         Click="EnableSubDirs_Click"
                         Name="chkEnableSubDirs">

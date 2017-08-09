@@ -25,6 +25,10 @@ namespace CairoDesktop
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
+        // delegates for WinSparkle
+        private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
+        private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
+
         // True if system tray failed to load
         public bool SystemTrayFailure = false;
 
@@ -41,6 +45,18 @@ namespace CairoDesktop
             initializeClock();
 
             setupPrograms();
+
+            initSparkle();
+        }
+
+        private void initSparkle()
+        {
+            WinSparkle.win_sparkle_set_appcast_url("https://dremin.github.io/appdescriptor.rss");
+            canShutdownDelegate = canShutdown;
+            shutdownDelegate = shutdown;
+            WinSparkle.win_sparkle_set_can_shutdown_callback(canShutdownDelegate);
+            WinSparkle.win_sparkle_set_shutdown_request_callback(shutdownDelegate);
+            WinSparkle.win_sparkle_init();
         }
 
         private void setupPrograms()
@@ -131,7 +147,12 @@ namespace CairoDesktop
 
         private void shutdown()
         {
-            Application.Current.Shutdown();
+            Dispatcher.Invoke(() => Application.Current.Shutdown(), DispatcherPriority.Normal);
+        }
+
+        private int canShutdown()
+        {
+            return 1;
         }
 
         private void LaunchProgram(object sender, RoutedEventArgs e)
@@ -141,7 +162,7 @@ namespace CairoDesktop
 
             if (!Shell.StartProcess(app.Path))
             {
-                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it using the right-click menu to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -351,9 +372,11 @@ namespace CairoDesktop
 
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            this.Height = 0;
             AppBarHelper.ResetWorkArea();
             AppBarHelper.RegisterBar(handle, this.ActualWidth, this.ActualHeight);
+
+            this.Height = 0;
+            WinSparkle.win_sparkle_cleanup();
 
             SysTray.DestroySystemTray();
 
@@ -434,6 +457,11 @@ namespace CairoDesktop
             CairoMessage.ShowAlert(
                 "Version " + version + " - Pre-release"
                 +"\n\nCopyright © 2007-" + DateTime.Now.Year.ToString() + " Cairo Development Team and community contributors.  All rights reserved.", "Cairo Desktop Environment", MessageBoxImage.None);
+        }
+
+        private void CheckForUpdates(object sender, RoutedEventArgs e)
+        {
+            WinSparkle.win_sparkle_check_update_with_ui();
         }
 
         private void OpenLogoffBox(object sender, RoutedEventArgs e)
