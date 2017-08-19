@@ -232,6 +232,9 @@
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
+                    <CheckBox IsChecked="{Binding Path=EnableTaskbarPolling}" Click="chkEnableTaskbarPolling_Click"  Name="chkEnableTaskbarPolling">
+                        <Label>Poll taskbar buttons for updates</Label>
+                    </CheckBox>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Menu Bar">

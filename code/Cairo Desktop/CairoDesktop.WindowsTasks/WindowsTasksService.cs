@@ -135,7 +135,8 @@ namespace CairoDesktop.WindowsTasks
             {
                 do
                 {
-                    win.VisCheck.Stop();
+                    if (Configuration.Settings.EnableTaskbarPolling)
+                        win.VisCheck.Stop();
                     this.Windows.Remove(win);
                 }
                 while (this.Windows.Contains(win));
@@ -205,6 +206,12 @@ namespace CairoDesktop.WindowsTasks
                                         win.State = ApplicationWindow.WindowState.Active;
                                         addWindow(win);
                                     }
+
+                                    foreach (ApplicationWindow wind in this.Windows)
+                                    {
+                                        if (wind.WinFileName == win.WinFileName)
+                                            wind.OnPropertyChanged("ShowInTaskbar");
+                                    }
                                 }
                                 break;
 
@@ -229,6 +236,12 @@ namespace CairoDesktop.WindowsTasks
                                     {
                                         win.State = ApplicationWindow.WindowState.Active;
                                         addWindow(win);
+                                    }
+
+                                    foreach (ApplicationWindow wind in this.Windows)
+                                    {
+                                        if (wind.WinFileName == win.WinFileName)
+                                            wind.OnPropertyChanged("ShowInTaskbar");
                                     }
                                 }
                                 break;
@@ -272,6 +285,16 @@ namespace CairoDesktop.WindowsTasks
                                     win.OnPropertyChanged("ShowInTaskbar");
                                     win.OnPropertyChanged("Title");
                                     win.OnPropertyChanged("Icon");
+
+                                    foreach (ApplicationWindow wind in this.Windows)
+                                    {
+                                        if (wind.WinFileName == win.WinFileName)
+                                        {
+                                            wind.OnPropertyChanged("ShowInTaskbar");
+                                            win.OnPropertyChanged("Title");
+                                            win.OnPropertyChanged("Icon");
+                                        }
+                                    }
                                 }
                                 break;
 
@@ -282,6 +305,13 @@ namespace CairoDesktop.WindowsTasks
 
                             default:
                                 Trace.WriteLine("Unknown called: " + msg.LParam.ToString() + " Message " + msg.Msg.ToString());
+                                if (this.Windows.Contains(win))
+                                {
+                                    win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
+                                    win.OnPropertyChanged("ShowInTaskbar");
+                                    win.OnPropertyChanged("Title");
+                                    win.OnPropertyChanged("Icon");
+                                }
                                 break;
                         }
                     }

@@ -26,12 +26,15 @@ namespace CairoDesktop.WindowsTasks
                 TasksService = sourceService;
             }
 
-            VisCheck = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Background, delegate
+            if (Configuration.Settings.EnableTaskbarPolling)
             {
+                VisCheck = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Background, delegate
+                {
                 // some windows don't send a redraw notification after a property changes, try to catch those cases here
                 OnPropertyChanged("Title");
-                OnPropertyChanged("ShowInTaskbar");
-            }, Application.Current.Dispatcher);
+                    OnPropertyChanged("ShowInTaskbar");
+                }, Application.Current.Dispatcher);
+            }
         }
 
         public ApplicationWindow(IntPtr handle) : this(handle, null)

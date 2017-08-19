@@ -244,5 +244,10 @@
         {
             this.btnRestart.Visibility = Visibility.Visible;
         }
+
+        private void chkEnableTaskbarPolling_Click(object sender, RoutedEventArgs e)
+        {
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
     }
 }

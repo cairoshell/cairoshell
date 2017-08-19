@@ -38,6 +38,7 @@
         // Taskbar
         private static bool? _EnableTaskbar;
         private static int? _WindowsTaskbarMode;
+        private static bool? _EnableTaskbarPolling;
 
         // Menu Bar
         private static string _DefaultProgramsCategory;
@@ -253,6 +254,23 @@
             {
                 _WindowsTaskbarMode = value;
                 Properties.Settings.Default.WindowsTaskbarMode = (int)_WindowsTaskbarMode;
+                Save();
+            }
+        }
+
+        public static bool EnableTaskbarPolling
+        {
+            get
+            {
+                if (_EnableTaskbarPolling == null)
+                    _EnableTaskbarPolling = Properties.Settings.Default.EnableTaskbarPolling;
+
+                return (bool)_EnableTaskbarPolling;
+            }
+            set
+            {
+                _EnableTaskbarPolling = value;
+                Properties.Settings.Default.EnableTaskbarPolling = (bool)_EnableTaskbarPolling;
                 Save();
             }
         }
