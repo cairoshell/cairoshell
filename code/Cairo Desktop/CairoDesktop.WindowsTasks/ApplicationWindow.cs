@@ -267,6 +267,16 @@ namespace CairoDesktop.WindowsTasks
                     return false;
                 }
 
+                if (Environment.OSVersion.Version.Major > 6 || (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2))
+                {
+                    IntPtr rect;
+                    int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(IntPtr));
+                    int res = NativeMethods.DwmGetWindowAttribute(this.Handle, (int)NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out rect, cbSize);
+
+                    if (res != 0)
+                        return false;
+                }
+
                 // Make sure this is a real application window and not a child or tool window
                 int exStyles = NativeMethods.GetWindowLong(this.Handle, NativeMethods.GWL_EXSTYLE);
                 IntPtr ownerWin = NativeMethods.GetWindow(this.Handle, NativeMethods.GW_OWNER);
