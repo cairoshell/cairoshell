@@ -28,7 +28,7 @@ namespace CairoDesktop
             InitializeComponent();
 
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
-            this.Height = AppBarHelper.PrimaryMonitorSize.Height;
+            this.Height = AppBarHelper.PrimaryMonitorSize.Height-1;
 
             if (Startup.IsCairoUserShell)
             {

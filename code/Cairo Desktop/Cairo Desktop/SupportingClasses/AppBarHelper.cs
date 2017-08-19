@@ -68,7 +68,7 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = (int)Marshal.SizeOf(abd);
             abd.hWnd = NativeMethods.FindWindow("System_TrayWnd");
-            abd.lParam = (IntPtr)state;
+            abd.lParam = (long)state;
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETSTATE, ref abd);
         }
 
@@ -77,6 +77,7 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = (int)Marshal.SizeOf(abd);
             abd.hWnd = hwnd;
+            abd.lParam = Convert.ToInt32(true);
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_ACTIVATE, ref abd);
         }
 
