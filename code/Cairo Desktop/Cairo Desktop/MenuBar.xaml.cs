@@ -375,12 +375,14 @@ namespace CairoDesktop
             SysTray.DestroySystemTray();
 
             AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
-            AppBarHelper.ResetWorkArea();
             
             WinSparkle.win_sparkle_cleanup();
 
             if (Startup.IsCairoUserShell)
+            {
+                AppBarHelper.ResetWorkArea();
                 Shell.StartProcess("explorer.exe");
+            }
         }
 
         private void Programs_Drop(object sender, DragEventArgs e)

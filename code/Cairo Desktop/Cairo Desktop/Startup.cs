@@ -144,6 +144,10 @@
                 if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
 
+            // Set desktop work area for when Explorer isn't running
+            if(IsCairoUserShell)
+                AppBarHelper.SetWorkArea();
+
             MenuBarWindow = new MenuBar() { Owner = _parentWindow };
             app.MainWindow = MenuBarWindow;
             MenuBarWindow.Show();
@@ -165,9 +169,6 @@
                 TaskbarWindow = new Taskbar() { Owner = _parentWindow };
                 TaskbarWindow.Show();
             }
-
-            // Set desktop work area for when Explorer isn't running
-            SupportingClasses.AppBarHelper.SetWorkArea();
 
 #if (ENABLEFIRSTRUN)
             FirstRun();
