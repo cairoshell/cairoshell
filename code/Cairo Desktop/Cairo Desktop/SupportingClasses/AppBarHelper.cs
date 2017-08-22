@@ -37,7 +37,7 @@ namespace CairoDesktop.SupportingClasses
 
             if (!appBars.Contains(handle))
             {
-                uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage"/* + Guid.NewGuid().ToString()*/);
+                uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage");
                 abd.uCallbackMessage = uCallBack;
 
                 uint ret = NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_NEW, ref abd);
@@ -111,7 +111,7 @@ namespace CairoDesktop.SupportingClasses
 
             if (abd.uEdge == (int)ABEdge.ABE_LEFT || abd.uEdge == (int)ABEdge.ABE_RIGHT)
             {
-                abd.rc.top = SystemInformation.WorkingArea.Top;
+                abd.rc.top = 0;
                 abd.rc.bottom = SystemInformation.WorkingArea.Bottom;
                 if (abd.uEdge == (int)ABEdge.ABE_LEFT)
                 {
@@ -131,7 +131,7 @@ namespace CairoDesktop.SupportingClasses
                 abd.rc.right = SystemInformation.WorkingArea.Right;
                 if (abd.uEdge == (int)ABEdge.ABE_TOP)
                 {
-                    abd.rc.top = SystemInformation.WorkingArea.Top;
+                    abd.rc.top = 0;
                     abd.rc.bottom = abd.rc.top + sHeight;
                 }
                 else
@@ -143,30 +143,12 @@ namespace CairoDesktop.SupportingClasses
 
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_QUERYPOS, ref abd);
 
-            /*switch (abd.uEdge)
-            {
-                case (int)ABEdge.ABE_LEFT:
-                    abd.rc.right = abd.rc.left + sWidth;
-                    break;
-                case (int)ABEdge.ABE_RIGHT:
-                    abd.rc.left = abd.rc.right - sWidth;
-                    break;
-                case (int)ABEdge.ABE_TOP:
-                    abd.rc.bottom = abd.rc.top + sHeight;
-                    break;
-                case (int)ABEdge.ABE_BOTTOM:
-                    abd.rc.top = abd.rc.bottom - sHeight;
-                    break;
-            }*/
-
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETPOS, ref abd);
 
             // tracing
             int h = abd.rc.bottom - abd.rc.top;
             Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_TOP, "Top AppBar height is " + h.ToString());
             Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_BOTTOM, "Bottom AppBar height is " + h.ToString());
-
-            //NativeMethods.MoveWindow(abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top, true);
 
             abWindow.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
                 new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top);
