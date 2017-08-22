@@ -143,6 +143,23 @@ namespace CairoDesktop.SupportingClasses
 
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_QUERYPOS, ref abd);
 
+            // system doesn't adjust all edges for us, do some adjustments
+            switch (abd.uEdge)		
+            {		
+                case (int)ABEdge.ABE_LEFT:		
+                    abd.rc.right = abd.rc.left + sWidth;		
+                    break;		
+                case (int)ABEdge.ABE_RIGHT:		
+                    abd.rc.left = abd.rc.right - sWidth;		
+                    break;		
+                case (int)ABEdge.ABE_TOP:		
+                    abd.rc.bottom = abd.rc.top + sHeight;		
+                    break;		
+                case (int)ABEdge.ABE_BOTTOM:		
+                    abd.rc.top = abd.rc.bottom - sHeight;		
+                    break;		
+            }
+
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETPOS, ref abd);
 
             // tracing
