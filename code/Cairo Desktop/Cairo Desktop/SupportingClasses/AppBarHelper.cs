@@ -6,6 +6,9 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CairoDesktop.Configuration;
+using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Threading;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -25,27 +28,31 @@ namespace CairoDesktop.SupportingClasses
             OnTop = 0
         }
 
-        public static int RegisterBar(IntPtr handle, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
+        public static int RegisterBar(Window abWindow, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = Marshal.SizeOf(abd);
+            IntPtr handle = new WindowInteropHelper(abWindow).Handle;
             abd.hWnd = handle;
 
             if (!appBars.Contains(handle))
             {
-                uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage" + Guid.NewGuid().ToString());
+                uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage"/* + Guid.NewGuid().ToString()*/);
                 abd.uCallbackMessage = uCallBack;
 
                 uint ret = NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_NEW, ref abd);
                 appBars.Add(handle);
+                Trace.WriteLine("Created AppBar for handle " + handle.ToString());
 
-                ABSetPos(handle, width, height, edge);
+                ABSetPos(abWindow, width, height, edge);
             }
             else
             {
                 NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_REMOVE, ref abd);
-                NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_REMOVE, ref abd); // sometimes this helps?
                 appBars.Remove(handle);
+                Trace.WriteLine("Removed AppBar for handle " + handle.ToString());
+
+                return 0;
             }
 
             return uCallBack;
@@ -57,7 +64,7 @@ namespace CairoDesktop.SupportingClasses
 
         public static void SetWinTaskbarPos(int swp)
         {
-            IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_traywnd", "");
+            IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
             IntPtr startButtonHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
             NativeMethods.SetWindowPos(taskbarHwnd, IntPtr.Zero, 0, 0, 0, 0, swp);
             NativeMethods.SetWindowPos(startButtonHwnd, IntPtr.Zero, 0, 0, 0, 0, swp);
@@ -89,10 +96,11 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
         }
 
-        public static void ABSetPos(IntPtr handle, double width, double height, ABEdge edge)
+        public static void ABSetPos(Window abWindow, double width, double height, ABEdge edge)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = Marshal.SizeOf(abd);
+            IntPtr handle = new WindowInteropHelper(abWindow).Handle;
             abd.hWnd = handle;
             abd.uEdge = (int)edge;
             int sWidth;
@@ -103,39 +111,39 @@ namespace CairoDesktop.SupportingClasses
 
             if (abd.uEdge == (int)ABEdge.ABE_LEFT || abd.uEdge == (int)ABEdge.ABE_RIGHT)
             {
-                abd.rc.top = 0;
-                abd.rc.bottom = PrimaryMonitorDeviceSize.Height;
+                abd.rc.top = SystemInformation.WorkingArea.Top;
+                abd.rc.bottom = SystemInformation.WorkingArea.Bottom;
                 if (abd.uEdge == (int)ABEdge.ABE_LEFT)
                 {
-                    abd.rc.left = 0;
-                    abd.rc.right = sWidth;
+                    abd.rc.left = SystemInformation.WorkingArea.Left;
+                    abd.rc.right = abd.rc.left + sWidth;
                 }
                 else
                 {
-                    abd.rc.right = PrimaryMonitorDeviceSize.Width;
+                    abd.rc.right = SystemInformation.WorkingArea.Right;
                     abd.rc.left = abd.rc.right - sWidth;
                 }
 
             }
             else
             {
-                abd.rc.left = 0;
-                abd.rc.right = PrimaryMonitorDeviceSize.Width;
+                abd.rc.left = SystemInformation.WorkingArea.Left;
+                abd.rc.right = SystemInformation.WorkingArea.Right;
                 if (abd.uEdge == (int)ABEdge.ABE_TOP)
                 {
-                    abd.rc.top = 0;
-                    abd.rc.bottom = sHeight;
+                    abd.rc.top = SystemInformation.WorkingArea.Top;
+                    abd.rc.bottom = abd.rc.top + sHeight;
                 }
                 else
                 {
-                    abd.rc.bottom = PrimaryMonitorDeviceSize.Height;
+                    abd.rc.bottom = SystemInformation.WorkingArea.Bottom;
                     abd.rc.top = abd.rc.bottom - sHeight;
                 }
             }
 
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_QUERYPOS, ref abd);
 
-            switch (abd.uEdge)
+            /*switch (abd.uEdge)
             {
                 case (int)ABEdge.ABE_LEFT:
                     abd.rc.right = abd.rc.left + sWidth;
@@ -149,7 +157,7 @@ namespace CairoDesktop.SupportingClasses
                 case (int)ABEdge.ABE_BOTTOM:
                     abd.rc.top = abd.rc.bottom - sHeight;
                     break;
-            }
+            }*/
 
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETPOS, ref abd);
 
@@ -158,25 +166,34 @@ namespace CairoDesktop.SupportingClasses
             Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_TOP, "Top AppBar height is " + h.ToString());
             Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_BOTTOM, "Bottom AppBar height is " + h.ToString());
 
-            NativeMethods.MoveWindow(abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top, true);
+            //NativeMethods.MoveWindow(abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top, true);
+
+            abWindow.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
+                new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top);
 
             if (h < sHeight)
-                ABSetPos(handle, width, height, edge);
+                ABSetPos(abWindow, width, height, edge);
         }
 
-        public static Size PrimaryMonitorSize
+        private delegate void ResizeDelegate(IntPtr hWnd, int x, int y, int cx, int cy);
+        private static void DoResize(IntPtr hWnd, int x, int y, int cx, int cy)
+        {
+            NativeMethods.MoveWindow(hWnd, x, y, cx, cy, true);
+        }
+
+        public static System.Drawing.Size PrimaryMonitorSize
         {
             get
             {
-                return new Size(Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenWidth), Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenHeight));
+                return new System.Drawing.Size(Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenWidth), Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenHeight));
             }
         }
 
-        public static Size PrimaryMonitorDeviceSize
+        public static System.Drawing.Size PrimaryMonitorDeviceSize
         {
             get
             {
-                return new Size(NativeMethods.GetSystemMetrics(0), NativeMethods.GetSystemMetrics(1));
+                return new System.Drawing.Size(NativeMethods.GetSystemMetrics(0), NativeMethods.GetSystemMetrics(1));
             }
         }
 

@@ -264,7 +264,7 @@ namespace CairoDesktop
                 {
                     case NativeMethods.AppBarNotifications.PosChanged:
                         // Reposition to the top of the screen.
-                        AppBarHelper.ABSetPos(handle, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+                        AppBarHelper.ABSetPos(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
                         if (Startup.MenuBarShadowWindow != null)
                             Startup.MenuBarShadowWindow.SetPosition();
                         break;
@@ -349,7 +349,7 @@ namespace CairoDesktop
 
             handle = helper.Handle;
 
-            appbarMessageId = AppBarHelper.RegisterBar(handle, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+            appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
@@ -372,13 +372,12 @@ namespace CairoDesktop
 
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            AppBarHelper.ResetWorkArea();
-            AppBarHelper.RegisterBar(handle, this.ActualWidth, this.ActualHeight);
-
-            this.Height = 0;
-            WinSparkle.win_sparkle_cleanup();
-
             SysTray.DestroySystemTray();
+
+            AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
+            AppBarHelper.ResetWorkArea();
+            
+            WinSparkle.win_sparkle_cleanup();
 
             if (Startup.IsCairoUserShell)
                 Shell.StartProcess("explorer.exe");

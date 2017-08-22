@@ -32,7 +32,6 @@ namespace CairoDesktop
 
             if (Startup.IsCairoUserShell)
             {
-                grid.Margin = new Thickness(0, 35, 0, 0);
                 string regWallpaper = (string)Registry.GetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop", "Wallpaper", "");
 
                 if (regWallpaper != string.Empty && Shell.Exists(regWallpaper))
@@ -176,6 +175,12 @@ namespace CairoDesktop
         {
             PathHistory.Push(Icons.Locations[0].FullName);
             Icons.Locations[0] = new SystemDirectory(newLocation, Dispatcher.CurrentDispatcher);
+        }
+
+        private void CairoDesktopWindow_LocationChanged(object sender, EventArgs e)
+        {
+            this.Top = 0;
+            this.Left = 0;
         }
     }
 }
