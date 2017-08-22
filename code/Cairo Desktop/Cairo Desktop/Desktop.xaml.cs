@@ -88,6 +88,14 @@ namespace CairoDesktop
             this.Height = y;
         }
 
+        public void ResetPosition()
+        {
+            this.Top = 0;
+            this.Left = 0;
+            this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+            this.Height = AppBarHelper.PrimaryMonitorSize.Height - 1;
+        }
+
         private void Window_Activated(object sender, EventArgs e)
         {
             int result = NativeMethods.SetShellWindow(helper.Handle);
@@ -179,8 +187,7 @@ namespace CairoDesktop
 
         private void CairoDesktopWindow_LocationChanged(object sender, EventArgs e)
         {
-            this.Top = 0;
-            this.Left = 0;
+            ResetPosition();
         }
     }
 }

@@ -359,6 +359,8 @@ namespace CairoDesktop
                 this.Top = 0;
                 if (Startup.MenuBarShadowWindow != null)
                     Startup.MenuBarShadowWindow.SetPosition();
+                if (Startup.DesktopWindow != null)
+                    Startup.DesktopWindow.ResetPosition();
             }
         }
 
