@@ -5,7 +5,6 @@ using CairoDesktop.WindowsTray;
 using System.Linq;
 using System.Diagnostics;
 using static CairoDesktop.Interop.NativeMethods;
-using CairoDesktop.Common;
 using System.Windows.Threading;
 
 namespace CairoDesktop
@@ -209,6 +208,8 @@ namespace CairoDesktop
                 }
                 _lastRClick = DateTime.Now;
             }
+
+            SetForegroundWindow(trayIcon.HWnd);
 
             Trace.WriteLine("Mouse up ("+ e.ChangedButton.ToString() +") on trayicon " + trayIcon.Title);
         }
