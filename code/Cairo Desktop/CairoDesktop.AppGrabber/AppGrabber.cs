@@ -150,14 +150,29 @@ namespace CairoDesktop.AppGrabber
         {
             List<ApplicationInfo> rval = new List<ApplicationInfo>();
 
-            IEnumerable<string> files = Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories);
-
-            foreach (string file in files)
+            try
             {
-                ApplicationInfo app = PathToApp(file, false);
-                if (!object.ReferenceEquals(app, null))
-                    rval.Add(app);
+                IEnumerable<string> subs = Directory.EnumerateDirectories(directory);
+
+                foreach (string dir in subs)
+                {
+                    rval.AddRange(generateAppList(dir));
+                }
             }
+            catch { }
+
+            try
+            {
+                IEnumerable<string> files = Directory.EnumerateFiles(directory, "*");
+
+                foreach (string file in files)
+                {
+                    ApplicationInfo app = PathToApp(file, false);
+                    if (!object.ReferenceEquals(app, null))
+                        rval.Add(app);
+                }
+            }
+            catch { }
 
             return rval;
         }
