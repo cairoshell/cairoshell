@@ -126,5 +126,10 @@ namespace CairoDesktop.AppGrabber
             categoryView.ItemsSource = catList;
             categoryView.Visibility = Visibility.Visible;
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            AppGrabber.ui2Instance = null;
+        }
     }
 }

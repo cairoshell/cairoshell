@@ -44,7 +44,8 @@ namespace CairoDesktop.AppGrabber
 
         private void Button_Click(object sender, RoutedEventArgs e) {
             this.Visibility = Visibility.Hidden;
-            new AppGrabberUI_Page2(this.appGrabber, programsMenuAppsCollection).Show();
+            AppGrabber.ui2Instance = new AppGrabberUI_Page2(this.appGrabber, programsMenuAppsCollection);
+            AppGrabber.ui2Instance.Show();
             this.Close();
         }
 
@@ -129,6 +130,11 @@ namespace CairoDesktop.AppGrabber
             (InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Remove(app);
 
             (ProgramsMenuAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Add(app);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            AppGrabber.uiInstance = null;
         }
     }
 }
