@@ -16,8 +16,6 @@ namespace CairoDesktop.AppGrabber
 
         public static AppGrabberUI uiInstance;
 
-        public static AppGrabberUI_Page2 ui2Instance;
-
         private static string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web" };
 
         public static AppGrabber Instance
@@ -271,15 +269,13 @@ namespace CairoDesktop.AppGrabber
 
         public void ShowDialog() {
             try {
-                if (uiInstance == null && ui2Instance == null)
+                if (uiInstance == null)
                 {
                     uiInstance = new AppGrabberUI(this);
                     uiInstance.Show();
                 }
-                else if (ui2Instance == null)
-                    uiInstance.Activate();
-                else
-                    ui2Instance.Activate();
+
+                uiInstance.Activate();
             } catch { }
         }
     }

@@ -112,9 +112,6 @@
     <Compile Include="BindingCollection.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="CategoryList.cs" />
-    <Compile Include="AppGrabberUI_Page2.xaml.cs">
-      <DependentUpon>AppGrabberUI_Page2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IconImageConverter.cs" />
   </ItemGroup>
@@ -124,10 +121,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="AppGrabberUIResources.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="AppGrabberUI_Page2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
