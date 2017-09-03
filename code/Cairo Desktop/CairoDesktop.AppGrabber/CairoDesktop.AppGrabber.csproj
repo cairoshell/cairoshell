@@ -109,7 +109,6 @@
     </Compile>
     <Compile Include="ApplicationInfo.cs" />
     <Compile Include="AppViewSorter.cs" />
-    <Compile Include="BindingCollection.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="CategoryList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
