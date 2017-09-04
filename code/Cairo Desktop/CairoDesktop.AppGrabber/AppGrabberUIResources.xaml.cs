@@ -174,10 +174,10 @@ namespace CairoDesktop.AppGrabber
         ListView sourceView;
         private void ListView_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed && e.OriginalSource.GetType() != typeof(System.Windows.Controls.Primitives.Thumb) && e.OriginalSource.GetType() != typeof(System.Windows.Controls.Primitives.RepeatButton) && e.OriginalSource.GetType() != typeof(System.Windows.Controls.Primitives.Track))
             {
                 sourceView = sender as ListView;
-                
+
                 if (sourceView.SelectedItem != null)
                 {
                     isDragging = true;

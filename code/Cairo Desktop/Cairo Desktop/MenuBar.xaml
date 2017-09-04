@@ -195,21 +195,31 @@
                     <MenuItem.Header>
                         <TextBlock Name="dateText" />
                     </MenuItem.Header>
-                    <StackPanel>
-                        <Calendar Name="monthCalendar" Style="{StaticResource CairoCalendarStyle}"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-                        <MenuItem Style="{StaticResource CairoMenuItemStyle}"
+                    <MenuItem StaysOpenOnClick="True">
+                        <MenuItem.Header>
+                            <Calendar Name="monthCalendar" Style="{StaticResource CairoCalendarStyle}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+                        </MenuItem.Header>
+                        <MenuItem.Template>
+                            <ControlTemplate TargetType="{x:Type MenuItem}">
+                                <ContentPresenter
+                            x:Name="HeaderHost"
+                            RecognizesAccessKey="True"
+                            ContentSource="Header" />
+                            </ControlTemplate>
+                        </MenuItem.Template>
+                    </MenuItem>
+                    <MenuItem Style="{StaticResource CairoMenuItemStyle}"
                             Click="OpenTimeDateCPL">
-                            <MenuItem.Header>Open Date &amp; Time Settings</MenuItem.Header>
-                            <MenuItem.Icon>
-                                <Image Source="Resources\dateTimeIcon.png"
+                        <MenuItem.Header>Open Date &amp; Time Settings</MenuItem.Header>
+                        <MenuItem.Icon>
+                            <Image Source="Resources\dateTimeIcon.png"
                                     Width="14"
                                     Height="15"
                                     Margin="0,-1,0,0" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                    </StackPanel>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
             <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
