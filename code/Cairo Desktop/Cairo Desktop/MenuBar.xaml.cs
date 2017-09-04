@@ -496,7 +496,7 @@ namespace CairoDesktop
 
         private void OpenRunWindow(object sender, RoutedEventArgs e)
         {
-            Interop.Shell.ShowRunDialog();
+            Shell.ShowRunDialog();
         }
 
         private void OpenCloseCairoBox(object sender, RoutedEventArgs e)

@@ -194,7 +194,7 @@ namespace CairoDesktop.Interop
         /// <param name="fileName">Path to the file to open</param>
         public static void ShowOpenWithDialog(string fileName)
         {
-            System.Diagnostics.Process owProc = new System.Diagnostics.Process();
+            Process owProc = new Process();
             owProc.StartInfo.UseShellExecute = true;
             owProc.StartInfo.FileName = Environment.GetEnvironmentVariable("WINDIR") + @"\system32\rundll32.exe";
             owProc.StartInfo.Arguments =
@@ -204,10 +204,7 @@ namespace CairoDesktop.Interop
 
         public static void ShowRunDialog()
         {
-            Type t = Type.GetTypeFromProgID("Shell.Application");
-
-            dynamic shell = Activator.CreateInstance(t);
-            shell.FileRun();
+            SHRunFileDialog(IntPtr.Zero, IntPtr.Zero, null, "Run", "Type the name of a program, folder, document, or Internet resource, and Cairo will open it for you.", RunFileDialogFlags.None);
         }
 
         public static void ShowWindowSwitcher()
