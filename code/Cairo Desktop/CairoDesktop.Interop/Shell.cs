@@ -261,7 +261,8 @@ namespace CairoDesktop.Interop
         public static void ToggleDesktopIcons(bool enable)
         {
             var toggleDesktopCommand = new IntPtr(0x7402);
-            IntPtr hWnd = GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD);
+            //IntPtr hWnd = GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD);
+            IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", "");
 
             if(IsDesktopVisible() != enable)
                 SendMessageTimeout(hWnd, WM_COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
@@ -269,7 +270,8 @@ namespace CairoDesktop.Interop
 
         static bool IsDesktopVisible()
         {
-            IntPtr hWnd = GetWindow(GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD), GetWindow_Cmd.GW_CHILD);
+            //IntPtr hWnd = GetWindow(GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD), GetWindow_Cmd.GW_CHILD);
+            IntPtr hWnd = GetWindow(FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", ""), GetWindow_Cmd.GW_CHILD);
             WINDOWINFO info = new WINDOWINFO();
             info.cbSize = (uint)Marshal.SizeOf(info);
             GetWindowInfo(hWnd, ref info);
