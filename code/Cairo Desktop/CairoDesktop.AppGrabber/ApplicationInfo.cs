@@ -125,6 +125,42 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
+        private bool alwaysAdmin;
+        /// <summary>
+        /// If the user has chosen to run the app as admin always.
+        /// </summary>
+        public bool AlwaysAdmin
+        {
+            get { return alwaysAdmin; }
+            set
+            {
+                alwaysAdmin = value;
+                // Notify Databindings of property change
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("AlwaysAdmin"));
+                }
+            }
+        }
+
+        private bool askAlwaysAdmin;
+        /// <summary>
+        /// Whether the UI should ask if the app should be always run as admin (set true after running as admin once)
+        /// </summary>
+        public bool AskAlwaysAdmin
+        {
+            get { return askAlwaysAdmin; }
+            set
+            {
+                askAlwaysAdmin = value;
+                // Notify Databindings of property change
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("AskAlwaysAdmin"));
+                }
+            }
+        }
+
         private ImageSource icon;
         /// <summary>
         /// ImageSource used to denote the application's icon in a graphical environment.

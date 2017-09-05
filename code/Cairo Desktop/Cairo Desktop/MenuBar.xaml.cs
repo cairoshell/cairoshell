@@ -160,7 +160,18 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            if (!Shell.StartProcess(app.Path))
+            // so that we only prompt to always run as admin if it's done consecutively
+            if (app.AskAlwaysAdmin)
+            {
+                app.AskAlwaysAdmin = false;
+                appGrabber.Save();
+            }
+
+            if (!app.IsStoreApp && app.AlwaysAdmin)
+            {
+                Shell.StartProcess(app.Path, "", "runas");
+            }
+            else if (!Shell.StartProcess(app.Path))
             {
                 CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it using the right-click menu to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -172,7 +183,26 @@ namespace CairoDesktop
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
             if (!app.IsStoreApp)
+            {
+                if (!app.AlwaysAdmin)
+                {
+                    if (app.AskAlwaysAdmin)
+                    {
+                        app.AskAlwaysAdmin = false;
+
+                        bool? always = CairoMessage.Show("You've run " + app.Name + " as an administrator before. Would you like Cairo to automatically run it as an administrator every time?", "Always run as administrator?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                        if (always == true)
+                            app.AlwaysAdmin = true;
+                    }
+                    else
+                        app.AskAlwaysAdmin = true;
+
+                    appGrabber.Save();
+                }
+
                 Shell.StartProcess(app.Path, "", "runas");
+            }
             else
                 LaunchProgram(sender, e);
         }

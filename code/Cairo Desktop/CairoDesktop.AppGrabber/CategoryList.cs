@@ -80,6 +80,12 @@ namespace CairoDesktop.AppGrabber {
                     {
                         XmlElement appElement = doc.CreateElement("Application");
                         catElement.AppendChild(appElement);
+                        XmlAttribute appAskAlwaysAdminAttribute = doc.CreateAttribute("AskAlwaysAdmin");
+                        appAskAlwaysAdminAttribute.Value = app.AskAlwaysAdmin.ToString();
+                        appElement.Attributes.Append(appAskAlwaysAdminAttribute);
+                        XmlAttribute appAlwaysAdminAttribute = doc.CreateAttribute("AlwaysAdmin");
+                        appAlwaysAdminAttribute.Value = app.AlwaysAdmin.ToString();
+                        appElement.Attributes.Append(appAlwaysAdminAttribute);
                         XmlElement appNameElement = doc.CreateElement("Name");
                         appNameElement.InnerText = app.Name;
                         appElement.AppendChild(appNameElement);
@@ -108,7 +114,11 @@ namespace CairoDesktop.AppGrabber {
                     ApplicationInfo app = new ApplicationInfo();
                     app.Name = appElement.ChildNodes[0].InnerText;
                     app.Path = appElement.ChildNodes[1].InnerText;
-                    if(appElement.ChildNodes.Count > 2)
+                    if (appElement.Attributes["AskAlwaysAdmin"] != null)
+                        app.AskAlwaysAdmin = Convert.ToBoolean(appElement.Attributes["AskAlwaysAdmin"].Value);
+                    if (appElement.Attributes["AlwaysAdmin"] != null)
+                        app.AlwaysAdmin = Convert.ToBoolean(appElement.Attributes["AlwaysAdmin"].Value);
+                    if (appElement.ChildNodes.Count > 2)
                         app.Target = appElement.ChildNodes[2].InnerText;
                     if (!app.IsStoreApp && !Interop.Shell.Exists(app.Path)) {
                         System.Diagnostics.Debug.WriteLine(app.Path + " does not exist");
