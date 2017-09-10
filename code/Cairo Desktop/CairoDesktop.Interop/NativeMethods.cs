@@ -209,7 +209,7 @@ namespace CairoDesktop.Interop
             public int uCallbackMessage;
             public int uEdge;
             public RECT rc;
-            public long lParam;
+            public IntPtr lParam;
         }
 
         public enum ABMsg : int

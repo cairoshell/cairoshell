@@ -270,6 +270,7 @@ namespace CairoDesktop.WindowsTasks
                     return false;
                 }
 
+                /* This didn't help
                 if (Environment.OSVersion.Version.Major > 6 || (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2))
                 {
                     IntPtr rect;
@@ -278,7 +279,7 @@ namespace CairoDesktop.WindowsTasks
 
                     if (res != 0)
                         return false;
-                }
+                }*/
 
                 // Make sure this is a real application window and not a child or tool window
                 int exStyles = NativeMethods.GetWindowLong(this.Handle, NativeMethods.GWL_EXSTYLE);

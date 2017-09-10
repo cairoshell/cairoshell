@@ -31,7 +31,7 @@ namespace CairoDesktop.SupportingClasses
         public static int RegisterBar(Window abWindow, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-            abd.cbSize = Marshal.SizeOf(abd);
+            abd.cbSize = Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
             IntPtr handle = new WindowInteropHelper(abWindow).Handle;
             abd.hWnd = handle;
 
@@ -73,25 +73,25 @@ namespace CairoDesktop.SupportingClasses
         public static void SetWinTaskbarState(WinTaskbarState state)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-            abd.cbSize = (int)Marshal.SizeOf(abd);
+            abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
             abd.hWnd = NativeMethods.FindWindow("System_TrayWnd");
-            abd.lParam = (long)state;
+            abd.lParam = (IntPtr)state;
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETSTATE, ref abd);
         }
 
         public static void AppBarActivate(IntPtr hwnd)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-            abd.cbSize = (int)Marshal.SizeOf(abd);
+            abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
             abd.hWnd = hwnd;
-            abd.lParam = Convert.ToInt32(true);
+            abd.lParam = (IntPtr)Convert.ToInt32(true);
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_ACTIVATE, ref abd);
         }
 
         public static void AppBarWindowPosChanged(IntPtr hwnd)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-            abd.cbSize = (int)Marshal.SizeOf(abd);
+            abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
             abd.hWnd = hwnd;
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
         }
@@ -99,7 +99,7 @@ namespace CairoDesktop.SupportingClasses
         public static void ABSetPos(Window abWindow, double width, double height, ABEdge edge)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-            abd.cbSize = Marshal.SizeOf(abd);
+            abd.cbSize = Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
             IntPtr handle = new WindowInteropHelper(abWindow).Handle;
             abd.hWnd = handle;
             abd.uEdge = (int)edge;
