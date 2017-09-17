@@ -553,7 +553,7 @@
                                         <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                                         Height="32"
                                         Width="32" Margin="0,0,10,0" />
-                                        <StackPanel Orientation="Vertical">
+                                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                                             <TextBlock 
                                             FontSize="14"
                                             FontFamily="Segoe UI" Text="{Binding Path=Name}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Width="270" />
