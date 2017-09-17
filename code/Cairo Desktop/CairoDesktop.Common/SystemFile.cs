@@ -63,7 +63,11 @@ namespace CairoDesktop.Common
             Process refProc = new Process();
             refProc.StartInfo.FileName = this.FullName;
 
-            this.Verbs.AddRange(refProc.StartInfo.Verbs);
+            try
+            {
+                this.Verbs.AddRange(refProc.StartInfo.Verbs);
+            }
+            catch { }
 
             refProc.Dispose();
 
