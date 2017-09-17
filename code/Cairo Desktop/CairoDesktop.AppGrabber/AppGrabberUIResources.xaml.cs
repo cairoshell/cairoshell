@@ -194,7 +194,7 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
-        // Moving Categories Arround
+        // Moving Categories Around
         private void TextBlock_PreviewDragEnter(object sender, DragEventArgs e)
         {
             string[] formats = e.Data.GetFormats();

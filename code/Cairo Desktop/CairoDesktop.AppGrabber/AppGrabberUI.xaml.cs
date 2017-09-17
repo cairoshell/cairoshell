@@ -140,20 +140,26 @@ namespace CairoDesktop.AppGrabber
 
         private void ProgramsMenuAppsView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ApplicationInfo app = ((FrameworkElement)e.OriginalSource).DataContext as ApplicationInfo;
+            if (((FrameworkElement)e.OriginalSource).DataContext != null)
+            {
+                ApplicationInfo app = ((FrameworkElement)e.OriginalSource).DataContext as ApplicationInfo;
 
-            (ProgramsMenuAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Remove(app);
+                (ProgramsMenuAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Remove(app);
 
-            (InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Add(app);
+                (InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Add(app);
+            }
         }
 
         private void InstalledAppsView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ApplicationInfo app = ((FrameworkElement)e.OriginalSource).DataContext as ApplicationInfo;
+            if (((FrameworkElement)e.OriginalSource).DataContext != null)
+            {
+                ApplicationInfo app = ((FrameworkElement)e.OriginalSource).DataContext as ApplicationInfo;
 
-            (InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Remove(app);
+                (InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Remove(app);
 
-            (ProgramsMenuAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Add(app);
+                (ProgramsMenuAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Add(app);
+            }
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
