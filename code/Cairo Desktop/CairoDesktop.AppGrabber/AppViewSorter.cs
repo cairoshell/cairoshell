@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 using System.Windows.Data;
-using System.Collections;
 
 namespace CairoDesktop.AppGrabber {
-    class AppViewSorter {
+    public class AppViewSorter {
 
         /// <summary>
         /// Sorts the default view of the specified collection of ApplicationInfo objects by the specified property.

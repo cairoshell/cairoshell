@@ -1,13 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Net;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Navigation;
-using System.Windows.Markup;
+using CairoDesktop.Common;
 
 namespace CairoDesktop
 {
@@ -16,22 +9,13 @@ namespace CairoDesktop
 		public QuickLaunchButton()
 		{
 			this.InitializeComponent();
-			// Insert code required on object creation below this point.
-            // Sets the Theme for Cairo
-            string theme = Properties.Settings.Default.CairoTheme;
-            if (theme != "Cairo.xaml")
-            {
-                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme));
-                this.Resources.MergedDictionaries[0] = CairoDictionary;
-            }
-		}
+        }
 
-private void LaunchProgram(object sender, RoutedEventArgs e)
+        private void LaunchProgram(object sender, RoutedEventArgs e)
         {
             Button item = (Button)sender;
-            try {
-                System.Diagnostics.Process.Start(item.CommandParameter.ToString());
-            } catch {
+            if (!Interop.Shell.StartProcess(item.CommandParameter.ToString()))
+            {
                 CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

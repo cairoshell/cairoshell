@@ -7,66 +7,16 @@
     DragEnter="locationDisplay_DragEnter"
     Drop="locationDisplay_Drop"
     Background="Transparent"
-    ToolTip="Drag directories here for easy access."
-    ToolTipService.InitialShowDelay="1000" MinWidth="600"
+    ToolTip="Drag directories here for easy access." ToolTipService.ShowDuration="1000"
+    ToolTipService.InitialShowDelay="1000" MinWidth="600" xmlns:stacksManager="clr-namespace:CairoDesktop.SupportingClasses"
     x:Name="CairoStacksContainer">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Cairo.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="FolderViewStyle"
-                TargetType="ItemsControl">
-                <Setter Property="ItemsPanel">
-                    <Setter.Value>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel Orientation="Horizontal"
-                                MinWidth="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}"
-                                Background="Transparent" />
-                        </ItemsPanelTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="ItemTemplate">
-                    <Setter.Value>
-                        <DataTemplate>
-                            <Button Click="File_Button_Click"
-                                CommandParameter="{Binding Path=FullName}"
-                                Style="{StaticResource CairoStackButtonStyle}">
-                                <DockPanel>
-                                    <TextBlock DockPanel.Dock="Bottom"
-                                        Text="{Binding Path=Name}"
-                                        TextAlignment="Center"
-                                        TextTrimming="CharacterEllipsis"
-                                        Width="65"
-                                        Background="Transparent"
-                                        Margin="5,3,5,3"
-                                        Foreground="White" />
-                                    <Viewbox Width="32" Height="32">
-                                        <Image Source="{Binding Path=Icon}" Stretch="Uniform" />
-                                    </Viewbox>
-                                </DockPanel>
-                                <Button.ContextMenu>
-                                    <ContextMenu ItemsSource="{Binding Path=Verbs}"
-                                        Tag="{Binding Path=FullName}"
-                                        Style="{StaticResource CairoContextMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemStyle}">
-                                    </ContextMenu>
-                                </Button.ContextMenu>
-                                <Button.ToolTip>
-                                    <ToolTip Content="{Binding Path=Name}" />
-                                </Button.ToolTip>
-                            </Button>
-                        </DataTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="GradBgBrush">
-                <GradientStop Color="#bf1a1a1a" Offset="0" />
-                <GradientStop Color="#df000000" Offset="1" />
-            </LinearGradientBrush>
+            <stacksManager:StacksManager x:Key="StacksManager" x:Name="StacksManager" />
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel Margin="0">
-        <ItemsControl ItemsSource="{Binding ElementName=CairoStacksContainer, Path=Locations}">
+        <ItemsControl ItemsSource="{Binding Source={StaticResource StacksManager}, Path=StackLocations}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel Orientation="Horizontal" />
@@ -74,16 +24,16 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}" DataContext="{Binding}">
+                    <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}" DataContext="{Binding}" Drop="StackMenu_Drop"  PreviewMouseLeftButtonDown="StackMenu_PreviewMouseLeftButtonDown" PreviewMouseMove="StackMenu_PreviewMouseMove" Name="StackMenu" PreviewMouseLeftButtonUp="StackMenu_PreviewMouseLeftButtonUp">
                         <Menu.ContextMenu>
-                            <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
+                            <ContextMenu Style="{StaticResource CairoContextMenuStyle}" Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
                                 <MenuItem Header="Open in new window" Click="Open_Click" CommandParameter="{Binding Path=FullName}" Style="{StaticResource CairoMenuItemStyle}" />
                                 <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                                 <MenuItem Header="Remove" Click="Remove_Click" CommandParameter="{Binding}" Style="{StaticResource CairoMenuItemStyle}" />
                             </ContextMenu>
                         </Menu.ContextMenu>
-                        <MenuItem Header="{Binding Path=Name}" CommandParameter="{Binding}" Style="{StaticResource CairoStacksStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Margin="0">
-                            <MenuItem Background="{StaticResource GradBgBrush}">
+                        <MenuItem Header="{Binding Path=NameLabel}" CommandParameter="{Binding}" Style="{StaticResource CairoStacksStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Margin="0">
+                            <MenuItem>
                                 <MenuItem.Header>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -91,8 +41,9 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="30" />
                                         </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Style="{StaticResource StackTopButton}" Click="Open_Click" CommandParameter="{Binding Path=FullName}" Content="2" ToolTip="Open in new window" />
                                         <Button Grid.Column="0" Style="{StaticResource StackScrollButton}" Command="ScrollBar.PageLeftCommand" CommandTarget="{Binding ElementName=Scroller}" Content="3" />
-                                        <ScrollViewer x:Name="Scroller" Grid.Column="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" Grid.ColumnSpan="1" FocusManager.IsFocusScope="True" Margin="-10,0,-10,0">
+                                        <ScrollViewer x:Name="Scroller" Grid.Column="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" Grid.ColumnSpan="1" FocusManager.IsFocusScope="True" Margin="-5,0,-5,-10" Height="85">
                                             <ItemsControl Style="{StaticResource FolderViewStyle}" ItemsSource="{Binding Path=Files}" />
                                         </ScrollViewer>
                                         <Button Grid.Column="2" Style="{StaticResource StackScrollButton}" Command="ScrollBar.PageRightCommand" CommandTarget="{Binding ElementName=Scroller}" Content="4" />

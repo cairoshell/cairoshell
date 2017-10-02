@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,13 +10,19 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CairoDesktop</RootNamespace>
     <AssemblyName>CairoDesktop</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <ApplicationIcon>Application.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <StartupObject>CairoDesktop.Startup</StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -41,6 +47,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,12 +59,36 @@
     <PlatformTarget>x86</PlatformTarget>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <DebugSymbols>true</DebugSymbols>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>..\Build\x64\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;ENABLEFIRSTRUN</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\Build\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationFramework.Aero">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="SearchAPILib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="SearchAPILib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\..\Dependencies\SearchAPILib\SearchAPILib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -70,14 +101,8 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
-    <Reference Include="UIAutomationProvider">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="UnhandledExceptionFilter, Version=1.1.3277.28032, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\UnhandledExceptionHandler\UnhandledExceptionFilter.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -88,10 +113,14 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
-    <Reference Include="WPFToolkit, Version=3.5.31016.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Dependencies\WPFToolkit\WPFToolkit.dll</HintPath>
-    </Reference>
+    <Page Include="CairoSettingsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DesktopNavigationToolbar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SystemTray.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -104,6 +133,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="Cairo.xaml.cs">
+      <DependentUpon>Cairo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CairoSettingsWindow.xaml.cs">
+      <DependentUpon>CairoSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DesktopNavigationToolbar.xaml.cs">
+      <DependentUpon>DesktopNavigationToolbar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SupportingClasses\AppBarHelper.cs" />
+    <Compile Include="SupportingClasses\StacksManager.cs" />
+    <Compile Include="SupportingClasses\WinSparkle.cs" />
     <Compile Include="SystemTray.xaml.cs">
       <DependentUpon>SystemTray.xaml</DependentUpon>
     </Compile>
@@ -115,18 +156,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="App.xaml">
+    <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="CairoMessage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CairoSettingsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    </ApplicationDefinition>
     <Page Include="Cairo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -175,12 +208,6 @@
     <Compile Include="SupportingClasses\WindowsServices.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CairoMessage.xaml.cs">
-      <DependentUpon>CairoMessage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CairoSettingsWindow.xaml.cs">
-      <DependentUpon>CairoSettingsWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DesktopIcons.xaml.cs">
       <DependentUpon>DesktopIcons.xaml</DependentUpon>
     </Compile>
@@ -188,21 +215,13 @@
     <Compile Include="Desktop.xaml.cs">
       <DependentUpon>Desktop.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DragDropHandler.cs" />
+    <Compile Include="SupportingClasses\DragDropHandler.cs" />
     <Compile Include="MenuBarShadow.xaml.cs">
       <DependentUpon>MenuBarShadow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AppBar Helper\NativeMethods.cs" />
     <Compile Include="StacksContainer.xaml.cs">
       <DependentUpon>StacksContainer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SupportingClasses\BoolTovisibilityConverter.cs" />
-    <Compile Include="SupportingClasses\IconConverter.cs" />
-    <Compile Include="SupportingClasses\InvokingObservableCollection.cs" />
-    <Compile Include="SupportingClasses\NativeMethods.cs" />
-    <Compile Include="SupportingClasses\SystemDirectory.cs" />
-    <Compile Include="SupportingClasses\MessageBoxButtonConverter.cs" />
-    <Compile Include="SupportingClasses\MessageBoxImageConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -211,15 +230,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Settings.cs" />
-    <Compile Include="AppBar Helper\SHAppBarMessageHelper.cs" />
+    <Compile Include="SupportingClasses\Settings.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="SupportingClasses\SystemFile.cs" />
     <Compile Include="SupportingClasses\TaskbuttonStyleConverter.cs" />
     <Compile Include="Taskbar.xaml.cs">
       <DependentUpon>Taskbar.xaml</DependentUpon>
@@ -227,25 +239,17 @@
     <Compile Include="TaskListButton.xaml.cs">
       <DependentUpon>TaskListButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ThreadSafeObservableCollection.cs" />
+    <Compile Include="SupportingClasses\ThreadSafeObservableCollection.cs" />
     <Compile Include="SupportingClasses\TrayIcon.cs" />
-    <Compile Include="VistaSearchProviderHelper.cs" />
+    <Compile Include="SupportingClasses\VistaSearchProviderHelper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="SearchAPI.tlb" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\cairoDiag.png">
-    </Resource>
     <Resource Include="Resources\cairoMenuDefault.png">
     </Resource>
     <Resource Include="Resources\searchDefault.png">
@@ -255,41 +259,19 @@
     <Resource Include="Application.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\restartIcon.png">
-    </Resource>
-    <Resource Include="Resources\shutdownIcon.png">
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\logoffIcon.png">
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\cairoIcon.png">
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\controlsBack.png">
     </Resource>
     <Resource Include="Resources\controlsForward.png">
     </Resource>
     <Resource Include="Resources\controlsHome.png">
     </Resource>
-    <Resource Include="Resources\desktopControlsBg.png">
-    </Resource>
+    <Resource Include="Resources\desktopControlsBg.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\menubarShadow.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\SEGUISB.TTF" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\dateTimeIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\warningIcon.png">
-    </Resource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -324,36 +306,37 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\menuArrow.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Resource Include="Resources\menuArrow.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\cairoMenuBlack.png">
     </Resource>
     <Resource Include="Resources\searchBlack.png" />
-    <None Include="Resources\menubarWhite.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Resource Include="Resources\menubarWhite.png" />
     <Resource Include="Resources\nullIcon.png">
     </Resource>
     <Resource Include="Resources\taskListIcon.png">
     </Resource>
-    <None Include="Resources\stackShadow.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <Resource Include="Resources\controlsBrowse.png" />
-    <Resource Include="Resources\folderIcon.png" />
-    <Content Include="SearchAPILib.dll" />
+    <SplashScreen Include="Resources\loadSplash.png" />
+    <Resource Include="Resources\taskViewIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Cairo.WindowsHooksWrapper\Cairo.WindowsHooksWrapper.csproj">
-      <Project>{79B5DDAC-5102-4B11-BFA1-B16D6F6FE661}</Project>
-      <Name>Cairo.WindowsHooksWrapper</Name>
+    <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">
+      <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
+      <Name>CairoDesktop.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.WindowsTray\CairoDesktop.WindowsTray.csproj">
+      <Project>{79b5ddac-5102-4b11-bfa1-b16d6f6fe661}</Project>
+      <Name>CairoDesktop.WindowsTray</Name>
     </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj">
       <Project>{DE9674CC-507E-4049-9152-5C899B9F0939}</Project>
       <Name>CairoDesktop.AppGrabber</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj">
+      <Project>{8e50fc68-8bf3-44f2-9229-708500625757}</Project>
+      <Name>CairoDesktop.Configuration</Name>
     </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
       <Project>{233781C8-83E4-47A6-847E-FA7A31B1CC51}</Project>
@@ -363,6 +346,16 @@
       <Project>{5FABAD0F-D28C-4EE6-A826-77968087864E}</Project>
       <Name>CairoDesktop.WindowsTasks</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'x64' ">
+    <Content Include="..\..\Dependencies\WinSparkle\x64\WinSparkle.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <Content Include="..\..\Dependencies\WinSparkle\x86\WinSparkle.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

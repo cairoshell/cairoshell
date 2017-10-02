@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
-using System.Windows;
 using System.ComponentModel;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace CairoDesktop.AppGrabber {
 
@@ -25,7 +23,26 @@ namespace CairoDesktop.AppGrabber {
             }
         }
 
-        private List<ApplicationInfo> internalList;
+        private List<ApplicationInfo> appsList;
+
+        private List<ApplicationInfo> internalList
+        {
+            get
+            {
+                /*if (this.Name == "All")
+                {
+                    appsList = this.ParentCategoryList.FlatList.ToList();
+                    appsList.Sort();
+                }*/
+
+                return appsList;
+            }
+
+            set
+            {
+                appsList = value;
+            }
+        }
 
         private String name;
         /// <summary>
@@ -50,7 +67,7 @@ namespace CairoDesktop.AppGrabber {
         public Category() {
             this.Name = "Unknown";
             this.ShowInMenu = true;
-            this.internalList = new List<ApplicationInfo>();
+            this.appsList = new List<ApplicationInfo>();
             AppViewSorter.Sort(this, "Name");
         }
 
@@ -62,7 +79,7 @@ namespace CairoDesktop.AppGrabber {
         public Category(String name, IList<ApplicationInfo> apps) {
             this.Name = name;
             this.ShowInMenu = true;
-            this.internalList = new List<ApplicationInfo>();
+            this.appsList = new List<ApplicationInfo>();
             this.AddRange(apps);
             AppViewSorter.Sort(this, "Name");
         }
@@ -74,7 +91,7 @@ namespace CairoDesktop.AppGrabber {
         public Category(String name) {
             this.Name = name;
             this.ShowInMenu = true;
-            this.internalList = new List<ApplicationInfo>();
+            this.appsList = new List<ApplicationInfo>();
             AppViewSorter.Sort(this, "Name");
         }
 
@@ -89,7 +106,8 @@ namespace CairoDesktop.AppGrabber {
         /// <param name="items">List of Application infos to add.</param>
         public void Add(ApplicationInfo ai) {
             this.internalList.Add(ai);
-            ai.Category = this;
+            if (this.name != "All")
+                ai.Category = this;
             if (CollectionChanged != null) {
                 CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, ai));
             }
@@ -97,6 +115,9 @@ namespace CairoDesktop.AppGrabber {
             if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
+
+            if(this.name != "All" && this.name != "Quick Launch")
+                this.ParentCategoryList.GetCategory("All").Add(ai);
         }
 
         /// <summary>
@@ -140,7 +161,8 @@ namespace CairoDesktop.AppGrabber {
         /// <param name="item">ApplicationInfo object to insert.</param>
         public void Insert(int index, ApplicationInfo item) {
             internalList.Insert(index, item);
-            item.Category = this;
+            if (this.name != "All")
+                item.Category = this;
             if (CollectionChanged != null) {
                 CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
             }
@@ -148,6 +170,9 @@ namespace CairoDesktop.AppGrabber {
             if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
+
+            if (this.name != "All" && this.name != "Quick Launch")
+                this.ParentCategoryList.GetCategory("All").Insert(0, item);
         }
 
         /// <summary>
@@ -165,6 +190,9 @@ namespace CairoDesktop.AppGrabber {
             if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
+
+            if (this.name != "All" && this.name != "Quick Launch")
+                this.ParentCategoryList.GetCategory("All").Remove(app);
         }
 
         /// <summary>
@@ -205,6 +233,9 @@ namespace CairoDesktop.AppGrabber {
             if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
+
+            if (this.name != "All" && this.name != "Quick Launch")
+                this.ParentCategoryList.GetCategory("All").Clear();
         }
 
         /// <summary>
@@ -257,6 +288,10 @@ namespace CairoDesktop.AppGrabber {
                 if (PropertyChanged != null) {
                     PropertyChanged(this, new PropertyChangedEventArgs("Count"));
                 }
+
+                if (this.name != "All" && this.name != "Quick Launch")
+                    this.ParentCategoryList.GetCategory("All").Remove(item);
+
                 return true;
             } catch {
                 return false;

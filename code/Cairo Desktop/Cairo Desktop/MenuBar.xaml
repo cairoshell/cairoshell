@@ -1,200 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:CairoDesktop.Properties" xmlns:control="clr-namespace:CairoDesktop" xmlns:search="clr-namespace:VistaSearchProvider" xmlns:c="http://schemas.microsoft.com/wpf/2008/toolkit" x:Class="CairoDesktop.MenuBar"
+<Window xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:CairoDesktop.Properties" xmlns:control="clr-namespace:CairoDesktop" xmlns:search="clr-namespace:VistaSearchProvider" x:Class="CairoDesktop.MenuBar"
     x:Name="Window"
     Title=""
     WindowStyle="None"
     AllowsTransparency="True"
-    Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}"
     Height="23"
     Top="0"
     BorderBrush="#AF707070"
     BorderThickness="0,0,0,1"
     Left="0"
     Margin="0,0,0,0"
-    Topmost="False"
+    Topmost="True"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
-    Visibility="Hidden"
     Focusable="False"
     AllowDrop="True"
     Loaded="OnWindowLoaded"
     Initialized="OnWindowInitialized"
+    SourceInitialized="Window_SourceInitialized"
     Closing="OnWindowClosing"
-    SizeChanged="OnWindowResize"
-    MaxHeight="23">
-    <Window.Background>
-        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-            <GradientStop Color="#8F4a4a4a" Offset="1.0" />
-            <GradientStop Color="#CF000000" Offset="0.0" />
-        </LinearGradientBrush>
-        
-    </Window.Background>
+    LocationChanged="Window_LocationChanged"
+    UseLayoutRounding="True"
+    MaxHeight="23"
+    Background="Transparent">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Cairo.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <local:Settings x:Key="settings" />
             <Style x:Key="InnerProgramsListStyle"
                 TargetType="ItemsControl">
                 <Setter Property="ItemTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <MenuItem Style="{DynamicResource CairoMenuItemStyle}"
-                                Header="{Binding Path=Name}"
-                                CommandParameter="{Binding Path=Path}"
-                                Click="LaunchProgram">
+                            <MenuItem Style="{StaticResource CairoMenuItemStyle}" Click="LaunchProgram">
                                 <MenuItem.Icon>
-                                    <Image Source="{Binding Path=Icon}"
+                                    <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                                         Height="16"
                                         Width="16" />
                                 </MenuItem.Icon>
+                                <MenuItem.ContextMenu>
+                                    <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
+                                        <ContextMenu.Resources>
+                                            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
+                                                
+                                            </Style>
+                                            <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </Style>
+                                        </ContextMenu.Resources>
+                                        <MenuItem Header="Open" Click="LaunchProgram" />
+                                        <MenuItem Header="Open as administrator" Click="LaunchProgramAdmin" />
+                                        <Separator />
+                                        <MenuItem Header="Rename" Click="programsMenu_Rename" />
+                                        <MenuItem Header="Remove from menu" Click="programsMenu_Remove" />
+                                        <MenuItem Header="Properties" Click="programsMenu_Properties" />
+                                    </ContextMenu>
+                                </MenuItem.ContextMenu>
+                                <MenuItem.Header>
+                                    <DockPanel>
+                                        <TextBlock Text="{Binding Path=Name}" Name="lblProgramName" />
+                                        <TextBox Visibility="Collapsed" Text="{Binding Path=Name}" Name="txtProgramRename" LostFocus="txtProgramRename_LostFocus" PreviewKeyDown="txtProgramRename_PreviewKeyDown" TextWrapping="WrapWithOverflow" PreviewLostKeyboardFocus="txtProgramRename_PreviewLostKeyboardFocus" />
+                                    </DockPanel>
+                                </MenuItem.Header>
                             </MenuItem>
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
-            <control:BoolTovisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <DataTemplate x:Key="CairoSearchResultsItemTemplate">
-                <MenuItem Command="control:CustomCommands.OpenSearchResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-            CommandParameter="{Binding}">
-                    <MenuItem.Header>
-                        <TextBlock Text="{Binding Path=Name}"/>
-                    </MenuItem.Header>
-                </MenuItem>
-            </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
-    <DockPanel DataContext="{DynamicResource settings}"
-        x:Name="CairoMenuBarContainer" Style="{DynamicResource DockPanelStyle}">
+    <DockPanel DataContext="{StaticResource settings}" Style="{StaticResource MenuBarStyle}"
+        x:Name="CairoMenuBarContainer">
         <StackPanel Orientation="Horizontal"
             VerticalAlignment="Top"
             Height="24"
             Width="Auto"
             x:Name="CairoMenuBar">
-            <Menu Style="{DynamicResource CairoMenuBarMainContainerStyle}">
-                <MenuItem Style="{DynamicResource CairoMenuItemCairoMenuStyle}">
+            <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
+                <MenuItem Style="{StaticResource CairoMenuItemCairoMenuStyle}">
                     <MenuItem.Header>
-                        <Image Name="CairoMenuIcon" Source="Resources\cairoMenuDefault.png"
+                        <Image Name="CairoMenuIcon" Source="{StaticResource CairoMenuIcon}"
                             Width="38"
                             Height="22"/>
                     </MenuItem.Header>
                     <MenuItem Header="About Cairo"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="AboutCairo"
                         Name="OpenAboutCairo" />
-                    <Separator Style="{DynamicResource CairoMenuSeparatorStyle}" />
-                    <MenuItem Header="Task Manager"
-                        Style="{DynamicResource CairoMenuItemStyle}"
-                        Click="OpenTaskManager" />
+                    <MenuItem Header="Check for updates"
+                        Style="{StaticResource CairoMenuItemStyle}"
+                        Click="CheckForUpdates"
+                        Name="OpenCheckForUpdates" />
+                    <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="App Grabber"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="InitAppGrabberWindow" />
-                    <Separator Style="{DynamicResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="Cairo Settings"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="InitCairoSettingsWindow" />
                     <MenuItem Header="Windows Control Panel"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenControlPanel" />
-                    <Separator Style="{DynamicResource CairoMenuSeparatorStyle}" />
+                    <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
+                    <MenuItem Header="Run..."
+                        Style="{StaticResource CairoMenuItemStyle}"
+                        Click="OpenRunWindow" />
+                    <MenuItem Header="Task Manager"
+                        Style="{StaticResource CairoMenuItemStyle}"
+                        Click="OpenTaskManager" />
+                    <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="Exit Cairo..."
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenCloseCairoBox" />
-                    <Separator Style="{DynamicResource CairoMenuSeparatorStyle}" />
+                    <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="Sleep"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="SysSleep" />
                     <MenuItem Header="Restart..."
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenRebootBox" />
                     <MenuItem Header="Shut Down..."
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenShutDownBox" />
                     <MenuItem Header="Log Off..."
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenLogoffBox" />
                 </MenuItem>
-                <MenuItem Header="Programs"
-                    Style="{DynamicResource CairoMenuItemStyle}"
-                    ItemContainerStyle="{DynamicResource CairoMenuItemContainerStyle}" TextBlock.FontFamily="./Resources/#Segoe UI Semibold">
-                    <ScrollViewer MaxHeight="600"
+                <MenuItem Header="Programs" Name="ProgramsMenu"
+                    Style="{StaticResource CairoMenuItemStyle}" Drop="Programs_Drop"
+                    ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" TextBlock.FontWeight="SemiBold" StaysOpenOnClick="True">
+                    <MenuItem StaysOpenOnClick="True">
+                        <MenuItem.Header>
+                            <TabControl Name="categorizedProgramsList" TabStripPlacement="Right" Style="{StaticResource ProgramsTabControl}">
+                                <TabControl.Resources>
+                                    <Style TargetType="TabItem" BasedOn="{StaticResource ProgramsTabItem}">
+                                    </Style>
+                                </TabControl.Resources>
+                                <TabControl.ContentTemplate>
+                                    <DataTemplate>
+                                        <ScrollViewer MaxHeight="600" Width="240"
                         VerticalScrollBarVisibility="Auto">
-                        <ItemsControl Name="categorizedProgramsList">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <StackPanel.Resources>
-                                            <Style TargetType="{x:Type StackPanel}">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Path=Count}"
-                                                        Value="0">
-                                                        <Setter Property="Visibility"
-                                                            Value="Collapsed" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Path=ShowInMenu}"
-                                                        Value="False">
-                                                        <Setter Property="Visibility"
-                                                            Value="Collapsed" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </StackPanel.Resources>
-                                        <Border BorderThickness="0,0,0,1">
-                                            <Border.BorderBrush>
-                                                <LinearGradientBrush StartPoint="0,0"
-                                                    EndPoint="1,0">
-                                                    <GradientStop Color="DarkGray"
-                                                        Offset="0" />
-                                                    <GradientStop Color="Transparent"
-                                                        Offset="1" />
-                                                </LinearGradientBrush>
-                                            </Border.BorderBrush>
-                                            <TextBlock Text="{Binding Path=Name}"
-                                                Foreground="White"
-                                                FontFamily="Segoe UI"
-                                                FontSize="12"
-                                                FontWeight="Bold"
-                                                Padding="5"
-                                                Background="Transparent" />
-                                        </Border>
-                                        <ItemsControl ItemsSource="{Binding}"
-                                            Style="{DynamicResource InnerProgramsListStyle}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
+                                            <ItemsControl ItemsSource="{Binding}"
+                                            Style="{StaticResource InnerProgramsListStyle}" />
+                                        </ScrollViewer>
+                                    </DataTemplate>
+                                </TabControl.ContentTemplate>
+                            </TabControl>
+                        </MenuItem.Header>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Places"
-                    Style="{DynamicResource CairoMenuItemStyle}" TextBlock.FontFamily="./Resources/#Segoe UI Semibold">
-                    <MenuItem xmlns:s="clr-namespace:System;assembly=mscorlib" Header="{Binding Source={x:Static s:Environment.UserName}}"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                    Style="{StaticResource CairoMenuItemStyle}" TextBlock.FontWeight="SemiBold">
+                    <MenuItem xmlns:s="clr-namespace:System;assembly=mscorlib" Name="miUserName"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         FontWeight="Bold"
                         Click="OpenUserFolder" />
                     <MenuItem Header="Documents"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenMyDocs" />
                     <MenuItem Header="Downloads"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenDownloads" x:Name="PlacesDownloadsItem" />
                     <MenuItem Header="Music"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenMyMusic" />
                     <MenuItem Header="Pictures"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenMyPics" />
-                    <Separator Style="{DynamicResource CairoMenuSeparatorStyle}" />
-                    <MenuItem Header="Computer"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                    <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
+                    <MenuItem Header="This PC"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         FontWeight="Bold"
                         Click="OpenMyComputer" />
                     <MenuItem Header="Program Files"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenProgramFiles" />
-                    <Separator Style="{DynamicResource CairoMenuSeparatorStyle}" />
+                    <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="Recycle Bin"
-                        Style="{DynamicResource CairoMenuItemStyle}"
+                        Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenRecycleBin" />
                 </MenuItem>
             </Menu>
@@ -207,89 +189,95 @@
             x:Name="CairoMenuBarRight"
             Margin="0,0,0,0">
             <control:SystemTray x:Name="SysTray" />
-            <Menu Style="{DynamicResource CairoMenuBarMainContainerStyle}">
-                <MenuItem Style="{DynamicResource CairoMenuItemThinStyle}"
-                          ItemContainerStyle="{DynamicResource CairoMenuItemContainerStyle}">
+            <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
+                <MenuItem Style="{StaticResource CairoMenuItemStyle}"
+                          ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}">
                     <MenuItem.Header>
                         <TextBlock Name="dateText" />
                     </MenuItem.Header>
-                    <StackPanel>
-                        <c:Calendar Name="monthCalendar"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-                        <MenuItem Style="{DynamicResource CairoMenuItemStyle}"
+                    <MenuItem StaysOpenOnClick="True">
+                        <MenuItem.Header>
+                            <Calendar Name="monthCalendar" Style="{StaticResource CairoCalendarStyle}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center" />
+                        </MenuItem.Header>
+                        <MenuItem.Template>
+                            <ControlTemplate TargetType="{x:Type MenuItem}">
+                                <ContentPresenter
+                            x:Name="HeaderHost"
+                            RecognizesAccessKey="True"
+                            ContentSource="Header" />
+                            </ControlTemplate>
+                        </MenuItem.Template>
+                    </MenuItem>
+                    <MenuItem Style="{StaticResource CairoMenuItemStyle}"
                             Click="OpenTimeDateCPL">
-                            <MenuItem.Header>Open Date &amp; Time Settings</MenuItem.Header>
-                            <MenuItem.Icon>
-                                <Image Source="Resources\dateTimeIcon.png"
+                        <MenuItem.Header>Open Date &amp; Time Settings</MenuItem.Header>
+                        <MenuItem.Icon>
+                            <Image Source="Resources\dateTimeIcon.png"
                                     Width="14"
                                     Height="15"
                                     Margin="0,-1,0,0" />
-                            </MenuItem.Icon>
-                        </MenuItem>
-                    </StackPanel>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
-            <Menu Style="{DynamicResource CairoMenuBarMainContainerStyle}">
-            <MenuItem x:Name="CairoSearchMenu" Style="{DynamicResource CairoMenuItemCairoSearchMenuStyle}" ItemContainerStyle="{DynamicResource CairoMenuItemContainerStyle}" MenuItem.SubmenuOpened="FocusSearchBox">
+            <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
+                <MenuItem x:Name="CairoSearchMenu" Style="{StaticResource CairoMenuItemCairoSearchMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" MenuItem.SubmenuOpened="FocusSearchBox">
                     <MenuItem.Header>
-                        <Image Name="CairoSearchMenuIcon" Source="Resources\searchDefault.png"
+                        <Image Name="CairoSearchMenuIcon" Source="{StaticResource CairoSearchIcon}"
                               Width="37"
                               Height="22" />
                     </MenuItem.Header>
-                    <Border BorderBrush="#AF12367F"
-                    BorderThickness="0,1,0,0">
-                        <Border
-                        BorderThickness="0"
-                        CornerRadius="0,0,5,5"
-                        Padding="0"
-                        Background="#DFDFDF">
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal"
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal"
                                 FocusManager.FocusedElement="{Binding ElementName=searchStr}">
-                                    <StackPanel.Background>
-                                        <LinearGradientBrush StartPoint="0,0"
+                            <StackPanel.Background>
+                                <LinearGradientBrush StartPoint="0,0"
                                         EndPoint="0,1">
-                                            <LinearGradientBrush.GradientStops>
-                                                <GradientStop Color="#FF555555"
+                                    <LinearGradientBrush.GradientStops>
+                                        <GradientStop Color="#FF252326"
                                                 Offset="0" />
-                                                <GradientStop Color="#FF333333"
+                                        <GradientStop Color="#FF020200"
                                                 Offset="1" />
-                                            </LinearGradientBrush.GradientStops>
-                                        </LinearGradientBrush>
-                                    </StackPanel.Background>
-                                    <StackPanel Margin="15"
+                                    </LinearGradientBrush.GradientStops>
+                                </LinearGradientBrush>
+                            </StackPanel.Background>
+                            <StackPanel Margin="15"
                                     Orientation="Horizontal">
-                                        <TextBlock Width="100"
+                                <TextBlock Width="100"
                                         Foreground="#FFFFFFFF"
                                         FontSize="14"
-                                        FontFamily="Segoe UI">Desktop Search</TextBlock>
-                                        <TextBox FontFamily="Segoe UI"
-                                        FontSize="12"
+                                        FontFamily="Segoe UI" Margin="0,2,0,0">Desktop Search</TextBlock>
+                                <TextBox FontFamily="Segoe UI"
+                                        FontSize="14"
                                         Width="200"
                                         Margin="10,0,0,0"
-                                        Background="#FFD9D9D9"
-                                        BorderBrush="Black"
+                                        Background="#FFFFFFFF"
+                                        BorderBrush="Transparent"
+                                        Padding="7,1,7,1"
                                         Name="searchStr"
-                                        Text="{Binding Path=SearchText, UpdateSourceTrigger=PropertyChanged }" />
-                                    </StackPanel>
-                                </StackPanel>
-                                <Border BorderThickness="1,0,1,1"
-                                BorderBrush="#FF333333"
-                                CornerRadius="0,0,5,5">
-                                    <ListView ItemsSource="{Binding Path=Results}"
-                                    BorderThickness="0"
-                                    Background="{x:Null}"
-                                    MinHeight="5"
-                                    MaxHeight="600"
-                                    Width="340"
-                                    AlternationCount="2"
-                                    ItemTemplate="{DynamicResource CairoSearchResultsItemTemplate}"
-                                    ItemContainerStyle="{DynamicResource CairoSearchResultsItemStyle}" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
-                                </Border>
+                                        TextChanged="searchStr_TextChanged" PreviewKeyDown="searchStr_KeyDown">
+                                    <TextBox.Resources>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="CornerRadius" Value="10"/>
+                                        </Style>
+                                    </TextBox.Resources>
+                                </TextBox>
                             </StackPanel>
-                        </Border>
-                    </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <Button Style="{StaticResource CairoSearchResultsButtonStyle}" Name="btnViewResults" Click="btnViewResults_Click" Visibility="Collapsed">View All Results</Button>
+                            <ListView BorderThickness="0"
+                                    Background="{x:Null}"
+                                    MinHeight="0"
+                                    MaxHeight="600"
+                                    Width="342" Margin="-1"
+                                    AlternationCount="2"
+                                    Name="lstSearchResults"
+                                    ItemContainerStyle="{StaticResource CairoSearchResultsItemStyle}" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />
+                        </StackPanel>
+                    </StackPanel>
                 </MenuItem>
             </Menu>
         </StackPanel>

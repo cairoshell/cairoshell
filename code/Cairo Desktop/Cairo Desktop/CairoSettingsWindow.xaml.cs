@@ -2,11 +2,15 @@
 {
     using System;
     using System.Windows;
-    using System.Resources;
-    using System.Windows.Input;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Text.RegularExpressions;
+    using System.IO;
+    using System.Linq;
+    using System.Diagnostics;
+    using Interop;
+    using System.Windows.Interop;
+    using System.Windows.Forms;
+    using Configuration;
+    using AppGrabber;
+
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
     /// </summary>
@@ -15,129 +19,157 @@
         public CairoSettingsWindow()
         {
             InitializeComponent();
-            string themelist = Properties.Settings.Default.ThemeList;
-            StringBuilder sBuilder = new StringBuilder();
-            int id = 0;
-            foreach (string subStr in Regex.Split(themelist, " |, |,"))
+
+            loadThemes();
+            loadRadioGroups();
+            loadCategories();
+
+            checkUpdateConfig();
+            checkTrayStatus();
+        }
+
+        private void loadRadioGroups()
+        {
+            switch (Settings.WindowsTaskbarMode)
             {
-                if (subStr == Properties.Settings.Default.CairoTheme)
-                {
-                    int index = id;
-                    selectTheme.SelectedIndex = index;
-                }
-                selectTheme.Items.Add(subStr);
-                id++;
+                case 0:
+                    radTaskbarMode0.IsChecked = true;
+                    radTaskbarMode1.IsChecked = false;
+                    radTaskbarMode2.IsChecked = false;
+                    break;
+                case 1:
+                    radTaskbarMode0.IsChecked = false;
+                    radTaskbarMode1.IsChecked = true;
+                    radTaskbarMode2.IsChecked = false;
+                    break;
+                case 2:
+                    radTaskbarMode0.IsChecked = false;
+                    radTaskbarMode1.IsChecked = false;
+                    radTaskbarMode2.IsChecked = true;
+                    break;
+                default:
+                    break;
             }
 
+            switch (Settings.SysTrayAlwaysExpanded)
+            {
+                case false:
+                    radTrayMode0.IsChecked = true;
+                    radTrayMode1.IsChecked = false;
+                    break;
+                case true:
+                    radTrayMode0.IsChecked = false;
+                    radTrayMode1.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void loadThemes()
+        {
+            cboThemeSelect.Items.Add("Default");
+            
+            foreach (string subStr in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory).Where(s => Path.GetExtension(s).Contains("xaml")))
+            {
+                string theme = Path.GetFileName(subStr);
+                cboThemeSelect.Items.Add(theme);
+            }
+        }
+
+        private void loadCategories()
+        {
+            foreach (Category cat in AppGrabber.AppGrabber.Instance.CategoryList)
+            {
+                if (cat.ShowInMenu)
+                {
+                    string theme = cat.Name;
+                    cboDefaultProgramsCategory.Items.Add(theme);
+                }
+            }
+        }
+
+        private void checkUpdateConfig()
+        {
+            chkEnableAutoUpdates.IsChecked = Convert.ToBoolean(SupportingClasses.WinSparkle.win_sparkle_get_automatic_check_for_updates());
+        }
+
+        private void checkTrayStatus()
+        {
+            if (Startup.MenuBarWindow.SystemTrayFailure)
+            {
+                // adjust settings window to alert user they need to install vc_redist
+
+                chkEnableSysTray.IsEnabled = false;
+                pnlTraySettings.Visibility = Visibility.Collapsed;
+                chkEnableSysTrayRehook.Visibility = Visibility.Collapsed;
+
+                lblTrayWarning.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void EnableAutoUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            SupportingClasses.WinSparkle.win_sparkle_set_automatic_check_for_updates(Convert.ToInt32(chkEnableAutoUpdates.IsChecked));
         }
 
         private void EnableDesktop_Click(object sender, RoutedEventArgs e)
         {
-            bool IsDesktopEnabled = Properties.Settings.Default.EnableDesktop;
-            if (IsDesktopEnabled == true)
-            {
-                Desktop window = new Desktop();
-                window.Show();
-                Activate();
-            }
-            else
-            {
-                if (Startup.DesktopWindow != null)
-                {
-                    Startup.DesktopWindow.Close();
-                }
-            }
+            this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void EnableDynamicDesktop_Click(object sender, RoutedEventArgs e)
         {
-            bool IsDynamicDesktopEnabled = Properties.Settings.Default.EnableDynamicDesktop;
-            if (IsDynamicDesktopEnabled == true)
-            {
-                this.restartButton.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.restartButton.Visibility = Visibility.Visible;
-            }
+            this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void EnableSubDirs_Click(object sender, RoutedEventArgs e)
         {
-            bool IsSubDirsEnabled = Properties.Settings.Default.EnableSubDirs;
-            if (IsSubDirsEnabled == true)
-            {
-                this.restartButton.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.restartButton.Visibility = Visibility.Visible;
-            }
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void ShowFileExtensions_Click(object sender, RoutedEventArgs e)
+        {
+            this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void EnableTaskbar_Click(object sender, RoutedEventArgs e)
         {
-            bool IsTaskbarEnabled = Properties.Settings.Default.EnableTaskbar;
-            if (IsTaskbarEnabled == true)
-            {
-                Startup.TaskbarWindow = new Taskbar();
-                Startup.TaskbarWindow.Show();
-                this.Activate();
-            }
-            else
-            {
-                if (Startup.TaskbarWindow != null)
-                {
-                    Startup.TaskbarWindow.Close();
-                }
-            }
+            this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void EnableMenuBarShadow_Click(object sender, RoutedEventArgs e)
         {
-            bool IsMenuBarShadowEnabled = Properties.Settings.Default.EnableMenuBarShadow;
-            if (IsMenuBarShadowEnabled == true)
-            {
-                Startup.MenuBarShadowWindow = new MenuBarShadow();
-                Startup.MenuBarShadowWindow.Show();
-                this.Activate();
-            }
-            else
-            {
-                if (Startup.MenuBarShadowWindow != null)
-                {
-                    Startup.MenuBarShadowWindow.Close();
-                }
-            }
+            this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void EnableSysTray_Click(object sender, RoutedEventArgs e)
         {
-            bool IsSysTrayEnabled = Properties.Settings.Default.EnableSysTray;
-            this.restartButton.Visibility = Visibility.Visible;
-        }
-
-        private void UseDarkIcons_Click(object sender, RoutedEventArgs e)
-        {
-            bool IsDarkIconsEnabled = Properties.Settings.Default.UseDarkIcons;
-            this.restartButton.Visibility = Visibility.Visible;
+            this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void themeSetting_Changed(object sender, EventArgs e)
         {
-            this.restartButton.Visibility = Visibility.Visible;
+            this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void restartCairo(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.TimeFormat = timeSetting.Text;
-            Properties.Settings.Default.DateFormat = dateSetting.Text;
-            string s1 = selectTheme.SelectedValue.ToString();
-            s1.Replace("'", "");
-            Properties.Settings.Default.CairoTheme = s1;
-            Properties.Settings.Default.Save();
-            System.Windows.Forms.Application.Restart();
-            Application.Current.Shutdown();
+            saveChanges();
+
+            try
+            {
+                //run the program again and close this one
+                Process current = new Process();
+                current.StartInfo.FileName = AppDomain.CurrentDomain.BaseDirectory + "CairoDesktop.exe";
+                current.StartInfo.Arguments = "/restart";
+                current.Start();
+
+                //close this one
+                System.Windows.Application.Current.Shutdown();
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -147,12 +179,75 @@
         /// <param name="e">Arguments for the event.</param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Properties.Settings.Default.TimeFormat = timeSetting.Text;
-            Properties.Settings.Default.DateFormat = dateSetting.Text;
-            string s1 = selectTheme.SelectedValue.ToString();
-            s1.Replace("'", "");
-            Properties.Settings.Default.CairoTheme = s1;
-            Properties.Settings.Default.Save();
+            saveChanges();
+        }
+
+        private void saveChanges()
+        {
+            // placeholder in case we need to do extra work in the future
+        }
+
+        private void Window_SourceInitialized(object sender, EventArgs e)
+        {
+            NativeMethods.SetForegroundWindow(new WindowInteropHelper(this).Handle);
+        }
+
+        private void btnDesktopHomeSelect_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.Description = "Select a folder to display as your desktop:";
+            fbd.ShowNewFolderButton = false;
+            fbd.SelectedPath = Settings.DesktopDirectory;
+
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                DirectoryInfo dir = new DirectoryInfo(fbd.SelectedPath);
+                if (dir != null)
+                {
+                    Settings.DesktopDirectory = fbd.SelectedPath;
+                    txtDesktopHome.Text = fbd.SelectedPath;
+                }
+            }
+        }
+
+        private void radTaskbarMode0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.WindowsTaskbarMode = 0;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTaskbarMode1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.WindowsTaskbarMode = 1;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTaskbarMode2_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.WindowsTaskbarMode = 2;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTrayMode0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.SysTrayAlwaysExpanded = false;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTrayMode1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.SysTrayAlwaysExpanded = true;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void chkEnableSysTrayRehook_Click(object sender, RoutedEventArgs e)
+        {
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void chkEnableTaskbarPolling_Click(object sender, RoutedEventArgs e)
+        {
+            this.btnRestart.Visibility = Visibility.Visible;
         }
     }
 }

@@ -1,26 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Diagnostics;
 using System.ComponentModel;
+using CairoDesktop.Interop;
+using CairoDesktop.AppGrabber;
+using System.Windows.Threading;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using System.Windows;
 
 namespace CairoDesktop.WindowsTasks
 {
     [DebuggerDisplay("Title: {Title}, Handle: {Handle}")]
     public class ApplicationWindow : IEquatable<ApplicationWindow>, ICairoNotifyPropertyChanged
     {
-        private bool _isActive;
+        public DispatcherTimer VisCheck;
 
         public ApplicationWindow(IntPtr handle, WindowsTasksService sourceService)
         {
             this.Handle = handle;
-            this.State = WindowState.Active;
+            this.State = WindowState.Inactive;
             if (sourceService != null)
             {
-                sourceService.Redraw += HandleRedraw;
+                TasksService = sourceService;
+            }
+
+            if (Configuration.Settings.EnableTaskbarPolling)
+            {
+                VisCheck = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Background, delegate
+                {
+                // some windows don't send a redraw notification after a property changes, try to catch those cases here
+                OnPropertyChanged("Title");
+                    OnPropertyChanged("ShowInTaskbar");
+                }, Application.Current.Dispatcher);
             }
         }
 
@@ -36,107 +49,249 @@ namespace CairoDesktop.WindowsTasks
 
         public WindowsTasksService TasksService
         {
+            get;
+            set;
+        }
+
+        private string _appUserModelId = "";
+
+        public string AppUserModelID
+        {
             get
             {
-                throw new NotImplementedException();
+                if (string.IsNullOrEmpty(_appUserModelId))
+                {
+                    uint cchLen = 256;
+                    StringBuilder appUserModelID = new StringBuilder((int)cchLen);
+
+                    NativeMethods.IPropertyStore propStore;
+                    var g = new Guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99");
+                    int result = NativeMethods.SHGetPropertyStoreForWindow(this.Handle, ref g, out propStore);
+
+                    NativeMethods.PropVariant prop;
+
+                    NativeMethods.PROPERTYKEY PKEY_AppUserModel_ID = new NativeMethods.PROPERTYKEY();
+                    PKEY_AppUserModel_ID.fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3");
+                    PKEY_AppUserModel_ID.pid = 5;
+
+                    propStore.GetValue(PKEY_AppUserModel_ID, out prop);
+
+                    _appUserModelId = prop.Value.ToString();
+                }
+
+                return _appUserModelId;
+            }
+        }
+
+        private string _winFileName = "";
+
+        public string WinFileName
+        {
+            get
+            {
+                if(string.IsNullOrEmpty(_winFileName))
+                {
+                    _winFileName = GetFileNameForWindow(this.Handle);
+                }
+
+                return _winFileName;
+            }
+        }
+
+        private string _category;
+
+        public string Category
+        {
+            get
+            {
+                if(_category == null)
+                {
+                    string backupCategory = "";
+                    foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
+                    {
+                        if (ai.Target == WinFileName || (WinFileName.Contains("ApplicationFrameHost.exe") && ai.Target == AppUserModelID))
+                        {
+                            _category = ai.Category.Name;
+                            break;
+                        }
+                        else if (this.Title.Contains(ai.Name))
+                        {
+                            backupCategory = ai.Category.Name;
+                        }
+                    }
+
+                    if (_category == null && !string.IsNullOrEmpty(backupCategory))
+                        _category = backupCategory;
+                    else if (_category == null)
+                        _category = "Uncategorized";
+                }
+                return _category;
             }
             set
             {
-                throw new NotImplementedException();
+                _category = value;
             }
+        }
+
+        public static string GetFileNameForWindow(IntPtr hWnd)
+        {
+            // get process id
+            uint procId;
+            NativeMethods.GetWindowThreadProcessId(hWnd, out procId);
+
+            // open process
+            IntPtr hProc = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryInformation | NativeMethods.ProcessAccessFlags.VirtualMemoryRead, false, (int)procId);
+
+            // get filename
+            StringBuilder outFileName = new StringBuilder(1024);
+            NativeMethods.GetModuleFileNameEx(hProc, IntPtr.Zero, outFileName, outFileName.Capacity);
+
+            outFileName.Replace("Excluded,", "");
+            outFileName.Replace(",SFC protected", "");
+
+            return outFileName.ToString();
         }
 
         public string Title
         {
             get
             {
-                int len = GetWindowTextLength(this.Handle);
+                int len = NativeMethods.GetWindowTextLength(this.Handle);
                 StringBuilder sb = new StringBuilder(len);
-                GetWindowText(this.Handle, sb, len + 1);
+                NativeMethods.GetWindowText(this.Handle, sb, len + 1);
 
                 return sb.ToString();
             }
         }
 
-        public bool IsAppResponding
+        public ImageSource Icon
         {
             get
             {
-                return IsAppHungWindow(this.Handle);
+                if (WinFileName.Contains("ApplicationFrameHost.exe") && !string.IsNullOrEmpty(AppUserModelID))
+                {
+                    try
+                    {
+                        BitmapImage img = new BitmapImage();
+                        img.BeginInit();
+                        img.UriSource = new Uri(UWPInterop.StoreAppHelper.GetAppIcon(AppUserModelID)[0], UriKind.Absolute);
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        img.EndInit();
+                        img.Freeze();
+                        return img;
+                    }
+                    catch
+                    {
+                        return IconImageConverter.GetDefaultIcon();
+                    }
+                }
+
+                if (this._icon != null)
+                {
+                    IntPtr hIcon = this._icon.Handle;
+                    if (hIcon != null)
+                    {
+                        ImageSource icon = IconImageConverter.GetImageFromHIcon(hIcon);
+                        icon.Freeze();
+                        return icon;
+                    }
+                    else
+                    {
+                        iconTries = 0;
+                        DispatcherTimer getIcon = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
+                        getIcon.Interval = new TimeSpan(0, 0, 2);
+                        getIcon.Tick += getIcon_Tick;
+                        getIcon.Start();
+                    }
+                }
+
+                return IconImageConverter.GetDefaultIcon();
             }
         }
 
-        public Icon Icon
+        private Icon _icon
         {
             get
             {
-                uint iconHandle = GetIconForWindow();
+                IntPtr iconHandle = GetIconForWindow(this.Handle);
 
                 Icon ico = null;
-                try
+
+                if (iconHandle != IntPtr.Zero)
                 {
-                    ico = Icon.FromHandle(new IntPtr(iconHandle));
-                }   
-                catch (Exception ex)
-                {
-                    ico = null;
+                    try
+                    {
+                        ico = System.Drawing.Icon.FromHandle(iconHandle);
+                    }
+                    catch
+                    {
+                        ico = null;
+                    }
                 }
 
                 return ico;
             }
         }
 
+        private WindowState _state;
+
         public WindowState State
         {
-            get;
-            [NotifyPropertyChangedAspect("State")]
-            set;
+            get
+            {
+                return _state;
+            }
+
+            set
+            {
+                _state = value;
+                OnPropertyChanged("State");
+            }
         }
 
-        public bool IsActive
+        public int Placement
         {
-            get;
-            [NotifyPropertyChangedAspect("IsActive")]
-            set;
+            get { return GetWindowPlacement(this.Handle); }
         }
 
-        /// <summary>
-        /// TODO: Implement the flash property - or should this be an event??
-        /// Perhaps we can bind to a wpf animation enabled property??
-        /// </summary>
-        public bool Flash
-        {
-            get;
-            [NotifyPropertyChangedAspect("Flash")]
-            set;
-        }
-
-        // TODO: Implement show in taskbar property.
+        // True if this window should be shown in the taskbar
         public bool ShowInTaskbar
         {
             get
             {
-                if ((this.State != WindowState.Hidden) && (GetParent(this.Handle) != IntPtr.Zero))
-                {
-                    return false;
-                }
-
                 // Don't show empty buttons.
                 if (string.IsNullOrEmpty(this.Title))
                 {
                     return false;
                 }
 
-                int GWL_EXSTYLE = -20;
-                int WS_EX_TOOLWINDOW = 0x00000080;
-                int GW_Owner = 4;
+                if ((this.State == WindowState.Hidden) || (NativeMethods.GetParent(this.Handle) != IntPtr.Zero))
+                {
+                    return false;
+                }
 
-                int exStyles = GetWindowLong(this.Handle, GWL_EXSTYLE);
+                /* This didn't help
+                if (Environment.OSVersion.Version.Major > 6 || (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2))
+                {
+                    IntPtr rect;
+                    int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(IntPtr));
+                    int res = NativeMethods.DwmGetWindowAttribute(this.Handle, (int)NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out rect, cbSize);
 
-                IntPtr ownerWin = GetWindow(this.Handle, GW_Owner);
-                // TODO: Add method to check that this isn't a child window...
-                if ((((exStyles & WS_EX_TOOLWINDOW) == 0) && (ownerWin == IntPtr.Zero)) ||
-                    (((exStyles & WS_EX_TOOLWINDOW) == 0) && (ownerWin != IntPtr.Zero)))
+                    if (res != 0)
+                        return false;
+                }*/
+
+                // Make sure this is a real application window and not a child or tool window
+                int exStyles = NativeMethods.GetWindowLong(this.Handle, NativeMethods.GWL_EXSTYLE);
+                IntPtr ownerWin = NativeMethods.GetWindow(this.Handle, NativeMethods.GW_OWNER);
+
+                bool isAppWindow = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
+                bool hasEdge = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0;
+                bool isTopmostOnly = exStyles == (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST;
+                bool isToolWindow = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
+                bool isVisible = NativeMethods.IsWindowVisible(this.Handle);
+
+                if ((isAppWindow || ((hasEdge || isTopmostOnly || exStyles == 0) && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
                 {
                     return true;
                 }
@@ -147,14 +302,55 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        private uint GetIconForWindow()
+        int iconTries = 0;
+
+        private void getIcon_Tick(object sender, EventArgs e)
         {
-            uint hIco = 0;
-            SendMessageTimeout(this.Handle, 127, 2, 0, 2, 200, ref hIco);
-            int GCL_HICONSM = -34;
-            if(hIco == 0)
+            if (this._icon.Handle != null || iconTries > 5)
             {
-                hIco = GetClassLong(this.Handle, GCL_HICONSM);
+                OnPropertyChanged("Icon");
+                (sender as DispatcherTimer).Stop();
+            }
+            else
+                iconTries++;
+        }
+
+        public static IntPtr GetIconForWindow(IntPtr hWnd)
+        {
+            IntPtr hIco = default(IntPtr);
+            uint WM_GETICON = 0x007f;
+            IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
+            int GCL_HICON = -14;
+            int GCL_HICONSM = -34;
+
+            NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 2, 0, 2, 1000, ref hIco);
+
+            if (hIco == IntPtr.Zero)
+            {
+                NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 0, 0, 2, 1000, ref hIco);
+            }
+
+            if (hIco == IntPtr.Zero)
+            {
+                if(!Environment.Is64BitProcess)
+                    hIco = NativeMethods.GetClassLong(hWnd, GCL_HICONSM);
+                else
+                    hIco = NativeMethods.GetClassLongPtr(hWnd, GCL_HICONSM);
+            }
+
+            if (hIco == IntPtr.Zero)
+            {
+                if (!Environment.Is64BitProcess)
+                    hIco = NativeMethods.GetClassLong(hWnd, GCL_HICON);
+                else
+                    hIco = NativeMethods.GetClassLongPtr(hWnd, GCL_HICON);
+            }
+
+            if (hIco == IntPtr.Zero)
+            {
+                string winFileName = GetFileNameForWindow(hWnd);
+                if (Shell.Exists(winFileName))
+                    hIco = Shell.GetIconByFilename(winFileName, true);
             }
 
             return hIco;
@@ -162,166 +358,30 @@ namespace CairoDesktop.WindowsTasks
 
         public void BringToFront()
         {
-            ShowWindow(this.Handle, WindowShowStyle.Restore);
-            SetForegroundWindow(this.Handle);
+            // so that maximized windows stay that way
+            if(Placement == 3)
+                NativeMethods.ShowWindowAsync(this.Handle, NativeMethods.WindowShowStyle.Show);
+            else
+                NativeMethods.ShowWindowAsync(this.Handle, NativeMethods.WindowShowStyle.Restore);
+
+            NativeMethods.SetForegroundWindow(this.Handle);
         }
 
         public void Minimize()
         {
-            //...In your code some where: show a form, without making it active
-            ShowWindow(this.Handle, WindowShowStyle.Minimize);
+            NativeMethods.ShowWindowAsync(this.Handle, NativeMethods.WindowShowStyle.Minimize);
         }
 
         /// <summary>
-        /// Handles calls to the refresh event of the source for this handle and notifies subscribers that the property has changed.
+        /// Returns whether a window is normal (1), minimized (2), or maximized (3).
         /// </summary>
-        /// <param name="handle">The handle of the window.</param>
-        private void HandleRedraw(IntPtr handle)
+        /// <param name="hWnd">The handle of the window.</param>
+        public int GetWindowPlacement(IntPtr hWnd)
         {
-            if (!this.Handle.Equals(handle))
-            {
-                return;
-            }
-
-            Trace.WriteLine("Handling redraw call for handle " + handle.ToString());
-
-            OnPropertyChanged("Title");
-            OnPropertyChanged("Icon");
-            OnPropertyChanged("ShowInTaskbar");
+            NativeMethods.WINDOWPLACEMENT placement = new NativeMethods.WINDOWPLACEMENT();
+            NativeMethods.GetWindowPlacement(hWnd, ref placement);
+            return placement.showCmd;
         }
-
-        #region P/Invoke Declarations
-        [DllImport("user32.dll")]
-        private static extern int GetWindowTextLength(IntPtr hwnd);
-
-        [DllImport("user32.dll")]
-        private static extern int GetWindowText(IntPtr hwnd, StringBuilder sb, int Length);
-
-        [DllImport("user32.dll")]
-        private static extern bool IsWindow(IntPtr handle);
-
-        [DllImport("user32.dll")]
-        private static extern bool IsAppHungWindow(IntPtr handle);
-
-        [DllImport("user32.dll")]
-        private static extern uint GetClassLong(IntPtr handle, int longClass);
-
-        [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        private static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, uint wparam, uint lparam, uint timeoutFlags, uint timeout, ref uint retval);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowLong(IntPtr handle, int nIndex);
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetParent(IntPtr handle);
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetWindow(IntPtr handle, int wCmd);
-
-        /// <summary>Shows a Window</summary>
-        /// <remarks>
-        /// <para>To perform certain special effects when showing or hiding a 
-        /// window, use AnimateWindow.</para>
-        ///<para>The first time an application calls ShowWindow, it should use 
-        ///the WinMain function's nCmdShow parameter as its nCmdShow parameter. 
-        ///Subsequent calls to ShowWindow must use one of the values in the 
-        ///given list, instead of the one specified by the WinMain function's 
-        ///nCmdShow parameter.</para>
-        ///<para>As noted in the discussion of the nCmdShow parameter, the 
-        ///nCmdShow value is ignored in the first call to ShowWindow if the 
-        ///program that launched the application specifies startup information 
-        ///in the structure. In this case, ShowWindow uses the information 
-        ///specified in the STARTUPINFO structure to show the window. On 
-        ///subsequent calls, the application must call ShowWindow with nCmdShow 
-        ///set to SW_SHOWDEFAULT to use the startup information provided by the 
-        ///program that launched the application. This behavior is designed for 
-        ///the following situations: </para>
-        ///<list type="">
-        ///    <item>Applications create their main window by calling CreateWindow 
-        ///    with the WS_VISIBLE flag set. </item>
-        ///    <item>Applications create their main window by calling CreateWindow 
-        ///    with the WS_VISIBLE flag cleared, and later call ShowWindow with the 
-        ///    SW_SHOW flag set to make it visible.</item>
-        ///</list></remarks>
-        /// <param name="hWnd">Handle to the window.</param>
-        /// <param name="nCmdShow">Specifies how the window is to be shown. 
-        /// This parameter is ignored the first time an application calls 
-        /// ShowWindow, if the program that launched the application provides a 
-        /// STARTUPINFO structure. Otherwise, the first time ShowWindow is called, 
-        /// the value should be the value obtained by the WinMain function in its 
-        /// nCmdShow parameter. In subsequent calls, this parameter can be one of 
-        /// the WindowShowStyle members.</param>
-        /// <returns>
-        /// If the window was previously visible, the return value is nonzero. 
-        /// If the window was previously hidden, the return value is zero.
-        /// </returns>
-        [DllImport("user32.dll")]
-        private static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
-
-        /// <summary>Enumeration of the different ways of showing a window using 
-        /// ShowWindow</summary>
-        private enum WindowShowStyle : uint
-        {
-            /// <summary>Hides the window and activates another window.</summary>
-            /// <remarks>See SW_HIDE</remarks>
-            Hide = 0,
-            /// <summary>Activates and displays a window. If the window is minimized 
-            /// or maximized, the system restores it to its original size and 
-            /// position. An application should specify this flag when displaying 
-            /// the window for the first time.</summary>
-            /// <remarks>See SW_SHOWNORMAL</remarks>
-            ShowNormal = 1,
-            /// <summary>Activates the window and displays it as a minimized window.</summary>
-            /// <remarks>See SW_SHOWMINIMIZED</remarks>
-            ShowMinimized = 2,
-            /// <summary>Activates the window and displays it as a maximized window.</summary>
-            /// <remarks>See SW_SHOWMAXIMIZED</remarks>
-            ShowMaximized = 3,
-            /// <summary>Maximizes the specified window.</summary>
-            /// <remarks>See SW_MAXIMIZE</remarks>
-            Maximize = 3,
-            /// <summary>Displays a window in its most recent size and position. 
-            /// This value is similar to "ShowNormal", except the window is not 
-            /// actived.</summary>
-            /// <remarks>See SW_SHOWNOACTIVATE</remarks>
-            ShowNormalNoActivate = 4,
-            /// <summary>Activates the window and displays it in its current size 
-            /// and position.</summary>
-            /// <remarks>See SW_SHOW</remarks>
-            Show = 5,
-            /// <summary>Minimizes the specified window and activates the next 
-            /// top-level window in the Z order.</summary>
-            /// <remarks>See SW_MINIMIZE</remarks>
-            Minimize = 6,
-            /// <summary>Displays the window as a minimized window. This value is 
-            /// similar to "ShowMinimized", except the window is not activated.</summary>
-            /// <remarks>See SW_SHOWMINNOACTIVE</remarks>
-            ShowMinNoActivate = 7,
-            /// <summary>Displays the window in its current size and position. This 
-            /// value is similar to "Show", except the window is not activated.</summary>
-            /// <remarks>See SW_SHOWNA</remarks>
-            ShowNoActivate = 8,
-            /// <summary>Activates and displays the window. If the window is 
-            /// minimized or maximized, the system restores it to its original size 
-            /// and position. An application should specify this flag when restoring 
-            /// a minimized window.</summary>
-            /// <remarks>See SW_RESTORE</remarks>
-            Restore = 9,
-            /// <summary>Sets the show state based on the SW_ value specified in the 
-            /// STARTUPINFO structure passed to the CreateProcess function by the 
-            /// program that started the application.</summary>
-            /// <remarks>See SW_SHOWDEFAULT</remarks>
-            ShowDefault = 10,
-            /// <summary>Windows 2000/XP: Minimizes a window, even if the thread 
-            /// that owns the window is hung. This flag should only be used when 
-            /// minimizing windows from a different thread.</summary>
-            /// <remarks>See SW_FORCEMINIMIZE</remarks>
-            ForceMinimized = 11
-        }
-        #endregion
 
         #region IEquatable<Window> Members
 

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Xml;
 
 namespace CairoDesktop.AppGrabber {
@@ -12,6 +10,7 @@ namespace CairoDesktop.AppGrabber {
         /// Simple wrapper around an ObservableCollection of Category objects.
         /// </summary>
         public CategoryList() {
+            Add(new Category("All"));
         }
 
         /// <summary>
@@ -30,7 +29,7 @@ namespace CairoDesktop.AppGrabber {
         /// Add a Category object to this CategoryList.
         /// </summary>
         /// <param name="category">Category to add.</param>
-        public void Add(Category category) {
+        public new void Add(Category category) {
             base.Add(category);
             category.ParentCategoryList = this;
         }
@@ -56,7 +55,7 @@ namespace CairoDesktop.AppGrabber {
             get {
                 ObservableCollection<ApplicationInfo> rval = new ObservableCollection<ApplicationInfo>();
                 foreach (Category cat in this) {
-                    if (cat.Name == "Quick Launch") continue;
+                    if (cat.Name == "Quick Launch" || cat.Name == "All") continue;
                     foreach (ApplicationInfo app in cat) {
                         rval.Add(app);
                     }
@@ -70,20 +69,33 @@ namespace CairoDesktop.AppGrabber {
             XmlElement root = doc.CreateElement("CategoryList");
             doc.AppendChild(root);
             foreach (Category cat in this) {
-                XmlElement catElement = doc.CreateElement("Category");
-                XmlAttribute catNameAttribute = doc.CreateAttribute("Name");
-                catNameAttribute.Value = cat.Name;
-                catElement.Attributes.Append(catNameAttribute);
-                root.AppendChild(catElement);
-                foreach (ApplicationInfo app in cat) {
-                    XmlElement appElement = doc.CreateElement("Application");
-                    catElement.AppendChild(appElement);
-                    XmlElement appNameElement = doc.CreateElement("Name");
-                    appNameElement.InnerText = app.Name;
-                    appElement.AppendChild(appNameElement);
-                    XmlElement pathElement = doc.CreateElement("Path");
-                    pathElement.InnerText = app.Path;
-                    appElement.AppendChild(pathElement);
+                if (cat.Name != "All")
+                {
+                    XmlElement catElement = doc.CreateElement("Category");
+                    XmlAttribute catNameAttribute = doc.CreateAttribute("Name");
+                    catNameAttribute.Value = cat.Name;
+                    catElement.Attributes.Append(catNameAttribute);
+                    root.AppendChild(catElement);
+                    foreach (ApplicationInfo app in cat)
+                    {
+                        XmlElement appElement = doc.CreateElement("Application");
+                        catElement.AppendChild(appElement);
+                        XmlAttribute appAskAlwaysAdminAttribute = doc.CreateAttribute("AskAlwaysAdmin");
+                        appAskAlwaysAdminAttribute.Value = app.AskAlwaysAdmin.ToString();
+                        appElement.Attributes.Append(appAskAlwaysAdminAttribute);
+                        XmlAttribute appAlwaysAdminAttribute = doc.CreateAttribute("AlwaysAdmin");
+                        appAlwaysAdminAttribute.Value = app.AlwaysAdmin.ToString();
+                        appElement.Attributes.Append(appAlwaysAdminAttribute);
+                        XmlElement appNameElement = doc.CreateElement("Name");
+                        appNameElement.InnerText = app.Name;
+                        appElement.AppendChild(appNameElement);
+                        XmlElement pathElement = doc.CreateElement("Path");
+                        pathElement.InnerText = app.Path;
+                        appElement.AppendChild(pathElement);
+                        XmlElement targetElement = doc.CreateElement("Target");
+                        targetElement.InnerText = app.Target;
+                        appElement.AppendChild(targetElement);
+                    }
                 }
             }
             doc.Save(ConfigFile);
@@ -102,11 +114,17 @@ namespace CairoDesktop.AppGrabber {
                     ApplicationInfo app = new ApplicationInfo();
                     app.Name = appElement.ChildNodes[0].InnerText;
                     app.Path = appElement.ChildNodes[1].InnerText;
-                    if (!System.IO.File.Exists(app.Path)) {
+                    if (appElement.Attributes["AskAlwaysAdmin"] != null)
+                        app.AskAlwaysAdmin = Convert.ToBoolean(appElement.Attributes["AskAlwaysAdmin"].Value);
+                    if (appElement.Attributes["AlwaysAdmin"] != null)
+                        app.AlwaysAdmin = Convert.ToBoolean(appElement.Attributes["AlwaysAdmin"].Value);
+                    if (appElement.ChildNodes.Count > 2)
+                        app.Target = appElement.ChildNodes[2].InnerText;
+                    if (!app.IsStoreApp && !Interop.Shell.Exists(app.Path)) {
                         System.Diagnostics.Debug.WriteLine(app.Path + " does not exist");
                         continue;
                     }
-                    app.Icon = app.GetAssociatedIcon();
+                    //app.Icon = app.GetAssociatedIcon();
                     cat.Add(app);
                 }
             }

@@ -12,11 +12,17 @@ namespace CairoDesktop
         public MenuBarShadow()
         {
             InitializeComponent();
-            // Sets the Theme for Cairo
-            string theme = Properties.Settings.Default.CairoTheme;
-            if (theme != "Cairo.xaml")
+
+            SetPosition();
+        }
+
+        public void SetPosition()
+        {
+            if (Startup.MenuBarWindow != null)
             {
-                this.Top = 22;
+                this.Width = Startup.MenuBarWindow.ActualWidth;
+                this.Top = Startup.MenuBarWindow.Top + Startup.MenuBarWindow.ActualHeight;
+                this.Left = Startup.MenuBarWindow.Left;
             }
         }
 
@@ -43,7 +49,10 @@ namespace CairoDesktop
 
             source.AddHook(new HwndSourceHook(WndProc));
         }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            SetPosition();
+        }
     }
-
-
 }

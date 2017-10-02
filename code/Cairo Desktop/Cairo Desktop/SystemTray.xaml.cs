@@ -1,16 +1,11 @@
 ﻿using System;
-using System.IO;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Navigation;
 using System.Collections.ObjectModel;
-using Cairo.WindowsHooksWrapper;
+using CairoDesktop.WindowsTray;
 using System.Linq;
 using System.Diagnostics;
+using static CairoDesktop.Interop.NativeMethods;
+using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -22,7 +17,6 @@ namespace CairoDesktop
         IWindowsHooksWrapper hooksWrapper = new WindowsHooksWrapper();
 
         private DependencyProperty iconListProperty = DependencyProperty.Register("TrayIcons", typeof(ObservableCollection<TrayIcon>), typeof(SystemTray), new PropertyMetadata(new ObservableCollection<TrayIcon>()));
-        private DependencyProperty hiddenIconListProperty = DependencyProperty.Register("HiddenTrayIcons", typeof(ObservableCollection<TrayIcon>), typeof(SystemTray), new PropertyMetadata(new ObservableCollection<TrayIcon>()));
         private SystrayDelegate trayDelegate;
 
         public SystemTray()
@@ -44,25 +38,10 @@ namespace CairoDesktop
                 // Synchronised!
                 if (this.Dispatcher.Thread != System.Threading.Thread.CurrentThread)
                 {
-                    this.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Normal, (Action)delegate { this.TrayIcons = value; });
+                    this.Dispatcher.Invoke(DispatcherPriority.Background, (Action)delegate { this.TrayIcons = value; });
                     return;
                 }
                 SetValue(iconListProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the list of hidden tray icons.
-        /// </summary>
-        public ObservableCollection<TrayIcon> HiddenTrayIcons
-        {
-            get
-            {
-                return GetValue(hiddenIconListProperty) as ObservableCollection<TrayIcon>;
-            }
-            set
-            {
-                SetValue(hiddenIconListProperty, value);
             }
         }
 
@@ -74,93 +53,117 @@ namespace CairoDesktop
                 hooksWrapper.SetSystrayCallback(trayDelegate);
                 hooksWrapper.InitializeSystray();
                 hooksWrapper.Run();
+
+                if (Configuration.Settings.EnableSysTrayRehook)
+                {
+                    DispatcherTimer trayRehook = new DispatcherTimer(DispatcherPriority.Background, this.Dispatcher);
+                    trayRehook.Interval = new TimeSpan(0, 0, 10);
+                    trayRehook.Tick += trayRehook_Tick;
+                    trayRehook.Start();
+                }
             }
-            catch (Exception ex)
+            catch /*(Exception ex)*/
             {
-                CairoMessage.Show("Error initializing the system tray component.\n\n" + ex.ToString() + "\n\nIf this error continues please report it (including a screen shot of this message) to the Cairo Development Team. \nThank you.", "Error", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                Startup.MenuBarWindow.SystemTrayFailure = true;
+                //CairoMessage.ShowAlert("Error initializing the system tray component.\n\n" + ex.ToString() + "\n\nIf this error continues please report it (including a screen shot of this message) to the Cairo Development Team. \nThank you.", "Error", MessageBoxImage.Asterisk);
+            }
+        }
+
+        private void trayRehook_Tick(object sender, EventArgs e)
+        {
+            // check if setting has changed
+            if (Configuration.Settings.EnableSysTrayRehook)
+            {
+                hooksWrapper.InitializeSystray();
+                hooksWrapper.Run();
+            }
+            else
+            {
+                (sender as DispatcherTimer).Stop();
             }
         }
 
         public void DestroySystemTray()
         {
-            hooksWrapper.ShutdownAll();
+            if(!Startup.MenuBarWindow.SystemTrayFailure && trayDelegate != null)
+                hooksWrapper.ShutdownSystray();
         }
 
         private bool SysTrayCallback(uint message, NOTIFYICONDATA nicData)
         {
-            TrayIcon trayIcon = new TrayIcon(nicData.hWnd);
-            if(nicData.uID!=null) trayIcon.UID = nicData.uID;
+            TrayIcon trayIcon = new TrayIcon((IntPtr)nicData.hWnd);
+            trayIcon.UID = nicData.uID;
 
             lock (_lockObject)
             {
-                switch ((NIM)message)
+                if ((NIM)message == NIM.NIM_ADD || (NIM)message == NIM.NIM_MODIFY)
                 {
-                    case NIM.NIM_ADD:
-                        // Ensure the icon doesn't already exist.
-                        if (TrayIcons.Contains(trayIcon)) return false;
+                    try
+                    {
+                        bool exists = false;
 
-                        // Add the icon.
-                        trayIcon.Title = nicData.szTip;
-                        try
+                        if (nicData.dwState != 1)
                         {
-                            trayIcon.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-                        }
-                        catch
-                        {
-                            trayIcon.Icon = null;
-                        }
-                        trayIcon.HWnd = nicData.hWnd;
-                        trayIcon.UID = nicData.uID;
-                        trayIcon.CallbackMessage = nicData.uCallbackMessage;
-
-                        TrayIcons.Add(trayIcon);
-                        break;
-
-                    case NIM.NIM_DELETE:
-                        try
-                        {
-                            if (!TrayIcons.Contains(trayIcon))
-                            {
-                                // Nothing to remove.
-                                return false;
-                            }
-
-                            // Woo! Using Linq to avoid iterating!
-                            TrayIcons.Remove(trayIcon);
-                        }
-                        catch (Exception ex)
-                        {
-                            Trace.WriteLine("Unable to remove the icon from the collection. Error: " + ex.ToString());
-                        }
-                        break;
-
-                    case NIM.NIM_MODIFY:
-                        try
-                        {
-                            bool exists = false;
                             if (TrayIcons.Contains(trayIcon))
                             {
                                 exists = true;
-                                trayIcon = TrayIcons.Single(i => i.HWnd == nicData.hWnd && i.UID == nicData.uID);
+                                trayIcon = TrayIcons.Single(i => i.HWnd == (IntPtr)nicData.hWnd && i.UID == nicData.uID);
                             }
 
                             trayIcon.Title = nicData.szTip;
-                            trayIcon.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-                            trayIcon.HWnd = nicData.hWnd;
+                            try
+                            {
+                                trayIcon.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon((IntPtr)nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                            }
+                            catch
+                            {
+                                trayIcon.Icon = AppGrabber.IconImageConverter.GetDefaultIcon();
+                            }
+                            trayIcon.HWnd = (IntPtr)nicData.hWnd;
                             trayIcon.UID = nicData.uID;
                             trayIcon.CallbackMessage = nicData.uCallbackMessage;
 
                             if (!exists)
                             {
+                                if(!Configuration.Settings.SysTrayAlwaysExpanded)
+                                    btnToggle.Visibility = Visibility.Visible;
+                                else
+                                    LayoutRoot.Visibility = Visibility.Visible;
+
                                 TrayIcons.Add(trayIcon);
+                                Trace.WriteLine("Added tray icon: " + trayIcon.Title);
                             }
+                            else
+                                Trace.WriteLine("Modified tray icon: " + trayIcon.Title);
                         }
-                        catch (Exception ex)
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine("Unable to modify the icon in the collection. Error: " + ex.ToString());
+                    }
+                }
+                else if ((NIM)message == NIM.NIM_DELETE)
+                {
+                    try
+                    {
+                        if (!TrayIcons.Contains(trayIcon))
                         {
-                            Trace.WriteLine("Unable to modify the icon in the collection. Error: " + ex.ToString());
+                            // Nothing to remove.
+                            return false;
                         }
 
-                        break;
+                        // Woo! Using Linq to avoid iterating!
+                        TrayIcons.Remove(trayIcon);
+
+                        Trace.WriteLine("Removed tray icon: " + nicData.szTip);
+
+                        if (TrayIcons.Count < 1 && !Configuration.Settings.SysTrayAlwaysExpanded)
+                            btnToggle.Visibility = Visibility.Collapsed;
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine("Unable to remove the icon from the collection. Error: " + ex.ToString());
+                    }
                 }
             }
             return true;
@@ -168,22 +171,26 @@ namespace CairoDesktop
 
         private void Image_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            uint WM_LBUTTONDOWN = 0x201;
             uint WM_LBUTTONUP = 0x202;
             uint WM_LBUTTONDBLCLK = 0x203;
+            uint WM_RBUTTONDOWN = 0x204;
             uint WM_RBUTTONUP = 0x205;
             uint WM_RBUTTONDBLCLK = 0x206;
 
             var trayIcon = (sender as System.Windows.Controls.Image).DataContext as TrayIcon;
-
+                        
             if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
             {
                 if (DateTime.Now.Subtract(_lastLClick).TotalSeconds < 1)
                 {
-                    Interop.NativeMethods.PostWindowsMessage(trayIcon.HWnd, trayIcon.CallbackMessage, trayIcon.UID, WM_LBUTTONDBLCLK);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONDBLCLK);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONUP);
                 }
                 else
                 {
-                    Interop.NativeMethods.PostWindowsMessage(trayIcon.HWnd, trayIcon.CallbackMessage, trayIcon.UID, WM_LBUTTONUP);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONDOWN);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONUP);
                 }
                 _lastLClick = DateTime.Now;
             }
@@ -191,16 +198,43 @@ namespace CairoDesktop
             {
                 if (DateTime.Now.Subtract(_lastRClick).TotalSeconds < 1)
                 {
-                    Interop.NativeMethods.PostWindowsMessage(trayIcon.HWnd, trayIcon.CallbackMessage, trayIcon.UID, WM_RBUTTONDBLCLK);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONDBLCLK);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONUP);
                 }
                 else
                 {
-                    Interop.NativeMethods.PostWindowsMessage(trayIcon.HWnd, trayIcon.CallbackMessage, trayIcon.UID, WM_RBUTTONUP);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONDOWN);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONUP);
                 }
                 _lastRClick = DateTime.Now;
             }
 
+            SetForegroundWindow(trayIcon.HWnd);
+
             Trace.WriteLine("Mouse up ("+ e.ChangedButton.ToString() +") on trayicon " + trayIcon.Title);
         }
-	}
+
+        private void btnToggle_Click(object sender, RoutedEventArgs e)
+        {
+            if (LayoutRoot.Visibility == Visibility.Visible)
+            {
+                LayoutRoot.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                LayoutRoot.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void Image_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            var trayIcon = (sender as System.Windows.Controls.Image).DataContext as TrayIcon;
+
+            if (!IsWindow(trayIcon.HWnd))
+            {
+                TrayIcons.Remove(trayIcon);
+                return;
+            }
+        }
+    }
 }

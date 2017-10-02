@@ -1,10 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.Cairo"
     xmlns:cairo="clr-namespace:CairoDesktop">
     <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" x:Key="CairoMenuItemHoverGradient">
         <GradientStop Color="#8F1A4DFF" Offset="0.0" />
         <GradientStop Color="#DF338FFF" Offset="1.0" />
     </LinearGradientBrush>
+    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="CairoMenuBackgroundGradient">
+        <GradientStop Color="#cF0f0f0f" Offset="0" />
+        <GradientStop Color="#bf1a1a1a" Offset="0.8" />
+        <GradientStop Color="#cF0f0f0f" Offset="1" />
+    </LinearGradientBrush>
+    <DropShadowEffect x:Key="CairoMenuShadow" Color="Black" ShadowDepth="4" Direction="270" Opacity="0.6" BlurRadius="10" />
+    <BitmapImage x:Key="CairoMenuIcon" UriSource="Resources\cairoMenuDefault.png"></BitmapImage>
+    <BitmapImage x:Key="CairoSearchIcon" UriSource="Resources\searchDefault.png"></BitmapImage>
+    <BitmapImage x:Key="MenubarShadow" UriSource="Resources\menubarShadow.png"></BitmapImage>
+    <BitmapImage x:Key="NullIcon" UriSource="Resources\nullIcon.png"></BitmapImage>
     <Style TargetType="{x:Type Control}">
         <Setter Property="Template">
             <Setter.Value>
@@ -20,19 +30,33 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- Main menu bar background style -->
+    <Style x:Key="MenuBarStyle"
+        TargetType="{x:Type DockPanel}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#8F4a4a4a" Offset="1.0" />
+                    <GradientStop Color="#CF000000" Offset="0.0" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <!-- New menu styles below, will be renamed later -->
     <Style x:Key="CairoMenuBarMainContainerStyle"
         TargetType="{x:Type Menu}">
         <Setter Property="OverridesDefaultStyle"
             Value="True" />
-        <Setter Property="SnapsToDevicePixels"
+        <Setter Property="UseLayoutRounding"
             Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Menu}">
                     <Border Background="Transparent"
                         BorderThickness="0"
-                        Margin="-2"
+                        Margin="0"
                         Padding="0">
                         <StackPanel ClipToBounds="True"
                             Orientation="Horizontal"
@@ -46,8 +70,10 @@
         TargetType="{x:Type MenuItem}">
         <Setter Property="Foreground"
             Value="#FFFFFFFF" />
-        <Setter Property="FontFamily"
-                                Value="./Resources/#Segoe UI Semibold" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type MenuItem}">
@@ -119,33 +145,27 @@
                                     <Border.Style>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="BorderBrush"
-                                                Value="#AF12367F" />
+                                                Value="#FF12367F" />
                                             <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
+                                            <Setter Property="Margin"
+                                                    Value="5,0,5,11" />
+                                            <Setter Property="Effect"
+                                                Value="{StaticResource ResourceKey=CairoMenuShadow}" />
                                         </Style>
                                     </Border.Style>
                                     <Border>
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
-                                                <Setter Property="Background">
-                                                    <Setter.Value>
-                                                        <LinearGradientBrush StartPoint="0.5,0"
-                                                            EndPoint="0.5,1">
-                                                            <GradientStop Color="#bf1a1a1a"
-                                                                Offset="0" />
-                                                            <GradientStop Color="#cF000000"
-                                                                Offset="1" />
-                                                        </LinearGradientBrush>
-                                                    </Setter.Value>
-                                                </Setter>
+                                                <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
                                                 <Setter Property="BorderBrush"
-                                                    Value="#FF5b5b5b" />
+                                                    Value="#AF5b5b5b" />
                                                 <Setter Property="BorderThickness"
                                                     Value="1,0,1,1" />
                                                 <Setter Property="CornerRadius"
                                                     Value="0,0,5,5" />
                                                 <Setter Property="Padding"
-                                                    Value="0,5,0,5" />
+                                                    Value="0,3,0,3" />
                                             </Style>
                                         </Border.Style>
                                         <Grid x:Name="SubMenu"
@@ -179,7 +199,7 @@
                                 TargetName="Col3" />
                             <Setter Property="Height"
                                 Value="22" />
-                            
+
                             <Setter Property="FontSize"
                                 Value="14" />
                             <Setter Property="Visibility"
@@ -194,33 +214,15 @@
                             <Setter Property="Visibility"
                                 Value="Collapsed"
                                 TargetName="ArrowPanel" />
-                            <Setter Property="BitmapEffect">
+                            <Setter Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowBitmapEffect Color="Black"
-                                        Softness="0"
-                                        ShadowDepth="1"
-                                        Direction="90"
-                                        Opacity=".5" />
+                                    <DropShadowEffect Color="Black"
+                                                        ShadowDepth="1"
+                                                                  Direction="90"
+                                                        Opacity="0.6" BlurRadius="0" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="Role"
-                                    Value="TopLevelHeader" />
-                                <Condition Property="IsMouseOver"
-                                    Value="True" />
-                                <Condition Property="IsPressed"
-                                    Value="False" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="BitmapEffect">
-                                <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                                </Setter.Value>
-                            </Setter>
-                        </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Role"
@@ -232,7 +234,7 @@
                                 TargetName="Border">
                                 <Setter.Value>
                                     <!-- Pressed Menubar State -->
-                                <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
                                         <GradientStop Color="#8F1A4DB5" Offset="1.0" />
                                         <GradientStop Color="#DF338FFF" Offset="0.0" />
                                     </LinearGradientBrush>
@@ -345,32 +347,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="CairoMenuItemThinStyle"
-        TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
-        <Setter Property="FontFamily" Value="Segoe UI" />
-        <Style.Triggers>
-            <Trigger Property="Role"
-                            Value="TopLevelHeader">
-                <Setter Property="BitmapEffect">
-                    <Setter.Value>
-                        <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="2"
-                                        Opacity="1" />
-                    </Setter.Value>
-                </Setter>
-            </Trigger>
-            <Trigger Property="IsMouseOver"
-                            Value="True">
-                <Setter Property="BitmapEffect">
-                    <Setter.Value>
-                        <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                    </Setter.Value>
-                </Setter>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
     <Style x:Key="CairoMenuItemCairoMenuStyle"
         TargetType="{x:Type MenuItem}">
         <Setter Property="Foreground"
@@ -400,37 +376,29 @@
                                 Focusable="false"
                                 PopupAnimation="Fade"
                                 AllowsTransparency="True">
-                                <Border x:Name="SubMenuBorder">
-                                    <Border.Style>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="BorderBrush"
-                                                Value="#AF12367F" />
-                                            <Setter Property="BorderThickness"
-                                                Value="0,1,0,0" />
-                                        </Style>
-                                    </Border.Style>
-                                    <Border>
+                                    <Border x:Name="SubMenuBorder" Margin="11,0,5,11">
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
-                                                <Setter Property="Background">
-                                                    <Setter.Value>
-                                                        <LinearGradientBrush StartPoint="0.5,0"
-                                                            EndPoint="0.5,1">
-                                                            <GradientStop Color="#bf1a1a1a"
-                                                                Offset="0" />
-                                                            <GradientStop Color="#cF000000"
-                                                                Offset="1" />
-                                                        </LinearGradientBrush>
-                                                    </Setter.Value>
-                                                </Setter>
                                                 <Setter Property="BorderBrush"
-                                                    Value="#FF5b5b5b" />
+                                                Value="#FF12367F" />
+                                                <Setter Property="BorderThickness"
+                                                Value="0,1,0,0" />
+                                                <Setter Property="Effect"
+                                                Value="{StaticResource ResourceKey=CairoMenuShadow}" />
+                                            </Style>
+                                        </Border.Style>
+                                        <Border>
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
+                                                <Setter Property="BorderBrush"
+                                                    Value="#AF5b5b5b" />
                                                 <Setter Property="BorderThickness"
                                                     Value="1,0,1,1" />
                                                 <Setter Property="CornerRadius"
                                                     Value="0,0,5,5" />
                                                 <Setter Property="Padding"
-                                                    Value="0,5,0,5" />
+                                                    Value="0,3,0,3" />
                                             </Style>
                                         </Border.Style>
                                         <Grid x:Name="SubMenu"
@@ -451,7 +419,7 @@
                         <Trigger Property="Role"
                             Value="TopLevelHeader">
                             <Setter Property="Padding"
-                                Value="0,0,0,0" />
+                                Value="2,0,2,0" />
                             <Setter Property="Margin"
                                 Value="0,-2,0,0" />
                             <Setter Property="Placement"
@@ -460,23 +428,6 @@
                             <Setter Property="Height"
                                 Value="22" />
                         </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="Role"
-                                    Value="TopLevelHeader" />
-                                <Condition Property="IsMouseOver"
-                                    Value="True" />
-                                <Condition Property="IsPressed"
-                                    Value="False" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="BitmapEffect">
-                                <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                                </Setter.Value>
-                            </Setter>
-                        </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Role"
@@ -517,17 +468,26 @@
                                 <ContentPresenter Grid.Column="0" Margin="{TemplateBinding Padding}" x:Name="HeaderHost" RecognizesAccessKey="True" ContentSource="Header" />
                                 <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
                                 <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
-                                Placement="Right"
+                                Placement="Left"
                                 x:Name="SubMenuPopup"
-                                Focusable="false"
+                                Focusable="False"
                                 PopupAnimation="Fade"
                                 AllowsTransparency="True">
-                                        <Grid x:Name="SubMenu"
-                                            Grid.IsSharedSizeScope="True">
-                                            <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
-                                            <StackPanel IsItemsHost="True"
-                                                KeyboardNavigation.DirectionalNavigation="Cycle" />
-                                        </Grid>
+                                    <Border Margin="5,0,11,11">
+                                        <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
+                                        <StackPanel IsItemsHost="True"
+                                                    KeyboardNavigation.DirectionalNavigation="Cycle" />
+                                        <Border.Style>
+                                            <Style TargetType="{x:Type Border}">
+                                                <Setter Property="BorderBrush"
+                                                Value="#FF12367F" />
+                                                <Setter Property="BorderThickness"
+                                                Value="0,1,0,0" />
+                                                <Setter Property="Effect"
+                                                Value="{StaticResource ResourceKey=CairoMenuShadow}" />
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
                                 </Popup>
                             </Grid>
                         </Border>
@@ -535,36 +495,19 @@
                         <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
                         <ControlTemplate.Triggers>
                             <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
-                            <Trigger Property="Role"
+                        <Trigger Property="Role"
                             Value="TopLevelHeader">
-                                <Setter Property="Padding"
-                                Value="0,0,0,0" />
-                                <Setter Property="Margin"
+                            <Setter Property="Padding"
+                                Value="2,0,2,0" />
+                            <Setter Property="Margin"
                                 Value="0,-2,0,0" />
-                                <Setter Property="Placement"
+                            <Setter Property="Placement"
                                 Value="Bottom"
                                 TargetName="SubMenuPopup" />
-                                <Setter Property="Height"
+                            <Setter Property="Height"
                                 Value="22" />
-                            </Trigger>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="Role"
-                                    Value="TopLevelHeader" />
-                                    <Condition Property="IsMouseOver"
-                                    Value="True" />
-                                    <Condition Property="IsPressed"
-                                    Value="False" />
-                                </MultiTrigger.Conditions>
-                                <Setter Property="BitmapEffect">
-                                    <Setter.Value>
-                                        <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                                    </Setter.Value>
-                                </Setter>
-                            </MultiTrigger>
-                            <MultiTrigger>
+                        </Trigger>
+                        <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="Role"
                                     Value="TopLevelHeader" />
@@ -590,8 +533,44 @@
     <!-- Search Results -->
     <Style x:Key="CairoSearchResultsItemStyle"
         TargetType="ListViewItem">
-        <Setter Property="MinHeight" Value="23"/>
-        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Height" Value="60"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="ToolTip" Value="{Binding Path=PathDisplay}"/>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border
+                                     BorderBrush="Transparent"
+                                     BorderThickness="0"
+                                     Background="{TemplateBinding Background}">
+                        <MenuItem Command="cairo:CustomCommands.OpenSearchResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            CommandParameter="{Binding}" Header="{Binding}">
+                            <MenuItem.HeaderTemplate>
+                                <ItemContainerTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="-20,0,0,0">
+                                        <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
+                                        Height="32"
+                                        Width="32" Margin="0,0,10,0" />
+                                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                            <TextBlock 
+                                            FontSize="14"
+                                            FontFamily="Segoe UI" Text="{Binding Path=Name}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Width="270" />
+                                            <TextBlock 
+                                                Foreground="Gray"
+                                            FontSize="12"
+                                            FontFamily="Segoe UI" Text="{Binding Path=DateModifiedDisplay}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Width="270" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ItemContainerTemplate>
+
+                            </MenuItem.HeaderTemplate>
+                        </MenuItem>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
         <Style.Triggers>
             <Trigger Property="ItemsControl.AlternationIndex"
                 Value="0">
@@ -604,37 +583,6 @@
                     Value="#FFFFFFFF"></Setter>
             </Trigger>
         </Style.Triggers>
-    </Style>
-    <DataTemplate x:Key="CairoSearchResultsItemTemplate">
-        <MenuItem Command="cairo:CustomCommands.OpenSearchResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-            CommandParameter="{Binding}">
-            <MenuItem.Header>
-                <TextBlock Text="{Binding Path=Name}"/>
-            </MenuItem.Header>
-        </MenuItem>
-    </DataTemplate>
-    <!-- CairoConfirmationBoxStyle -->
-    <Style x:Key="CairoConfirmationBoxStyle"
-        TargetType="{x:Type StackPanel}">
-        <Setter Property="Width"
-            Value="588" />
-        <Setter Property="Height"
-            Value="239" />
-        <Setter Property="Background">
-            <Setter.Value>
-                <ImageBrush ImageSource="Resources\cairoDiag.png" />
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <!-- CairoConfirmationBoxImageStyle -->
-    <Style x:Key="CairoConfirmationBoxImageStyle"
-        TargetType="{x:Type Image}">
-        <Setter Property="Width"
-            Value="73" />
-        <Setter Property="Height"
-            Value="73" />
-        <Setter Property="Margin"
-            Value="40,40,20,0" />
     </Style>
     <!-- Style for menus that have something other than menuitems -->
     <Style x:Key="CairoMenuItemContainerStyle" TargetType="{x:Type MenuItem}">
@@ -656,28 +604,22 @@
                 <ControlTemplate TargetType="{x:Type ContextMenu}">
                             <Border>
                                 <Border.Style>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <LinearGradientBrush StartPoint="0.5,0"
-                                                            EndPoint="0.5,1">
-                                                    <GradientStop Color="#bf1a1a1a"
-                                                                Offset="0" />
-                                                    <GradientStop Color="#cF000000"
-                                                                Offset="1" />
-                                                </LinearGradientBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                        <Setter Property="BorderBrush"
-                                                    Value="#FF5b5b5b" />
-                                        <Setter Property="BorderThickness"
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
+                                <Setter Property="BorderBrush"
+                                                    Value="#AF5b5b5b" />
+                                <Setter Property="BorderThickness"
                                                     Value="1" />
-                                        <Setter Property="CornerRadius"
+                                <Setter Property="CornerRadius"
                                                     Value="5" />
-                                        <Setter Property="Padding"
-                                                    Value="0,5,0,5" />
-                                    </Style>
-                                </Border.Style>
+                                <Setter Property="Padding"
+                                                    Value="0,3,0,3" />
+                                <Setter Property="Margin"
+                                                    Value="5,0,5,11" />
+                                <Setter Property="Effect"
+                                                Value="{StaticResource ResourceKey=CairoMenuShadow}" />
+                            </Style>
+                        </Border.Style>
                                 <Grid x:Name="SubMenu"
                                             Grid.IsSharedSizeScope="True">
                                     <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
@@ -709,26 +651,29 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!-- Button Style for Quick Launch -->
-    <Style x:Key="CairoQuickLaunchButtonStyle"
+    <!-- Button Style for View All Results -->
+    <Style x:Key="CairoSearchResultsButtonStyle"
         TargetType="{x:Type Button}">
-        <Setter Property="OverridesDefaultStyle"
-            Value="true" />
-        <Setter Property="Width"
-            Value="24" />
-        <Setter Property="Height"
-            Value="26" />
-        <Setter Property="VerticalAlignment"
-            Value="Center" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Height" Value="26" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
-                        BorderThickness="1"
-                        Margin="0"
-                        Background="Transparent"
-                        BorderBrush="Transparent">
-                        <ContentPresenter Margin="2,2,2,0"
+                        BorderThickness="0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                <GradientStop Color="#FF569fd1"
+                                    Offset="0.0" />
+                                <GradientStop Color="#FF0073bc"
+                                    Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <ContentPresenter Margin="0,0,0,1"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
                     </Border>
@@ -740,22 +685,10 @@
                                 <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,0"
                                 EndPoint="0,1">
-                                        <GradientStop Color="#00FFFFFF"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#1fFFFFFF"
+                                        <GradientStop Color="#ff5fb1ea"
                                     Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter TargetName="Border"
-                                Property="BorderBrush">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <GradientStop Color="#4FFFFFFF"
-                                    Offset="1" />
-                                        <GradientStop Color="#0FFFFFFF"
-                                    Offset="0" />
+                                        <GradientStop Color="#ff0185d7"
+                                    Offset="1.0" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
                             </Setter>
@@ -765,25 +698,65 @@
                             <Setter TargetName="Border"
                                 Property="Background">
                                 <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <GradientStop Color="#BA0054C9"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#4F005CE4"
+                                    <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                        <GradientStop Color="#ff4b8bb8"
                                     Offset="0.0" />
+                                        <GradientStop Color="#ff0164a2"
+                                    Offset="1.0" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
                             </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- Button Style for Quick Launch -->
+    <Style x:Key="CairoQuickLaunchButtonStyle"
+        TargetType="{x:Type Button}">
+        <Setter Property="OverridesDefaultStyle"
+            Value="true" />
+        <Setter Property="Width"
+            Value="26" />
+        <Setter Property="Height"
+            Value="29" />
+        <Setter Property="VerticalAlignment"
+            Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border"
+                        BorderThickness="1"
+                        CornerRadius="1"
+                        Margin="0,0,0,0"
+                        Background="Transparent"
+                        BorderBrush="Transparent">
+                        <ContentPresenter Margin="2,1,2,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                            Value="true">
                             <Setter TargetName="Border"
-                                Property="BorderBrush">
+                                    Property="Effect">
                                 <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <GradientStop Color="#DF00aeff"
-                                    Offset="1" />
-                                        <GradientStop Color="#8F005A78"
-                                    Offset="0" />
-                                    </LinearGradientBrush>
+                                    <DropShadowEffect Color="White"
+                                            ShadowDepth="0"
+                                            Opacity="0.5" BlurRadius="7" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                    Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="White"
+                                            ShadowDepth="0"
+                                            Opacity="1" BlurRadius="7" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
@@ -793,136 +766,6 @@
         </Setter>
     </Style>
     <!-- Button Style for Taskbar -->
-    <Style x:Key="CairoTaskbarButtonActiveStyle"
-        TargetType="{x:Type Button}">
-        <Setter Property="OverridesDefaultStyle"
-            Value="true" />
-        <Setter Property="FontFamily"
-            Value="Segoe UI" />
-        <Setter Property="FontSize"
-            Value="12" />
-        <Setter Property="Foreground"
-            Value="White" />
-        <Setter Property="Width"
-            Value="140" />
-        <Setter Property="Height"
-            Value="28" />
-        <Setter Property="VerticalAlignment"
-            Value="Center" />
-        <Setter Property="Template">
-            <Setter.Value>
-                
-                <!-- this is the style that loads on default buttons -->
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Border"
-                        BorderThickness="1"
-                        CornerRadius="1"
-                        Margin="0,0,0,0">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                <!-- <GradientStop Color="#3AFFFFFF"
-                                    Offset="1.0" />
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="0.65" />
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="0.0" />  -->
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="1.0" />
-                                <GradientStop Color="#1fFFFFFF"
-                                    Offset="0.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <Border.BorderBrush>
-                            <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                <GradientStop Color="#4FFFFFFF"
-                                    Offset="1" />
-                                <GradientStop Color="#0FFFFFFF"
-                                    Offset="0" />
-                            </LinearGradientBrush>
-                        </Border.BorderBrush>
-                        <ContentPresenter Margin="5,0,5,0"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsEnabled"
-                            Value="false">
-                            <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                        <GradientStop Color="#00FFFFFF"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#00FFFFFF"
-                                    Offset="0.4" />
-                                        <GradientStop Color="#3fFFFFFF"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver"
-                            Value="true">
-                            <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <!-- <GradientStop Color="#EF005CE4"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#7F0054C9"
-                                    Offset="0.4" />
-                                        <GradientStop Color="#3F1B4266"
-                                    Offset="0.0" /> 
-                                        <GradientStop Color="#DF005CE4" Offset="1.0" />
-                                        <GradientStop Color="#6F0054C9" Offset="0.3" />
-                                        <GradientStop Color="#4FFFFFFF" Offset="0.0" /> -->
-                                        
-                                        <GradientStop Color="#DF005FC0"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#8F005A78"
-                                    Offset="0.0" />
-
-                                       
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter TargetName="Border"
-                                Property="BorderBrush">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <GradientStop Color="#DF00aeff"
-                                    Offset="1" />
-                                        <GradientStop Color="#8F005A78"
-                                    Offset="0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                        <Trigger Property="IsPressed"
-                            Value="true">
-                            <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                       <GradientStop Color="#BA0054C9"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#4F005CE4"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
     <Style x:Key="CairoTaskbarButtonInactiveStyle"
         TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle"
@@ -936,7 +779,107 @@
         <Setter Property="Width"
             Value="140" />
         <Setter Property="Height"
-            Value="28" />
+            Value="29" />
+        <Setter Property="VerticalAlignment"
+            Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <!-- this is the style that loads on default buttons -->
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border"
+                        BorderThickness="1"
+                        CornerRadius="1,1,0,0"
+                        Margin="0,0,0,0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,1"
+                                EndPoint="0,0">
+                                <GradientStop Color="#3AFFFFFF"
+                                    Offset="1.0" />
+                                <GradientStop Color="#00FFFFFF"
+                                    Offset="0.65" />
+                                <GradientStop Color="#00FFFFFF"
+                                    Offset="0.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.BorderBrush>
+                            <LinearGradientBrush StartPoint="0,1"
+                                EndPoint="0,0">
+                                <GradientStop Color="#4FFFFFFF"
+                                    Offset="1" />
+                                <GradientStop Color="#2FFFFFFF"
+                                    Offset="0" />
+                            </LinearGradientBrush>
+                        </Border.BorderBrush>
+                        <ContentPresenter Margin="5,1,5,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                        <GradientStop Color="#EF0057a8"
+                                    Offset="1.0" />
+                                        <GradientStop Color="#4F0054C9"
+                                    Offset="0.35" />
+                                        <GradientStop Color="#55FFFFFF"
+                                    Offset="0.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Border"
+                                Property="BorderBrush">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,1"
+                                EndPoint="0,0">
+                                        <GradientStop Color="#8F83b8e9"
+                                    Offset="1" />
+                                        <GradientStop Color="#DF0f82c2"
+                                    Offset="0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                        <GradientStop Color="#FF0057a8"
+                                    Offset="1.0" />
+                                        <GradientStop Color="#6F0054C9"
+                                    Offset="0.35" />
+                                        <GradientStop Color="#55FFFFFF"
+                                    Offset="0.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CairoTaskbarButtonActiveStyle"
+        TargetType="{x:Type Button}">
+        <Setter Property="OverridesDefaultStyle"
+            Value="true" />
+        <Setter Property="FontFamily"
+            Value="Segoe UI" />
+        <Setter Property="FontSize"
+            Value="12" />
+        <Setter Property="Foreground"
+            Value="White" />
+        <Setter Property="Width"
+            Value="140" />
+        <Setter Property="Height"
+            Value="29" />
         <Setter Property="VerticalAlignment"
             Value="Center" />
         <Setter Property="Template">
@@ -944,52 +887,33 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
                         BorderThickness="1"
-                        CornerRadius="1"
+                        CornerRadius="1,1,0,0"
                         Margin="0,0,0,0">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,1"
                                 EndPoint="0,0">
-                                <!-- <GradientStop Color="#AFFFFFFF"
+                                <GradientStop Color="#55FFFFFF"
                                     Offset="1.0" />
-                                <GradientStop Color="#5FFFFFFF"
-                                    Offset="0.5" />
-                                <GradientStop Color="#6F808080"
-                                    Offset="0.0" /> -->
-                                <GradientStop Color="#6AFFFFFF"
-                                    Offset="1.0" />
-                                <GradientStop Color="#5f808080"
+                                <GradientStop Color="#20FFFFFF"
+                                    Offset="0.65" />
+                                <GradientStop Color="#40ffffff"
                                     Offset="0.0" />
                             </LinearGradientBrush>
                         </Border.Background>
                         <Border.BorderBrush>
                             <LinearGradientBrush StartPoint="0,1"
                                 EndPoint="0,0">
-                                <GradientStop Color="#BFFFFFFF"
+                                <GradientStop Color="#8FFFFFFF"
                                     Offset="1" />
-                                <GradientStop Color="#5F808080"
+                                <GradientStop Color="#5FFFFFFF"
                                     Offset="0" />
                             </LinearGradientBrush>
                         </Border.BorderBrush>
-                        <ContentPresenter Margin="5,0,5,0"
+                        <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsEnabled"
-                            Value="false">
-                            <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                        EndPoint="0,1">
-                                        <GradientStop Color="#6AFFFFFF"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#5f808080"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
                         <Trigger Property="IsMouseOver"
                             Value="true">
                             <Setter TargetName="Border"
@@ -997,9 +921,11 @@
                                 <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,1"
                                         EndPoint="0,0">
-                                        <GradientStop Color="#8AFFFFFF"
+                                        <GradientStop Color="#65FFFFFF"
                                     Offset="1.0" />
-                                        <GradientStop Color="#8f808080"
+                                        <GradientStop Color="#30FFFFFF"
+                                    Offset="0.65" />
+                                        <GradientStop Color="#43FFFFFF"
                                     Offset="0.0" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
@@ -1012,16 +938,12 @@
                                 <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,1"
                                         EndPoint="0,0">
-                                        <GradientStop Color="#6AFFFFFF"
+                                        <GradientStop Color="#75FFFFFF"
                                     Offset="1.0" />
-                                        <GradientStop Color="#4f808080"
+                                        <GradientStop Color="#40FFFFFF"
+                                    Offset="0.65" />
+                                        <GradientStop Color="#53FFFFFF"
                                     Offset="0.0" />
-                                        <!-- I enjoyed this style too much to
-                                        delete it completely.
-                                        <GradientStop Color="#6AFFFFFF"
-                                    Offset="0.7" />
-                                        <GradientStop Color="#5f808080"
-                                    Offset="0.0" /> -->
                                     </LinearGradientBrush>
                                 </Setter.Value>
                             </Setter>
@@ -1044,7 +966,7 @@
         <Setter Property="Width"
             Value="140" />
         <Setter Property="Height"
-            Value="28" />
+            Value="29" />
         <Setter Property="VerticalAlignment"
             Value="Center" />
         <Setter Property="Template">
@@ -1054,51 +976,40 @@
                 		<Storyboard x:Key="FlashPulseCycle" AutoReverse="True" RepeatBehavior="Forever">
                 			<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" AccelerationRatio="0.2" DecelerationRatio="0.2">
                 				<SplineColorKeyFrame KeyTime="00:00:00" Value="#5FFF5400"/>
-                				<SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#8F000000"/>
+                				<SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#00000000"/>
                 			</ColorAnimationUsingKeyFrames>
                 			<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[0].(GradientStop.Color)" AccelerationRatio="0.2" DecelerationRatio="0.2">
                 				<SplineColorKeyFrame KeyTime="00:00:00" Value="#AFF6BA31"/>
-                				<SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#DF000000"/>
+                				<SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#00000000"/>
                 			</ColorAnimationUsingKeyFrames>
-                			<!-- <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[2].(GradientStop.Color)" AccelerationRatio="0.2" DecelerationRatio="0.2">
-                				<SplineColorKeyFrame KeyTime="00:00:00" Value="#4FFFFFFF"/>
-                				<SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#AF1A1A1A"/>
-                			</ColorAnimationUsingKeyFrames> -->
+                			<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[2].(GradientStop.Color)" AccelerationRatio="0.2" DecelerationRatio="0.2">
+                				<SplineColorKeyFrame KeyTime="00:00:00" Value="#55FFFFFF"/>
+                				<SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#3affffff"/>
+                			</ColorAnimationUsingKeyFrames>
                 		</Storyboard>
                 	</ControlTemplate.Resources>
                     <Border x:Name="Border"
                         BorderThickness="1"
-                        CornerRadius="1"
+                        CornerRadius="1,1,0,0"
                         Margin="0,0,0,0">
                         <Border.Background>
-                            <LinearGradientBrush StartPoint="0,1"
-                                        EndPoint="0,0">
-                                <GradientStop Color="#CFDBA715"
-                                    Offset="1.0" />
-                                <GradientStop Color="#8FDB570B"
-                                    Offset="0.0" />
-                                <!-- <GradientStop Color="#CFF6BA31"
-                                    Offset="1.0" />
-                                <GradientStop Color="#7fff5400"
-                                    Offset="0.4" />
-                                <GradientStop Color="#3fff5400"
-                                    Offset="0.0" /> 
-
+                            <LinearGradientBrush StartPoint="0,0"
+                                        EndPoint="0,1">
                                 <GradientStop Color="#AFF6BA31" Offset="1.0" />
-                                <GradientStop Color="#5fff5400" Offset="0.3" />
-                                <GradientStop Color="#4FFFFFFF" Offset="0.0" /> -->
+                                <GradientStop Color="#5fff5400" Offset="0.35" />
+                                <GradientStop Color="#55FFFFFF" Offset="0.0" />
                             </LinearGradientBrush>
                         </Border.Background>
                         <Border.BorderBrush>
-                            <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                <GradientStop Color="#FFFFDC2D"
-                                    Offset="1.0" />
-                                <GradientStop Color="#8FDB570B"
+                            <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                <GradientStop Color="#8Fcb7900"
                                     Offset="0.0" />
+                                <GradientStop Color="#FFcb7900"
+                                    Offset="1.0" />
                             </LinearGradientBrush>
                         </Border.BorderBrush>
-                        <ContentPresenter Margin="5,0,5,0"
+                        <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" />
                     </Border>
@@ -1134,16 +1045,12 @@
                 			<Setter TargetName="Border"
                 				Property="Background">
                 				<Setter.Value>
-                					<LinearGradientBrush StartPoint="0,1"
-                						EndPoint="0,0">
-                                        <GradientStop Color="#EFDBA715"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#AFDB570B"
-                                    Offset="0.0" />
-                                        <!-- <GradientStop Color="#DFF6BA31" Offset="1.0" />
-                						<GradientStop Color="#7fff5400" Offset="0.3" />
-                						<GradientStop Color="#5FFFFFFF" Offset="0.0" /> -->
-                					</LinearGradientBrush>
+                                    <LinearGradientBrush StartPoint="0,0"
+                						EndPoint="0,1">
+                                        <GradientStop Color="#BFF6BA31" Offset="1.0" />
+                						<GradientStop Color="#6fff5400" Offset="0.3" />
+                                        <GradientStop Color="#5FFFFFFF" Offset="0.0" />
+                                    </LinearGradientBrush>
                 				</Setter.Value>
                 			</Setter>
                 		</Trigger>
@@ -1152,13 +1059,12 @@
                 			<Setter TargetName="Border"
                 				Property="Background">
                 				<Setter.Value>
-                					<LinearGradientBrush StartPoint="0,1"
-                						EndPoint="0,0">
-                                        <GradientStop Color="#AFDBA715"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#6FDB570B"
-                                    Offset="0.0" />
-                					</LinearGradientBrush>
+                                    <LinearGradientBrush StartPoint="0,0"
+                						EndPoint="0,1">
+                                        <GradientStop Color="#CFF6BA31" Offset="1.0" />
+                                        <GradientStop Color="#7fff5400" Offset="0.3" />
+                                        <GradientStop Color="#65FFFFFF" Offset="0.0" />
+                                    </LinearGradientBrush>
                 				</Setter.Value>
                 			</Setter>
                 		</Trigger>
@@ -1169,18 +1075,13 @@
     </Style>
     <!-- Style for task list buttons -->
     <Style x:Key="CairoTaskListPopupStyle" TargetType="{x:Type Border}">
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Color="#bf1a1a1a" Offset="0" />
-                    <GradientStop Color="#cF000000" Offset="1" />
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="BorderBrush" Value="#FF5b5b5b"/>
-        <Setter Property="BorderThickness" Value="1,1,1,1"/>
-        <Setter Property="CornerRadius" Value="5,5,5,5"/>
-        <Setter Property="Padding" Value="0,5,0,5"/>
+        <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
+        <Setter Property="BorderBrush" Value="#AF5b5b5b"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Padding" Value="0,3,0,3"/>
+        <Setter Property="Margin" Value="5,0,5,28" />
+        <Setter Property="Effect" Value="{StaticResource ResourceKey=CairoMenuShadow}" />
     </Style>
     <Style x:Key="CairoTaskListButtonStyle"
         TargetType="{x:Type Button}">
@@ -1193,9 +1094,9 @@
         <Setter Property="Foreground"
             Value="White" />
         <Setter Property="Width"
-            Value="176" />
+            Value="350" />
         <Setter Property="Height"
-            Value="28" />
+            Value="24" />
         <Setter Property="VerticalAlignment"
             Value="Center" />
         <Setter Property="Template">
@@ -1227,7 +1128,7 @@
     </Style>
     <!-- Style for list button on taskbar -->
     <Style x:Key="CairoTaskbarButtonList"
-        TargetType="{x:Type Button}">
+        TargetType="{x:Type ToggleButton}">
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
         <Setter Property="FontFamily"
@@ -1239,27 +1140,19 @@
         <Setter Property="Width"
             Value="24" />
         <Setter Property="Height"
-            Value="28" />
+            Value="29" />
         <Setter Property="VerticalAlignment"
             Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
-
-                <!-- this is the style that loads on default buttons -->
-                <ControlTemplate TargetType="{x:Type Button}">
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border x:Name="Border"
                         BorderThickness="1"
-                        CornerRadius="0,6,0,0"
+                        CornerRadius="0,8,0,0"
                         Margin="0,0,0,0">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0"
                                 EndPoint="0,1">
-                                <!-- <GradientStop Color="#3AFFFFFF"
-                                    Offset="1.0" />
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="0.65" />
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="0.0" />  -->
                                 <GradientStop Color="#00FFFFFF"
                                     Offset="1.0" />
                                 <GradientStop Color="#00FFFFFF"
@@ -1275,26 +1168,11 @@
                                     Offset="0" />
                             </LinearGradientBrush>
                         </Border.BorderBrush>
-                        <ContentPresenter Margin="5,0,5,0"
+                        <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsEnabled"
-                            Value="false">
-                            <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                        <GradientStop Color="#00FFFFFF"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#00FFFFFF"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
                         <Trigger Property="IsMouseOver"
                             Value="true">
                             <Setter TargetName="Border"
@@ -1302,36 +1180,23 @@
                                 <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,0"
                                 EndPoint="0,1">
-                                        <!-- <GradientStop Color="#EF005CE4"
+                                        <GradientStop Color="#EF0057a8"
                                     Offset="1.0" />
-                                        <GradientStop Color="#7F0054C9"
-                                    Offset="0.4" />
-                                        <GradientStop Color="#3F1B4266"
-                                    Offset="0.0" /> 
-                                        <GradientStop Color="#DF005CE4" Offset="1.0" />
-                                        <GradientStop Color="#6F0054C9" Offset="0.3" />
-                                        <GradientStop Color="#4FFFFFFF" Offset="0.0" /> -->
-
-                                        <GradientStop Color="#00FFFFFF"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#1fFFFFFF"
+                                        <GradientStop Color="#4F0054C9"
+                                    Offset="0.35" />
+                                        <GradientStop Color="#55FFFFFF"
                                     Offset="0.0" />
-
                                     </LinearGradientBrush>
-                                    
-                                    
                                 </Setter.Value>
-                                
                             </Setter>
                             <Setter TargetName="Border"
                                 Property="BorderBrush">
                                 <Setter.Value>
-
                                     <LinearGradientBrush StartPoint="0,1"
                                 EndPoint="0,0">
-                                        <GradientStop Color="#4FFFFFFF"
+                                        <GradientStop Color="#8F83b8e9"
                                     Offset="1" />
-                                        <GradientStop Color="#0FFFFFFF"
+                                        <GradientStop Color="#DF0f82c2"
                                     Offset="0" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
@@ -1342,11 +1207,30 @@
                             <Setter TargetName="Border"
                                 Property="Background">
                                 <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                        <GradientStop Color="#FF0057a8"
+                                    Offset="1.0" />
+                                        <GradientStop Color="#6F0054C9"
+                                    Offset="0.35" />
+                                        <GradientStop Color="#55FFFFFF"
+                                    Offset="0.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsChecked"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,1"
                                 EndPoint="0,0">
-                                        <GradientStop Color="#BA0054C9"
+                                        <GradientStop Color="#55FFFFFF"
                                     Offset="1.0" />
-                                        <GradientStop Color="#4F005CE4"
+                                        <GradientStop Color="#20FFFFFF"
+                                    Offset="0.65" />
+                                        <GradientStop Color="#40ffffff"
                                     Offset="0.0" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
@@ -1354,12 +1238,11 @@
                             <Setter TargetName="Border"
                                 Property="BorderBrush">
                                 <Setter.Value>
-
                                     <LinearGradientBrush StartPoint="0,1"
                                 EndPoint="0,0">
-                                        <GradientStop Color="#DF00aeff"
+                                        <GradientStop Color="#8FFFFFFF"
                                     Offset="1" />
-                                        <GradientStop Color="#8F005A78"
+                                        <GradientStop Color="#5FFFFFFF"
                                     Offset="0" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
@@ -1390,14 +1273,14 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
                         BorderThickness="1"
-                        CornerRadius="3"
-                        BorderBrush="#FF999999">
+                        CornerRadius="5"
+                        BorderBrush="#402e2e2e">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0"
                                 EndPoint="0,1">
                                 <GradientStop Color="#FFFFFFFF"
                                     Offset="0" />
-                                <GradientStop Color="#FFD9D9D9"
+                                <GradientStop Color="#FFDFDFDF"
                                     Offset="1" />
                             </LinearGradientBrush>
                         </Border.Background>
@@ -1428,13 +1311,14 @@
                                 <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,0"
                                         EndPoint="0,1">
-                                        <GradientStop Color="#FFE9E9E9"
+                                        <GradientStop Color="#FFDCE1E6"
                                             Offset="0" />
-                                        <GradientStop Color="#FFB1B1B1"
+                                        <GradientStop Color="#FFC0C5C9"
                                             Offset="1" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
                             </Setter>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#4028292a" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
@@ -1443,13 +1327,14 @@
                                 <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,0"
                                         EndPoint="0,1">
-                                        <GradientStop Color="#FFD1D1D1"
+                                        <GradientStop Color="#FFc6cbcf"
                                             Offset="0" />
-                                        <GradientStop Color="#FF999999"
+                                        <GradientStop Color="#FFadb2b5"
                                             Offset="1" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
                             </Setter>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#40242525" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1490,7 +1375,7 @@
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="BorderBrush"
-                                                Value="#6F707070" />
+                                                Value="#FF12367F" />
                                                 <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
                                             </Style>
@@ -1498,19 +1383,9 @@
                                         <Border>
                                             <Border.Style>
                                                 <Style TargetType="{x:Type Border}">
-                                                    <Setter Property="Background">
-                                                        <Setter.Value>
-                                                            <LinearGradientBrush StartPoint="0.5,0"
-                                                            EndPoint="0.5,1">
-                                                                <GradientStop Color="#bf1a1a1a"
-                                                                Offset="0" />
-                                                                <GradientStop Color="#cF000000"
-                                                                Offset="1" />
-                                                            </LinearGradientBrush>
-                                                        </Setter.Value>
-                                                    </Setter>
+                                                    <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
                                                     <Setter Property="BorderBrush"
-                                                    Value="#FF5b5b5b" />
+                                                    Value="#AF5b5b5b" />
                                                     <Setter Property="BorderThickness"
                                                     Value="0,0,0,1" />
                                                     <Setter Property="Padding"
@@ -1525,7 +1400,7 @@
                                             </Grid>
                                         </Border>
                                     </Border>
-                                    <Image Source="Resources\menubarShadow.png" Stretch="Fill" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
+                                    <Image Source="{StaticResource MenubarShadow}" Stretch="Fill" Width="{StaticResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
                                 </StackPanel>
                             </Popup>
                         </Grid>
@@ -1548,31 +1423,15 @@
                                 Value="Segoe UI" />
                             <Setter Property="FontSize"
                                 Value="14" />
-                            <Setter Property="BitmapEffect">
+                            <Setter Property="Effect">
                                 <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="2"
-                                        Opacity="1" />
+                                    <DropShadowEffect Color="Black"
+                                                        ShadowDepth="1"
+                                                                  Direction="90"
+                                                        Opacity="0.6" BlurRadius="0" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="Role"
-                                    Value="TopLevelHeader" />
-                                <Condition Property="IsMouseOver"
-                                    Value="True" />
-                                <Condition Property="IsPressed"
-                                    Value="False" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="BitmapEffect">
-                                <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity=".5" />
-                                </Setter.Value>
-                            </Setter>
-                        </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Role"
@@ -1622,8 +1481,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!-- Button Style for Stacks -->
-    <Style x:Key="CairoStackButtonStyle"
+    <!-- Button Style for icons -->
+    <Style x:Key="CairoFileButtonStyle"
         TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
@@ -1640,33 +1499,42 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Border"
-                        BorderThickness="0"
-                        Background="Transparent">
-                        <ContentPresenter Margin="5,18,5,15"
+                    <ContentPresenter Margin="5,0,5,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
-                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- Button Style for Desktop icons -->
+    <Style x:Key="CairoDesktopButtonStyle"
+        TargetType="{x:Type Button}" BasedOn="{StaticResource CairoFileButtonStyle}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <ContentPresenter Margin="5,8,5,5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver"
                             Value="true">
-                            <Setter TargetName="Border"
-                                Property="BitmapEffect">
+                            <Setter Property="Button.Effect">
                                 <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="5"
-                                        Opacity=".5" />
+                                    <DropShadowEffect Color="Black"
+                                                        ShadowDepth="0"
+                                                        Direction="0"
+                                                        Opacity="0.5" BlurRadius="6" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
-                            <Setter TargetName="Border"
-                                Property="BitmapEffect">
+                            <Setter Property="Button.Effect">
                                 <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="7"
-                                        Opacity="1" />
+                                    <DropShadowEffect Color="Black"
+                                                        ShadowDepth="0"
+                                                        Direction="0"
+                                                        Opacity="1" BlurRadius="7" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
@@ -1675,97 +1543,135 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!-- Button Style for Desktop -->
-    <Style x:Key="CairoDesktopButtonStyle"
-        TargetType="{x:Type Button}">
-        <Setter Property="OverridesDefaultStyle"
-            Value="true" />
-        <Setter Property="FontFamily"
-            Value="Segoe UI" />
-        <Setter Property="FontSize"
-            Value="12" />
-        <Setter Property="Height"
-            Value="85" />
-        <Setter Property="MinWidth"
-            Value="100" />
-        <Setter Property="VerticalAlignment"
-            Value="Center" />
-        <Setter Property="Template">
+    <!-- Files -->
+    <Style x:Key="DesktopFolderViewStyle" TargetType="ItemsControl">
+        <Setter Property="ItemsPanel">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Border"
-                        BorderThickness="0"
-                        Background="Transparent">
-                        <ContentPresenter Margin="5,18,5,15"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver"
-                            Value="true">
-                            <Setter TargetName="Border"
-                                Property="BitmapEffect">
-                                <Setter.Value>
-                                    <OuterGlowBitmapEffect GlowColor="Black"
-                                        GlowSize="5"
-                                        Opacity=".5" />
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Button MouseDoubleClick="btnFile_Click"
+                                CommandParameter="{Binding Path=FullName}"
+                                Style="{StaticResource CairoDesktopButtonStyle}">
+                        <DockPanel>
+                            <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="32" Height="32" DockPanel.Dock="Top" RenderOptions.BitmapScalingMode="LowQuality" />
+                            <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
+                            <Border DockPanel.Dock="Bottom" Name="bdrFilename">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black"
+                                                            ShadowDepth="2"
+                                                                  Direction="270"
+                                                            BlurRadius="4"
+                                                            Opacity="1" />
+                                </Border.Effect>
+                                <TextBlock
+                                        Text="{Binding Path=FriendlyName}"
+                                        TextAlignment="Center"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap"
+                                        Height="35"
+                                        Width="80"
+                                        Background="Transparent"
+                                        Margin="5,0,5,3"
+                                        Foreground="White">
+                                    <TextBlock.Effect>
+                                        <DropShadowEffect Color="Black"
+                                                        ShadowDepth="1"
+                                                                  Direction="90"
+                                                        Opacity="0.3" BlurRadius="2" />
+                                    </TextBlock.Effect>
+                                    <TextBlock.ToolTip>
+                                        <ToolTip Content="{Binding Path=Name}" />
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </Border>
+                        </DockPanel>
+                        <Button.ContextMenu>
+                            <ContextMenu Loaded="ctxFile_Loaded"
+                                        Tag="{Binding Path=FullName}"
+                                        Style="{StaticResource CairoContextMenuStyle}">
+                                <ContextMenu.Resources>
+                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
+                                        <EventSetter Event="Click" Handler="miVerb_Click" />
+                                    </Style>
+                                    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </Style>
+                                </ContextMenu.Resources>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="FolderViewStyle" TargetType="ItemsControl">
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Horizontal"
+                                MinWidth="{DynamicResource {x:Static SystemParameters.FullPrimaryScreenWidthKey}}"
+                                Background="Transparent" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Button Click="btnFile_Click"
+                                CommandParameter="{Binding Path=FullName}"
+                                Style="{StaticResource CairoFileButtonStyle}">
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
+                            <Border DockPanel.Dock="Bottom" Name="bdrFilename">
+                                <TextBlock
+                                        Text="{Binding Path=FriendlyName}"
+                                        TextAlignment="Center"
+                                        TextTrimming="CharacterEllipsis"
+                                        TextWrapping="Wrap"
+                                        Height="35"
+                                        Width="80"
+                                        Background="Transparent"
+                                        Margin="5,0,5,3"
+                                        Foreground="White">
+                                    <TextBlock.ToolTip>
+                                        <ToolTip Content="{Binding Path=Name}" />
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </Border>
+                            <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="32" Height="32" RenderOptions.BitmapScalingMode="LowQuality" />
+                        </DockPanel>
+                        <Button.ContextMenu>
+                            <ContextMenu Loaded="ctxFile_Loaded"
+                                        Tag="{Binding Path=FullName}"
+                                        Style="{StaticResource CairoContextMenuStyle}">
+                                <ContextMenu.Resources>
+                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
+                                        <EventSetter Event="Click" Handler="miVerb_Click" />
+                                    </Style>
+                                    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </Style>
+                                </ContextMenu.Resources>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                        <Button.ToolTip>
+                            <ToolTip Content="{Binding Path=Name}" />
+                        </Button.ToolTip>
+                    </Button>
+                </DataTemplate>
             </Setter.Value>
         </Setter>
     </Style>
     <!-- Scrollbars -->
-    <Style x:Key="ScrollBarLineButton"
-        TargetType="{x:Type RepeatButton}">
-        <Setter Property="SnapsToDevicePixels"
-            Value="True" />
-        <Setter Property="OverridesDefaultStyle"
-            Value="true" />
-        <Setter Property="Focusable"
-            Value="false" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type RepeatButton}">
-                    <Border Name="Border"
-                        Margin="1"
-                        CornerRadius="2"
-                        Background="#22FFFFFF"
-                        BorderBrush="#22000000"
-                        BorderThickness="1">
-                        <Path HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Fill="#FF444444"
-                            Data="{Binding Path=Content,RelativeSource={RelativeSource TemplatedParent}}" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver"
-                            Value="true">
-                            <Setter TargetName="Border"
-                                Property="Background"
-                                Value="#33FFFFFF" />
-                        </Trigger>
-                        <Trigger Property="IsPressed"
-                            Value="true">
-                            <Setter TargetName="Border"
-                                Property="Background"
-                                Value="#44FFFFFF" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled"
-                            Value="false">
-                            <Setter Property="Foreground"
-                                Value="DarkGray" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
     <Style x:Key="ScrollBarPageButton"
         TargetType="{x:Type RepeatButton}">
-        <Setter Property="SnapsToDevicePixels"
+        <Setter Property="UseLayoutRounding"
             Value="True" />
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
@@ -1783,7 +1689,7 @@
     </Style>
     <Style x:Key="ScrollBarThumb"
         TargetType="{x:Type Thumb}">
-        <Setter Property="SnapsToDevicePixels"
+        <Setter Property="UseLayoutRounding"
             Value="True" />
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
@@ -1794,32 +1700,31 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Border CornerRadius="2"
-                        Background="#22FFFFFF"
-                        BorderBrush="#22000000"
-                        BorderThickness="1" />
+                    <Border CornerRadius="5"
+                        BorderThickness="1">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#33FFFFFF" />
+                                <Setter Property="BorderBrush" Value="#55000000" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Trigger.Setters>
+                                            <Setter Property="Background" Value="#55FFFFFF" />
+                                            <Setter Property="BorderBrush" Value="#44000000" />
+                                        </Trigger.Setters>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
     <ControlTemplate x:Key="VerticalScrollBar"
         TargetType="{x:Type ScrollBar}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition MaxHeight="18" />
-                <RowDefinition Height="0.00001*" />
-                <RowDefinition MaxHeight="18" />
-            </Grid.RowDefinitions>
-            <Border Grid.RowSpan="3"
-                CornerRadius="2,0,0,2"
-                Background="#FFBFBFBF" />
-            <RepeatButton Grid.Row="0"
-                Style="{StaticResource ScrollBarLineButton}"
-                Height="18"
-                Command="ScrollBar.LineUpCommand"
-                Content="M 0 4 L 8 4 L 4 0 Z" />
+        <Border Background="#22000000">
             <Track Name="PART_Track"
-                Grid.Row="1"
                 IsDirectionReversed="true">
                 <Track.DecreaseRepeatButton>
                     <RepeatButton Style="{StaticResource ScrollBarPageButton}"
@@ -1827,40 +1732,19 @@
                 </Track.DecreaseRepeatButton>
                 <Track.Thumb>
                     <Thumb Style="{StaticResource ScrollBarThumb}"
-                        Margin="1,0,1,0"
-                        Background="#22FFFFFF"
-                        BorderBrush="#22000000" />
+                        Margin="3" />
                 </Track.Thumb>
                 <Track.IncreaseRepeatButton>
                     <RepeatButton Style="{StaticResource ScrollBarPageButton}"
                         Command="ScrollBar.PageDownCommand" />
                 </Track.IncreaseRepeatButton>
             </Track>
-            <RepeatButton Grid.Row="3"
-                Style="{StaticResource ScrollBarLineButton}"
-                Height="18"
-                Command="ScrollBar.LineDownCommand"
-                Content="M 0 0 L 4 4 L 8 0 Z" />
-        </Grid>
+        </Border>
     </ControlTemplate>
     <ControlTemplate x:Key="HorizontalScrollBar"
         TargetType="{x:Type ScrollBar}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition MaxWidth="18" />
-                <ColumnDefinition Width="0.00001*" />
-                <ColumnDefinition MaxWidth="18" />
-            </Grid.ColumnDefinitions>
-            <Border Grid.ColumnSpan="3"
-                CornerRadius="2,2,0,0"
-                Background="#FFBFBFBF" />
-            <RepeatButton Grid.Column="0"
-                Style="{StaticResource ScrollBarLineButton}"
-                Width="18"
-                Command="ScrollBar.LineLeftCommand"
-                Content="M 4 0 L 4 8 L 0 4 Z" />
+        <Border Background="#22000000">
             <Track Name="PART_Track"
-                Grid.Column="1"
                 IsDirectionReversed="False">
                 <Track.DecreaseRepeatButton>
                     <RepeatButton Style="{StaticResource ScrollBarPageButton}"
@@ -1868,28 +1752,21 @@
                 </Track.DecreaseRepeatButton>
                 <Track.Thumb>
                     <Thumb Style="{StaticResource ScrollBarThumb}"
-                        Margin="0,1,0,1"
-                        Background="#22FFFFFF"
-                        BorderBrush="#22000000" />
+                        Margin="3" />
                 </Track.Thumb>
                 <Track.IncreaseRepeatButton>
                     <RepeatButton Style="{StaticResource ScrollBarPageButton}"
                         Command="ScrollBar.PageRightCommand" />
                 </Track.IncreaseRepeatButton>
             </Track>
-            <RepeatButton Grid.Column="3"
-                Style="{StaticResource ScrollBarLineButton}"
-                Width="18"
-                Command="ScrollBar.LineRightCommand"
-                Content="M 0 0 L 4 4 L 0 8 Z" />
-        </Grid>
+        </Border>
     </ControlTemplate>
     <Style x:Key="{x:Type ScrollBar}"
         TargetType="{x:Type ScrollBar}">
-        <Setter Property="SnapsToDevicePixels"
+        <Setter Property="UseLayoutRounding"
             Value="True" />
         <Setter Property="OverridesDefaultStyle"
-            Value="true" />
+            Value="True" />
         <Style.Triggers>
             <Trigger Property="Orientation"
                 Value="Horizontal">
@@ -1969,6 +1846,672 @@
                             <Setter TargetName="Border"
                                 Property="Background"
                                 Value="#2f000000" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="StackTopButton"
+        TargetType="{x:Type Button}" BasedOn="{StaticResource StackScrollButton}">
+        <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+
+    <!-- Programs menu styles -->
+    <Style x:Key="ProgramsMenuButton" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="#FF9a9a9a" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Width" Value="140" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border" BorderThickness="0">
+                        <ContentPresenter Margin="10,0,0,2"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="Border" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#30FFFFFF" Offset="0.0" />
+                                        <GradientStop Color="#01FFFFFF" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="{StaticResource ResourceKey=CairoMenuItemHoverGradient}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ProgramsTabControl" TargetType="{x:Type TabControl}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0,3" />
+        <Setter Property="Margin" Value="0,-3" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <Grid KeyboardNavigation.TabNavigation="Local">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <DockPanel Grid.Column="1">
+                            <TabPanel x:Name="HeaderPanel"
+                            DockPanel.Dock="Top"
+                            Panel.ZIndex="1"
+                            Margin="0,3"
+                            IsItemsHost="True"
+                            Background="Transparent" />
+                            <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom" Margin="0,12,0,3" VerticalAlignment="Bottom">
+                                <Button Style="{StaticResource ProgramsMenuButton}" Name="btnAppGrabber" Click="btnAppGrabber_Click">App Grabber</Button>
+                                <Button Style="{StaticResource ProgramsMenuButton}" Name="btnUninstallApps" Click="btnUninstallApps_Click">Uninstall a Program</Button>
+                            </StackPanel>
+                        </DockPanel>
+                        <Border x:Name="Border"
+                      Grid.Column="0"
+                      BorderThickness="0,0,1,0"
+                                BorderBrush="#AF5b5b5b"
+                                Background="Transparent">
+                            <ContentPresenter
+                                  Margin="0,3"
+                                  ContentSource="SelectedContent" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ProgramsTabItem" TargetType="{x:Type TabItem}">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Width" Value="140" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TabItem">
+                    <Border Name="Tab" Background="Transparent">
+                        <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Left"
+                                        ContentSource="Header"
+                                        Margin="10,0"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="Tab" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Tab" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#30FFFFFF" Offset="0.0" />
+                                        <GradientStop Color="#01FFFFFF" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected"
+                                    Value="False" />
+                                <Condition SourceName="Tab" Property="IsMouseOver"
+                                    Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Foreground" Value="#FF9a9a9a" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=Count}"
+                                                        Value="0">
+                <Setter Property="Visibility"
+                                                            Value="Collapsed" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Path=ShowInMenu}"
+                                                        Value="False">
+                <Setter Property="Visibility"
+                                                            Value="Collapsed" />
+            </DataTrigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="White" />
+            </Trigger>
+            <Trigger Property="IsSelected" Value="False">
+                <Setter Property="Foreground" Value="#FF9a9a9a" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="Red" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Calendar -->
+    <Style x:Key="CairoCalendarItemStyle" TargetType="{x:Type CalendarItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CalendarItem}">
+                    <ControlTemplate.Resources>
+                        <DataTemplate x:Key="{x:Static CalendarItem.DayTitleTemplateResourceKey}">
+                            <TextBlock Foreground="#FFFFFFFF" FontWeight="Normal" FontSize="12" HorizontalAlignment="Center" Margin="0,5,0,5" Text="{Binding}" VerticalAlignment="Center"/>
+                        </DataTemplate>
+                    </ControlTemplate.Resources>
+
+                    <Grid x:Name="PART_Root">
+                        <Grid.Resources>
+                            <SolidColorBrush x:Key="DisabledColor" Color="#A5FFFFFF"/>
+                        </Grid.Resources>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PART_DisabledVisual"/>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border BorderThickness="0" Background="Transparent">
+                            <Border BorderBrush="#FFFFFFFF" BorderThickness="0">
+                                <Grid>
+                                    <Grid.Resources>
+                                        <ControlTemplate x:Key="PreviousButtonTemplate" TargetType="{x:Type Button}">
+                                            <Grid Cursor="Hand">
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup x:Name="CommonStates">
+                                                        <VisualState x:Name="Normal"/>
+                                                        <VisualState x:Name="MouseOver">
+                                                            <Storyboard>
+                                                                <ColorAnimation Duration="0" To="#FFA9C822" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="path"/>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="Disabled">
+                                                            <Storyboard>
+                                                                <DoubleAnimation Duration="0" To=".5" Storyboard.TargetProperty="(Shape.Fill).(Brush.Opacity)" Storyboard.TargetName="path"/>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+
+                                                <Rectangle Fill="Transparent" Opacity="1" Stretch="Fill"/>
+
+                                                <Grid>
+                                                    <Path x:Name="path" Data="M288.75,232.25 L288.75,240.625 L283,236.625 z" Fill="#FF528cec" HorizontalAlignment="Left" Height="10" Margin="5,-6,0,0" Stretch="Fill" VerticalAlignment="Center" Width="6"/>
+                                                </Grid>
+                                            </Grid>
+                                        </ControlTemplate>
+
+                                        <ControlTemplate x:Key="NextButtonTemplate" TargetType="{x:Type Button}">
+                                            <Grid Cursor="Hand">
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup x:Name="CommonStates">
+                                                        <VisualState x:Name="Normal"/>
+                                                        <VisualState x:Name="MouseOver">
+                                                            <Storyboard>
+                                                                <ColorAnimation Duration="0" To="#FFA9C822" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="path"/>
+                                                            </Storyboard>
+                                                        </VisualState>
+
+                                                        <VisualState x:Name="Disabled">
+                                                            <Storyboard>
+                                                                <DoubleAnimation Duration="0" To=".5" Storyboard.TargetProperty="(Shape.Fill).(Brush.Opacity)" Storyboard.TargetName="path"/>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+
+                                                <Rectangle Fill="Transparent" Opacity="1" Stretch="Fill"/>
+
+                                                <Grid>
+                                                    <Path x:Name="path" Data="M282.875,231.875 L282.875,240.375 L288.625,236 z" Fill="#FF528cec" HorizontalAlignment="Right" Height="10" Margin="0,-6,5,0" Stretch="Fill" VerticalAlignment="Center" Width="6"/>
+                                                </Grid>
+                                            </Grid>
+                                        </ControlTemplate>
+
+                                        <ControlTemplate x:Key="HeaderButtonTemplate" TargetType="{x:Type Button}">
+                                            <Grid Cursor="Hand">
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup x:Name="CommonStates">
+                                                        <VisualState x:Name="Normal"/>
+                                                        <VisualState x:Name="MouseOver">
+                                                            <Storyboard>
+                                                                <DoubleAnimation Duration="0" To=".7" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="buttonContent"/>
+                                                            </Storyboard>
+                                                        </VisualState>
+
+                                                        <VisualState x:Name="Disabled">
+                                                            <Storyboard>
+                                                                <DoubleAnimation Duration="0" To=".5" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="buttonContent"/>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+
+                                                <ContentPresenter x:Name="buttonContent" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" TextElement.Foreground="White" TextElement.FontFamily="Segoe UI" Margin="1,3,1,9"/>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Grid.Resources>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Stretch">
+                                        <Button x:Name="PART_PreviousButton" Grid.Column="0" Focusable="False" HorizontalAlignment="Left" Height="20" Grid.Row="0" Margin="20,0,0,0" Template="{StaticResource PreviousButtonTemplate}" Width="28"/>
+                                        <Button x:Name="PART_HeaderButton" Grid.Column="1" FontWeight="Normal" Focusable="False" FontSize="12" HorizontalAlignment="Center" Grid.Row="0" Template="{StaticResource HeaderButtonTemplate}" VerticalAlignment="Center" />
+                                        <Button x:Name="PART_NextButton" Grid.Column="2" Focusable="False" HorizontalAlignment="Right" Height="20" Grid.Row="0" Margin="0,0,20,0"  Template="{StaticResource NextButtonTemplate}" Width="28"/>
+                                    </Grid>
+                                    <Grid x:Name="PART_MonthView" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="6,-1,6,6" Grid.Row="1" Visibility="Visible">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                    </Grid>
+
+                                    <Grid x:Name="PART_YearView" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="6,-3,7,6" Grid.Row="1" Visibility="Hidden">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Border>
+
+                        <Rectangle x:Name="PART_DisabledVisual" Fill="{StaticResource DisabledColor}" Opacity="0" RadiusY="2" RadiusX="2" Stretch="Fill" Stroke="{StaticResource DisabledColor}" StrokeThickness="1" Visibility="Collapsed"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Visibility" TargetName="PART_DisabledVisual" Value="Visible" />
+                        </Trigger>
+
+                        <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Calendar}}}" Value="Year">
+                            <Setter Property="Visibility" TargetName="PART_MonthView" Value="Hidden" />
+                            <Setter Property="Visibility" TargetName="PART_YearView" Value="Visible" />
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Calendar}}}" Value="Decade">
+                            <Setter Property="Visibility" TargetName="PART_MonthView" Value="Hidden" />
+                            <Setter Property="Visibility" TargetName="PART_YearView" Value="Visible" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CairoCalendarDayButtonStyle" TargetType="{x:Type CalendarDayButton}">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="MinWidth" Value="28" />
+        <Setter Property="MinHeight" Value="28" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CalendarDayButton">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.1" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To=".5" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To=".5" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0" Duration="0" />
+                                        <DoubleAnimation Storyboard.TargetName="Content" Storyboard.TargetProperty="Opacity" To=".35" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Unselected" />
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To=".75" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CalendarButtonFocusStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="CalendarButtonFocused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FocusVisual" Storyboard.TargetProperty="Visibility" Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="CalendarButtonUnfocused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FocusVisual" Storyboard.TargetProperty="Visibility" Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ActiveStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Active" />
+                                <VisualState x:Name="Inactive">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Content" Storyboard.TargetProperty="(ContentControl.Foreground).(GradientBrush.GradientStops)[2].(GradientStop.Color)" To="#33FFFFFF" Duration="0" />
+                                        <ColorAnimation Storyboard.TargetName="Content" Storyboard.TargetProperty="(ContentControl.Foreground).(GradientBrush.GradientStops)[3].(GradientStop.Color)" To="#33FFFFFF" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="DayStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="RegularDay"  />
+                                <VisualState x:Name="Today">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="TodayBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0" />
+                                        <DoubleAnimation Storyboard.TargetName="Content" Storyboard.TargetProperty="(ContentControl.Foreground).(GradientBrush.GradientStops)[1].(GradientStop.Offset)" To="1" Duration="0" />
+                                        <DoubleAnimation Storyboard.TargetName="Content" Storyboard.TargetProperty="(ContentControl.Foreground).(GradientBrush.GradientStops)[2].(GradientStop.Offset)" To="1" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="BlackoutDayStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="NormalDay" />
+                                <VisualState x:Name="BlackoutDay">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="BlackoutVisual" Storyboard.TargetProperty="Opacity" To=".2" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Rectangle x:Name="TodayBackground" RadiusX="1" RadiusY="1" Opacity="0" Fill="#FF528cec" />
+                        <Rectangle x:Name="SelectedBackground" RadiusX="1" RadiusY="1" Opacity="0" Fill="{TemplateBinding Background}" />
+                        <Rectangle x:Name="Background" RadiusX="1" RadiusY="1" Opacity="0" Fill="{TemplateBinding Background}" />
+
+                        <ContentControl x:Name="Content" IsTabStop="False" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" FontSize="{TemplateBinding FontSize}" Margin="5,1,5,1">
+                            <ContentControl.Foreground>
+                                <LinearGradientBrush>
+                                    <GradientStop Offset="0" Color="White" />
+                                    <GradientStop Offset="0" Color="White" />
+                                    <GradientStop Offset="0" Color="White" />
+                                    <GradientStop Offset="1" Color="White" />
+                                </LinearGradientBrush>
+                            </ContentControl.Foreground>
+                        </ContentControl>
+
+                        <Path x:Name="BlackoutVisual" Opacity="0" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" Fill="#FF000000" Stretch="Fill" Data="M8.1772461,11.029181 L10.433105,11.029181 L11.700684,12.801641 L12.973633,11.029181 L15.191895,11.029181 L12.844727,13.999395 L15.21875,17.060919 L12.962891,17.060919 L11.673828,15.256231 L10.352539,17.060919 L8.1396484,17.060919 L10.519043,14.042364 z" />
+                        <Rectangle x:Name="FocusVisual" Visibility="Collapsed" IsHitTestVisible="false" RadiusX="1" RadiusY="1" Stroke="#FF6DBDD1" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CairoCalendarButtonStyle" TargetType="{x:Type CalendarButton}">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Margin" Value="4" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CalendarButton">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.1" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To=".5" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To=".5" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Background" Storyboard.TargetProperty="Opacity" To="0" Duration="0" />
+                                        <DoubleAnimation Storyboard.TargetName="Content" Storyboard.TargetProperty="Opacity" To=".35" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Unselected" />
+                                <VisualState x:Name="Selected">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="SelectedBackground" Storyboard.TargetProperty="Opacity" To=".75" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CalendarButtonFocusStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="CalendarButtonFocused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FocusVisual" Storyboard.TargetProperty="Visibility" Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="CalendarButtonUnfocused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="FocusVisual" Storyboard.TargetProperty="Visibility" Duration="0">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ActiveStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Active" />
+                                <VisualState x:Name="Inactive">
+                                    <Storyboard>
+                                        <ColorAnimation Storyboard.TargetName="Content" Storyboard.TargetProperty="(ContentControl.Foreground).(GradientBrush.GradientStops)[2].(GradientStop.Color)" To="#33FFFFFF" Duration="0" />
+                                        <ColorAnimation Storyboard.TargetName="Content" Storyboard.TargetProperty="(ContentControl.Foreground).(GradientBrush.GradientStops)[3].(GradientStop.Color)" To="#33FFFFFF" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="DayStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="RegularDay"  />
+                                <VisualState x:Name="Today">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="TodayBackground" Storyboard.TargetProperty="Opacity" To="1" Duration="0" />
+                                        <DoubleAnimation Storyboard.TargetName="Content" Storyboard.TargetProperty="(ContentControl.Foreground).(GradientBrush.GradientStops)[1].(GradientStop.Offset)" To="1" Duration="0" />
+                                        <DoubleAnimation Storyboard.TargetName="Content" Storyboard.TargetProperty="(ContentControl.Foreground).(GradientBrush.GradientStops)[2].(GradientStop.Offset)" To="1" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="BlackoutDayStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="NormalDay" />
+                                <VisualState x:Name="BlackoutDay">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="BlackoutVisual" Storyboard.TargetProperty="Opacity" To=".2" Duration="0" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Rectangle x:Name="TodayBackground" RadiusX="1" RadiusY="1" Opacity="0" Fill="#FF528cec" />
+                        <Rectangle x:Name="SelectedBackground" RadiusX="1" RadiusY="1" Opacity="0" Fill="{TemplateBinding Background}" />
+                        <Rectangle x:Name="Background" RadiusX="1" RadiusY="1" Opacity="0" Fill="{TemplateBinding Background}" />
+
+                        <ContentControl x:Name="Content" IsTabStop="False" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" FontSize="{TemplateBinding FontSize}" Margin="5,1,5,1">
+                            <ContentControl.Foreground>
+                                <LinearGradientBrush>
+                                    <GradientStop Offset="0" Color="White" />
+                                    <GradientStop Offset="0" Color="White" />
+                                    <GradientStop Offset="0" Color="White" />
+                                    <GradientStop Offset="1" Color="White" />
+                                </LinearGradientBrush>
+                            </ContentControl.Foreground>
+                        </ContentControl>
+
+                        <Path x:Name="BlackoutVisual" Opacity="0" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RenderTransformOrigin="0.5,0.5" Fill="#FF000000" Stretch="Fill" Data="M8.1772461,11.029181 L10.433105,11.029181 L11.700684,12.801641 L12.973633,11.029181 L15.191895,11.029181 L12.844727,13.999395 L15.21875,17.060919 L12.962891,17.060919 L11.673828,15.256231 L10.352539,17.060919 L8.1396484,17.060919 L10.519043,14.042364 z" />
+                        <Rectangle x:Name="FocusVisual" Visibility="Collapsed" IsHitTestVisible="false" RadiusX="1" RadiusY="1" Stroke="#FF6DBDD1" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CairoCalendarStyle" TargetType="{x:Type Calendar}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="CalendarButtonStyle" Value="{DynamicResource CairoCalendarButtonStyle}"/>
+        <Setter Property="CalendarDayButtonStyle" Value="{DynamicResource CairoCalendarDayButtonStyle}"/>
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Calendar}">
+                    <StackPanel x:Name="PART_Root" HorizontalAlignment="Center">
+                        <CalendarItem x:Name="PART_CalendarItem" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Style="{StaticResource CairoCalendarItemStyle}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- Button Style for Systray Expander -->
+    <Style x:Key="CairoSystrayExpanderStyle"
+        TargetType="{x:Type ToggleButton}">
+        <Setter Property="OverridesDefaultStyle"
+            Value="true" />
+        <Setter Property="Height"
+            Value="22" />
+        <Setter Property="Foreground"
+            Value="White" />
+        <Setter Property="FontSize"
+            Value="11" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="Border"
+                        BorderThickness="0"
+                        Margin="0,0,0,0"
+                        Background="Transparent"
+                        BorderBrush="Transparent" Opacity="0.7">
+                        <Path x:Name="Path" Margin="5,-2,13,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M 6 0 L 6 8 L 0 4 Z" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                    Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="White"
+                                            ShadowDepth="0"
+                                            Opacity="0.5" BlurRadius="7" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Border" Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                    Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="White"
+                                            ShadowDepth="0"
+                                            Opacity="1" BlurRadius="7" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Border" Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsChecked"
+                            Value="true">
+                            <Setter TargetName="Path" Property="Data" Value="M 0 0 L 6 4 L 0 8 Z" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Threading;
+using System.Windows.Media.Imaging;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -24,14 +23,18 @@ namespace CairoDesktop.AppGrabber
         /// This object holds the basic information necessary for identifying an application.
         /// </summary>
         /// <param name="name">The friendly name of this application.</param>
-        /// <param name="path">Path to the executable.</param>
+        /// <param name="path">Path to the shortcut.</param>
+        /// <param name="target">Path to the executable.</param>
         /// <param name="icon">ImageSource used to denote the application's icon in a graphical environment.</param>
-        public ApplicationInfo(string name, string path, ImageSource icon)
+        public ApplicationInfo(string name, string path, string target, ImageSource icon, string iconColor, string iconPath)
 		{
 			this.Name = name;
 			this.Path = path;
+            this.Target = target;
             this.Icon = icon;
-		}
+            this.IconColor = iconColor;
+            this.IconPath = iconPath;
+        }
 
         private string name;
         /// <summary>
@@ -50,7 +53,7 @@ namespace CairoDesktop.AppGrabber
         
         private string path;
 		/// <summary>
-        /// Path to the executable.
+        /// Path to the shortcut.
 		/// </summary>
         public string Path {
             get { return path; }
@@ -63,18 +66,138 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
+        private string target;
+        /// <summary>
+        /// Path to the executable.
+        /// </summary>
+        public string Target
+        {
+            get { return target; }
+            set
+            {
+                target = value;
+                // Notify Databindings of property change
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("Target"));
+                }
+            }
+        }
+
+        private string iconColor;
+        /// <summary>
+        /// Path to the executable.
+        /// </summary>
+        public string IconColor
+        {
+            get {
+                if (!string.IsNullOrEmpty(iconColor))
+                    return iconColor;
+                else
+                    return "Transparent";
+            }
+            set
+            {
+                iconColor = value;
+                // Notify Databindings of property change
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("IconColor"));
+                }
+            }
+        }
+
+        private string iconPath;
+        /// <summary>
+        /// Path to the executable.
+        /// </summary>
+        public string IconPath
+        {
+            get { return iconPath; }
+            set
+            {
+                iconPath = value;
+                // Notify Databindings of property change
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("IconPath"));
+                }
+            }
+        }
+
+        private bool alwaysAdmin;
+        /// <summary>
+        /// If the user has chosen to run the app as admin always.
+        /// </summary>
+        public bool AlwaysAdmin
+        {
+            get { return alwaysAdmin; }
+            set
+            {
+                alwaysAdmin = value;
+                // Notify Databindings of property change
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("AlwaysAdmin"));
+                }
+            }
+        }
+
+        private bool askAlwaysAdmin;
+        /// <summary>
+        /// Whether the UI should ask if the app should be always run as admin (set true after running as admin once)
+        /// </summary>
+        public bool AskAlwaysAdmin
+        {
+            get { return askAlwaysAdmin; }
+            set
+            {
+                askAlwaysAdmin = value;
+                // Notify Databindings of property change
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("AskAlwaysAdmin"));
+                }
+            }
+        }
+
         private ImageSource icon;
         /// <summary>
         /// ImageSource used to denote the application's icon in a graphical environment.
         /// </summary>
         public ImageSource Icon {
-            get { return icon; }
+            get
+            {
+                if (icon == null)
+                {
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => {
+
+                        icon = GetAssociatedIcon();
+                        icon.Freeze();
+                        // Notify Databindings of property change
+                        if (PropertyChanged != null)
+                        {
+                            PropertyChanged(this, new PropertyChangedEventArgs("Icon"));
+                        }
+                    }));
+                }
+
+                return icon;
+            }
             set {
                 icon = value;
                 // Notify Databindings of property change
                 if (PropertyChanged != null) {
                     PropertyChanged(this, new PropertyChangedEventArgs("Icon"));
                 }
+            }
+        }
+
+        public bool IsStoreApp
+        {
+            get
+            {
+                return this.path.StartsWith("appx:");
             }
         }
 
@@ -105,7 +228,7 @@ namespace CairoDesktop.AppGrabber
                 return true;
             }
             if (System.IO.Path.GetExtension(this.Path).Equals(".lnk", StringComparison.OrdinalIgnoreCase)) {
-                if (new Interop.Shell.Link(this.Path).Target == new Interop.Shell.Link(other.Path).Target) {
+                if (this.Target == other.Target) {
                     return true;
                 }
             }
@@ -147,7 +270,7 @@ namespace CairoDesktop.AppGrabber
 		}
 		
 		public static bool operator ==(ApplicationInfo x, ApplicationInfo y) {
-			return x.Equals(y);
+            return x.Equals(y);
 		}
 
 		public static bool operator !=(ApplicationInfo x, ApplicationInfo y) {
@@ -163,15 +286,39 @@ namespace CairoDesktop.AppGrabber
         /// Gets an ImageSource object representing the associated icon of a file.
         /// </summary>
         public ImageSource GetAssociatedIcon() {
-            String ext = System.IO.Path.GetExtension(this.Path);
-            if (ext.Equals(".lnk", StringComparison.OrdinalIgnoreCase)) {
-                Interop.Shell.Link link = new Interop.Shell.Link(this.Path);
-                IntPtr hIcon = Interop.Shell.GetHIcon(link.IconFile, link.IconIndex);
-                if (hIcon != IntPtr.Zero) {
-                    return WpfWin32ImageConverter.GetImageFromHIcon(hIcon);
+            if (this.IsStoreApp)
+            {
+                if (string.IsNullOrEmpty(this.IconPath) || !Interop.Shell.Exists(this.IconPath))
+                {
+                    try
+                    {
+                        string[] icon = UWPInterop.StoreAppHelper.GetAppIcon(this.Target);
+                        this.IconPath = icon[0];
+                        this.IconColor = icon[1];
+                    }
+                    catch
+                    {
+                        return IconImageConverter.GetDefaultIcon();
+                    }
                 }
-            } 
-            return WpfWin32ImageConverter.GetImageFromAssociatedIcon(this.Path);
+
+                try
+                {
+                    BitmapImage img = new BitmapImage();
+                    img.BeginInit();
+                    img.UriSource = new Uri(this.IconPath, UriKind.Absolute);
+                    img.CacheOption = BitmapCacheOption.OnLoad;
+                    img.EndInit();
+                    img.Freeze();
+                    return img;
+                }
+                catch
+                {
+                    return IconImageConverter.GetDefaultIcon();
+                }
+            }
+            else
+                return IconImageConverter.GetImageFromAssociatedIcon(this.Path, true);
         }
 
         /// <summary>
@@ -179,7 +326,7 @@ namespace CairoDesktop.AppGrabber
         /// </summary>
         /// <returns>A new ApplicationInfo object with the same data as this object, not bound to a Category.</returns>
         internal ApplicationInfo Clone() {
-            ApplicationInfo rval = new ApplicationInfo(this.Name, this.Path, this.Icon);
+            ApplicationInfo rval = new ApplicationInfo(this.Name, this.Path, this.Target, this.Icon, this.IconColor, this.IconPath);
             return rval;
         }
     }

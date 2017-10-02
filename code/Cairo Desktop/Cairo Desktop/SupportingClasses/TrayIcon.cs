@@ -1,13 +1,13 @@
-
 namespace CairoDesktop
 {
     using System;
+    using System.ComponentModel;
     using System.Windows.Media;
 
     /// <summary>
     /// TrayIcon class representing a notification icon in the system tray.
     /// </summary>
-    public class TrayIcon : IEquatable<TrayIcon>
+    public class TrayIcon : IEquatable<TrayIcon>, INotifyPropertyChanged
     {
         /// <summary>
         /// Initializes a new instance of the TrayIcon class with no hwnd.
@@ -25,22 +25,40 @@ namespace CairoDesktop
             this.HWnd = hWnd;
         }
 
+        private ImageSource _icon;
+
         /// <summary>
         /// Gets or sets the Icon's image.
         /// </summary>
         public ImageSource Icon
         {
-            get;
-            set;
+            get
+            {
+                return _icon;
+            }
+            set
+            {
+                _icon = value;
+                OnPropertyChanged("Icon");
+            }
         }
+
+        private string _title;
 
         /// <summary>
         /// Gets or sets the Icon's title (tool tip).
         /// </summary>
         public string Title
         {
-            get;
-            set;
+            get
+            {
+                return _title;
+            }
+            set
+            {
+                _title = value;
+                OnPropertyChanged("Title");
+            }
         }
 
         /// <summary>
@@ -64,7 +82,7 @@ namespace CairoDesktop
         /// <summary>
         /// Gets or sets the callback message id.
         /// </summary>
-        public uint CallbackMessage
+        public int CallbackMessage
         {
             get;
             set;
@@ -73,7 +91,7 @@ namespace CairoDesktop
         /// <summary>
         /// Gets or sets the UID of the Icon.
         /// </summary>
-        public uint UID
+        public int UID
         {
             get;
             set;
@@ -89,6 +107,20 @@ namespace CairoDesktop
         public bool Equals(TrayIcon other)
         {
             return this.HWnd.Equals(other.HWnd) && this.UID.Equals(other.UID);
+        }
+
+        #endregion
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged(string PropertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(PropertyName));
+            }
         }
 
         #endregion

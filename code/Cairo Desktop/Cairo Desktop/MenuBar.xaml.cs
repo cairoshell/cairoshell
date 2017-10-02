@@ -1,120 +1,634 @@
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Diagnostics;
-using System.Net;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Navigation;
 using System.Windows.Threading;
-using System.Windows.Controls.Primitives;
-// Helper code - thanks to Greg Franklin - MSFT
-using SHAppBarMessage1.Common;
 using CairoDesktop.Interop;
-using System.Resources;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using System.Windows.Markup;
+using CairoDesktop.SupportingClasses;
+using System.Windows.Interop;
+using CairoDesktop.Configuration;
+using CairoDesktop.Common;
+using CairoDesktop.AppGrabber;
 
 namespace CairoDesktop
 {
     public partial class MenuBar
     {
+        // AppBar properties
         private WindowInteropHelper helper;
         private IntPtr handle;
-        public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
         private int appbarMessageId = -1;
 
-        private String configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+@"\CairoAppConfig.xml";
-        private String fileManger = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.FileManager);
+        // AppGrabber instance
+        public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
+
+        // delegates for WinSparkle
+        private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
+        private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
+
+        // True if system tray failed to load
+        public bool SystemTrayFailure = false;
 
         public MenuBar()
         {
-            this.InitializeComponent();
-            // Sets the Theme for Cairo
-            string theme = Properties.Settings.Default.CairoTheme;
-            if (theme != "Cairo.xaml")
-            {
-                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme));
-                this.Resources.MergedDictionaries[0] = CairoDictionary;
-            }
-            if (Properties.Settings.Default.UseDarkIcons) {
-                SolidColorBrush borderBrushColor = new SolidColorBrush();
-                borderBrushColor.Color = Color.FromArgb(135, 0, 0, 0);
-                this.BorderBrush = borderBrushColor;
-                this.BorderThickness = new Thickness(0, 0, 0, 0);
-                this.Height = 22;
-                this.MaxHeight = 22;
-                this.Background = Brushes.Transparent;
-                BitmapImage CairoMenuIconBlack = new BitmapImage();
-                CairoMenuIconBlack.BeginInit();
-                CairoMenuIconBlack.UriSource = new Uri("pack://application:,,,/Resources/cairoMenuBlack.png", UriKind.RelativeOrAbsolute);
-                CairoMenuIconBlack.EndInit();
-                CairoMenuIcon.Source = CairoMenuIconBlack;
-                BitmapImage CairoSearchMenuIconBlack = new BitmapImage();
-                CairoSearchMenuIconBlack.BeginInit();
-                CairoSearchMenuIconBlack.UriSource = new Uri("pack://application:,,,/Resources/searchBlack.png", UriKind.RelativeOrAbsolute);
-                CairoSearchMenuIconBlack.EndInit();
-                CairoSearchMenuIcon.Source = CairoSearchMenuIconBlack;
-            }
+            InitializeComponent();
 
-            this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
+            Width = SystemParameters.WorkArea.Width;
 
-            // Show the search button only if the service is running
-            if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
-            {
-                ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
-                vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
-                CairoSearchMenu.DataContext = vistaSearchProvider;
-            } 
-            else
-            {
-                CairoSearchMenu.Visibility = Visibility.Collapsed;
-                DispatcherTimer searchcheck = new DispatcherTimer(new TimeSpan(0, 0, 7), DispatcherPriority.Normal, delegate
-                {
+            setupPlaces();
 
-                    if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
-                    {
-                        ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
-                        vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
-                        CairoSearchMenu.DataContext = vistaSearchProvider;
-                        CairoSearchMenu.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        CairoSearchMenu.Visibility = Visibility.Collapsed;
-                    }
+            setupSearch();
 
-                }, this.Dispatcher);
+            initializeClock();
 
-            }
-            if (System.Environment.OSVersion.Version.Major < 6)
-            {
-                PlacesDownloadsItem.Visibility = Visibility.Collapsed;
-            }
-            // ---------------------------------------------------------------- //
+            setupPrograms();
 
-            InitializeClock();
+            initSparkle();
+        }
 
-            //Set Quick Launch category to not show in menu
+        private void initSparkle()
+        {
+            WinSparkle.win_sparkle_set_appcast_url("https://dremin.github.io/appdescriptor.rss");
+            canShutdownDelegate = canShutdown;
+            shutdownDelegate = shutdown;
+            WinSparkle.win_sparkle_set_can_shutdown_callback(canShutdownDelegate);
+            WinSparkle.win_sparkle_set_shutdown_request_callback(shutdownDelegate);
+            WinSparkle.win_sparkle_init();
+        }
+
+        private void setupPrograms()
+        {
+            // Set Quick Launch and Uncategorized categories to not show in menu
             AppGrabber.Category ql = appGrabber.CategoryList.GetCategory("Quick Launch");
             if (ql != null)
             {
                 ql.ShowInMenu = false;
             }
+            AppGrabber.Category uncat = appGrabber.CategoryList.GetCategory("Uncategorized");
+            if (uncat != null)
+            {
+                uncat.ShowInMenu = false;
+            }
 
-            //Set Programs Menu to use appGrabber's ProgramList as its source
+            // Set Programs Menu to use appGrabber's ProgramList as its source
             categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
+
+            // set tab based on user preference
+            int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.DefaultProgramsCategory));
+            categorizedProgramsList.SelectedIndex = i;
         }
 
-        ///
-        /// Focuses the specified UI element.
-        ///
-        /// The UI element.
+        private void setupPlaces()
+        {
+            // Set username
+            string username = Environment.UserName.Replace("_", "__");
+            miUserName.Header = username;
+
+            // Only show Downloads folder on Vista or greater
+            if (Environment.OSVersion.Version.Major < 6)
+            {
+                PlacesDownloadsItem.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void setupSearch()
+        {
+            this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
+
+            // Show the search button only if the service is running
+            if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
+            {
+                setSearchProvider();
+            }
+            else
+            {
+                CairoSearchMenu.Visibility = Visibility.Collapsed;
+                DispatcherTimer searchcheck = new DispatcherTimer(DispatcherPriority.Background, this.Dispatcher);
+                searchcheck.Interval = new TimeSpan(0, 0, 5);
+                searchcheck.Tick += searchcheck_Tick;
+                searchcheck.Start();
+            }
+        }
+
+        private void searchcheck_Tick(object sender, EventArgs e)
+        {
+            if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
+            {
+                setSearchProvider();
+                CairoSearchMenu.Visibility = Visibility.Visible;
+                (sender as DispatcherTimer).Stop();
+            }
+            else
+            {
+                CairoSearchMenu.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void setSearchProvider()
+        {
+            ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
+            vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
+            CairoSearchMenu.DataContext = vistaSearchProvider;
+
+            Binding bSearchText = new Binding("SearchText");
+            bSearchText.Mode = BindingMode.Default;
+            bSearchText.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+
+            Binding bSearchResults = new Binding("Results");
+            bSearchResults.Mode = BindingMode.Default;
+            bSearchResults.IsAsync = true;
+
+            searchStr.SetBinding(TextBox.TextProperty, bSearchText);
+            lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
+        }
+
+        private void shutdown()
+        {
+            Dispatcher.Invoke(() => Application.Current.Shutdown(), DispatcherPriority.Normal);
+        }
+
+        private int canShutdown()
+        {
+            return 1;
+        }
+
+        private void LaunchProgram(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            // so that we only prompt to always run as admin if it's done consecutively
+            if (app.AskAlwaysAdmin)
+            {
+                app.AskAlwaysAdmin = false;
+                appGrabber.Save();
+            }
+
+            if (!app.IsStoreApp && app.AlwaysAdmin)
+            {
+                Shell.StartProcess(app.Path, "", "runas");
+            }
+            else if (!Shell.StartProcess(app.Path))
+            {
+                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it using the right-click menu to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void LaunchProgramAdmin(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            if (!app.IsStoreApp)
+            {
+                if (!app.AlwaysAdmin)
+                {
+                    if (app.AskAlwaysAdmin)
+                    {
+                        app.AskAlwaysAdmin = false;
+
+                        bool? always = CairoMessage.Show("You've run " + app.Name + " as an administrator before. Would you like Cairo to automatically run it as an administrator every time?", "Always run as administrator?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                        if (always == true)
+                            app.AlwaysAdmin = true;
+                    }
+                    else
+                        app.AskAlwaysAdmin = true;
+
+                    appGrabber.Save();
+                }
+
+                Shell.StartProcess(app.Path, "", "runas");
+            }
+            else
+                LaunchProgram(sender, e);
+        }
+
+        private void programsMenu_Rename(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            DockPanel parent = ((MenuItem)((ContextMenu)item.Parent).PlacementTarget).Header as DockPanel;
+            TextBox rename = parent.FindName("txtProgramRename") as TextBox;
+            TextBlock label = parent.FindName("lblProgramName") as TextBlock;
+
+            rename.Visibility = Visibility.Visible;
+            label.Visibility = Visibility.Collapsed;
+            rename.Focus();
+            rename.SelectAll();
+        }
+
+        private void programsMenu_Remove(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+            bool? deleteChoice = CairoMessage.ShowOkCancel("\"" + app.Name + "\" will be removed from the Programs menu. This will not uninstall the program.", "Remove this app from the menu?", "Resources/cairoIcon.png", "Remove", "Cancel");
+            if (deleteChoice.HasValue && deleteChoice.Value)
+            {
+                app.Category.Remove(app);
+                appGrabber.Save();
+            }
+        }
+
+        private void programsMenu_Properties(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+
+            if (app.IsStoreApp)
+                CairoMessage.ShowAlert("This is a Universal Windows Platform (UWP) application.", app.Name, MessageBoxImage.None);
+            else
+                Shell.ShowFileProperties(app.Path);
+        }
+
+        #region Date/time
+        /// <summary>
+        /// Initializes the dispatcher timers to updates the time and date bindings
+        /// </summary>
+        private void initializeClock()
+        {
+            // initial display
+            clock_Tick();
+
+            // Create our timer for clock
+            DispatcherTimer clock = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 500), DispatcherPriority.Background, delegate
+            {
+                clock_Tick();
+            }, this.Dispatcher);
+        }
+
+        private void clock_Tick()
+        {
+            string timeFormat = Settings.TimeFormat;
+            if (string.IsNullOrEmpty(timeFormat))
+            {
+                timeFormat = "T"; // culturally safe long time pattern
+            }
+
+            dateText.Text = DateTime.Now.ToString(timeFormat);
+
+            string dateFormat = Settings.DateFormat;
+            if (string.IsNullOrEmpty(dateFormat))
+            {
+                dateFormat = "D"; // culturally safe long date pattern
+            }
+
+            dateText.ToolTip = DateTime.Now.ToString(dateFormat);
+        }
+
+        private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("timedate.cpl");
+        }
+        #endregion
+
+        #region Events
+        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == appbarMessageId && appbarMessageId != -1)
+            {
+                switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
+                {
+                    case NativeMethods.AppBarNotifications.PosChanged:
+                        // Reposition to the top of the screen.
+                        AppBarHelper.ABSetPos(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+                        if (Startup.MenuBarShadowWindow != null)
+                            Startup.MenuBarShadowWindow.SetPosition();
+                        break;
+
+                    case NativeMethods.AppBarNotifications.FullScreenApp:
+                        if ((int)lParam == 1)
+                        {
+                            this.Topmost = false;
+                            Shell.ShowWindowBottomMost(hwnd);
+
+                            if (Settings.EnableTaskbar)
+                            {
+                                Startup.TaskbarWindow.Topmost = false;
+                                Shell.ShowWindowBottomMost(Startup.TaskbarWindow.handle);
+                            }
+                        }
+                        else
+                        {
+                            this.Topmost = true;
+                            Shell.ShowWindowTopMost(hwnd);
+
+                            if (Settings.EnableTaskbar)
+                            {
+                                Startup.TaskbarWindow.Topmost = true;
+                                Shell.ShowWindowTopMost(Startup.TaskbarWindow.handle);
+                            }
+                        }
+
+                        break;
+
+                    case NativeMethods.AppBarNotifications.WindowArrange:
+                        if ((int)lParam != 0)    // before
+                            this.Visibility = Visibility.Collapsed;
+                        else                         // after
+                            this.Visibility = Visibility.Visible;
+
+                        break;
+                }
+                handled = true;
+            }
+            else if (msg == NativeMethods.WM_ACTIVATE)
+            {
+                AppBarHelper.AppBarActivate(hwnd);
+            }
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED)
+            {
+                AppBarHelper.AppBarWindowPosChanged(hwnd);
+            }
+            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            {
+                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                handled = true;
+            }
+
+            return IntPtr.Zero;
+        }
+
+        private void setPosition(uint x, uint y)
+        {
+            int sWidth;
+            int sHeight;
+            // adjust size for dpi
+            AppBarHelper.TransformFromPixels(x, y, out sWidth, out sHeight);
+            this.Top = 0;
+            this.Left = 0;
+            this.Width = sWidth;
+            if (Startup.MenuBarShadowWindow != null)
+                Startup.MenuBarShadowWindow.SetPosition();
+        }
+
+        private void OnWindowInitialized(object sender, EventArgs e)
+        {
+            Visibility = Visibility.Visible;
+        }
+
+        private void Window_SourceInitialized(object sender, EventArgs e)
+        {
+            helper = new WindowInteropHelper(this);
+
+            HwndSource source = HwndSource.FromHwnd(helper.Handle);
+            source.AddHook(new HwndSourceHook(WndProc));
+
+            handle = helper.Handle;
+
+            appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+        }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            if (this.Top != 0)
+            {
+                this.Top = 0;
+                if (Startup.MenuBarShadowWindow != null)
+                    Startup.MenuBarShadowWindow.SetPosition();
+                if (Startup.DesktopWindow != null)
+                    Startup.DesktopWindow.ResetPosition();
+            }
+        }
+
+        private void OnWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            if (Settings.EnableSysTray == true)
+            {
+                SysTray.InitializeSystemTray();
+            }
+        }
+
+        private void OnWindowClosing(object sender, CancelEventArgs e)
+        {
+            SysTray.DestroySystemTray();
+
+            AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
+            
+            WinSparkle.win_sparkle_cleanup();
+
+            if (Startup.IsCairoUserShell)
+            {
+                AppBarHelper.ResetWorkArea();
+                Shell.StartProcess("explorer.exe");
+            }
+        }
+
+        private void Programs_Drop(object sender, DragEventArgs e)
+        {
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (fileNames != null)
+            {
+                int count = 0;
+                foreach (String fileName in fileNames)
+                {
+                    if (Shell.Exists(fileName))
+                    {
+                        ApplicationInfo customApp = appGrabber.PathToApp(fileName, false);
+                        if (!object.ReferenceEquals(customApp, null))
+                        {
+                            appGrabber.CategoryList.GetCategory("Uncategorized").Add(customApp);
+                            count++;
+                        }
+                    }
+                }
+
+                if (count > 0)
+                    appGrabber.Save();
+            }
+        }
+
+        private void txtProgramRename_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox box = e.OriginalSource as TextBox;
+            ApplicationInfo app = ((box.Parent as DockPanel).Parent as MenuItem).DataContext as ApplicationInfo;
+
+            if (!object.ReferenceEquals(app, null))
+            {
+                app.Name = box.Text;
+                appGrabber.Save();
+                AppViewSorter.Sort(appGrabber.CategoryList.GetCategory("All"), "Name");
+                AppViewSorter.Sort(app.Category, "Name");
+            }
+
+            foreach (UIElement peer in (box.Parent as DockPanel).Children)
+            {
+                if (peer is TextBlock)
+                {
+                    peer.Visibility = Visibility.Visible;
+                }
+            }
+            box.Visibility = Visibility.Collapsed;
+        }
+
+        private void txtProgramRename_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Keyboard.ClearFocus();
+                e.Handled = true;
+            }
+        }
+
+        private void txtProgramRename_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (ProgramsMenu.IsKeyboardFocusWithin && !(e.NewFocus is TextBox))
+                e.Handled = true;
+        }
+        #endregion
+
+        #region Cairo menu items
+        private void AboutCairo(object sender, RoutedEventArgs e)
+        {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+
+            CairoMessage.ShowAlert(
+                "Version " + version + " - Pre-release"
+                +"\n\nCopyright © 2007-" + DateTime.Now.Year.ToString() + " Cairo Development Team and community contributors.  All rights reserved.", "Cairo Desktop Environment", MessageBoxImage.None);
+        }
+
+        private void CheckForUpdates(object sender, RoutedEventArgs e)
+        {
+            WinSparkle.win_sparkle_check_update_with_ui();
+        }
+
+        private void OpenLogoffBox(object sender, RoutedEventArgs e)
+        {
+            bool? LogoffChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and be logged off.", "Are you sure you want to log off now?", "Resources/logoffIcon.png", "Log Off", "Cancel");
+            if (LogoffChoice.HasValue && LogoffChoice.Value)
+            {
+                NativeMethods.Logoff();
+            }
+        }
+
+        private void OpenRebootBox(object sender, RoutedEventArgs e)
+        {
+            bool? RebootChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and your computer will restart.", "Are you sure you want to restart now?", "Resources/restartIcon.png", "Restart", "Cancel");
+            if (RebootChoice.HasValue && RebootChoice.Value)
+            {
+                NativeMethods.Reboot();
+            }
+        }
+
+        private void OpenShutDownBox(object sender, RoutedEventArgs e)
+        {
+            bool? ShutdownChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and your computer will turn off.", "Are you sure you want to shut down now?", "Resources/shutdownIcon.png", "Shut Down", "Cancel");
+            if (ShutdownChoice.HasValue && ShutdownChoice.Value)
+            {
+                NativeMethods.Shutdown();
+            }
+        }
+
+        private void OpenRunWindow(object sender, RoutedEventArgs e)
+        {
+            Shell.ShowRunDialog();
+        }
+
+        private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
+        {
+            bool? CloseCairoChoice = CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/exitIcon.png", "Exit Cairo", "Cancel");
+            if (CloseCairoChoice.HasValue && CloseCairoChoice.Value)
+            {
+                shutdown();
+            }
+        }
+
+        private void OpenControlPanel(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("control.exe");
+        }
+
+        private void OpenTaskManager(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("taskmgr.exe");
+        }
+
+        private void SysSleep(object sender, RoutedEventArgs e)
+        {
+            NativeMethods.Sleep();
+        }
+
+        private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
+        {
+            CairoSettingsWindow window = new CairoSettingsWindow();
+            window.Show();
+        }
+
+        private void InitAppGrabberWindow(object sender, RoutedEventArgs e)
+        {
+            appGrabber.ShowDialog();
+        }
+        #endregion
+
+        #region Places menu items
+        private void OpenMyDocs(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Documents));
+        }
+
+        private void OpenMyPics(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Pictures));
+        }
+
+        private void OpenMyMusic(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Music));
+        }
+
+        private void OpenDownloads(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Downloads));
+        }
+
+        private void OpenMyComputer(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
+        }
+
+        private void OpenUserFolder(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), System.Environment.GetEnvironmentVariable("USERPROFILE"));
+        }
+
+        private void OpenProgramFiles(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), System.Environment.GetEnvironmentVariable("ProgramFiles"));
+        }
+
+        private void OpenRecycleBin(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), "::{645FF040-5081-101B-9F08-00AA002F954E}");
+        }
+        #endregion
+
+        #region Search menu
+        private void btnViewResults_Click(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("search:query=" + searchStr.Text);
+        }
+
+        private void searchStr_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (searchStr.Text.Length > 0)
+                btnViewResults.Visibility = Visibility.Visible;
+            else
+                btnViewResults.Visibility = Visibility.Collapsed;
+        }
+
+        private void searchStr_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Return)
+            {
+                Shell.StartProcess("search:query=" + searchStr.Text);
+            }
+        }
+
         public void FocusSearchBox(object sender, RoutedEventArgs e)
         {
             searchStr.Dispatcher.BeginInvoke(
@@ -129,292 +643,13 @@ namespace CairoDesktop
 
         public void ExecuteOpenSearchResult(object sender, ExecutedRoutedEventArgs e)
         {
-            // Get parameter (e.Parameter as T)
-            // Try shell execute...
-            // TODO: Determine which app to start the file as and boom!
             var searchObj = (VistaSearchProvider.SearchResult)e.Parameter;
 
-            Process p = new Process();
-            p.StartInfo.UseShellExecute = true;
-            p.StartInfo.FileName = searchObj.Path; // e.Parameter as T.x
-            p.StartInfo.Verb = "Open";
-
-            try
+            if (!Shell.StartProcess(searchObj.Path))
             {
-                p.Start();
-            }
-            catch (Exception ex)
-            {
-                CairoMessage.Show("Woops, it seems we had some trouble opening the search result you chose.\n\n The error we received was: " + ex.Message, "Uh Oh!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show("We were unable to open the search result.", "Uh Oh!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
-        {
-            if (appbarMessageId == -1)
-            {
-                return IntPtr.Zero;
-            }
-
-            if (msg == appbarMessageId)
-            {
-                System.Diagnostics.Trace.WriteLine("Callback on AppBarMessage: " + wparam.ToString());
-                switch (wparam.ToInt32())
-                {
-                    case 1:
-                        // Reposition to the top of the screen.
-                        if (this.Top != 0)
-                        {
-                            System.Diagnostics.Trace.WriteLine("Repositioning menu bar to top of screen.");
-                            this.Top = 0;
-                        }
-                        /*SHAppBarMessageHelper.QuerySetPosition(hwnd, 
-                            new System.Drawing.Size() { Height = (int)this.ActualWidth, Width = (int)this.ActualWidth }, 
-                            SHAppBarMessage1.Win32.NativeMethods.ABEdge.ABE_TOP);*/
-                        break;
-                }
-                handled = true;
-            }
-
-            return IntPtr.Zero;
-        }
-
-        /// <summary>
-        /// Initializes the dispatcher timers to updates the time and date bindings
-        /// </summary>
-        private void InitializeClock()
-        {
-            // Create our timer for clock
-            DispatcherTimer timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
-            {
-                string timeFormat = Properties.Settings.Default.TimeFormat;
-                if (string.IsNullOrEmpty(timeFormat))
-                {
-                    timeFormat = "T"; /// culturally safe long time pattern
-                }
-
-                dateText.Text = DateTime.Now.ToString(timeFormat);
-            }, this.Dispatcher);
-
-            DispatcherTimer fulldatetimer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
-            {
-                string dateFormat = Properties.Settings.Default.DateFormat;
-                if (string.IsNullOrEmpty(dateFormat))
-                {
-                    dateFormat = "D"; // Culturally safe Long Date Pattern
-                }
-
-                dateText.ToolTip = DateTime.Now.ToString(dateFormat);
-            }, this.Dispatcher);
-        }
-
-        private void OnWindowInitialized(object sender, EventArgs e)
-        {
-            Visibility = Visibility.Visible;
-        }
-
-        private void OnWindowLoaded(object sender, RoutedEventArgs e)
-        {
-            helper = new WindowInteropHelper(this);
-
-            HwndSource source = HwndSource.FromHwnd(helper.Handle);
-            source.AddHook(new HwndSourceHook(WndProc));
-
-            handle = helper.Handle;
-            System.Drawing.Size size = new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight);
-
-            appbarMessageId = SHAppBarMessageHelper.RegisterBar(handle, size);
-            //SHAppBarMessageHelper.QuerySetPosition(handle, size, SHAppBarMessage1.Win32.NativeMethods.ABEdge.ABE_TOP);
-
-            if (Properties.Settings.Default.EnableSysTray == true)
-            {
-                SysTray.InitializeSystemTray();
-            }
-            else
-            {
-            }
-        }
-
-        private void OnWindowClosing(object sender, CancelEventArgs e)
-        {
-            if (CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/cairoIcon.png", "Exit Cairo", "Cancel") == true)
-            {
-                //SHAppBarMessageHelper.DeRegisterBar(handle);
-                System.Drawing.Size size = new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight);
-                SHAppBarMessageHelper.RegisterBar(handle, size);
-                SysTray.DestroySystemTray();
-                Application.Current.Shutdown();
-            }
-            else
-            {
-                e.Cancel = true;
-            }
-        }
-
-        private void OnWindowResize(object sender, RoutedEventArgs e)
-        {
-            Trace.WriteLine("OnWindowResize raised...");
-            System.Drawing.Size size = new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight);
-            //SHAppBarMessageHelper.QuerySetPosition(handle, size, SHAppBarMessage1.Win32.NativeMethods.ABEdge.ABE_TOP);
-            SHAppBarMessageHelper.ABSetPos(handle, size);
-        }
-
-        private void LaunchProgram(object sender, RoutedEventArgs e)
-        {
-            MenuItem item = (MenuItem)sender;
-            try {
-                System.Diagnostics.Process.Start(item.CommandParameter.ToString());
-            } catch {
-                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-        
-        private void AboutCairo(object sender, RoutedEventArgs e)
-        {
-            CairoMessage.Show(
-                // Replace next line with the Version
-                "Version 0.0.1.11 - Milestone 2 Preview 3"
-                +"\nCopyright © 2007-2010 Cairo Development Team and community contributors.  All rights reserved."
-                // +
-                // Replace next line with the ID Key
-//"Not for redistribution."
-                , "Cairo Desktop Environment", MessageBoxButton.OK, MessageBoxImage.None);
-        } 
-        private void OpenLogoffBox(object sender, RoutedEventArgs e)
-        {
-            bool? LogoffChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and be logged off.", "Are you sure you want to log off now?", "Resources/logoffIcon.png", "Log Off", "Cancel");
-            if (LogoffChoice.HasValue && LogoffChoice.Value)
-            {
-                NativeMethods.Logoff();
-            }
-            else
-            {
-            }
-        }
-        private void OpenRebootBox(object sender, RoutedEventArgs e)
-        {
-            bool? RebootChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and your computer will restart.", "Are you sure you want to restart now?", "Resources/restartIcon.png", "Restart", "Cancel");
-            if (RebootChoice.HasValue && RebootChoice.Value)
-            {
-                NativeMethods.Reboot();
-            }
-            else
-            {
-            }
-        }
-        private void OpenShutDownBox(object sender, RoutedEventArgs e)
-        {
-            bool? ShutdownChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and your computer will turn off.", "Are you sure you want to shut down now?", "Resources/shutdownIcon.png", "Shut Down", "Cancel");
-            if (ShutdownChoice.HasValue && ShutdownChoice.Value)
-            {
-                NativeMethods.Shutdown();
-            }
-            else
-            {
-            }
-        }
-        private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
-        {
-            bool? CloseCairoChoice = CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/cairoIcon.png", "Exit Cairo", "Cancel");
-            if (CloseCairoChoice.HasValue && CloseCairoChoice.Value)
-            {
-                //SHAppBarMessageHelper.DeRegisterBar(handle);
-                System.Drawing.Size size = new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight);
-                SHAppBarMessageHelper.RegisterBar(handle, size);
-                SysTray.DestroySystemTray();
-                Application.Current.Shutdown();
-                // TODO: Will want to relaunch explorer.exe when we start disabling it
-            }
-            else
-            {
-            }
-        }
-        private void OpenMyDocs(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
-        }
-        private void OpenMyPics(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures));
-        }
-        private void OpenMyMusic(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(fileManger, Environment.GetFolderPath(Environment.SpecialFolder.MyMusic));
-        }
-        private void OpenDownloads(object sender, RoutedEventArgs e)
-        {
-            string userprofile = System.Environment.GetEnvironmentVariable("USERPROFILE");
-            string downloadsPath = userprofile + @"\Downloads\";
-            System.Diagnostics.Process.Start(fileManger, downloadsPath);
-        }
-        private void OpenMyComputer(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(fileManger, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
-        }
-        private void OpenUserFolder(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(fileManger, System.Environment.GetEnvironmentVariable("USERPROFILE"));
-        }
-        private void OpenProgramFiles(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(fileManger, System.Environment.GetEnvironmentVariable("ProgramFiles"));
-        }
-        private void OpenRecycleBin(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(fileManger, "::{645FF040-5081-101B-9F08-00AA002F954E}");
-        }
-        private void OpenControlPanel(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("control.exe");
-        }
-        private void OpenTaskManager(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("taskmgr.exe");
-        }
-        private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("timedate.cpl");
-        }
-        private void SysSleep(object sender, RoutedEventArgs e)
-        {
-            NativeMethods.Sleep();
-        }
-        private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
-        {
-            CairoSettingsWindow window = new CairoSettingsWindow();
-            window.Show();
-        }
-        private void InitAppGrabberWindow(object sender, RoutedEventArgs e)
-        {
-            appGrabber.ShowDialog();
-        }
-        private void LaunchShortcut(object sender, RoutedEventArgs e)
-        {
-            Button item = (Button)sender;
-            string ItemLoc = item.CommandParameter.ToString();
-            System.Diagnostics.Process.Start(ItemLoc);
-        }
-        
-        /// <summary>
-        /// Retrieves the users ID key from a compiled resources file.
-        /// </summary>
-        /// <returns>The users ID key.</returns>
-        private string GetUsersIdKey()
-        {
-            string idKey = "For internal use only.";
-            string resKey = null;
-
-            try
-            {
-                var mgr = ResourceManager.CreateFileBasedResourceManager("cairo", Environment.CurrentDirectory, null);
-                resKey = mgr.GetString("ID-Key");
-            }
-            catch (Exception)
-            {
-                resKey = null;
-            }
-
-            return resKey ?? idKey;
-        }
-   }
+        #endregion
+    }
 }

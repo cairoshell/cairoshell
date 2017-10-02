@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Window x:Class="CairoDesktop.MenuBarShadow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title=""
-    Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}"
     Height="14"
     WindowStyle="None"
     AllowsTransparency="True"
@@ -13,10 +12,7 @@
     AllowDrop="False"
     Visibility="Visible"
     Focusable="False"
-    Topmost="False"
-    Loaded="MenuBarShadow_Loaded">
-    <Window.Background>
-        <ImageBrush ImageSource="Resources\menubarShadow.png" />
-    </Window.Background>
-    <Grid></Grid>
+    Topmost="False" Background="Transparent"
+    Loaded="MenuBarShadow_Loaded" LocationChanged="Window_LocationChanged">
+    <Image Source="{StaticResource MenubarShadow}" Stretch="Fill" />
 </Window>

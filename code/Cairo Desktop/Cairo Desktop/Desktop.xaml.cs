@@ -1,23 +1,17 @@
 ﻿using System;
-//using System.Collections.Generic;
-//using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-//using System.Windows.Input;
+using System.Collections.Generic;
+using System.Windows.Interop;
+using CairoDesktop.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Runtime.InteropServices;
-using System.Windows.Input;
+using Microsoft.VisualBasic.FileIO;
+using Microsoft.Win32;
 using System.IO;
-using System.Windows.Threading;
-using System.Collections.Generic;
 using CairoDesktop.SupportingClasses;
-using System.Windows.Interop;
-using System.Windows.Forms;
-//using System.Windows.Shapes;
+using CairoDesktop.Configuration;
+using CairoDesktop.Common;
+using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -26,168 +20,174 @@ namespace CairoDesktop
     /// </summary>
     public partial class Desktop : Window
     {
-        Stack<string> pathHistory = new Stack<string>();
+        public Stack<string> PathHistory = new Stack<string>();
+        private WindowInteropHelper helper;
+        public DesktopIcons Icons;
         public Desktop()
         {
             InitializeComponent();
-            if (Properties.Settings.Default.EnableDynamicDesktop)
+
+            this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+            this.Height = AppBarHelper.PrimaryMonitorSize.Height-1;
+
+            if (Startup.IsCairoUserShell)
             {
-                this.DesktopNavToolbar.IsOpen = true;
-                this.DesktopNavToolbar.StaysOpen = true;
-            }
-            else
-            {
-                this.DesktopNavToolbar.IsOpen = false;
-                this.DesktopNavToolbar.StaysOpen = false;
-            }
-        }
+                string regWallpaper = (string)Registry.GetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop", "Wallpaper", "");
 
-        #region sorry for commenting this out
-        //public string oldPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        //public string oldPath2 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        //public string oldPath3 = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
-        //private void Back_Click(object sender, RoutedEventArgs e)
-        //{
-        //    SystemDirectory desktopSysDir = new SystemDirectory(oldPath, Dispatcher.CurrentDispatcher);
-        //    SystemDirectory oldSysDir = new SystemDirectory(oldPath2, Dispatcher.CurrentDispatcher);
-        //    Locations.Remove(desktopSysDir as SystemDirectory);
-        //    Locations.Add(oldSysDir);
-        //    oldPath = oldPath2;
-        //}
-
-        //private void Home_Click(object sender, RoutedEventArgs e)
-        //{
-        //    SystemDirectory oldSysDir = new SystemDirectory(oldPath, Dispatcher.CurrentDispatcher);
-        //    string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        //    if (Directory.Exists(desktopPath))
-        //    {
-        //        SystemDirectory desktopSysDir = new SystemDirectory(desktopPath, Dispatcher.CurrentDispatcher);
-        //        Locations.Remove(oldSysDir as SystemDirectory);
-        //        Locations.Add(desktopSysDir);
-        //        oldPath = desktopPath;
-        //    }
-        //}
-
-        //private void Fwd_Click(object sender, RoutedEventArgs e)
-        //{
-        //    SystemDirectory desktopSysDir = new SystemDirectory(oldPath, Dispatcher.CurrentDispatcher);
-        //    SystemDirectory oldSysDir = new SystemDirectory(oldPath3, Dispatcher.CurrentDispatcher);
-        //    Locations.Remove(desktopSysDir as SystemDirectory);
-        //    Locations.Add(oldSysDir);
-        //    oldPath = oldPath3;
-        //}
-
-
-
-        //public InvokingObservableCollection<SystemDirectory> Locations
-        //{
-        //    get
-        //    {
-        //        return GetValue(DesktopIcons.locationsProperty) as InvokingObservableCollection<SystemDirectory>;
-        //    }
-        //    set
-        //    {
-        //        if (!this.Dispatcher.CheckAccess())
-        //        {
-        //            this.Dispatcher.Invoke((Action)(() => this.Locations = value), null);
-        //            return;
-        //        }
-
-        //        SetValue(DesktopIcons.locationsProperty, value);
-        //    }
-        //}
-        #endregion
-
-        private void GoChangeDesktopAddress(object sender, RoutedEventArgs e)
-        {
-            //SystemDirectory oldSysDir = new SystemDirectory(oldPath, Dispatcher.CurrentDispatcher);
-            //oldPath2 = oldPath;
-            //oldPath3 = oldPath;
-            string desktopPath = "";
-            if (Directory.Exists(desktopPath))
-            {
-                //SystemDirectory desktopSysDir = new SystemDirectory(desktopPath, Dispatcher.CurrentDispatcher);
-                //Locations.Remove(oldSysDir as SystemDirectory);
-                //Locations.Add(desktopSysDir);
-                //oldPath = desktopPath;
-
-                DirectoryInfo dir = new DirectoryInfo(desktopPath);
-                if (dir != null)
+                if (regWallpaper != string.Empty && Shell.Exists(regWallpaper))
                 {
-                    pathHistory.Push(DesktopIcons.Locations[0].DirectoryInfo.FullName);
-                    DesktopIcons.Locations[0] = new SystemDirectory(dir.FullName, Dispatcher.CurrentDispatcher);
+                    // draw wallpaper
+                    try
+                    {
+                        ImageBrush bgBrush = new ImageBrush();
+                        bgBrush.ImageSource = new BitmapImage(new Uri(regWallpaper, UriKind.Absolute));
+
+                        this.Background = bgBrush;
+                    } catch { }
                 }
             }
         }
 
-        private void Back_Click(object sender, RoutedEventArgs e)
+        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            //CairoMessage.Show("This will go back.", "Cairo Desktop", MessageBoxButton.OK, MessageBoxImage.Information);
-            DirectoryInfo parent = DesktopIcons.Locations[0].DirectoryInfo.Parent;
-            if (parent != null)
+            if (msg == NativeMethods.WM_MOUSEACTIVATE)
             {
-                pathHistory.Push(DesktopIcons.Locations[0].DirectoryInfo.FullName);
-                DesktopIcons.Locations[0] = new SystemDirectory(parent.FullName, Dispatcher.CurrentDispatcher);
+                handled = true;
+                return new IntPtr(NativeMethods.MA_NOACTIVATE);
+            }
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
+            {
+                /*// Extract the WINDOWPOS structure corresponding to this message
+                NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
+
+                // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
+                if (!((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == NativeMethods.SetWindowPosFlags.SWP_NOZORDER))
+                {
+                    // add the SWP_NOZORDER flag
+                    wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOZORDER;
+                    wndPos.UpdateMessage(lParam);
+                }*/
+
+                handled = true;
+                return new IntPtr(NativeMethods.MA_NOACTIVATE);
+            }
+            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            {
+                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                handled = true;
             }
 
+            return IntPtr.Zero;
         }
 
-        private void Home_Click(object sender, RoutedEventArgs e)
+        private void setPosition(uint x, uint y)
         {
-            //CairoMessage.Show("This will go to %USERPROFILE%\\Desktop.", "Cairo Desktop", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            pathHistory.Push(DesktopIcons.Locations[0].DirectoryInfo.FullName);
-            DesktopIcons.Locations[0] = new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), Dispatcher.CurrentDispatcher);
-
+            this.Top = 0;
+            this.Left = 0;
+            this.Width = x;
+            this.Height = y;
         }
 
-        private void Fwd_Click(object sender, RoutedEventArgs e)
+        public void ResetPosition()
         {
-            //CairoMessage.Show("This will go forward.", "Cairo Desktop", MessageBoxButton.OK, MessageBoxImage.Information);
-            if (pathHistory.Count > 0)
-                DesktopIcons.Locations[0] = new SystemDirectory(pathHistory.Pop(), Dispatcher.CurrentDispatcher);
-        }
-
-
-        private void ShowWindowBottomMost_Internal(IntPtr handle)
-        {
-            NativeMethods.SetWindowPos(
-                handle,
-                (IntPtr)NativeMethods.HWND_BOTTOMMOST,
-                0,
-                0,
-                0,
-                0,
-                NativeMethods.SWP_NOSIZE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_SHOWWINDOW);
-        }
-
-        public void ShowWindowBottomMost(IntPtr handle)
-        {
-            this.ShowWindowBottomMost_Internal((new WindowInteropHelper(this)).Handle);
+            this.Top = 0;
+            this.Left = 0;
+            this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+            this.Height = AppBarHelper.PrimaryMonitorSize.Height - 1;
         }
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            WindowInteropHelper f = new WindowInteropHelper(this);
-            this.ShowWindowBottomMost(f.Handle);
+            int result = NativeMethods.SetShellWindow(helper.Handle);
+            Shell.ShowWindowBottomMost(helper.Handle);
         }
 
-        private void Browse_Click(object sender, RoutedEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            // show the windows desktop
+            Shell.ToggleDesktopIcons(true);
+        }
 
-            fbd.SelectedPath = DesktopIcons.Locations[0].DirectoryInfo.FullName;
+        private void Window_SourceInitialized(object sender, EventArgs e)
+        {
+            this.Top = 0;
 
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            helper = new WindowInteropHelper(this);
+
+            HwndSource source = HwndSource.FromHwnd(helper.Handle);
+            source.AddHook(new HwndSourceHook(WndProc));
+
+            if (Settings.EnableDesktop && Icons == null)
             {
-                DirectoryInfo dir = new DirectoryInfo(fbd.SelectedPath);
-                if (dir != null)
+                Icons = new DesktopIcons();
+                grid.Children.Add(Icons);
+
+                if (Settings.EnableDynamicDesktop)
                 {
-                    pathHistory.Push(DesktopIcons.Locations[0].DirectoryInfo.FullName);
-                    DesktopIcons.Locations[0] = new SystemDirectory(dir.FullName, Dispatcher.CurrentDispatcher);
+                    try
+                    {
+                        DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this };
+                        nav.Show();
+                    }
+                    catch { }
                 }
             }
+        }
+
+        private void pasteFromClipboard()
+        {
+            IDataObject clipFiles = Clipboard.GetDataObject();
+
+            if(clipFiles.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] files = (string[])clipFiles.GetData(DataFormats.FileDrop);
+
+                foreach(string file in files)
+                {
+                    if(Shell.Exists(file))
+                    {
+                        try
+                        {
+                            FileAttributes attr = File.GetAttributes(file);
+                            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                                FileSystem.CopyDirectory(file, Icons.Locations[0].FullName + "\\" + new DirectoryInfo(file).Name, UIOption.AllDialogs);
+                            else
+                                FileSystem.CopyFile(file, Icons.Locations[0].FullName + "\\" + Path.GetFileName(file), UIOption.AllDialogs);
+                        }
+                        catch { }
+                    }
+                }
+            }
+        }
+
+        private void miPaste_Click(object sender, RoutedEventArgs e)
+        {
+            pasteFromClipboard();
+        }
+
+        private void miPersonalization_Click(object sender, RoutedEventArgs e)
+        {
+            // doesn't work because Settings app requires Explorer :(
+            if (!Shell.StartProcess("desk.cpl"))
+            {
+                CairoMessage.Show("Unable to open the Display control panel.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void grid_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            NativeMethods.SetForegroundWindow(helper.Handle);
+        }
+
+        public void Navigate(string newLocation)
+        {
+            PathHistory.Push(Icons.Locations[0].FullName);
+            Icons.Locations[0] = new SystemDirectory(newLocation, Dispatcher.CurrentDispatcher);
+        }
+
+        private void CairoDesktopWindow_LocationChanged(object sender, EventArgs e)
+        {
+            ResetPosition();
         }
     }
 }

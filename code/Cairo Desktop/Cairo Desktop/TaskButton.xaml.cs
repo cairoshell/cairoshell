@@ -1,93 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
+﻿using CairoDesktop.Interop;
+using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using System.IO;
-using System.Windows.Markup;
-using System.Runtime.InteropServices;
 
 namespace CairoDesktop
 {
 	public partial class TaskButton
 	{
-        [DllImport("user32.dll")]
-        public static extern int FindWindow(string lpClassName, string lpWindowName);
-        [DllImport("user32.dll")]
-        public static extern int SendMessage(int hWnd, uint Msg, int wParam, int lParam);
-
-        public const int WM_COMMAND = 0x0112;
-        public const int WM_CLOSE = 0xF060; 
+        public WindowsTasks.ApplicationWindow Window;
+        
 		public TaskButton()
 		{
 			this.InitializeComponent();
-			// Insert code required on object creation below this point.
-            // Sets the Theme for Cairo
-            string theme = Properties.Settings.Default.CairoTheme;
-            if (theme != "Cairo.xaml")
-            {
-                ResourceDictionary CairoDictionary = (ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme));
-                this.Resources.MergedDictionaries[0] = CairoDictionary;
-            }
-            
-		}
+        }
 
         private void btnClick(object sender, RoutedEventArgs e)
         {
-            var windowObject = this.DataContext as CairoDesktop.WindowsTasks.ApplicationWindow;
-            if (windowObject != null)
+            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
+            if (Window != null)
             {
-                if (windowObject.State == CairoDesktop.WindowsTasks.ApplicationWindow.WindowState.Active)
-                    {
-                        windowObject.Minimize();
-                        windowObject.State = CairoDesktop.WindowsTasks.ApplicationWindow.WindowState.Inactive;
-                    }
-                    else
-                    {
-                        windowObject.BringToFront();
-                    }
+                if (Window.State == WindowsTasks.ApplicationWindow.WindowState.Active)
+                {
+                    Window.Minimize();
+                    Window.State = WindowsTasks.ApplicationWindow.WindowState.Inactive;
+                }
+                else
+                {
+                    Window.BringToFront();
+                }
             }
         }
 
         private void Min_Click(object sender, RoutedEventArgs e)
         {
-            var windowObject = this.DataContext as CairoDesktop.WindowsTasks.ApplicationWindow;
-            if (windowObject != null)
+            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
+            if (Window != null)
             {
-                windowObject.Minimize();
-                windowObject.State = CairoDesktop.WindowsTasks.ApplicationWindow.WindowState.Inactive;
+                Window.Minimize();
+                Window.State = WindowsTasks.ApplicationWindow.WindowState.Inactive;
             }
         }
 
         private void Max_Click(object sender, RoutedEventArgs e)
         {
-            var windowObject = this.DataContext as CairoDesktop.WindowsTasks.ApplicationWindow;
-            if (windowObject != null)
+            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
+            if (Window != null)
             {
-                windowObject.BringToFront();
+                Window.BringToFront();
             }
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            var windowObject = this.DataContext as CairoDesktop.WindowsTasks.ApplicationWindow;
-            if (windowObject != null)
+            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
+            if (Window != null)
             {
-                int handle = FindWindow(null, WinTitle.Text);
+                IntPtr handle = NativeMethods.FindWindow(null, WinTitle.Text);
 
-                SendMessage(handle, WM_COMMAND, WM_CLOSE, 0);
+                // if the window exists, send close, otherwise remove from the collection
+                if (handle != IntPtr.Zero)
+                    NativeMethods.SendMessageTimeout(handle, WindowsTasks.WindowsTasksService.WM_COMMAND, WindowsTasks.WindowsTasksService.WM_CLOSE, 0, 2, 200, ref handle);
+                else
+                    Window.TasksService.Windows.Remove(Window);
             }
         }
-	}
+
+        private void miTaskMan_Click(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("taskmgr.exe");
+        }
+
+        private void btn_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == System.Windows.Input.MouseButton.Middle)
+            {
+                Shell.StartProcess((this.DataContext as WindowsTasks.ApplicationWindow).WinFileName);
+            }
+        }
+    }
 }

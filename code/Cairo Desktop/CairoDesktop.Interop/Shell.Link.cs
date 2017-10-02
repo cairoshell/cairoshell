@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using IWshRuntimeLibrary;
 using io = System.IO;
 
@@ -48,19 +46,18 @@ namespace CairoDesktop.Interop {
 
                 WshShell shell = new WshShell();
                 IWshShortcut link = (IWshShortcut)shell.CreateShortcut(Path);
-                Target = System.Environment.ExpandEnvironmentVariables(link.TargetPath);
+                Target = Environment.ExpandEnvironmentVariables(link.TargetPath);
                 Arguments = link.Arguments;
                 string[] iconParts = link.IconLocation.Split(',');
                 if (iconParts[0] == "") {
                     IconFile = Target;
                 } else {
-                    IconFile = System.Environment.ExpandEnvironmentVariables(iconParts[0]);
+                    IconFile = Environment.ExpandEnvironmentVariables(iconParts[0]);
                 }
                 int index = 0;
                 int.TryParse(iconParts[1], out index);
                 IconIndex = index;
             }
-
         }
 
     }

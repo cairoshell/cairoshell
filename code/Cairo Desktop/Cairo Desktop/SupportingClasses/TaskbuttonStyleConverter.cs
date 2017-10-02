@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Data;
 using System.Windows;
 using CairoDesktop.WindowsTasks;
@@ -39,9 +36,9 @@ namespace CairoDesktop
                     fxStyle = fxElement.FindResource("CairoTaskbarButtonFlashingStyle");
                     break;
 
-                case ApplicationWindow.WindowState.Hidden:
+                /*case ApplicationWindow.WindowState.Hidden:
                     fxStyle = fxElement.FindResource("CairoTaskbarButtonHiddenStyle");
-                    break;
+                    break;*/
             }
 
             return fxStyle;

@@ -4,8 +4,14 @@
     using System.Diagnostics;
     using System.Windows;
     using Microsoft.Win32;
-    using CairoDesktop.SupportingClasses;
-    using System.Windows.Interop;
+    using Interop;
+    using System.Collections.Generic;
+    using System.Windows.Threading;
+    using System.Windows.Markup;
+    using System.Threading.Tasks;
+    using CairoDesktop.Configuration;
+    using SupportingClasses;
+    using Common;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
@@ -14,30 +20,62 @@
     {
         private static System.Threading.Mutex cairoMutex;
 
-        private static System.Windows.Window _parentWindow;
+        private static Window _parentWindow;
+
+        private static Window _desktopWindow;
 
         public static MenuBar MenuBarWindow { get; set; }
+
         public static MenuBarShadow MenuBarShadowWindow { get; set; }
+
         public static Taskbar TaskbarWindow { get; set; }
+
         public static Desktop DesktopWindow { get; set; }
 
+        public static Window DeskParent { get; set; }
+
+        public static bool IsCairoUserShell;
+
+        private static bool isRestart;
+
+        private static string procName;
+
+        // properties for startup
+        private static string[] hklmStartupKeys = new string[] { "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Run" };
+        
+        private static string[] hkcuStartupKeys = new string[] { "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce" };
 
         /// <summary>
         /// The main entry point for the application
         /// </summary>
         [STAThread]
-        public static void Main()
+        public static void Main(string[] args)
         {
+            if (args.Length > 0 && args[0] == "/restart")
+                isRestart = true;
+            else
+                isRestart = false;
+
             #region Single Instance Check
             bool ok;
             cairoMutex = new System.Threading.Mutex(true, "CairoShell", out ok);
 
-            if (!ok)
+            if (!ok && !isRestart)
             {
                 // Another instance is already running.
                 return;
             }
+            else if (!ok && isRestart)
+            {
+                // this is a restart so let's wait for the old instance to end
+                System.Threading.Thread.Sleep(2000);
+            }
             #endregion
+
+            // Show a splash screen while WPF inits
+            // not needed any more
+            //SplashScreen splash = new SplashScreen("Resources/loadSplash.png");
+            //splash.Show(false, true);
 
             #region some real shell code
             int hShellReadyEvent;
@@ -54,84 +92,97 @@
             }
             #endregion
 
-            #region old code
-            //if (!SingleInstanceCheck())
-            //{
-            //    return;
-            //}
+            // check if we are the current user's shell
+            object userShell = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell");
+            procName = Process.GetCurrentProcess().ProcessName;
+            if (userShell != null)
+                IsCairoUserShell = userShell.ToString().ToLower().Contains("cairodesktop");
+            else
+                IsCairoUserShell = false;
 
-            // Causes crash?
-            // If framework is not correct version then quit.
-            //if (!FrameworkCheck())
-            //{
-            //    return;
-            //}
-            #endregion
+            // Before we do anything, check if settings need to be upgraded
+            if (Settings.IsFirstRun == true)
+                Settings.Upgrade();
 
-            InitializeParentWindow();
-
-            App app = new App();
-
-            MenuBarWindow = new MenuBar() { Owner = _parentWindow };
-            MenuBarWindow.Show();
-            app.MainWindow = MenuBarWindow;
-
-#if (ENABLEFIRSTRUN)
-            FirstRun(app);
-#endif
-
-            if (Properties.Settings.Default.EnableDesktop)
+            if (Settings.EnableTaskbar)
             {
-                DesktopWindow = new Desktop() { Owner = _parentWindow };
-                DesktopWindow.Show();
-                WindowInteropHelper f = new WindowInteropHelper(DesktopWindow);
-                int result = NativeMethods.SetShellWindow(f.Handle);
-                DesktopWindow.ShowWindowBottomMost(f.Handle);
+                // hide the windows taskbar according to user prefs
+                switch (Settings.WindowsTaskbarMode)
+                {
+                    case 0:
+                        AppBarHelper.SetWinTaskbarPos(NativeMethods.SWP_HIDEWINDOW);
+                        break;
+                    case 1:
+                        AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
+                        break;
+                    case 2:
+                        break;
+                    default:
+                        break;
+                }
             }
 
-            if (Properties.Settings.Default.EnableMenuBarShadow)
+            if (Settings.EnableDesktop)
             {
-                MenuBarShadowWindow = new MenuBarShadow() { Owner = _parentWindow };
+                // hide the windows desktop
+                Shell.ToggleDesktopIcons(false);
+            }
+
+            _parentWindow = new Window();
+            InitializeParentWindow(_parentWindow);
+
+            _desktopWindow = new Window();
+            InitializeParentWindow(_desktopWindow);
+            DeskParent = _desktopWindow;
+
+            App app = new App();
+            app.InitializeComponent();
+
+            // Set custom theme if selected
+            string theme = Settings.CairoTheme;
+            if (theme != "Default")
+                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
+            
+            // Set desktop work area for when Explorer isn't running
+            if(IsCairoUserShell)
+                AppBarHelper.SetWorkArea();
+
+            MenuBarWindow = new MenuBar() { Owner = _parentWindow };
+            app.MainWindow = MenuBarWindow;
+            MenuBarWindow.Show();
+
+            if (Settings.EnableDesktop)
+            {
+                DesktopWindow = new Desktop() { Owner = _desktopWindow };
+                DesktopWindow.Show();
+            }
+
+            if (Settings.EnableMenuBarShadow)
+            {
+                MenuBarShadowWindow = new MenuBarShadow() { Owner = _desktopWindow };
                 MenuBarShadowWindow.Show();
             }
 
-            if (Properties.Settings.Default.EnableTaskbar)
+            if (Settings.EnableTaskbar)
             {
                 TaskbarWindow = new Taskbar() { Owner = _parentWindow };
                 TaskbarWindow.Show();
             }
-            
+
+#if (ENABLEFIRSTRUN)
+            FirstRun();
+#endif
+
+            // Close the splash screen
+            //splash.Close(new TimeSpan(0, 0, 0, 0, 800));
+
+            // login items only necessary if Explorer didn't start them
+            if (IsCairoUserShell && !isRestart)
+            {
+                RunStartupApps();
+            }
+
             app.Run();
-
-        }
-
-        /// <summary>
-        /// Checks the version of the framework available on the machine. We require .NET 3.5SP1 for the WPFToolkit.
-        /// </summary>
-        /// <returns>Result of framework check.</returns>
-        private static bool FrameworkCheck()
-        {
-            try
-            {
-                var key = Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\NET Framework Setup\\NDP\\v3.5", false);
-
-                int verValue = (key == null) ? 0 : (int)key.GetValue("SP", 0, RegistryValueOptions.None);
-
-                if (verValue != 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    CairoMessage.Show("Cairo requires .NET Framework 3.5 SP1 or newer to run.  You can visit microsoft.com to obtain it.", "Error", MessageBoxButton.OK, MessageBoxImage.Stop);
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                CairoMessage.Show("Cairo requires .NET Framework 3.5 SP1 or newer to run.  You can visit microsoft.com to obtain it.", "Error", MessageBoxButton.OK, MessageBoxImage.Stop);
-                return false;
-            }
         }
 
         /// <summary>
@@ -140,23 +191,21 @@
         /// <returns>Result of instance check.</returns>
         private static bool SingleInstanceCheck()
         {
-            string proc = Process.GetCurrentProcess().ProcessName;
-
             // get the list of all processes by that name
-            Process[] processes = Process.GetProcessesByName(proc);
+            Process[] processes = Process.GetProcessesByName(procName);
 
             // if there is more than one process...
             if (processes.Length > 1)
             {
                 System.Threading.Thread.Sleep(1000);
-                Process[] processes2 = Process.GetProcessesByName(proc);
+                Process[] processes2 = Process.GetProcessesByName(procName);
                 if (processes2.Length > 1)
                 {
                     System.Threading.Thread.Sleep(3000);
-                    Process[] processes3 = Process.GetProcessesByName(proc);
+                    Process[] processes3 = Process.GetProcessesByName(procName);
                     if (processes3.Length > 1)
                     {
-                        CairoMessage.Show("If it's not responding, end it from Task Manager before trying to run Cairo again.", "Cairo is already running!", MessageBoxButton.OK, MessageBoxImage.Stop);
+                        CairoMessage.ShowAlert("If it's not responding, end it from Task Manager before trying to run Cairo again.", "Cairo is already running!", MessageBoxImage.Stop);
                         return false;
                     }
                     else
@@ -178,24 +227,20 @@
         /// <summary>
         /// Executes the first run sequence.
         /// </summary>
-        /// <param name="app">References to the app object.</param>
-        private static void FirstRun(App app)
+        private static void FirstRun()
         {
             try
             {
-                if (Properties.Settings.Default.IsFirstRun == true)
+                if (Settings.IsFirstRun == true)
                 {
-                    Properties.Settings.Default.IsFirstRun = false;
-                    Properties.Settings.Default.EnableTaskbar = true;
-                    Properties.Settings.Default.Save();
+                    Settings.IsFirstRun = false;
                     AppGrabber.AppGrabber.Instance.ShowDialog();
                 }
             }
             catch (Exception ex)
             {
-                CairoMessage.Show(string.Format("Woops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex), 
+                CairoMessage.ShowAlert(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex), 
                     "Unexpected error!", 
-                    MessageBoxButton.OK, 
                     MessageBoxImage.Error);
             }
         }
@@ -204,9 +249,9 @@
         /// Initializes a new hidden toolwindow to be the owner for all other windows.
         /// This hides the applications icons from the task switcher.
         /// </summary>
-        private static void InitializeParentWindow()
+        private static void InitializeParentWindow(Window _parentWindow)
         {
-            _parentWindow = new Window();
+            
             _parentWindow.Top = -100; // Location of new window is outside of visible part of screen
             _parentWindow.Left = -100;
             _parentWindow.Width = 1; // size of window is enough small to avoid its appearance at the beginning
@@ -217,5 +262,133 @@
             _parentWindow.Hide(); // Hide helper window just in case
         }
 
+        #region Autorun
+
+        private static List<string> FetchStartupApps()
+        {
+            List<string> startupApps = new List<string>();
+
+            // HKLM Run
+            foreach(string keyString in hklmStartupKeys)
+            {
+                RegistryKey key;
+
+                key = Registry.LocalMachine.OpenSubKey(keyString, false);
+
+                if(key != null && key.ValueCount > 0)
+                {
+                    foreach(string valueName in key.GetValueNames())
+                        startupApps.Add(((string)key.GetValue(valueName)).Replace("\"", ""));
+                }
+
+                if (key != null)
+                    key.Close();
+            }
+
+            // HKCU Run
+            foreach (string keyString in hkcuStartupKeys)
+            {
+                RegistryKey key;
+
+                if (keyString.Contains("RunOnce"))
+                    key = Registry.CurrentUser.OpenSubKey(keyString, true);
+                else
+                    key = Registry.CurrentUser.OpenSubKey(keyString, false);
+
+                if (key != null && key.ValueCount > 0)
+                {
+                    foreach (string valueName in key.GetValueNames())
+                    {
+                        startupApps.Add(((string)key.GetValue(valueName)).Replace("\"", ""));
+
+                        // if this is a runonce key, remove the value after we grab it
+                        if (keyString.Contains("RunOnce"))
+                        {
+                            try
+                            {
+                                key.DeleteValue(valueName);
+                            }
+                            catch { }
+                        }
+                    }
+                }
+
+                if (key != null)
+                    key.Close();
+            }
+
+            // Common Start Menu - Startup folder
+            SystemDirectory comStartupDir = new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), Dispatcher.CurrentDispatcher);
+
+            foreach(SystemFile startupFile in comStartupDir.Files)
+            {
+                startupApps.Add(startupFile.FullName);
+            }
+
+            // Start Menu - Startup folder
+            SystemDirectory startupDir = new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Dispatcher.CurrentDispatcher);
+
+            foreach (SystemFile startupFile in startupDir.Files)
+            {
+                startupApps.Add(startupFile.FullName);
+            }
+
+            return startupApps;
+        }
+
+        private static string[] expandArgs(string startupPath)
+        {
+            string[] procInfo = new string[2];
+
+            int exeIndex = startupPath.IndexOf(".exe");
+
+            if(exeIndex > 0)
+            {
+                // we may have args for an executable
+                if (exeIndex + 4 != startupPath.Length)
+                {
+                    // argh, args!
+                    procInfo[0] = startupPath.Substring(0, exeIndex + 4);
+                    procInfo[1] = startupPath.Substring(exeIndex + 5, startupPath.Length - exeIndex - 5);
+                }
+                else
+                {
+                    procInfo[0] = startupPath;
+                }
+            }
+            else
+            {
+                // no args to parse out
+                procInfo[0] = startupPath;
+            }
+
+            return procInfo;
+        }
+
+        private async static void RunStartupApps()
+        {
+            await Task.Run(() => LoopStartupApps());
+        }
+
+        private static void LoopStartupApps()
+        {
+            foreach (string app in FetchStartupApps())
+            {
+                string[] procInfo = expandArgs(app);
+
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.UseShellExecute = true;
+                startInfo.FileName = procInfo[0];
+                startInfo.Arguments = procInfo[1];
+
+                try
+                {
+                    Process.Start(startInfo);
+                }
+                catch { }
+            }
+        }
+
+        #endregion
     }
 }

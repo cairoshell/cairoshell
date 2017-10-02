@@ -1,0 +1,8 @@
+LIBRARY	"CairoDesktop.WindowsTrayHooks.dll"
+EXPORTS
+SetSystrayCallback
+InitializeSystray
+ShutdownSystray
+Run
+
+DllMain
