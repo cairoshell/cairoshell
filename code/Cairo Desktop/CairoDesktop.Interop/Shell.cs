@@ -265,7 +265,26 @@ namespace CairoDesktop.Interop
             //IntPtr hWnd = GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD);
             IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", "");
 
-            if(IsDesktopVisible() != enable)
+            if (hWnd == IntPtr.Zero)
+            {
+                EnumWindows((hwnd, lParam) =>
+                {
+                    StringBuilder cName = new StringBuilder(256);
+                    GetClassName(hwnd, cName, cName.Capacity);
+                    if (cName.ToString() == "WorkerW")
+                    {
+                        IntPtr child = FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+                        if (child != IntPtr.Zero)
+                        {
+                            hWnd = child;
+                            return true;
+                        }
+                    }
+                    return true;
+                }, 0);
+            }
+
+            if (IsDesktopVisible() != enable)
                 SendMessageTimeout(hWnd, WM_COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
         }
 
@@ -273,6 +292,27 @@ namespace CairoDesktop.Interop
         {
             //IntPtr hWnd = GetWindow(GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD), GetWindow_Cmd.GW_CHILD);
             IntPtr hWnd = GetWindow(FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", ""), GetWindow_Cmd.GW_CHILD);
+
+
+            if (hWnd == IntPtr.Zero)
+            {
+                EnumWindows((hwnd, lParam) =>
+                {
+                    StringBuilder cName = new StringBuilder(256);
+                    GetClassName(hwnd, cName, cName.Capacity);
+                    if (cName.ToString() == "WorkerW")
+                    {
+                        IntPtr child = FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+                        if (child != IntPtr.Zero)
+                        {
+                            hWnd = FindWindowEx(child, IntPtr.Zero, "SysListView32", "FolderView");
+                            return true;
+                        }
+                    }
+                    return true;
+                }, 0);
+            }
+
             WINDOWINFO info = new WINDOWINFO();
             info.cbSize = (uint)Marshal.SizeOf(info);
             GetWindowInfo(hWnd, ref info);
