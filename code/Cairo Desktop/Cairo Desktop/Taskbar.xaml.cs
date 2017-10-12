@@ -72,7 +72,7 @@ namespace CairoDesktop
             int sWidth;
             int sHeight;
             // adjust size for dpi
-            AppBarHelper.TransformFromPixels(x, y, out sWidth, out sHeight);
+            Shell.TransformFromPixels(x, y, out sWidth, out sHeight);
             
             this.Top = sHeight - this.Height;
             this.Left = 0;

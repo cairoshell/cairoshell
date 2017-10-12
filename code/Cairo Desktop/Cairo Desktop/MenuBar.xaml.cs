@@ -51,7 +51,7 @@ namespace CairoDesktop
 
         private void initSparkle()
         {
-            WinSparkle.win_sparkle_set_appcast_url("https://dremin.github.io/appdescriptor.rss");
+            WinSparkle.win_sparkle_set_appcast_url("https://cairoshell.github.io/appdescriptor.rss");
             canShutdownDelegate = canShutdown;
             shutdownDelegate = shutdown;
             WinSparkle.win_sparkle_set_can_shutdown_callback(canShutdownDelegate);
@@ -61,6 +61,13 @@ namespace CairoDesktop
 
         private void setupPrograms()
         {
+            if (Environment.OSVersion.Version.Major >= 10)
+            {
+                // show Windows 10 features
+                miOpenUWPSettings.Visibility = Visibility.Visible;
+                //meOpenActionCenter.Visibility = Visibility.Visible; // need to make icon for this
+            }
+
             // Set Quick Launch and Uncategorized categories to not show in menu
             AppGrabber.Category ql = appGrabber.CategoryList.GetCategory("Quick Launch");
             if (ql != null)
@@ -302,8 +309,9 @@ namespace CairoDesktop
                     case NativeMethods.AppBarNotifications.FullScreenApp:
                         if ((int)lParam == 1)
                         {
+                            Trace.WriteLine("Cairo leaving on-top");
                             this.Topmost = false;
-                            Shell.ShowWindowBottomMost(hwnd);
+                            Shell.ShowWindowBottomMost(this.handle);
 
                             if (Settings.EnableTaskbar)
                             {
@@ -313,8 +321,9 @@ namespace CairoDesktop
                         }
                         else
                         {
+                            Trace.WriteLine("Cairo entering on-top");
                             this.Topmost = true;
-                            Shell.ShowWindowTopMost(hwnd);
+                            Shell.ShowWindowTopMost(this.handle);
 
                             if (Settings.EnableTaskbar)
                             {
@@ -357,7 +366,7 @@ namespace CairoDesktop
             int sWidth;
             int sHeight;
             // adjust size for dpi
-            AppBarHelper.TransformFromPixels(x, y, out sWidth, out sHeight);
+            Shell.TransformFromPixels(x, y, out sWidth, out sHeight);
             this.Top = 0;
             this.Left = 0;
             this.Width = sWidth;
@@ -541,6 +550,16 @@ namespace CairoDesktop
         private void OpenControlPanel(object sender, RoutedEventArgs e)
         {
             Shell.StartProcess("control.exe");
+        }
+
+        private void miOpenUWPSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("ms-settings://");
+        }
+
+        private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("ms-actioncenter://");
         }
 
         private void OpenTaskManager(object sender, RoutedEventArgs e)

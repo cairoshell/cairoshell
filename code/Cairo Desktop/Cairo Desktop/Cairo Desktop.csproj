@@ -79,6 +79,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationFramework.Aero">
@@ -164,6 +167,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <None Include="app.manifest">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="White.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

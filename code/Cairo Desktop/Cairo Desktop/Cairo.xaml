@@ -451,6 +451,47 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="CairoMenuItemButtonMenuStyle"
+        TargetType="{x:Type MenuItem}">
+        <Setter Property="Foreground"
+            Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" />
+        <Setter Property="Padding" Value="2,0,2,0" />
+        <Setter Property="Margin" Value="0,-2,0,0" />
+        <Setter Property="Height" Value="22" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type MenuItem}">
+                    <Border x:Name="ContainerBorder" Background="Transparent" BorderBrush="Transparent" Padding="0">
+                        <Border x:Name="Border">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="MenuTextColumnGroup" />
+                                </Grid.ColumnDefinitions>
+                                <!-- Content for the menu text etc -->
+                                <ContentPresenter Grid.Column="0" Margin="{TemplateBinding Padding}" x:Name="HeaderHost" RecognizesAccessKey="True" ContentSource="Header" />
+                            </Grid>
+                        </Border>
+                    </Border>
+                    <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
+                    <ControlTemplate.Triggers>
+                        <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background"
+                                TargetName="Border">
+                                <Setter.Value>
+                                    <!-- Pressed Menubar State -->
+                                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
+                                        <GradientStop Color="#8F1A4DB5" Offset="1.0" />
+                                        <GradientStop Color="#DF338FFF" Offset="0.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="CairoMenuItemCairoSearchMenuStyle"
         TargetType="{x:Type MenuItem}">
             <Setter Property="Foreground"
