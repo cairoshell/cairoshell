@@ -35,7 +35,7 @@ namespace CairoDesktop
             int sWidth;
             int sHeight;
             // adjust size for dpi
-            AppBarHelper.TransformFromPixels(x, y, out sWidth, out sHeight);
+            Shell.TransformFromPixels(x, y, out sWidth, out sHeight);
 
             this.Top = sHeight - this.Height - 150;
             this.Left = (sWidth / 2) - (this.Width / 2);
@@ -124,6 +124,11 @@ namespace CairoDesktop
             //Set the window style to noactivate.
             NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
                 NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            DragMove();
         }
     }
 }

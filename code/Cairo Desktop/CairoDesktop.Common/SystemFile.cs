@@ -197,7 +197,9 @@ namespace CairoDesktop.Common
                     img.BeginInit();
                     img.UriSource = new Uri(this.FullName);
                     img.CacheOption = BitmapCacheOption.OnLoad;
-                    img.DecodePixelWidth = 32;
+                    int dSize = 32;
+                    Interop.Shell.TransformToPixels(32, 32, out dSize, out dSize);
+                    img.DecodePixelWidth = dSize;
                     img.EndInit();
                     img.Freeze();
 

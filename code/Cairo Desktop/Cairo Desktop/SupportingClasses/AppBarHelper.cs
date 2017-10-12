@@ -107,7 +107,7 @@ namespace CairoDesktop.SupportingClasses
             int sHeight;
 
             // adjust size for dpi
-            TransformToPixels(width, height, out sWidth, out sHeight);
+            Shell.TransformToPixels(width, height, out sWidth, out sHeight);
 
             if (abd.uEdge == (int)ABEdge.ABE_LEFT || abd.uEdge == (int)ABEdge.ABE_RIGHT)
             {
@@ -223,32 +223,6 @@ namespace CairoDesktop.SupportingClasses
         public static void ResetWorkArea()
         {
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
-        }
-
-        /// <summary>
-        /// Transforms device independent units (1/96 of an inch)
-        /// to pixels
-        /// </summary>
-        /// <param name="unitX">a device independent unit value X</param>
-        /// <param name="unitY">a device independent unit value Y</param>
-        /// <param name="pixelX">returns the X value in pixels</param>
-        /// <param name="pixelY">returns the Y value in pixels</param>
-        public static void TransformToPixels(double unitX, double unitY, out int pixelX, out int pixelY)
-        {
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                pixelX = (int)((g.DpiX / 96) * unitX);
-                pixelY = (int)((g.DpiY / 96) * unitY);
-            }
-        }
-
-        public static void TransformFromPixels(double unitX, double unitY, out int pixelX, out int pixelY)
-        {
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                pixelX = (int)(unitX / (g.DpiX / 96));
-                pixelY = (int)(unitY / (g.DpiY / 96));
-            }
         }
     }
 }

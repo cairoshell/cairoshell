@@ -84,6 +84,9 @@ Section "Cairo Desktop (required)" cairo
   File "..\Cairo Desktop\Build\x64\Release\White.xaml"
   File "..\Cairo Desktop\Build\x64\Release\WinSparkle.dll"
 
+  ; Set shell context to All Users
+  SetShellVarContext all
+
   ; Start menu shortcuts
   createShortCut "$SMPROGRAMS\Cairo Desktop.lnk" "$INSTDIR\CairoDesktop.exe"
   
@@ -148,6 +151,9 @@ SectionEnd
 
 
 Section "Uninstall"
+
+  ; Set shell context to All Users
+  SetShellVarContext all
 
   ; Remove registry keys
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell"

@@ -23,7 +23,16 @@ namespace CairoDesktop
             if (e.Exception.InnerException != null)
                 inner = "\r\n\r\nInner exception:\r\nMessage: " + e.Exception.InnerException.Message + "\r\nTarget Site: " + e.Exception.InnerException.TargetSite + "\r\n\r\n" + e.Exception.InnerException.StackTrace;
 
-            Common.CairoMessage.Show("Please submit a bug report with the error text below. Thanks! \r\n\r\nMessage: " + e.Exception.Message + "\r\nTarget Site: " + e.Exception.TargetSite + "\r\nVersion: " + version + "\r\n\r\n" + e.Exception.StackTrace + inner, "Oops!  An error has occurred.", MessageBoxButton.OK, MessageBoxImage.Warning);
+            string msg = "Please submit a bug report with the error text below. Thanks! \r\n\r\nMessage: " + e.Exception.Message + "\r\nTarget Site: " + e.Exception.TargetSite + "\r\nVersion: " + version + "\r\n\r\n" + e.Exception.StackTrace + inner;
+
+            Trace.WriteLine(msg);
+
+            try
+            {
+                Common.CairoMessage.Show(msg, "Oops!  An error has occurred.", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch { }
+
             e.Handled = true;
         }
     }

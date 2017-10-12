@@ -18,7 +18,7 @@ namespace CairoDesktop.UWPInterop
             List<string[]> ret = new List<string[]>();
 
             Windows.Management.Deployment.PackageManager pman = new Windows.Management.Deployment.PackageManager();
-            IEnumerable<Windows.ApplicationModel.Package> packages = pman.FindPackagesForUser(System.Security.Principal.WindowsIdentity.GetCurrent().User.ToString());
+            IEnumerable<Windows.ApplicationModel.Package> packages = getPackages(pman);
 
             foreach (Windows.ApplicationModel.Package package in packages)
             {
@@ -169,6 +169,38 @@ namespace CairoDesktop.UWPInterop
             return "";
         }
 
+        private static string userSID = null;
+
+        private static IEnumerable<Windows.ApplicationModel.Package> getPackages(Windows.Management.Deployment.PackageManager pman)
+        {
+            if (userSID == null)
+                userSID = System.Security.Principal.WindowsIdentity.GetCurrent().User.ToString();
+
+            try
+            {
+                return pman.FindPackagesForUser(userSID);
+            }
+            catch
+            {
+                return Enumerable.Empty<Windows.ApplicationModel.Package>();
+            }
+        }
+
+        private static IEnumerable<Windows.ApplicationModel.Package> getPackages(Windows.Management.Deployment.PackageManager pman, string packageFamilyName)
+        {
+            if (userSID == null)
+                userSID = System.Security.Principal.WindowsIdentity.GetCurrent().User.ToString();
+
+            try
+            {
+                return pman.FindPackagesForUser(userSID, packageFamilyName);
+            }
+            catch
+            {
+                return Enumerable.Empty<Windows.ApplicationModel.Package>();
+            }
+        }
+
         // returns [icon, color]
         public static string[] GetAppIcon(string appUserModelId)
         {
@@ -179,7 +211,7 @@ namespace CairoDesktop.UWPInterop
             string returnColor = "";
 
             Windows.Management.Deployment.PackageManager pman = new Windows.Management.Deployment.PackageManager();
-            IEnumerable<Windows.ApplicationModel.Package> packages = pman.FindPackagesForUser(System.Security.Principal.WindowsIdentity.GetCurrent().User.ToString(), packageFamilyName);
+            IEnumerable<Windows.ApplicationModel.Package> packages = getPackages(pman, packageFamilyName);
 
             foreach (Windows.ApplicationModel.Package package in packages)
             {
@@ -198,6 +230,8 @@ namespace CairoDesktop.UWPInterop
                 XmlDocument manifest = getManifest(path);
                 XmlNamespaceManager xmlnsManager = getNamespaceManager(manifest);
 
+                bool found = false;
+
                 foreach (XmlNode app in manifest.SelectNodes("/ns:Package/ns:Applications/ns:Application", xmlnsManager))
                 {
                     // get specific app in package
@@ -212,9 +246,14 @@ namespace CairoDesktop.UWPInterop
                         else
                             returnColor = getPlateColor(app, xmlnsManager);
 
+                        found = true;
+
                         break;
                     }
                 }
+
+                if (found)
+                    break;
             }
 
             return new string[] { returnIcon, returnColor };

@@ -195,9 +195,10 @@ namespace CairoDesktop.WindowsTasks
                         icon.Freeze();
                         return icon;
                     }
-                    else
+                    else if (!_iconBeingRetried)
                     {
                         iconTries = 0;
+                        _iconBeingRetried = true;
                         DispatcherTimer getIcon = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
                         getIcon.Interval = new TimeSpan(0, 0, 2);
                         getIcon.Tick += getIcon_Tick;
@@ -208,6 +209,8 @@ namespace CairoDesktop.WindowsTasks
                 return IconImageConverter.GetDefaultIcon();
             }
         }
+
+        private bool _iconBeingRetried = false;
 
         private Icon _icon
         {
@@ -227,6 +230,8 @@ namespace CairoDesktop.WindowsTasks
                     {
                         ico = null;
                     }
+
+                    NativeMethods.DestroyIcon(iconHandle);
                 }
 
                 return ico;
@@ -309,6 +314,7 @@ namespace CairoDesktop.WindowsTasks
             if (this._icon.Handle != null || iconTries > 5)
             {
                 OnPropertyChanged("Icon");
+                _iconBeingRetried = false;
                 (sender as DispatcherTimer).Stop();
             }
             else
@@ -350,7 +356,9 @@ namespace CairoDesktop.WindowsTasks
             {
                 string winFileName = GetFileNameForWindow(hWnd);
                 if (Shell.Exists(winFileName))
+                {
                     hIco = Shell.GetIconByFilename(winFileName, true);
+                }
             }
 
             return hIco;
