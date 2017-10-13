@@ -76,6 +76,13 @@
                 if (_TimeFormat == null)
                     _TimeFormat = Properties.Settings.Default.TimeFormat;
 
+                // if still null, means we are using the default or user removed from configuration
+                if (string.IsNullOrEmpty(_TimeFormat))
+                {
+                    System.Globalization.DateTimeFormatInfo dtfi = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat;
+                    _TimeFormat = "ddd " + dtfi.ShortTimePattern;
+                }
+
                 return _TimeFormat;
             }
             set
@@ -92,6 +99,12 @@
             {
                 if (_DateFormat == null)
                     _DateFormat = Properties.Settings.Default.DateFormat;
+
+                // if still null, means user removed from configuration
+                if (string.IsNullOrEmpty(_DateFormat))
+                {
+                    _DateFormat = "D";
+                }
 
                 return _DateFormat;
             }

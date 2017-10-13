@@ -269,21 +269,8 @@ namespace CairoDesktop
 
         private void clock_Tick()
         {
-            string timeFormat = Settings.TimeFormat;
-            if (string.IsNullOrEmpty(timeFormat))
-            {
-                timeFormat = "T"; // culturally safe long time pattern
-            }
-
-            dateText.Text = DateTime.Now.ToString(timeFormat);
-
-            string dateFormat = Settings.DateFormat;
-            if (string.IsNullOrEmpty(dateFormat))
-            {
-                dateFormat = "D"; // culturally safe long date pattern
-            }
-
-            dateText.ToolTip = DateTime.Now.ToString(dateFormat);
+            dateText.Text = DateTime.Now.ToString(Settings.TimeFormat);
+            dateText.ToolTip = DateTime.Now.ToString(Settings.DateFormat);
         }
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)

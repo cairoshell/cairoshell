@@ -15,7 +15,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="TimeFormat" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ddd h:mm tt</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DateFormat" Type="System.String" Scope="User">
       <Value Profile="(Default)">D</Value>
