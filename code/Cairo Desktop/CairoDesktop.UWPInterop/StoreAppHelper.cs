@@ -13,6 +13,9 @@ namespace CairoDesktop.UWPInterop
     {
         const string defaultColor = "#111111";
 
+        private static string userSID = null;
+        private static double scale = 0;
+
         public static List<string[]> GetStoreApps()
         {
             List<string[]> ret = new List<string[]>();
@@ -138,7 +141,7 @@ namespace CairoDesktop.UWPInterop
         {
             string iconPath = path + "\\" + (app.SelectSingleNode("uap:VisualElements/@Square44x44Logo", xmlnsManager).Value).Replace(".png", "");
 
-            string[] iconAssets = new string[] {
+            List<string> iconAssets = new List<string> {
                 ".png",
                 ".targetsize-32_altform-unplated.png",
                 ".targetsize-36_altform-unplated.png",
@@ -158,6 +161,22 @@ namespace CairoDesktop.UWPInterop
                 ".targetsize-256.png"
             };
 
+            // do some sorting based on DPI for prettiness
+            if (scale == 0)
+                scale = Shell.GetDpiScale();
+
+            int numMoved = 0;
+            for (int i = 0; i < iconAssets.Count; i++)
+            {
+                if ((scale < 1.25 && iconAssets[i].Contains("16")) || ((scale >= 1.25 && scale < 1.75) && iconAssets[i].Contains("24")))
+                {
+                    string copy = iconAssets[i];
+                    iconAssets.RemoveAt(i);
+                    iconAssets.Insert(1 + numMoved, copy);
+                    numMoved++;
+                }
+            }
+
             foreach (string iconName in iconAssets)
             {
                 if (File.Exists(iconPath + iconName))
@@ -168,8 +187,6 @@ namespace CairoDesktop.UWPInterop
 
             return "";
         }
-
-        private static string userSID = null;
 
         private static IEnumerable<Windows.ApplicationModel.Package> getPackages(Windows.Management.Deployment.PackageManager pman)
         {

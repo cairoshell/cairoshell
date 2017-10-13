@@ -344,5 +344,13 @@ namespace CairoDesktop.Interop
                 pixelY = (int)(unitY / (g.DpiY / 96));
             }
         }
+
+        public static double GetDpiScale()
+        {
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                return (g.DpiX / 96);
+            }
+        }
     }
 }
