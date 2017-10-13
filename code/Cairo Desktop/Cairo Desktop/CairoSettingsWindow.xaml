@@ -180,12 +180,12 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Time format:" />
                         <TextBox Text="{Binding Path=TimeFormat}"
-                            Name="timeSetting" />
+                            Name="timeSetting" ToolTip="Some values you can use here:&#x0a;d	Day of month&#x0a;ddd	Day of week&#x0a;h	Hour (12-hour)&#x0a;H	Hour (24-hour)&#x0a;m	Minutes&#x0a;mm	Minutes (leading zero)&#x0a;s	Seconds&#x0a;ss	Seconds (leading zero)&#x0a;tt	AM/PM if applicable" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Date format:" />
                         <TextBox Text="{Binding Path=DateFormat}"
-                            Name="dateSetting" />
+                            Name="dateSetting" ToolTip="Some values you can use here:&#x0a;d	Day of month&#x0a;dd	Day of month (leading zero)&#x0a;ddd	Weekday (abbreviated)&#x0a;dddd	Weekday (text)&#x0a;M	Month&#x0a;MM	Month (leading zero)&#x0a;MMM	Month (abbreviated)&#x0a;MMMM	Month (text)&#x0a;yy	Year (2-digit)&#x0a;yyyy	Year (4-digit)" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="File manager:" />
