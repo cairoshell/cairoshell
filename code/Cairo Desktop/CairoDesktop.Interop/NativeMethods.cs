@@ -1501,5 +1501,66 @@ namespace CairoDesktop.Interop
                                    string lpszDialogTitle,
                                    string lpszDialogTextBody,
                                    RunFileDialogFlags uflags);
+
+        [DllImport("User32.dll")]
+        public static extern uint SendInput(uint numberOfInputs, INPUT[] input, int structSize);
+
+        [DllImport("user32.dll", SetLastError = false)]
+        public static extern IntPtr GetMessageExtraInfo();
+
+        public const int INPUT_KEYBOARD = 1;
+        public const uint KEYEVENTF_KEYUP = 0x0002;
+
+        public const int VK_LWIN = 0x5B;
+        public const int VK_TAB = 0x09;
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MOUSEINPUT
+        {
+            int dx;
+            int dy;
+            uint mouseData;
+            uint dwFlags;
+            uint time;
+            IntPtr dwExtraInfo;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct KEYBDINPUT
+        {
+            public ushort wVk;
+            public ushort wScan;
+            public uint dwFlags;
+            public uint time;
+            public IntPtr dwExtraInfo;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct HARDWAREINPUT
+        {
+            uint uMsg;
+            ushort wParamL;
+            ushort wParamH;
+        }
+        
+        [StructLayout(LayoutKind.Explicit)]
+        public struct MouseKeybdHardwareInputUnion
+        {
+            [FieldOffset(0)]
+            public MOUSEINPUT mi;
+
+            [FieldOffset(0)]
+            public KEYBDINPUT ki;
+
+            [FieldOffset(0)]
+            public HARDWAREINPUT hi;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct INPUT
+        {
+            public int type;
+            public MouseKeybdHardwareInputUnion mkhi;
+        }
     }
 }
