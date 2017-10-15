@@ -54,7 +54,7 @@ namespace CairoDesktop.SupportingClasses
 
                 return 0;
             }
-
+            
             return uCallBack;
         }
 
@@ -68,6 +68,12 @@ namespace CairoDesktop.SupportingClasses
             IntPtr startButtonHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
             NativeMethods.SetWindowPos(taskbarHwnd, IntPtr.Zero, 0, 0, 0, 0, swp);
             NativeMethods.SetWindowPos(startButtonHwnd, IntPtr.Zero, 0, 0, 0, 0, swp);
+
+            // adjust secondary taskbars for multi-mon
+            if (swp == NativeMethods.SWP_HIDEWINDOW)
+                SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.Hide);
+            else
+                SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.ShowNoActivate);
         }
 
         public static void SetWinTaskbarState(WinTaskbarState state)
@@ -79,6 +85,24 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETSTATE, ref abd);
         }
 
+        private static void SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle shw)
+        {
+            bool complete = false;
+            IntPtr secTaskbarHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Shell_SecondaryTrayWnd", null);
+
+            // if we have 3+ monitors there may be multiple secondary taskbars
+            while (!complete)
+            {
+                if (secTaskbarHwnd != IntPtr.Zero)
+                {
+                    NativeMethods.ShowWindowAsync(secTaskbarHwnd, shw);
+                    secTaskbarHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, secTaskbarHwnd, "Shell_SecondaryTrayWnd", null);
+                }
+                else
+                    complete = true;
+            }
+        }
+
         public static void AppBarActivate(IntPtr hwnd)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
@@ -86,6 +110,10 @@ namespace CairoDesktop.SupportingClasses
             abd.hWnd = hwnd;
             abd.lParam = (IntPtr)Convert.ToInt32(true);
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_ACTIVATE, ref abd);
+
+            // apparently the secondary taskbars like to pop up when app bars change
+            if (Settings.WindowsTaskbarMode == 0)
+                SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.Hide);
         }
 
         public static void AppBarWindowPosChanged(IntPtr hwnd)

@@ -52,9 +52,9 @@ void InitializeSystray()
 	RegisterClass( &m_TrayClass );
 
 	m_hWndTray = CreateWindowEx(	WS_EX_TOPMOST | WS_EX_TOOLWINDOW,
-								TEXT("Shell_TrayWnd"),
-								TEXT(""),
-								WS_POPUP,
+								L"Shell_TrayWnd",
+								NULL,
+								WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
 								0, 0,
 								0, 0,
 								NULL,
@@ -63,9 +63,9 @@ void InitializeSystray()
 								NULL);
 
 	ODS("Shell_TrayWnd Created\n");
-
+	
 	memset(&m_NotifyClass,0, sizeof(m_NotifyClass));
-     m_NotifyClass.lpszClassName = TEXT("TrayNotifyWnd");
+     m_NotifyClass.lpszClassName = L"TrayNotifyWnd";
      m_NotifyClass.lpfnWndProc = WndProc;
      //m_NotifyClass.cbSize = sizeof(WNDCLASSEX);
      m_NotifyClass.hInstance = m_hInstance;
@@ -74,9 +74,9 @@ void InitializeSystray()
      RegisterClass(&m_NotifyClass);
         
 	 m_hWndNotify = CreateWindowEx( 0,
-              TEXT("TrayNotifyWnd"), 
+              L"TrayNotifyWnd", 
               NULL,
-              WS_CHILD,
+              WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
               0, 0, 0, 0,
               m_hWndTray, NULL,
               m_hInstance,
