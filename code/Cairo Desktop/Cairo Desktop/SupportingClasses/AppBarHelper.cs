@@ -236,12 +236,12 @@ namespace CairoDesktop.SupportingClasses
 
             NativeMethods.RECT rc;
             rc.left = SystemInformation.VirtualScreen.Left;
-            rc.top = SystemInformation.VirtualScreen.Top + 23; // allocate menu bar space
+            rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.GetDpiScale()); // allocate menu bar space
             rc.right = SystemInformation.VirtualScreen.Right;
 
             // only allocate space for taskbar if enabled
             if (Settings.EnableTaskbar)
-                rc.bottom = SystemInformation.VirtualScreen.Bottom - 29;
+                rc.bottom = SystemInformation.VirtualScreen.Bottom - (int)(Startup.TaskbarWindow.ActualHeight * Shell.GetDpiScale());
             else
                 rc.bottom = SystemInformation.VirtualScreen.Bottom;
 
