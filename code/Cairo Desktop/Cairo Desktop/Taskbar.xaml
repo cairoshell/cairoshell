@@ -285,7 +285,7 @@
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
-                            <Border Margin="99,-3,0,-3" Padding="0,3" Width="351" BorderThickness="1,0,0,0" BorderBrush="#AF5b5b5b">
+                            <Border Margin="99,-3,0,-3" Padding="0,3" Width="351" BorderThickness="1,0,0,0" BorderBrush="#AF5b5b5b" Visibility="Collapsed" Name="bdrTaskView">
                                 <MenuItem Header="Task View" Style="{StaticResource CairoMenuItemStyle}" Click="TaskView_Click">
                                     <MenuItem.Icon>
                                         <Image Source="Resources\taskViewIcon.png"

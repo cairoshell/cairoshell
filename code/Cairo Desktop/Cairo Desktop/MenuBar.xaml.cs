@@ -61,7 +61,7 @@ namespace CairoDesktop
 
         private void setupPrograms()
         {
-            if (Environment.OSVersion.Version.Major >= 10)
+            if (Shell.IsWindows10OrBetter)
             {
                 // show Windows 10 features
                 miOpenUWPSettings.Visibility = Visibility.Visible;
@@ -95,7 +95,7 @@ namespace CairoDesktop
             miUserName.Header = username;
 
             // Only show Downloads folder on Vista or greater
-            if (Environment.OSVersion.Version.Major < 6)
+            if (!Shell.IsWindowsVistaOrBetter)
             {
                 PlacesDownloadsItem.Visibility = Visibility.Collapsed;
             }

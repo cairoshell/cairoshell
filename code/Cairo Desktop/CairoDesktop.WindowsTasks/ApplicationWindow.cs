@@ -276,7 +276,7 @@ namespace CairoDesktop.WindowsTasks
                 }
 
                 /* This didn't help
-                if (Environment.OSVersion.Version.Major > 6 || (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2))
+                if (Shell.IsWindows8OrBetter)
                 {
                     IntPtr rect;
                     int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(IntPtr));

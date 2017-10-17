@@ -35,6 +35,12 @@ namespace CairoDesktop
             this.quickLaunchList.ItemsSource = quickLaunch;
             this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+
+            // show task view on windows >= 10, adjust margin if not shown
+            if (Shell.IsWindows10OrBetter)
+                bdrTaskView.Visibility = Visibility.Visible;
+            else
+                TasksList2.Margin = new Thickness(0, -3, 0, -3);
         }
 
         private void Taskbar_Closing(object sender, System.ComponentModel.CancelEventArgs e)

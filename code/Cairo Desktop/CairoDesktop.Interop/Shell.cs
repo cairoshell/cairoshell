@@ -376,5 +376,58 @@ namespace CairoDesktop.Interop
                 return (g.DpiX / 96);
             }
         }
+
+        private static int osVersionMajor = 0;
+        private static int osVersionMinor = 0;
+
+        private static void getOSVersion()
+        {
+            osVersionMajor = Environment.OSVersion.Version.Major;
+            osVersionMinor = Environment.OSVersion.Version.Minor;
+        }
+
+        public static bool IsWindows2kOrBetter
+        {
+            get
+            {
+                if (osVersionMajor == 0)
+                    getOSVersion();
+
+                return (osVersionMajor >= 5);
+            }
+        }
+
+        public static bool IsWindowsVistaOrBetter
+        {
+            get
+            {
+                if (osVersionMajor == 0)
+                    getOSVersion();
+
+                return (osVersionMajor >= 6);
+            }
+        }
+
+        public static bool IsWindows8OrBetter
+        {
+            get
+            {
+                if (osVersionMajor == 0)
+                    getOSVersion();
+
+                return (osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2));
+            }
+        }
+
+        public static bool IsWindows10OrBetter
+        {
+            get
+            {
+                if (osVersionMajor == 0)
+                    getOSVersion();
+
+                return (osVersionMajor >= 10);
+            }
+        }
     }
 }

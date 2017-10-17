@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using System.Linq;
 using System.Diagnostics;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -121,7 +122,7 @@ namespace CairoDesktop.AppGrabber
             }
             List<ApplicationInfo> rval = mergeLists(listsToMerge);
             //rval.Sort();
-            if(Environment.OSVersion.Version.Major > 6 || (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor >= 2))
+            if(Shell.IsWindows8OrBetter)
                 rval.AddRange(getStoreApps());
             return rval;
         }

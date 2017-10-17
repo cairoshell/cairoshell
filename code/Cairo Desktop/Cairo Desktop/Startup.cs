@@ -38,7 +38,7 @@
 
         private static bool isRestart;
 
-        private static string procName;
+        //private static string procName;
 
         // properties for startup
         private static string[] hklmStartupKeys = new string[] { "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Run" };
@@ -80,7 +80,7 @@
             #region some real shell code
             int hShellReadyEvent;
 
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version.Major >= 5)
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT && Shell.IsWindows2kOrBetter)
                 hShellReadyEvent = NativeMethods.OpenEvent(NativeMethods.EVENT_MODIFY_STATE, true, @"Global\msgina: ShellReadyEvent");
             else
                 hShellReadyEvent = NativeMethods.OpenEvent(NativeMethods.EVENT_MODIFY_STATE, false, "msgina: ShellReadyEvent");
@@ -94,7 +94,7 @@
 
             // check if we are the current user's shell
             object userShell = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell");
-            procName = Process.GetCurrentProcess().ProcessName;
+            //procName = Process.GetCurrentProcess().ProcessName;
             if (userShell != null)
                 IsCairoUserShell = userShell.ToString().ToLower().Contains("cairodesktop");
             else
@@ -189,7 +189,7 @@
         /// Checks that a single instance of the application is running, and if another is found it notifies the user and exits.
         /// </summary>
         /// <returns>Result of instance check.</returns>
-        private static bool SingleInstanceCheck()
+        /*private static bool SingleInstanceCheck()
         {
             // get the list of all processes by that name
             Process[] processes = Process.GetProcessesByName(procName);
@@ -222,7 +222,7 @@
             {
                 return true;
             }
-        }
+        }*/
 
         /// <summary>
         /// Executes the first run sequence.
