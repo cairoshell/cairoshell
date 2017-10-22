@@ -223,7 +223,7 @@ namespace CairoDesktop.AppGrabber
         /// <param name="other">ApplicationInfo object to compare to.</param>
         /// <returns>True if the Name and Path values are equal, False if not.</returns>
 		public bool Equals(ApplicationInfo other) {
-            if (this.Name != other.Name) return false;
+            //if (this.Name != other.Name) return false; -- because apps can be renamed, this is no longer valid
             if (this.Path == other.Path ) {
                 return true;
             }

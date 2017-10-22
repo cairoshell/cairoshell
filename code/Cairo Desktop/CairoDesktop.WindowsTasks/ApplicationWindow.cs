@@ -76,7 +76,16 @@ namespace CairoDesktop.WindowsTasks
 
                     propStore.GetValue(PKEY_AppUserModel_ID, out prop);
 
-                    _appUserModelId = prop.Value.ToString();
+                    try
+                    {
+                        _appUserModelId = prop.Value.ToString();
+                    }
+                    catch
+                    {
+                        _appUserModelId = "";
+                    }
+
+                    prop.Clear();
                 }
 
                 return _appUserModelId;

@@ -15,13 +15,23 @@ namespace CairoDesktop.Common
         private static readonly string[] ImageFileTypes = new string[] { ".jpg", ".jpeg", ".gif", ".bmp", ".png" };
         private Dispatcher _dispatcher;
         private ImageSource _icon;
+        private string _friendlyName;
+        private string _fullName;
+        private string _name;
         private List<string> _verbs = new List<string>();
 
         public bool IsDirectory
         {
             get
             {
-                return Interop.Shell.Exists(FullName) && (File.GetAttributes(this.FullName) & FileAttributes.Directory) == FileAttributes.Directory;
+                try
+                {
+                    return Interop.Shell.Exists(FullName) && (File.GetAttributes(this.FullName) & FileAttributes.Directory) == FileAttributes.Directory;
+                }
+                catch
+                {
+                    return false;
+                }
             }
         }
 
@@ -41,24 +51,28 @@ namespace CairoDesktop.Common
         /// <param name="dispatcher">The current UI dispatcher.</param>
         public SystemFile(string filePath, Dispatcher dispatcher)
         {
-            this.FullName = filePath;
-            if (Interop.Shell.Exists(FullName))
-            {
-                this.Name = Path.GetFileName(filePath);
+            this._dispatcher = dispatcher;
 
-                if (Settings.ShowFileExtensions || IsDirectory)
-                    this.FriendlyName = this.Name;
-                else
-                    this.FriendlyName = Path.GetFileNameWithoutExtension(filePath);
-                this._dispatcher = dispatcher;
-                Initialize();
+            SetFilePath(filePath);
+        }
+
+        public bool SetFilePath(string filePath)
+        {
+            if (Interop.Shell.Exists(filePath))
+            {
+                this.FullName = filePath;
+
+                getVerbs();
+
+                return true;
             }
+            return false;
         }
 
         /// <summary>
         /// Initializes the details of the file.
         /// </summary>
-        private void Initialize()
+        private void getVerbs()
         {
             Process refProc = new Process();
             refProc.StartInfo.FileName = this.FullName;
@@ -70,24 +84,82 @@ namespace CairoDesktop.Common
             catch { }
 
             refProc.Dispose();
-
-            //_dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() => Icon = GetDisplayIcon()));
         }
 
         /// <summary>
         /// Gets or sets the name of the file.
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                if (_name == null)
+                {
+                    _name = Path.GetFileName(this.FullName);
+                }
+
+                return _name;
+            }
+
+            private set
+            {
+                _name = value;
+                OnPropertyChanged("Name");
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the name of the file, without extension depending on user preference.
+        /// Gets the name of the file, without extension depending on user preference.
         /// </summary>
-        public string FriendlyName { get; set; }
+        public string FriendlyName
+        {
+            get
+            {
+                if (_friendlyName == null)
+                {
+                    if ((Settings.ShowFileExtensions || IsDirectory) && this.Name != null)
+                        this.FriendlyName = this.Name;
+                    else
+                        this.FriendlyName = Path.GetFileNameWithoutExtension(this.FullName);
+                }
+
+                return _friendlyName;
+            }
+
+            private set
+            {
+                _friendlyName = value;
+                OnPropertyChanged("FriendlyName");
+            }
+        }
 
         /// <summary>
         /// Gets or sets the FullName of the System File.
         /// </summary>
-        public string FullName { get; set; }
+        public string FullName
+        {
+            get
+            {
+                return _fullName;
+            }
+
+            set
+            {
+                _fullName = value;
+                OnPropertyChanged("FullName");
+
+
+                // reset affected properties
+                _name = null;
+                OnPropertyChanged("Name");
+
+                _friendlyName = null;
+                OnPropertyChanged("FriendlyName");
+
+                _icon = null;
+                OnPropertyChanged("Icon");
+            }
+        }
 
         /// <summary>
         /// Gets or sets the Icon associated with this file.
@@ -130,6 +202,14 @@ namespace CairoDesktop.Common
             }
         }
 
+        public static long GetFileSize(string path)
+        {
+            using (var file = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                return file.Length;
+            }
+        }
+
         /// <summary>
         /// Checks the path's file extension against the list of known types to determine if the file is an image.
         /// </summary>
@@ -147,7 +227,7 @@ namespace CairoDesktop.Common
                 string ext = Path.GetExtension(path);
                 foreach (string fileType in ImageFileTypes)
                 {
-                    if (ext.Equals(fileType, StringComparison.OrdinalIgnoreCase))
+                    if (ext.Equals(fileType, StringComparison.OrdinalIgnoreCase) && GetFileSize(path) >= 1)
                     {
                         return true;
                     }
@@ -189,31 +269,38 @@ namespace CairoDesktop.Common
         /// </summary>
         private ImageSource GetDisplayIcon()
         {
-            if (GetFileIsImage(this.FullName))
+            if (Interop.Shell.Exists(this.FullName))
             {
-                try
+                if (GetFileIsImage(this.FullName))
                 {
-                    BitmapImage img = new BitmapImage();
-                    img.BeginInit();
-                    img.UriSource = new Uri(this.FullName);
-                    img.CacheOption = BitmapCacheOption.OnLoad;
-                    int dSize = 32;
-                    Interop.Shell.TransformToPixels(32, 32, out dSize, out dSize);
-                    img.DecodePixelWidth = dSize;
-                    img.EndInit();
-                    img.Freeze();
+                    try
+                    {
+                        BitmapImage img = new BitmapImage();
+                        img.BeginInit();
+                        img.UriSource = new Uri(this.FullName);
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        int dSize = 32;
+                        Interop.Shell.TransformToPixels(32, 32, out dSize, out dSize);
+                        img.DecodePixelWidth = dSize;
+                        img.EndInit();
+                        img.Freeze();
 
-                    return img;
+                        return img;
+                    }
+                    catch
+                    {
+                        return AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
+                    }
                 }
-                catch
+                else
                 {
+                    // This will attempts to get the icon via AppGrabber - if it fails the default icon will be returned.
                     return AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
                 }
-            } 
-            else 
+            }
+            else
             {
-                // This will attempts to get the icon via AppGrabber - if it fails the default icon will be returned.
-                return AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
+                return AppGrabber.IconImageConverter.GetDefaultIcon();
             }
         }
 

@@ -1537,6 +1537,8 @@
             Value="100" />
         <Setter Property="VerticalAlignment"
             Value="Center" />
+        <Setter Property="FocusVisualStyle"
+            Value="{x:Null}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -1601,7 +1603,7 @@
                                 Style="{StaticResource CairoDesktopButtonStyle}">
                         <DockPanel>
                             <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="32" Height="32" DockPanel.Dock="Top" RenderOptions.BitmapScalingMode="LowQuality" />
-                            <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
+                            <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name, Mode=OneWay}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
                             <Border DockPanel.Dock="Bottom" Name="bdrFilename">
                                 <Border.Effect>
                                     <DropShadowEffect Color="Black"
@@ -1624,10 +1626,10 @@
                                         <DropShadowEffect Color="Black"
                                                         ShadowDepth="1"
                                                                   Direction="90"
-                                                        Opacity="0.3" BlurRadius="2" />
+                                                        Opacity="0.8" BlurRadius="2" />
                                     </TextBlock.Effect>
                                     <TextBlock.ToolTip>
-                                        <ToolTip Content="{Binding Path=Name}" />
+                                        <ToolTip Content="{Binding Path=Name, Mode=OneWay}" />
                                     </TextBlock.ToolTip>
                                 </TextBlock>
                             </Border>
@@ -1668,7 +1670,7 @@
                                 CommandParameter="{Binding Path=FullName}"
                                 Style="{StaticResource CairoFileButtonStyle}">
                         <DockPanel>
-                            <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
+                            <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name, Mode=OneWay}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
                             <Border DockPanel.Dock="Bottom" Name="bdrFilename">
                                 <TextBlock
                                         Text="{Binding Path=FriendlyName}"
@@ -1681,7 +1683,7 @@
                                         Margin="5,0,5,3"
                                         Foreground="White">
                                     <TextBlock.ToolTip>
-                                        <ToolTip Content="{Binding Path=Name}" />
+                                        <ToolTip Content="{Binding Path=Name, Mode=OneWay}" />
                                     </TextBlock.ToolTip>
                                 </TextBlock>
                             </Border>
@@ -1702,7 +1704,7 @@
                             </ContextMenu>
                         </Button.ContextMenu>
                         <Button.ToolTip>
-                            <ToolTip Content="{Binding Path=Name}" />
+                            <ToolTip Content="{Binding Path=Name, Mode=OneWay}" />
                         </Button.ToolTip>
                     </Button>
                 </DataTemplate>

@@ -66,13 +66,12 @@ namespace CairoDesktop.Common {
         void fileWatcher_Renamed(object sender, RenamedEventArgs e) {
             try
             {
-                this.removeFile(e.OldFullPath);
+                this.changeFile(e.OldFullPath, e.FullPath);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            this.addFile(e.FullPath);
         }
 
         void fileWatcher_Deleted(object sender, FileSystemEventArgs e) {
@@ -91,10 +90,12 @@ namespace CairoDesktop.Common {
         }
 
         private void addFile(String filePath) {
-            SystemFile newFile = new SystemFile(filePath, dispatcher);
-
-            if(newFile.Name != null)
-                files.Add(newFile);
+            if (Interop.Shell.Exists(filePath) && isFileVisible(filePath))
+            {
+                SystemFile newFile = new SystemFile(filePath, dispatcher);
+                if (newFile.Name != null)
+                    files.Add(newFile);
+            }
         }
 
         private void removeFile(String filePath) {
@@ -105,7 +106,54 @@ namespace CairoDesktop.Common {
                     break;
                 }
             }
-            files.RemoveAt(removalIndex);
+
+            if (removalIndex > -1)
+                files.RemoveAt(removalIndex);
+        }
+
+        private void changeFile(string oldPath, string newPath)
+        {
+            bool newExists = false;
+            foreach (SystemFile file in files)
+            {
+                if (file.FullName == newPath)
+                {
+                    newExists = true;
+                    break;
+                }
+            }
+
+            if (!newExists)
+            {
+                foreach (SystemFile file in files)
+                {
+                    if (file.FullName == oldPath)
+                    {
+                        file.SetFilePath(newPath);
+                        break;
+                    }
+                }
+            }
+            else
+                removeFile(oldPath);
+        }
+
+        private bool isFileVisible(string fileName)
+        {
+            if (Interop.Shell.Exists(fileName))
+            {
+                try
+                {
+                    FileAttributes attributes = File.GetAttributes(fileName);
+                    return (((attributes & FileAttributes.Hidden) != FileAttributes.Hidden) && ((attributes & FileAttributes.System) != FileAttributes.System) && ((attributes & FileAttributes.Temporary) != FileAttributes.Temporary));
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return false;
         }
 
         private void initialize()
@@ -117,8 +165,7 @@ namespace CairoDesktop.Common {
 
             foreach (DirectoryInfo subDir in dir.GetDirectories())
             {
-                FileAttributes attributes = subDir.Attributes;
-                if (showSubs && ((attributes & FileAttributes.Hidden) != FileAttributes.Hidden) && ((attributes & FileAttributes.System) != FileAttributes.System) && ((attributes & FileAttributes.Temporary) != FileAttributes.Temporary))
+                if (showSubs && isFileVisible(subDir.FullName))
                 {
                     files.Add(new SystemFile(subDir.FullName, dispatcher));
                 }
@@ -126,8 +173,7 @@ namespace CairoDesktop.Common {
 
             foreach (String file in Directory.GetFiles(this.DirectoryInfo.FullName))
             {
-                FileAttributes attributes = File.GetAttributes(file);
-                if (((attributes & FileAttributes.Hidden) != FileAttributes.Hidden) && ((attributes & FileAttributes.System) != FileAttributes.System) && ((attributes & FileAttributes.Temporary) != FileAttributes.Temporary))
+                if (isFileVisible(file))
                 {
                     files.Add(new SystemFile(file, dispatcher));
                 }

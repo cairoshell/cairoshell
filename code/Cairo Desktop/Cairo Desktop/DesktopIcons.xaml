@@ -4,7 +4,7 @@
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Name="CairoDesktopIcons" UseLayoutRounding="True">
     <DockPanel Margin="0">
-        <ItemsControl ItemsSource="{Binding ElementName=CairoDesktopIcons, Path=Locations}">
+        <ItemsControl ItemsSource="{Binding ElementName=CairoDesktopIcons, Path=Locations}" FocusVisualStyle="{x:Null}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Vertical" />
