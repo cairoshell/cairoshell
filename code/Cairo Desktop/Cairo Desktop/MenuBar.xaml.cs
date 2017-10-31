@@ -61,7 +61,7 @@ namespace CairoDesktop
 
         private void setupPrograms()
         {
-            if (Shell.IsWindows10OrBetter)
+            if (Shell.IsWindows10OrBetter && !Startup.IsCairoUserShell)
             {
                 // show Windows 10 features
                 miOpenUWPSettings.Visibility = Visibility.Visible;
