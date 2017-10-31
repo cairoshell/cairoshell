@@ -80,7 +80,7 @@ namespace CairoDesktop.SupportingClasses
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
-            abd.hWnd = NativeMethods.FindWindow("System_TrayWnd");
+            abd.hWnd = NativeMethods.FindWindow("Shell_TrayWnd");
             abd.lParam = (IntPtr)state;
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETSTATE, ref abd);
         }

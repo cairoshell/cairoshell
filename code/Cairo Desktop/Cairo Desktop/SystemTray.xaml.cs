@@ -104,11 +104,20 @@ namespace CairoDesktop
 
                         if (nicData.dwState != 1)
                         {
-                            if (TrayIcons.Contains(trayIcon))
+                            foreach (TrayIcon ti in TrayIcons)
+                            {
+                                if (ti.HWnd == (IntPtr)nicData.hWnd && ti.UID == nicData.uID)
+                                {
+                                    exists = true;
+                                    trayIcon = ti;
+                                    break;
+                                }
+                            }
+                            /*if (TrayIcons.Contains(trayIcon))
                             {
                                 exists = true;
                                 trayIcon = TrayIcons.Single(i => i.HWnd == (IntPtr)nicData.hWnd && i.UID == nicData.uID);
-                            }
+                            }*/
 
                             trayIcon.Title = nicData.szTip;
                             try
