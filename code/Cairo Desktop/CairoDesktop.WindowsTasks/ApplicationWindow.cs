@@ -197,22 +197,18 @@ namespace CairoDesktop.WindowsTasks
 
                 if (this._icon != null)
                 {
-                    IntPtr hIcon = this._icon.Handle;
-                    if (hIcon != null)
-                    {
-                        ImageSource icon = IconImageConverter.GetImageFromHIcon(hIcon);
-                        icon.Freeze();
-                        return icon;
-                    }
-                    else if (!_iconBeingRetried)
-                    {
-                        iconTries = 0;
-                        _iconBeingRetried = true;
-                        DispatcherTimer getIcon = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
-                        getIcon.Interval = new TimeSpan(0, 0, 2);
-                        getIcon.Tick += getIcon_Tick;
-                        getIcon.Start();
-                    }
+                    ImageSource icon = IconImageConverter.GetImageFromHIcon(this._icon);
+                    icon.Freeze();
+                    return icon;
+                }
+                else if (!_iconBeingRetried)
+                {
+                    iconTries = 0;
+                    _iconBeingRetried = true;
+                    DispatcherTimer getIcon = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
+                    getIcon.Interval = new TimeSpan(0, 0, 2);
+                    getIcon.Tick += getIcon_Tick;
+                    getIcon.Start();
                 }
 
                 return IconImageConverter.GetDefaultIcon();
@@ -221,29 +217,13 @@ namespace CairoDesktop.WindowsTasks
 
         private bool _iconBeingRetried = false;
 
-        private Icon _icon
+        private IntPtr _icon
         {
             get
             {
                 IntPtr iconHandle = GetIconForWindow(this.Handle);
-
-                Icon ico = null;
-
-                if (iconHandle != IntPtr.Zero)
-                {
-                    try
-                    {
-                        ico = System.Drawing.Icon.FromHandle(iconHandle);
-                    }
-                    catch
-                    {
-                        ico = null;
-                    }
-
-                    NativeMethods.DestroyIcon(iconHandle);
-                }
-
-                return ico;
+                
+                return iconHandle;
             }
         }
 
@@ -320,7 +300,7 @@ namespace CairoDesktop.WindowsTasks
 
         private void getIcon_Tick(object sender, EventArgs e)
         {
-            if (this._icon.Handle != null || iconTries > 5)
+            if (this._icon != null || iconTries > 5)
             {
                 OnPropertyChanged("Icon");
                 _iconBeingRetried = false;
