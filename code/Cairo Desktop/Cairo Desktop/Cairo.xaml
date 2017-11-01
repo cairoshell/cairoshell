@@ -1382,6 +1382,14 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="NoItemsTextBlock" TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="#FF9a9a9a" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0" />
+    </Style>
     <!-- Stacks -->
     <Style x:Key="CairoStacksStyle"
         TargetType="{x:Type MenuItem}">
@@ -1710,6 +1718,17 @@
                 </DataTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="HasItems" Value="False">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ItemsControl}">
+                            <TextBlock Style="{StaticResource NoItemsTextBlock}" HorizontalAlignment="Center" Padding="0,0,0,10">This folder is empty.</TextBlock>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <!-- Scrollbars -->
     <Style x:Key="ScrollBarPageButton"
@@ -2029,15 +2048,8 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Path=Count}"
-                                                        Value="0">
-                <Setter Property="Visibility"
-                                                            Value="Collapsed" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding Path=ShowInMenu}"
-                                                        Value="False">
-                <Setter Property="Visibility"
-                                                            Value="Collapsed" />
+            <DataTrigger Binding="{Binding Path=ShowInMenu}" Value="False">
+                <Setter Property="Visibility" Value="Collapsed" />
             </DataTrigger>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Foreground" Value="White" />

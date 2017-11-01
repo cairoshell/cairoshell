@@ -41,7 +41,7 @@
                                     <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
                                         <ContextMenu.Resources>
                                             <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
-                                                
+
                                             </Style>
                                             <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
                                                 <Setter Property="Visibility" Value="Visible" />
@@ -65,6 +65,17 @@
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
+                <Style.Triggers>
+                    <Trigger Property="HasItems" Value="False">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ItemsControl}">
+                                    <TextBlock Style="{StaticResource NoItemsTextBlock}" TextAlignment="Center" Padding="20,17,20,20" Width="240">No programs have been selected yet. Open App Grabber to get started!</TextBlock>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
         </ResourceDictionary>
     </Window.Resources>

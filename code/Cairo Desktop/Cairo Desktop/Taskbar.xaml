@@ -14,14 +14,14 @@
     Visibility="Visible"
     Focusable="False"
     Background="{x:Null}"
-    Closing="Taskbar_Closing" SourceInitialized="TaskbarWindow_SourceInitialized" LocationChanged="TaskbarWindow_LocationChanged"  UseLayoutRounding="True" HorizontalAlignment="Center"
+    Closing="Taskbar_Closing" SourceInitialized="TaskbarWindow_SourceInitialized" LocationChanged="TaskbarWindow_LocationChanged" UseLayoutRounding="True" HorizontalAlignment="Center"
     Topmost="True">
     <Window.Resources>
         <ResourceDictionary>
             <tasks:WindowsTasksService x:Key="tasksSvc" x:Name="tasksSvc" />
             <SolidColorBrush x:Key="ListBorder"
                 Color="#828790" />
-            <Style x:Key="ListViewStyle1"
+            <Style x:Key="TaskbarListView"
                 TargetType="{x:Type ListView}">
                 <Setter Property="Background"
                     Value="Transparent" />
@@ -64,6 +64,24 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            <Style x:Key="TaskListStyle" BasedOn="{StaticResource TaskbarListView}"
+                TargetType="{x:Type ListView}">
+                <Style.Triggers>
+                    <Trigger Property="HasItems" Value="False">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListView}">
+                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                        <Border BorderThickness="0,0,1,0" BorderBrush="#AF5b5b5b" Width="100" Margin="0,-3">
+                                        </Border>
+                                        <TextBlock Style="{StaticResource NoItemsTextBlock}" Padding="8,4,0,4" Width="350">Open windows to see them listed here.</TextBlock>
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
             <Style TargetType="ListViewItem">
                 <Style.Resources>
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
@@ -105,7 +123,7 @@
                     Name="quickLaunchList"
                     Background="{x:Null}"
                     Foreground="{x:Null}"
-                    Style="{StaticResource ListViewStyle1}"
+                    Style="{StaticResource TaskbarListView}"
                           MinHeight="29"
                     BorderThickness="0"
                     Margin="0,-1,3,0"
@@ -134,7 +152,7 @@
                           DataContext="{StaticResource tasksSvc}"
                     Background="{x:Null}"
                     Foreground="{x:Null}"
-                    Style="{StaticResource ListViewStyle1}"
+                    Style="{StaticResource TaskbarListView}"
                     BorderThickness="0"
                     VerticalAlignment="Stretch" x:Name="TasksList">
                     <ListView.ItemsPanel>
@@ -229,7 +247,7 @@
                     ItemsSource="{Binding Source={StaticResource groupedWindows}}"
                     Background="{x:Null}"
                     BorderBrush="#FF908382"
-                    Style="{StaticResource ListViewStyle1}"
+                    Style="{StaticResource TaskListStyle}"
                     BorderThickness="0,0,0,0"
                               Margin="0,-3,0,3"
                     VerticalAlignment="Stretch" x:Name="TasksList2">

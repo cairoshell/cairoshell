@@ -3,7 +3,6 @@ using System.Windows;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
-using System.Threading;
 using System.Windows.Threading;
 
 namespace CairoDesktop
