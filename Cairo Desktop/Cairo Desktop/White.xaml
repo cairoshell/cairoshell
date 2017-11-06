@@ -15,7 +15,9 @@
     
     <!-- Menu bar images -->
     <BitmapImage x:Key="CairoMenuIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/cairoMenuBlack.png"></BitmapImage>
+    <BitmapImage x:Key="CairoMenuIcon_2x" UriSource="pack://application:,,,/CairoDesktop;component/Resources/cairoMenuBlack_2x.png"></BitmapImage>
     <BitmapImage x:Key="CairoSearchIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/searchBlack.png"></BitmapImage>
+    <BitmapImage x:Key="CairoActionCenterIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/actionCenterBlack.png"></BitmapImage>
     <BitmapImage x:Key="MenubarBackground" UriSource="pack://application:,,,/CairoDesktop;component/Resources/menubarWhite.png"></BitmapImage>
     <BitmapImage x:Key="MenubarShadow" UriSource="pack://application:,,,/CairoDesktop;component/Resources/menubarShadow.png"></BitmapImage>
     

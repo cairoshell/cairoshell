@@ -237,7 +237,6 @@
                     <Image Source="Resources\taskListIcon.png"
                            Width="15"
                            Height="12"
-                           Opacity="0.3"
                            Margin="0,0,0,0"></Image>
                 </ToggleButton>
                 <Popup Placement="Relative" PlacementTarget="{Binding ElementName=btnTaskList}" HorizontalOffset="-428" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{Binding ElementName=btnTaskList, Path=IsChecked}" StaysOpen="False">

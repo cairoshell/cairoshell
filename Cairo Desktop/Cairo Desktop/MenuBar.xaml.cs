@@ -38,6 +38,8 @@ namespace CairoDesktop
 
             Width = SystemParameters.WorkArea.Width;
 
+            setupMenu();
+
             setupPlaces();
 
             setupSearch();
@@ -59,15 +61,28 @@ namespace CairoDesktop
             WinSparkle.win_sparkle_init();
         }
 
-        private void setupPrograms()
+        private void setupMenu()
         {
             if (Shell.IsWindows10OrBetter && !Startup.IsCairoUserShell)
             {
                 // show Windows 10 features
                 miOpenUWPSettings.Visibility = Visibility.Visible;
-                //meOpenActionCenter.Visibility = Visibility.Visible; // need to make icon for this
+                meOpenActionCenter.Visibility = Visibility.Visible; // need to make icon for this
             }
 
+            // load high dpi assets if appropriate
+            if (Shell.GetDpiScale() > 1.0)
+            {
+                try
+                {
+                    CairoMenuIcon.Source = (System.Windows.Media.ImageSource)this.FindResource("CairoMenuIcon_2x");
+                }
+                catch { }
+            }
+        }
+
+        private void setupPrograms()
+        {
             // Set Programs Menu to use appGrabber's ProgramList as its source
             categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
 

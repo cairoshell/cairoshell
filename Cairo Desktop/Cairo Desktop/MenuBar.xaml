@@ -205,6 +205,15 @@
             x:Name="CairoMenuBarRight"
             Margin="0,0,0,0">
             <control:SystemTray x:Name="SysTray" />
+            <Menu x:Name="meOpenActionCenter" Style="{StaticResource CairoMenuBarMainContainerStyle}" Visibility="Collapsed">
+                <MenuItem x:Name="miOpenActionCenter" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click" ToolTip="Open Action Center">
+                    <MenuItem.Header>
+                        <Image Name="CairoActionCenterIcon" Source="{StaticResource CairoActionCenterIcon}"
+                              Width="38"
+                              Height="22" />
+                    </MenuItem.Header>
+                </MenuItem>
+            </Menu>
             <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
                 <MenuItem Style="{StaticResource CairoMenuItemStyle}"
                           ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}">
@@ -231,27 +240,17 @@
                         <MenuItem.Header>Open Date &amp; Time Settings</MenuItem.Header>
                         <MenuItem.Icon>
                             <Image Source="Resources\dateTimeIcon.png"
-                                    Width="14"
-                                    Height="15"
-                                    Margin="0,-1,0,0" />
+                                    Width="16"
+                                    Height="16" />
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
             </Menu>
-            <!--<Menu x:Name="meOpenActionCenter" Style="{StaticResource CairoMenuBarMainContainerStyle}" Visibility="Collapsed">
-                <MenuItem x:Name="miOpenActionCenter" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click">
-                    <MenuItem.Header>
-                        <Image Name="CairoActionCenterIcon" Source="{StaticResource CairoSearchIcon}"
-                              Width="37"
-                              Height="22" />
-                    </MenuItem.Header>
-                </MenuItem>
-            </Menu>-->
             <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
                 <MenuItem x:Name="CairoSearchMenu" Style="{StaticResource CairoMenuItemCairoSearchMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" MenuItem.SubmenuOpened="FocusSearchBox">
                     <MenuItem.Header>
                         <Image Name="CairoSearchMenuIcon" Source="{StaticResource CairoSearchIcon}"
-                              Width="37"
+                              Width="38"
                               Height="22" />
                     </MenuItem.Header>
                     <StackPanel>

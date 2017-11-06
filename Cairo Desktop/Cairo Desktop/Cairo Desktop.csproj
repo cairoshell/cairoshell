@@ -324,7 +324,6 @@
     <Resource Include="Resources\taskListIcon.png">
     </Resource>
     <Resource Include="Resources\controlsBrowse.png" />
-    <SplashScreen Include="Resources\loadSplash.png" />
     <Resource Include="Resources\taskViewIcon.png" />
   </ItemGroup>
   <ItemGroup>
@@ -362,6 +361,18 @@
     <Content Include="..\..\Dependencies\WinSparkle\x86\WinSparkle.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\actionCenterDefault.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\actionCenterBlack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cairoMenuBlack_2x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\cairoMenuDefault_2x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
