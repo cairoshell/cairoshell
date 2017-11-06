@@ -113,7 +113,9 @@ namespace CairoDesktop.AppGrabber
         {
             // add Windows taskbar pinned apps to QuickLaunch
             string pinnedPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar";
-            this.QuickLaunch.AddRange(generateAppList(pinnedPath));
+
+            if (Shell.Exists(pinnedPath))
+                this.QuickLaunch.AddRange(generateAppList(pinnedPath));
         }
 
         private List<ApplicationInfo> GetApps()

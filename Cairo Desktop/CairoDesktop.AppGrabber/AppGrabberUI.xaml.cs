@@ -177,13 +177,19 @@ namespace CairoDesktop.AppGrabber
             // Grab the Programs
             List<ApplicationInfo> apps = appGrabber.ProgramList;
 
+            // automatically select apps if none have been yet
+            bool autoAddApps = programsMenuAppsCollection.Count < 1;
+
             // Iterate thru the apps, creating ApplicationInfoPanels and
             // add them to the installedAppsCollection
             foreach (ApplicationInfo app in apps)
             {
                 if (!programsMenuAppsCollection.Contains(app))
                 {
-                    installedAppsCollection.Add(app);
+                    if (autoAddApps && autoSelectByName(app.Name))
+                        programsMenuAppsCollection.Add(app);
+                    else
+                        installedAppsCollection.Add(app);
                 }
             }
             AppViewSorter.Sort(installedAppsCollection, "Name");
@@ -216,6 +222,78 @@ namespace CairoDesktop.AppGrabber
         }
 
         #endregion
+
+        private bool autoSelectByName(string name)
+        {
+            string[] autoAppNames = {
+                // system
+                "File Explorer|full",
+                "Internet Explorer|full",
+                "Windows Explorer|full",
+                "Calculator|full",
+                "Notepad|contains",
+                "Snipping Tool|full",
+                // productivity
+                "LibreOffice|contains",
+                "Access 20|contains",
+                "Excel 20|contains",
+                "Lync 20|contains",
+                "PowerPoint 20|contains",
+                "Publisher 20|contains",
+                "OneNote 20|contains",
+                "Outlook 20|contains",
+                "Skype for Business 20|contains",
+                "Word 20|contains",
+                "Visio 20|contains",
+                "Visual Studio 20|contains",
+                // graphics
+                "Adobe After Effects|contains",
+                "Adobe Illustrator|contains",
+                "Adobe InDesign|contains",
+                "Adobe Dreamweaver|contains",
+                "Adobe Photoshop|contains",
+                "Adobe Premiere|contains",
+                // media
+                "Media Player|contains",
+                "Spotify|full",
+                "iTunes|full",
+                "Audacity|full",
+                // internet
+                "Mozilla Firefox|full",
+                "Chrome|contains",
+                "Remote Desktop Connection|full",
+                "PuTTY|full",
+                "FileZilla|full",
+                "Pidgin|full",
+                "OneDrive|full",
+                "Dropbox|full",
+                "Skype|full",
+                "Twitter|full",
+                "Microsoft Edge|full",
+                "Slack|full",
+                "PureCloud|full",
+                "Discord|full",
+                // games
+                "Steam|full",
+                "Epic Games|full",
+                "Uplay|full",
+                "Battle.net|full",
+                "Open Broadcaster Software|full",
+                "Origin|full"
+            };
+
+            foreach (string autoApp in autoAppNames)
+            {
+                string[] autoAppName = autoApp.Split('|');
+
+                if (autoAppName[1] == "full" && autoAppName[0] == name)
+                    return true;
+                if (autoAppName[1] == "contains" && name.Contains(autoAppName[0]))
+                    return true;
+            }
+
+            return false;
+        }
 
         private void goPage2()
         {
