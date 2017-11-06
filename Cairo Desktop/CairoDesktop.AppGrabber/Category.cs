@@ -29,12 +29,6 @@ namespace CairoDesktop.AppGrabber {
         {
             get
             {
-                /*if (this.Name == "All")
-                {
-                    appsList = this.ParentCategoryList.FlatList.ToList();
-                    appsList.Sort();
-                }*/
-
                 return appsList;
             }
 
@@ -88,9 +82,10 @@ namespace CairoDesktop.AppGrabber {
         /// Object that represents a named list of ApplicationInfos.
         /// </summary>
         /// <param name="name">The name of the category - retrievable from the Name property.</param>
-        public Category(String name) {
+        /// <param name="showInMenu">Should the category appear in the Programs menu</param>
+        public Category(String name, bool showInMenu = true) {
             this.Name = name;
-            this.ShowInMenu = true;
+            this.ShowInMenu = showInMenu;
             this.appsList = new List<ApplicationInfo>();
             AppViewSorter.Sort(this, "Name");
         }

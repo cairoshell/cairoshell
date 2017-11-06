@@ -17,7 +17,7 @@ namespace CairoDesktop.AppGrabber
 
         public static AppGrabberUI uiInstance;
 
-        private static string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web" };
+        private string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web" };
 
         public static AppGrabber Instance
         {
@@ -29,13 +29,8 @@ namespace CairoDesktop.AppGrabber
         { 
             get
             {
-                // always get updated list
-                //var retObject = GetValue(programsListProperty) as List<ApplicationInfo>;
-                //if (retObject.Count == 0)
-                //{
-                    this.ProgramList = GetApps();
-                    var retObject = GetValue(programsListProperty) as List<ApplicationInfo>;
-                //}
+                this.ProgramList = GetApps();
+                var retObject = GetValue(programsListProperty) as List<ApplicationInfo>;
 
                 return retObject;
             }
@@ -60,17 +55,15 @@ namespace CairoDesktop.AppGrabber
                 Category quicklaunch = this.CategoryList.GetCategory("Quick Launch");
                 if (quicklaunch == null)
                 {
-                    this.CategoryList.Add(new Category("Quick Launch"));
+                    this.CategoryList.Add(new Category("Quick Launch", false));
                     quicklaunch = this.CategoryList.GetCategory("Quick Launch");
-                    quicklaunch.ShowInMenu = false;
                 }
                 return quicklaunch;
             }
         }
 
         public bool hasNewApps = false;
-
-        // TODO: Need to handle the setter so we can re-load the config file...
+        
         public String ConfigFile { get; set; }
 
         public List<String> ExecutableExtensions = new List<string>();
@@ -105,12 +98,22 @@ namespace CairoDesktop.AppGrabber
             if (Interop.Shell.Exists(ConfigFile)) {
                 this.CategoryList = CategoryList.Deserialize(ConfigFile);
             } else {
-                this.CategoryList = new CategoryList();
+                // config file not initialized, run first start logic
+                this.CategoryList = new CategoryList(true);
+
+                getPinnedApps();
             }
         }
 
         public void Save() {
             this.CategoryList.Serialize(ConfigFile);
+        }
+
+        private void getPinnedApps()
+        {
+            // add Windows taskbar pinned apps to QuickLaunch
+            string pinnedPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar";
+            this.QuickLaunch.AddRange(generateAppList(pinnedPath));
         }
 
         private List<ApplicationInfo> GetApps()
@@ -121,7 +124,7 @@ namespace CairoDesktop.AppGrabber
                 listsToMerge.Add(generateAppList(location));
             }
             List<ApplicationInfo> rval = mergeLists(listsToMerge);
-            //rval.Sort();
+            
             if(Shell.IsWindows8OrBetter)
                 rval.AddRange(getStoreApps());
             return rval;

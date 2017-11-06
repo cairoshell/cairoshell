@@ -229,8 +229,7 @@ namespace CairoDesktop.AppGrabber
             Category uncat = catList.GetCategory("Uncategorized");
             if (uncat == null)
             {
-                uncat = new Category("Uncategorized");
-                uncat.ShowInMenu = false;
+                uncat = new Category("Uncategorized", false);
                 catList.Add(uncat);
             }
 
@@ -238,8 +237,7 @@ namespace CairoDesktop.AppGrabber
             Category quicklaunch = catList.GetCategory("Quick Launch");
             if (quicklaunch == null)
             {
-                quicklaunch = new Category("Quick Launch");
-                quicklaunch.ShowInMenu = false;
+                quicklaunch = new Category("Quick Launch", false);
                 catList.Add(quicklaunch);
             }
 

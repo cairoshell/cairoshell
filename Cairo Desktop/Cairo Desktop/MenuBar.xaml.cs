@@ -68,18 +68,6 @@ namespace CairoDesktop
                 //meOpenActionCenter.Visibility = Visibility.Visible; // need to make icon for this
             }
 
-            // Set Quick Launch and Uncategorized categories to not show in menu
-            AppGrabber.Category ql = appGrabber.CategoryList.GetCategory("Quick Launch");
-            if (ql != null)
-            {
-                ql.ShowInMenu = false;
-            }
-            AppGrabber.Category uncat = appGrabber.CategoryList.GetCategory("Uncategorized");
-            if (uncat != null)
-            {
-                uncat.ShowInMenu = false;
-            }
-
             // Set Programs Menu to use appGrabber's ProgramList as its source
             categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
 

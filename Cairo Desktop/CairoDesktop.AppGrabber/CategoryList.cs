@@ -9,8 +9,15 @@ namespace CairoDesktop.AppGrabber {
         /// <summary>
         /// Simple wrapper around an ObservableCollection of Category objects.
         /// </summary>
-        public CategoryList() {
+        public CategoryList(bool firstStart = false) {
+            // add default categories
             Add(new Category("All"));
+
+            if (firstStart)
+            {
+                Add(new Category("Uncategorized", false));
+                Add(new Category("Quick Launch", false));
+            }
         }
 
         /// <summary>
@@ -75,6 +82,9 @@ namespace CairoDesktop.AppGrabber {
                     XmlAttribute catNameAttribute = doc.CreateAttribute("Name");
                     catNameAttribute.Value = cat.Name;
                     catElement.Attributes.Append(catNameAttribute);
+                    XmlAttribute catShowInMenuAttribute = doc.CreateAttribute("ShowInMenu");
+                    catShowInMenuAttribute.Value = cat.ShowInMenu.ToString();
+                    catElement.Attributes.Append(catShowInMenuAttribute);
                     root.AppendChild(catElement);
                     foreach (ApplicationInfo app in cat)
                     {
@@ -107,10 +117,24 @@ namespace CairoDesktop.AppGrabber {
             XmlElement root = doc.ChildNodes[0] as XmlElement;
             CategoryList catList = new CategoryList();
             foreach (XmlElement catElement in root.ChildNodes) {
+                // get category
                 Category cat = new Category();
                 cat.Name = catElement.Attributes["Name"].Value;
+                if (catElement.Attributes["ShowInMenu"] != null)
+                    cat.ShowInMenu = Convert.ToBoolean(catElement.Attributes["ShowInMenu"].Value);
+                else
+                {
+                    // force hide quick launch and uncategorized
+                    if (cat.Name == "Uncategorized")
+                        cat.ShowInMenu = false;
+                    if (cat.Name == "Quick Launch")
+                        cat.ShowInMenu = false;
+                }
+
                 catList.Add(cat);
+
                 foreach (XmlElement appElement in catElement.ChildNodes) {
+                    // get application
                     ApplicationInfo app = new ApplicationInfo();
                     app.Name = appElement.ChildNodes[0].InnerText;
                     app.Path = appElement.ChildNodes[1].InnerText;
@@ -124,7 +148,7 @@ namespace CairoDesktop.AppGrabber {
                         System.Diagnostics.Debug.WriteLine(app.Path + " does not exist");
                         continue;
                     }
-                    //app.Icon = app.GetAssociatedIcon();
+                    
                     cat.Add(app);
                 }
             }
