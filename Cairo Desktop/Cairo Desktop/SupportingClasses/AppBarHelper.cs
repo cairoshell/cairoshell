@@ -66,7 +66,7 @@ namespace CairoDesktop.SupportingClasses
         {
             IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
 
-            if (Startup.CairoTrayHWnd != null)
+            if (Startup.CairoTrayHWnd != null && Startup.CairoTrayHWnd != IntPtr.Zero)
             {
                 while (taskbarHwnd == Startup.CairoTrayHWnd)
                 {
@@ -91,7 +91,7 @@ namespace CairoDesktop.SupportingClasses
             abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
             abd.hWnd = NativeMethods.FindWindow("Shell_TrayWnd");
 
-            if (Startup.CairoTrayHWnd != null)
+            if (Startup.CairoTrayHWnd != null && Startup.CairoTrayHWnd != IntPtr.Zero)
             {
                 while (abd.hWnd == Startup.CairoTrayHWnd)
                 {
