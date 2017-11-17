@@ -80,14 +80,6 @@ namespace CairoDesktop.Interop
 
         public const int HWND_TOPMOST = -1; // 0xffff 
         public const int HWND_BOTTOMMOST = 1;
-        public const int SWP_NOSIZE = 0x0001; // 0x0001  
-        public const int SWP_NOMOVE = 0x0002; // 0x0002  
-        public const int SWP_NOZORDER = 0x0004; // 0x0004
-        public const int SWP_NOOWNERZORDER = 0x0200;
-        public const int SWP_NOACTIVATE = 0x0010; // 0x0010  
-        public const int SWP_SHOWWINDOW = 64; // 0x0040  
-        public const int SWP_HIDEWINDOW = 128; // 0x0080  
-        public const int SWP_DRAWFRAME = 32; // 0x0020 
 
         // Handling the close splash screen event
         [DllImport("kernel32.dll")]
@@ -864,7 +856,7 @@ namespace CairoDesktop.Interop
             SWP_NOREPOSITION = SWP_NOOWNERZORDER,
             SWP_NOSENDCHANGING = 0x400,
             SWP_DEFERERASE = 0x2000,
-            SWP_ASYNCWINDOWPOS = 0x4000,
+            SWP_ASYNCWINDOWPOS = 0x4000
         }
 
         public enum WindowZOrder

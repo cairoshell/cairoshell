@@ -163,7 +163,7 @@ namespace CairoDesktop.Interop
                 0,
                 0,
                 0,
-                SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
+                (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
         }
 
         public static void ShowWindowTopMost(IntPtr handle)
@@ -175,7 +175,7 @@ namespace CairoDesktop.Interop
                 0,
                 0,
                 0,
-                SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
+                (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
         }
 
         public static bool ShowFileProperties(string Filename)

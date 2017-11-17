@@ -3,6 +3,7 @@ using System.Windows;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
+using CairoDesktop.Configuration;
 using System.Windows.Threading;
 
 namespace CairoDesktop
@@ -47,9 +48,16 @@ namespace CairoDesktop
             // Manually call dispose on window close...
             (TasksList.DataContext as WindowsTasks.WindowsTasksService).Dispose();
 
+            // dispose system tray if it's still running to prevent conflicts when doing AppBar stuff
+            if (Startup.MenuBarWindow != null && Startup.MenuBarWindow.SysTray != null)
+                Startup.MenuBarWindow.SysTray.DestroySystemTray();
+
+            if (Settings.WindowsTaskbarMode == 0)
+                AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
+
             // show the windows taskbar again
             AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.OnTop);
-            AppBarHelper.SetWinTaskbarPos(NativeMethods.SWP_SHOWWINDOW);
+            AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_SHOWWINDOW);
         }
 
         private void setPosition()
@@ -98,17 +106,47 @@ namespace CairoDesktop
                 setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;
             }
-
-            if (msg == appbarMessageId)
+            
+            if (msg == appbarMessageId && appbarMessageId != -1 && Settings.WindowsTaskbarMode == 0)
             {
-                switch (wParam.ToInt32())
+                switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
                 {
-                    case 1:
-                        // Reposition to the bottom of the screen.
-                        //AppBarHelper.ABSetPos(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_BOTTOM);
+                    case NativeMethods.AppBarNotifications.PosChanged:
+                        // Reposition to the top of the screen.
+                        AppBarHelper.ABSetPos(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_BOTTOM);
+                        break;
+
+                    case NativeMethods.AppBarNotifications.FullScreenApp:
+                        if ((int)lParam == 1)
+                        {
+                            this.Topmost = false;
+                            Shell.ShowWindowBottomMost(this.handle);
+                        }
+                        else
+                        {
+                            this.Topmost = true;
+                            Shell.ShowWindowTopMost(this.handle);
+                        }
+
+                        break;
+
+                    case NativeMethods.AppBarNotifications.WindowArrange:
+                        if ((int)lParam != 0)    // before
+                            this.Visibility = Visibility.Collapsed;
+                        else                         // after
+                            this.Visibility = Visibility.Visible;
+
                         break;
                 }
                 handled = true;
+            }
+            else if (msg == NativeMethods.WM_ACTIVATE && Settings.WindowsTaskbarMode == 0)
+            {
+                AppBarHelper.AppBarActivate(hwnd);
+            }
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.WindowsTaskbarMode == 0)
+            {
+                AppBarHelper.AppBarWindowPosChanged(hwnd);
             }
 
             return IntPtr.Zero;
@@ -133,8 +171,8 @@ namespace CairoDesktop
 
             setPosition();
 
-            // Windows bugs make this no bueno...
-            //appbarMessageId = AppBarHelper.RegisterBar(handle, new System.Drawing.Size((int)this.ActualWidth, (int)this.ActualHeight), AppBarHelper.ABEdge.ABE_BOTTOM);
+            if (Settings.WindowsTaskbarMode == 0)
+                appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_BOTTOM);
         }
 
         private void CollectionViewSource_Filter(object sender, System.Windows.Data.FilterEventArgs e)
@@ -155,14 +193,17 @@ namespace CairoDesktop
             else
             {
                 displayChanged = false;
-                
-                // set position after 2 seconds anyway in case we missed something
-                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
-                timer.Start();
-                timer.Tick += (sender1, args) =>
+
+                if (Settings.WindowsTaskbarMode > 0)
                 {
-                    setPosition();
-                };
+                    // set position after 2 seconds anyway in case we missed something
+                    var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+                    timer.Start();
+                    timer.Tick += (sender1, args) =>
+                    {
+                        setPosition();
+                    };
+                }
             }
         }
 

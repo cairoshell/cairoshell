@@ -38,7 +38,7 @@ void SetSystrayCallback(LPVOID theCallbackFunctionAddress)
 	ODS("Systray callback set.\n");
 }
 
-void InitializeSystray()
+HWND InitializeSystray()
 {
 	ShutdownSystray();
 
@@ -83,6 +83,8 @@ void InitializeSystray()
               NULL);
 
 	 ODS("TrayNotifyWnd Created\n");
+
+	 return m_hWndTray;
 }
 
 

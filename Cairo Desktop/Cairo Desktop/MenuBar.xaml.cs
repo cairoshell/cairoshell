@@ -67,7 +67,7 @@ namespace CairoDesktop
             {
                 // show Windows 10 features
                 miOpenUWPSettings.Visibility = Visibility.Visible;
-                meOpenActionCenter.Visibility = Visibility.Visible; // need to make icon for this
+                meOpenActionCenter.Visibility = Visibility.Visible;
             }
 
             // load high dpi assets if appropriate

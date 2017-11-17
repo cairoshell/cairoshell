@@ -222,13 +222,10 @@
                         <TextBlock Text="Mode:" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click">
-                                <Label>Completely hide Windows taskbar</Label>
+                                <Label>Taskbar reserves space</Label>
                             </RadioButton>
                             <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode1" Click="radTaskbarMode1_Click">
-                                <Label>Auto-hide Windows taskbar</Label>
-                            </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode2" Click="radTaskbarMode2_Click">
-                                <Label>Show Windows taskbar</Label>
+                                <Label>Taskbar overlaps windows</Label>
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>

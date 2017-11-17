@@ -51,7 +51,7 @@ namespace CairoDesktop
             {
                 trayDelegate = new SystrayDelegate(SysTrayCallback);
                 hooksWrapper.SetSystrayCallback(trayDelegate);
-                hooksWrapper.InitializeSystray();
+                Startup.CairoTrayHWnd = hooksWrapper.InitializeSystray();
                 hooksWrapper.Run();
 
                 if (Configuration.Settings.EnableSysTrayRehook)
@@ -74,7 +74,7 @@ namespace CairoDesktop
             // check if setting has changed
             if (Configuration.Settings.EnableSysTrayRehook)
             {
-                hooksWrapper.InitializeSystray();
+                Startup.CairoTrayHWnd = hooksWrapper.InitializeSystray();
                 hooksWrapper.Run();
             }
             else

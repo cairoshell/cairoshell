@@ -26,9 +26,9 @@ namespace CairoDesktop.WindowsTray
         /// <summary>
         /// Initializes the system tray hooks.
         /// </summary>
-        public void InitializeSystray()
+        public IntPtr InitializeSystray()
         {
-            InteropCalls.InitializeSystray();
+            return InteropCalls.InitializeSystray();
 
             /*IntPtr hInstance = Marshal.GetHINSTANCE(typeof(WindowsHooksWrapper).Module);
 

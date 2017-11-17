@@ -26,7 +26,7 @@ typedef BOOL (__stdcall *CALLBACK_TASK_FUNCTION)(INT, TASKINFORMATION*);
 // Forward declaration of methods.
 void SetSystrayCallback(LPVOID);
 void SetTaskCallback(LPVOID);
-void InitializeSystray();
+HWND InitializeSystray();
 void Run();
 void ShutdownSystray();
 BOOL CallSystrayDelegate(int, NOTIFYICONDATA);

@@ -17,7 +17,7 @@ namespace CairoDesktop.WindowsTray
         /// <summary>
         /// Initializes the system tray hooks.
         /// </summary>
-        void InitializeSystray();
+        IntPtr InitializeSystray();
 
         /// <summary>
         /// Starts the system tray listener (send the TaskbarCreated message).

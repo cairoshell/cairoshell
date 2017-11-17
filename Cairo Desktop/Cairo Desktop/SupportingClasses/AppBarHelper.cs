@@ -65,12 +65,21 @@ namespace CairoDesktop.SupportingClasses
         public static void SetWinTaskbarPos(int swp)
         {
             IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
+
+            if (Startup.CairoTrayHWnd != null)
+            {
+                while (taskbarHwnd == Startup.CairoTrayHWnd)
+                {
+                    taskbarHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, taskbarHwnd, "Shell_TrayWnd", "");
+                }
+            }
+
             IntPtr startButtonHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
             NativeMethods.SetWindowPos(taskbarHwnd, IntPtr.Zero, 0, 0, 0, 0, swp);
             NativeMethods.SetWindowPos(startButtonHwnd, IntPtr.Zero, 0, 0, 0, 0, swp);
 
             // adjust secondary taskbars for multi-mon
-            if (swp == NativeMethods.SWP_HIDEWINDOW)
+            if (swp == (int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW)
                 SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.Hide);
             else
                 SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.ShowNoActivate);
@@ -81,6 +90,15 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
             abd.hWnd = NativeMethods.FindWindow("Shell_TrayWnd");
+
+            if (Startup.CairoTrayHWnd != null)
+            {
+                while (abd.hWnd == Startup.CairoTrayHWnd)
+                {
+                    abd.hWnd = NativeMethods.FindWindowEx(IntPtr.Zero, abd.hWnd, "Shell_TrayWnd", "");
+                }
+            }
+
             abd.lParam = (IntPtr)state;
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETSTATE, ref abd);
         }
@@ -111,9 +129,11 @@ namespace CairoDesktop.SupportingClasses
             abd.lParam = (IntPtr)Convert.ToInt32(true);
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_ACTIVATE, ref abd);
 
-            // apparently the secondary taskbars like to pop up when app bars change
-            if (Settings.WindowsTaskbarMode == 0)
+            // apparently the taskbars like to pop up when app bars change
+            if (Settings.EnableTaskbar)
+            {
                 SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.Hide);
+            }
         }
 
         public static void AppBarWindowPosChanged(IntPtr hwnd)
@@ -164,7 +184,7 @@ namespace CairoDesktop.SupportingClasses
                 }
                 else
                 {
-                    abd.rc.bottom = SystemInformation.WorkingArea.Bottom;
+                    abd.rc.bottom = SystemInformation.VirtualScreen.Bottom;
                     abd.rc.top = abd.rc.bottom - sHeight;
                 }
             }
@@ -206,6 +226,12 @@ namespace CairoDesktop.SupportingClasses
         private static void DoResize(IntPtr hWnd, int x, int y, int cx, int cy)
         {
             NativeMethods.MoveWindow(hWnd, x, y, cx, cy, true);
+
+            // apparently the taskbars like to pop up when app bars change
+            if (Settings.EnableTaskbar)
+            {
+                SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
+            }
         }
 
         public static System.Drawing.Size PrimaryMonitorSize
@@ -240,7 +266,7 @@ namespace CairoDesktop.SupportingClasses
             rc.right = SystemInformation.VirtualScreen.Right;
 
             // only allocate space for taskbar if enabled
-            if (Settings.EnableTaskbar)
+            if (Settings.EnableTaskbar && Settings.WindowsTaskbarMode == 0)
                 rc.bottom = SystemInformation.VirtualScreen.Bottom - (int)(Startup.TaskbarWindow.ActualHeight * Shell.GetDpiScale());
             else
                 rc.bottom = SystemInformation.VirtualScreen.Bottom;

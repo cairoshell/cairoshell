@@ -34,6 +34,8 @@
 
         public static Window DeskParent { get; set; }
 
+        public static IntPtr CairoTrayHWnd { get; set; }
+
         public static bool IsCairoUserShell;
 
         private static bool isRestart;
@@ -104,13 +106,13 @@
             if (Settings.IsFirstRun == true)
                 Settings.Upgrade();
 
-            if (Settings.EnableTaskbar)
+            /*if (Settings.EnableTaskbar)
             {
                 // hide the windows taskbar according to user prefs
                 switch (Settings.WindowsTaskbarMode)
                 {
                     case 0:
-                        AppBarHelper.SetWinTaskbarPos(NativeMethods.SWP_HIDEWINDOW);
+                        AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
                         break;
                     case 1:
                         AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
@@ -120,7 +122,7 @@
                     default:
                         break;
                 }
-            }
+            }*/
 
             if (Settings.EnableDesktop)
             {
@@ -143,6 +145,18 @@
             if (theme != "Default")
                 if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
+            if (Settings.EnableTaskbar)
+            {
+                // init taskbar before menubar because we can't add an appbar once the notification area is created
+
+                // hide Windows taskbar
+                AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
+                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
+
+                TaskbarWindow = new Taskbar() { Owner = _parentWindow };
+                TaskbarWindow.Show();
+            }
+
             MenuBarWindow = new MenuBar() { Owner = _parentWindow };
             app.MainWindow = MenuBarWindow;
             MenuBarWindow.Show();
@@ -157,12 +171,6 @@
             {
                 MenuBarShadowWindow = new MenuBarShadow() { Owner = _desktopWindow };
                 MenuBarShadowWindow.Show();
-            }
-
-            if (Settings.EnableTaskbar)
-            {
-                TaskbarWindow = new Taskbar() { Owner = _parentWindow };
-                TaskbarWindow.Show();
             }
 
             // Set desktop work area for when Explorer isn't running
