@@ -63,17 +63,10 @@ namespace CairoDesktop
         private void setPosition()
         {
             double screen = AppBarHelper.PrimaryMonitorSize.Height;
-            double workArea = SystemParameters.WorkArea.Bottom;
-            
-            if (screen - workArea == this.Height)
-            {
-                this.Top = screen - this.Height;
-            }
-            else
-            {
-                // set to bottom of workspace
-                this.Top = screen - this.Height;
-            }
+
+            // set to bottom of workspace
+            this.Top = screen - this.Height;
+
             this.Left = 0;
             this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
