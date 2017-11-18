@@ -393,14 +393,6 @@ namespace CairoDesktop
             }
         }
 
-        private void OnWindowLoaded(object sender, RoutedEventArgs e)
-        {
-            if (Settings.EnableSysTray == true)
-            {
-                SysTray.InitializeSystemTray();
-            }
-        }
-
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
             SysTray.DestroySystemTray();

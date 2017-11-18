@@ -15,7 +15,6 @@
     ShowInTaskbar="False"
     Focusable="False"
     AllowDrop="True"
-    Loaded="OnWindowLoaded"
     Initialized="OnWindowInitialized"
     SourceInitialized="Window_SourceInitialized"
     Closing="OnWindowClosing"

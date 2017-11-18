@@ -145,18 +145,6 @@
             if (theme != "Default")
                 if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
-            if (Settings.EnableTaskbar)
-            {
-                // init taskbar before menubar because we can't add an appbar once the notification area is created
-
-                // hide Windows taskbar
-                AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
-                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
-
-                TaskbarWindow = new Taskbar() { Owner = _parentWindow };
-                TaskbarWindow.Show();
-            }
-
             MenuBarWindow = new MenuBar() { Owner = _parentWindow };
             app.MainWindow = MenuBarWindow;
             MenuBarWindow.Show();
@@ -173,9 +161,26 @@
                 MenuBarShadowWindow.Show();
             }
 
+            if (Settings.EnableTaskbar)
+            {
+                // hide Windows taskbar
+                AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
+                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
+
+                TaskbarWindow = new Taskbar() { Owner = _parentWindow };
+                TaskbarWindow.Show();
+            }
+
             // Set desktop work area for when Explorer isn't running
             if (IsCairoUserShell)
                 AppBarHelper.SetWorkArea();
+
+            if (Settings.EnableSysTray == true)
+            {
+                MenuBarWindow.SysTray.InitializeSystemTray();
+            }
+
+            // initialize system tray if enabled
 
 #if (ENABLEFIRSTRUN)
             FirstRun();
