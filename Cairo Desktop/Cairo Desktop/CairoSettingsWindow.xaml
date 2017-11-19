@@ -229,6 +229,17 @@
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Position:" VerticalAlignment="Top" />
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos0" Click="radTaskbarPos0_Click">
+                                <Label>Bottom</Label>
+                            </RadioButton>
+                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos1" Click="radTaskbarPos1_Click">
+                                <Label>Top</Label>
+                            </RadioButton>
+                        </StackPanel>
+                    </StackPanel>
                     <CheckBox IsChecked="{Binding Path=EnableTaskbarPolling}" Click="chkEnableTaskbarPolling_Click"  Name="chkEnableTaskbarPolling">
                         <Label>Poll taskbar buttons for updates</Label>
                     </CheckBox>

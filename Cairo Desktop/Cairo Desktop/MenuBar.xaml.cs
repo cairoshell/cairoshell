@@ -157,6 +157,10 @@ namespace CairoDesktop
 
         private void shutdown()
         {
+            if (Startup.IsCairoUserShell)
+            {
+                Shell.StartProcess("explorer.exe");
+            }
             Dispatcher.Invoke(() => Application.Current.Shutdown(), DispatcherPriority.Normal);
         }
 
@@ -404,7 +408,6 @@ namespace CairoDesktop
             if (Startup.IsCairoUserShell)
             {
                 AppBarHelper.ResetWorkArea();
-                Shell.StartProcess("explorer.exe");
             }
         }
 

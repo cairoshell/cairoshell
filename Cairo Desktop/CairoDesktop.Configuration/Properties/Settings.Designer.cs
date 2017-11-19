@@ -182,12 +182,12 @@ namespace CairoDesktop.Configuration.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int WindowsTaskbarMode {
+        public int TaskbarMode {
             get {
-                return ((int)(this["WindowsTaskbarMode"]));
+                return ((int)(this["TaskbarMode"]));
             }
             set {
-                this["WindowsTaskbarMode"] = value;
+                this["TaskbarMode"] = value;
             }
         }
         
@@ -236,6 +236,18 @@ namespace CairoDesktop.Configuration.Properties {
             }
             set {
                 this["EnableTaskbarPolling"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int TaskbarPosition {
+            get {
+                return ((int)(this["TaskbarPosition"]));
+            }
+            set {
+                this["TaskbarPosition"] = value;
             }
         }
     }

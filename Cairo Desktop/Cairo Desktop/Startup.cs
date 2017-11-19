@@ -106,24 +106,6 @@
             if (Settings.IsFirstRun == true)
                 Settings.Upgrade();
 
-            /*if (Settings.EnableTaskbar)
-            {
-                // hide the windows taskbar according to user prefs
-                switch (Settings.WindowsTaskbarMode)
-                {
-                    case 0:
-                        AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
-                        break;
-                    case 1:
-                        AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
-                        break;
-                    case 2:
-                        break;
-                    default:
-                        break;
-                }
-            }*/
-
             if (Settings.EnableDesktop)
             {
                 // hide the windows desktop

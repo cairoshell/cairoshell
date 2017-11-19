@@ -37,8 +37,9 @@
 
         // Taskbar
         private static bool? _EnableTaskbar;
-        private static int? _WindowsTaskbarMode;
+        private static int? _TaskbarMode;
         private static bool? _EnableTaskbarPolling;
+        private static int? _TaskbarPosition;
 
         // Menu Bar
         private static string _DefaultProgramsCategory;
@@ -254,19 +255,19 @@
             }
         }
 
-        public static int WindowsTaskbarMode
+        public static int TaskbarMode
         {
             get
             {
-                if (_WindowsTaskbarMode == null)
-                    _WindowsTaskbarMode = Properties.Settings.Default.WindowsTaskbarMode;
+                if (_TaskbarMode == null)
+                    _TaskbarMode = Properties.Settings.Default.TaskbarMode;
 
-                return (int)_WindowsTaskbarMode;
+                return (int)_TaskbarMode;
             }
             set
             {
-                _WindowsTaskbarMode = value;
-                Properties.Settings.Default.WindowsTaskbarMode = (int)_WindowsTaskbarMode;
+                _TaskbarMode = value;
+                Properties.Settings.Default.TaskbarMode = (int)_TaskbarMode;
                 Save();
             }
         }
@@ -284,6 +285,23 @@
             {
                 _EnableTaskbarPolling = value;
                 Properties.Settings.Default.EnableTaskbarPolling = (bool)_EnableTaskbarPolling;
+                Save();
+            }
+        }
+
+        public static int TaskbarPosition
+        {
+            get
+            {
+                if (_TaskbarPosition == null)
+                    _TaskbarPosition = Properties.Settings.Default.TaskbarPosition;
+
+                return (int)_TaskbarPosition;
+            }
+            set
+            {
+                _TaskbarPosition = value;
+                Properties.Settings.Default.TaskbarPosition = (int)_TaskbarPosition;
                 Save();
             }
         }

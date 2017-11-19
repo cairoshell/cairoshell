@@ -1126,6 +1126,9 @@
         <Setter Property="Margin" Value="5,0,5,28" />
         <Setter Property="Effect" Value="{StaticResource ResourceKey=CairoMenuShadow}" />
     </Style>
+    <Style x:Key="CairoTaskListTopPopupStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskListPopupStyle}">
+        <Setter Property="Margin" Value="5,52,5,11" />
+    </Style>
     <Style x:Key="CairoTaskListButtonStyle"
         TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle"
@@ -1295,6 +1298,167 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style x:Key="CairoTaskbarTopButtonList"
+        TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource CairoTaskbarButtonList}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="Border"
+                        BorderThickness="1"
+                        CornerRadius="0,0,8,0"
+                        Margin="0,0,0,0">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                <GradientStop Color="#00FFFFFF"
+                                    Offset="1.0" />
+                                <GradientStop Color="#00FFFFFF"
+                                    Offset="0.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.BorderBrush>
+                            <LinearGradientBrush StartPoint="0,1"
+                                EndPoint="0,0">
+                                <GradientStop Color="#00FFFFFF"
+                                    Offset="1" />
+                                <GradientStop Color="#00FFFFFF"
+                                    Offset="0" />
+                            </LinearGradientBrush>
+                        </Border.BorderBrush>
+                        <ContentPresenter Margin="5,1,5,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                        <GradientStop Color="#EF0057a8"
+                                    Offset="1.0" />
+                                        <GradientStop Color="#4F0054C9"
+                                    Offset="0.35" />
+                                        <GradientStop Color="#55FFFFFF"
+                                    Offset="0.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Border"
+                                Property="BorderBrush">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,1"
+                                EndPoint="0,0">
+                                        <GradientStop Color="#8F83b8e9"
+                                    Offset="1" />
+                                        <GradientStop Color="#DF0f82c2"
+                                    Offset="0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0"
+                                EndPoint="0,1">
+                                        <GradientStop Color="#FF0057a8"
+                                    Offset="1.0" />
+                                        <GradientStop Color="#6F0054C9"
+                                    Offset="0.35" />
+                                        <GradientStop Color="#55FFFFFF"
+                                    Offset="0.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsChecked"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,1"
+                                EndPoint="0,0">
+                                        <GradientStop Color="#55FFFFFF"
+                                    Offset="1.0" />
+                                        <GradientStop Color="#20FFFFFF"
+                                    Offset="0.65" />
+                                        <GradientStop Color="#40ffffff"
+                                    Offset="0.0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="Border"
+                                Property="BorderBrush">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,1"
+                                EndPoint="0,0">
+                                        <GradientStop Color="#8FFFFFFF"
+                                    Offset="1" />
+                                        <GradientStop Color="#5FFFFFFF"
+                                    Offset="0" />
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CairoTaskbarBorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness" Value="1,1,0,0" />
+        <Setter Property="CornerRadius" Value="8,0,0,0" />
+        <Setter Property="Padding" Value="7,0,0,0" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#AF1d1d1d" Offset="0.0" />
+                    <GradientStop Color="#DF050505" Offset="1.0" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#C07b7b7b" Offset="0.0" />
+                    <GradientStop Color="#C0595959" Offset="1.0" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CairoTaskbarTopBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarBorderStyle}">
+        <Setter Property="BorderThickness" Value="1,0,0,1" />
+        <Setter Property="CornerRadius" Value="0,0,0,8" />
+    </Style>
+    <Style x:Key="CairoTaskbarEndBorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness" Value="0,1,1,0" />
+        <Setter Property="CornerRadius" Value="0,8,0,0" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#AF1d1d1d" Offset="0.0" />
+                    <GradientStop Color="#DF050505" Offset="1.0" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#C07b7b7b" Offset="0.0" />
+                    <GradientStop Color="#C0595959" Offset="1.0" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CairoTaskbarEndTopBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarEndBorderStyle}">
+        <Setter Property="BorderThickness" Value="0,0,1,1" />
+        <Setter Property="CornerRadius" Value="0,0,8,0" />
     </Style>
     <!-- Button Style for Dialogs -->
     <Style x:Key="CairoButtonStyle"

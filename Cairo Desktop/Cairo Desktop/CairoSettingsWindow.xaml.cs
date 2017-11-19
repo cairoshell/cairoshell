@@ -30,7 +30,7 @@
 
         private void loadRadioGroups()
         {
-            switch (Settings.WindowsTaskbarMode)
+            switch (Settings.TaskbarMode)
             {
                 case 0:
                     radTaskbarMode0.IsChecked = true;
@@ -39,6 +39,20 @@
                 case 1:
                     radTaskbarMode0.IsChecked = false;
                     radTaskbarMode1.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (Settings.TaskbarPosition)
+            {
+                case 0:
+                    radTaskbarPos0.IsChecked = true;
+                    radTaskbarPos1.IsChecked = false;
+                    break;
+                case 1:
+                    radTaskbarPos0.IsChecked = false;
+                    radTaskbarPos1.IsChecked = true;
                     break;
                 default:
                     break;
@@ -205,13 +219,25 @@
 
         private void radTaskbarMode0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.WindowsTaskbarMode = 0;
+            Settings.TaskbarMode = 0;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 
         private void radTaskbarMode1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.WindowsTaskbarMode = 1;
+            Settings.TaskbarMode = 1;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTaskbarPos0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.TaskbarPosition = 0;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTaskbarPos1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.TaskbarPosition = 1;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 

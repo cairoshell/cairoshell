@@ -58,7 +58,7 @@ namespace CairoDesktop.SupportingClasses
             return uCallBack;
         }
 
-        private static List<IntPtr> appBars = new List<IntPtr>();
+        public static List<IntPtr> appBars = new List<IntPtr>();
 
         private static int uCallBack = 0;
 
@@ -179,7 +179,10 @@ namespace CairoDesktop.SupportingClasses
                 abd.rc.right = SystemInformation.WorkingArea.Right;
                 if (abd.uEdge == (int)ABEdge.ABE_TOP)
                 {
-                    abd.rc.top = 0;
+                    if (abWindow is Taskbar)
+                        abd.rc.top = Convert.ToInt32(Startup.MenuBarWindow.Height);
+                    else
+                        abd.rc.top = 0;
                     abd.rc.bottom = abd.rc.top + sHeight;
                 }
                 else
@@ -262,14 +265,27 @@ namespace CairoDesktop.SupportingClasses
 
             NativeMethods.RECT rc;
             rc.left = SystemInformation.VirtualScreen.Left;
-            rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.GetDpiScale()); // allocate menu bar space
             rc.right = SystemInformation.VirtualScreen.Right;
 
             // only allocate space for taskbar if enabled
-            if (Settings.EnableTaskbar && Settings.WindowsTaskbarMode == 0)
-                rc.bottom = SystemInformation.VirtualScreen.Bottom - (int)(Startup.TaskbarWindow.ActualHeight * Shell.GetDpiScale());
+            if (Settings.EnableTaskbar && Settings.TaskbarMode == 0)
+            {
+                if (Settings.TaskbarPosition == 1)
+                {
+                    rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.GetDpiScale()) + (int)(Startup.TaskbarWindow.ActualHeight * Shell.GetDpiScale());
+                    rc.bottom = SystemInformation.VirtualScreen.Bottom;
+                }
+                else
+                {
+                    rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.GetDpiScale());
+                    rc.bottom = SystemInformation.VirtualScreen.Bottom - (int)(Startup.TaskbarWindow.ActualHeight * Shell.GetDpiScale());
+                }
+            }
             else
+            {
+                rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.GetDpiScale());
                 rc.bottom = SystemInformation.VirtualScreen.Bottom;
+            }
 
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref rc, (1 | 2));
         }

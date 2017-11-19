@@ -18,6 +18,7 @@ namespace CairoDesktop
         public IntPtr handle;
         private int appbarMessageId = -1;
         private bool displayChanged = false;
+        private AppBarHelper.ABEdge appBarEdge = AppBarHelper.ABEdge.ABE_BOTTOM;
 
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
@@ -33,8 +34,20 @@ namespace CairoDesktop
             AppGrabber.Category quickLaunch = appGrabber.QuickLaunch;
             
             this.quickLaunchList.ItemsSource = quickLaunch;
-            this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
+            this.bdrTaskbar.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+
+            // set taskbar edge based on preference
+            if (Settings.TaskbarPosition == 1)
+            {
+                this.Top = Startup.MenuBarWindow.Height;
+                appBarEdge = AppBarHelper.ABEdge.ABE_TOP;
+                bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarTopBorderStyle") as Style;
+                bdrTaskbarEnd.Style = Application.Current.FindResource("CairoTaskbarEndTopBorderStyle") as Style;
+                bdrTaskListPopup.Style = Application.Current.FindResource("CairoTaskListTopPopupStyle") as Style;
+                btnTaskList.Style = Application.Current.FindResource("CairoTaskbarTopButtonList") as Style;
+                TasksList.Margin = new Thickness(0);
+            }
 
             // show task view on windows >= 10, adjust margin if not shown
             if (Shell.IsWindows10OrBetter && !Startup.IsCairoUserShell)
@@ -52,7 +65,7 @@ namespace CairoDesktop
             if (Startup.MenuBarWindow != null && Startup.MenuBarWindow.SysTray != null)
                 Startup.MenuBarWindow.SysTray.DestroySystemTray();
 
-            if (Settings.WindowsTaskbarMode == 0)
+            if (AppBarHelper.appBars.Contains(this.handle))
                 AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
 
             // show the windows taskbar again
@@ -62,13 +75,12 @@ namespace CairoDesktop
 
         private void setPosition()
         {
-            double screen = AppBarHelper.PrimaryMonitorSize.Height;
+            int screen = AppBarHelper.PrimaryMonitorSize.Height;
 
-            // set to bottom of workspace
-            this.Top = screen - this.Height;
+            setTopPosition(screen);
 
             this.Left = 0;
-            this.TaskbarBorder.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
+            this.bdrTaskbar.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
         }
 
@@ -80,10 +92,35 @@ namespace CairoDesktop
             // adjust size for dpi
             Shell.TransformFromPixels(x, y, out sWidth, out sHeight);
             
-            this.Top = sHeight - this.Height;
+            setTopPosition(sHeight);
+
             this.Left = 0;
-            this.TaskbarBorder.MaxWidth =sWidth - 36;
+            this.bdrTaskbar.MaxWidth = sWidth - 36;
             this.Width = sWidth;
+        }
+
+        private void setTopPosition(int top)
+        {
+            if (Startup.IsCairoUserShell || Settings.TaskbarMode > 0 || this.Top < Startup.MenuBarWindow.Height)
+            {
+                if (Settings.TaskbarPosition == 1)
+                {
+                    double workArea = SystemParameters.WorkArea.Top;
+
+                    // set to top of workspace
+                    if (workArea >= this.Height + Startup.MenuBarWindow.Height)
+                        this.Top = workArea - this.Height;
+                    else if (workArea == 0)
+                        this.Top = Startup.MenuBarWindow.Height;
+                    else
+                        this.Top = workArea;
+                }
+                else
+                {
+                    // set to bottom of workspace
+                    this.Top = top - this.Height;
+                }
+            }
         }
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -100,13 +137,13 @@ namespace CairoDesktop
                 handled = true;
             }
             
-            if (msg == appbarMessageId && appbarMessageId != -1 && Settings.WindowsTaskbarMode == 0)
+            if (msg == appbarMessageId && appbarMessageId != -1 && Settings.TaskbarMode == 0)
             {
                 switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
                 {
                     case NativeMethods.AppBarNotifications.PosChanged:
                         // Reposition to the top of the screen.
-                        AppBarHelper.ABSetPos(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_BOTTOM);
+                        AppBarHelper.ABSetPos(this, this.ActualWidth, this.ActualHeight, appBarEdge);
                         break;
 
                     case NativeMethods.AppBarNotifications.FullScreenApp:
@@ -133,11 +170,11 @@ namespace CairoDesktop
                 }
                 handled = true;
             }
-            else if (msg == NativeMethods.WM_ACTIVATE && Settings.WindowsTaskbarMode == 0)
+            else if (msg == NativeMethods.WM_ACTIVATE && Settings.TaskbarMode == 0)
             {
                 AppBarHelper.AppBarActivate(hwnd);
             }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.WindowsTaskbarMode == 0)
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.TaskbarMode == 0)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
             }
@@ -164,8 +201,8 @@ namespace CairoDesktop
 
             setPosition();
 
-            if (Settings.WindowsTaskbarMode == 0)
-                appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_BOTTOM);
+            if (Settings.TaskbarMode == 0)
+                appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, appBarEdge);
         }
 
         private void CollectionViewSource_Filter(object sender, System.Windows.Data.FilterEventArgs e)
@@ -187,7 +224,7 @@ namespace CairoDesktop
             {
                 displayChanged = false;
 
-                if (Settings.WindowsTaskbarMode > 0)
+                if (Settings.TaskbarMode > 0)
                 {
                     // set position after 2 seconds anyway in case we missed something
                     var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
@@ -195,6 +232,7 @@ namespace CairoDesktop
                     timer.Tick += (sender1, args) =>
                     {
                         setPosition();
+                        timer.Stop();
                     };
                 }
             }

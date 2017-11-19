@@ -105,19 +105,7 @@
         </ResourceDictionary>
     </Window.Resources>
     <StackPanel Orientation="Horizontal" x:Name="grdTaskbar" HorizontalAlignment="Center">
-        <Border CornerRadius="8,0,0,0" BorderThickness="1,1,0,0" HorizontalAlignment="Center" Padding="7,0,0,0" Name="TaskbarBorder">
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#AF1d1d1d" Offset="0.0" />
-                    <GradientStop Color="#DF050505" Offset="1.0" />
-                </LinearGradientBrush>
-            </Border.Background>
-            <Border.BorderBrush>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#C07b7b7b" Offset="0.0" />
-                    <GradientStop Color="#C0595959" Offset="1.0" />
-                </LinearGradientBrush>
-            </Border.BorderBrush>
+        <Border HorizontalAlignment="Center" Style="{StaticResource CairoTaskbarBorderStyle}" Name="bdrTaskbar">
             <StackPanel Orientation="Horizontal">
                 <ListView HorizontalAlignment="Stretch"
                     Name="quickLaunchList"
@@ -154,7 +142,7 @@
                     Foreground="{x:Null}"
                     Style="{StaticResource TaskbarListView}"
                     BorderThickness="0"
-                    VerticalAlignment="Stretch" x:Name="TasksList">
+                    VerticalAlignment="Stretch" x:Name="TasksList" Margin="0,-1,0,0">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"
@@ -191,7 +179,7 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                        <Border BorderThickness="0" Margin="0,-1,-1,0" BorderBrush="Transparent">
+                                        <Border BorderThickness="0" Margin="0,0,-1,0" BorderBrush="Transparent">
                                             <self:TaskButton MouseRightButtonUp="TaskButton_MouseRightButtonUp" />
                                             <Border.Style>
                                                 <Style TargetType="{x:Type Border}">
@@ -219,19 +207,7 @@
                 </ListView>
             </StackPanel>
         </Border>
-        <Border CornerRadius="0,8,0,0" BorderThickness="0,1,1,0" HorizontalAlignment="Left">
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#AF1d1d1d" Offset="0.0" />
-                    <GradientStop Color="#DF050505" Offset="1.0" />
-                </LinearGradientBrush>
-            </Border.Background>
-            <Border.BorderBrush>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#C07b7b7b" Offset="0.0" />
-                    <GradientStop Color="#C0595959" Offset="1.0" />
-                </LinearGradientBrush>
-            </Border.BorderBrush>
+        <Border HorizontalAlignment="Left" Style="{StaticResource CairoTaskbarEndBorderStyle}" Name="bdrTaskbarEnd">
             <StackPanel Orientation="Horizontal">
                 <ToggleButton x:Name="btnTaskList" Margin="1,-1,-1,0" Style="{StaticResource CairoTaskbarButtonList}" Click="btnTaskList_Click">
                     <Image Source="Resources\taskListIcon.png"
@@ -240,7 +216,7 @@
                            Margin="0,0,0,0"></Image>
                 </ToggleButton>
                 <Popup Placement="Relative" PlacementTarget="{Binding ElementName=btnTaskList}" HorizontalOffset="-428" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{Binding ElementName=btnTaskList, Path=IsChecked}" StaysOpen="False">
-                    <Border Style="{StaticResource CairoTaskListPopupStyle}">
+                    <Border Name="bdrTaskListPopup" Style="{StaticResource CairoTaskListPopupStyle}">
                         <StackPanel Orientation="Vertical">
                         <ListView HorizontalAlignment="Stretch"
                     ItemsSource="{Binding Source={StaticResource groupedWindows}}"
