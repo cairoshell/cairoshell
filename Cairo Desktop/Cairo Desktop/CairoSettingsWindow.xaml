@@ -118,6 +118,9 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="RadioGroup" TargetType="{x:Type StackPanel}">
+            <Setter Property="Margin" Value="0,4" />
+        </Style>
         <Style TargetType="{x:Type CheckBox}">
             <Setter Property="Margin" Value="5,8" />
             <Setter Property="Padding" Value="0" />
@@ -218,7 +221,7 @@
                         Click="EnableTaskbar_Click" Name="chkEnableTaskbar">
                         <Label>Enable Taskbar</Label>
                     </CheckBox>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
                         <TextBlock Text="Mode:" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click">
@@ -229,7 +232,7 @@
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
                         <TextBlock Text="Position:" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos0" Click="radTaskbarPos0_Click">
@@ -260,7 +263,7 @@
                         <Label>Enable notification area</Label>
                     </CheckBox>
                     <TextBlock Name="lblTrayWarning" Visibility="Collapsed" Width="300" TextWrapping="Wrap" Text="The notification area component could not be loaded. Please install the Microsoft Visual C++ 2015 Redistributable."/>
-                    <StackPanel Orientation="Horizontal" Name="pnlTraySettings">
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}" Name="pnlTraySettings">
                         <TextBlock Text="Show notification area icons:" Width="165" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTrayMode" Name="radTrayMode0" Click="radTrayMode0_Click">
