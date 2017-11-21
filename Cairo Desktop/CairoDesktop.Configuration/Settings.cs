@@ -34,6 +34,7 @@
         private static bool? _EnableDesktop;
         private static bool? _EnableDynamicDesktop;
         private static string _DesktopDirectory;
+        private static int? _DesktopLabelPosition;
 
         // Taskbar
         private static bool? _EnableTaskbar;
@@ -233,6 +234,23 @@
             {
                 _DesktopDirectory = value;
                 Properties.Settings.Default.DesktopDirectory = _DesktopDirectory;
+                Save();
+            }
+        }
+
+        public static int DesktopLabelPosition
+        {
+            get
+            {
+                if (_DesktopLabelPosition == null)
+                    _DesktopLabelPosition = Properties.Settings.Default.DesktopLabelPosition;
+
+                return (int)_DesktopLabelPosition;
+            }
+            set
+            {
+                _DesktopLabelPosition = value;
+                Properties.Settings.Default.DesktopLabelPosition = (int)_DesktopLabelPosition;
                 Save();
             }
         }

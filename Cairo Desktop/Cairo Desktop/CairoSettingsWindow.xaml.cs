@@ -30,6 +30,20 @@
 
         private void loadRadioGroups()
         {
+            switch (Settings.DesktopLabelPosition)
+            {
+                case 0:
+                    radDesktopLabelPos0.IsChecked = true;
+                    radDesktopLabelPos1.IsChecked = false;
+                    break;
+                case 1:
+                    radDesktopLabelPos0.IsChecked = false;
+                    radDesktopLabelPos1.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+
             switch (Settings.TaskbarMode)
             {
                 case 0:
@@ -238,6 +252,18 @@
         private void radTaskbarPos1_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarPosition = 1;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radDesktopLabelPos0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.DesktopLabelPosition = 0;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radDesktopLabelPos1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.DesktopLabelPosition = 1;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 

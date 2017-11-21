@@ -242,6 +242,17 @@
                         Click="EnableDesktop_Click" Name="chkEnableDesktop">
                         <Label>Enable Desktop</Label>
                     </CheckBox>
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="Label position:" VerticalAlignment="Top" />
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton GroupName="rdoDesktopLabelPos" Name="radDesktopLabelPos0" Click="radDesktopLabelPos0_Click">
+                                <Label>Right</Label>
+                            </RadioButton>
+                            <RadioButton GroupName="rdoDesktopLabelPos" Name="radDesktopLabelPos1" Click="radDesktopLabelPos1_Click">
+                                <Label>Bottom</Label>
+                            </RadioButton>
+                        </StackPanel>
+                    </StackPanel>
                     <TextBlock Text="Dynamic Desktop" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableDynamicDesktop}"
                         Click="EnableDynamicDesktop_Click" Name="chkEnableDynamicDesktop">

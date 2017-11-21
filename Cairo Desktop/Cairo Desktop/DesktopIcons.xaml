@@ -4,17 +4,6 @@
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Name="CairoDesktopIcons" UseLayoutRounding="True">
     <DockPanel Margin="0">
-        <ItemsControl ItemsSource="{Binding ElementName=CairoDesktopIcons, Path=Locations}" FocusVisualStyle="{x:Null}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Vertical" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <ItemsControl Style="{StaticResource DesktopFolderViewStyle}" ItemsSource="{Binding Path=Files, IsAsync=True}" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <ItemsControl Name="IconsControl" DataContext="{Binding ElementName=CairoDesktopIcons, Path=Locations[0]}" FocusVisualStyle="{x:Null}" Style="{StaticResource DesktopFolderViewHorizontalStyle}" ItemsSource="{Binding Path=Files, IsAsync=True}" />
     </DockPanel>
 </UserControl>

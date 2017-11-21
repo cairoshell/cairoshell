@@ -250,5 +250,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["TaskbarPosition"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int DesktopLabelPosition {
+            get {
+                return ((int)(this["DesktopLabelPosition"]));
+            }
+            set {
+                this["DesktopLabelPosition"] = value;
+            }
+        }
     }
 }

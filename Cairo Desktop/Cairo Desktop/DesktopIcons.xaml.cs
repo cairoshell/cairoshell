@@ -18,6 +18,11 @@ namespace CairoDesktop {
         {
             InitializeComponent();
 
+            if (Settings.DesktopLabelPosition == 1)
+            {
+                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewStyle") as Style;
+            }
+
             string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string userDesktopPath = Settings.DesktopDirectory;
 
