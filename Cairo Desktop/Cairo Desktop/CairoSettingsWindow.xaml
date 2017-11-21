@@ -121,6 +121,12 @@
         <Style x:Key="RadioGroup" TargetType="{x:Type StackPanel}">
             <Setter Property="Margin" Value="0,4" />
         </Style>
+        <Style x:Key="SettingGroupHeader" TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="#55ffffff" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="5,16,0,4" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
         <Style TargetType="{x:Type CheckBox}">
             <Setter Property="Margin" Value="5,8" />
             <Setter Property="Padding" Value="0" />
@@ -166,16 +172,6 @@
                         Name="chkEnableAutoUpdates">
                         <Label>Automatically check for updates</Label>
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Path=EnableSubDirs}"
-                        Click="EnableSubDirs_Click"
-                        Name="chkEnableSubDirs">
-                        <Label>Show sub-directories</Label>
-                    </CheckBox>
-                    <CheckBox IsChecked="{Binding Path=ShowFileExtensions}"
-                        Click="ShowFileExtensions_Click"
-                        Name="chkShowFileExtensions">
-                        <Label>Show file extensions</Label>
-                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Theme:" ToolTip="Place themes into your Cairo installation directory." />
                         <ComboBox Name="cboThemeSelect" DropDownClosed="themeSetting_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=CairoTheme}" />
@@ -190,62 +186,22 @@
                         <TextBox Text="{Binding Path=DateFormat}"
                             Name="dateSetting" ToolTip="Some values you can use here:&#x0a;d	Day of month&#x0a;dd	Day of month (leading zero)&#x0a;ddd	Weekday (abbreviated)&#x0a;dddd	Weekday (text)&#x0a;M	Month&#x0a;MM	Month (leading zero)&#x0a;MMM	Month (abbreviated)&#x0a;MMMM	Month (text)&#x0a;yy	Year (2-digit)&#x0a;yyyy	Year (4-digit)" />
                     </StackPanel>
+                    <TextBlock Text="Files and folders" Style="{StaticResource SettingGroupHeader}" />
+                    <CheckBox IsChecked="{Binding Path=EnableSubDirs}"
+                        Click="EnableSubDirs_Click"
+                        Name="chkEnableSubDirs">
+                        <Label>Show sub-directories</Label>
+                    </CheckBox>
+                    <CheckBox IsChecked="{Binding Path=ShowFileExtensions}"
+                        Click="ShowFileExtensions_Click"
+                        Name="chkShowFileExtensions">
+                        <Label>Show file extensions</Label>
+                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="File manager:" />
                         <TextBox Text="{Binding Path=FileManager}"
                             Name="fileManager" />
                     </StackPanel>
-                </StackPanel>
-            </TabItem>
-            <TabItem Header="Desktop">
-                <StackPanel Orientation="Vertical">
-                    <CheckBox IsChecked="{Binding Path=EnableDesktop}"
-                        Click="EnableDesktop_Click" Name="chkEnableDesktop">
-                        <Label>Enable Desktop</Label>
-                    </CheckBox>
-                    <CheckBox IsChecked="{Binding Path=EnableDynamicDesktop}"
-                        Click="EnableDynamicDesktop_Click" Name="chkEnableDynamicDesktop">
-                        <Label>Use Dynamic Desktop</Label>
-                    </CheckBox>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Desktop home:" />
-                        <TextBox Text="{Binding Path=DesktopDirectory}"
-                            Name="txtDesktopHome" />
-                        <Button Name="btnDesktopHomeSelect" Click="btnDesktopHomeSelect_Click" Height="24" Padding="10,0">...</Button>
-                    </StackPanel>
-                </StackPanel>
-            </TabItem>
-            <TabItem Header="Taskbar">
-                <StackPanel Orientation="Vertical">
-                    <CheckBox IsChecked="{Binding Path=EnableTaskbar}"
-                        Click="EnableTaskbar_Click" Name="chkEnableTaskbar">
-                        <Label>Enable Taskbar</Label>
-                    </CheckBox>
-                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="Mode:" VerticalAlignment="Top" />
-                        <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click">
-                                <Label>Taskbar reserves space</Label>
-                            </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode1" Click="radTaskbarMode1_Click">
-                                <Label>Taskbar overlaps windows</Label>
-                            </RadioButton>
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="Position:" VerticalAlignment="Top" />
-                        <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos0" Click="radTaskbarPos0_Click">
-                                <Label>Bottom</Label>
-                            </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos1" Click="radTaskbarPos1_Click">
-                                <Label>Top</Label>
-                            </RadioButton>
-                        </StackPanel>
-                    </StackPanel>
-                    <CheckBox IsChecked="{Binding Path=EnableTaskbarPolling}" Click="chkEnableTaskbarPolling_Click"  Name="chkEnableTaskbarPolling">
-                        <Label>Poll taskbar buttons for updates</Label>
-                    </CheckBox>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Menu Bar">
@@ -258,6 +214,7 @@
                         Click="EnableMenuBarShadow_Click" Name="chkEnableMenuBarShadow">
                         <Label>Enable Menu Bar shadow</Label>
                     </CheckBox>
+                    <TextBlock Text="Notification area" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableSysTray}"
                         Click="EnableSysTray_Click" Name="chkEnableSysTray">
                         <Label>Enable notification area</Label>
@@ -277,6 +234,59 @@
                     <CheckBox IsChecked="{Binding Path=EnableSysTrayRehook}" Click="chkEnableSysTrayRehook_Click" Name="chkEnableSysTrayRehook">
                         <Label>Periodically re-establish notification area hook</Label>
                     </CheckBox>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Desktop">
+                <StackPanel Orientation="Vertical">
+                    <CheckBox IsChecked="{Binding Path=EnableDesktop}"
+                        Click="EnableDesktop_Click" Name="chkEnableDesktop">
+                        <Label>Enable Desktop</Label>
+                    </CheckBox>
+                    <TextBlock Text="Dynamic Desktop" Style="{StaticResource SettingGroupHeader}" />
+                    <CheckBox IsChecked="{Binding Path=EnableDynamicDesktop}"
+                        Click="EnableDynamicDesktop_Click" Name="chkEnableDynamicDesktop">
+                        <Label>Use Dynamic Desktop</Label>
+                    </CheckBox>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Desktop home:" />
+                        <TextBox Text="{Binding Path=DesktopDirectory}"
+                            Name="txtDesktopHome" />
+                        <Button Name="btnDesktopHomeSelect" Click="btnDesktopHomeSelect_Click" Height="24" Padding="10,0">...</Button>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Taskbar">
+                <StackPanel Orientation="Vertical">
+                    <CheckBox IsChecked="{Binding Path=EnableTaskbar}"
+                        Click="EnableTaskbar_Click" Name="chkEnableTaskbar">
+                        <Label>Enable Taskbar</Label>
+                    </CheckBox>
+                    <!--<CheckBox IsChecked="{Binding Path=EnableTaskbarPolling}" Click="chkEnableTaskbarPolling_Click"  Name="chkEnableTaskbarPolling">
+                        <Label>Poll taskbar buttons for updates</Label>
+                    </CheckBox>-->
+                    <TextBlock Text="Appearance" Style="{StaticResource SettingGroupHeader}" />
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="Position:" VerticalAlignment="Top" />
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos0" Click="radTaskbarPos0_Click">
+                                <Label>Bottom</Label>
+                            </RadioButton>
+                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos1" Click="radTaskbarPos1_Click">
+                                <Label>Top</Label>
+                            </RadioButton>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="Mode:" VerticalAlignment="Top" />
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click">
+                                <Label>Taskbar reserves space</Label>
+                            </RadioButton>
+                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode1" Click="radTaskbarMode1_Click">
+                                <Label>Taskbar overlaps windows</Label>
+                            </RadioButton>
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
             <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}" Name="btnRestart" MouseLeftButtonUp="restartCairo" Visibility="Hidden">
