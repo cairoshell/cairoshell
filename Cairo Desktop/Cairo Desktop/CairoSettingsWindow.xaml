@@ -277,7 +277,7 @@
                     </CheckBox>-->
                     <TextBlock Text="Appearance" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="Position:" VerticalAlignment="Top" />
+                        <TextBlock Text="Taskbar position:" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos0" Click="radTaskbarPos0_Click">
                                 <Label>Bottom</Label>
@@ -288,7 +288,7 @@
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="Mode:" VerticalAlignment="Top" />
+                        <TextBlock Text="Display mode:" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click">
                                 <Label>Taskbar reserves space</Label>
