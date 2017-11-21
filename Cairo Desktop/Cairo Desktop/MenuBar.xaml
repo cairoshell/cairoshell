@@ -181,6 +181,9 @@
                     <MenuItem Header="Pictures"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenMyPics" />
+                    <MenuItem Header="Videos"
+                        Style="{StaticResource CairoMenuItemStyle}"
+                        Click="OpenMyVideos" x:Name="PlacesVideosItem" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="This PC"
                         Style="{StaticResource CairoMenuItemStyle}"

@@ -101,6 +101,7 @@ namespace CairoDesktop
             if (!Shell.IsWindowsVistaOrBetter)
             {
                 PlacesDownloadsItem.Visibility = Visibility.Collapsed;
+                PlacesVideosItem.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -583,6 +584,11 @@ namespace CairoDesktop
         private void OpenMyMusic(object sender, RoutedEventArgs e)
         {
             Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Music));
+        }
+
+        private void OpenMyVideos(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Videos));
         }
 
         private void OpenDownloads(object sender, RoutedEventArgs e)
