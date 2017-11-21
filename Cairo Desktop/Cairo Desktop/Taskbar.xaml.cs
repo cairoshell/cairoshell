@@ -48,6 +48,11 @@ namespace CairoDesktop
                 btnTaskList.Style = Application.Current.FindResource("CairoTaskbarTopButtonList") as Style;
                 TasksList.Margin = new Thickness(0);
             }
+            else
+            {
+                int screen = AppBarHelper.PrimaryMonitorSize.Height;
+                setTopPosition(screen, true);
+            }
 
             // show task view on windows >= 10, adjust margin if not shown
             if (Shell.IsWindows10OrBetter && !Startup.IsCairoUserShell)
@@ -99,9 +104,9 @@ namespace CairoDesktop
             this.Width = sWidth;
         }
 
-        private void setTopPosition(int top)
+        private void setTopPosition(int top, bool force = false)
         {
-            if (Startup.IsCairoUserShell || Settings.TaskbarMode > 0 || this.Top < Startup.MenuBarWindow.Height)
+            if (Startup.IsCairoUserShell || Settings.TaskbarMode > 0 || this.Top < Startup.MenuBarWindow.Height || force)
             {
                 if (Settings.TaskbarPosition == 1)
                 {
