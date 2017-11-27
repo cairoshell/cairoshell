@@ -150,22 +150,7 @@
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                     <ListView.GroupStyle>
-                        <GroupStyle>
-                            <GroupStyle.ContainerStyle>
-                                <Style TargetType="{x:Type GroupItem}">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate>
-                                                <Border BorderThickness="3,0,1,0" BorderBrush="Transparent">
-                                                    <Border BorderThickness="1,0,0,0" BorderBrush="#77000000">
-                                                        <ItemsPresenter />
-                                                    </Border>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </GroupStyle.ContainerStyle>
+                        <GroupStyle x:Name="TaskbarGroupStyle" ContainerStyle="{StaticResource CairoTaskbarGroupStyle}">
                             <GroupStyle.Panel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel></WrapPanel>

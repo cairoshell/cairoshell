@@ -808,6 +808,28 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="CairoTaskbarGroupStyle" TargetType="{x:Type GroupItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border BorderThickness="1,0,0,0" BorderBrush="#77000000" Margin="3,1,1,0">
+                        <ItemsPresenter Margin="0,-1,0,0" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CairoTaskbarTopGroupStyle" TargetType="{x:Type GroupItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border BorderThickness="1,0,0,0" BorderBrush="#77000000" Margin="3,0,1,0">
+                        <ItemsPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <!-- Button Style for Taskbar -->
     <Style x:Key="CairoTaskbarButtonInactiveStyle"
         TargetType="{x:Type Button}">
@@ -1435,30 +1457,18 @@
     <Style x:Key="CairoTaskbarTopBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarBorderStyle}">
         <Setter Property="BorderThickness" Value="1,0,0,1" />
         <Setter Property="CornerRadius" Value="0,0,0,8" />
+        <Setter Property="Background" Value="#9F2a2a2a" />
+        <Setter Property="BorderBrush" Value="#AF707070" />
     </Style>
-    <Style x:Key="CairoTaskbarEndBorderStyle" TargetType="{x:Type Border}">
+    <Style x:Key="CairoTaskbarEndBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarBorderStyle}">
         <Setter Property="BorderThickness" Value="0,1,1,0" />
         <Setter Property="CornerRadius" Value="0,8,0,0" />
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#AF1d1d1d" Offset="0.0" />
-                    <GradientStop Color="#DF050505" Offset="1.0" />
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="BorderBrush">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#C07b7b7b" Offset="0.0" />
-                    <GradientStop Color="#C0595959" Offset="1.0" />
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Padding" Value="0" />
     </Style>
-    <Style x:Key="CairoTaskbarEndTopBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarEndBorderStyle}">
+    <Style x:Key="CairoTaskbarEndTopBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarTopBorderStyle}">
         <Setter Property="BorderThickness" Value="0,0,1,1" />
         <Setter Property="CornerRadius" Value="0,0,8,0" />
+        <Setter Property="Padding" Value="0" />
     </Style>
     <!-- Button Style for Dialogs -->
     <Style x:Key="CairoButtonStyle"

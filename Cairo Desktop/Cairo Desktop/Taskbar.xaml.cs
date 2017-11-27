@@ -46,6 +46,7 @@ namespace CairoDesktop
                 bdrTaskbarEnd.Style = Application.Current.FindResource("CairoTaskbarEndTopBorderStyle") as Style;
                 bdrTaskListPopup.Style = Application.Current.FindResource("CairoTaskListTopPopupStyle") as Style;
                 btnTaskList.Style = Application.Current.FindResource("CairoTaskbarTopButtonList") as Style;
+                TaskbarGroupStyle.ContainerStyle = Application.Current.FindResource("CairoTaskbarTopGroupStyle") as Style;
                 TasksList.Margin = new Thickness(0);
             }
             else
