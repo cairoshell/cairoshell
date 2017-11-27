@@ -262,5 +262,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["DesktopLabelPosition"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int DesktopIconSize {
+            get {
+                return ((int)(this["DesktopIconSize"]));
+            }
+            set {
+                this["DesktopIconSize"] = value;
+            }
+        }
     }
 }

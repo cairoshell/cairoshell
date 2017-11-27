@@ -172,6 +172,7 @@
                         Name="chkEnableAutoUpdates">
                         <Label>Automatically check for updates</Label>
                     </CheckBox>
+                    <TextBlock Text="Appearance" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Theme:" ToolTip="Place themes into your Cairo installation directory." />
                         <ComboBox Name="cboThemeSelect" DropDownClosed="themeSetting_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=CairoTheme}" />
@@ -210,6 +211,7 @@
                         <TextBlock Text="Default programs category:" Width="160" />
                         <ComboBox Name="cboDefaultProgramsCategory" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=DefaultProgramsCategory}" Width="170" />
                     </StackPanel>
+                    <TextBlock Text="Appearance" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableMenuBarShadow}"
                         Click="EnableMenuBarShadow_Click" Name="chkEnableMenuBarShadow">
                         <Label>Enable Menu Bar shadow</Label>
@@ -242,6 +244,24 @@
                         Click="EnableDesktop_Click" Name="chkEnableDesktop">
                         <Label>Enable Desktop</Label>
                     </CheckBox>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Desktop home:" />
+                        <TextBox Text="{Binding Path=DesktopDirectory}"
+                            Name="txtDesktopHome" />
+                        <Button Name="btnDesktopHomeSelect" Click="btnDesktopHomeSelect_Click" Height="24" Padding="10,0">...</Button>
+                    </StackPanel>
+                    <TextBlock Text="Appearance" Style="{StaticResource SettingGroupHeader}" />
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="Icon size:" VerticalAlignment="Top" />
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize2" Click="radDesktopIconSize2_Click">
+                                <Label>Large</Label>
+                            </RadioButton>
+                            <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize0" Click="radDesktopIconSize0_Click">
+                                <Label>Small</Label>
+                            </RadioButton>
+                        </StackPanel>
+                    </StackPanel>
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
                         <TextBlock Text="Label position:" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
@@ -258,12 +278,6 @@
                         Click="EnableDynamicDesktop_Click" Name="chkEnableDynamicDesktop">
                         <Label>Use Dynamic Desktop</Label>
                     </CheckBox>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Desktop home:" />
-                        <TextBox Text="{Binding Path=DesktopDirectory}"
-                            Name="txtDesktopHome" />
-                        <Button Name="btnDesktopHomeSelect" Click="btnDesktopHomeSelect_Click" Height="24" Padding="10,0">...</Button>
-                    </StackPanel>
                 </StackPanel>
             </TabItem>
             <TabItem Header="Taskbar">

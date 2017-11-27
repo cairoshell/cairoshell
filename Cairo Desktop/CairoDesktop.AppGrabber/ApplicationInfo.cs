@@ -318,7 +318,7 @@ namespace CairoDesktop.AppGrabber
                 }
             }
             else
-                return IconImageConverter.GetImageFromAssociatedIcon(this.Path, true);
+                return IconImageConverter.GetImageFromAssociatedIcon(this.Path, 1);
         }
 
         /// <summary>

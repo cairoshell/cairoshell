@@ -152,7 +152,7 @@ namespace VistaSearchProvider
             get
             {
                 string iconPath = Path.Substring(Path.IndexOf(':') + 1).Replace("/", "\\");
-                return CairoDesktop.AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(iconPath, false);
+                return CairoDesktop.AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(iconPath, 0);
             }
         }
     }

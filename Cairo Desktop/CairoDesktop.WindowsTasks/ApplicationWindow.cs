@@ -346,7 +346,7 @@ namespace CairoDesktop.WindowsTasks
                 string winFileName = GetFileNameForWindow(hWnd);
                 if (Shell.Exists(winFileName))
                 {
-                    hIco = Shell.GetIconByFilename(winFileName, true);
+                    hIco = Shell.GetIconByFilename(winFileName, 1);
                 }
             }
 

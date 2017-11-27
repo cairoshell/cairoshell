@@ -15,6 +15,7 @@ namespace CairoDesktop.Common
         private static readonly string[] ImageFileTypes = new string[] { ".jpg", ".jpeg", ".gif", ".bmp", ".png" };
         private Dispatcher _dispatcher;
         private ImageSource _icon;
+        private ImageSource _largeIcon;
         private string _friendlyName;
         private string _fullName;
         private string _name;
@@ -158,6 +159,9 @@ namespace CairoDesktop.Common
 
                 _icon = null;
                 OnPropertyChanged("Icon");
+
+                _largeIcon = null;
+                OnPropertyChanged("LargeIcon");
             }
         }
 
@@ -171,7 +175,7 @@ namespace CairoDesktop.Common
             {
                 if (_icon == null)
                 {
-                    _icon = GetDisplayIcon();
+                    _icon = GetDisplayIcon(0);
                     _icon.Freeze();
                 }
 
@@ -181,6 +185,29 @@ namespace CairoDesktop.Common
             {
                 _icon = value;
                 OnPropertyChanged("Icon");
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the Icon associated with this file.
+        /// This is a Dependency Property.
+        /// </summary>
+        public ImageSource LargeIcon
+        {
+            get
+            {
+                if (_largeIcon == null)
+                {
+                    _largeIcon = GetDisplayIcon(2);
+                    _largeIcon.Freeze();
+                }
+
+                return _largeIcon;
+            }
+            set
+            {
+                _largeIcon = value;
+                OnPropertyChanged("LargeIcon");
             }
         }
 
@@ -267,7 +294,7 @@ namespace CairoDesktop.Common
         /// Retrieves the display icon of the file.
         /// If the file is an image then it will return the image its self (e.g. preview).
         /// </summary>
-        private ImageSource GetDisplayIcon()
+        private ImageSource GetDisplayIcon(int size)
         {
             if (Interop.Shell.Exists(this.FullName))
             {
@@ -280,7 +307,11 @@ namespace CairoDesktop.Common
                         img.UriSource = new Uri(this.FullName);
                         img.CacheOption = BitmapCacheOption.OnLoad;
                         int dSize = 32;
-                        Interop.Shell.TransformToPixels(32, 32, out dSize, out dSize);
+
+                        if (size == 2)
+                            dSize = 48;
+
+                        Interop.Shell.TransformToPixels(dSize, dSize, out dSize, out dSize);
                         img.DecodePixelWidth = dSize;
                         img.EndInit();
                         img.Freeze();
@@ -289,13 +320,13 @@ namespace CairoDesktop.Common
                     }
                     catch
                     {
-                        return AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
+                        return AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
                     }
                 }
                 else
                 {
                     // This will attempts to get the icon via AppGrabber - if it fails the default icon will be returned.
-                    return AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName);
+                    return AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
                 }
             }
             else

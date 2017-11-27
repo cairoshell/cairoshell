@@ -15,12 +15,13 @@ namespace CairoDesktop.AppGrabber
         /// Retrieves the Icon for the file name as an ImageSource
         /// </summary>
         /// <param name="filename">The filename of the file to query the Icon for.</param>
+        /// <param name="size">0 = 32px, 1 = 16px, 2 = 48px</param>
         /// <returns>The icon as an ImageSource, otherwise a default image.</returns>
-        public static ImageSource GetImageFromAssociatedIcon(string filename, bool isSmall = false) 
+        public static ImageSource GetImageFromAssociatedIcon(string filename, int size) 
         {
             BitmapSource bs = null;
             
-            IntPtr hIcon = Interop.Shell.GetIconByFilename(filename, isSmall);
+            IntPtr hIcon = Shell.GetIconByFilename(filename, size);
                 
             if (hIcon == IntPtr.Zero || hIcon == null)
             {

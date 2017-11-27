@@ -18,9 +18,17 @@ namespace CairoDesktop {
         {
             InitializeComponent();
 
-            if (Settings.DesktopLabelPosition == 1)
+            if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 0)
             {
-                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewStyle") as Style;
+                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewVerticalSmallStyle") as Style;
+            }
+            else if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 2)
+            {
+                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewVerticalStyle") as Style;
+            }
+            else if (Settings.DesktopIconSize == 0)
+            {
+                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewHorizontalSmallStyle") as Style;
             }
 
             string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);

@@ -18,17 +18,25 @@ namespace CairoDesktop.Interop
         // Uses some code from https://gist.github.com/madd0/1433330
 
         private const int MAX_PATH = 260;
-        
 
-        public static IntPtr GetIconByFilename(string fileName, bool isSmall = false)
+
+        public static IntPtr GetIconByFilename(string fileName, int size)
         {
-            if (isSmall)
-                return GetIcon(fileName, SHGFI.SmallIcon);
-            else
-                return GetIcon(fileName, SHGFI.LargeIcon);
+            /*switch (size)
+            {
+                case 0:
+                    return GetIcon(fileName, SHGFI.LargeIcon);
+                case 1:
+                    return GetIcon(fileName, SHGFI.SmallIcon);
+                case 2:
+                    return GetIcon_New(fileName, size);
+                default:
+                    return GetIcon(fileName, SHGFI.LargeIcon);
+            }*/
+            return GetIcon_New(fileName, size);
         }
 
-        private static IntPtr GetIcon(string filename, SHGFI flags)
+        /*private static IntPtr GetIcon(string filename, SHGFI flags)
         {
             try
             {
@@ -52,8 +60,44 @@ namespace CairoDesktop.Interop
             {
                 return IntPtr.Zero;
             }
+        }*/
+
+        private static IntPtr GetIcon_New(string filename, int size)
+        {
+            try
+            {
+                SHFILEINFO shinfo = new SHFILEINFO();
+                IntPtr hIconInfo;
+
+                if (!filename.StartsWith("\\") && (File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex));
+                }
+                else
+                {
+                    hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.UseFileAttributes | SHGFI.SysIconIndex));
+                }
+
+                var iconIndex = shinfo.iIcon;
+
+                // Get the System IImageList object from the Shell:
+                Guid iidImageList = new Guid("46EB5926-582E-4017-9FDF-E8998DAA0950");
+
+                IImageList iml;
+                var hres = SHGetImageList(size, ref iidImageList, out iml);
+
+                IntPtr hIcon = IntPtr.Zero;
+                int ILD_TRANSPARENT = 1;
+                hres = iml.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
+
+                return hIcon;
+            }
+            catch
+            {
+                return IntPtr.Zero;
+            }
         }
-        
+
         public static string UsersStartMenuPath
         {
             get {

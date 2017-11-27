@@ -30,7 +30,12 @@ namespace CairoDesktop
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
             this.Height = AppBarHelper.PrimaryMonitorSize.Height-1;
 
-            if (Startup.IsCairoUserShell)
+            if (Settings.DesktopLabelPosition == 1)
+            {
+                grid.Margin = new Thickness(0, 35, 0, 0);
+            }
+
+                if (Startup.IsCairoUserShell)
             {
                 string regWallpaper = (string)Registry.GetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop", "Wallpaper", "");
 

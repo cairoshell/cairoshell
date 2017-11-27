@@ -35,6 +35,7 @@
         private static bool? _EnableDynamicDesktop;
         private static string _DesktopDirectory;
         private static int? _DesktopLabelPosition;
+        private static int? _DesktopIconSize;
 
         // Taskbar
         private static bool? _EnableTaskbar;
@@ -251,6 +252,23 @@
             {
                 _DesktopLabelPosition = value;
                 Properties.Settings.Default.DesktopLabelPosition = (int)_DesktopLabelPosition;
+                Save();
+            }
+        }
+
+        public static int DesktopIconSize
+        {
+            get
+            {
+                if (_DesktopIconSize == null)
+                    _DesktopIconSize = Properties.Settings.Default.DesktopIconSize;
+
+                return (int)_DesktopIconSize;
+            }
+            set
+            {
+                _DesktopIconSize = value;
+                Properties.Settings.Default.DesktopIconSize = (int)_DesktopIconSize;
                 Save();
             }
         }

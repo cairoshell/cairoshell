@@ -44,6 +44,20 @@
                     break;
             }
 
+            switch (Settings.DesktopIconSize)
+            {
+                case 0:
+                    radDesktopIconSize0.IsChecked = true;
+                    radDesktopIconSize2.IsChecked = false;
+                    break;
+                case 2:
+                    radDesktopIconSize0.IsChecked = false;
+                    radDesktopIconSize2.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+
             switch (Settings.TaskbarMode)
             {
                 case 0:
@@ -264,6 +278,18 @@
         private void radDesktopLabelPos1_Click(object sender, RoutedEventArgs e)
         {
             Settings.DesktopLabelPosition = 1;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radDesktopIconSize0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.DesktopIconSize = 0;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radDesktopIconSize2_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.DesktopIconSize = 2;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 
