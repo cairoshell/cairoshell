@@ -20,62 +20,66 @@ namespace CairoDesktop.UWPInterop
         {
             List<string[]> ret = new List<string[]>();
 
-            Windows.Management.Deployment.PackageManager pman = new Windows.Management.Deployment.PackageManager();
-            IEnumerable<Windows.ApplicationModel.Package> packages = getPackages(pman);
-
-            foreach (Windows.ApplicationModel.Package package in packages)
+            try
             {
-                string path = "";
+                Windows.Management.Deployment.PackageManager pman = new Windows.Management.Deployment.PackageManager();
+                IEnumerable<Windows.ApplicationModel.Package> packages = getPackages(pman);
 
-                // need to catch a system-thrown exception...
-                try
+                foreach (Windows.ApplicationModel.Package package in packages)
                 {
-                    path = package.InstalledLocation.Path;
-                }
-                catch
-                {
-                    continue;
-                }
+                    string path = "";
 
-                XmlDocument manifest = getManifest(path);
-                XmlNamespaceManager xmlnsManager = getNamespaceManager(manifest);
-
-                foreach (XmlNode app in manifest.SelectNodes("/ns:Package/ns:Applications/ns:Application", xmlnsManager))
-                {
-                    // packages can contain multiple apps
-
-                    XmlNode showEntry = app.SelectSingleNode("uap:VisualElements/@AppListEntry", xmlnsManager);
-                    if (showEntry == null || showEntry.Value == "true")
+                    // need to catch a system-thrown exception...
+                    try
                     {
-                        // App is visible in the applist
+                        path = package.InstalledLocation.Path;
+                    }
+                    catch
+                    {
+                        continue;
+                    }
 
-                        // return values
-                        string appUserModelId = package.Id.FamilyName + "!" + app.SelectSingleNode("@Id", xmlnsManager).Value;
-                        string returnName = getDisplayName(package.Id.Name, path, app, xmlnsManager);
-                        string returnIcon = getIconPath(path, app, xmlnsManager);
-                        string returnColor = "";
+                    XmlDocument manifest = getManifest(path);
+                    XmlNamespaceManager xmlnsManager = getNamespaceManager(manifest);
 
-                        if (returnIcon.EndsWith("_altform-unplated.png"))
-                            returnColor = defaultColor;
-                        else
-                            returnColor = getPlateColor(app, xmlnsManager);
+                    foreach (XmlNode app in manifest.SelectNodes("/ns:Package/ns:Applications/ns:Application", xmlnsManager))
+                    {
+                        // packages can contain multiple apps
 
-                        string[] toAdd = new string[] { appUserModelId, returnName, returnIcon, returnColor };
-                        bool canAdd = true;
-                        foreach (string[] added in ret)
+                        XmlNode showEntry = app.SelectSingleNode("uap:VisualElements/@AppListEntry", xmlnsManager);
+                        if (showEntry == null || showEntry.Value == "true")
                         {
-                            if (added[0] == appUserModelId)
-                            {
-                                canAdd = false;
-                                break;
-                            }
-                        }
+                            // App is visible in the applist
 
-                        if (canAdd)
-                            ret.Add(toAdd);
+                            // return values
+                            string appUserModelId = package.Id.FamilyName + "!" + app.SelectSingleNode("@Id", xmlnsManager).Value;
+                            string returnName = getDisplayName(package.Id.Name, path, app, xmlnsManager);
+                            string returnIcon = getIconPath(path, app, xmlnsManager);
+                            string returnColor = "";
+
+                            if (returnIcon.EndsWith("_altform-unplated.png"))
+                                returnColor = defaultColor;
+                            else
+                                returnColor = getPlateColor(app, xmlnsManager);
+
+                            string[] toAdd = new string[] { appUserModelId, returnName, returnIcon, returnColor };
+                            bool canAdd = true;
+                            foreach (string[] added in ret)
+                            {
+                                if (added[0] == appUserModelId)
+                                {
+                                    canAdd = false;
+                                    break;
+                                }
+                            }
+
+                            if (canAdd)
+                                ret.Add(toAdd);
+                        }
                     }
                 }
             }
+            catch { }
 
             return ret;
         }
