@@ -312,9 +312,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\menuArrow.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\cairoMenuBlack.png">
     </Resource>
     <Resource Include="Resources\searchBlack.png" />
