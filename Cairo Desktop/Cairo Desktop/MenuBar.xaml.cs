@@ -162,6 +162,9 @@ namespace CairoDesktop
             {
                 Shell.StartProcess("explorer.exe");
             }
+
+            Startup.IsShuttingDown = true;
+
             Dispatcher.Invoke(() => Application.Current.Shutdown(), DispatcherPriority.Normal);
         }
 
@@ -400,16 +403,19 @@ namespace CairoDesktop
 
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            SysTray.DestroySystemTray();
-
-            AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
-            
-            WinSparkle.win_sparkle_cleanup();
-
-            if (Startup.IsCairoUserShell)
+            if (Startup.IsShuttingDown)
             {
-                AppBarHelper.ResetWorkArea();
+                SysTray.DestroySystemTray();
+
+                AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
+
+                WinSparkle.win_sparkle_cleanup();
+
+                if (Startup.IsCairoUserShell)
+                    AppBarHelper.ResetWorkArea();
             }
+            else
+                e.Cancel = true;
         }
 
         private void Programs_Drop(object sender, DragEventArgs e)

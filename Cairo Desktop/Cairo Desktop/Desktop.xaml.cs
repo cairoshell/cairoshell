@@ -109,8 +109,13 @@ namespace CairoDesktop
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            // show the windows desktop
-            Shell.ToggleDesktopIcons(true);
+            if (Startup.IsShuttingDown)
+            {
+                // show the windows desktop
+                Shell.ToggleDesktopIcons(true);
+            }
+            else
+                e.Cancel = true;
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)

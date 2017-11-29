@@ -40,6 +40,8 @@
 
         private static bool isRestart;
 
+        public static bool IsShuttingDown { get; set; }
+
         //private static string procName;
 
         // properties for startup

@@ -11,7 +11,7 @@
             AllowsTransparency="True"
         Background="Transparent"
             Width="200"
-            Height="54" SourceInitialized="Window_SourceInitialized" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+            Height="54" SourceInitialized="Window_SourceInitialized" MouseLeftButtonDown="Window_MouseLeftButtonDown" Closing="Window_Closing">
     <Window.Resources>
         <Style x:Key="CairoDesktopNavItemStyle"
             TargetType="{x:Type Button}">

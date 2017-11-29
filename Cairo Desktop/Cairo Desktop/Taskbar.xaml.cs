@@ -64,19 +64,24 @@ namespace CairoDesktop
 
         private void Taskbar_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            // Manually call dispose on window close...
-            (TasksList.DataContext as WindowsTasks.WindowsTasksService).Dispose();
+            if (Startup.IsShuttingDown)
+            {
+                // Manually call dispose on window close...
+                (TasksList.DataContext as WindowsTasks.WindowsTasksService).Dispose();
 
-            // dispose system tray if it's still running to prevent conflicts when doing AppBar stuff
-            if (Startup.MenuBarWindow != null && Startup.MenuBarWindow.SysTray != null)
-                Startup.MenuBarWindow.SysTray.DestroySystemTray();
+                // dispose system tray if it's still running to prevent conflicts when doing AppBar stuff
+                if (Startup.MenuBarWindow != null && Startup.MenuBarWindow.SysTray != null)
+                    Startup.MenuBarWindow.SysTray.DestroySystemTray();
 
-            if (AppBarHelper.appBars.Contains(this.handle))
-                AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
+                if (AppBarHelper.appBars.Contains(this.handle))
+                    AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
 
-            // show the windows taskbar again
-            AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.OnTop);
-            AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_SHOWWINDOW);
+                // show the windows taskbar again
+                AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.OnTop);
+                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_SHOWWINDOW);
+            }
+            else
+                e.Cancel = true;
         }
 
         private void setPosition()

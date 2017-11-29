@@ -54,5 +54,11 @@ namespace CairoDesktop
         {
             SetPosition();
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!Startup.IsShuttingDown)
+                e.Cancel = true;
+        }
     }
 }
