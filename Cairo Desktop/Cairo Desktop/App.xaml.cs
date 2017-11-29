@@ -23,7 +23,7 @@ namespace CairoDesktop
             if (e.Exception.InnerException != null)
                 inner = "\r\n\r\nInner exception:\r\nMessage: " + e.Exception.InnerException.Message + "\r\nTarget Site: " + e.Exception.InnerException.TargetSite + "\r\n\r\n" + e.Exception.InnerException.StackTrace;
 
-            string msg = "Please submit a bug report with a screenshot of this error. Thanks! \r\n\r\nMessage: " + e.Exception.Message + "\r\nTarget Site: " + e.Exception.TargetSite + "\r\nVersion: " + version + "\r\n\r\n" + e.Exception.StackTrace + inner;
+            string msg = "Would you like to restart Cairo?\r\nPlease submit a bug report with a screenshot of this error. Thanks! \r\n\r\nMessage: " + e.Exception.Message + "\r\nTarget Site: " + e.Exception.TargetSite + "\r\nVersion: " + version + "\r\n\r\n" + e.Exception.StackTrace + inner;
 
             Trace.WriteLine(msg);
 
@@ -36,9 +36,17 @@ namespace CairoDesktop
 
             try
             {
-                MessageBox.Show(dMsg, "Cairo Desktop Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                if (MessageBox.Show(dMsg, "Cairo Desktop Error", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    // it's like getting a morning coffee.
+                    CairoDesktop.Startup.Restart();
+                }
             }
-            catch { }
+            catch
+            {
+                // If this fails we're probably up the creek. Abandon ship!
+                CairoDesktop.Startup.Shutdown();
+            }
 
             e.Handled = true;
         }

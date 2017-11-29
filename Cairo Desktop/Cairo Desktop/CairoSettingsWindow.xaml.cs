@@ -192,19 +192,7 @@
         {
             saveChanges();
 
-            try
-            {
-                //run the program again and close this one
-                Process current = new Process();
-                current.StartInfo.FileName = AppDomain.CurrentDomain.BaseDirectory + "CairoDesktop.exe";
-                current.StartInfo.Arguments = "/restart";
-                current.Start();
-
-                //close this one
-                System.Windows.Application.Current.Shutdown();
-            }
-            catch
-            { }
+            Startup.Restart();
         }
 
         /// <summary>

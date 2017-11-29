@@ -242,6 +242,35 @@
             }
         }
 
+        public static void Restart()
+        {
+            try
+            {
+                // run the program again
+                Process current = new Process();
+                current.StartInfo.FileName = AppDomain.CurrentDomain.BaseDirectory + "CairoDesktop.exe";
+                current.StartInfo.Arguments = "/restart";
+                current.Start();
+
+                // close this instance
+                Shutdown();
+            }
+            catch
+            { }
+        }
+
+        public static void Shutdown()
+        {
+            if (IsCairoUserShell)
+            {
+                Shell.StartProcess("explorer.exe");
+            }
+
+            IsShuttingDown = true;
+
+            Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown(), DispatcherPriority.Normal);
+        }
+
         /// <summary>
         /// Initializes a new hidden toolwindow to be the owner for all other windows.
         /// This hides the applications icons from the task switcher.

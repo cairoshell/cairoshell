@@ -158,14 +158,7 @@ namespace CairoDesktop
 
         private void shutdown()
         {
-            if (Startup.IsCairoUserShell)
-            {
-                Shell.StartProcess("explorer.exe");
-            }
-
-            Startup.IsShuttingDown = true;
-
-            Dispatcher.Invoke(() => Application.Current.Shutdown(), DispatcherPriority.Normal);
+            Startup.Shutdown();
         }
 
         private int canShutdown()
