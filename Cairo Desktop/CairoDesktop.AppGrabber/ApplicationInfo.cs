@@ -228,7 +228,7 @@ namespace CairoDesktop.AppGrabber
                 return true;
             }
             if (System.IO.Path.GetExtension(this.Path).Equals(".lnk", StringComparison.OrdinalIgnoreCase)) {
-                if (this.Target == other.Target) {
+                if ((this.Target == other.Target) && (this.Name == other.Name)) {
                     return true;
                 }
             }

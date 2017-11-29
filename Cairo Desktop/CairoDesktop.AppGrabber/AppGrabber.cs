@@ -200,7 +200,7 @@ namespace CairoDesktop.AppGrabber
 
                     if (fileExt.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
                     {
-                        Interop.Shell.Link link = new Interop.Shell.Link(file);
+                        Shell.Link link = new Shell.Link(file);
                         target = link.Target;
                     }
                     else

@@ -254,12 +254,13 @@ namespace CairoDesktop.AppGrabber
                 "Adobe Photoshop|contains",
                 "Adobe Premiere|contains",
                 // media
-                "Media Player|contains",
+                "Windows Media Player|full",
                 "Spotify|full",
                 "iTunes|full",
                 "Audacity|full",
+                "VLC media player|full",
                 // internet
-                "Mozilla Firefox|full",
+                "Firefox|contains",
                 "Chrome|contains",
                 "Remote Desktop Connection|full",
                 "PuTTY|full",

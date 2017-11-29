@@ -123,7 +123,7 @@ namespace CairoDesktop.WindowsTasks
                             _category = ai.Category.Name;
                             break;
                         }
-                        else if (this.Title.Contains(ai.Name))
+                        else if (this.Title.ToLower().Contains(ai.Name.ToLower()))
                         {
                             backupCategory = ai.Category.Name;
                         }
