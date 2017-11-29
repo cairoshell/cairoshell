@@ -223,65 +223,68 @@ namespace CairoDesktop.AppGrabber
 
         #endregion
 
+        #region Auto selection
+
+        string[] autoAppNames = {
+            // system
+            "File Explorer|full|System",
+            "Internet Explorer|full|System",
+            "Windows Explorer|full|System",
+            "Calculator|full|System",
+            "Notepad|contains|System",
+            "Snipping Tool|full|System",
+            // productivity
+            "LibreOffice|contains|Productivity",
+            "Access 20|contains|Productivity",
+            "Excel 20|contains|Productivity",
+            "Lync 20|contains|Productivity",
+            "PowerPoint 20|contains|Productivity",
+            "Publisher 20|contains|Productivity",
+            "OneNote 20|contains|Productivity",
+            "Outlook 20|contains|Productivity",
+            "Skype for Business 20|contains|Productivity",
+            "Word 20|contains|Productivity",
+            "Visio 20|contains|Productivity",
+            "Visual Studio 20|contains|Productivity",
+            // graphics
+            "Adobe After Effects|contains|Graphics",
+            "Adobe Illustrator|contains|Graphics",
+            "Adobe InDesign|contains|Graphics",
+            "Adobe Dreamweaver|contains|Graphics",
+            "Adobe Photoshop|contains|Graphics",
+            "Adobe Premiere|contains|Graphics",
+            // media
+            "Windows Media Player|full|Media",
+            "Spotify|full|Media",
+            "iTunes|full|Media",
+            "Audacity|full|Media",
+            "VLC media player|full|Media",
+            // internet
+            "Firefox|contains|Internet",
+            "Chrome|contains|Internet",
+            "Remote Desktop Connection|full|Internet",
+            "PuTTY|full|Internet",
+            "FileZilla|full|Internet",
+            "Pidgin|full|Internet",
+            "OneDrive|full|Internet",
+            "Dropbox|full|Internet",
+            "Skype|full|Internet",
+            "Twitter|full|Internet",
+            "Microsoft Edge|full|Internet",
+            "Slack|full|Internet",
+            "PureCloud|full|Internet",
+            "Discord|full|Internet",
+            // games
+            "Steam|full|Games",
+            "Epic Games|full|Games",
+            "Uplay|full|Games",
+            "Battle.net|full|Games",
+            "Open Broadcaster Software|full|Games",
+            "Origin|full|Games"
+        };
+
         private bool autoSelectByName(string name)
         {
-            string[] autoAppNames = {
-                // system
-                "File Explorer|full",
-                "Internet Explorer|full",
-                "Windows Explorer|full",
-                "Calculator|full",
-                "Notepad|contains",
-                "Snipping Tool|full",
-                // productivity
-                "LibreOffice|contains",
-                "Access 20|contains",
-                "Excel 20|contains",
-                "Lync 20|contains",
-                "PowerPoint 20|contains",
-                "Publisher 20|contains",
-                "OneNote 20|contains",
-                "Outlook 20|contains",
-                "Skype for Business 20|contains",
-                "Word 20|contains",
-                "Visio 20|contains",
-                "Visual Studio 20|contains",
-                // graphics
-                "Adobe After Effects|contains",
-                "Adobe Illustrator|contains",
-                "Adobe InDesign|contains",
-                "Adobe Dreamweaver|contains",
-                "Adobe Photoshop|contains",
-                "Adobe Premiere|contains",
-                // media
-                "Windows Media Player|full",
-                "Spotify|full",
-                "iTunes|full",
-                "Audacity|full",
-                "VLC media player|full",
-                // internet
-                "Firefox|contains",
-                "Chrome|contains",
-                "Remote Desktop Connection|full",
-                "PuTTY|full",
-                "FileZilla|full",
-                "Pidgin|full",
-                "OneDrive|full",
-                "Dropbox|full",
-                "Skype|full",
-                "Twitter|full",
-                "Microsoft Edge|full",
-                "Slack|full",
-                "PureCloud|full",
-                "Discord|full",
-                // games
-                "Steam|full",
-                "Epic Games|full",
-                "Uplay|full",
-                "Battle.net|full",
-                "Open Broadcaster Software|full",
-                "Origin|full"
-            };
 
             foreach (string autoApp in autoAppNames)
             {
@@ -295,6 +298,23 @@ namespace CairoDesktop.AppGrabber
 
             return false;
         }
+
+        private string autoCategorizeByName(string name)
+        {
+            foreach (string autoApp in autoAppNames)
+            {
+                string[] autoAppName = autoApp.Split('|');
+
+                if (autoAppName[1] == "full" && autoAppName[0] == name)
+                    return autoAppName[2];
+                if (autoAppName[1] == "contains" && name.Contains(autoAppName[0]))
+                    return autoAppName[2];
+            }
+
+            return "";
+        }
+
+        #endregion
 
         private void goPage2()
         {
@@ -320,12 +340,30 @@ namespace CairoDesktop.AppGrabber
                 catList.Add(quicklaunch);
             }
 
-            // Add Apps to uncat if they haven't been added to a category yet.
+            // Add apps to category if they haven't been added to one yet.
             foreach (ApplicationInfo app in programsMenuAppsCollection)
             {
                 if (app.Category == null)
                 {
-                    uncat.Add(app);
+                    string cat = autoCategorizeByName(app.Name);
+
+                    if (cat != "")
+                    {
+                        // Get the category - create it if it doesn't exist.
+                        Category categoryToAdd = catList.GetCategory(cat);
+                        if (categoryToAdd == null)
+                        {
+                            categoryToAdd = new Category(cat, true);
+                            catList.Add(categoryToAdd);
+                        }
+
+                        categoryToAdd.Add(app);
+                    }
+                    else
+                    {
+                        // not a known app, add to Uncategorized
+                        uncat.Add(app);
+                    }
                 }
             }
 
