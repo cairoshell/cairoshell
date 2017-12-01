@@ -164,7 +164,8 @@ namespace CairoDesktop.AppGrabber
 
                 foreach (string dir in subs)
                 {
-                    rval.AddRange(generateAppList(dir));
+                    if (!dir.EndsWith("\\Startup"))
+                        rval.AddRange(generateAppList(dir));
                 }
             }
             catch { }
