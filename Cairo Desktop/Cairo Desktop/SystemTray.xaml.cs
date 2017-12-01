@@ -126,7 +126,8 @@ namespace CairoDesktop
                             }
                             catch
                             {
-                                trayIcon.Icon = AppGrabber.IconImageConverter.GetDefaultIcon();
+                                if (trayIcon.Icon == null)
+                                    trayIcon.Icon = AppGrabber.IconImageConverter.GetDefaultIcon();
                             }
                             trayIcon.HWnd = (IntPtr)nicData.hWnd;
                             trayIcon.UID = nicData.uID;
