@@ -226,15 +226,19 @@ namespace CairoDesktop.AppGrabber
         #region Auto selection
 
         string[] autoAppNames = {
-            // system
-            "File Explorer|full|System",
-            "Internet Explorer|full|System",
-            "Windows Explorer|full|System",
-            "Calculator|full|System",
-            "Notepad|contains|System",
-            "Snipping Tool|full|System",
+            // accessories
+            "File Explorer|full|Accessories",
+            "Windows Explorer|full|Accessories",
+            "Command Prompt|full|Accessories",
+            "Calculator|full|Accessories",
+            "Notepad|contains|Accessories",
+            "Snipping Tool|full|Accessories",
+            "Wordpad|full|Accessories",
+            "Sticky Notes|full|Accessories",
+            "Paint|full|Accessories",
             // productivity
             "LibreOffice|contains|Productivity",
+            "OpenOffice|contains|Productivity",
             "Access 20|contains|Productivity",
             "Excel 20|contains|Productivity",
             "Lync 20|contains|Productivity",
@@ -245,7 +249,13 @@ namespace CairoDesktop.AppGrabber
             "Skype for Business 20|contains|Productivity",
             "Word 20|contains|Productivity",
             "Visio 20|contains|Productivity",
-            "Visual Studio 20|contains|Productivity",
+            "SumatraPDF|full|Productivity",
+            // development
+            "Android Studio|contains|Development",
+            "Eclpise|contains|Development",
+            "Netbeans IDE|contains|Development",
+            "Sublime Text|contains|Development",
+            "Visual Studio 20|contains|Development",
             // graphics
             "Adobe After Effects|contains|Graphics",
             "Adobe Illustrator|contains|Graphics",
@@ -253,6 +263,8 @@ namespace CairoDesktop.AppGrabber
             "Adobe Dreamweaver|contains|Graphics",
             "Adobe Photoshop|contains|Graphics",
             "Adobe Premiere|contains|Graphics",
+            "GIMP |contains|Graphics",
+            "Inkscape|contains|Graphics",
             // media
             "Windows Media Player|full|Media",
             "Spotify|full|Media",
@@ -261,16 +273,20 @@ namespace CairoDesktop.AppGrabber
             "VLC media player|full|Media",
             // internet
             "Firefox|contains|Internet",
+            "Thunderbird|contains|Internet",
             "Chrome|contains|Internet",
             "Remote Desktop Connection|full|Internet",
             "PuTTY|full|Internet",
+            "WinSCP|full|Internet",
             "FileZilla|full|Internet",
             "Pidgin|full|Internet",
             "OneDrive|full|Internet",
+            "Backup and Sync from Google|full|Internet",
             "Dropbox|full|Internet",
             "Skype|full|Internet",
             "Twitter|full|Internet",
             "Microsoft Edge|full|Internet",
+            "Internet Explorer|full|Internet",
             "Slack|full|Internet",
             "PureCloud|full|Internet",
             "Discord|full|Internet",

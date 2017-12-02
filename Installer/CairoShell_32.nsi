@@ -105,11 +105,11 @@ Section "Cairo Desktop (required)" cairo
   WriteUninstaller "RemoveCairo.exe"
   
   ; ngen to improve first start performance
-  SetDetailsPrint both
-  DetailPrint "Generating native image..."
-  SetDetailsPrint none
-  ExecWait '"$R0\ngen.exe" install "$INSTDIR\CairoDesktop.exe"'
-  SetDetailsPrint both
+  ;SetDetailsPrint both
+  ;DetailPrint "Generating native image..."
+  ;SetDetailsPrint none
+  ;ExecWait '"$R0\ngen.exe" install "$INSTDIR\CairoDesktop.exe"'
+  ;SetDetailsPrint both
 
   Return
  
