@@ -14,23 +14,8 @@ namespace CairoDesktop {
     {
         public static DependencyProperty locationsProperty = DependencyProperty.Register("Locations", typeof(InvokingObservableCollection<SystemDirectory>), typeof(DesktopIcons), new PropertyMetadata(new InvokingObservableCollection<SystemDirectory>(Dispatcher.CurrentDispatcher)));
 
-        public DesktopIcons() 
+        public DesktopIcons()
         {
-            InitializeComponent();
-
-            if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 0)
-            {
-                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewVerticalSmallStyle") as Style;
-            }
-            else if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 2)
-            {
-                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewVerticalStyle") as Style;
-            }
-            else if (Settings.DesktopIconSize == 0)
-            {
-                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewHorizontalSmallStyle") as Style;
-            }
-
             string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string userDesktopPath = Settings.DesktopDirectory;
 
@@ -48,6 +33,21 @@ namespace CairoDesktop {
             else if (Directory.Exists(defaultDesktopPath))
             {
                 setDesktopDir(defaultDesktopPath);
+            }
+
+            InitializeComponent();
+
+            if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 0)
+            {
+                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewVerticalSmallStyle") as Style;
+            }
+            else if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 2)
+            {
+                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewVerticalStyle") as Style;
+            }
+            else if (Settings.DesktopIconSize == 0)
+            {
+                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewHorizontalSmallStyle") as Style;
             }
         }
 
