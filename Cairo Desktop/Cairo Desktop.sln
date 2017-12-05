@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo Desktop", "Cairo Desktop\Cairo Desktop.csproj", "{F0383E91-6ADC-4016-9E21-D3DC0FFC55FF}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -30,6 +30,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.UWPInterop", "CairoDesktop.UWPInterop\CairoDesktop.UWPInterop.csproj", "{52A795C9-3C28-487A-B7B8-AAB324DA7305}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Common", "CairoDesktop.Common\CairoDesktop.Common.csproj", "{963EB868-7672-4557-8FE9-6A1A388AA5FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Localization", "CairoDesktop.Localization\CairoDesktop.Localization.csproj", "{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +117,14 @@ Global
 		{963EB868-7672-4557-8FE9-6A1A388AA5FF}.Release|x64.Build.0 = Release|x64
 		{963EB868-7672-4557-8FE9-6A1A388AA5FF}.Release|x86.ActiveCfg = Release|Any CPU
 		{963EB868-7672-4557-8FE9-6A1A388AA5FF}.Release|x86.Build.0 = Release|Any CPU
+		{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}.Debug|x64.ActiveCfg = Debug|x64
+		{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}.Debug|x64.Build.0 = Debug|x64
+		{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}.Debug|x86.Build.0 = Debug|Any CPU
+		{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}.Release|x64.ActiveCfg = Release|x64
+		{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}.Release|x64.Build.0 = Release|x64
+		{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}.Release|x86.ActiveCfg = Release|Any CPU
+		{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

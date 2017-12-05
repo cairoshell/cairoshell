@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:CairoDesktop.Properties" xmlns:control="clr-namespace:CairoDesktop" xmlns:search="clr-namespace:VistaSearchProvider" x:Class="CairoDesktop.MenuBar"
+<Window xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"  xmlns:control="clr-namespace:CairoDesktop" x:Class="CairoDesktop.MenuBar"
     x:Name="Window"
     Title=""
     WindowStyle="None"
@@ -24,7 +24,6 @@
     Background="Transparent">
     <Window.Resources>
         <ResourceDictionary>
-            <local:Settings x:Key="settings" />
             <Style x:Key="InnerProgramsListStyle"
                 TargetType="ItemsControl">
                 <Setter Property="ItemTemplate">
@@ -78,7 +77,10 @@
             </Style>
         </ResourceDictionary>
     </Window.Resources>
-    <DockPanel DataContext="{StaticResource settings}" Style="{StaticResource MenuBarStyle}"
+    <Window.DataContext>
+        <l10n:DisplayString/>
+    </Window.DataContext>
+    <DockPanel Style="{StaticResource MenuBarStyle}"
         x:Name="CairoMenuBarContainer">
         <StackPanel Orientation="Horizontal"
             VerticalAlignment="Top"
@@ -140,7 +142,7 @@
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenLogoffBox" />
                 </MenuItem>
-                <MenuItem Header="Programs" Name="ProgramsMenu"
+                <MenuItem Header="{Binding sProgramsMenu}" Name="ProgramsMenu"
                     Style="{StaticResource CairoMenuItemStyle}" Drop="Programs_Drop"
                     ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" TextBlock.FontWeight="SemiBold" StaysOpenOnClick="True">
                     <MenuItem StaysOpenOnClick="True">
@@ -163,7 +165,7 @@
                         </MenuItem.Header>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Places"
+                <MenuItem Header="{Binding sPlacesMenu}"
                     Style="{StaticResource CairoMenuItemStyle}" TextBlock.FontWeight="SemiBold">
                     <MenuItem xmlns:s="clr-namespace:System;assembly=mscorlib" Name="miUserName"
                         Style="{StaticResource CairoMenuItemStyle}"
