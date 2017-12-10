@@ -145,7 +145,7 @@ namespace VistaSearchProvider
         public string Path { get; set; }
         public string PathDisplay { get; set; }
         public string DateModified { get; set; }
-        public string DateModifiedDisplay { get { return "Last Modified: " + DateModified; } }
+        public string DateModifiedDisplay { get { return String.Format(CairoDesktop.Localization.DisplayString.sSearch_LastModified, DateModified); } }
 
         public ImageSource Icon
         {

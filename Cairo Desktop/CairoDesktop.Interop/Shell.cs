@@ -249,7 +249,7 @@ namespace CairoDesktop.Interop
 
         public static void ShowRunDialog()
         {
-            SHRunFileDialog(IntPtr.Zero, IntPtr.Zero, null, "Run", "Type the name of a program, folder, document, or Internet resource, and Cairo will open it for you.", RunFileDialogFlags.None);
+            SHRunFileDialog(IntPtr.Zero, IntPtr.Zero, null, Localization.DisplayString.sRun_Title, Localization.DisplayString.sRun_Info, RunFileDialogFlags.None);
         }
 
         public static void ShowWindowSwitcher()

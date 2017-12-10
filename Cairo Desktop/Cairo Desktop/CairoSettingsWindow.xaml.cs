@@ -218,7 +218,7 @@
         private void btnDesktopHomeSelect_Click(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.Description = "Select a folder to display as your desktop:";
+            fbd.Description = Localization.DisplayString.sDesktop_BrowseTitle;
             fbd.ShowNewFolderButton = false;
             fbd.SelectedPath = Settings.DesktopDirectory;
 

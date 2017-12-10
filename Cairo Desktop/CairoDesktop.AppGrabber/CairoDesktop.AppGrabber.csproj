@@ -129,6 +129,10 @@
       <Project>{233781C8-83E4-47A6-847E-FA7A31B1CC51}</Project>
       <Name>CairoDesktop.Interop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj">
+      <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>
+      <Name>CairoDesktop.Localization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.UWPInterop\CairoDesktop.UWPInterop.csproj">
       <Project>{52a795c9-3c28-487a-b7b8-aab324da7305}</Project>
       <Name>CairoDesktop.UWPInterop</Name>

@@ -184,7 +184,7 @@ namespace CairoDesktop
             }
             else if (!Shell.StartProcess(app.Path))
             {
-                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it using the right-click menu to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -201,7 +201,7 @@ namespace CairoDesktop
                     {
                         app.AskAlwaysAdmin = false;
 
-                        bool? always = CairoMessage.Show("You've run " + app.Name + " as an administrator before. Would you like Cairo to automatically run it as an administrator every time?", "Always run as administrator?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                        bool? always = CairoMessage.Show(String.Format(Localization.DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), Localization.DisplayString.sProgramsMenu_AlwaysAdminTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                         if (always == true)
                             app.AlwaysAdmin = true;
@@ -235,7 +235,7 @@ namespace CairoDesktop
         {
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
-            bool? deleteChoice = CairoMessage.ShowOkCancel("\"" + app.Name + "\" will be removed from the Programs menu. This will not uninstall the program.", "Remove this app from the menu?", "Resources/cairoIcon.png", "Remove", "Cancel");
+            bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name), Localization.DisplayString.sProgramsMenu_RemoveTitle, "Resources/cairoIcon.png", Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel);
             if (deleteChoice.HasValue && deleteChoice.Value)
             {
                 app.Category.Remove(app);
@@ -250,7 +250,7 @@ namespace CairoDesktop
 
 
             if (app.IsStoreApp)
-                CairoMessage.ShowAlert("This is a Universal Windows Platform (UWP) application.", app.Name, MessageBoxImage.None);
+                CairoMessage.ShowAlert(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, MessageBoxImage.None);
             else
                 Shell.ShowFileProperties(app.Path);
         }
@@ -482,8 +482,8 @@ namespace CairoDesktop
             string version = fvi.FileVersion;
 
             CairoMessage.ShowAlert(
-                "Version " + version + " - Pre-release"
-                +"\n\nCopyright © 2007-" + DateTime.Now.Year.ToString() + " Cairo Development Team and community contributors.  All rights reserved.", "Cairo Desktop Environment", MessageBoxImage.None);
+                Localization.DisplayString.sAbout_Version + " " + version + " - " + Localization.DisplayString.sAbout_PreRelease
+                + "\n\n" + String.Format(Localization.DisplayString.sAbout_Copyright, DateTime.Now.Year.ToString()), "Cairo Desktop Environment", MessageBoxImage.None);
         }
 
         private void CheckForUpdates(object sender, RoutedEventArgs e)
@@ -493,7 +493,7 @@ namespace CairoDesktop
 
         private void OpenLogoffBox(object sender, RoutedEventArgs e)
         {
-            bool? LogoffChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and be logged off.", "Are you sure you want to log off now?", "Resources/logoffIcon.png", "Log Off", "Cancel");
+            bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sLogoff_Info, Localization.DisplayString.sLogoff_Title, "Resources/logoffIcon.png", Localization.DisplayString.sCairoMenu_LogOff, Localization.DisplayString.sInterface_Cancel);
             if (LogoffChoice.HasValue && LogoffChoice.Value)
             {
                 NativeMethods.Logoff();
@@ -502,7 +502,7 @@ namespace CairoDesktop
 
         private void OpenRebootBox(object sender, RoutedEventArgs e)
         {
-            bool? RebootChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and your computer will restart.", "Are you sure you want to restart now?", "Resources/restartIcon.png", "Restart", "Cancel");
+            bool? RebootChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sRestart_Info, Localization.DisplayString.sRestart_Title, "Resources/restartIcon.png", Localization.DisplayString.sRestart_Restart, Localization.DisplayString.sInterface_Cancel);
             if (RebootChoice.HasValue && RebootChoice.Value)
             {
                 NativeMethods.Reboot();
@@ -511,7 +511,7 @@ namespace CairoDesktop
 
         private void OpenShutDownBox(object sender, RoutedEventArgs e)
         {
-            bool? ShutdownChoice = CairoMessage.ShowOkCancel("You will lose all unsaved documents and your computer will turn off.", "Are you sure you want to shut down now?", "Resources/shutdownIcon.png", "Shut Down", "Cancel");
+            bool? ShutdownChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sShutDown_Info, Localization.DisplayString.sShutDown_Title, "Resources/shutdownIcon.png", Localization.DisplayString.sShutDown_ShutDown, Localization.DisplayString.sInterface_Cancel);
             if (ShutdownChoice.HasValue && ShutdownChoice.Value)
             {
                 NativeMethods.Shutdown();
@@ -525,7 +525,7 @@ namespace CairoDesktop
 
         private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
         {
-            bool? CloseCairoChoice = CairoMessage.ShowOkCancel("You will need to reboot or use the start menu shortcut in order to run Cairo again.", "Are you sure you want to exit Cairo?", "Resources/exitIcon.png", "Exit Cairo", "Cancel");
+            bool? CloseCairoChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title, "Resources/exitIcon.png", Localization.DisplayString.sExitCairo_ExitCairo, Localization.DisplayString.sInterface_Cancel);
             if (CloseCairoChoice.HasValue && CloseCairoChoice.Value)
             {
                 shutdown();
@@ -656,7 +656,7 @@ namespace CairoDesktop
 
             if (!Shell.StartProcess(searchObj.Path))
             {
-                CairoMessage.Show("We were unable to open the search result.", "Uh Oh!", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         #endregion

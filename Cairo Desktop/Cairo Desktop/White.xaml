@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:cairo="clr-namespace:CairoDesktop">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- Menu item common resources -->
     <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" x:Key="CairoMenuItemHoverGradient">
         <GradientStop Color="#8F1A4DFF" Offset="0.0" />

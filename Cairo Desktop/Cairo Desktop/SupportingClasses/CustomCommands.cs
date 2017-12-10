@@ -56,7 +56,7 @@ namespace CairoDesktop
             }
             else if (verb == "delete")
             {
-                bool? deleteChoice = CairoMessage.ShowOkCancel("\"" + displayName + "\" will be sent to the Recycle Bin.", "Are you sure you want to delete this?", "Resources/cairoIcon.png", "Delete", "Cancel");
+                bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sDesktop_DeleteInfo, displayName), Localization.DisplayString.sDesktop_DeleteTitle, "Resources/cairoIcon.png", Localization.DisplayString.sInterface_Delete, Localization.DisplayString.sInterface_Cancel);
                 if (deleteChoice.HasValue && deleteChoice.Value)
                 {
                     Interop.Shell.SendToRecycleBin(fileName);
@@ -104,12 +104,12 @@ namespace CairoDesktop
             {
                 string filePath = menu.Tag as string;
 
-                menu.Items.Add(new MenuItem { Header = "Open", Tag = "open|" + filePath });
+                menu.Items.Add(new MenuItem { Header = Localization.DisplayString.sInterface_Open, Tag = "open|" + filePath });
 
                 if ((File.GetAttributes(filePath) & FileAttributes.Directory) != FileAttributes.Directory)
-                    menu.Items.Add(new MenuItem { Header = "Open With...", Tag = "openwith|" + filePath });
+                    menu.Items.Add(new MenuItem { Header = Localization.DisplayString.sInterface_OpenWith, Tag = "openwith|" + filePath });
                 else
-                    menu.Items.Add(new MenuItem { Header = "Add to Stacks", Tag = "addStack|" + filePath });
+                    menu.Items.Add(new MenuItem { Header = Localization.DisplayString.sInterface_AddToStacks, Tag = "addStack|" + filePath });
 
                 foreach (string verb in ((menu.PlacementTarget as Button).DataContext as SystemFile).Verbs)
                 {
@@ -119,16 +119,16 @@ namespace CairoDesktop
 
                 menu.Items.Add(new Separator());
 
-                menu.Items.Add(new MenuItem { Header = "Copy", Tag = "copy|" + filePath });
+                menu.Items.Add(new MenuItem { Header = Localization.DisplayString.sInterface_Copy, Tag = "copy|" + filePath });
 
                 menu.Items.Add(new Separator());
 
-                menu.Items.Add(new MenuItem { Header = "Delete", Tag = "delete|" + filePath });
-                menu.Items.Add(new MenuItem { Header = "Rename", Tag = "rename|" + filePath });
+                menu.Items.Add(new MenuItem { Header = Localization.DisplayString.sInterface_Delete, Tag = "delete|" + filePath });
+                menu.Items.Add(new MenuItem { Header = Localization.DisplayString.sInterface_Rename, Tag = "rename|" + filePath });
 
                 menu.Items.Add(new Separator());
 
-                menu.Items.Add(new MenuItem { Header = "Properties", Tag = "properties|" + filePath });
+                menu.Items.Add(new MenuItem { Header = Localization.DisplayString.sInterface_Properties, Tag = "properties|" + filePath });
             }
         }
     }

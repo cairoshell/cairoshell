@@ -146,12 +146,12 @@
         {
             if (string.IsNullOrEmpty(CancelButtonText))
             {
-                CancelButtonText = "Cancel";
+                CancelButtonText = CairoDesktop.Localization.DisplayString.sInterface_Cancel;
             }
 
             if(string.IsNullOrEmpty(OkButtonText))
             {
-                OkButtonText = "OK";
+                OkButtonText = CairoDesktop.Localization.DisplayString.sInterface_OK;
             }
 
             if(string.IsNullOrEmpty(ImageSource))

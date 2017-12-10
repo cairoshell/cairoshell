@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.Taskbar" xmlns:tasks="clr-namespace:CairoDesktop.WindowsTasks;assembly=CairoDesktop.WindowsTasks" xmlns:self="clr-namespace:CairoDesktop" xmlns:clr="clr-namespace:System;assembly=mscorlib"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.Taskbar" xmlns:tasks="clr-namespace:CairoDesktop.WindowsTasks;assembly=CairoDesktop.WindowsTasks" xmlns:self="clr-namespace:CairoDesktop" xmlns:clr="clr-namespace:System;assembly=mscorlib" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
     x:Name="TaskbarWindow"
     Title=""
     Height="29"
@@ -74,7 +74,7 @@
                                     <StackPanel Orientation="Horizontal" Margin="0,3">
                                         <Border BorderThickness="0,0,1,0" BorderBrush="#AF5b5b5b" Width="100" Margin="0,-3">
                                         </Border>
-                                        <TextBlock Style="{StaticResource NoItemsTextBlock}" Padding="8,4,0,4" Width="350">Open windows to see them listed here.</TextBlock>
+                                        <TextBlock Style="{StaticResource NoItemsTextBlock}" Padding="8,4,0,4" Width="350" Text="{Binding Path=(l10n:DisplayString.sTaskbar_Empty)}" />
                                     </StackPanel>
                                 </ControlTemplate>
                             </Setter.Value>
@@ -264,7 +264,7 @@
                             </ListView.ItemContainerStyle>
                         </ListView>
                             <Border Margin="99,-3,0,-3" Padding="0,3" Width="351" BorderThickness="1,0,0,0" BorderBrush="#AF5b5b5b" Visibility="Collapsed" Name="bdrTaskView">
-                                <MenuItem Header="Task View" Style="{StaticResource CairoMenuItemStyle}" Click="TaskView_Click">
+                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_TaskView)}" Style="{StaticResource CairoMenuItemStyle}" Click="TaskView_Click">
                                     <MenuItem.Icon>
                                         <Image Source="Resources\taskViewIcon.png"
                                         Width="16"
