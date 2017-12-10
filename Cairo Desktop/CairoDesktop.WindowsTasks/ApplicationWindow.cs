@@ -165,11 +165,18 @@ namespace CairoDesktop.WindowsTasks
         {
             get
             {
-                int len = NativeMethods.GetWindowTextLength(this.Handle);
-                StringBuilder sb = new StringBuilder(len);
-                NativeMethods.GetWindowText(this.Handle, sb, len + 1);
+                try
+                {
+                    int len = NativeMethods.GetWindowTextLength(this.Handle);
+                    StringBuilder sb = new StringBuilder(len);
+                    NativeMethods.GetWindowText(this.Handle, sb, len + 1);
 
-                return sb.ToString();
+                    return sb.ToString();
+                }
+                catch
+                {
+                    return "";
+                }
             }
         }
 
