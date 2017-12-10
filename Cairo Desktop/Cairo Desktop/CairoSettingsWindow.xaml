@@ -187,6 +187,11 @@
                         <TextBox Text="{Binding Path=DateFormat}"
                             Name="dateSetting" ToolTip="Some values you can use here:&#x0a;d	Day of month&#x0a;dd	Day of month (leading zero)&#x0a;ddd	Weekday (abbreviated)&#x0a;dddd	Weekday (text)&#x0a;M	Month&#x0a;MM	Month (leading zero)&#x0a;MMM	Month (abbreviated)&#x0a;MMMM	Month (text)&#x0a;yy	Year (2-digit)&#x0a;yyyy	Year (4-digit)" />
                     </StackPanel>
+                    <CheckBox IsChecked="{Binding Path=ForceSoftwareRendering}"
+                        Click="chkForceSoftwareRendering_Click"
+                        Name="chkForceSoftwareRendering">
+                        <Label>Force software rendering (advanced)</Label>
+                    </CheckBox>
                     <TextBlock Text="Files and folders" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableSubDirs}"
                         Click="EnableSubDirs_Click"

@@ -29,6 +29,7 @@
         private static string _CairoTheme;
         private static bool? _EnableSubDirs;
         private static bool? _ShowFileExtensions;
+        private static bool? _ForceSoftwareRendering;
 
         // Desktop
         private static bool? _EnableDesktop;
@@ -183,6 +184,23 @@
             {
                 _ShowFileExtensions = value;
                 Properties.Settings.Default.ShowFileExtensions = (bool)_ShowFileExtensions;
+                Save();
+            }
+        }
+
+        public static bool ForceSoftwareRendering
+        {
+            get
+            {
+                if (_ForceSoftwareRendering == null)
+                    _ForceSoftwareRendering = Properties.Settings.Default.ForceSoftwareRendering;
+
+                return (bool)_ForceSoftwareRendering;
+            }
+            set
+            {
+                _ForceSoftwareRendering = value;
+                Properties.Settings.Default.ForceSoftwareRendering = (bool)_ForceSoftwareRendering;
                 Save();
             }
         }

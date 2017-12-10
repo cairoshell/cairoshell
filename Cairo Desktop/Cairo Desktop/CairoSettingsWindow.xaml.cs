@@ -302,5 +302,10 @@
         {
             this.btnRestart.Visibility = Visibility.Visible;
         }
+
+        private void chkForceSoftwareRendering_Click(object sender, RoutedEventArgs e)
+        {
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
     }
 }

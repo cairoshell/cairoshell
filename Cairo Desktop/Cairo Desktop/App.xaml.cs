@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace CairoDesktop
 {
@@ -12,6 +14,9 @@ namespace CairoDesktop
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            if (Configuration.Settings.ForceSoftwareRendering)
+                RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
         }
 
         private static bool errorVisible = false;

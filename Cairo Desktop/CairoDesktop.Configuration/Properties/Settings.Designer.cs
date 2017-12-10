@@ -274,5 +274,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["DesktopIconSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ForceSoftwareRendering {
+            get {
+                return ((bool)(this["ForceSoftwareRendering"]));
+            }
+            set {
+                this["ForceSoftwareRendering"] = value;
+            }
+        }
     }
 }
