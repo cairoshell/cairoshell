@@ -27,6 +27,7 @@
         private static string _DateFormat;
         private static string _FileManager;
         private static string _CairoTheme;
+        private static string _Language;
         private static bool? _EnableSubDirs;
         private static bool? _ShowFileExtensions;
         private static bool? _ForceSoftwareRendering;
@@ -150,6 +151,23 @@
             {
                 _CairoTheme = value;
                 Properties.Settings.Default.CairoTheme = _CairoTheme;
+                Save();
+            }
+        }
+
+        public static string Language
+        {
+            get
+            {
+                if (_Language == null)
+                    _Language = Properties.Settings.Default.Language;
+
+                return _Language;
+            }
+            set
+            {
+                _Language = value;
+                Properties.Settings.Default.Language = _Language;
                 Save();
             }
         }

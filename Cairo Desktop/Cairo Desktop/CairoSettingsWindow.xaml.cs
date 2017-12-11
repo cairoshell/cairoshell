@@ -10,6 +10,7 @@
     using System.Windows.Forms;
     using Configuration;
     using AppGrabber;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
@@ -21,6 +22,7 @@
             InitializeComponent();
 
             loadThemes();
+            loadLanguages();
             loadRadioGroups();
             loadCategories();
 
@@ -110,6 +112,13 @@
                 string theme = Path.GetFileName(subStr);
                 cboThemeSelect.Items.Add(theme);
             }
+        }
+
+        private void loadLanguages()
+        {
+            cboLangSelect.DisplayMemberPath = "Key";
+            cboLangSelect.SelectedValuePath = "Value";
+            cboLangSelect.Items.Add(new KeyValuePair<string, string>("English (United States)", "en_US"));
         }
 
         private void loadCategories()

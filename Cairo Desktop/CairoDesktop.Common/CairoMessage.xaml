@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:self="clr-namespace:CairoDesktop.Common"
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:self="clr-namespace:CairoDesktop.Common" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
 	x:Class="CairoDesktop.Common.CairoMessage"
 	Title="{Binding ElementName=messageWindow, Path=Title}"
 	MaxHeight="600"
@@ -85,27 +85,27 @@
 			Grid.ColumnSpan="5"
 			HorizontalAlignment="Center" VerticalAlignment="Center">
 					<Button x:Name="OkButton"
-				Content="OK"
+				Content="{Binding Path=(l10n:DisplayString.sInterface_OK)}"
 				IsDefault="True"
 				Margin="6,0,6,0"
 				Style="{StaticResource CairoButtonStyle}"
 				Click="OkButton_Click"
 				Visibility="{Binding ElementName=messageWindow, Path=Buttons, Converter={StaticResource MessageBoxButtonConverter}, ConverterParameter=Ok}" />
 					<Button x:Name="YesButton"
-				Content="Yes"
+				Content="{Binding Path=(l10n:DisplayString.sInterface_Yes)}"
 				IsDefault="True"
 				Margin="6,0,6,0"
 				Style="{StaticResource CairoButtonStyle}"
 				Click="OkButton_Click"
 				Visibility="{Binding ElementName=messageWindow, Path=Buttons, Converter={StaticResource MessageBoxButtonConverter}, ConverterParameter=Yes}" />
 					<Button x:Name="NoButton"
-				Content="No"
+				Content="{Binding Path=(l10n:DisplayString.sInterface_No)}"
 				Margin="6,0,6,0"
 				Style="{StaticResource CairoButtonStyle}"
 				Click="NoButton_Click"
 				Visibility="{Binding ElementName=messageWindow, Path=Buttons, Converter={StaticResource MessageBoxButtonConverter}, ConverterParameter=No}" />
 					<Button x:Name="CancelButton"
-				Content="Cancel"
+				Content="{Binding Path=(l10n:DisplayString.sInterface_Cancel)}"
 				IsCancel="True"
 				Margin="6,0,6,0"
 				Style="{StaticResource CairoButtonStyle}"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="CairoDesktop.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Cairo Settings"
+<Window x:Class="CairoDesktop.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+    Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
     SizeToContent="Height"
     Width="520"
     WindowStartupLocation="CenterScreen"
@@ -166,154 +166,158 @@
                 <Style TargetType="TabItem" BasedOn="{StaticResource SettingsTabItem}">
                 </Style>
             </TabControl.Resources>
-            <TabItem Header="General">
+            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_General)}">
                 <StackPanel Orientation="Vertical">
                     <CheckBox Click="EnableAutoUpdates_Click"
                         Name="chkEnableAutoUpdates">
-                        <Label>Automatically check for updates</Label>
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_UpdateCheck)}" />
                     </CheckBox>
-                    <TextBlock Text="Appearance" Style="{StaticResource SettingGroupHeader}" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Theme:" ToolTip="Place themes into your Cairo installation directory." />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_Language)}" />
+                        <ComboBox Name="cboLangSelect" DropDownClosed="themeSetting_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=Language}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_Theme)}" ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_ThemeTooltip)}" />
                         <ComboBox Name="cboThemeSelect" DropDownClosed="themeSetting_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=CairoTheme}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Time format:" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormat)}" />
                         <TextBox Text="{Binding Path=TimeFormat}"
-                            Name="timeSetting" ToolTip="Some values you can use here:&#x0a;d	Day of month&#x0a;ddd	Day of week&#x0a;h	Hour (12-hour)&#x0a;hh	Hour (12-hour, leading zero)&#x0a;H	Hour (24-hour)&#x0a;HH	Hour (24-hour, leading zero)&#x0a;m	Minutes&#x0a;mm	Minutes (leading zero)&#x0a;s	Seconds&#x0a;ss	Seconds (leading zero)&#x0a;tt	AM/PM if applicable" />
+                            Name="timeSetting" ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormatTooltip)}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Date format:" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormat)}" />
                         <TextBox Text="{Binding Path=DateFormat}"
-                            Name="dateSetting" ToolTip="Some values you can use here:&#x0a;d	Day of month&#x0a;dd	Day of month (leading zero)&#x0a;ddd	Weekday (abbreviated)&#x0a;dddd	Weekday (text)&#x0a;M	Month&#x0a;MM	Month (leading zero)&#x0a;MMM	Month (abbreviated)&#x0a;MMMM	Month (text)&#x0a;yy	Year (2-digit)&#x0a;yyyy	Year (4-digit)" />
+                            Name="dateSetting" ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormatTooltip)}" />
                     </StackPanel>
                     <CheckBox IsChecked="{Binding Path=ForceSoftwareRendering}"
                         Click="chkForceSoftwareRendering_Click"
                         Name="chkForceSoftwareRendering">
-                        <Label>Force software rendering (advanced)</Label>
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_ForceSoftwareRendering)}" />
                     </CheckBox>
-                    <TextBlock Text="Files and folders" Style="{StaticResource SettingGroupHeader}" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FilesAndFolders)}" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableSubDirs}"
                         Click="EnableSubDirs_Click"
                         Name="chkEnableSubDirs">
-                        <Label>Show sub-directories</Label>
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_ShowSubDirectories)}" />
                     </CheckBox>
                     <CheckBox IsChecked="{Binding Path=ShowFileExtensions}"
                         Click="ShowFileExtensions_Click"
                         Name="chkShowFileExtensions">
-                        <Label>Show file extensions</Label>
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_ShowFileExtensions)}" />
                     </CheckBox>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="File manager:" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FileManager)}" />
                         <TextBox Text="{Binding Path=FileManager}"
                             Name="fileManager" />
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Menu Bar">
+            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_MenuBar)}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Default programs category:" Width="160" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_DefaultProgramsCategory)}" Width="160" />
                         <ComboBox Name="cboDefaultProgramsCategory" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=DefaultProgramsCategory}" Width="170" />
                     </StackPanel>
-                    <TextBlock Text="Appearance" Style="{StaticResource SettingGroupHeader}" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableMenuBarShadow}"
                         Click="EnableMenuBarShadow_Click" Name="chkEnableMenuBarShadow">
-                        <Label>Enable Menu Bar shadow</Label>
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarShadow)}" />
                     </CheckBox>
-                    <TextBlock Text="Notification area" Style="{StaticResource SettingGroupHeader}" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableSysTray}"
                         Click="EnableSysTray_Click" Name="chkEnableSysTray">
-                        <Label>Enable notification area</Label>
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableNotificationArea)}" />
                     </CheckBox>
-                    <TextBlock Name="lblTrayWarning" Visibility="Collapsed" Width="300" TextWrapping="Wrap" Text="The notification area component could not be loaded. Please install the Microsoft Visual C++ 2015 Redistributable."/>
+                    <TextBlock Name="lblTrayWarning" Visibility="Collapsed" Width="300" TextWrapping="Wrap" Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationAreaError)}"/>
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}" Name="pnlTraySettings">
-                        <TextBlock Text="Show notification area icons:" Width="165" VerticalAlignment="Top" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIcons)}" Width="165" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTrayMode" Name="radTrayMode0" Click="radTrayMode0_Click">
-                                <Label>Collapsed</Label>
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIconsCollapsed)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoTrayMode" Name="radTrayMode1" Click="radTrayMode1_Click">
-                                <Label>Always</Label>
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIconsAlways)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
                     <CheckBox IsChecked="{Binding Path=EnableSysTrayRehook}" Click="chkEnableSysTrayRehook_Click" Name="chkEnableSysTrayRehook">
-                        <Label>Periodically re-establish notification area hook</Label>
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_PeriodicallyRehook)}" />
                     </CheckBox>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Desktop">
+            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}">
                 <StackPanel Orientation="Vertical">
                     <CheckBox IsChecked="{Binding Path=EnableDesktop}"
                         Click="EnableDesktop_Click" Name="chkEnableDesktop">
-                        <Label>Enable Desktop</Label>
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDesktop)}" />
                     </CheckBox>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Desktop home:" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DesktopHome)}" />
                         <TextBox Text="{Binding Path=DesktopDirectory}"
                             Name="txtDesktopHome" />
                         <Button Name="btnDesktopHomeSelect" Click="btnDesktopHomeSelect_Click" Height="24" Padding="10,0">...</Button>
                     </StackPanel>
-                    <TextBlock Text="Appearance" Style="{StaticResource SettingGroupHeader}" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="Icon size:" VerticalAlignment="Top" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_IconSize)}" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize2" Click="radDesktopIconSize2_Click">
-                                <Label>Large</Label>
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_IconSizeLarge)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize0" Click="radDesktopIconSize0_Click">
-                                <Label>Small</Label>
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_IconSizeSmall)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="Label position:" VerticalAlignment="Top" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPosition)}" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoDesktopLabelPos" Name="radDesktopLabelPos0" Click="radDesktopLabelPos0_Click">
-                                <Label>Right</Label>
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPositionRight)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoDesktopLabelPos" Name="radDesktopLabelPos1" Click="radDesktopLabelPos1_Click">
-                                <Label>Bottom</Label>
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPositionBottom)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
-                    <TextBlock Text="Dynamic Desktop" Style="{StaticResource SettingGroupHeader}" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DynamicDesktop)}" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableDynamicDesktop}"
                         Click="EnableDynamicDesktop_Click" Name="chkEnableDynamicDesktop">
-                        <Label>Use Dynamic Desktop</Label>
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDynamicDesktop)}" />
                     </CheckBox>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Taskbar">
+            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Taskbar)}">
                 <StackPanel Orientation="Vertical">
                     <CheckBox IsChecked="{Binding Path=EnableTaskbar}"
                         Click="EnableTaskbar_Click" Name="chkEnableTaskbar">
-                        <Label>Enable Taskbar</Label>
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableTaskbar)}" />
                     </CheckBox>
                     <!--<CheckBox IsChecked="{Binding Path=EnableTaskbarPolling}" Click="chkEnableTaskbarPolling_Click"  Name="chkEnableTaskbarPolling">
                         <Label>Poll taskbar buttons for updates</Label>
                     </CheckBox>-->
-                    <TextBlock Text="Appearance" Style="{StaticResource SettingGroupHeader}" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="Taskbar position:" VerticalAlignment="Top" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_TaskbarPosition)}" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos0" Click="radTaskbarPos0_Click">
-                                <Label>Bottom</Label>
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_PositionBottom)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos1" Click="radTaskbarPos1_Click">
-                                <Label>Top</Label>
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_PositionTop)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="Display mode:" VerticalAlignment="Top" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayMode)}" VerticalAlignment="Top" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click">
-                                <Label>Taskbar reserves space</Label>
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayModeAppBar)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode1" Click="radTaskbarMode1_Click">
-                                <Label>Taskbar overlaps windows</Label>
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayModeOverlap)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
@@ -322,10 +326,10 @@
             <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}" Name="btnRestart" MouseLeftButtonUp="restartCairo" Visibility="Hidden">
                 <TabItem.Header>
                     <StackPanel>
-                        <TextBlock TextAlignment="Center" TextWrapping="Wrap">Restart Cairo to apply</TextBlock>
+                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="{Binding Path=(l10n:DisplayString.sSettings_RestartCairo)}" />
                     </StackPanel>
                 </TabItem.Header>
-                <TextBlock Foreground="#55FFFFFF" FontSize="14">Restarting...</TextBlock>
+                <TextBlock Foreground="#55FFFFFF" FontSize="14" Text="{Binding Path=(l10n:DisplayString.sSettings_Restarting)}" />
             </TabItem>
         </TabControl>
     </Grid>

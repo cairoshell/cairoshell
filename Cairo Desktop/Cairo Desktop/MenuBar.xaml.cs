@@ -493,7 +493,7 @@ namespace CairoDesktop
 
         private void OpenLogoffBox(object sender, RoutedEventArgs e)
         {
-            bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sLogoff_Info, Localization.DisplayString.sLogoff_Title, "Resources/logoffIcon.png", Localization.DisplayString.sCairoMenu_LogOff, Localization.DisplayString.sInterface_Cancel);
+            bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sLogoff_Info, Localization.DisplayString.sLogoff_Title, "Resources/logoffIcon.png", Localization.DisplayString.sLogoff_Logoff, Localization.DisplayString.sInterface_Cancel);
             if (LogoffChoice.HasValue && LogoffChoice.Value)
             {
                 NativeMethods.Logoff();

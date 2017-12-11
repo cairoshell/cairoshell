@@ -67,6 +67,7 @@ namespace CairoDesktop.Localization
             { "sExitCairo_ExitCairo", "Exit Cairo" },
             { "sLogoff_Title", "Are you sure you want to log off now?" },
             { "sLogoff_Info", "You will lose all unsaved documents and be logged off." },
+            { "sLogoff_Logoff", "Log Off" },
             { "sRestart_Title", "Are you sure you want to restart now?" },
             { "sRestart_Info", "You will lose all unsaved documents and your computer will restart." },
             { "sRestart_Restart", "Restart" },

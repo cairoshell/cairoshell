@@ -11,13 +11,21 @@ namespace CairoDesktop.Localization
 
         private static string getString(string stringName)
         {
-            //return stringName; // debug
+            // return stringName; // debug
 
             Dictionary<string, string> lang;
             bool isDefault = false;
 
-            lang = Language.en_US;
-            isDefault = true;
+            /*if (Configuration.Settings.Language != "en_US")
+            {
+                lang = new Dictionary<string, string>();
+                isDefault = true;
+            }
+            else
+            {*/
+                lang = Language.en_US;
+                isDefault = true;
+            //}
 
             if (lang.ContainsKey(stringName))
                 return lang[stringName];
@@ -520,6 +528,14 @@ namespace CairoDesktop.Localization
             get
             {
                 return getString("sLogoff_Info");
+            }
+        }
+
+        public static string sLogoff_Logoff
+        {
+            get
+            {
+                return getString("sLogoff_Logoff");
             }
         }
 
