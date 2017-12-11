@@ -5,6 +5,7 @@ using System.Windows.Interop;
 using CairoDesktop.Interop;
 using CairoDesktop.Configuration;
 using System.Windows.Threading;
+using System.Collections.Specialized;
 
 namespace CairoDesktop
 {
@@ -22,6 +23,20 @@ namespace CairoDesktop
 
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
+        public DependencyProperty ButtonWidthProperty = DependencyProperty.Register("ButtonWidth", typeof(double), typeof(Taskbar), new PropertyMetadata(new double()));
+        public double ButtonWidth
+        {
+            get { return (double)GetValue(ButtonWidthProperty); }
+            set { SetValue(ButtonWidthProperty, value); }
+        }
+
+        public DependencyProperty ButtonTextWidthProperty = DependencyProperty.Register("ButtonTextWidth", typeof(double), typeof(Taskbar), new PropertyMetadata(new double()));
+        public double ButtonTextWidth
+        {
+            get { return (double)GetValue(ButtonTextWidthProperty); }
+            set { SetValue(ButtonTextWidthProperty, value); }
+        }
+
         public Taskbar()
         {
             InitializeComponent();
@@ -36,6 +51,8 @@ namespace CairoDesktop
             this.quickLaunchList.ItemsSource = quickLaunch;
             this.bdrTaskbar.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+
+            ((INotifyCollectionChanged)TasksList.Items).CollectionChanged += TasksList_Changed;
 
             // set taskbar edge based on preference
             if (Settings.TaskbarPosition == 1)
@@ -82,6 +99,16 @@ namespace CairoDesktop
             }
             else
                 e.Cancel = true;
+        }
+
+        private void setTaskButtonSize()
+        {
+            double size = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - bdrTaskbarEnd.ActualWidth - (TasksList.Items.Groups.Count * 5) - 14) / TasksList.Items.Count);
+            if (size > 140)
+                ButtonWidth = 140;
+            else
+                ButtonWidth = size;
+            ButtonTextWidth = ButtonWidth - 33;
         }
 
         private void setPosition()
@@ -211,9 +238,15 @@ namespace CairoDesktop
             handle = helper.Handle;
 
             setPosition();
+            setTaskButtonSize();
 
             if (Settings.TaskbarMode == 0)
                 appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, appBarEdge);
+        }
+
+        private void TasksList_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            setTaskButtonSize();
         }
 
         private void CollectionViewSource_Filter(object sender, System.Windows.Data.FilterEventArgs e)

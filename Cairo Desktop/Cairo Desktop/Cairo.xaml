@@ -841,8 +841,10 @@
             Value="12" />
         <Setter Property="Foreground"
             Value="White" />
-        <Setter Property="Width"
+        <Setter Property="MaxWidth"
             Value="140" />
+        <Setter Property="HorizontalAlignment"
+            Value="Stretch" />
         <Setter Property="Height"
             Value="29" />
         <Setter Property="VerticalAlignment"
@@ -876,7 +878,7 @@
                             </LinearGradientBrush>
                         </Border.BorderBrush>
                         <ContentPresenter Margin="5,1,5,0"
-                            HorizontalAlignment="Left"
+                            HorizontalAlignment="Stretch"
                             VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -941,8 +943,10 @@
             Value="12" />
         <Setter Property="Foreground"
             Value="White" />
-        <Setter Property="Width"
+        <Setter Property="MaxWidth"
             Value="140" />
+        <Setter Property="HorizontalAlignment"
+            Value="Stretch" />
         <Setter Property="Height"
             Value="29" />
         <Setter Property="VerticalAlignment"
@@ -975,7 +979,7 @@
                             </LinearGradientBrush>
                         </Border.BorderBrush>
                         <ContentPresenter Margin="5,1,5,0"
-                            HorizontalAlignment="Left"
+                            HorizontalAlignment="Stretch"
                             VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -1028,8 +1032,10 @@
             Value="12" />
         <Setter Property="Foreground"
             Value="White" />
-        <Setter Property="Width"
+        <Setter Property="MaxWidth"
             Value="140" />
+        <Setter Property="HorizontalAlignment"
+            Value="Stretch" />
         <Setter Property="Height"
             Value="29" />
         <Setter Property="VerticalAlignment"
@@ -1075,7 +1081,7 @@
                             </LinearGradientBrush>
                         </Border.BorderBrush>
                         <ContentPresenter Margin="5,1,5,0"
-                            HorizontalAlignment="Left"
+                            HorizontalAlignment="Stretch"
                             VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>

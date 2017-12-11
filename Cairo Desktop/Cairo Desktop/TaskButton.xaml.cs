@@ -7,8 +7,15 @@ namespace CairoDesktop
 	public partial class TaskButton
 	{
         public WindowsTasks.ApplicationWindow Window;
-        
-		public TaskButton()
+
+        public static readonly DependencyProperty TextWidthProperty = DependencyProperty.Register("TextWidth", typeof(double), typeof(TaskButton), new PropertyMetadata(new double()));
+        public double TextWidth
+        {
+            get { return (double)GetValue(TextWidthProperty); }
+            set { SetValue(TextWidthProperty, value); }
+        }
+
+        public TaskButton()
 		{
 			this.InitializeComponent();
         }

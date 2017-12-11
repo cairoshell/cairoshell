@@ -17,7 +17,7 @@ namespace CairoDesktop.AppGrabber
 
         public static AppGrabberUI uiInstance;
 
-        private string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web" };
+        private string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web", "safe mode" };
 
         public static AppGrabber Instance
         {

@@ -31,12 +31,6 @@
                     Value="0" />
                 <Setter Property="Foreground"
                     Value="{StaticResource {x:Static SystemColors.ControlTextBrushKey}}" />
-                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
-                    Value="Auto" />
-                <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
-                    Value="Auto" />
-                <Setter Property="ScrollViewer.CanContentScroll"
-                    Value="true" />
                 <Setter Property="VerticalContentAlignment"
                     Value="Center" />
                 <Setter Property="Template">
@@ -137,7 +131,7 @@
                 </ListView>
                 <ListView HorizontalAlignment="Stretch"
                     ItemsSource="{Binding Source={StaticResource groupedWindows}}"
-                          DataContext="{StaticResource tasksSvc}"
+                    DataContext="{StaticResource tasksSvc}"
                     Background="{x:Null}"
                     Foreground="{x:Null}"
                     Style="{StaticResource TaskbarListView}"
@@ -153,7 +147,7 @@
                         <GroupStyle x:Name="TaskbarGroupStyle" ContainerStyle="{StaticResource CairoTaskbarGroupStyle}">
                             <GroupStyle.Panel>
                                 <ItemsPanelTemplate>
-                                    <WrapPanel></WrapPanel>
+                                    <StackPanel Orientation="Horizontal"></StackPanel>
                                 </ItemsPanelTemplate>
                             </GroupStyle.Panel>
                         </GroupStyle>
@@ -164,25 +158,27 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                        <Border BorderThickness="0" Margin="0,0,-1,0" BorderBrush="Transparent">
-                                            <self:TaskButton MouseRightButtonUp="TaskButton_MouseRightButtonUp" />
+                                        <Border BorderThickness="0" Margin="0,0,-1,0" BorderBrush="Transparent" Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}">
+                                            <self:TaskButton MouseRightButtonUp="TaskButton_MouseRightButtonUp" TextWidth="{Binding Path=ButtonTextWidth, ElementName=TaskbarWindow}" />
                                             <Border.Style>
                                                 <Style TargetType="{x:Type Border}">
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                     <Style.Triggers>
                                                         <DataTrigger Binding="{Binding Path=ShowInTaskbar}" Value="True">
-                                                            <DataTrigger.EnterActions>
-                                                                <BeginStoryboard>
-                                                                    <Storyboard>
-                                                                        <DoubleAnimation Storyboard.TargetProperty="Width" From="0" To="140" Duration="0:0:0.2"/>
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </DataTrigger.EnterActions>
                                                             <Setter Property="Visibility" Value="Visible" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </Border.Style>
+                                            <Border.Triggers>
+                                                <EventTrigger RoutedEvent="Loaded">
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Storyboard.TargetProperty="Width" From="0" To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}" Duration="0:0:0.2" FillBehavior="Stop" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger>
+                                            </Border.Triggers>
                                         </Border>
                                     </ControlTemplate>
                                 </Setter.Value>

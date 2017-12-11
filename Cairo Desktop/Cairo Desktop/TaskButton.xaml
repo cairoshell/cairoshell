@@ -10,42 +10,38 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Button x:Name="btn"
-            BorderThickness="0"
-            VerticalAlignment="Stretch"
-            Click="btnClick" ToolTip="{Binding Path=Title}" MouseUp="btn_MouseUp">
-            <Button.Style>
-                <MultiBinding Converter="{StaticResource styleConverter}" NotifyOnSourceUpdated="True">
-                    <Binding RelativeSource="{RelativeSource Self}" />
-                    <Binding Path="State" UpdateSourceTrigger="PropertyChanged" />
-                </MultiBinding>
-            </Button.Style>
-            <Button.ContextMenu>
-                <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
-                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_TaskManager)}" Style="{StaticResource CairoMenuItemStyle}" Click="miTaskMan_Click" />
-                    <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
-                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Minimize)}" Style="{StaticResource CairoMenuItemStyle}" Click="Min_Click" Name="MinItem" />
-                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Restore)}" Style="{StaticResource CairoMenuItemStyle}" Click="Max_Click" Name="MaxItem" />
-                    <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
-                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Close)}" Style="{StaticResource CairoMenuItemStyle}" Click="Close_Click" />
-                </ContextMenu>
-            </Button.ContextMenu>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="21" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Image Source="{Binding Path=Icon, IsAsync=True, Mode=OneWay}"
+        BorderThickness="0"
+        VerticalAlignment="Stretch"
+        Click="btnClick" ToolTip="{Binding Path=Title}" MouseUp="btn_MouseUp">
+        <Button.Style>
+            <MultiBinding Converter="{StaticResource styleConverter}" NotifyOnSourceUpdated="True">
+                <Binding RelativeSource="{RelativeSource Self}" />
+                <Binding Path="State" UpdateSourceTrigger="PropertyChanged" />
+            </MultiBinding>
+        </Button.Style>
+        <Button.ContextMenu>
+            <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_TaskManager)}" Style="{StaticResource CairoMenuItemStyle}" Click="miTaskMan_Click" />
+                <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Minimize)}" Style="{StaticResource CairoMenuItemStyle}" Click="Min_Click" Name="MinItem" />
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Restore)}" Style="{StaticResource CairoMenuItemStyle}" Click="Max_Click" Name="MaxItem" />
+                <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Close)}" Style="{StaticResource CairoMenuItemStyle}" Click="Close_Click" />
+            </ContextMenu>
+        </Button.ContextMenu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="21" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image Source="{Binding Path=Icon, IsAsync=True, Mode=OneWay}"
                     Width="16"
                     Height="16"
                     Grid.Column="0" Margin="0,0,5,0"/>
-                <!-- text block requires width to center text;
-                    should implement a dynamic width variable for when the buttons 
-                    resize when the taskbar is filled -->
-                <TextBlock Padding="0,0,5,0"
-                           Width="95" Name="WinTitle"
+            <TextBlock Padding="0,0,0,0" Width="{Binding ElementName=UserControl, Path=TextWidth}" Name="WinTitle" HorizontalAlignment="Stretch"
                     Text="{Binding Path=Title}"
                     TextTrimming="CharacterEllipsis"
-                    Grid.Column="1" TextAlignment="Center"/>
-            </Grid>
-        </Button>
+                    Grid.Column="1" TextAlignment="Center" />
+        </Grid>
+    </Button>
 </UserControl>

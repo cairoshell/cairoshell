@@ -231,7 +231,7 @@ namespace CairoDesktop.AppGrabber
             "Windows Explorer|full|Accessories",
             "Command Prompt|full|Accessories",
             "Calculator|full|Accessories",
-            "Notepad|contains|Accessories",
+            "Notepad|full|Accessories",
             "Snipping Tool|full|Accessories",
             "Wordpad|full|Accessories",
             "Sticky Notes|full|Accessories",
@@ -254,6 +254,7 @@ namespace CairoDesktop.AppGrabber
             "Android Studio|contains|Development",
             "Eclpise|contains|Development",
             "Netbeans IDE|contains|Development",
+            "Notepad++|full|Development",
             "Sublime Text|contains|Development",
             "Visual Studio 20|contains|Development",
             // graphics
