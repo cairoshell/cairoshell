@@ -16,16 +16,15 @@ namespace CairoDesktop.Localization
             Dictionary<string, string> lang;
             bool isDefault = false;
 
-            /*if (Configuration.Settings.Language != "en_US")
+            if (Configuration.Settings.Language == "fr_FR")
             {
-                lang = new Dictionary<string, string>();
-                isDefault = true;
+                lang = Language.fr_FR;
             }
             else
-            {*/
+            {
                 lang = Language.en_US;
                 isDefault = true;
-            //}
+            }
 
             if (lang.ContainsKey(stringName))
                 return lang[stringName];

@@ -118,7 +118,8 @@
         {
             cboLangSelect.DisplayMemberPath = "Key";
             cboLangSelect.SelectedValuePath = "Value";
-            cboLangSelect.Items.Add(new KeyValuePair<string, string>("English (United States)", "en_US"));
+            cboLangSelect.Items.Add(new KeyValuePair<string, string>("English", "en_US"));
+            cboLangSelect.Items.Add(new KeyValuePair<string, string>("Français", "fr_FR"));
         }
 
         private void loadCategories()
