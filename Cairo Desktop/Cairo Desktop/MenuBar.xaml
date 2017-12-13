@@ -299,7 +299,7 @@
                                     Background="{x:Null}"
                                     MinHeight="0"
                                     MaxHeight="600"
-                                    Width="342" Margin="-1"
+                                    HorizontalAlignment="Stretch" Margin="-1"
                                     AlternationCount="2"
                                     Name="lstSearchResults"
                                     ItemContainerStyle="{StaticResource CairoSearchResultsItemStyle}" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" />

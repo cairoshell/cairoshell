@@ -592,7 +592,7 @@
             CommandParameter="{Binding}" Header="{Binding}">
                             <MenuItem.HeaderTemplate>
                                 <ItemContainerTemplate>
-                                    <StackPanel Orientation="Horizontal" Margin="-20,0,0,0">
+                                    <StackPanel Orientation="Horizontal" Margin="-20,0,-40,0">
                                         <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                                         Height="32"
                                         Width="32" Margin="0,0,10,0" />
@@ -607,7 +607,6 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </ItemContainerTemplate>
-
                             </MenuItem.HeaderTemplate>
                         </MenuItem>
                     </Border>

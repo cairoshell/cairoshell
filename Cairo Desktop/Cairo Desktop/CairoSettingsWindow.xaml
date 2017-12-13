@@ -328,7 +328,7 @@
                         <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="{Binding Path=(l10n:DisplayString.sSettings_RestartCairo)}" />
                     </StackPanel>
                 </TabItem.Header>
-                <TextBlock Foreground="#55FFFFFF" FontSize="14" Text="{Binding Path=(l10n:DisplayString.sSettings_Restarting)}" />
+                <TextBlock Foreground="#55FFFFFF" FontSize="14" Text="{Binding Path=(l10n:DisplayString.sSettings_Restarting)}" MinWidth="300" TextAlignment="Center" />
             </TabItem>
         </TabControl>
     </Grid>
