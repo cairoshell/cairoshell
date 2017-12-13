@@ -272,7 +272,7 @@
                             </StackPanel.Background>
                             <StackPanel Margin="15"
                                     Orientation="Horizontal">
-                                <TextBlock Width="100"
+                                <TextBlock MinWidth="100"
                                         Foreground="#FFFFFFFF"
                                         FontSize="14"
                                         FontFamily="Segoe UI" Margin="0,2,0,0" Text="{Binding Path=(l10n:DisplayString.sSearch_Title)}" />

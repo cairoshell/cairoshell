@@ -38,7 +38,7 @@
                     Width="16"
                     Height="16"
                     Grid.Column="0" Margin="0,0,5,0"/>
-            <TextBlock Padding="0,0,0,0" Width="{Binding ElementName=UserControl, Path=TextWidth}" Name="WinTitle" HorizontalAlignment="Stretch"
+            <TextBlock Padding="0,0,5,0" Width="{Binding ElementName=UserControl, Path=TextWidth}" Name="WinTitle" HorizontalAlignment="Stretch"
                     Text="{Binding Path=Title}"
                     TextTrimming="CharacterEllipsis"
                     Grid.Column="1" TextAlignment="Center" />

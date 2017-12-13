@@ -2281,18 +2281,18 @@
     <Style x:Key="ProgramsMenuButton" TargetType="{x:Type Button}">
         <Setter Property="Foreground" Value="#FF9a9a9a" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Height" Value="24" />
-        <Setter Property="Width" Value="140" />
+        <Setter Property="MinWidth" Value="140" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border" BorderThickness="0">
-                        <ContentPresenter Margin="10,0,0,2"
+                        <ContentPresenter Margin="10,0,10,2"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" />
                     </Border>
@@ -2359,12 +2359,12 @@
     <Style x:Key="ProgramsTabItem" TargetType="{x:Type TabItem}">
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Height" Value="24" />
-        <Setter Property="Width" Value="140" />
+        <Setter Property="MinWidth" Value="140" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">

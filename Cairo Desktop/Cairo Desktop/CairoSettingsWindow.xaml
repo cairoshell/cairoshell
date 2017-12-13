@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Window x:Class="CairoDesktop.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
     Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
-    SizeToContent="Height"
-    Width="520"
+    SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterScreen"
     Closing="Window_Closing" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
@@ -137,9 +136,9 @@
         </Style>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground" Value="#ffe9ecf4" />
-            <Setter Property="Margin" Value="5,4,0,4" />
+            <Setter Property="Margin" Value="5,4" />
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Width" Value="100" />
+            <Setter Property="MinWidth" Value="100" />
         </Style>
         <Style TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="#ffe9ecf4" />
@@ -217,7 +216,7 @@
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_MenuBar)}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_DefaultProgramsCategory)}" Width="160" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_DefaultProgramsCategory)}" MinWidth="160" />
                         <ComboBox Name="cboDefaultProgramsCategory" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=DefaultProgramsCategory}" Width="170" />
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
@@ -232,7 +231,7 @@
                     </CheckBox>
                     <TextBlock Name="lblTrayWarning" Visibility="Collapsed" Width="300" TextWrapping="Wrap" Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationAreaError)}"/>
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}" Name="pnlTraySettings">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIcons)}" Width="165" VerticalAlignment="Top" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIcons)}" MinWidth="165" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTrayMode" Name="radTrayMode0" Click="radTrayMode0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIconsCollapsed)}" />
@@ -261,7 +260,7 @@
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_IconSize)}" VerticalAlignment="Top" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_IconSize)}" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize2" Click="radDesktopIconSize2_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_IconSizeLarge)}" />
@@ -272,7 +271,7 @@
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPosition)}" VerticalAlignment="Top" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPosition)}" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoDesktopLabelPos" Name="radDesktopLabelPos0" Click="radDesktopLabelPos0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPositionRight)}" />
@@ -300,7 +299,7 @@
                     </CheckBox>-->
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_TaskbarPosition)}" VerticalAlignment="Top" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_TaskbarPosition)}" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos0" Click="radTaskbarPos0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_PositionBottom)}" />
@@ -311,7 +310,7 @@
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayMode)}" VerticalAlignment="Top" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayMode)}" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayModeAppBar)}" />
