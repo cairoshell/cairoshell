@@ -474,6 +474,62 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sAppGrabber_Category_Accessories
+        {
+            get
+            {
+                return getString("sAppGrabber_Category_Accessories");
+            }
+        }
+
+        public static string sAppGrabber_Category_Productivity
+        {
+            get
+            {
+                return getString("sAppGrabber_Category_Productivity");
+            }
+        }
+
+        public static string sAppGrabber_Category_Development
+        {
+            get
+            {
+                return getString("sAppGrabber_Category_Development");
+            }
+        }
+
+        public static string sAppGrabber_Category_Graphics
+        {
+            get
+            {
+                return getString("sAppGrabber_Category_Graphics");
+            }
+        }
+
+        public static string sAppGrabber_Category_Media
+        {
+            get
+            {
+                return getString("sAppGrabber_Category_Media");
+            }
+        }
+
+        public static string sAppGrabber_Category_Internet
+        {
+            get
+            {
+                return getString("sAppGrabber_Category_Internet");
+            }
+        }
+
+        public static string sAppGrabber_Category_Games
+        {
+            get
+            {
+                return getString("sAppGrabber_Category_Games");
+            }
+        }
+
         public static string sRun_Title
         {
             get
