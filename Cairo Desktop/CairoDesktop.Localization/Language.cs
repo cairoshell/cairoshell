@@ -219,7 +219,7 @@ namespace CairoDesktop.Localization
             { "sAppGrabber_Uncategorized", "Non classé" },
             { "sAppGrabber_All", "Tous" },
             { "sRun_Title", "Exécuter" },
-            { "sRun_Info", "Tapez le nom d'une application, d'un dossier, d'un document document ou d'une ressource  Internet, et Cairo l'ouvrira pour vous." },
+            { "sRun_Info", "Tapez le nom d'une application, d'un dossier, d'un document ou d'une ressource Internet, et Cairo l'ouvrira pour vous." },
             { "sExitCairo_Title", "Êtes-vous sûr de vouloir quitter Cairo ?" },
             { "sExitCairo_Info", "Vous devrez redémarrer ou utiliser le raccourci du menu démarrer afin de lancer Cairo à nouveau." },
             { "sExitCairo_ExitCairo", "Quitter Cairo" },

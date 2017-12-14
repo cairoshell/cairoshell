@@ -71,7 +71,7 @@
 				FontWeight="Bold"
 				FontSize="20"
 				FontFamily="Corbel"
-				Padding="0,0,0,15" />
+				Padding="0,0,0,15" TextWrapping="Wrap" />
                     <TextBox Margin="0"
 					TextWrapping="Wrap"
 					x:Name="MessageContent"
