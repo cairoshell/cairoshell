@@ -120,19 +120,19 @@ namespace CairoDesktop.WindowsTasks
                     {
                         if (ai.Target == WinFileName || (WinFileName.Contains("ApplicationFrameHost.exe") && ai.Target == AppUserModelID))
                         {
-                            _category = ai.Category.Name;
+                            _category = ai.Category.DisplayName;
                             break;
                         }
                         else if (this.Title.ToLower().Contains(ai.Name.ToLower()))
                         {
-                            backupCategory = ai.Category.Name;
+                            backupCategory = ai.Category.DisplayName;
                         }
                     }
 
                     if (_category == null && !string.IsNullOrEmpty(backupCategory))
                         _category = backupCategory;
                     else if (_category == null)
-                        _category = "Uncategorized";
+                        _category = Localization.DisplayString.sAppGrabber_Uncategorized;
                 }
                 return _category;
             }

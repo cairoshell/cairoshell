@@ -430,7 +430,7 @@
                                     KeyUp="TextBox_KeyUp" />
                                 <TextBlock DockPanel.Dock="Left"
                                     Visibility="Visible"
-                                    Text="{Binding Path=Name}"
+                                    Text="{Binding Path=DisplayName}"
                                     Style="{StaticResource CategoryLabelStyle}"
                                     AllowDrop="True"
                                     PreviewDragEnter="TextBlock_PreviewDragEnter"
@@ -455,8 +455,8 @@
                                             <Setter Property="Visibility"
                                                             Value="Collapsed" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding Path=Name}"
-                                                        Value="Uncategorized">
+                                        <DataTrigger Binding="{Binding Path=Type}"
+                                                        Value="2">
                                             <Setter Property="Visibility"
                                                             Value="Visible" />
                                         </DataTrigger>
@@ -466,7 +466,7 @@
                         </ListView>
                     </DockPanel>
                     <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=Name}" Value="All">
+                        <DataTrigger Binding="{Binding Path=Type}" Value="1">
                             <Setter TargetName="CategoryPanel" Property="Visibility" Value="Collapsed" />
                         </DataTrigger>
                     </DataTemplate.Triggers>

@@ -341,21 +341,11 @@ namespace CairoDesktop.AppGrabber
             // Grab the Programs
             CategoryList catList = appGrabber.CategoryList;
 
-            // Get the Uncategorized category - create it if it doesn't exist.
-            Category uncat = catList.GetCategory("Uncategorized");
-            if (uncat == null)
-            {
-                uncat = new Category("Uncategorized", false);
-                catList.Add(uncat);
-            }
+            // Get the Uncategorized category
+            Category uncat = catList.GetSpecialCategory(2);
 
-            // Get the Quick Launch category - create it if it doesn't exist.
-            Category quicklaunch = catList.GetCategory("Quick Launch");
-            if (quicklaunch == null)
-            {
-                quicklaunch = new Category("Quick Launch", false);
-                catList.Add(quicklaunch);
-            }
+            // Get the Quick Launch category
+            Category quicklaunch = catList.GetSpecialCategory(3);
 
             // Add apps to category if they haven't been added to one yet.
             foreach (ApplicationInfo app in programsMenuAppsCollection)

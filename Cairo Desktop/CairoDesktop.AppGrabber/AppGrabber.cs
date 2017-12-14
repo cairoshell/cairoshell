@@ -52,12 +52,8 @@ namespace CairoDesktop.AppGrabber
         {
             get
             {
-                Category quicklaunch = this.CategoryList.GetCategory("Quick Launch");
-                if (quicklaunch == null)
-                {
-                    this.CategoryList.Add(new Category("Quick Launch", false));
-                    quicklaunch = this.CategoryList.GetCategory("Quick Launch");
-                }
+                Category quicklaunch = this.CategoryList.GetSpecialCategory(3);
+                
                 return quicklaunch;
             }
         }

@@ -14,11 +14,7 @@ namespace CairoDesktop.AppGrabber
         {
             Button button = sender as Button;
             Category actionableCategory = button.CommandParameter as Category;
-            if (actionableCategory.Name == "Uncategorized")
-            {
-                button.Visibility = Visibility.Collapsed;
-            }
-            if (actionableCategory.Name == "Quick Launch")
+            if (actionableCategory.Type > 0)
             {
                 button.Visibility = Visibility.Collapsed;
             }
@@ -29,9 +25,9 @@ namespace CairoDesktop.AppGrabber
             if (e.RightButton == MouseButtonState.Pressed)
             {
                 TextBlock block = sender as TextBlock;
-                // Do not allow the Uncategorized category to be renamed.
-                if (block.Text == "Uncategorized") return;
-                if (block.Text == "Quick Launch") return;
+                // Do not allow special category to be renamed.
+                if ((block.DataContext as Category).Type > 0) return;
+                
                 foreach (UIElement peer in (block.Parent as DockPanel).Children)
                 {
                     if (peer is TextBox)
@@ -60,10 +56,10 @@ namespace CairoDesktop.AppGrabber
                     catList.MoveCategory(actionableCategory, 1);
                     break;
                 case "X":
-                    //Don't allow removal of uncategorized or quick launch
-                    if (actionableCategory.Name == "Quick Launch") return;
-                    if (actionableCategory.Name == "Uncategorized") return;
-                    Category uncategorized = catList.GetCategory("Uncategorized");
+                    //Don't allow removal of special category
+                    if (actionableCategory.Type > 0) return;
+
+                    Category uncategorized = catList.GetSpecialCategory(2);
                     for (int i = actionableCategory.Count - 1; i >= 0; i--)
                     {
                         ApplicationInfo app = actionableCategory[i];
@@ -118,7 +114,7 @@ namespace CairoDesktop.AppGrabber
                 ListView dropTarget = sender as ListView;
                 if (dropTarget.ItemsSource is Category)
                 {
-                    if ((dropTarget.ItemsSource as Category).Name == "Quick Launch")
+                    if ((dropTarget.ItemsSource as Category).Type == 3)
                     {
                         e.Effects = DragDropEffects.Copy;
                     }
@@ -137,7 +133,7 @@ namespace CairoDesktop.AppGrabber
                     (sourceView.ItemsSource as IList<ApplicationInfo>).Remove(dropData);
                     if (dropTarget.ItemsSource is Category)
                     {
-                        if ((sourceView.ItemsSource as Category).Name != "Quick Launch")
+                        if ((sourceView.ItemsSource as Category).Type != 3)
                         {
                             ((dropTarget.ItemsSource) as IList<ApplicationInfo>).Add(dropData);
                         }
@@ -229,7 +225,7 @@ namespace CairoDesktop.AppGrabber
             }
             else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
             {
-                if (((sender as TextBlock).DataContext as Category).Name == "Quick Launch")
+                if (((sender as TextBlock).DataContext as Category).Type == 3)
                 {
                     e.Effects = DragDropEffects.Copy;
                 }
@@ -242,7 +238,7 @@ namespace CairoDesktop.AppGrabber
                 if (e.Effects == DragDropEffects.Move)
                 {
                     (sourceView.ItemsSource as IList<ApplicationInfo>).Remove(dropData);
-                    if ((sourceView.ItemsSource as Category).Name != "Quick Launch")
+                    if ((sourceView.ItemsSource as Category).Type != 3)
                     {
                         dropCollection.Add(dropData);
                     }

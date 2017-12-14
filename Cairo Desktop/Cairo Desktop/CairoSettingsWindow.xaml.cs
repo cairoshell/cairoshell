@@ -128,8 +128,8 @@
             {
                 if (cat.ShowInMenu)
                 {
-                    string theme = cat.Name;
-                    cboDefaultProgramsCategory.Items.Add(theme);
+                    string cboCat = cat.DisplayName;
+                    cboDefaultProgramsCategory.Items.Add(cboCat);
                 }
             }
         }

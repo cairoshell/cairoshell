@@ -11,12 +11,12 @@ namespace CairoDesktop.AppGrabber {
         /// </summary>
         public CategoryList(bool firstStart = false) {
             // add default categories
-            Add(new Category("All"));
+            Add(new Category("All", true, 1));
 
             if (firstStart)
             {
-                Add(new Category("Uncategorized", false));
-                Add(new Category("Quick Launch", false));
+                Add(new Category("Uncategorized", false, 2));
+                Add(new Category("Quick Launch", false, 3));
             }
         }
 
@@ -30,6 +30,40 @@ namespace CairoDesktop.AppGrabber {
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Returns the category with the specified name.
+        /// </summary>
+        public Category GetSpecialCategory(int type)
+        {
+            foreach (Category c in this)
+            {
+                if (c.Type == type)
+                {
+                    return c;
+                }
+            }
+
+            // category wasn't found
+            Category cat;
+            switch (type)
+            {
+                case 1:
+                    cat = new Category("All", true, 1);
+                    Add(cat);
+                    return cat;
+                case 2:
+                    cat = new Category("Uncategorized", true, 2);
+                    Add(cat);
+                    return cat;
+                case 3:
+                    cat = new Category("Quick Launch", true, 3);
+                    Add(cat);
+                    return cat;
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
@@ -62,7 +96,7 @@ namespace CairoDesktop.AppGrabber {
             get {
                 ObservableCollection<ApplicationInfo> rval = new ObservableCollection<ApplicationInfo>();
                 foreach (Category cat in this) {
-                    if (cat.Name == "Quick Launch" || cat.Name == "All") continue;
+                    if (cat.Type == 3 || cat.Type == 1) continue;
                     foreach (ApplicationInfo app in cat) {
                         rval.Add(app);
                     }
@@ -76,7 +110,7 @@ namespace CairoDesktop.AppGrabber {
             XmlElement root = doc.CreateElement("CategoryList");
             doc.AppendChild(root);
             foreach (Category cat in this) {
-                if (cat.Name != "All")
+                if (cat.Type != 1)
                 {
                     XmlElement catElement = doc.CreateElement("Category");
                     XmlAttribute catNameAttribute = doc.CreateAttribute("Name");
@@ -85,6 +119,9 @@ namespace CairoDesktop.AppGrabber {
                     XmlAttribute catShowInMenuAttribute = doc.CreateAttribute("ShowInMenu");
                     catShowInMenuAttribute.Value = cat.ShowInMenu.ToString();
                     catElement.Attributes.Append(catShowInMenuAttribute);
+                    XmlAttribute catTypeAttribute = doc.CreateAttribute("Type");
+                    catTypeAttribute.Value = cat.Type.ToString();
+                    catElement.Attributes.Append(catTypeAttribute);
                     root.AppendChild(catElement);
                     foreach (ApplicationInfo app in cat)
                     {
@@ -120,14 +157,22 @@ namespace CairoDesktop.AppGrabber {
                 // get category
                 Category cat = new Category();
                 cat.Name = catElement.Attributes["Name"].Value;
+                if (catElement.Attributes["Type"] != null)
+                    cat.Type = Convert.ToInt32(catElement.Attributes["Type"].Value);
+                else
+                {
+                    // migration
+                    if (cat.Name == "Uncategorized")
+                        cat.Type = 2;
+                    else if (cat.Name == "Quick Launch")
+                        cat.Type = 3;
+                }
                 if (catElement.Attributes["ShowInMenu"] != null)
                     cat.ShowInMenu = Convert.ToBoolean(catElement.Attributes["ShowInMenu"].Value);
                 else
                 {
                     // force hide quick launch and uncategorized
-                    if (cat.Name == "Uncategorized")
-                        cat.ShowInMenu = false;
-                    if (cat.Name == "Quick Launch")
+                    if (cat.Type > 1)
                         cat.ShowInMenu = false;
                 }
 

@@ -424,7 +424,7 @@ namespace CairoDesktop
                         ApplicationInfo customApp = appGrabber.PathToApp(fileName, false);
                         if (!object.ReferenceEquals(customApp, null))
                         {
-                            appGrabber.CategoryList.GetCategory("Uncategorized").Add(customApp);
+                            appGrabber.CategoryList.GetSpecialCategory(2).Add(customApp);
                             count++;
                         }
                     }
@@ -444,7 +444,7 @@ namespace CairoDesktop
             {
                 app.Name = box.Text;
                 appGrabber.Save();
-                AppViewSorter.Sort(appGrabber.CategoryList.GetCategory("All"), "Name");
+                AppViewSorter.Sort(appGrabber.CategoryList.GetSpecialCategory(1), "Name");
                 AppViewSorter.Sort(app.Category, "Name");
             }
 
