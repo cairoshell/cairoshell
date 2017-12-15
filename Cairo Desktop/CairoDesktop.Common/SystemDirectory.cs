@@ -34,13 +34,20 @@ namespace CairoDesktop.Common {
             get { return files; }
         }
 
+        private string name;
+
         public string Name {
-            get { return dir.Name; }
+            get
+            {
+                if (name == null)
+                    name = Interop.Shell.GetDisplayName(FullName);
+                return name;
+            }
         }
 
         public string NameLabel
         {
-            get { return dir.Name.Replace("_", "__"); }
+            get { return Name.Replace("_", "__"); }
         }
 
         public string FullName {

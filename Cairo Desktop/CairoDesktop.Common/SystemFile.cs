@@ -118,10 +118,7 @@ namespace CairoDesktop.Common
             {
                 if (_friendlyName == null)
                 {
-                    if ((Settings.ShowFileExtensions || IsDirectory) && this.Name != null)
-                        this.FriendlyName = this.Name;
-                    else
-                        this.FriendlyName = Path.GetFileNameWithoutExtension(this.FullName);
+                    this.FriendlyName = Interop.Shell.GetDisplayName(this.FullName);
                 }
 
                 return _friendlyName;

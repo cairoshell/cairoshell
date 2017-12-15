@@ -191,7 +191,7 @@ namespace CairoDesktop.AppGrabber
             {
                 try
                 {
-                    ai.Name = Path.GetFileNameWithoutExtension(file);
+                    ai.Name = Shell.GetDisplayName(file);
                     ai.Path = file;
                     string target = string.Empty;
 

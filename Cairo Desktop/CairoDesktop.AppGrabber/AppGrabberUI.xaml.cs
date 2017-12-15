@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -186,7 +187,7 @@ namespace CairoDesktop.AppGrabber
             {
                 if (!programsMenuAppsCollection.Contains(app))
                 {
-                    if (autoAddApps && autoSelectByName(app.Name))
+                    if (autoAddApps && autoSelectByName(Path.GetFileNameWithoutExtension(app.Path)))
                         programsMenuAppsCollection.Add(app);
                     else
                         installedAppsCollection.Add(app);
@@ -361,7 +362,7 @@ namespace CairoDesktop.AppGrabber
             {
                 if (app.Category == null)
                 {
-                    string cat = autoCategorizeByName(app.Name);
+                    string cat = autoCategorizeByName(Path.GetFileNameWithoutExtension(app.Path));
 
                     if (cat != "")
                     {

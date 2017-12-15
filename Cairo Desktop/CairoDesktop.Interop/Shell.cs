@@ -98,6 +98,14 @@ namespace CairoDesktop.Interop
             }
         }
 
+        public static string GetDisplayName(string filename)
+        {
+            SHFILEINFO shinfo = new SHFILEINFO();
+            SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.DisplayName));
+
+            return shinfo.szDisplayName;
+        }
+
         public static string UsersStartMenuPath
         {
             get {

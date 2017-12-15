@@ -37,12 +37,7 @@ namespace CairoDesktop
             string tag = item.Tag as string;
             string verb = tag.Substring(0, tag.IndexOf('|'));
             string fileName = tag.Substring(tag.IndexOf('|') + 1);
-            string displayName;
-
-            if (Settings.ShowFileExtensions)
-                displayName = Path.GetFileName(fileName);
-            else
-                displayName = Path.GetFileNameWithoutExtension(fileName);
+            string displayName = Interop.Shell.GetDisplayName(fileName);
 
             if (verb == "open")
             {
