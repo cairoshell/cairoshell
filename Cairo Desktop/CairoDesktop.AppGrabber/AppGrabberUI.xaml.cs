@@ -262,7 +262,7 @@ namespace CairoDesktop.AppGrabber
             "SumatraPDF|full|" + productivity,
             // development
             "Android Studio|contains|" + development,
-            "Eclpise|contains|" + development,
+            "Eclipse|contains|" + development,
             "Netbeans IDE|contains|" + development,
             "Notepad++|full|" + development,
             "Sublime Text|contains|" + development,
