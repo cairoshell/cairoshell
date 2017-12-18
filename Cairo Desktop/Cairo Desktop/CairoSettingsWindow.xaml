@@ -201,11 +201,6 @@
                         Name="chkEnableSubDirs">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_ShowSubDirectories)}" />
                     </CheckBox>
-                    <!--<CheckBox IsChecked="{Binding Path=ShowFileExtensions}"
-                        Click="ShowFileExtensions_Click"
-                        Name="chkShowFileExtensions">
-                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_ShowFileExtensions)}" />
-                    </CheckBox>-->
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FileManager)}" />
                         <TextBox Text="{Binding Path=FileManager}"

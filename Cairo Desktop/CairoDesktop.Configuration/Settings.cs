@@ -29,7 +29,6 @@
         private static string _CairoTheme;
         private static string _Language;
         private static bool? _EnableSubDirs;
-        private static bool? _ShowFileExtensions;
         private static bool? _ForceSoftwareRendering;
 
         // Desktop
@@ -185,23 +184,6 @@
             {
                 _EnableSubDirs = value;
                 Properties.Settings.Default.EnableSubDirs = (bool)_EnableSubDirs;
-                Save();
-            }
-        }
-
-        public static bool ShowFileExtensions
-        {
-            get
-            {
-                if (_ShowFileExtensions == null)
-                    _ShowFileExtensions = Properties.Settings.Default.ShowFileExtensions;
-
-                return (bool)_ShowFileExtensions;
-            }
-            set
-            {
-                _ShowFileExtensions = value;
-                Properties.Settings.Default.ShowFileExtensions = (bool)_ShowFileExtensions;
                 Save();
             }
         }

@@ -173,11 +173,6 @@
             this.btnRestart.Visibility = Visibility.Visible;
         }
 
-        private void ShowFileExtensions_Click(object sender, RoutedEventArgs e)
-        {
-            this.btnRestart.Visibility = Visibility.Visible;
-        }
-
         private void EnableTaskbar_Click(object sender, RoutedEventArgs e)
         {
             this.btnRestart.Visibility = Visibility.Visible;
