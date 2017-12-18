@@ -68,5 +68,8 @@
     <Setting Name="Language" Type="System.String" Scope="User">
       <Value Profile="(Default)">en_US</Value>
     </Setting>
+    <Setting Name="TaskbarIconSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

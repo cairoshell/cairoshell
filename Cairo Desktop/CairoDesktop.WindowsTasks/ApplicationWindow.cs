@@ -190,7 +190,7 @@ namespace CairoDesktop.WindowsTasks
                     {
                         BitmapImage img = new BitmapImage();
                         img.BeginInit();
-                        img.UriSource = new Uri(UWPInterop.StoreAppHelper.GetAppIcon(AppUserModelID)[0], UriKind.Absolute);
+                        img.UriSource = new Uri(UWPInterop.StoreAppHelper.GetAppIcon(AppUserModelID, Configuration.Settings.TaskbarIconSize)[0], UriKind.Absolute);
                         img.CacheOption = BitmapCacheOption.OnLoad;
                         img.EndInit();
                         img.Freeze();
@@ -324,17 +324,22 @@ namespace CairoDesktop.WindowsTasks
             IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
             int GCL_HICON = -14;
             int GCL_HICONSM = -34;
+            int sizeSetting = Configuration.Settings.TaskbarIconSize;
 
-            NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 2, 0, 2, 1000, ref hIco);
-
-            if (hIco == IntPtr.Zero)
+            if (sizeSetting == 1)
             {
-                NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 0, 0, 2, 1000, ref hIco);
+                NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 2, 0, 2, 1000, ref hIco);
+                if (hIco == IntPtr.Zero)
+                    NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 0, 0, 2, 1000, ref hIco);
+            }
+            else
+            {
+                NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 1, 0, 2, 1000, ref hIco);
             }
 
-            if (hIco == IntPtr.Zero)
+            if (hIco == IntPtr.Zero && sizeSetting == 1)
             {
-                if(!Environment.Is64BitProcess)
+                if (!Environment.Is64BitProcess)
                     hIco = NativeMethods.GetClassLong(hWnd, GCL_HICONSM);
                 else
                     hIco = NativeMethods.GetClassLongPtr(hWnd, GCL_HICONSM);
@@ -353,7 +358,11 @@ namespace CairoDesktop.WindowsTasks
                 string winFileName = GetFileNameForWindow(hWnd);
                 if (Shell.Exists(winFileName))
                 {
-                    hIco = Shell.GetIconByFilename(winFileName, 1);
+                    int size = 1;
+                    if (sizeSetting != 1)
+                        size = 0;
+
+                    hIco = Shell.GetIconByFilename(winFileName, size);
                 }
             }
 

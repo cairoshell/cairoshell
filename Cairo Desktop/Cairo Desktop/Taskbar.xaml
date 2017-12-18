@@ -2,7 +2,6 @@
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.Taskbar" xmlns:tasks="clr-namespace:CairoDesktop.WindowsTasks;assembly=CairoDesktop.WindowsTasks" xmlns:self="clr-namespace:CairoDesktop" xmlns:clr="clr-namespace:System;assembly=mscorlib" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
     x:Name="TaskbarWindow"
     Title=""
-    Height="29"
     WindowStyle="None"
     AllowsTransparency="True"
     Left="0"
@@ -106,9 +105,8 @@
                     Background="{x:Null}"
                     Foreground="{x:Null}"
                     Style="{StaticResource TaskbarListView}"
-                          MinHeight="29"
                     BorderThickness="0"
-                    Margin="0,-1,3,0"
+                    Margin="0,0,3,0"
                     VerticalAlignment="Stretch">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>

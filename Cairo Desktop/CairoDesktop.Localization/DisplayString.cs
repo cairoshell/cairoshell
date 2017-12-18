@@ -1218,30 +1218,6 @@ namespace CairoDesktop.Localization
             }
         }
 
-        public static string sSettings_Desktop_IconSize
-        {
-            get
-            {
-                return getString("sSettings_Desktop_IconSize");
-            }
-        }
-
-        public static string sSettings_Desktop_IconSizeLarge
-        {
-            get
-            {
-                return getString("sSettings_Desktop_IconSizeLarge");
-            }
-        }
-
-        public static string sSettings_Desktop_IconSizeSmall
-        {
-            get
-            {
-                return getString("sSettings_Desktop_IconSizeSmall");
-            }
-        }
-
         public static string sSettings_Desktop_LabelPosition
         {
             get
@@ -1279,6 +1255,38 @@ namespace CairoDesktop.Localization
             get
             {
                 return getString("sSettings_Desktop_EnableDynamicDesktop");
+            }
+        }
+
+        public static string sSettings_IconSize
+        {
+            get
+            {
+                return getString("sSettings_IconSize");
+            }
+        }
+
+        public static string sSettings_IconSizeLarge
+        {
+            get
+            {
+                return getString("sSettings_IconSizeLarge");
+            }
+        }
+
+        public static string sSettings_IconSizeMedium
+        {
+            get
+            {
+                return getString("sSettings_IconSizeMedium");
+            }
+        }
+
+        public static string sSettings_IconSizeSmall
+        {
+            get
+            {
+                return getString("sSettings_IconSizeSmall");
             }
         }
 

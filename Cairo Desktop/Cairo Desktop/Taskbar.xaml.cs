@@ -20,6 +20,7 @@ namespace CairoDesktop
         private int appbarMessageId = -1;
         private bool displayChanged = false;
         private AppBarHelper.ABEdge appBarEdge = AppBarHelper.ABEdge.ABE_BOTTOM;
+        private int addToSize = 0;
 
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
@@ -51,6 +52,22 @@ namespace CairoDesktop
             this.quickLaunchList.ItemsSource = quickLaunch;
             this.bdrTaskbar.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+
+            switch (Settings.TaskbarIconSize)
+            {
+                case 0:
+                    addToSize = 16;
+                    break;
+                case 10:
+                    addToSize = 8;
+                    break;
+                default:
+                    addToSize = 0;
+                    break;
+            }
+
+            this.Height = 29 + addToSize;
+            bdrTaskListPopup.Margin = new Thickness(5, 0, 5, this.Height - 1);
 
             ((INotifyCollectionChanged)TasksList.Items).CollectionChanged += TasksList_Changed;
 
@@ -104,11 +121,11 @@ namespace CairoDesktop
         private void setTaskButtonSize()
         {
             double size = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - bdrTaskbarEnd.ActualWidth - (TasksList.Items.Groups.Count * 5) - 14) / TasksList.Items.Count);
-            if (size > 140)
-                ButtonWidth = 140;
+            if (size > (140 + addToSize))
+                ButtonWidth = 140 + addToSize;
             else
                 ButtonWidth = size;
-            ButtonTextWidth = ButtonWidth - 33;
+            ButtonTextWidth = ButtonWidth - 33 - addToSize;
         }
 
         private void setPosition()

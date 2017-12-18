@@ -255,13 +255,13 @@
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_IconSize)}" VerticalAlignment="Top" Margin="5,3,5,4" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_IconSize)}" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize2" Click="radDesktopIconSize2_Click">
-                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_IconSizeLarge)}" />
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeLarge)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize0" Click="radDesktopIconSize0_Click">
-                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_IconSizeSmall)}" />
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeSmall)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
@@ -293,6 +293,20 @@
                         <Label>Poll taskbar buttons for updates</Label>
                     </CheckBox>-->
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_IconSize)}" VerticalAlignment="Top" Margin="5,3,5,4" />
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize1" Click="radTaskbarSize1_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeSmall)}" />
+                            </RadioButton>
+                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize10" Click="radTaskbarSize10_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeMedium)}" />
+                            </RadioButton>
+                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize0" Click="radTaskbarSize0_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeLarge)}" />
+                            </RadioButton>
+                        </StackPanel>
+                    </StackPanel>
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_TaskbarPosition)}" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">

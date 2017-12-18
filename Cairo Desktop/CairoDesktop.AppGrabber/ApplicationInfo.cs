@@ -285,14 +285,19 @@ namespace CairoDesktop.AppGrabber
         /// <summary>
         /// Gets an ImageSource object representing the associated icon of a file.
         /// </summary>
-        public ImageSource GetAssociatedIcon() {
+        public ImageSource GetAssociatedIcon()
+        {
+            int size = 1;
+            if (this.Category != null && this.Category.Type == 3 && Configuration.Settings.TaskbarIconSize != 1)
+                size = 0;
+
             if (this.IsStoreApp)
             {
                 if (string.IsNullOrEmpty(this.IconPath) || !Interop.Shell.Exists(this.IconPath))
                 {
                     try
                     {
-                        string[] icon = UWPInterop.StoreAppHelper.GetAppIcon(this.Target);
+                        string[] icon = UWPInterop.StoreAppHelper.GetAppIcon(this.Target, size);
                         this.IconPath = icon[0];
                         this.IconColor = icon[1];
                     }
@@ -318,7 +323,7 @@ namespace CairoDesktop.AppGrabber
                 }
             }
             else
-                return IconImageConverter.GetImageFromAssociatedIcon(this.Path, 1);
+                return IconImageConverter.GetImageFromAssociatedIcon(this.Path, size);
         }
 
         /// <summary>

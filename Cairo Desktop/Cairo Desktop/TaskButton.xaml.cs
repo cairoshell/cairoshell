@@ -18,6 +18,22 @@ namespace CairoDesktop
         public TaskButton()
 		{
 			this.InitializeComponent();
+
+            switch (Configuration.Settings.TaskbarIconSize)
+            {
+                case 0:
+                    imgIcon.Width = 32;
+                    imgIcon.Height = 32;
+                    break;
+                case 10:
+                    imgIcon.Width = 24;
+                    imgIcon.Height = 24;
+                    break;
+                default:
+                    imgIcon.Width = 16;
+                    imgIcon.Height = 16;
+                    break;
+            }
         }
 
         private void btnClick(object sender, RoutedEventArgs e)

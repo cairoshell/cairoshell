@@ -125,6 +125,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj">
+      <Project>{8e50fc68-8bf3-44f2-9229-708500625757}</Project>
+      <Name>CairoDesktop.Configuration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
       <Project>{233781C8-83E4-47A6-847E-FA7A31B1CC51}</Project>
       <Name>CairoDesktop.Interop</Name>

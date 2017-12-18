@@ -317,12 +317,28 @@
                 <DataTemplate>
                     <DockPanel MinHeight="20"
                         VerticalAlignment="Center">
-                        <Grid Background="{Binding Path=IconColor, Mode=OneWay, IsAsync=True}" Height="16">
+                        <Border BorderThickness="0" Background="{Binding Path=IconColor, Mode=OneWay, IsAsync=True}" Height="16">
                             <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                             Width="16"
                             Height="16"
                             DockPanel.Dock="Left" />
-                        </Grid>
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IconColor}" Value="#00111111">
+                                            <Setter Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect Color="Black"
+                                                        ShadowDepth="0.5"
+                                                        Direction="270"
+                                                        Opacity="1" BlurRadius="2" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                        </Border>
                         <TextBlock Text="{Binding Path=Name}"
                             Margin="3"
                             FontFamily="Corbel"

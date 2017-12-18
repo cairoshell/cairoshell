@@ -43,6 +43,7 @@
         private static int? _TaskbarMode;
         private static bool? _EnableTaskbarPolling;
         private static int? _TaskbarPosition;
+        private static int? _TaskbarIconSize;
 
         // Menu Bar
         private static string _DefaultProgramsCategory;
@@ -356,6 +357,23 @@
             {
                 _TaskbarPosition = value;
                 Properties.Settings.Default.TaskbarPosition = (int)_TaskbarPosition;
+                Save();
+            }
+        }
+
+        public static int TaskbarIconSize
+        {
+            get
+            {
+                if (_TaskbarIconSize == null)
+                    _TaskbarIconSize = Properties.Settings.Default.TaskbarIconSize;
+
+                return (int)_TaskbarIconSize;
+            }
+            set
+            {
+                _TaskbarIconSize = value;
+                Properties.Settings.Default.TaskbarIconSize = (int)_TaskbarIconSize;
                 Save();
             }
         }

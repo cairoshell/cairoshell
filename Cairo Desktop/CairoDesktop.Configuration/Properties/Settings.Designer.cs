@@ -286,5 +286,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["Language"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int TaskbarIconSize {
+            get {
+                return ((int)(this["TaskbarIconSize"]));
+            }
+            set {
+                this["TaskbarIconSize"] = value;
+            }
+        }
     }
 }

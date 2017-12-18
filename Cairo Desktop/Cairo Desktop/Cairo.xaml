@@ -783,22 +783,15 @@
         TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
-        <Setter Property="Width"
-            Value="26" />
-        <Setter Property="Height"
-            Value="29" />
-        <Setter Property="VerticalAlignment"
-            Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
-                        BorderThickness="1"
-                        CornerRadius="1"
+                        BorderThickness="0"
                         Margin="0,0,0,0"
                         Background="Transparent"
                         BorderBrush="Transparent">
-                        <ContentPresenter Margin="2,1,2,0"
+                        <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
                     </Border>
@@ -863,14 +856,10 @@
             Value="12" />
         <Setter Property="Foreground"
             Value="White" />
-        <Setter Property="MaxWidth"
-            Value="140" />
         <Setter Property="HorizontalAlignment"
             Value="Stretch" />
-        <Setter Property="Height"
-            Value="29" />
         <Setter Property="VerticalAlignment"
-            Value="Center" />
+            Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <!-- this is the style that loads on default buttons -->
@@ -965,14 +954,10 @@
             Value="12" />
         <Setter Property="Foreground"
             Value="White" />
-        <Setter Property="MaxWidth"
-            Value="140" />
         <Setter Property="HorizontalAlignment"
             Value="Stretch" />
-        <Setter Property="Height"
-            Value="29" />
         <Setter Property="VerticalAlignment"
-            Value="Center" />
+            Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -1054,14 +1039,10 @@
             Value="12" />
         <Setter Property="Foreground"
             Value="White" />
-        <Setter Property="MaxWidth"
-            Value="140" />
         <Setter Property="HorizontalAlignment"
             Value="Stretch" />
-        <Setter Property="Height"
-            Value="29" />
         <Setter Property="VerticalAlignment"
-            Value="Center" />
+            Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -1173,7 +1154,6 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Padding" Value="0,3,0,3"/>
-        <Setter Property="Margin" Value="5,0,5,28" />
         <Setter Property="Effect" Value="{StaticResource ResourceKey=CairoMenuShadow}" />
     </Style>
     <Style x:Key="CairoTaskListTopPopupStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskListPopupStyle}">
@@ -1235,10 +1215,8 @@
             Value="White" />
         <Setter Property="Width"
             Value="24" />
-        <Setter Property="Height"
-            Value="29" />
         <Setter Property="VerticalAlignment"
-            Value="Center" />
+            Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">

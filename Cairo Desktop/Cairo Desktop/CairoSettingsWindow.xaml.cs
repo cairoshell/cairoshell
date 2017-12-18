@@ -88,6 +88,27 @@
                     break;
             }
 
+            switch (Settings.TaskbarIconSize)
+            {
+                case 0:
+                    radTaskbarSize0.IsChecked = true;
+                    radTaskbarSize10.IsChecked = false;
+                    radTaskbarSize1.IsChecked = false;
+                    break;
+                case 1:
+                    radTaskbarSize0.IsChecked = false;
+                    radTaskbarSize10.IsChecked = false;
+                    radTaskbarSize1.IsChecked = true;
+                    break;
+                case 10:
+                    radTaskbarSize0.IsChecked = false;
+                    radTaskbarSize10.IsChecked = true;
+                    radTaskbarSize1.IsChecked = false;
+                    break;
+                default:
+                    break;
+            }
+
             switch (Settings.SysTrayAlwaysExpanded)
             {
                 case false:
@@ -259,6 +280,24 @@
         private void radTaskbarPos1_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarPosition = 1;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.TaskbarIconSize = 0;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTaskbarSize1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.TaskbarIconSize = 1;
+            this.btnRestart.Visibility = Visibility.Visible;
+        }
+
+        private void radTaskbarSize10_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.TaskbarIconSize = 10;
             this.btnRestart.Visibility = Visibility.Visible;
         }
 

@@ -61,7 +61,7 @@ namespace CairoDesktop.Interop
                 return IntPtr.Zero;
             }
         }*/
-
+        
         private static IntPtr GetIcon_New(string filename, int size)
         {
             try
@@ -89,6 +89,7 @@ namespace CairoDesktop.Interop
                 IntPtr hIcon = IntPtr.Zero;
                 int ILD_TRANSPARENT = 1;
                 hres = iml.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
+                Marshal.ReleaseComObject(iml);
 
                 return hIcon;
             }

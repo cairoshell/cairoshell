@@ -11,7 +11,7 @@ namespace CairoDesktop.UWPInterop
 {
     public class StoreAppHelper
     {
-        const string defaultColor = "#111111";
+        const string defaultColor = "#00111111";
 
         private static string userSID = null;
         private static double scale = 0;
@@ -54,7 +54,7 @@ namespace CairoDesktop.UWPInterop
                             // return values
                             string appUserModelId = package.Id.FamilyName + "!" + app.SelectSingleNode("@Id", xmlnsManager).Value;
                             string returnName = getDisplayName(package.Id.Name, path, app, xmlnsManager);
-                            string returnIcon = getIconPath(path, app, xmlnsManager);
+                            string returnIcon = getIconPath(path, app, xmlnsManager, 1);
                             string returnColor = "";
 
                             if (returnIcon.EndsWith("_altform-unplated.png"))
@@ -141,7 +141,7 @@ namespace CairoDesktop.UWPInterop
                 return defaultColor;
         }
 
-        private static string getIconPath(string path, XmlNode app, XmlNamespaceManager xmlnsManager)
+        private static string getIconPath(string path, XmlNode app, XmlNamespaceManager xmlnsManager, int size)
         {
             string iconPath = path + "\\" + (app.SelectSingleNode("uap:VisualElements/@Square44x44Logo", xmlnsManager).Value).Replace(".png", "");
 
@@ -172,7 +172,7 @@ namespace CairoDesktop.UWPInterop
             int numMoved = 0;
             for (int i = 0; i < iconAssets.Count; i++)
             {
-                if ((scale < 1.25 && iconAssets[i].Contains("16")) || ((scale >= 1.25 && scale < 1.75) && iconAssets[i].Contains("24")))
+                if (((scale < 1.25 || size != 1) && iconAssets[i].Contains("16")) || (((scale >= 1.25 && scale < 1.75) || size != 1) && iconAssets[i].Contains("24")))
                 {
                     string copy = iconAssets[i];
                     iconAssets.RemoveAt(i);
@@ -223,7 +223,7 @@ namespace CairoDesktop.UWPInterop
         }
 
         // returns [icon, color]
-        public static string[] GetAppIcon(string appUserModelId)
+        public static string[] GetAppIcon(string appUserModelId, int size)
         {
             string[] pkgAppId = appUserModelId.Split('!');
             string packageFamilyName = pkgAppId[0];
@@ -260,7 +260,7 @@ namespace CairoDesktop.UWPInterop
                     if (app.SelectSingleNode("@Id", xmlnsManager).Value == appId)
                     {
                         // return values
-                        returnIcon = getIconPath(path, app, xmlnsManager);
+                        returnIcon = getIconPath(path, app, xmlnsManager, size);
 
                         if (returnIcon.EndsWith("_altform-unplated.png"))
                             returnColor = defaultColor;
