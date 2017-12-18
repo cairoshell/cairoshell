@@ -85,7 +85,7 @@ namespace CairoDesktop
         {
             if (!Interop.Shell.StartProcess("appwiz.cpl"))
             {
-                CairoMessage.Show("Unable to open the Programs and Features control panel.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show(Localization.DisplayString.sError_CantOpenAppWiz, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

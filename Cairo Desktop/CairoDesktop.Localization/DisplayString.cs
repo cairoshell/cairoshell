@@ -954,6 +954,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sError_CantOpenAppWiz
+        {
+            get
+            {
+                return getString("sError_CantOpenAppWiz");
+            }
+        }
+
         public static string sSettings_General
         {
             get
