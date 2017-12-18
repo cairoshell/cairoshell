@@ -24,20 +24,26 @@ InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_RIGHT
   !define MUI_HEADERIMAGE_BITMAP header_img.bmp
+  !define MUI_UNWELCOMEFINISHPAGE_BITMAP left_img.bmp
   !define MUI_UNICON inst_icon.ico
   !define MUI_COMPONENTSPAGE_SMALLDESC
   !define MUI_WELCOMEFINISHPAGE_BITMAP left_img.bmp
-  !define MUI_WELCOMEPAGE_TEXT "This installer will guide you through the installation of Cairo.\r\n\r\nBefore installing, please ensure .NET Framework 4.5.2 or higher is installed, and that any running instance of Cairo is ended.\r\n\r\nClick Next to continue."
-  !define MUI_FINISHPAGE_TITLE "Cairo is now installed"
-  !define MUI_FINISHPAGE_TEXT "To start Cairo, open it from your Start menu."
+  !define MUI_WELCOMEPAGE_TEXT "$(PAGE_Welcome_Text)"
+  !define MUI_WELCOMEPAGE_TITLE_3LINES
+  !define MUI_FINISHPAGE_TITLE_3LINES
+  !define MUI_FINISHPAGE_RUN
+  !define MUI_FINISHPAGE_RUN_TEXT "$(PAGE_Finish_RunText)"
+  !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchCairo"
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE "License.txt"
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_INSTFILES
   !insertmacro MUI_PAGE_FINISH
   
+  !define MUI_WELCOMEPAGE_TITLE_3LINES
+  !define MUI_FINISHPAGE_TITLE_3LINES
   !insertmacro MUI_UNPAGE_WELCOME
-  !define MUI_UNCONFIRMPAGE_TEXT_TOP "Please be sure that you have closed Cairo before uninstalling to ensure that all files are removed."
+  !define MUI_UNCONFIRMPAGE_TEXT_TOP "$(PAGE_UnDir_TopText)"
   !insertmacro MUI_UNPAGE_CONFIRM
   !insertmacro MUI_UNPAGE_INSTFILES
   !insertmacro MUI_UNPAGE_FINISH
@@ -48,7 +54,7 @@ InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
 !insertmacro MUI_LANGUAGE "English"
 
 ; The stuff to install
-Section "Cairo Desktop (required)" cairo
+Section "$(SECT_cairo)" cairo
 
   SectionIn RO
 
@@ -64,7 +70,7 @@ Section "Cairo Desktop (required)" cairo
   System::Call 'kernel32::OpenMutex(i 0x100000, b 0, t "CairoShell") i .R1'
   IntCmp $R1 0 notRunning
     System::Call 'kernel32::CloseHandle(i $R1)'
-    MessageBox MB_OK|MB_ICONEXCLAMATION "Cairo is currently running. Please exit Cairo from the Cairo menu and run this installer again." /SD IDOK
+    MessageBox MB_OK|MB_ICONEXCLAMATION "$(DLOG_RunningText)" /SD IDOK
     Quit
   
   notRunning:
@@ -104,31 +110,24 @@ Section "Cairo Desktop (required)" cairo
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "NoRepair" 1
   WriteUninstaller "RemoveCairo.exe"
-  
-  ; ngen to improve first start performance
-  ;SetDetailsPrint both
-  ;DetailPrint "Generating native image..."
-  ;SetDetailsPrint none
-  ;ExecWait '"$R0\ngen.exe" install "$INSTDIR\CairoDesktop.exe"'
-  ;SetDetailsPrint both
 
   Return
  
   noDotNetFound:
-    MessageBox MB_OK|MB_ICONSTOP "Cairo requires Microsoft .NET Framework 4.5.2 or higher. Please install this from the Microsoft web site and install Cairo again." /SD IDOK
+    MessageBox MB_OK|MB_ICONSTOP "$(DLOG_DotNetText)" /SD IDOK
     Quit
 
 SectionEnd
 
 ; Run at startup
-Section "Run at startup (current user)" startupCU
+Section "$(SECT_startupCU)" startupCU
   
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "CairoShell" "$INSTDIR\CairoDesktop.exe"
   
 SectionEnd
 
 ; Replace explorer
-Section /o "Advanced users only: Replace Explorer (current user)" shellCU
+Section /o "$(SECT_shellCU)" shellCU
   
   WriteRegStr HKCU "Software\Microsoft\Windows NT\CurrentVersion\Winlogon" "Shell" "$INSTDIR\CairoDesktop.exe"
   DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "CairoShell"
@@ -136,6 +135,14 @@ Section /o "Advanced users only: Replace Explorer (current user)" shellCU
 SectionEnd
 
   ;Language strings
+  LangString PAGE_Welcome_Text ${LANG_ENGLISH} "This installer will guide you through the installation of Cairo.\r\n\r\nBefore installing, please ensure .NET Framework 4.5.2 or higher is installed, and that any running instance of Cairo is ended.\r\n\r\nClick Next to continue."
+  LangString PAGE_Finish_RunText ${LANG_ENGLISH} "Start Cairo Desktop Environment"
+  LangString PAGE_UnDir_TopText ${LANG_ENGLISH} "Please be sure that you have closed Cairo before uninstalling to ensure that all files are removed."
+  LangString DLOG_RunningText ${LANG_ENGLISH} "Cairo is currently running. Please exit Cairo from the Cairo menu and run this installer again."
+  LangString DLOG_DotNetText ${LANG_ENGLISH} "Cairo requires Microsoft .NET Framework 4.5.2 or higher. Please install this from the Microsoft web site and install Cairo again."
+  LangString SECT_cairo ${LANG_ENGLISH} "Cairo Desktop (required)"
+  LangString SECT_startupCU ${LANG_ENGLISH} "Run at startup (current user)"
+  LangString SECT_shellCU ${LANG_ENGLISH} "Advanced users only: Replace Explorer (current user)"
   LangString DESC_cairo ${LANG_ENGLISH} "Installs Cairo and its required components."
   LangString DESC_startupCU ${LANG_ENGLISH} "Makes Cairo start up when you log in."
   LangString DESC_shellCU ${LANG_ENGLISH} "Run Cairo instead of Windows Explorer. Note this also disables many new features in Windows."
@@ -234,4 +241,13 @@ Function GetDotNetDir
     StrCpy $R0 ""
     Goto getdotnetdir_end
  
+FunctionEnd
+
+Function LaunchCairo
+  IfFileExists "$WINDIR\explorer.exe" 0 std_exec
+    Exec '"$WINDIR\explorer.exe" "$INSTDIR\CairoDesktop.exe"' ; use the shell to launch as current user (otherwise notification area breaks)
+    goto end_launch
+  std_exec:
+    Exec '$INSTDIR\CairoDesktop.exe'
+  end_launch:
 FunctionEnd
