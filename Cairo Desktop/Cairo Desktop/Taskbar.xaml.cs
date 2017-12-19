@@ -67,7 +67,6 @@ namespace CairoDesktop
             }
 
             this.Height = 29 + addToSize;
-            bdrTaskListPopup.Margin = new Thickness(5, 0, 5, this.Height - 1);
 
             ((INotifyCollectionChanged)TasksList.Items).CollectionChanged += TasksList_Changed;
 
@@ -78,14 +77,15 @@ namespace CairoDesktop
                 appBarEdge = AppBarHelper.ABEdge.ABE_TOP;
                 bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarTopBorderStyle") as Style;
                 bdrTaskbarEnd.Style = Application.Current.FindResource("CairoTaskbarEndTopBorderStyle") as Style;
-                bdrTaskListPopup.Style = Application.Current.FindResource("CairoTaskListTopPopupStyle") as Style;
                 btnTaskList.Style = Application.Current.FindResource("CairoTaskbarTopButtonList") as Style;
                 TaskbarGroupStyle.ContainerStyle = Application.Current.FindResource("CairoTaskbarTopGroupStyle") as Style;
                 TasksList.Margin = new Thickness(0);
+                bdrTaskListPopup.Margin = new Thickness(5, this.Top + this.Height - 1, 5, 11);
             }
             else
             {
                 int screen = AppBarHelper.PrimaryMonitorSize.Height;
+                bdrTaskListPopup.Margin = new Thickness(5, 0, 5, this.Height - 1);
                 setTopPosition(screen, true);
             }
 

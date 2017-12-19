@@ -1156,9 +1156,6 @@
         <Setter Property="Padding" Value="0,3,0,3"/>
         <Setter Property="Effect" Value="{StaticResource ResourceKey=CairoMenuShadow}" />
     </Style>
-    <Style x:Key="CairoTaskListTopPopupStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskListPopupStyle}">
-        <Setter Property="Margin" Value="5,52,5,11" />
-    </Style>
     <Style x:Key="CairoTaskListButtonStyle"
         TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle"
