@@ -187,7 +187,7 @@ namespace CairoDesktop.AppGrabber
             {
                 if (!programsMenuAppsCollection.Contains(app))
                 {
-                    if (autoAddApps && autoSelectByName(Path.GetFileNameWithoutExtension(app.Path)))
+                    if (autoAddApps && ((app.IsStoreApp && autoSelectByName(app.Name)) || (!app.IsStoreApp && autoSelectByName(Path.GetFileNameWithoutExtension(app.Path)))))
                         programsMenuAppsCollection.Add(app);
                     else
                         installedAppsCollection.Add(app);
@@ -306,7 +306,7 @@ namespace CairoDesktop.AppGrabber
             "Epic Games|full|" + games,
             "Uplay|full|" + games,
             "Battle.net|full|" + games,
-            "Open Broadcaster Software|full|" + games,
+            "OBS Studio|contains|" + games,
             "Origin|full|" + games
         };
 
@@ -362,7 +362,11 @@ namespace CairoDesktop.AppGrabber
             {
                 if (app.Category == null)
                 {
-                    string cat = autoCategorizeByName(Path.GetFileNameWithoutExtension(app.Path));
+                    string cat;
+                    if (app.IsStoreApp)
+                        cat = autoCategorizeByName(app.Name);
+                    else
+                        cat = autoCategorizeByName(Path.GetFileNameWithoutExtension(app.Path));
 
                     if (cat != "")
                     {

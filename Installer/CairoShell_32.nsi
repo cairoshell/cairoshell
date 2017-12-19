@@ -26,7 +26,7 @@ InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
   !define MUI_HEADERIMAGE_BITMAP header_img.bmp
   !define MUI_UNWELCOMEFINISHPAGE_BITMAP left_img.bmp
   !define MUI_UNICON inst_icon.ico
-  !define MUI_COMPONENTSPAGE_SMALLDESC
+  ;!define MUI_COMPONENTSPAGE_SMALLDESC
   !define MUI_WELCOMEFINISHPAGE_BITMAP left_img.bmp
   !define MUI_WELCOMEPAGE_TEXT "$(PAGE_Welcome_Text)"
   !define MUI_WELCOMEPAGE_TITLE_3LINES
@@ -52,6 +52,7 @@ InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
 ; Components
 
 !insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "French"
 
 ; The stuff to install
 Section "$(SECT_cairo)" cairo
@@ -146,6 +147,17 @@ SectionEnd
   LangString DESC_cairo ${LANG_ENGLISH} "Installs Cairo and its required components."
   LangString DESC_startupCU ${LANG_ENGLISH} "Makes Cairo start up when you log in."
   LangString DESC_shellCU ${LANG_ENGLISH} "Run Cairo instead of Windows Explorer. Note this also disables many new features in Windows."
+  LangString PAGE_Welcome_Text ${LANG_FRENCH} "Cet installateur va vous guider au long de l'installation de Cairo.\r\n\r\nAvant d'installer, veuillez vous assurer que le .NET Framework 4.5.2 ou plus récent est installé, et que vous avez quitté toute instance de Cairo encore en cours de fonctionnement.\r\n\r\nCliquez sur Suivant pour continuer."
+  LangString PAGE_Finish_RunText ${LANG_FRENCH} "Démarrer l'environnement de bureau Cairo"
+  LangString PAGE_UnDir_TopText ${LANG_FRENCH} "Veuillez vérifier que vous avez fermé Cairo avant de le désinstaller pour assurer que tous les fichiers soient supprimés."
+  LangString DLOG_RunningText ${LANG_FRENCH} "Cairo est en cours de fonctionnement. Veuillez quitter Cairo depuis le menu Cairo et lancer de nouveau cet installateur."
+  LangString DLOG_DotNetText ${LANG_FRENCH} "Cairo nécessite le Microsoft .NET Framework 4.5.2 ou plus récent. Veuillez l'installer depuis le site web de Microsoft et installer de nouveau Cairo."
+  LangString SECT_cairo ${LANG_FRENCH} "Bureau Cairo (requis)"
+  LangString SECT_startupCU ${LANG_FRENCH} "Lancer au démarrage (utilisateur actuel)"
+  LangString SECT_shellCU ${LANG_FRENCH} "Utilisateurs avancés uniquement : remplacer l'Explorateur Windows (utilisateur actuel)"
+  LangString DESC_cairo ${LANG_FRENCH} "Installer Cairo et ses composants requis."
+  LangString DESC_startupCU ${LANG_FRENCH} "Démarrer Cairo lorsque vous vous connectez."
+  LangString DESC_shellCU ${LANG_FRENCH} "Lancer Cairo au lieu de l'Explorateur Windows. Notez que cela désactive également de nombreuses fonctionnalités nouvelles dans Windows."
 
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN

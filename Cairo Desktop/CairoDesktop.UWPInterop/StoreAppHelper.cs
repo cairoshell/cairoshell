@@ -155,13 +155,13 @@ namespace CairoDesktop.UWPInterop
                 ".targetsize-36.png",
                 ".targetsize-40.png",
                 ".targetsize-48.png",
+                ".targetsize-256_altform-unplated.png",
                 ".scale-200.png",
                 ".targetsize-24_altform-unplated.png",
                 ".targetsize-16_altform-unplated.png",
                 ".targetsize-24.png",
                 ".targetsize-16.png",
                 ".scale-100.png",
-                ".targetsize-256_altform-unplated.png",
                 ".targetsize-256.png"
             };
 
@@ -172,7 +172,7 @@ namespace CairoDesktop.UWPInterop
             int numMoved = 0;
             for (int i = 0; i < iconAssets.Count; i++)
             {
-                if (((scale < 1.25 || size != 1) && iconAssets[i].Contains("16")) || (((scale >= 1.25 && scale < 1.75) || size != 1) && iconAssets[i].Contains("24")))
+                if (((scale < 1.25 && size == 1) && iconAssets[i].Contains("16")) || ((((scale >= 1.25 && scale < 1.75) && size == 1) || (scale < 1.25 && size == 10)) && iconAssets[i].Contains("24")) || (((scale >= 1.5 && size == 10) || ((scale >= 1.25 && scale <= 1.75) && size == 0)) && iconAssets[i].Contains("48")) || (((scale >= 1.5 && size != 1) || (scale >= 1.25 && size == 0)) && (iconAssets[i].Contains("200") || iconAssets[i].Contains("100") || iconAssets[i].Contains("256"))))
                 {
                     string copy = iconAssets[i];
                     iconAssets.RemoveAt(i);
