@@ -15,8 +15,9 @@ namespace CairoDesktop.Localization
 
             Dictionary<string, string> lang;
             bool isDefault = false;
+            string useLang = Configuration.Settings.Language.ToLower();
 
-            if (Configuration.Settings.Language == "fr_FR")
+            if (useLang.StartsWith("fr_"))
             {
                 lang = Language.fr_FR;
             }

@@ -1,4 +1,6 @@
-﻿namespace CairoDesktop.Configuration
+﻿using System.Globalization;
+
+namespace CairoDesktop.Configuration
 {
     public class Settings
     {
@@ -84,7 +86,7 @@
                 // if still null, means we are using the default or user removed from configuration
                 if (string.IsNullOrEmpty(_TimeFormat))
                 {
-                    System.Globalization.DateTimeFormatInfo dtfi = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat;
+                    DateTimeFormatInfo dtfi = CultureInfo.CurrentCulture.DateTimeFormat;
                     _TimeFormat = "ddd " + dtfi.ShortTimePattern;
                 }
 
@@ -161,6 +163,12 @@
             {
                 if (_Language == null)
                     _Language = Properties.Settings.Default.Language;
+
+                // if still null, means we are using the default or user removed from configuration
+                if (string.IsNullOrEmpty(_Language))
+                {
+                    _Language = CultureInfo.CurrentUICulture.Name.Replace('-', '_');
+                }
 
                 return _Language;
             }

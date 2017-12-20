@@ -66,7 +66,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Language" Type="System.String" Scope="User">
-      <Value Profile="(Default)">en_US</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="TaskbarIconSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
