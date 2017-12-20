@@ -146,6 +146,7 @@ namespace CairoDesktop.AppGrabber
                 else if (e.Effects == DragDropEffects.Copy)
                 {
                     ApplicationInfo dropClone = dropData.Clone();
+                    dropClone.Icon = null; // icon may differ depending on category
                     // Do not duplicate entries
                     if (!((dropTarget.ItemsSource) as Category).Contains(dropClone))
                     {
