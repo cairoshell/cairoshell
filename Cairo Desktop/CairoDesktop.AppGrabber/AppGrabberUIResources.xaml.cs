@@ -146,11 +146,12 @@ namespace CairoDesktop.AppGrabber
                 else if (e.Effects == DragDropEffects.Copy)
                 {
                     ApplicationInfo dropClone = dropData.Clone();
-                    dropClone.Icon = null; // icon may differ depending on category
                     // Do not duplicate entries
                     if (!((dropTarget.ItemsSource) as Category).Contains(dropClone))
                     {
                         ((dropTarget.ItemsSource) as Category).Add(dropClone);
+                        dropClone.Icon = null; // icon may differ depending on category
+                        dropClone.IconPath = null;
                     }
                 }
                 if (dropTarget.Items.Count > 0)
@@ -251,6 +252,8 @@ namespace CairoDesktop.AppGrabber
                     if (!dropCollection.Contains(dropClone))
                     {
                         dropCollection.Add(dropClone);
+                        dropClone.Icon = null; // icon may differ depending on category
+                        dropClone.IconPath = null;
                     }
                 }
                 sourceView = null;
