@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Drawing;
 using System.Diagnostics;
 using System.ComponentModel;
 using CairoDesktop.Interop;
@@ -9,6 +8,7 @@ using System.Windows.Threading;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Windows;
+using CairoDesktop.Common;
 
 namespace CairoDesktop.WindowsTasks
 {

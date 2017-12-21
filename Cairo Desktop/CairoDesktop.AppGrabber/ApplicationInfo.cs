@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Threading;
 using System.Windows.Media.Imaging;
+using CairoDesktop.Common;
 
 namespace CairoDesktop.AppGrabber
 {

@@ -4,11 +4,11 @@ using System.IO;
 using System.Windows;
 using System.Linq;
 using System.Diagnostics;
+using CairoDesktop.Common;
 using CairoDesktop.Interop;
 
 namespace CairoDesktop.AppGrabber
 {
-
     public class AppGrabber : DependencyObject
     {
         private static DependencyProperty programsListProperty = DependencyProperty.Register("ProgramsList", typeof(List<ApplicationInfo>), typeof(AppGrabber), new PropertyMetadata(new List<ApplicationInfo>()));
@@ -17,7 +17,7 @@ namespace CairoDesktop.AppGrabber
 
         public static AppGrabberUI uiInstance;
 
-        private string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web", "safe mode" };
+        private static string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web", "safe mode" };
 
         public static AppGrabber Instance
         {
@@ -62,9 +62,17 @@ namespace CairoDesktop.AppGrabber
         
         public String ConfigFile { get; set; }
 
-        public List<String> ExecutableExtensions = new List<string>();
+        public static String[] ExecutableExtensions = {
+                ".exe",
+                ".bat",
+                ".com",
+                ".lnk",
+                ".msc",
+                ".appref-ms",
+                ".url"
+            };
 
-        String[] searchLocations = {
+        static String[] searchLocations = {
                 Interop.Shell.UsersStartMenuPath,
                 Interop.Shell.AllUsersStartMenuPath
         };
@@ -74,16 +82,6 @@ namespace CairoDesktop.AppGrabber
 
         public AppGrabber(String configFile)
         {
-            ExecutableExtensions.AddRange(new String[]{
-                ".exe",
-                ".bat",
-                ".com",
-                ".lnk",
-                ".msc",
-                ".appref-ms",
-                ".url"
-            });
-
             this.ConfigFile = configFile ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";
 
             this.Load();
@@ -114,7 +112,7 @@ namespace CairoDesktop.AppGrabber
                 this.QuickLaunch.AddRange(generateAppList(pinnedPath));
         }
 
-        private List<ApplicationInfo> GetApps()
+        private static List<ApplicationInfo> GetApps()
         {
             List<List<ApplicationInfo>> listsToMerge = new List<List<ApplicationInfo>>();
             foreach (String location in searchLocations)
@@ -128,7 +126,7 @@ namespace CairoDesktop.AppGrabber
             return rval;
         }
         
-        private List<ApplicationInfo> getStoreApps()
+        private static List<ApplicationInfo> getStoreApps()
         {
             List<ApplicationInfo> storeApps = new List<ApplicationInfo>();
 
@@ -150,7 +148,7 @@ namespace CairoDesktop.AppGrabber
             return storeApps;
         }
 
-        private List<ApplicationInfo> generateAppList(string directory)
+        private static List<ApplicationInfo> generateAppList(string directory)
         {
             List<ApplicationInfo> rval = new List<ApplicationInfo>();
 
@@ -182,7 +180,7 @@ namespace CairoDesktop.AppGrabber
             return rval;
         }
 
-        public ApplicationInfo PathToApp(string file, bool allowNonApps)
+        public static ApplicationInfo PathToApp(string file, bool allowNonApps)
         {
             ApplicationInfo ai = new ApplicationInfo();
             string fileExt = Path.GetExtension(file);
@@ -239,7 +237,7 @@ namespace CairoDesktop.AppGrabber
             return null;
         }
 
-        private List<ApplicationInfo> mergeLists(List<ApplicationInfo> a, List<ApplicationInfo> b)
+        private static List<ApplicationInfo> mergeLists(List<ApplicationInfo> a, List<ApplicationInfo> b)
         {
             List<ApplicationInfo> rval = new List<ApplicationInfo>(a.Count);
             rval.AddRange(a);
@@ -253,7 +251,7 @@ namespace CairoDesktop.AppGrabber
             return rval;
         }
 
-        private List<ApplicationInfo> mergeLists(List<List<ApplicationInfo>> listOfApplicationLists)
+        private static List<ApplicationInfo> mergeLists(List<List<ApplicationInfo>> listOfApplicationLists)
         {
             List<ApplicationInfo> rval = new List<ApplicationInfo>(listOfApplicationLists[0].Count);
             rval.AddRange(listOfApplicationLists[0]);
@@ -280,6 +278,79 @@ namespace CairoDesktop.AppGrabber
 
                 uiInstance.Activate();
             } catch { }
+        }
+
+        /* Helper methods */
+        public void LaunchProgram(ApplicationInfo app)
+        {
+            // so that we only prompt to always run as admin if it's done consecutively
+            if (app.AskAlwaysAdmin)
+            {
+                app.AskAlwaysAdmin = false;
+                Save();
+            }
+
+            if (!app.IsStoreApp && app.AlwaysAdmin)
+            {
+                Shell.StartProcess(app.Path, "", "runas");
+            }
+            else if (!Shell.StartProcess(app.Path))
+            {
+                CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public void LaunchProgramAdmin(ApplicationInfo app)
+        {
+            if (!app.IsStoreApp)
+            {
+                if (!app.AlwaysAdmin)
+                {
+                    if (app.AskAlwaysAdmin)
+                    {
+                        app.AskAlwaysAdmin = false;
+
+                        bool? always = CairoMessage.Show(String.Format(Localization.DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), Localization.DisplayString.sProgramsMenu_AlwaysAdminTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                        if (always == true)
+                            app.AlwaysAdmin = true;
+                    }
+                    else
+                        app.AskAlwaysAdmin = true;
+
+                    Save();
+                }
+
+                Shell.StartProcess(app.Path, "", "runas");
+            }
+            else
+                LaunchProgram(app);
+        }
+
+        public void RemoveAppConfirm(ApplicationInfo app)
+        {
+            bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name), Localization.DisplayString.sProgramsMenu_RemoveTitle, "Resources/cairoIcon.png", Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel);
+            if (deleteChoice.HasValue && deleteChoice.Value)
+            {
+                app.Category.Remove(app);
+                Save();
+            }
+        }
+
+        public void Rename(ApplicationInfo app, string newName)
+        {
+            app.Name = newName;
+            Save();
+            AppViewSorter.Sort(CategoryList.GetSpecialCategory(1), "Name");
+            AppViewSorter.Sort(app.Category, "Name");
+        }
+
+        public static void ShowAppProperties(ApplicationInfo app)
+        {
+            if (app.IsStoreApp)
+                CairoMessage.ShowAlert(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, MessageBoxImage.None);
+            else
+                Shell.ShowFileProperties(app.Path);
         }
     }
 }

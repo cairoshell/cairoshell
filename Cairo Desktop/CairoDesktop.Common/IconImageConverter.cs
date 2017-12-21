@@ -4,7 +4,7 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using CairoDesktop.Interop;
 
-namespace CairoDesktop.AppGrabber
+namespace CairoDesktop.Common
 {
     /// <summary>
     /// Provides static conversion methods to change Win32 Icons into ImageSources.

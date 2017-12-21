@@ -61,6 +61,7 @@
     <Compile Include="CairoMessage.xaml.cs">
       <DependentUpon>CairoMessage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IconImageConverter.cs" />
     <Compile Include="InvokingObservableCollection.cs" />
     <Compile Include="MessageBoxButtonConverter.cs" />
     <Compile Include="MessageBoxImageConverter.cs" />
@@ -69,10 +70,6 @@
     <Compile Include="SystemFile.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj">
-      <Project>{de9674cc-507e-4049-9152-5c899b9f0939}</Project>
-      <Name>CairoDesktop.AppGrabber</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj">
       <Project>{8e50fc68-8bf3-44f2-9229-708500625757}</Project>
       <Name>CairoDesktop.Configuration</Name>

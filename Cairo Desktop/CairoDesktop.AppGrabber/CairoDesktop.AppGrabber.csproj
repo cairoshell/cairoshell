@@ -112,7 +112,6 @@
     <Compile Include="Category.cs" />
     <Compile Include="CategoryList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IconImageConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="AppGrabberUI.xaml">
@@ -125,6 +124,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">
+      <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
+      <Name>CairoDesktop.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj">
       <Project>{8e50fc68-8bf3-44f2-9229-708500625757}</Project>
       <Name>CairoDesktop.Configuration</Name>

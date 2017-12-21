@@ -1,11 +1,13 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using CairoDesktop.Common;
+using CairoDesktop.AppGrabber;
 
 namespace CairoDesktop
 {
 	public partial class QuickLaunchButton
 	{
+        static AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
+
 		public QuickLaunchButton()
 		{
 			this.InitializeComponent();
@@ -30,10 +32,41 @@ namespace CairoDesktop
         private void LaunchProgram(object sender, RoutedEventArgs e)
         {
             Button item = (Button)sender;
-            if (!Interop.Shell.StartProcess(item.CommandParameter.ToString()))
-            {
-                CairoMessage.Show("The file could not be found.  If you just removed this program, try removing it from the App Grabber to make the icon go away.", "Oops!", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            appGrabber.LaunchProgram(app);
         }
-	}
+
+        private void LaunchProgramMenu(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            appGrabber.LaunchProgram(app);
+        }
+
+        private void LaunchProgramAdmin(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            appGrabber.LaunchProgramAdmin(app);
+        }
+
+        private void programsMenu_Remove(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            appGrabber.RemoveAppConfirm(app);
+        }
+
+        private void programsMenu_Properties(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            AppGrabber.AppGrabber.ShowAppProperties(app);
+        }
+    }
 }

@@ -79,7 +79,7 @@ namespace CairoDesktop.AppGrabber
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.Filter = "Programs and shortcuts|";
 
-            foreach (string ext in appGrabber.ExecutableExtensions)
+            foreach (string ext in AppGrabber.ExecutableExtensions)
             {
                 dlg.Filter += "*" + ext + ";";
             }
@@ -101,7 +101,7 @@ namespace CairoDesktop.AppGrabber
 
             if (result == System.Windows.Forms.DialogResult.OK && Interop.Shell.Exists(dlg.FileName))
             {
-                ApplicationInfo customApp = appGrabber.PathToApp(dlg.FileName, true);
+                ApplicationInfo customApp = AppGrabber.PathToApp(dlg.FileName, true);
                 if (!object.ReferenceEquals(customApp, null))
                     programsMenuAppsCollection.Add(customApp);
             }

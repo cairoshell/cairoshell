@@ -171,21 +171,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            // so that we only prompt to always run as admin if it's done consecutively
-            if (app.AskAlwaysAdmin)
-            {
-                app.AskAlwaysAdmin = false;
-                appGrabber.Save();
-            }
-
-            if (!app.IsStoreApp && app.AlwaysAdmin)
-            {
-                Shell.StartProcess(app.Path, "", "runas");
-            }
-            else if (!Shell.StartProcess(app.Path))
-            {
-                CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            appGrabber.LaunchProgram(app);
         }
 
         private void LaunchProgramAdmin(object sender, RoutedEventArgs e)
@@ -193,29 +179,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            if (!app.IsStoreApp)
-            {
-                if (!app.AlwaysAdmin)
-                {
-                    if (app.AskAlwaysAdmin)
-                    {
-                        app.AskAlwaysAdmin = false;
-
-                        bool? always = CairoMessage.Show(String.Format(Localization.DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), Localization.DisplayString.sProgramsMenu_AlwaysAdminTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-                        if (always == true)
-                            app.AlwaysAdmin = true;
-                    }
-                    else
-                        app.AskAlwaysAdmin = true;
-
-                    appGrabber.Save();
-                }
-
-                Shell.StartProcess(app.Path, "", "runas");
-            }
-            else
-                LaunchProgram(sender, e);
+            appGrabber.LaunchProgramAdmin(app);
         }
 
         private void programsMenu_Rename(object sender, RoutedEventArgs e)
@@ -235,12 +199,8 @@ namespace CairoDesktop
         {
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
-            bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name), Localization.DisplayString.sProgramsMenu_RemoveTitle, "Resources/cairoIcon.png", Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel);
-            if (deleteChoice.HasValue && deleteChoice.Value)
-            {
-                app.Category.Remove(app);
-                appGrabber.Save();
-            }
+
+            appGrabber.RemoveAppConfirm(app);
         }
 
         private void programsMenu_Properties(object sender, RoutedEventArgs e)
@@ -248,11 +208,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-
-            if (app.IsStoreApp)
-                CairoMessage.ShowAlert(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, MessageBoxImage.None);
-            else
-                Shell.ShowFileProperties(app.Path);
+            AppGrabber.AppGrabber.ShowAppProperties(app);
         }
 
         #region Date/time
@@ -421,7 +377,7 @@ namespace CairoDesktop
                 {
                     if (Shell.Exists(fileName))
                     {
-                        ApplicationInfo customApp = appGrabber.PathToApp(fileName, false);
+                        ApplicationInfo customApp = AppGrabber.AppGrabber.PathToApp(fileName, false);
                         if (!object.ReferenceEquals(customApp, null))
                         {
                             appGrabber.CategoryList.GetSpecialCategory(2).Add(customApp);
@@ -442,10 +398,7 @@ namespace CairoDesktop
 
             if (!object.ReferenceEquals(app, null))
             {
-                app.Name = box.Text;
-                appGrabber.Save();
-                AppViewSorter.Sort(appGrabber.CategoryList.GetSpecialCategory(1), "Name");
-                AppViewSorter.Sort(app.Category, "Name");
+                appGrabber.Rename(app, box.Text);
             }
 
             foreach (UIElement peer in (box.Parent as DockPanel).Children)

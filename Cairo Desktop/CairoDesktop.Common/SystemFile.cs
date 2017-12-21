@@ -6,7 +6,6 @@ using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System.Diagnostics;
-using CairoDesktop.Configuration;
 
 namespace CairoDesktop.Common
 {
@@ -317,18 +316,18 @@ namespace CairoDesktop.Common
                     }
                     catch
                     {
-                        return AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
+                        return IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
                     }
                 }
                 else
                 {
                     // This will attempts to get the icon via AppGrabber - if it fails the default icon will be returned.
-                    return AppGrabber.IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
+                    return IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
                 }
             }
             else
             {
-                return AppGrabber.IconImageConverter.GetDefaultIcon();
+                return IconImageConverter.GetDefaultIcon();
             }
         }
 
