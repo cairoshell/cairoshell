@@ -329,7 +329,12 @@ namespace CairoDesktop.AppGrabber
 
         public void RemoveAppConfirm(ApplicationInfo app)
         {
-            bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name), Localization.DisplayString.sProgramsMenu_RemoveTitle, "Resources/cairoIcon.png", Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel);
+            string menu;
+            if (app.Category.Type == 3)
+                menu = Localization.DisplayString.sAppGrabber_QuickLaunch;
+            else
+                menu = Localization.DisplayString.sProgramsMenu;
+            bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name, menu), Localization.DisplayString.sProgramsMenu_RemoveTitle, "Resources/cairoIcon.png", Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel);
             if (deleteChoice.HasValue && deleteChoice.Value)
             {
                 app.Category.Remove(app);
