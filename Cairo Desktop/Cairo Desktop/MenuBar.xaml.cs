@@ -372,22 +372,7 @@ namespace CairoDesktop
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
-                int count = 0;
-                foreach (String fileName in fileNames)
-                {
-                    if (Shell.Exists(fileName))
-                    {
-                        ApplicationInfo customApp = AppGrabber.AppGrabber.PathToApp(fileName, false);
-                        if (!object.ReferenceEquals(customApp, null))
-                        {
-                            appGrabber.CategoryList.GetSpecialCategory(2).Add(customApp);
-                            count++;
-                        }
-                    }
-                }
-
-                if (count > 0)
-                    appGrabber.Save();
+                appGrabber.AddByPath(fileNames, 2);
             }
         }
 

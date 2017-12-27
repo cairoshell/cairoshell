@@ -357,5 +357,25 @@ namespace CairoDesktop.AppGrabber
             else
                 Shell.ShowFileProperties(app.Path);
         }
+
+        public void AddByPath(string[] fileNames, int categoryType)
+        {
+            int count = 0;
+            foreach (String fileName in fileNames)
+            {
+                if (Shell.Exists(fileName))
+                {
+                    ApplicationInfo customApp = PathToApp(fileName, false);
+                    if (!object.ReferenceEquals(customApp, null))
+                    {
+                        CategoryList.GetSpecialCategory(categoryType).Add(customApp);
+                        count++;
+                    }
+                }
+            }
+
+            if (count > 0)
+                Save();
+        }
     }
 }

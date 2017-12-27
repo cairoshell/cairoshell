@@ -319,5 +319,14 @@ namespace CairoDesktop
         {
             takeFocus();
         }
+
+        private void quickLaunchList_Drop(object sender, DragEventArgs e)
+        {
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (fileNames != null)
+            {
+                appGrabber.AddByPath(fileNames, 3);
+            }
+        }
     }
 }
