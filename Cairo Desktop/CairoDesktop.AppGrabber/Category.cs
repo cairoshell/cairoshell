@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections.Specialized;
+using System.Windows.Data;
 
 namespace CairoDesktop.AppGrabber {
 
@@ -69,6 +70,10 @@ namespace CairoDesktop.AppGrabber {
             set
             {
                 type = value;
+
+                if (type == 3)
+                    CollectionViewSource.GetDefaultView(this).SortDescriptions.Clear();
+
                 // Notify Databindings of property change
                 if (PropertyChanged != null)
                 {
@@ -143,9 +148,9 @@ namespace CairoDesktop.AppGrabber {
         {
             this.Name = name;
             this.ShowInMenu = showInMenu;
-            this.Type = type;
             this.appsList = new List<ApplicationInfo>();
             AppViewSorter.Sort(this, "Name");
+            this.Type = type;
         }
 
         /// <summary>
@@ -246,6 +251,23 @@ namespace CairoDesktop.AppGrabber {
 
             if (this.Type != 1 && this.Type != 3)
                 this.ParentCategoryList.GetSpecialCategory(1).Remove(app);
+        }
+
+        public void Move(int oldIndex, int newIndex)
+        {
+            ApplicationInfo item = internalList[oldIndex];
+            internalList.RemoveAt(oldIndex);
+            internalList.Insert(newIndex, item);
+
+            if (CollectionChanged != null)
+            {
+                CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, newIndex, oldIndex));
+            }
+            // Notify Databindings of property change
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs("Count"));
+            }
         }
 
         /// <summary>

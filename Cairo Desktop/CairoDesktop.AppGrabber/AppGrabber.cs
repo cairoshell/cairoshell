@@ -6,6 +6,7 @@ using System.Linq;
 using System.Diagnostics;
 using CairoDesktop.Common;
 using CairoDesktop.Interop;
+using System.Windows.Data;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -346,8 +347,9 @@ namespace CairoDesktop.AppGrabber
         {
             app.Name = newName;
             Save();
-            AppViewSorter.Sort(CategoryList.GetSpecialCategory(1), "Name");
-            AppViewSorter.Sort(app.Category, "Name");
+
+            CollectionViewSource.GetDefaultView(CategoryList.GetSpecialCategory(1)).Refresh();
+            CollectionViewSource.GetDefaultView(app.Category).Refresh();
         }
 
         public static void ShowAppProperties(ApplicationInfo app)

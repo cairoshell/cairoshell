@@ -327,6 +327,19 @@ namespace CairoDesktop
             {
                 appGrabber.AddByPath(fileNames, 3);
             }
+
+            e.Handled = true;
+        }
+
+        private void quickLaunchList_DragEnter(object sender, DragEventArgs e)
+        {
+            String[] formats = e.Data.GetFormats(true);
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.Copy;
+            }
+
+            e.Handled = true;
         }
     }
 }

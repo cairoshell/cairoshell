@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -108,57 +107,61 @@ namespace CairoDesktop.AppGrabber
 
         private void ListView_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(typeof(ApplicationInfo)) && sourceView != sender)
+            if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
             {
                 System.Diagnostics.Debug.WriteLine(e.Data.GetData(typeof(ApplicationInfo)).ToString());
                 ListView dropTarget = sender as ListView;
+
                 if (dropTarget.ItemsSource is Category)
                 {
-                    if ((dropTarget.ItemsSource as Category).Type == 3)
+                    Category target = dropTarget.ItemsSource as Category;
+                    ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
+
+                    if (target.Type == 3)
                     {
                         e.Effects = DragDropEffects.Copy;
-                    }
-                    else
-                    {
-                        e.Effects = DragDropEffects.Move;
-                    }
-                }
-                else
-                {
-                    e.Effects = DragDropEffects.Move;
-                }
-                ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
-                if (e.Effects == DragDropEffects.Move)
-                {
-                    (sourceView.ItemsSource as IList<ApplicationInfo>).Remove(dropData);
-                    if (dropTarget.ItemsSource is Category)
-                    {
-                        if ((sourceView.ItemsSource as Category).Type != 3)
+
+                        // Do not duplicate entries
+                        if (!target.Contains(dropData))
                         {
-                            ((dropTarget.ItemsSource) as IList<ApplicationInfo>).Add(dropData);
+                            ApplicationInfo dropClone = dropData.Clone();
+
+                            if (e.OriginalSource != null && e.OriginalSource is FrameworkElement && (e.OriginalSource as FrameworkElement).DataContext != null && (e.OriginalSource as FrameworkElement).DataContext is ApplicationInfo)
+                                target.Insert(target.IndexOf((e.OriginalSource as FrameworkElement).DataContext as ApplicationInfo), dropClone);
+                            else
+                                target.Add(dropClone);
+
+                            dropClone.Icon = null; // icon may differ depending on category
+                            dropClone.IconPath = null;
+                        }
+                        else
+                        {
+                            // reorder existing
+                            if (e.OriginalSource != null && e.OriginalSource is FrameworkElement && (e.OriginalSource as FrameworkElement).DataContext != null && (e.OriginalSource as FrameworkElement).DataContext is ApplicationInfo)
+                                target.Move(target.IndexOf(dropData), target.IndexOf((e.OriginalSource as FrameworkElement).DataContext as ApplicationInfo));
                         }
                     }
-                    else
+                    else if (sourceView != null && sourceView != sender)
                     {
-                        ((dropTarget.ItemsSource) as IList<ApplicationInfo>).Add(dropData);
+                        e.Effects = DragDropEffects.Move;
+
+                        Category source = sourceView.ItemsSource as Category;
+
+                        source.Remove(dropData);
+
+                        if (source.Type != 3)
+                        {
+                            target.Add(dropData); // if coming from quick launch, simply remove from quick launch
+                        }
                     }
                 }
-                else if (e.Effects == DragDropEffects.Copy)
-                {
-                    ApplicationInfo dropClone = dropData.Clone();
-                    // Do not duplicate entries
-                    if (!((dropTarget.ItemsSource) as Category).Contains(dropClone))
-                    {
-                        ((dropTarget.ItemsSource) as Category).Add(dropClone);
-                        dropClone.Icon = null; // icon may differ depending on category
-                        dropClone.IconPath = null;
-                    }
-                }
+
                 if (dropTarget.Items.Count > 0)
                 {
                     dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.Count - 1]);
                 }
             }
+            
             sourceView = null;
             isDragging = false;
         }
@@ -212,52 +215,49 @@ namespace CairoDesktop.AppGrabber
 
         private void TextBlock_Drop(object sender, DragEventArgs e)
         {
+            TextBlock dropBlock = sender as TextBlock;
+            Category dropCategory = dropBlock.DataContext as Category;
+
             if (e.Data.GetDataPresent(typeof(Category)))
             {
-                TextBlock dropBlock = sender as TextBlock;
-                Category replacedCategory = dropBlock.DataContext as Category;
-
                 System.Diagnostics.Debug.WriteLine(e.Data.GetData(typeof(Category)).ToString());
                 Category dropData = e.Data.GetData(typeof(Category)) as Category;
 
-                CategoryList parent = replacedCategory.ParentCategoryList;
+                CategoryList parent = dropCategory.ParentCategoryList;
                 int initialIndex = parent.IndexOf(dropData);
-                int dropIndex = parent.IndexOf(replacedCategory);
+                int dropIndex = parent.IndexOf(dropCategory);
                 parent.Move(initialIndex, dropIndex);
             }
             else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
             {
-                if (((sender as TextBlock).DataContext as Category).Type == 3)
+                ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
+                if (dropCategory.Type == 3)
                 {
                     e.Effects = DragDropEffects.Copy;
-                }
-                else
-                {
-                    e.Effects = DragDropEffects.Move;
-                }
-                ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
-                Category dropCollection = (sender as TextBlock).DataContext as Category;
-                if (e.Effects == DragDropEffects.Move)
-                {
-                    (sourceView.ItemsSource as IList<ApplicationInfo>).Remove(dropData);
-                    if ((sourceView.ItemsSource as Category).Type != 3)
-                    {
-                        dropCollection.Add(dropData);
-                    }
-                }
-                else if (e.Effects == DragDropEffects.Copy)
-                {
-                    ApplicationInfo dropClone = dropData.Clone();
+
                     // Do not duplicate entries
-                    if (!dropCollection.Contains(dropClone))
+                    if (!dropCategory.Contains(dropData))
                     {
-                        dropCollection.Add(dropClone);
+                        ApplicationInfo dropClone = dropData.Clone();
+                        dropCategory.Add(dropClone);
                         dropClone.Icon = null; // icon may differ depending on category
                         dropClone.IconPath = null;
                     }
                 }
+                else if (sourceView != null)
+                {
+                    e.Effects = DragDropEffects.Move;
+
+                    (sourceView.ItemsSource as Category).Remove(dropData);
+                    if ((sourceView.ItemsSource as Category).Type != 3)
+                    {
+                        dropCategory.Add(dropData);
+                    }
+                }
+                
                 sourceView = null;
             }
+
             isDragging = false;
         }
 

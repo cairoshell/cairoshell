@@ -9,12 +9,12 @@
             CommandParameter="{Binding Path=Path}"
             Click="LaunchProgram"
             Style="{StaticResource CairoQuickLaunchButtonStyle}"
-            ToolTip="{Binding Path=Name}">
+            ToolTip="{Binding Path=Name}" DragEnter="btn_DragEnter" Drop="btn_Drop" PreviewMouseLeftButtonDown="btn_PreviewMouseLeftButtonDown" PreviewMouseMove="btn_PreviewMouseMove" PreviewMouseLeftButtonUp="btn_PreviewMouseLeftButtonUp">
             <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True}" Name="imgIcon"
                 Width="16"
                 Height="16" />
             <Button.ContextMenu>
-                <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
+                <ContextMenu Style="{StaticResource CairoContextMenuStyle}" Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
                     <ContextMenu.Resources>
                         <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
 

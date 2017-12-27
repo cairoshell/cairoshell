@@ -75,6 +75,7 @@ namespace CairoDesktop {
 
         private Point? startPoint = null;
         private bool ctxOpen = false;
+        private bool inMove = false;
 
         private void StackMenu_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -87,8 +88,10 @@ namespace CairoDesktop {
 
         private void StackMenu_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (startPoint != null && !ctxOpen)
+            if (!inMove && startPoint != null && !ctxOpen)
             {
+                inMove = true;
+
                 Point mousePos = e.GetPosition(null);
                 Vector diff = (Point)startPoint - mousePos;
 
@@ -106,6 +109,8 @@ namespace CairoDesktop {
                     // reset the stored mouse position
                     startPoint = null;
                 }
+
+                inMove = false;
             }
 
             e.Handled = true;
@@ -146,8 +151,6 @@ namespace CairoDesktop {
             startPoint = null;
         }
 
-        #endregion
-
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)
         {
             startPoint = null;
@@ -158,5 +161,7 @@ namespace CairoDesktop {
         {
             ctxOpen = false;
         }
+
+        #endregion
     }
 }
