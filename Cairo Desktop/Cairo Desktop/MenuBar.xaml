@@ -90,7 +90,7 @@
             <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
                 <MenuItem Style="{StaticResource CairoMenuItemCairoMenuStyle}">
                     <MenuItem.Header>
-                        <Image Name="CairoMenuIcon" Source="{StaticResource CairoMenuIcon}"
+                        <Image Name="CairoMenuIcon" Source="{StaticResource CairoMenuIcon_2x}"
                             Width="38"
                             Height="22"/>
                     </MenuItem.Header>

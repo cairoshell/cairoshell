@@ -69,16 +69,6 @@ namespace CairoDesktop
                 miOpenUWPSettings.Visibility = Visibility.Visible;
                 meOpenActionCenter.Visibility = Visibility.Visible;
             }
-
-            // load high dpi assets if appropriate
-            if (Shell.GetDpiScale() > 1.0)
-            {
-                try
-                {
-                    CairoMenuIcon.Source = (System.Windows.Media.ImageSource)this.FindResource("CairoMenuIcon_2x");
-                }
-                catch { }
-            }
         }
 
         private void setupPrograms()
@@ -345,8 +335,6 @@ namespace CairoDesktop
                 this.Top = 0;
                 if (Startup.MenuBarShadowWindow != null)
                     Startup.MenuBarShadowWindow.SetPosition();
-                if (Startup.DesktopWindow != null)
-                    Startup.DesktopWindow.ResetPosition();
             }
         }
 

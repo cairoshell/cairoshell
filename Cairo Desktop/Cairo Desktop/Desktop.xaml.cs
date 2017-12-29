@@ -76,7 +76,7 @@ namespace CairoDesktop
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
-            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            else if (msg == NativeMethods.WM_DISPLAYCHANGE && (Startup.IsCairoUserShell))
             {
                 setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;

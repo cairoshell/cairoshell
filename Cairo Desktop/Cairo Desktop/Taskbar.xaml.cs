@@ -120,7 +120,7 @@ namespace CairoDesktop
 
         private void setTaskButtonSize()
         {
-            double size = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - bdrTaskbarEnd.ActualWidth - (TasksList.Items.Groups.Count * 5) - 14) / TasksList.Items.Count);
+            double size = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - bdrTaskbarEnd.ActualWidth - (TasksList.Items.Groups.Count * (5 * Shell.GetDpiScale())) - 14) / TasksList.Items.Count);
             if (size > (140 + addToSize))
                 ButtonWidth = 140 + addToSize;
             else
@@ -185,12 +185,6 @@ namespace CairoDesktop
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
-
-            if (msg == NativeMethods.WM_DISPLAYCHANGE)
-            {
-                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
-                handled = true;
-            }
             
             if (msg == appbarMessageId && appbarMessageId != -1 && Settings.TaskbarMode == 0)
             {
@@ -232,6 +226,11 @@ namespace CairoDesktop
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.TaskbarMode == 0)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
+            }
+            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            {
+                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                handled = true;
             }
 
             return IntPtr.Zero;
