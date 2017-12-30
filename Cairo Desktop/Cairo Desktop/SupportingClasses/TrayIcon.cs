@@ -97,6 +97,15 @@ namespace CairoDesktop
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the GUID of the Icon.
+        /// </summary>
+        public Guid GUID
+        {
+            get;
+            set;
+        }
+
         #region IEquatable<TrayIcon> Members
 
         /// <summary>

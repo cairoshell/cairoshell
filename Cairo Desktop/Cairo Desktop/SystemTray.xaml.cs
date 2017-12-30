@@ -2,10 +2,10 @@
 using System.Windows;
 using System.Collections.ObjectModel;
 using CairoDesktop.WindowsTray;
-using System.Linq;
 using System.Diagnostics;
 using static CairoDesktop.Interop.NativeMethods;
 using System.Windows.Threading;
+using System.Windows.Forms;
 
 namespace CairoDesktop
 {
@@ -13,6 +13,7 @@ namespace CairoDesktop
     {
         private DateTime _lastLClick = DateTime.Now;
         private DateTime _lastRClick = DateTime.Now;
+        private IntPtr _lastClickHwnd;
         private object _lockObject = new object();
         IWindowsHooksWrapper hooksWrapper = new WindowsHooksWrapper();
 
@@ -106,18 +107,13 @@ namespace CairoDesktop
                         {
                             foreach (TrayIcon ti in TrayIcons)
                             {
-                                if (ti.HWnd == (IntPtr)nicData.hWnd && ti.UID == nicData.uID)
+                                if ((nicData.guidItem != Guid.Empty && nicData.guidItem == ti.GUID) || (ti.HWnd == (IntPtr)nicData.hWnd && ti.UID == nicData.uID))
                                 {
                                     exists = true;
                                     trayIcon = ti;
                                     break;
                                 }
                             }
-                            /*if (TrayIcons.Contains(trayIcon))
-                            {
-                                exists = true;
-                                trayIcon = TrayIcons.Single(i => i.HWnd == (IntPtr)nicData.hWnd && i.UID == nicData.uID);
-                            }*/
 
                             trayIcon.Title = nicData.szTip;
                             try
@@ -131,6 +127,7 @@ namespace CairoDesktop
                             }
                             trayIcon.HWnd = (IntPtr)nicData.hWnd;
                             trayIcon.UID = nicData.uID;
+                            trayIcon.GUID = nicData.guidItem;
                             trayIcon.CallbackMessage = nicData.uCallbackMessage;
 
                             if (!exists)
@@ -179,45 +176,51 @@ namespace CairoDesktop
             return true;
         }
 
+        private uint getMousePos()
+        {
+            return (((uint)System.Windows.Forms.Cursor.Position.Y << 16) | (uint)System.Windows.Forms.Cursor.Position.X);
+        }
+
         private void Image_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            uint WM_LBUTTONDOWN = 0x201;
-            uint WM_LBUTTONUP = 0x202;
-            uint WM_LBUTTONDBLCLK = 0x203;
-            uint WM_RBUTTONDOWN = 0x204;
-            uint WM_RBUTTONUP = 0x205;
-            uint WM_RBUTTONDBLCLK = 0x206;
-
             var trayIcon = (sender as System.Windows.Controls.Image).DataContext as TrayIcon;
-                        
+            
+            uint mouse = getMousePos();
+
             if (e.ChangedButton == System.Windows.Input.MouseButton.Left)
             {
-                if (DateTime.Now.Subtract(_lastLClick).TotalSeconds < 1)
+                if (DateTime.Now.Subtract(_lastLClick).TotalMilliseconds <= SystemInformation.DoubleClickTime && _lastClickHwnd == trayIcon.HWnd)
                 {
-                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONDBLCLK);
-                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONUP);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, WM_LBUTTONDBLCLK);
                 }
                 else
                 {
-                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONDOWN);
-                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_LBUTTONUP);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, WM_LBUTTONDOWN);
                 }
+
+                PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, WM_LBUTTONUP);
+                PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, (NIN_SELECT | ((uint)trayIcon.UID << 16)));
+
                 _lastLClick = DateTime.Now;
             }
-            else if(e.ChangedButton == System.Windows.Input.MouseButton.Right)
+            else if (e.ChangedButton == System.Windows.Input.MouseButton.Right)
             {
-                if (DateTime.Now.Subtract(_lastRClick).TotalSeconds < 1)
+                if (DateTime.Now.Subtract(_lastRClick).TotalMilliseconds <= SystemInformation.DoubleClickTime && _lastClickHwnd == trayIcon.HWnd)
                 {
-                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONDBLCLK);
-                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONUP);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, (WM_RBUTTONDBLCLK | ((uint)trayIcon.UID << 16)));
                 }
                 else
                 {
-                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONDOWN);
-                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, (uint)trayIcon.UID, WM_RBUTTONUP);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, (WM_RBUTTONDOWN | ((uint)trayIcon.UID << 16)));
                 }
+
+                PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, (WM_RBUTTONUP | ((uint)trayIcon.UID << 16)));
+                PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, (WM_CONTEXTMENU | ((uint)trayIcon.UID << 16)));
+
                 _lastRClick = DateTime.Now;
             }
+
+            _lastClickHwnd = trayIcon.HWnd;
 
             SetForegroundWindow(trayIcon.HWnd);
 
@@ -239,11 +242,39 @@ namespace CairoDesktop
         private void Image_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var trayIcon = (sender as System.Windows.Controls.Image).DataContext as TrayIcon;
-
+            
             if (!IsWindow(trayIcon.HWnd))
             {
                 TrayIcons.Remove(trayIcon);
                 return;
+            }
+            else
+            {
+                uint mouse = getMousePos();
+                PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, WM_MOUSEFIRST);
+                PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, WM_MOUSEHOVER);
+                PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, NIN_POPUPOPEN);
+            }
+        }
+
+        private void Image_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            var trayIcon = (sender as System.Windows.Controls.Image).DataContext as TrayIcon;
+
+            if (trayIcon != null)
+            {
+                if (!IsWindow(trayIcon.HWnd))
+                {
+                    TrayIcons.Remove(trayIcon);
+                    return;
+                }
+                else
+                {
+                    uint mouse = getMousePos();
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, WM_MOUSELEAVE);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, NIN_POPUPCLOSE);
+                    PostMessage(trayIcon.HWnd, (uint)trayIcon.CallbackMessage, mouse, WM_MOUSELAST);
+                }
             }
         }
     }

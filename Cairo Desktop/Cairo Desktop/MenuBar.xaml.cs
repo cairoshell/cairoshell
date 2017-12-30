@@ -67,7 +67,7 @@ namespace CairoDesktop
             {
                 // show Windows 10 features
                 miOpenUWPSettings.Visibility = Visibility.Visible;
-                meOpenActionCenter.Visibility = Visibility.Visible;
+                MenuExtras.Visibility = Visibility.Visible;
             }
         }
 
@@ -468,11 +468,6 @@ namespace CairoDesktop
             Shell.StartProcess("ms-settings://");
         }
 
-        private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)
-        {
-            Shell.StartProcess("ms-actioncenter://");
-        }
-
         private void OpenTaskManager(object sender, RoutedEventArgs e)
         {
             Shell.StartProcess("taskmgr.exe");
@@ -540,6 +535,20 @@ namespace CairoDesktop
         {
             Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), "::{645FF040-5081-101B-9F08-00AA002F954E}");
         }
+        #endregion
+
+        #region Menu extras
+
+        private void miOpenVolume_Click(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("sndvol.exe", "-f " + (int)(((ushort)1880) | (uint)(23 << 16)));
+        }
+
+        private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)
+        {
+            Shell.ShowActionCenter();
+        }
+
         #endregion
 
         #region Search menu

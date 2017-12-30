@@ -474,8 +474,6 @@ namespace CairoDesktop.Interop
             GW_ENABLEDPOPUP = 6
         }
 
-        public const int WM_COMMAND = 0x111;
-
         [DllImport("user32.dll", SetLastError = true)]
         public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
@@ -660,6 +658,22 @@ namespace CairoDesktop.Interop
         public const int WM_WINDOWPOSCHANGING = 0x0046;
         public const int WM_WINDOWPOSCHANGED = 0x0047;
         public const int WM_ACTIVATE = 0x0006;
+        public const int WM_COMMAND = 0x111;
+        public const uint WM_LBUTTONDOWN = 0x201;
+        public const uint WM_LBUTTONUP = 0x202;
+        public const uint WM_LBUTTONDBLCLK = 0x203;
+        public const uint WM_RBUTTONDOWN = 0x204;
+        public const uint WM_RBUTTONUP = 0x205;
+        public const uint WM_RBUTTONDBLCLK = 0x206;
+        public const uint WM_CONTEXTMENU = 0x7B;
+        public const uint WM_MOUSEFIRST = 0x200;
+        public const uint WM_MOUSEHOVER = 0x2A1;
+        public const uint WM_MOUSELAST = 0x20D;
+        public const uint WM_MOUSELEAVE = 0x2A3;
+
+        public const uint NIN_SELECT = 0x400;
+        public const uint NIN_POPUPOPEN = 0x406;
+        public const uint NIN_POPUPCLOSE = 0x407;
 
         public struct WINDOWPLACEMENT
         {

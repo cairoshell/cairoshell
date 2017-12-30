@@ -24,7 +24,7 @@
                             Height="16"
                             Margin="5,0,5,2"
                             ToolTip="{Binding Path=Title}"
-                            MouseUp="Image_MouseUp" MouseEnter="Image_MouseEnter" />
+                            MouseUp="Image_MouseUp" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave" />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

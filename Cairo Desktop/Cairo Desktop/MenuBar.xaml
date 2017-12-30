@@ -209,7 +209,14 @@
             x:Name="CairoMenuBarRight"
             Margin="0,0,0,0">
             <control:SystemTray x:Name="SysTray" />
-            <Menu x:Name="meOpenActionCenter" Style="{StaticResource CairoMenuBarMainContainerStyle}" Visibility="Collapsed">
+            <Menu x:Name="MenuExtras" Style="{StaticResource CairoMenuBarMainContainerStyle}" Visibility="Collapsed">
+                <!--<MenuItem x:Name="miOpenVolume" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenVolume_Click"  ToolTip="{Binding sMenuBar_OpenActionCenter}">
+                    <MenuItem.Header>
+                        <Image Source="{StaticResource CairoActionCenterIcon}"
+                              Width="38"
+                              Height="22" />
+                    </MenuItem.Header>
+                </MenuItem>-->
                 <MenuItem x:Name="miOpenActionCenter" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click" ToolTip="{Binding sMenuBar_OpenActionCenter}">
                     <MenuItem.Header>
                         <Image Name="CairoActionCenterIcon" Source="{StaticResource CairoActionCenterIcon}"
