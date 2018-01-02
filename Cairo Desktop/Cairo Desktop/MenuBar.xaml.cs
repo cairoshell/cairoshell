@@ -12,6 +12,7 @@ using System.Windows.Interop;
 using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using CairoDesktop.AppGrabber;
+using CairoDesktop.WindowsTray;
 
 namespace CairoDesktop
 {
@@ -28,9 +29,6 @@ namespace CairoDesktop
         // delegates for WinSparkle
         private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
         private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
-
-        // True if system tray failed to load
-        public bool SystemTrayFailure = false;
 
         public MenuBar()
         {
@@ -342,7 +340,7 @@ namespace CairoDesktop
         {
             if (Startup.IsShuttingDown)
             {
-                SysTray.DestroySystemTray();
+                NotificationArea.Instance.Dispose();
 
                 AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
 
@@ -470,7 +468,7 @@ namespace CairoDesktop
 
         private void OpenTaskManager(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("taskmgr.exe");
+            Shell.StartTaskManager();
         }
 
         private void SysSleep(object sender, RoutedEventArgs e)

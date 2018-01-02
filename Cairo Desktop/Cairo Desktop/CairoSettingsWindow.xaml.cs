@@ -4,13 +4,13 @@
     using System.Windows;
     using System.IO;
     using System.Linq;
-    using System.Diagnostics;
     using Interop;
     using System.Windows.Interop;
     using System.Windows.Forms;
     using Configuration;
     using AppGrabber;
     using System.Collections.Generic;
+    using CairoDesktop.WindowsTray;
 
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
@@ -162,7 +162,7 @@
 
         private void checkTrayStatus()
         {
-            if (Startup.MenuBarWindow.SystemTrayFailure)
+            if (NotificationArea.Instance.IsFailed)
             {
                 // adjust settings window to alert user they need to install vc_redist
 

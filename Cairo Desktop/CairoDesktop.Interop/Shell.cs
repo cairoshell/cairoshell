@@ -256,6 +256,11 @@ namespace CairoDesktop.Interop
             owProc.Start();
         }
 
+        public static void StartTaskManager()
+        {
+            Shell.StartProcess("taskmgr.exe");
+        }
+
         public static void ShowRunDialog()
         {
             SHRunFileDialog(IntPtr.Zero, IntPtr.Zero, null, Localization.DisplayString.sRun_Title, Localization.DisplayString.sRun_Info, RunFileDialogFlags.None);

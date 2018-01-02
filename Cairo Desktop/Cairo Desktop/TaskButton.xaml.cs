@@ -83,7 +83,7 @@ namespace CairoDesktop
 
         private void miTaskMan_Click(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("taskmgr.exe");
+            Shell.StartTaskManager();
         }
 
         private void btn_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)

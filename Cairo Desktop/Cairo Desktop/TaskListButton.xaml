@@ -7,7 +7,7 @@
             BorderThickness="0"
             VerticalAlignment="Stretch"
             Click="btnClick"
-            Style="{StaticResource CairoTaskListButtonStyle}">
+            Style="{StaticResource CairoTaskListButtonStyle}" MouseUp="btn_MouseUp">
             <Button.ContextMenu>
                 <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Minimize)}" Style="{StaticResource CairoMenuItemStyle}" Click="Min_Click" Name="MinItem" />

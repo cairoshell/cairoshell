@@ -12,6 +12,7 @@
     using CairoDesktop.Configuration;
     using SupportingClasses;
     using Common;
+    using CairoDesktop.WindowsTray;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
@@ -33,8 +34,6 @@
         public static Desktop DesktopWindow { get; set; }
 
         public static Window DeskParent { get; set; }
-
-        public static IntPtr CairoTrayHWnd { get; set; }
 
         public static bool IsCairoUserShell;
 
@@ -159,13 +158,12 @@
             if (IsCairoUserShell)
                 AppBarHelper.SetWorkArea();
 
+            // initialize system tray if enabled
             if (Settings.EnableSysTray == true)
             {
-                MenuBarWindow.SysTray.InitializeSystemTray();
+                NotificationArea.Instance.Initialize();
             }
-
-            // initialize system tray if enabled
-
+            
 #if (ENABLEFIRSTRUN)
             FirstRun();
 #endif

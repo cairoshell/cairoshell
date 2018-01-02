@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using CairoDesktop.Interop;
 using System.Diagnostics;
@@ -9,6 +8,7 @@ using CairoDesktop.Configuration;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Threading;
+using CairoDesktop.WindowsTray;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -66,9 +66,9 @@ namespace CairoDesktop.SupportingClasses
         {
             IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
 
-            if (Startup.CairoTrayHWnd != null && Startup.CairoTrayHWnd != IntPtr.Zero)
+            if (NotificationArea.Instance.Handle != null && NotificationArea.Instance.Handle != IntPtr.Zero)
             {
-                while (taskbarHwnd == Startup.CairoTrayHWnd)
+                while (taskbarHwnd == NotificationArea.Instance.Handle)
                 {
                     taskbarHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, taskbarHwnd, "Shell_TrayWnd", "");
                 }
@@ -91,9 +91,9 @@ namespace CairoDesktop.SupportingClasses
             abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
             abd.hWnd = NativeMethods.FindWindow("Shell_TrayWnd");
 
-            if (Startup.CairoTrayHWnd != null && Startup.CairoTrayHWnd != IntPtr.Zero)
+            if (NotificationArea.Instance.Handle != null && NotificationArea.Instance.Handle != IntPtr.Zero)
             {
-                while (abd.hWnd == Startup.CairoTrayHWnd)
+                while (abd.hWnd == NotificationArea.Instance.Handle)
                 {
                     abd.hWnd = NativeMethods.FindWindowEx(IntPtr.Zero, abd.hWnd, "Shell_TrayWnd", "");
                 }

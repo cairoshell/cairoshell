@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using CairoDesktop.Interop;
+using System.Windows;
 
 namespace CairoDesktop
 {
@@ -51,6 +52,14 @@ namespace CairoDesktop
             if (Window != null)
             {
                 Window.Close();
+            }
+        }
+
+        private void btn_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == System.Windows.Input.MouseButton.Middle)
+            {
+                Shell.StartProcess((this.DataContext as WindowsTasks.ApplicationWindow).WinFileName);
             }
         }
     }

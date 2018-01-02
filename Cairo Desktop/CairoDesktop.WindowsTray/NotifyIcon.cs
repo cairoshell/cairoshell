@@ -1,18 +1,18 @@
-namespace CairoDesktop
+namespace CairoDesktop.WindowsTray
 {
     using System;
     using System.ComponentModel;
     using System.Windows.Media;
 
     /// <summary>
-    /// TrayIcon class representing a notification icon in the system tray.
+    /// NotifyIcon class representing a notification area icon.
     /// </summary>
-    public class TrayIcon : IEquatable<TrayIcon>, INotifyPropertyChanged
+    public class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     {
         /// <summary>
         /// Initializes a new instance of the TrayIcon class with no hwnd.
         /// </summary>
-        public TrayIcon() : this(IntPtr.Zero)
+        public NotifyIcon() : this(IntPtr.Zero)
         {
         }
 
@@ -20,7 +20,7 @@ namespace CairoDesktop
         /// Initializes a new instance of the TrayIcon class with the specified hWnd.
         /// </summary>
         /// <param name="hWnd">The window handle of the icon.</param>
-        public TrayIcon(IntPtr hWnd)
+        public NotifyIcon(IntPtr hWnd)
         {
             this.HWnd = hWnd;
         }
@@ -106,14 +106,14 @@ namespace CairoDesktop
             set;
         }
 
-        #region IEquatable<TrayIcon> Members
+        #region IEquatable<NotifyIcon> Members
 
         /// <summary>
         /// Checks the equality of the icon based on the hWnd and uID;
         /// </summary>
-        /// <param name="other">The other TrayIcon to compare to.</param>
+        /// <param name="other">The other NotifyIcon to compare to.</param>
         /// <returns>Indication of equality.</returns>
-        public bool Equals(TrayIcon other)
+        public bool Equals(NotifyIcon other)
         {
             return this.HWnd.Equals(other.HWnd) && this.UID.Equals(other.UID);
         }

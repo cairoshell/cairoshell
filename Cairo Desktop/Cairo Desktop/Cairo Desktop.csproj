@@ -246,7 +246,6 @@
       <DependentUpon>TaskListButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportingClasses\ThreadSafeObservableCollection.cs" />
-    <Compile Include="SupportingClasses\TrayIcon.cs" />
     <Compile Include="SupportingClasses\VistaSearchProviderHelper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

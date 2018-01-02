@@ -6,6 +6,7 @@ using CairoDesktop.Interop;
 using CairoDesktop.Configuration;
 using System.Windows.Threading;
 using System.Collections.Specialized;
+using CairoDesktop.WindowsTray;
 
 namespace CairoDesktop
 {
@@ -104,8 +105,7 @@ namespace CairoDesktop
                 (TasksList.DataContext as WindowsTasks.WindowsTasksService).Dispose();
 
                 // dispose system tray if it's still running to prevent conflicts when doing AppBar stuff
-                if (Startup.MenuBarWindow != null && Startup.MenuBarWindow.SysTray != null)
-                    Startup.MenuBarWindow.SysTray.DestroySystemTray();
+                NotificationArea.Instance.Dispose();
 
                 if (AppBarHelper.appBars.Contains(this.handle))
                     AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
