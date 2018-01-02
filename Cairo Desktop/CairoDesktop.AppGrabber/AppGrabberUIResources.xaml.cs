@@ -164,9 +164,9 @@ namespace CairoDesktop.AppGrabber
                     (dropTarget.ItemsSource as IList<ApplicationInfo>).Add(dropData);
                 }
 
-                if (dropTarget.Items.Count > 0)
+                if (dropTarget.Items.Contains(dropData))
                 {
-                    dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.Count - 1]);
+                    dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.IndexOf(dropData)]);
                 }
             }
             
