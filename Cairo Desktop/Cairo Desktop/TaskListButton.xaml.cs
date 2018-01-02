@@ -1,6 +1,4 @@
-﻿using CairoDesktop.Interop;
-using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace CairoDesktop
 {
@@ -52,13 +50,7 @@ namespace CairoDesktop
             var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
-                IntPtr handle = NativeMethods.FindWindow(null, WinTitle.Text);
-
-                // if the window exists, send close, otherwise remove from the collection
-                if (handle != IntPtr.Zero)
-                    NativeMethods.SendMessageTimeout(handle, WindowsTasks.WindowsTasksService.WM_COMMAND, WindowsTasks.WindowsTasksService.WM_CLOSE, 0, 2, 200, ref handle);
-                else
-                    Window.TasksService.Windows.Remove(Window);
+                Window.Close();
             }
         }
     }

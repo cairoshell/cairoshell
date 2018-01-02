@@ -271,16 +271,19 @@ namespace CairoDesktop.WindowsTasks
                     return false;
                 }
 
-                /* This didn't help
-                if (Shell.IsWindows8OrBetter)
+                /* When starting, WindowsTasksService calls EnumWindows to get the currently open windows. However, this shows suspended UWP apps. Check if we should hide the app here during startup. */
+                if (WindowsTasksService.IsStarting && Shell.IsWindows8OrBetter)
                 {
-                    IntPtr rect;
-                    int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(IntPtr));
-                    int res = NativeMethods.DwmGetWindowAttribute(this.Handle, (int)NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out rect, cbSize);
+                    bool cloaked;
+                    int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(bool));
+                    NativeMethods.DwmGetWindowAttribute(this.Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out cloaked, cbSize);
 
-                    if (res != 0)
+                    if (cloaked)
+                    {
+                        Trace.WriteLine(string.Format("Cloaked window ({0}) hidden from taskbar", this.Title));
                         return false;
-                }*/
+                    }
+                }
 
                 // Make sure this is a real application window and not a child or tool window
                 int exStyles = NativeMethods.GetWindowLong(this.Handle, NativeMethods.GWL_EXSTYLE);
@@ -383,6 +386,18 @@ namespace CairoDesktop.WindowsTasks
         public void Minimize()
         {
             NativeMethods.ShowWindowAsync(this.Handle, NativeMethods.WindowShowStyle.Minimize);
+        }
+
+        public void Close()
+        {
+            IntPtr retval = IntPtr.Zero;
+            NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.WM_CLOSE, 0, 2, 200, ref retval);
+
+            if (retval != IntPtr.Zero)
+            {
+                Trace.WriteLine(string.Format("Removing window {0} from collection due to no response", this.Title));
+                TasksService.Windows.Remove(this);
+            }
         }
 
         /// <summary>

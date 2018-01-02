@@ -210,8 +210,6 @@ namespace CairoDesktop.AppGrabber
         {
             int scrollTollerance = 12;
             ScrollViewer scroller = sender as ScrollViewer;
-            System.Diagnostics.Debug.WriteLine("Mouse rel scroller:" + e.GetPosition(scroller).Y);
-            System.Diagnostics.Debug.WriteLine("Scroller Height:" + scroller.ActualHeight);
             if (e.GetPosition(scroller).Y > scroller.ActualHeight - scrollTollerance)
             {
                 scroller.LineDown();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -110,12 +111,12 @@ namespace CairoDesktop.AppGrabber
             if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
             {
                 System.Diagnostics.Debug.WriteLine(e.Data.GetData(typeof(ApplicationInfo)).ToString());
+                ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
                 ListView dropTarget = sender as ListView;
 
                 if (dropTarget.ItemsSource is Category)
                 {
                     Category target = dropTarget.ItemsSource as Category;
-                    ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
 
                     if (target.Type == 3)
                     {
@@ -148,12 +149,19 @@ namespace CairoDesktop.AppGrabber
                         Category source = sourceView.ItemsSource as Category;
 
                         source.Remove(dropData);
-
+                        
                         if (source.Type != 3)
                         {
                             target.Add(dropData); // if coming from quick launch, simply remove from quick launch
                         }
                     }
+                }
+                else
+                {
+                    e.Effects = DragDropEffects.Move;
+
+                    (sourceView.ItemsSource as IList<ApplicationInfo>).Remove(dropData);
+                    (dropTarget.ItemsSource as IList<ApplicationInfo>).Add(dropData);
                 }
 
                 if (dropTarget.Items.Count > 0)

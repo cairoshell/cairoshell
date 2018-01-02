@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Windows;
 using System.Collections.ObjectModel;
-using CairoDesktop.Interop;
+using static CairoDesktop.Interop.NativeMethods;
 
 namespace CairoDesktop.WindowsTasks
 {
@@ -15,34 +15,8 @@ namespace CairoDesktop.WindowsTasks
         private object _windowsLock = new object();
 
         private static int WM_SHELLHOOKMESSAGE = -1;
-        private const int WH_SHELL = 10;
 
-        private const int HSHELL_WINDOWCREATED = 1;
-        private const int HSHELL_WINDOWDESTROYED = 2;
-        private const int HSHELL_ACTIVATESHELLWINDOW = 3;
-
-        //Windows NT
-        private const int HSHELL_WINDOWACTIVATED = 4;
-        private const int HSHELL_GETMINRECT = 5;
-        private const int HSHELL_REDRAW = 6;
-        private const int HSHELL_TASKMAN = 7;
-        private const int HSHELL_LANGUAGE = 8;
-        private const int HSHELL_SYSMENU = 9;
-        private const int HSHELL_ENDTASK = 10;
-        //Windows 2000
-        private const int HSHELL_ACCESSIBILITYSTATE = 11;
-        private const int HSHELL_APPCOMMAND = 12;
-
-        //Windows XP
-        private const int HSHELL_WINDOWREPLACED = 13;
-        private const int HSHELL_WINDOWREPLACING = 14;
-
-        private const int HSHELL_HIGHBIT = 0x8000;
-        private const int HSHELL_FLASH = (HSHELL_REDRAW | HSHELL_HIGHBIT);
-        private const int HSHELL_RUDEAPPACTIVATED = (HSHELL_WINDOWACTIVATED | HSHELL_HIGHBIT);
-
-        public const int WM_COMMAND = 0x0112;
-        public const int WM_CLOSE = 0xF060;
+        public static bool IsStarting = false;
 
         public WindowsTasksService()
         {
@@ -51,48 +25,48 @@ namespace CairoDesktop.WindowsTasks
 
         public void Initialize()
         {
+            IsStarting = true;
+
             try
             {
                 Trace.WriteLine("Starting WindowsTasksService");
+
+                // create window to receive task events
                 _HookWin = new NativeWindowEx();
                 _HookWin.CreateHandle(new CreateParams());
                 
-                NativeMethods.SetTaskmanWindow(_HookWin.Handle);
-                //'Register to receive shell-related events
-                NativeMethods.RegisterShellHookWindow(_HookWin.Handle);
+                // prevent other shells from working properly
+                SetTaskmanWindow(_HookWin.Handle);
 
-                //'Assume no error occurred
-                WM_SHELLHOOKMESSAGE = NativeMethods.RegisterWindowMessage("SHELLHOOK");
+                // register to receive task events
+                RegisterShellHookWindow(_HookWin.Handle);
+                WM_SHELLHOOKMESSAGE = RegisterWindowMessage("SHELLHOOK");
                 _HookWin.MessageReceived += ShellWinProc;
 
+                // adjust minimize animation
                 SetMinimizedMetrics();
-                
 
-                //int msg = NativeMethods.RegisterWindowMessage("TaskbarCreated");
-                IntPtr ptr = new IntPtr(0xffff);
-                //IntPtr hDeskWnd = NativeMethods.GetDesktopWindow();
-                //NativeMethods.SendMessageTimeout(ptr, (uint)msg, IntPtr.Zero, IntPtr.Zero, 2, 200, ref ptr);
-                //NativeMethods.SendMessageTimeout(hDeskWnd, 0x0400, IntPtr.Zero, IntPtr.Zero, 2, 200, ref hDeskWnd);
-
-                NativeMethods.EnumWindows(new NativeMethods.CallBackPtr((hwnd, lParam) =>
+                // enumerate windows already opened
+                EnumWindows(new CallBackPtr((hwnd, lParam) =>
                 {
                     ApplicationWindow win = new ApplicationWindow(hwnd, this);
                     if(win.ShowInTaskbar && !Windows.Contains(win))
                         this.Windows.Add(win);
                     return true;
                 }), 0);
-
             }
             catch (Exception ex)
             {
                 Debug.Print(ex.Message);
             }
+
+            IsStarting = false;
         }
 
         public void Dispose()
         {
             Trace.WriteLine("Disposing of WindowsTasksService");
-            NativeMethods.DeregisterShellHookWindow(_HookWin.Handle);
+            DeregisterShellHookWindow(_HookWin.Handle);
             // May be contributing to #95
             //RegisterShellHook(_HookWin.Handle, 0);// 0 = RSH_UNREGISTER - this seems to be undocumented....
             _HookWin.DestroyHandle();
@@ -100,25 +74,25 @@ namespace CairoDesktop.WindowsTasks
 
         private void SetMinimizedMetrics()
         {
-            NativeMethods.MinimizedMetrics mm = new NativeMethods.MinimizedMetrics
+            MinimizedMetrics mm = new MinimizedMetrics
             {
-                cbSize = (uint)Marshal.SizeOf(typeof(NativeMethods.MinimizedMetrics))
+                cbSize = (uint)Marshal.SizeOf(typeof(MinimizedMetrics))
             };
 
-            IntPtr mmPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(NativeMethods.MinimizedMetrics)));
+            IntPtr mmPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(MinimizedMetrics)));
 
             try
             {
                 Marshal.StructureToPtr(mm, mmPtr, true);
-                NativeMethods.SystemParametersInfo(NativeMethods.SPI.SPI_GETMINIMIZEDMETRICS, mm.cbSize, mmPtr, NativeMethods.SPIF.None);
+                SystemParametersInfo(SPI.SPI_GETMINIMIZEDMETRICS, mm.cbSize, mmPtr, SPIF.None);
                 
-                mm.iArrange |= NativeMethods.MinimizedMetricsArrangement.Hide;
+                mm.iArrange |= MinimizedMetricsArrangement.Hide;
                 Marshal.StructureToPtr(mm, mmPtr, true);
-                NativeMethods.SystemParametersInfo(NativeMethods.SPI.SPI_SETMINIMIZEDMETRICS, mm.cbSize, mmPtr, NativeMethods.SPIF.None);
+                SystemParametersInfo(SPI.SPI_SETMINIMIZEDMETRICS, mm.cbSize, mmPtr, SPIF.None);
             }
             finally
             {
-            	Marshal.DestroyStructure(mmPtr, typeof(NativeMethods.MinimizedMetrics));
+            	Marshal.DestroyStructure(mmPtr, typeof(MinimizedMetrics));
                 Marshal.FreeHGlobal(mmPtr);
             }
         }
@@ -185,36 +159,6 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL_WINDOWACTIVATED:
-                                Trace.WriteLine("Activated: " + msg.LParam.ToString());
-
-                                foreach (var aWin in this.Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
-                                {
-                                    aWin.State = ApplicationWindow.WindowState.Inactive;
-                                }
-
-                                if (msg.LParam != IntPtr.Zero)
-                                {
-
-                                    if (this.Windows.Contains(win))
-                                    {
-                                        win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
-                                        win.State = ApplicationWindow.WindowState.Active;
-                                        win.OnPropertyChanged("ShowInTaskbar");
-                                    }
-                                    else
-                                    {
-                                        win.State = ApplicationWindow.WindowState.Active;
-                                        addWindow(win);
-                                    }
-
-                                    foreach (ApplicationWindow wind in this.Windows)
-                                    {
-                                        if (wind.WinFileName == win.WinFileName)
-                                            wind.OnPropertyChanged("ShowInTaskbar");
-                                    }
-                                }
-                                break;
-
                             case HSHELL_RUDEAPPACTIVATED:
                                 Trace.WriteLine("Activated: " + msg.LParam.ToString());
 
@@ -271,8 +215,8 @@ namespace CairoDesktop.WindowsTasks
 
                             case HSHELL_GETMINRECT:
                                 Trace.WriteLine("GetMinRect called: " + msg.LParam.ToString());
-                                NativeMethods.SHELLHOOKINFO winHandle = (NativeMethods.SHELLHOOKINFO)Marshal.PtrToStructure(msg.LParam, typeof(NativeMethods.SHELLHOOKINFO));
-                                winHandle.rc = new NativeMethods.RECT { bottom = 100, left = 0, right = 100, top = 0 };
+                                SHELLHOOKINFO winHandle = (SHELLHOOKINFO)Marshal.PtrToStructure(msg.LParam, typeof(SHELLHOOKINFO));
+                                winHandle.rc = new RECT { bottom = 100, left = 0, right = 100, top = 0 };
                                 Marshal.StructureToPtr(winHandle, msg.LParam, true);
                                 msg.Result = winHandle.hwnd;
                                 break;

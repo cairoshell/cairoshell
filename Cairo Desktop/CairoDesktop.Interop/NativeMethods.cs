@@ -1053,7 +1053,7 @@ namespace CairoDesktop.Interop
         public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
         [DllImport("dwmapi.dll")]
-        public static extern int DwmGetWindowAttribute(IntPtr hwnd, int dwAttribute, out IntPtr pvAttribute, int cbAttribute);
+        public static extern int DwmGetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, out bool pvAttribute, int cbAttribute);
 
         public enum DWMWINDOWATTRIBUTE
         {
@@ -1074,6 +1074,37 @@ namespace CairoDesktop.Interop
             DWMWA_FREEZE_REPRESENTATION,
             DWMWA_LAST
         }
+
+        // Taskbar
+        public const int WH_SHELL = 10;
+
+        public const int HSHELL_WINDOWCREATED = 1;
+        public const int HSHELL_WINDOWDESTROYED = 2;
+        public const int HSHELL_ACTIVATESHELLWINDOW = 3;
+
+        //Windows NT
+        public const int HSHELL_WINDOWACTIVATED = 4;
+        public const int HSHELL_GETMINRECT = 5;
+        public const int HSHELL_REDRAW = 6;
+        public const int HSHELL_TASKMAN = 7;
+        public const int HSHELL_LANGUAGE = 8;
+        public const int HSHELL_SYSMENU = 9;
+        public const int HSHELL_ENDTASK = 10;
+
+        //Windows 2000
+        public const int HSHELL_ACCESSIBILITYSTATE = 11;
+        public const int HSHELL_APPCOMMAND = 12;
+
+        //Windows XP
+        public const int HSHELL_WINDOWREPLACED = 13;
+        public const int HSHELL_WINDOWREPLACING = 14;
+
+        public const int HSHELL_HIGHBIT = 0x8000;
+        public const int HSHELL_FLASH = (HSHELL_REDRAW | HSHELL_HIGHBIT);
+        public const int HSHELL_RUDEAPPACTIVATED = (HSHELL_WINDOWACTIVATED | HSHELL_HIGHBIT);
+        
+        public const int WM_CLOSE = 0xF060;
+        public const int WM_SYSCOMMAND = 0x0112;
 
         /*/// <summary>
         /// Unregisters a window class, freeing the memory required for the class.

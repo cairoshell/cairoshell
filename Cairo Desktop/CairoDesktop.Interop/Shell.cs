@@ -263,37 +263,15 @@ namespace CairoDesktop.Interop
 
         public static void ShowWindowSwitcher()
         {
-            INPUT[] inputs = new INPUT[4];
-
-            inputs[0].type = INPUT_KEYBOARD;
-            inputs[0].mkhi.ki.time = 0;
-            inputs[0].mkhi.ki.wScan = 0;
-            inputs[0].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
-            inputs[0].mkhi.ki.wVk = VK_LWIN;
-            inputs[0].mkhi.ki.dwFlags = 0;
-
-            inputs[1].type = INPUT_KEYBOARD;
-            inputs[1].mkhi.ki.wScan = 0;
-            inputs[1].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
-            inputs[1].mkhi.ki.wVk = VK_TAB;
-            inputs[1].mkhi.ki.dwFlags = 0;
-
-            inputs[2].type = INPUT_KEYBOARD;
-            inputs[2].mkhi.ki.wScan = 0;
-            inputs[2].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
-            inputs[2].mkhi.ki.wVk = VK_TAB;
-            inputs[2].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
-
-            inputs[3].type = INPUT_KEYBOARD;
-            inputs[3].mkhi.ki.wScan = 0;
-            inputs[3].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
-            inputs[3].mkhi.ki.wVk = VK_LWIN;
-            inputs[3].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
-
-            SendInput(4, inputs, Marshal.SizeOf(typeof(INPUT)));
+            shellKeyCombo(VK_LWIN, VK_TAB);
         }
 
         public static void ShowActionCenter()
+        {
+            shellKeyCombo(VK_LWIN, 0x41);
+        }
+
+        private static void shellKeyCombo(ushort wVk_1, ushort wVk_2)
         {
             INPUT[] inputs = new INPUT[4];
 
@@ -301,25 +279,25 @@ namespace CairoDesktop.Interop
             inputs[0].mkhi.ki.time = 0;
             inputs[0].mkhi.ki.wScan = 0;
             inputs[0].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
-            inputs[0].mkhi.ki.wVk = VK_LWIN;
+            inputs[0].mkhi.ki.wVk = wVk_1;
             inputs[0].mkhi.ki.dwFlags = 0;
 
             inputs[1].type = INPUT_KEYBOARD;
             inputs[1].mkhi.ki.wScan = 0;
             inputs[1].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
-            inputs[1].mkhi.ki.wVk = 0x41;
+            inputs[1].mkhi.ki.wVk = wVk_2;
             inputs[1].mkhi.ki.dwFlags = 0;
 
             inputs[2].type = INPUT_KEYBOARD;
             inputs[2].mkhi.ki.wScan = 0;
             inputs[2].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
-            inputs[2].mkhi.ki.wVk = 0x41;
+            inputs[2].mkhi.ki.wVk = wVk_2;
             inputs[2].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
 
             inputs[3].type = INPUT_KEYBOARD;
             inputs[3].mkhi.ki.wScan = 0;
             inputs[3].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
-            inputs[3].mkhi.ki.wVk = VK_LWIN;
+            inputs[3].mkhi.ki.wVk = wVk_1;
             inputs[3].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
 
             SendInput(4, inputs, Marshal.SizeOf(typeof(INPUT)));
