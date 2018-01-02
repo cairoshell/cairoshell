@@ -24,7 +24,7 @@ namespace CairoDesktop
                 LayoutRoot.Visibility = Visibility.Visible;
                 btnToggle.Visibility = Visibility.Collapsed;
             }
-            else if (TrayItems.Items.Count > 1)
+            else if (TrayItems.Items.Count > 0)
                 btnToggle.Visibility = Visibility.Visible;
             else
                 btnToggle.Visibility = Visibility.Collapsed;
