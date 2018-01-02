@@ -215,14 +215,14 @@ namespace CairoDesktop.WindowsTray
             {
                 if (DateTime.Now.Subtract(_lastRClick).TotalMilliseconds <= doubleClickTime && _lastClickHwnd == icon.HWnd)
                 {
-                    PostMessage(icon.HWnd, (uint)icon.CallbackMessage, mouse, (WM_RBUTTONDBLCLK | ((uint)icon.UID << 16)));
+                    PostMessage(icon.HWnd, (uint)icon.CallbackMessage, mouse, WM_RBUTTONDBLCLK);
                 }
                 else
                 {
-                    PostMessage(icon.HWnd, (uint)icon.CallbackMessage, mouse, (WM_RBUTTONDOWN | ((uint)icon.UID << 16)));
+                    PostMessage(icon.HWnd, (uint)icon.CallbackMessage, mouse, WM_RBUTTONDOWN);
                 }
 
-                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, mouse, (WM_RBUTTONUP | ((uint)icon.UID << 16)));
+                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, mouse, WM_RBUTTONUP);
                 PostMessage(icon.HWnd, (uint)icon.CallbackMessage, mouse, (WM_CONTEXTMENU | ((uint)icon.UID << 16)));
 
                 _lastRClick = DateTime.Now;
