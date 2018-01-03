@@ -236,7 +236,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SupportingClasses\Settings.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="SupportingClasses\TaskbuttonStyleConverter.cs" />
     <Compile Include="Taskbar.xaml.cs">

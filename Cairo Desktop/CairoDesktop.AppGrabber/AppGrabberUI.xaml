@@ -87,7 +87,7 @@
                         Style="{StaticResource ApplicationInfoListStyle}"
                         MouseDoubleClick="ProgramsMenuAppsView_MouseDoubleClick"
                         Width="330"
-                        AlternationCount="2" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" UseLayoutRounding="True" />
+                        AlternationCount="2" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Visible" UseLayoutRounding="True" />
                 </Border>
                 <Border Grid.Row="3"
                     Grid.Column="3"
@@ -106,7 +106,7 @@
                         Style="{StaticResource ApplicationInfoListStyle}"
                         MouseDoubleClick="InstalledAppsView_MouseDoubleClick"
                         Width="330"
-                        AlternationCount="2" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" UseLayoutRounding="True" />
+                        AlternationCount="2" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Visible" UseLayoutRounding="True" />
                 </Border>
                 <StackPanel HorizontalAlignment="Right"
                     Grid.Row="6"
@@ -221,7 +221,7 @@
                 Grid.Column="3">
                     <ScrollViewer x:Name="scrollViewer" UseLayoutRounding="True"
                     HorizontalScrollBarVisibility="Hidden"
-                    VerticalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Visible"
                     CanContentScroll="True"
                     Background="White"
                     DragOver="ScrollViewer_DragOver">
