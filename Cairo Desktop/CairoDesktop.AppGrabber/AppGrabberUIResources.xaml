@@ -299,6 +299,8 @@
             Value="{x:Null}" />
         <Setter Property="Foreground"
             Value="White" />
+        <Setter Property="TextTrimming"
+            Value="CharacterEllipsis" />
     </Style>
     <Style x:Key="ApplicationInfoListStyle"
         TargetType="ListView">
@@ -342,7 +344,8 @@
                         <TextBlock Text="{Binding Path=Name}"
                             Margin="3"
                             FontFamily="Corbel"
-                            FontSize="14" />
+                            FontSize="14"
+                            TextTrimming="CharacterEllipsis" />
                     </DockPanel>
                 </DataTemplate>
             </Setter.Value>
@@ -362,6 +365,8 @@
     </Style>
     <Style x:Key="ApplicationInfoListItemStyle"
         TargetType="ListViewItem">
+        <Setter Property="MaxWidth"
+            Value="310" />
         <Style.Triggers>
             <Trigger Property="ItemsControl.AlternationIndex"
                 Value="0">
@@ -422,7 +427,7 @@
             <Setter.Value>
                 <DataTemplate>
                     <DockPanel Name="CategoryPanel">
-                        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="#FF333333">
+                        <Border DockPanel.Dock="Top" BorderThickness="0,0,0,1" BorderBrush="#FF333333" MaxWidth="310">
                             <DockPanel Height="26">
                                 <DockPanel.Background>
                                     <LinearGradientBrush StartPoint="0,0"
