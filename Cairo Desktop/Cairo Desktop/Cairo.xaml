@@ -1,22 +1,137 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.Cairo"
     xmlns:cairo="clr-namespace:CairoDesktop" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization">
-    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" x:Key="CairoMenuItemHoverGradient">
-        <GradientStop Color="#8F1A4DFF" Offset="0.0" />
-        <GradientStop Color="#DF338FFF" Offset="1.0" />
+    <!-- Menu resources -->
+    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="MenuBarBackground">
+        <GradientStop Color="#8F4a4a4a" Offset="1.0" />
+        <GradientStop Color="#CF000000" Offset="0.0" />
     </LinearGradientBrush>
     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="CairoMenuBackgroundGradient">
         <GradientStop Color="#cF0f0f0f" Offset="0" />
         <GradientStop Color="#bf1a1a1a" Offset="0.8" />
         <GradientStop Color="#cF0f0f0f" Offset="1" />
     </LinearGradientBrush>
+    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" x:Key="CairoMenuItemHoverGradient">
+        <GradientStop Color="#8F1A4DFF" Offset="0.0" />
+        <GradientStop Color="#DF338FFF" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" x:Key="MenuHeaderPressedGradient">
+        <GradientStop Color="#8F1A4DB5" Offset="1.0" />
+        <GradientStop Color="#DF338FFF" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="ProgramsMenuCategoryHoverBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#30FFFFFF" Offset="0.0" />
+        <GradientStop Color="#01FFFFFF" Offset="1.0" />
+    </LinearGradientBrush>
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="MenuHeaderForeground" />
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="MenuItemForeground" />
+    <SolidColorBrush Color="#FF12367F" x:Key="MenuTopBorderBrush" />
+    <SolidColorBrush Color="#AF5b5b5b" x:Key="MenuBorderBrush" />
+    <SolidColorBrush Color="#FF9a9a9a" x:Key="ProgramsMenuCategoryForeground" />
+    <SolidColorBrush Color="#40FFFFFF" x:Key="MenuSeparator" />
     <DropShadowEffect x:Key="CairoMenuShadow" Color="Black" ShadowDepth="4" Direction="270" Opacity="0.6" BlurRadius="10" />
+    <DropShadowEffect Color="Black" x:Key="MenuHeaderShadow" ShadowDepth="1" Direction="90" Opacity="0.6" BlurRadius="0" />
+
+    <!-- Taskbar resources -->
+    <LinearGradientBrush x:Key="TaskbarBottomBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#AF1d1d1d" Offset="0.0" />
+        <GradientStop Color="#DF050505" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarBottomBorder" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#C07b7b7b" Offset="0.0" />
+        <GradientStop Color="#C0595959" Offset="1.0" />
+    </LinearGradientBrush>
+    <SolidColorBrush Color="#9F2a2a2a" x:Key="TaskbarTopBackground" />
+    <SolidColorBrush Color="#AF707070" x:Key="TaskbarTopBorder" />
+    <SolidColorBrush Color="#77000000" x:Key="TaskGroupBorder" />
+    <LinearGradientBrush x:Key="TaskbarItemInactiveBackground" StartPoint="0,1" EndPoint="0,0">
+        <GradientStop Color="#3AFFFFFF" Offset="1.0" />
+        <GradientStop Color="#00FFFFFF" Offset="0.65" />
+        <GradientStop Color="#00FFFFFF" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemInactiveBorder" StartPoint="0,1" EndPoint="0,0">
+        <GradientStop Color="#4FFFFFFF" Offset="1" />
+        <GradientStop Color="#2FFFFFFF" Offset="0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemInactiveHoverBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#EF0057a8" Offset="1.0" />
+        <GradientStop Color="#4F0054C9" Offset="0.35" />
+        <GradientStop Color="#55FFFFFF" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemInactiveHoverBorder" StartPoint="0,1" EndPoint="0,0">
+        <GradientStop Color="#8F83b8e9" Offset="1" />
+        <GradientStop Color="#DF0f82c2" Offset="0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemInactivePressedBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FF0057a8" Offset="1.0" />
+        <GradientStop Color="#6F0054C9" Offset="0.35" />
+        <GradientStop Color="#55FFFFFF" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemActiveBackground" StartPoint="0,1" EndPoint="0,0">
+        <GradientStop Color="#55FFFFFF" Offset="1.0" />
+        <GradientStop Color="#20FFFFFF" Offset="0.65" />
+        <GradientStop Color="#40ffffff" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemActiveBorder" StartPoint="0,1" EndPoint="0,0">
+        <GradientStop Color="#8FFFFFFF" Offset="1" />
+        <GradientStop Color="#5FFFFFFF" Offset="0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemActiveHoverBackground" StartPoint="0,1" EndPoint="0,0">
+        <GradientStop Color="#65FFFFFF" Offset="1.0" />
+        <GradientStop Color="#30FFFFFF" Offset="0.65" />
+        <GradientStop Color="#43FFFFFF" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemActivePressedBackground" StartPoint="0,1" EndPoint="0,0">
+        <GradientStop Color="#75FFFFFF" Offset="1.0" />
+        <GradientStop Color="#40FFFFFF" Offset="0.65" />
+        <GradientStop Color="#53FFFFFF" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemFlashingBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#AFF6BA31" Offset="1.0" />
+        <GradientStop Color="#5fff5400" Offset="0.35" />
+        <GradientStop Color="#55FFFFFF" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemFlashingBorder" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#8Fcb7900" Offset="0.0" />
+        <GradientStop Color="#FFcb7900" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemFlashingDisabledBackground" StartPoint="0,1" EndPoint="0,0">
+        <GradientStop Color="#CFDBA715" Offset="1.0" />
+        <GradientStop Color="#8FDB570B" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemFlashingHoverBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#BFF6BA31" Offset="1.0" />
+        <GradientStop Color="#6fff5400" Offset="0.3" />
+        <GradientStop Color="#5FFFFFFF" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemFlashingPressedBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#CFF6BA31" Offset="1.0" />
+        <GradientStop Color="#7fff5400" Offset="0.3" />
+        <GradientStop Color="#65FFFFFF" Offset="0.0" />
+    </LinearGradientBrush>
+    <Storyboard x:Key="TaskbarFlashPulseCycle" AutoReverse="True" RepeatBehavior="Forever">
+        <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" AccelerationRatio="0.2" DecelerationRatio="0.2">
+            <SplineColorKeyFrame KeyTime="00:00:00" Value="#5FFF5400"/>
+            <SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#00000000"/>
+        </ColorAnimationUsingKeyFrames>
+        <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[0].(GradientStop.Color)" AccelerationRatio="0.2" DecelerationRatio="0.2">
+            <SplineColorKeyFrame KeyTime="00:00:00" Value="#AFF6BA31"/>
+            <SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#00000000"/>
+        </ColorAnimationUsingKeyFrames>
+        <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[2].(GradientStop.Color)" AccelerationRatio="0.2" DecelerationRatio="0.2">
+            <SplineColorKeyFrame KeyTime="00:00:00" Value="#55FFFFFF"/>
+            <SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#3affffff"/>
+        </ColorAnimationUsingKeyFrames>
+    </Storyboard>
+
+    <!-- Image resources -->
     <BitmapImage x:Key="CairoMenuIcon" UriSource="Resources\cairoMenuDefault.png"></BitmapImage>
     <BitmapImage x:Key="CairoMenuIcon_2x" UriSource="Resources\cairoMenuDefault_2x.png"></BitmapImage>
     <BitmapImage x:Key="CairoSearchIcon" UriSource="Resources\searchDefault.png"></BitmapImage>
     <BitmapImage x:Key="CairoActionCenterIcon" UriSource="Resources\actionCenterDefault.png"></BitmapImage>
     <BitmapImage x:Key="MenubarShadow" UriSource="Resources\menubarShadow.png"></BitmapImage>
     <BitmapImage x:Key="NullIcon" UriSource="Resources\nullIcon.png"></BitmapImage>
+    
     <Style TargetType="{x:Type Control}">
         <Setter Property="Template">
             <Setter.Value>
@@ -33,20 +148,11 @@
         </Setter>
     </Style>
 
-    <!-- Main menu bar background style -->
+    <!-- Main menu bar -->
     <Style x:Key="MenuBarStyle"
         TargetType="{x:Type DockPanel}">
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#8F4a4a4a" Offset="1.0" />
-                    <GradientStop Color="#CF000000" Offset="0.0" />
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Background" Value="{DynamicResource ResourceKey=MenuBarBackground}" />
     </Style>
-    
-    <!-- New menu styles below, will be renamed later -->
     <Style x:Key="CairoMenuBarMainContainerStyle"
         TargetType="{x:Type Menu}">
         <Setter Property="OverridesDefaultStyle"
@@ -70,9 +176,9 @@
     </Style>
     <Style x:Key="CairoMenuItemStyle"
         TargetType="{x:Type MenuItem}">
-        <Setter Property="Foreground"
-            Value="#FFFFFFFF" />
+        <Setter Property="Foreground" Value="{DynamicResource ResourceKey=MenuItemForeground}" />
         <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -147,21 +253,21 @@
                                     <Border.Style>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="BorderBrush"
-                                                Value="#FF12367F" />
+                                                Value="{DynamicResource ResourceKey=MenuTopBorderBrush}" />
                                             <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
                                             <Setter Property="Margin"
                                                     Value="5,0,5,11" />
                                             <Setter Property="Effect"
-                                                Value="{StaticResource ResourceKey=CairoMenuShadow}" />
+                                                Value="{DynamicResource ResourceKey=CairoMenuShadow}" />
                                         </Style>
                                     </Border.Style>
                                     <Border>
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
-                                                <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
+                                                <Setter Property="Background" Value="{DynamicResource ResourceKey=CairoMenuBackgroundGradient}" />
                                                 <Setter Property="BorderBrush"
-                                                    Value="#AF5b5b5b" />
+                                                    Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
                                                 <Setter Property="BorderThickness"
                                                     Value="1,0,1,1" />
                                                 <Setter Property="CornerRadius"
@@ -201,7 +307,6 @@
                                 TargetName="Col3" />
                             <Setter Property="Height"
                                 Value="22" />
-
                             <Setter Property="FontSize"
                                 Value="14" />
                             <Setter Property="Visibility"
@@ -216,14 +321,9 @@
                             <Setter Property="Visibility"
                                 Value="Collapsed"
                                 TargetName="ArrowPanel" />
-                            <Setter Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="Black"
-                                                        ShadowDepth="1"
-                                                                  Direction="90"
-                                                        Opacity="0.6" BlurRadius="0" />
-                                </Setter.Value>
-                            </Setter>
+                            <Setter Property="Effect" Value="{DynamicResource ResourceKey=MenuHeaderShadow}" />
+                            <Setter Property="Foreground"
+                                Value="{DynamicResource ResourceKey=MenuHeaderForeground}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -233,17 +333,9 @@
                                     Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background"
-                                TargetName="Border">
-                                <Setter.Value>
-                                    <!-- Pressed Menubar State -->
-                                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                        <GradientStop Color="#8F1A4DB5" Offset="1.0" />
-                                        <GradientStop Color="#DF338FFF" Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=MenuHeaderPressedGradient}" />
                             <Setter Property="Foreground"
-                                Value="#FFFFFFFF" />
+                                Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -253,7 +345,7 @@
                                     Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background"
-                                TargetName="Border" Value="{StaticResource CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
                         </MultiTrigger>
                         <!-- Role = TopLevelItem :  this is a child menu item from the top level without any child items-->
                         <Trigger Property="Role"
@@ -266,7 +358,7 @@
                             <Setter Property="MinHeight"
                                 Value="24" />
                             <Setter Property="Foreground"
-                                Value="#FFFFFFFF" />
+                                Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                             <Setter Property="FontSize"
                                 Value="12" />
                             <Setter Property="FontFamily"
@@ -280,7 +372,7 @@
                                     Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background"
-                                TargetName="Border" Value="{StaticResource CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
                         </MultiTrigger>
                         <!-- Role = SubMenuHeader : this is a child menu item which does not have children -->
                         <Trigger Property="Role"
@@ -292,7 +384,7 @@
                             <Setter Property="MinHeight"
                                 Value="24" />
                             <Setter Property="Foreground"
-                                Value="#FFFFFFFF" />
+                                Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                             <Setter Property="FontSize"
                                 Value="12" />
                             <Setter Property="FontFamily"
@@ -306,7 +398,7 @@
                                     Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background"
-                                TargetName="Border" Value="{StaticResource CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
                         </MultiTrigger>
                         <!-- Role = SubMenuItem : this is a child menu item which has children-->
                         <Trigger Property="Role"
@@ -321,7 +413,7 @@
                             <Setter Property="MinHeight"
                                 Value="24" />
                             <Setter Property="Foreground"
-                                Value="#FFFFFFFF" />
+                                Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                             <Setter Property="FontSize"
                                 Value="12" />
                             <Setter Property="FontFamily"
@@ -350,29 +442,20 @@
         </Setter>
     </Style>
     <Style x:Key="CairoMenuItemCairoMenuStyle"
-        TargetType="{x:Type MenuItem}">
-        <Setter Property="Foreground"
-            Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" />
+        TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type MenuItem}">
-                    <Border x:Name="ContainerBorder"
-                        Background="Transparent"
-                        BorderBrush="Transparent" Padding="13,0,0,0">
+                    <Border x:Name="ContainerBorder" Background="Transparent" BorderBrush="Transparent" Padding="13,0,0,0">
                         <Border x:Name="Border">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"
-                                    SharedSizeGroup="MenuTextColumnGroup" />
-                            </Grid.ColumnDefinitions>
-                            <!-- Content for the menu text etc -->
-                            <ContentPresenter Grid.Column="0"
-                                Margin="{TemplateBinding Padding}"
-                                x:Name="HeaderHost"
-                                RecognizesAccessKey="True"
-                                ContentSource="Header" />
-                            <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
-                            <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="MenuTextColumnGroup" />
+                                </Grid.ColumnDefinitions>
+                                <!-- Content for the menu text etc -->
+                                <ContentPresenter Grid.Column="0" Margin="{TemplateBinding Padding}" x:Name="HeaderHost" RecognizesAccessKey="True" ContentSource="Header" />
+                                <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
+                                <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
                                 Placement="Right"
                                 x:Name="SubMenuPopup"
                                 Focusable="false"
@@ -382,37 +465,36 @@
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="BorderBrush"
-                                                Value="#FF12367F" />
+                                                Value="{DynamicResource ResourceKey=MenuTopBorderBrush}" />
                                                 <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
                                                 <Setter Property="Effect"
-                                                Value="{StaticResource ResourceKey=CairoMenuShadow}" />
+                                                Value="{DynamicResource ResourceKey=CairoMenuShadow}" />
                                             </Style>
                                         </Border.Style>
                                         <Border>
-                                        <Border.Style>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
-                                                <Setter Property="BorderBrush"
-                                                    Value="#AF5b5b5b" />
-                                                <Setter Property="BorderThickness"
+                                            <Border.Style>
+                                                <Style TargetType="{x:Type Border}">
+                                                    <Setter Property="Background" Value="{DynamicResource ResourceKey=CairoMenuBackgroundGradient}" />
+                                                    <Setter Property="BorderBrush"
+                                                    Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
+                                                    <Setter Property="BorderThickness"
                                                     Value="1,0,1,1" />
-                                                <Setter Property="CornerRadius"
+                                                    <Setter Property="CornerRadius"
                                                     Value="0,0,5,5" />
-                                                <Setter Property="Padding"
+                                                    <Setter Property="Padding"
                                                     Value="0,3,0,3" />
-                                            </Style>
-                                        </Border.Style>
-                                        <Grid x:Name="SubMenu"
+                                                </Style>
+                                            </Border.Style>
+                                            <Grid x:Name="SubMenu"
                                             Grid.IsSharedSizeScope="True">
-                                            <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
-                                            <StackPanel IsItemsHost="True"
+                                                <StackPanel IsItemsHost="True"
                                                 KeyboardNavigation.DirectionalNavigation="Cycle" />
-                                        </Grid>
+                                            </Grid>
+                                        </Border>
                                     </Border>
-                                </Border>
-                            </Popup>
-                        </Grid>
+                                </Popup>
+                            </Grid>
                         </Border>
                     </Border>
                     <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
@@ -433,20 +515,12 @@
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="Role"
-                                    Value="TopLevelHeader" />
+                                Value="TopLevelHeader" />
                                 <Condition Property="IsSubmenuOpen"
-                                    Value="True" />
+                                Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background"
-                                TargetName="Border">
-                                <Setter.Value>
-                                    <!-- Pressed Menubar State -->
-                                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                        <GradientStop Color="#8F1A4DB5" Offset="1.0" />
-                                        <GradientStop Color="#DF338FFF" Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=MenuHeaderPressedGradient}" />
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -479,15 +553,7 @@
                         <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
                         <Trigger Property="IsPressed" Value="true">
                             <Setter Property="Background"
-                                TargetName="Border">
-                                <Setter.Value>
-                                    <!-- Pressed Menubar State -->
-                                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                        <GradientStop Color="#8F1A4DB5" Offset="1.0" />
-                                        <GradientStop Color="#DF338FFF" Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=MenuHeaderPressedGradient}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -495,9 +561,7 @@
         </Setter>
     </Style>
     <Style x:Key="CairoMenuItemCairoSearchMenuStyle"
-        TargetType="{x:Type MenuItem}">
-            <Setter Property="Foreground"
-            Value="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" />
+        TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type MenuItem}">
@@ -516,18 +580,18 @@
                                 Focusable="False"
                                 PopupAnimation="Fade"
                                 AllowsTransparency="True">
-                                    <Border Margin="5,0,11,11">
+                                    <Border Margin="5,0,13,11">
                                         <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
                                         <StackPanel IsItemsHost="True"
                                                     KeyboardNavigation.DirectionalNavigation="Cycle" />
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="BorderBrush"
-                                                Value="#FF12367F" />
+                                                Value="{DynamicResource ResourceKey=MenuTopBorderBrush}" />
                                                 <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
                                                 <Setter Property="Effect"
-                                                Value="{StaticResource ResourceKey=CairoMenuShadow}" />
+                                                Value="{DynamicResource ResourceKey=CairoMenuShadow}" />
                                             </Style>
                                         </Border.Style>
                                     </Border>
@@ -535,9 +599,9 @@
                             </Grid>
                         </Border>
                     </Border>
-                        <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
-                        <ControlTemplate.Triggers>
-                            <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
+                    <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
+                    <ControlTemplate.Triggers>
+                        <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
                         <Trigger Property="Role"
                             Value="TopLevelHeader">
                             <Setter Property="Padding"
@@ -551,28 +615,79 @@
                                 Value="22" />
                         </Trigger>
                         <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="Role"
-                                    Value="TopLevelHeader" />
-                                    <Condition Property="IsSubmenuOpen"
-                                    Value="True" />
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Background"
-                                TargetName="Border">
-                                    <Setter.Value>
-                                    <!-- Pressed Menubar State -->
-                                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                        <GradientStop Color="#8F1A4DB5" Offset="1.0" />
-                                        <GradientStop Color="#DF338FFF" Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                                </Setter>
-                            </MultiTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="Role"
+                                Value="TopLevelHeader" />
+                                <Condition Property="IsSubmenuOpen"
+                                Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background"
+                                TargetName="Border" Value="{DynamicResource ResourceKey=MenuHeaderPressedGradient}" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- Style for menus that have something other than menuitems -->
+    <Style x:Key="CairoMenuItemContainerStyle" TargetType="{x:Type MenuItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type MenuItem}">
+                    <ContentPresenter x:Name="Header"
+                                            ContentSource="Header"
+                                            RecognizesAccessKey="True" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- CairoContextMenuStyle -->
+    <Style x:Key="CairoContextMenuStyle"
+        TargetType="{x:Type ContextMenu}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border>
+                        <Border.Style>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="Background" Value="{DynamicResource ResourceKey=CairoMenuBackgroundGradient}" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
+                                <Setter Property="BorderThickness" Value="1" />
+                                <Setter Property="CornerRadius" Value="5" />
+                                <Setter Property="Padding" Value="0,3,0,3" />
+                                <Setter Property="Margin" Value="5,0,5,11" />
+                                <Setter Property="Effect" Value="{DynamicResource ResourceKey=CairoMenuShadow}" />
+                            </Style>
+                        </Border.Style>
+                        <Grid x:Name="SubMenu" Grid.IsSharedSizeScope="True">
+                            <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
+                            <StackPanel IsItemsHost="True"
+                                        KeyboardNavigation.DirectionalNavigation="Cycle" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- Separator -->
+    <Style x:Key="CairoMenuSeparatorStyle"
+        TargetType="{x:Type Separator}">
+        <Setter Property="OverridesDefaultStyle"
+            Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Separator}">
+                    <StackPanel>
+                        <Border Width="auto"
+                            Height="1"
+                            Margin="4,3,4,3"
+                            Background="{DynamicResource ResourceKey=MenuSeparator}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <!-- Search Results -->
     <Style x:Key="CairoSearchResultsItemStyle"
         TargetType="ListViewItem">
@@ -585,11 +700,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListViewItem}">
                     <Border 
-                                     BorderBrush="Transparent"
-                                     BorderThickness="0"
-                                     Background="{TemplateBinding Background}">
+                        BorderBrush="Transparent"
+                        BorderThickness="0"
+                        Background="{TemplateBinding Background}">
                         <MenuItem Command="cairo:CustomCommands.OpenSearchResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-            CommandParameter="{Binding}" Header="{Binding}">
+                            CommandParameter="{Binding}" Header="{Binding}">
                             <MenuItem.HeaderTemplate>
                                 <ItemContainerTemplate>
                                     <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Stretch">
@@ -615,9 +730,9 @@
                                             <ControlTemplate TargetType="{x:Type MenuItem}">
                                                 <Border BorderThickness="0" Background="Transparent" Name="Border">
                                                     <ContentPresenter Margin="15,0"
-                                x:Name="HeaderHost"
-                                RecognizesAccessKey="True"
-                                ContentSource="Header" />
+                                                        x:Name="HeaderHost"
+                                                        RecognizesAccessKey="True"
+                                                        ContentSource="Header" />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
@@ -648,73 +763,6 @@
                     Value="#FFFFFFFF"></Setter>
             </Trigger>
         </Style.Triggers>
-    </Style>
-    <!-- Style for menus that have something other than menuitems -->
-    <Style x:Key="CairoMenuItemContainerStyle" TargetType="{x:Type MenuItem}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type MenuItem}">
-                    <ContentPresenter x:Name="Header"
-                                            ContentSource="Header"
-                                            RecognizesAccessKey="True" />
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <!-- CairoContextMenuStyle -->
-    <Style x:Key="CairoContextMenuStyle"
-        TargetType="{x:Type ContextMenu}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ContextMenu}">
-                            <Border>
-                                <Border.Style>
-                            <Style TargetType="{x:Type Border}">
-                                <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
-                                <Setter Property="BorderBrush"
-                                                    Value="#AF5b5b5b" />
-                                <Setter Property="BorderThickness"
-                                                    Value="1" />
-                                <Setter Property="CornerRadius"
-                                                    Value="5" />
-                                <Setter Property="Padding"
-                                                    Value="0,3,0,3" />
-                                <Setter Property="Margin"
-                                                    Value="5,0,5,11" />
-                                <Setter Property="Effect"
-                                                Value="{StaticResource ResourceKey=CairoMenuShadow}" />
-                            </Style>
-                        </Border.Style>
-                                <Grid x:Name="SubMenu"
-                                            Grid.IsSharedSizeScope="True">
-                                    <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
-                                    <StackPanel IsItemsHost="True"
-                                                KeyboardNavigation.DirectionalNavigation="Cycle" />
-                                </Grid>
-                            </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <!-- Separator -->
-    <Style x:Key="CairoMenuSeparatorStyle"
-        TargetType="{x:Type Separator}">
-        <Setter Property="OverridesDefaultStyle"
-            Value="true" />
-        <Setter Property="Background"
-            Value="#9923272B" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Separator}">
-                    <StackPanel>
-                        <Border Width="auto"
-                            Height="1"
-                            Margin="4,3,4,3"
-                            Background="#40FFFFFF" />
-                    </StackPanel>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
     <!-- Button Style for View All Results -->
     <Style x:Key="CairoSearchResultsButtonStyle"
@@ -778,6 +826,31 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <!-- Taskbar -->
+    <Style x:Key="CairoTaskbarBorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness" Value="1,1,0,0" />
+        <Setter Property="CornerRadius" Value="8,0,0,0" />
+        <Setter Property="Padding" Value="7,0,0,0" />
+        <Setter Property="Background" Value="{DynamicResource ResourceKey=TaskbarBottomBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarBottomBorder}" />
+    </Style>
+    <Style x:Key="CairoTaskbarTopBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarBorderStyle}">
+        <Setter Property="BorderThickness" Value="1,0,0,1" />
+        <Setter Property="CornerRadius" Value="0,0,0,8" />
+        <Setter Property="Background" Value="{DynamicResource ResourceKey=TaskbarTopBackground}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarTopBorder}" />
+    </Style>
+    <Style x:Key="CairoTaskbarEndBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarBorderStyle}">
+        <Setter Property="BorderThickness" Value="0,1,1,0" />
+        <Setter Property="CornerRadius" Value="0,8,0,0" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
+    <Style x:Key="CairoTaskbarEndTopBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarTopBorderStyle}">
+        <Setter Property="BorderThickness" Value="0,0,1,1" />
+        <Setter Property="CornerRadius" Value="0,0,8,0" />
+        <Setter Property="Padding" Value="0" />
+    </Style>
     <!-- Button Style for Quick Launch -->
     <Style x:Key="CairoQuickLaunchButtonStyle"
         TargetType="{x:Type Button}">
@@ -823,11 +896,12 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <!-- Taskbar window groups -->
     <Style x:Key="CairoTaskbarGroupStyle" TargetType="{x:Type GroupItem}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border BorderThickness="1,0,0,0" BorderBrush="#77000000" Margin="3,1,1,0">
+                    <Border BorderThickness="1,0,0,0" BorderBrush="{DynamicResource ResourceKey=TaskGroupBorder}" Margin="3,1,1,0">
                         <ItemsPresenter Margin="0,-1,0,0" />
                     </Border>
                 </ControlTemplate>
@@ -838,7 +912,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border BorderThickness="1,0,0,0" BorderBrush="#77000000" Margin="3,0,1,0">
+                    <Border BorderThickness="1,0,0,0" BorderBrush="{DynamicResource ResourceKey=TaskGroupBorder}" Margin="3,0,1,0">
                         <ItemsPresenter />
                     </Border>
                 </ControlTemplate>
@@ -867,27 +941,7 @@
                     <Border x:Name="Border"
                         BorderThickness="1"
                         CornerRadius="1,1,0,0"
-                        Margin="0,0,0,0">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                <GradientStop Color="#3AFFFFFF"
-                                    Offset="1.0" />
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="0.65" />
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="0.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <Border.BorderBrush>
-                            <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                <GradientStop Color="#4FFFFFFF"
-                                    Offset="1" />
-                                <GradientStop Color="#2FFFFFFF"
-                                    Offset="0" />
-                            </LinearGradientBrush>
-                        </Border.BorderBrush>
+                        Margin="0,0,0,0" Background="{DynamicResource ResourceKey=TaskbarItemInactiveBackground}" BorderBrush="{DynamicResource ResourceKey=TaskbarItemInactiveBorder}">
                         <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center" />
@@ -896,48 +950,14 @@
                         <Trigger Property="IsMouseOver"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                        <GradientStop Color="#EF0057a8"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#4F0054C9"
-                                    Offset="0.35" />
-                                        <GradientStop Color="#55FFFFFF"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBackground}" />
                             <Setter TargetName="Border"
-                                Property="BorderBrush">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <GradientStop Color="#8F83b8e9"
-                                    Offset="1" />
-                                        <GradientStop Color="#DF0f82c2"
-                                    Offset="0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBorder}" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                        <GradientStop Color="#FF0057a8"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#6F0054C9"
-                                    Offset="0.35" />
-                                        <GradientStop Color="#55FFFFFF"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemInactivePressedBackground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -945,46 +965,14 @@
         </Setter>
     </Style>
     <Style x:Key="CairoTaskbarButtonActiveStyle"
-        TargetType="{x:Type Button}">
-        <Setter Property="OverridesDefaultStyle"
-            Value="true" />
-        <Setter Property="FontFamily"
-            Value="Segoe UI" />
-        <Setter Property="FontSize"
-            Value="12" />
-        <Setter Property="Foreground"
-            Value="White" />
-        <Setter Property="HorizontalAlignment"
-            Value="Stretch" />
-        <Setter Property="VerticalAlignment"
-            Value="Stretch" />
+        TargetType="{x:Type Button}" BasedOn="{StaticResource CairoTaskbarButtonInactiveStyle}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
                         BorderThickness="1"
                         CornerRadius="1,1,0,0"
-                        Margin="0,0,0,0">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                <GradientStop Color="#55FFFFFF"
-                                    Offset="1.0" />
-                                <GradientStop Color="#20FFFFFF"
-                                    Offset="0.65" />
-                                <GradientStop Color="#40ffffff"
-                                    Offset="0.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <Border.BorderBrush>
-                            <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                <GradientStop Color="#8FFFFFFF"
-                                    Offset="1" />
-                                <GradientStop Color="#5FFFFFFF"
-                                    Offset="0" />
-                            </LinearGradientBrush>
-                        </Border.BorderBrush>
+                        Margin="0,0,0,0" Background="{DynamicResource ResourceKey=TaskbarItemActiveBackground}" BorderBrush="{DynamicResource ResourceKey=TaskbarItemActiveBorder}">
                         <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center" />
@@ -993,36 +981,12 @@
                         <Trigger Property="IsMouseOver"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                        EndPoint="0,0">
-                                        <GradientStop Color="#65FFFFFF"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#30FFFFFF"
-                                    Offset="0.65" />
-                                        <GradientStop Color="#43FFFFFF"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemActiveHoverBackground}" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                        EndPoint="0,0">
-                                        <GradientStop Color="#75FFFFFF"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#40FFFFFF"
-                                    Offset="0.65" />
-                                        <GradientStop Color="#53FFFFFF"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemActivePressedBackground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1030,59 +994,14 @@
         </Setter>
     </Style>
     <Style x:Key="CairoTaskbarButtonFlashingStyle"
-        TargetType="{x:Type Button}">
-        <Setter Property="OverridesDefaultStyle"
-            Value="true" />
-        <Setter Property="FontFamily"
-            Value="Segoe UI" />
-        <Setter Property="FontSize"
-            Value="12" />
-        <Setter Property="Foreground"
-            Value="White" />
-        <Setter Property="HorizontalAlignment"
-            Value="Stretch" />
-        <Setter Property="VerticalAlignment"
-            Value="Stretch" />
+        TargetType="{x:Type Button}" BasedOn="{StaticResource CairoTaskbarButtonInactiveStyle}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                	<ControlTemplate.Resources>
-                		<Storyboard x:Key="FlashPulseCycle" AutoReverse="True" RepeatBehavior="Forever">
-                			<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" AccelerationRatio="0.2" DecelerationRatio="0.2">
-                				<SplineColorKeyFrame KeyTime="00:00:00" Value="#5FFF5400"/>
-                				<SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#00000000"/>
-                			</ColorAnimationUsingKeyFrames>
-                			<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[0].(GradientStop.Color)" AccelerationRatio="0.2" DecelerationRatio="0.2">
-                				<SplineColorKeyFrame KeyTime="00:00:00" Value="#AFF6BA31"/>
-                				<SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#00000000"/>
-                			</ColorAnimationUsingKeyFrames>
-                			<ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Border" Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[2].(GradientStop.Color)" AccelerationRatio="0.2" DecelerationRatio="0.2">
-                				<SplineColorKeyFrame KeyTime="00:00:00" Value="#55FFFFFF"/>
-                				<SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#3affffff"/>
-                			</ColorAnimationUsingKeyFrames>
-                		</Storyboard>
-                	</ControlTemplate.Resources>
                     <Border x:Name="Border"
                         BorderThickness="1"
                         CornerRadius="1,1,0,0"
-                        Margin="0,0,0,0">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0"
-                                        EndPoint="0,1">
-                                <GradientStop Color="#AFF6BA31" Offset="1.0" />
-                                <GradientStop Color="#5fff5400" Offset="0.35" />
-                                <GradientStop Color="#55FFFFFF" Offset="0.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <Border.BorderBrush>
-                            <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                <GradientStop Color="#8Fcb7900"
-                                    Offset="0.0" />
-                                <GradientStop Color="#FFcb7900"
-                                    Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.BorderBrush>
+                        Margin="0,0,0,0" Background="{DynamicResource ResourceKey=TaskbarItemFlashingBackground}" BorderBrush="{DynamicResource ResourceKey=TaskbarItemFlashingBorder}">
                         <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center" />
@@ -1090,71 +1009,43 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="True">
                             <Trigger.EnterActions>
-                                <BeginStoryboard Storyboard="{StaticResource FlashPulseCycle}" Name="SB1" />
+                                <BeginStoryboard Storyboard="{StaticResource TaskbarFlashPulseCycle}" Name="SB1" />
                             </Trigger.EnterActions>
                             <Trigger.ExitActions>
                                 <StopStoryboard BeginStoryboardName="SB1" />
                             </Trigger.ExitActions>
-                        </Trigger> 
-                		<EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                			<BeginStoryboard Storyboard="{StaticResource FlashPulseCycle}"/>
-                		</EventTrigger>
-                		<Trigger Property="IsEnabled"
+                        </Trigger>
+                        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                            <BeginStoryboard Storyboard="{StaticResource TaskbarFlashPulseCycle}"/>
+                        </EventTrigger>
+                        <Trigger Property="IsEnabled"
                 			Value="false">
-                			<Setter TargetName="Border"
-                				Property="Background">
-                				<Setter.Value>
-                					<LinearGradientBrush StartPoint="0,1"
-                						EndPoint="0,0">
-                                        <GradientStop Color="#CFDBA715"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#8FDB570B"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                				</Setter.Value>
-                			</Setter>
-                		</Trigger>
-                		<Trigger Property="IsMouseOver"
+                            <Setter TargetName="Border"
+                				Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemFlashingDisabledBackground}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver"
                 			Value="true">
-                			<Setter TargetName="Border"
-                				Property="Background">
-                				<Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                						EndPoint="0,1">
-                                        <GradientStop Color="#BFF6BA31" Offset="1.0" />
-                						<GradientStop Color="#6fff5400" Offset="0.3" />
-                                        <GradientStop Color="#5FFFFFFF" Offset="0.0" />
-                                    </LinearGradientBrush>
-                				</Setter.Value>
-                			</Setter>
-                		</Trigger>
-                		<Trigger Property="IsPressed"
+                            <Setter TargetName="Border"
+                				Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemFlashingHoverBackground}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
                 			Value="true">
-                			<Setter TargetName="Border"
-                				Property="Background">
-                				<Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                						EndPoint="0,1">
-                                        <GradientStop Color="#CFF6BA31" Offset="1.0" />
-                                        <GradientStop Color="#7fff5400" Offset="0.3" />
-                                        <GradientStop Color="#65FFFFFF" Offset="0.0" />
-                                    </LinearGradientBrush>
-                				</Setter.Value>
-                			</Setter>
-                		</Trigger>
-                	</ControlTemplate.Triggers>
+                            <Setter TargetName="Border"
+                				Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemFlashingPressedBackground}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <!-- Style for task list buttons -->
+    <!-- Style for task list -->
     <Style x:Key="CairoTaskListPopupStyle" TargetType="{x:Type Border}">
-        <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
-        <Setter Property="BorderBrush" Value="#AF5b5b5b"/>
+        <Setter Property="Background" Value="{DynamicResource ResourceKey=CairoMenuBackgroundGradient}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ResourceKey=MenuBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Padding" Value="0,3,0,3"/>
-        <Setter Property="Effect" Value="{StaticResource ResourceKey=CairoMenuShadow}" />
+        <Setter Property="Effect" Value="{DynamicResource ResourceKey=CairoMenuShadow}" />
     </Style>
     <Style x:Key="CairoTaskListButtonStyle"
         TargetType="{x:Type Button}">
@@ -1165,7 +1056,7 @@
         <Setter Property="FontSize"
             Value="12" />
         <Setter Property="Foreground"
-            Value="White" />
+            Value="{DynamicResource ResourceKey=MenuItemForeground}" />
         <Setter Property="Width"
             Value="350" />
         <Setter Property="Height"
@@ -1187,12 +1078,12 @@
                         <Trigger Property="IsMouseOver"
                             Value="true">
                             <Setter Property="Background"
-                                TargetName="Border" Value="{StaticResource CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
                             <Setter Property="Background"
-                                TargetName="Border" Value="{StaticResource CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1220,25 +1111,7 @@
                     <Border x:Name="Border"
                         BorderThickness="1"
                         CornerRadius="0,8,0,0"
-                        Margin="0,0,0,0">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="1.0" />
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="0.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <Border.BorderBrush>
-                            <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="1" />
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="0" />
-                            </LinearGradientBrush>
-                        </Border.BorderBrush>
+                        Margin="0,0,0,0" Background="Transparent" BorderBrush="Transparent">
                         <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" />
@@ -1247,77 +1120,21 @@
                         <Trigger Property="IsMouseOver"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                        <GradientStop Color="#EF0057a8"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#4F0054C9"
-                                    Offset="0.35" />
-                                        <GradientStop Color="#55FFFFFF"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBackground}" />
                             <Setter TargetName="Border"
-                                Property="BorderBrush">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <GradientStop Color="#8F83b8e9"
-                                    Offset="1" />
-                                        <GradientStop Color="#DF0f82c2"
-                                    Offset="0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBorder}" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                        <GradientStop Color="#FF0057a8"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#6F0054C9"
-                                    Offset="0.35" />
-                                        <GradientStop Color="#55FFFFFF"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemInactivePressedBackground}" />
                         </Trigger>
                         <Trigger Property="IsChecked"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <GradientStop Color="#55FFFFFF"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#20FFFFFF"
-                                    Offset="0.65" />
-                                        <GradientStop Color="#40ffffff"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemActiveBackground}" />
                             <Setter TargetName="Border"
-                                Property="BorderBrush">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <GradientStop Color="#8FFFFFFF"
-                                    Offset="1" />
-                                        <GradientStop Color="#5FFFFFFF"
-                                    Offset="0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarItemActiveBorder}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1332,25 +1149,7 @@
                     <Border x:Name="Border"
                         BorderThickness="1"
                         CornerRadius="0,0,8,0"
-                        Margin="0,0,0,0">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="1.0" />
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="0.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
-                        <Border.BorderBrush>
-                            <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="1" />
-                                <GradientStop Color="#00FFFFFF"
-                                    Offset="0" />
-                            </LinearGradientBrush>
-                        </Border.BorderBrush>
+                        Margin="0,0,0,0" Background="Transparent" BorderBrush="Transparent">
                         <ContentPresenter Margin="5,1,5,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center" />
@@ -1359,120 +1158,28 @@
                         <Trigger Property="IsMouseOver"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                        <GradientStop Color="#EF0057a8"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#4F0054C9"
-                                    Offset="0.35" />
-                                        <GradientStop Color="#55FFFFFF"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBackground}" />
                             <Setter TargetName="Border"
-                                Property="BorderBrush">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <GradientStop Color="#8F83b8e9"
-                                    Offset="1" />
-                                        <GradientStop Color="#DF0f82c2"
-                                    Offset="0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBorder}" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                        <GradientStop Color="#FF0057a8"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#6F0054C9"
-                                    Offset="0.35" />
-                                        <GradientStop Color="#55FFFFFF"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemInactivePressedBackground}" />
                         </Trigger>
                         <Trigger Property="IsChecked"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <GradientStop Color="#55FFFFFF"
-                                    Offset="1.0" />
-                                        <GradientStop Color="#20FFFFFF"
-                                    Offset="0.65" />
-                                        <GradientStop Color="#40ffffff"
-                                    Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemActiveBackground}" />
                             <Setter TargetName="Border"
-                                Property="BorderBrush">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,1"
-                                EndPoint="0,0">
-                                        <GradientStop Color="#8FFFFFFF"
-                                    Offset="1" />
-                                        <GradientStop Color="#5FFFFFFF"
-                                    Offset="0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarItemActiveBorder}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="CairoTaskbarBorderStyle" TargetType="{x:Type Border}">
-        <Setter Property="BorderThickness" Value="1,1,0,0" />
-        <Setter Property="CornerRadius" Value="8,0,0,0" />
-        <Setter Property="Padding" Value="7,0,0,0" />
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#AF1d1d1d" Offset="0.0" />
-                    <GradientStop Color="#DF050505" Offset="1.0" />
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="BorderBrush">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                    <GradientStop Color="#C07b7b7b" Offset="0.0" />
-                    <GradientStop Color="#C0595959" Offset="1.0" />
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style x:Key="CairoTaskbarTopBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarBorderStyle}">
-        <Setter Property="BorderThickness" Value="1,0,0,1" />
-        <Setter Property="CornerRadius" Value="0,0,0,8" />
-        <Setter Property="Background" Value="#9F2a2a2a" />
-        <Setter Property="BorderBrush" Value="#AF707070" />
-    </Style>
-    <Style x:Key="CairoTaskbarEndBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarBorderStyle}">
-        <Setter Property="BorderThickness" Value="0,1,1,0" />
-        <Setter Property="CornerRadius" Value="0,8,0,0" />
-        <Setter Property="Padding" Value="0" />
-    </Style>
-    <Style x:Key="CairoTaskbarEndTopBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarTopBorderStyle}">
-        <Setter Property="BorderThickness" Value="0,0,1,1" />
-        <Setter Property="CornerRadius" Value="0,0,8,0" />
-        <Setter Property="Padding" Value="0" />
-    </Style>
+
     <!-- Button Style for Dialogs -->
     <Style x:Key="CairoButtonStyle"
         TargetType="{x:Type Button}">
@@ -1561,6 +1268,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
     <Style x:Key="NoItemsTextBlock" TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground" Value="#FF9a9a9a" />
         <Setter Property="FontWeight" Value="Normal" />
@@ -1569,11 +1277,10 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Margin" Value="0" />
     </Style>
+   
     <!-- Stacks -->
     <Style x:Key="CairoStacksStyle"
         TargetType="{x:Type MenuItem}">
-        <Setter Property="Foreground"
-            Value="#FFFFFFFF" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type MenuItem}">
@@ -1603,7 +1310,7 @@
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="BorderBrush"
-                                                Value="#FF12367F" />
+                                                Value="{DynamicResource ResourceKey=MenuTopBorderBrush}" />
                                                 <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
                                             </Style>
@@ -1611,9 +1318,9 @@
                                         <Border>
                                             <Border.Style>
                                                 <Style TargetType="{x:Type Border}">
-                                                    <Setter Property="Background" Value="{StaticResource ResourceKey=CairoMenuBackgroundGradient}" />
+                                                    <Setter Property="Background" Value="{DynamicResource ResourceKey=CairoMenuBackgroundGradient}" />
                                                     <Setter Property="BorderBrush"
-                                                    Value="#AF5b5b5b" />
+                                                    Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
                                                     <Setter Property="BorderThickness"
                                                     Value="0,0,0,1" />
                                                     <Setter Property="Padding"
@@ -1647,18 +1354,11 @@
                                 TargetName="SubMenuPopup" />
                             <Setter Property="Height"
                                 Value="22" />
-                            <Setter Property="FontFamily"
-                                Value="Segoe UI" />
                             <Setter Property="FontSize"
                                 Value="14" />
-                            <Setter Property="Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="Black"
-                                                        ShadowDepth="1"
-                                                                  Direction="90"
-                                                        Opacity="0.6" BlurRadius="0" />
-                                </Setter.Value>
-                            </Setter>
+                            <Setter Property="Effect" Value="{DynamicResource ResourceKey=MenuHeaderShadow}" />
+                            <Setter Property="Foreground"
+                                Value="{DynamicResource ResourceKey=MenuHeaderForeground}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -1668,17 +1368,9 @@
                                     Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background"
-                                TargetName="Border">
-                                <Setter.Value>
-                                    <!-- Pressed Menubar State -->
-                                    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0">
-                                        <GradientStop Color="#8F1A4DB5" Offset="1.0" />
-                                        <GradientStop Color="#DF338FFF" Offset="0.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=MenuHeaderPressedGradient}" />
                             <Setter Property="Foreground"
-                                Value="#FFFFFFFF" />
+                                Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                         </MultiTrigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -1688,7 +1380,7 @@
                                     Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background"
-                                TargetName="Border" Value="{StaticResource CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
                         </MultiTrigger>
                         <!-- Role = TopLevelItem :  this is a child menu item from the top level without any child items-->
                         <Trigger Property="Role"
@@ -1698,7 +1390,7 @@
                             <Setter Property="MinHeight"
                                 Value="24" />
                             <Setter Property="Foreground"
-                                Value="#FFFFFFFF" />
+                                Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                             <Setter Property="FontSize"
                                 Value="12" />
                             <Setter Property="FontFamily"
@@ -1709,6 +1401,63 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="StackScrollButton"
+        TargetType="{x:Type Button}">
+        <Setter Property="OverridesDefaultStyle"
+            Value="true" />
+        <Setter Property="FontFamily"
+            Value="Webdings" />
+        <Setter Property="Foreground"
+            Value="#5fFFFFFF" />
+        <Setter Property="FontSize"
+            Value="11.5" />
+        <Setter Property="Width"
+            Value="20" />
+        <Setter Property="Height"
+            Value="20" />
+        <Setter Property="VerticalAlignment"
+            Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border"
+                        BorderThickness="1"
+                        CornerRadius="10"
+                        BorderBrush="#5fFFFFFF"
+                        Background="#2fFFFFFF">
+                        <ContentPresenter Margin="0,2,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled"
+                            Value="false">
+                            <Setter TargetName="Border"
+                                Property="Background" Value="#3FFFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background"
+                                Value="#2f555555" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background"
+                                Value="#2f000000" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="StackTopButton"
+        TargetType="{x:Type Button}" BasedOn="{StaticResource StackScrollButton}">
+        <Setter Property="VerticalAlignment" Value="Top" />
+    </Style>
+    
     <!-- Button Style for icons -->
     <Style x:Key="CairoFileButtonStyle"
         TargetType="{x:Type Button}">
@@ -1736,7 +1485,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!-- Button Style for Desktop icons -->
     <Style x:Key="CairoDesktopButtonStyle"
         TargetType="{x:Type Button}" BasedOn="{StaticResource CairoFileButtonStyle}">
         <Setter Property="Template">
@@ -1773,7 +1521,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <!-- Files -->
+    <!-- Folder Views -->
     <Style x:Key="DesktopFolderViewVerticalStyle" TargetType="ItemsControl">
         <Setter Property="ItemsPanel">
             <Setter.Value>
@@ -2084,6 +1832,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    
     <!-- Scrollbars -->
     <Style x:Key="ScrollBarPageButton"
         TargetType="{x:Type RepeatButton}">
@@ -2205,78 +1954,9 @@
         </Style.Triggers>
     </Style>
 
-    <!-- Button Style for Stack Scrollers -->
-    <Style x:Key="StackScrollButton"
-        TargetType="{x:Type Button}">
-        <Setter Property="OverridesDefaultStyle"
-            Value="true" />
-        <Setter Property="FontFamily"
-            Value="Webdings" />
-        <Setter Property="Foreground"
-            Value="#5fFFFFFF" />
-        <Setter Property="FontSize"
-            Value="11.5" />
-        <Setter Property="Width"
-            Value="20" />
-        <Setter Property="Height"
-            Value="20" />
-        <Setter Property="VerticalAlignment"
-            Value="Center" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Border"
-                        BorderThickness="1"
-                        CornerRadius="10"
-                        BorderBrush="#5fFFFFFF"
-                        Background="#2fFFFFFF">
-                        <ContentPresenter Margin="0,2,0,0"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center" />
-                        
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsEnabled"
-                            Value="false">
-                            <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                        EndPoint="0,1">
-                                        <GradientStop Color="#3FFFFFFF"
-                                    Offset="0" />
-                                        <GradientStop Color="#3FFFFFFF"
-                                    Offset="1" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver"
-                            Value="true">
-                            <Setter TargetName="Border"
-                                Property="Background"
-                                Value="#2f555555" />
-                        </Trigger>
-                        <Trigger Property="IsPressed"
-                            Value="true">
-                            <Setter TargetName="Border"
-                                Property="Background"
-                                Value="#2f000000" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="StackTopButton"
-        TargetType="{x:Type Button}" BasedOn="{StaticResource StackScrollButton}">
-        <Setter Property="VerticalAlignment" Value="Top" />
-    </Style>
-
     <!-- Programs menu styles -->
     <Style x:Key="ProgramsMenuButton" TargetType="{x:Type Button}">
-        <Setter Property="Foreground" Value="#FF9a9a9a" />
+        <Setter Property="Foreground" Value="{DynamicResource ResourceKey=ProgramsMenuCategoryForeground}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="FontFamily" Value="Segoe UI" />
@@ -2295,18 +1975,11 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Border" Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Color="#30FFFFFF" Offset="0.0" />
-                                        <GradientStop Color="#01FFFFFF" Offset="1.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Foreground" Value="White" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ResourceKey=ProgramsMenuCategoryHoverBackground}" />
+                            <Setter Property="Foreground" Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource ResourceKey=CairoMenuItemHoverGradient}" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -2342,7 +2015,7 @@
                         <Border x:Name="Border"
                       Grid.Column="0"
                       BorderThickness="0,0,1,0"
-                                BorderBrush="#AF5b5b5b"
+                                BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}"
                                 Background="Transparent">
                             <ContentPresenter
                                   Margin="0,3"
@@ -2354,7 +2027,7 @@
         </Setter>
     </Style>
     <Style x:Key="ProgramsTabItem" TargetType="{x:Type TabItem}">
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{DynamicResource ResourceKey=MenuItemForeground}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="FontFamily" Value="Segoe UI" />
@@ -2374,18 +2047,11 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger SourceName="Tab" Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Tab" Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Color="#30FFFFFF" Offset="0.0" />
-                                        <GradientStop Color="#01FFFFFF" Offset="1.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter Property="Foreground" Value="White" />
+                            <Setter TargetName="Tab" Property="Background" Value="{DynamicResource ResourceKey=ProgramsMenuCategoryHoverBackground}" />
+                            <Setter Property="Foreground" Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Foreground" Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                             <Setter Property="FontWeight" Value="SemiBold" />
                         </Trigger>
                         <MultiTrigger>
@@ -2395,7 +2061,7 @@
                                 <Condition SourceName="Tab" Property="IsMouseOver"
                                     Value="False" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="Foreground" Value="#FF9a9a9a" />
+                            <Setter Property="Foreground" Value="{DynamicResource ResourceKey=ProgramsMenuCategoryForeground}" />
                         </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -2406,13 +2072,10 @@
                 <Setter Property="Visibility" Value="Collapsed" />
             </DataTrigger>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Foreground" Value="White" />
+                <Setter Property="Foreground" Value="{DynamicResource ResourceKey=MenuItemForeground}" />
             </Trigger>
             <Trigger Property="IsSelected" Value="False">
-                <Setter Property="Foreground" Value="#FF9a9a9a" />
-            </Trigger>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="Red" />
+                <Setter Property="Foreground" Value="{DynamicResource ResourceKey=ProgramsMenuCategoryForeground}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -2603,7 +2266,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
     <Style x:Key="CairoCalendarDayButtonStyle" TargetType="{x:Type CalendarDayButton}">
         <Setter Property="FontSize" Value="12" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -2727,7 +2389,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
     <Style x:Key="CairoCalendarButtonStyle" TargetType="{x:Type CalendarButton}">
         <Setter Property="FontSize" Value="12" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -2850,7 +2511,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
     <Style x:Key="CairoCalendarStyle" TargetType="{x:Type Calendar}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="CalendarButtonStyle" Value="{DynamicResource CairoCalendarButtonStyle}"/>

@@ -27,7 +27,7 @@
                 <Setter Property="BorderThickness"
                     Value="0" />
                 <Setter Property="Foreground"
-                    Value="{StaticResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                    Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                 <Setter Property="VerticalContentAlignment"
                     Value="Center" />
                 <Setter Property="Template">
@@ -63,7 +63,7 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type ListView}">
                                     <StackPanel Orientation="Horizontal" Margin="0,3">
-                                        <Border BorderThickness="0,0,1,0" BorderBrush="#AF5b5b5b" Width="100" Margin="0,-3">
+                                        <Border BorderThickness="0,0,1,0" BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}" Width="100" Margin="0,-3">
                                         </Border>
                                         <TextBlock Style="{StaticResource NoItemsTextBlock}" Padding="8,4,0,4" Width="350" Text="{Binding Path=(l10n:DisplayString.sTaskbar_Empty)}" />
                                     </StackPanel>
@@ -198,7 +198,6 @@
                         <ListView HorizontalAlignment="Stretch"
                     ItemsSource="{Binding Source={StaticResource groupedWindows}}"
                     Background="{x:Null}"
-                    BorderBrush="#FF908382"
                     Style="{StaticResource TaskListStyle}"
                     BorderThickness="0,0,0,0"
                               Margin="0,-3,0,3"
@@ -217,8 +216,8 @@
                                                 <Setter.Value>
                                                     <ControlTemplate>
                                                         <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                            <Border BorderThickness="0,0,1,0" BorderBrush="#AF5b5b5b" Width="100" Margin="0,-3">
-                                                                <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Right" VerticalAlignment="Top" Foreground="White" Padding="6,7,6,0" />
+                                                                <Border BorderThickness="0,0,1,0" BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}" Width="100" Margin="0,-3">
+                                                                    <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6,7,6,0" />
                                                             </Border>
                                                             <ItemsPresenter />
                                                         </StackPanel>
@@ -255,7 +254,7 @@
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
-                            <Border Margin="99,-3,0,-3" Padding="0,3" Width="351" BorderThickness="1,0,0,0" BorderBrush="#AF5b5b5b" Visibility="Collapsed" Name="bdrTaskView">
+                            <Border Margin="99,-3,0,-3" Padding="0,3" Width="351" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}" Visibility="Collapsed" Name="bdrTaskView">
                                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_TaskView)}" Style="{StaticResource CairoMenuItemStyle}" Click="TaskView_Click">
                                     <MenuItem.Icon>
                                         <Image Source="Resources\taskViewIcon.png"
