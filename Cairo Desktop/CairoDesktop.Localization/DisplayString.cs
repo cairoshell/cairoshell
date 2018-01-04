@@ -715,6 +715,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sProgramsMenu_AddToQuickLaunch
+        {
+            get
+            {
+                return getString("sProgramsMenu_AddToQuickLaunch");
+            }
+        }
+
         public static string sPlacesMenu_Documents
         {
             get

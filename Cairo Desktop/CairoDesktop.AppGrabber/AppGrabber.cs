@@ -379,5 +379,19 @@ namespace CairoDesktop.AppGrabber
             if (count > 0)
                 Save();
         }
+
+        public void AddToQuickLaunch(ApplicationInfo app)
+        {
+            Category quickLaunch = CategoryList.GetSpecialCategory(3);
+
+            if (!quickLaunch.Contains(app))
+            {
+                ApplicationInfo appClone = app.Clone();
+                appClone.Icon = null;
+                appClone.IconPath = null;
+
+                quickLaunch.Add(appClone);
+            }
+        }
     }
 }

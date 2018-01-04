@@ -90,6 +90,7 @@ namespace CairoDesktop.Localization
             { "sProgramsMenu_AlwaysAdminInfo", "You've run \"{0}\" as an administrator before. Would you like Cairo to automatically run it as an administrator every time?" },
             { "sProgramsMenu_Remove", "Remove" },
             { "sProgramsMenu_UWPInfo", "This is a Universal Windows Platform (UWP) application." },
+            { "sProgramsMenu_AddToQuickLaunch", "Add to Quick Launch" },
             { "sPlacesMenu_Documents", "Documents" },
             { "sPlacesMenu_Downloads", "Downloads" },
             { "sPlacesMenu_Music", "Music" },

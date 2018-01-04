@@ -170,6 +170,14 @@ namespace CairoDesktop
             appGrabber.LaunchProgramAdmin(app);
         }
 
+        private void programsMenu_AddToQuickLaunch(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            appGrabber.AddToQuickLaunch(app);
+        }
+
         private void programsMenu_Rename(object sender, RoutedEventArgs e)
         {
             MenuItem item = (MenuItem)sender;
