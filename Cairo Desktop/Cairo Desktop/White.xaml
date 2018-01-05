@@ -2,21 +2,14 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- Menu resources -->
     <SolidColorBrush Color="#FF000000" x:Key="MenuHeaderForeground" />
+    <SolidColorBrush Color="#FF000000" x:Key="SysTrayExpanderColor" />
     <DropShadowEffect Color="White" x:Key="MenuHeaderShadow" ShadowDepth="1" Direction="270" Opacity="0.3" BlurRadius="0" />
     
     <!-- Image resources -->
-    <BitmapImage x:Key="CairoMenuIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/cairoMenuBlack.png"></BitmapImage>
-    <BitmapImage x:Key="CairoMenuIcon_2x" UriSource="pack://application:,,,/CairoDesktop;component/Resources/cairoMenuBlack_2x.png"></BitmapImage>
-    <BitmapImage x:Key="CairoSearchIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/searchBlack.png"></BitmapImage>
-    <BitmapImage x:Key="CairoActionCenterIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/actionCenterBlack.png"></BitmapImage>
+    <BitmapImage x:Key="MenuIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/cairoMenuBlack.png"></BitmapImage>
+    <BitmapImage x:Key="SearchIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/searchBlack.png"></BitmapImage>
+    <BitmapImage x:Key="ActionCenterIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/actionCenterBlack.png"></BitmapImage>
     <BitmapImage x:Key="WhiteBarBackground" UriSource="pack://application:,,,/CairoDesktop;component/Resources/menubarWhite.png"></BitmapImage>
-    
-    <ImageBrush x:Key="MenuBarBackground" ImageSource="{StaticResource WhiteBarBackground}" />
 
-    <!-- Button Style for Systray Expander -->
-    <Style x:Key="CairoSystrayExpanderStyle"
-        TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource CairoSystrayExpanderStyle}">
-        <Setter Property="Foreground"
-            Value="Black" />
-    </Style>
+    <ImageBrush x:Key="MenuBarBackground" ImageSource="{StaticResource WhiteBarBackground}" />
 </ResourceDictionary>

@@ -6,12 +6,12 @@
         <GradientStop Color="#8F4a4a4a" Offset="1.0" />
         <GradientStop Color="#CF000000" Offset="0.0" />
     </LinearGradientBrush>
-    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="CairoMenuBackgroundGradient">
+    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="MenuBackgroundGradient">
         <GradientStop Color="#cF0f0f0f" Offset="0" />
         <GradientStop Color="#bf1a1a1a" Offset="0.8" />
         <GradientStop Color="#cF0f0f0f" Offset="1" />
     </LinearGradientBrush>
-    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" x:Key="CairoMenuItemHoverGradient">
+    <LinearGradientBrush StartPoint="0,1" EndPoint="0,0" x:Key="MenuItemHoverGradient">
         <GradientStop Color="#8F1A4DFF" Offset="0.0" />
         <GradientStop Color="#DF338FFF" Offset="1.0" />
     </LinearGradientBrush>
@@ -29,9 +29,38 @@
     <SolidColorBrush Color="#AF5b5b5b" x:Key="MenuBorderBrush" />
     <SolidColorBrush Color="#FF9a9a9a" x:Key="ProgramsMenuCategoryForeground" />
     <SolidColorBrush Color="#40FFFFFF" x:Key="MenuSeparator" />
-    <DropShadowEffect x:Key="CairoMenuShadow" Color="Black" ShadowDepth="4" Direction="270" Opacity="0.6" BlurRadius="10" />
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="SysTrayExpanderColor" />
+    <DropShadowEffect x:Key="MenuShadow" Color="Black" ShadowDepth="4" Direction="270" Opacity="0.6" BlurRadius="10" />
     <DropShadowEffect Color="Black" x:Key="MenuHeaderShadow" ShadowDepth="1" Direction="90" Opacity="0.6" BlurRadius="0" />
+    
+    <!-- Search resources -->
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="SearchTitleText" />
+    <SolidColorBrush Color="#FF000000" x:Key="SearchResultText" />
+    <SolidColorBrush Color="#FF808080" x:Key="SearchResultSubtext" />
+    <SolidColorBrush Color="#FFEEEEEE" x:Key="SearchResultBackground0" />
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="SearchResultBackground1" />
+    <SolidColorBrush Color="#ffc4dff2" x:Key="SearchResultHover" />
+    <LinearGradientBrush x:Key="SearchTitleBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FF252326" Offset="0" />
+        <GradientStop Color="#FF020200" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="SearchViewAllResultsBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FF569fd1" Offset="0.0" />
+        <GradientStop Color="#FF0073bc" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="SearchViewAllResultsHoverBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#ff5fb1ea" Offset="0.0" />
+        <GradientStop Color="#ff0185d7" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="SearchViewAllResultsPressedBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#ff4b8bb8" Offset="0.0" />
+        <GradientStop Color="#ff0164a2" Offset="1.0" />
+    </LinearGradientBrush>
 
+    <!-- Folder view resources -->
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="DesktopIconText" />
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="StacksIconText" />
+    
     <!-- Taskbar resources -->
     <LinearGradientBrush x:Key="TaskbarBottomBackground" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="#AF1d1d1d" Offset="0.0" />
@@ -125,10 +154,9 @@
     </Storyboard>
 
     <!-- Image resources -->
-    <BitmapImage x:Key="CairoMenuIcon" UriSource="Resources\cairoMenuDefault.png"></BitmapImage>
-    <BitmapImage x:Key="CairoMenuIcon_2x" UriSource="Resources\cairoMenuDefault_2x.png"></BitmapImage>
-    <BitmapImage x:Key="CairoSearchIcon" UriSource="Resources\searchDefault.png"></BitmapImage>
-    <BitmapImage x:Key="CairoActionCenterIcon" UriSource="Resources\actionCenterDefault.png"></BitmapImage>
+    <BitmapImage x:Key="MenuIcon" UriSource="Resources\cairoMenuDefault.png"></BitmapImage>
+    <BitmapImage x:Key="SearchIcon" UriSource="Resources\searchDefault.png"></BitmapImage>
+    <BitmapImage x:Key="ActionCenterIcon" UriSource="Resources\actionCenterDefault.png"></BitmapImage>
     <BitmapImage x:Key="MenubarShadow" UriSource="Resources\menubarShadow.png"></BitmapImage>
     <BitmapImage x:Key="NullIcon" UriSource="Resources\nullIcon.png"></BitmapImage>
     
@@ -259,13 +287,13 @@
                                             <Setter Property="Margin"
                                                     Value="5,0,5,11" />
                                             <Setter Property="Effect"
-                                                Value="{DynamicResource ResourceKey=CairoMenuShadow}" />
+                                                Value="{DynamicResource ResourceKey=MenuShadow}" />
                                         </Style>
                                     </Border.Style>
                                     <Border>
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
-                                                <Setter Property="Background" Value="{DynamicResource ResourceKey=CairoMenuBackgroundGradient}" />
+                                                <Setter Property="Background" Value="{DynamicResource ResourceKey=MenuBackgroundGradient}" />
                                                 <Setter Property="BorderBrush"
                                                     Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
                                                 <Setter Property="BorderThickness"
@@ -345,7 +373,7 @@
                                     Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background"
-                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=MenuItemHoverGradient}"/>
                         </MultiTrigger>
                         <!-- Role = TopLevelItem :  this is a child menu item from the top level without any child items-->
                         <Trigger Property="Role"
@@ -372,7 +400,7 @@
                                     Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background"
-                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=MenuItemHoverGradient}"/>
                         </MultiTrigger>
                         <!-- Role = SubMenuHeader : this is a child menu item which does not have children -->
                         <Trigger Property="Role"
@@ -398,7 +426,7 @@
                                     Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background"
-                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=MenuItemHoverGradient}"/>
                         </MultiTrigger>
                         <!-- Role = SubMenuItem : this is a child menu item which has children-->
                         <Trigger Property="Role"
@@ -469,13 +497,13 @@
                                                 <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
                                                 <Setter Property="Effect"
-                                                Value="{DynamicResource ResourceKey=CairoMenuShadow}" />
+                                                Value="{DynamicResource ResourceKey=MenuShadow}" />
                                             </Style>
                                         </Border.Style>
                                         <Border>
                                             <Border.Style>
                                                 <Style TargetType="{x:Type Border}">
-                                                    <Setter Property="Background" Value="{DynamicResource ResourceKey=CairoMenuBackgroundGradient}" />
+                                                    <Setter Property="Background" Value="{DynamicResource ResourceKey=MenuBackgroundGradient}" />
                                                     <Setter Property="BorderBrush"
                                                     Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
                                                     <Setter Property="BorderThickness"
@@ -591,7 +619,7 @@
                                                 <Setter Property="BorderThickness"
                                                 Value="0,1,0,0" />
                                                 <Setter Property="Effect"
-                                                Value="{DynamicResource ResourceKey=CairoMenuShadow}" />
+                                                Value="{DynamicResource ResourceKey=MenuShadow}" />
                                             </Style>
                                         </Border.Style>
                                     </Border>
@@ -650,13 +678,13 @@
                     <Border>
                         <Border.Style>
                             <Style TargetType="{x:Type Border}">
-                                <Setter Property="Background" Value="{DynamicResource ResourceKey=CairoMenuBackgroundGradient}" />
+                                <Setter Property="Background" Value="{DynamicResource ResourceKey=MenuBackgroundGradient}" />
                                 <Setter Property="BorderBrush" Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
                                 <Setter Property="BorderThickness" Value="1" />
                                 <Setter Property="CornerRadius" Value="5" />
                                 <Setter Property="Padding" Value="0,3,0,3" />
                                 <Setter Property="Margin" Value="5,0,5,11" />
-                                <Setter Property="Effect" Value="{DynamicResource ResourceKey=CairoMenuShadow}" />
+                                <Setter Property="Effect" Value="{DynamicResource ResourceKey=MenuShadow}" />
                             </Style>
                         </Border.Style>
                         <Grid x:Name="SubMenu" Grid.IsSharedSizeScope="True">
@@ -712,11 +740,11 @@
                                         Height="32"
                                         Width="32" Margin="0,0,10,0" />
                                         <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                            <TextBlock 
+                                            <TextBlock Foreground="{DynamicResource ResourceKey=SearchResultText}"
                                             FontSize="14"
                                             FontFamily="Segoe UI" Text="{Binding Path=Name}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Width="268" />
                                             <TextBlock 
-                                                Foreground="Gray"
+                                                Foreground="{DynamicResource ResourceKey=SearchResultSubtext}"
                                             FontSize="12"
                                             FontFamily="Segoe UI" Text="{Binding Path=DateModifiedDisplay}" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" Width="268" />
                                         </StackPanel>
@@ -737,7 +765,7 @@
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
                                                         <Trigger.Setters>
-                                                            <Setter Property="Background" Value="#ffc4dff2" TargetName="Border" />
+                                                            <Setter Property="Background" Value="{DynamicResource ResourceKey=SearchResultHover}" TargetName="Border" />
                                                         </Trigger.Setters>
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
@@ -755,19 +783,19 @@
             <Trigger Property="ItemsControl.AlternationIndex"
                 Value="0">
                 <Setter Property="Background"
-                    Value="#FFEEEEEE"></Setter>
+                    Value="{DynamicResource ResourceKey=SearchResultBackground0}"></Setter>
             </Trigger>
             <Trigger Property="ItemsControl.AlternationIndex"
                 Value="1">
                 <Setter Property="Background"
-                    Value="#FFFFFFFF"></Setter>
+                    Value="{DynamicResource ResourceKey=SearchResultBackground1}"></Setter>
             </Trigger>
         </Style.Triggers>
     </Style>
     <!-- Button Style for View All Results -->
     <Style x:Key="CairoSearchResultsButtonStyle"
         TargetType="{x:Type Button}">
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{DynamicResource ResourceKey=SearchTitleText}" />
         <Setter Property="Height" Value="26" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -776,16 +804,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
-                        BorderThickness="0">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                <GradientStop Color="#FF569fd1"
-                                    Offset="0.0" />
-                                <GradientStop Color="#FF0073bc"
-                                    Offset="1.0" />
-                            </LinearGradientBrush>
-                        </Border.Background>
+                        BorderThickness="0" Background="{DynamicResource ResourceKey=SearchViewAllResultsBackground}">
                         <ContentPresenter Margin="0,0,0,1"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
@@ -794,32 +813,12 @@
                         <Trigger Property="IsMouseOver"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                        <GradientStop Color="#ff5fb1ea"
-                                    Offset="0.0" />
-                                        <GradientStop Color="#ff0185d7"
-                                    Offset="1.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=SearchViewAllResultsHoverBackground}" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                        <GradientStop Color="#ff4b8bb8"
-                                    Offset="0.0" />
-                                        <GradientStop Color="#ff0164a2"
-                                    Offset="1.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=SearchViewAllResultsPressedBackground}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1040,12 +1039,12 @@
     </Style>
     <!-- Style for task list -->
     <Style x:Key="CairoTaskListPopupStyle" TargetType="{x:Type Border}">
-        <Setter Property="Background" Value="{DynamicResource ResourceKey=CairoMenuBackgroundGradient}" />
+        <Setter Property="Background" Value="{DynamicResource ResourceKey=MenuBackgroundGradient}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ResourceKey=MenuBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Padding" Value="0,3,0,3"/>
-        <Setter Property="Effect" Value="{DynamicResource ResourceKey=CairoMenuShadow}" />
+        <Setter Property="Effect" Value="{DynamicResource ResourceKey=MenuShadow}" />
     </Style>
     <Style x:Key="CairoTaskListButtonStyle"
         TargetType="{x:Type Button}">
@@ -1078,12 +1077,12 @@
                         <Trigger Property="IsMouseOver"
                             Value="true">
                             <Setter Property="Background"
-                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=MenuItemHoverGradient}"/>
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
                             <Setter Property="Background"
-                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=MenuItemHoverGradient}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1318,7 +1317,7 @@
                                         <Border>
                                             <Border.Style>
                                                 <Style TargetType="{x:Type Border}">
-                                                    <Setter Property="Background" Value="{DynamicResource ResourceKey=CairoMenuBackgroundGradient}" />
+                                                    <Setter Property="Background" Value="{DynamicResource ResourceKey=MenuBackgroundGradient}" />
                                                     <Setter Property="BorderBrush"
                                                     Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
                                                     <Setter Property="BorderThickness"
@@ -1380,7 +1379,7 @@
                                     Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter Property="Background"
-                                TargetName="Border" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}"/>
+                                TargetName="Border" Value="{DynamicResource ResourceKey=MenuItemHoverGradient}"/>
                         </MultiTrigger>
                         <!-- Role = TopLevelItem :  this is a child menu item from the top level without any child items-->
                         <Trigger Property="Role"
@@ -1556,7 +1555,7 @@
                                         Width="80"
                                         Background="Transparent"
                                         Margin="5,0,5,3"
-                                        Foreground="White">
+                                        Foreground="{DynamicResource ResourceKey=DesktopIconText}">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="Black"
                                                         ShadowDepth="1"
@@ -1615,7 +1614,7 @@
                                         Width="80"
                                         Background="Transparent"
                                         Margin="5,0,5,3"
-                                        Foreground="White">
+                                        Foreground="{DynamicResource ResourceKey=DesktopIconText}">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="Black"
                                                         ShadowDepth="1"
@@ -1673,7 +1672,7 @@
                                         Width="130"
                                         Background="Transparent"
                                         Margin="5,0,5,3"
-                                        Foreground="White" VerticalAlignment="Center">
+                                        Foreground="{DynamicResource ResourceKey=DesktopIconText}" VerticalAlignment="Center">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="Black"
                                                         ShadowDepth="1"
@@ -1731,7 +1730,7 @@
                                         Width="130"
                                         Background="Transparent"
                                         Margin="5,0,5,3"
-                                        Foreground="White" VerticalAlignment="Center">
+                                        Foreground="{DynamicResource ResourceKey=DesktopIconText}" VerticalAlignment="Center">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="Black"
                                                         ShadowDepth="1"
@@ -1791,7 +1790,7 @@
                                         Width="80"
                                         Background="Transparent"
                                         Margin="5,0,5,3"
-                                        Foreground="White">
+                                        Foreground="{DynamicResource ResourceKey=StacksIconText}">
                                     <TextBlock.ToolTip>
                                         <ToolTip Content="{Binding Path=Name, Mode=OneWay}" />
                                     </TextBlock.ToolTip>
@@ -1979,7 +1978,7 @@
                             <Setter Property="Foreground" Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ResourceKey=CairoMenuItemHoverGradient}" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ResourceKey=MenuItemHoverGradient}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -2538,7 +2537,7 @@
         <Setter Property="Height"
             Value="22" />
         <Setter Property="Foreground"
-            Value="White" />
+            Value="{DynamicResource ResourceKey=SysTrayExpanderColor}" />
         <Setter Property="FontSize"
             Value="11" />
         <Setter Property="Template">

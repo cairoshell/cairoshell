@@ -254,8 +254,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\cairoMenuDefault.png">
-    </Resource>
     <Resource Include="Resources\searchDefault.png">
     </Resource>
   </ItemGroup>
@@ -310,8 +308,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\cairoMenuBlack.png">
-    </Resource>
     <Resource Include="Resources\searchBlack.png" />
     <Resource Include="Resources\menubarWhite.png" />
     <Resource Include="Resources\nullIcon.png">
@@ -368,10 +364,10 @@
     <Resource Include="Resources\actionCenterBlack.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\cairoMenuBlack_2x.png" />
+    <Resource Include="Resources\cairoMenuBlack.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\cairoMenuDefault_2x.png" />
+    <Resource Include="Resources\cairoMenuDefault.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

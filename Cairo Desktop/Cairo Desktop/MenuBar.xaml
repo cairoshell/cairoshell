@@ -92,7 +92,7 @@
             <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
                 <MenuItem Style="{StaticResource CairoMenuItemCairoMenuStyle}">
                     <MenuItem.Header>
-                        <Image Name="CairoMenuIcon" Source="{StaticResource CairoMenuIcon_2x}"
+                        <Image Name="MenuIcon" Source="{StaticResource MenuIcon}"
                             Width="38"
                             Height="22"/>
                     </MenuItem.Header>
@@ -214,14 +214,14 @@
             <Menu x:Name="MenuExtras" Style="{StaticResource CairoMenuBarMainContainerStyle}" Visibility="Collapsed">
                 <!--<MenuItem x:Name="miOpenVolume" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenVolume_Click"  ToolTip="{Binding sMenuBar_OpenActionCenter}">
                     <MenuItem.Header>
-                        <Image Source="{StaticResource CairoActionCenterIcon}"
+                        <Image Source="{StaticResource ActionCenterIcon}"
                               Width="38"
                               Height="22" />
                     </MenuItem.Header>
                 </MenuItem>-->
                 <MenuItem x:Name="miOpenActionCenter" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click" ToolTip="{Binding sMenuBar_OpenActionCenter}">
                     <MenuItem.Header>
-                        <Image Name="CairoActionCenterIcon" Source="{StaticResource CairoActionCenterIcon}"
+                        <Image Name="ActionCenterIcon" Source="{StaticResource ActionCenterIcon}"
                               Width="38"
                               Height="22" />
                     </MenuItem.Header>
@@ -261,35 +261,25 @@
             <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
                 <MenuItem x:Name="CairoSearchMenu" Style="{StaticResource CairoMenuItemCairoSearchMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" MenuItem.SubmenuOpened="FocusSearchBox">
                     <MenuItem.Header>
-                        <Image Name="CairoSearchMenuIcon" Source="{StaticResource CairoSearchIcon}"
+                        <Image Name="CairoSearchMenuIcon" Source="{StaticResource SearchIcon}"
                               Width="38"
                               Height="22" />
                     </MenuItem.Header>
                     <StackPanel>
                         <StackPanel Orientation="Horizontal"
-                                FocusManager.FocusedElement="{Binding ElementName=searchStr}">
-                            <StackPanel.Background>
-                                <LinearGradientBrush StartPoint="0,0"
-                                        EndPoint="0,1">
-                                    <LinearGradientBrush.GradientStops>
-                                        <GradientStop Color="#FF252326"
-                                                Offset="0" />
-                                        <GradientStop Color="#FF020200"
-                                                Offset="1" />
-                                    </LinearGradientBrush.GradientStops>
-                                </LinearGradientBrush>
-                            </StackPanel.Background>
+                                FocusManager.FocusedElement="{Binding ElementName=searchStr}" Background="{DynamicResource ResourceKey=SearchTitleBackground}">
                             <StackPanel Margin="15"
                                     Orientation="Horizontal">
                                 <TextBlock MinWidth="100"
-                                        Foreground="#FFFFFFFF"
+                                        Foreground="{DynamicResource ResourceKey=SearchTitleText}"
                                         FontSize="14"
                                         FontFamily="Segoe UI" Margin="0,2,0,0" Text="{Binding Path=(l10n:DisplayString.sSearch_Title)}" />
                                 <TextBox FontFamily="Segoe UI"
                                         FontSize="14"
                                         Width="200"
                                         Margin="10,0,0,0"
-                                        Background="#FFFFFFFF"
+                                        Background="{DynamicResource ResourceKey=SearchResultBackground1}"
+                                        Foreground="{DynamicResource ResourceKey=SearchResultText}"
                                         BorderBrush="Transparent"
                                         Padding="7,1,7,1"
                                         Name="searchStr"
