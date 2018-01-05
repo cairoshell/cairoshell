@@ -116,6 +116,8 @@ namespace CairoDesktop
 
             HwndSource source = HwndSource.FromHwnd(helper.Handle);
             source.AddHook(new HwndSourceHook(WndProc));
+
+            Shell.HideWindowFromTasks(helper.Handle);
         }
 
         protected override void OnActivated(EventArgs e)

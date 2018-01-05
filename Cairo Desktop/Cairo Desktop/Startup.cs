@@ -21,10 +21,6 @@
     {
         private static System.Threading.Mutex cairoMutex;
 
-        private static Window _parentWindow;
-
-        private static Window _desktopWindow;
-
         public static MenuBar MenuBarWindow { get; set; }
 
         public static MenuBarShadow MenuBarShadowWindow { get; set; }
@@ -112,14 +108,7 @@
                 // hide the windows desktop
                 Shell.ToggleDesktopIcons(false);
             }
-
-            _parentWindow = new Window();
-            InitializeParentWindow(_parentWindow);
-
-            _desktopWindow = new Window();
-            InitializeParentWindow(_desktopWindow);
-            DeskParent = _desktopWindow;
-
+            
             App app = new App();
             app.InitializeComponent();
 
@@ -128,19 +117,19 @@
             if (theme != "Default")
                 if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
-            MenuBarWindow = new MenuBar() { Owner = _parentWindow };
+            MenuBarWindow = new MenuBar();
             app.MainWindow = MenuBarWindow;
             MenuBarWindow.Show();
 
             if (Settings.EnableDesktop)
             {
-                DesktopWindow = new Desktop() { Owner = _desktopWindow };
+                DesktopWindow = new Desktop();
                 DesktopWindow.Show();
             }
 
             if (Settings.EnableMenuBarShadow)
             {
-                MenuBarShadowWindow = new MenuBarShadow() { Owner = _desktopWindow };
+                MenuBarShadowWindow = new MenuBarShadow();
                 MenuBarShadowWindow.Show();
             }
 
@@ -150,7 +139,7 @@
                 AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
                 AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
 
-                TaskbarWindow = new Taskbar() { Owner = _parentWindow };
+                TaskbarWindow = new Taskbar();
                 TaskbarWindow.Show();
             }
 
@@ -179,45 +168,6 @@
 
             app.Run();
         }
-
-        /// <summary>
-        /// Checks that a single instance of the application is running, and if another is found it notifies the user and exits.
-        /// </summary>
-        /// <returns>Result of instance check.</returns>
-        /*private static bool SingleInstanceCheck()
-        {
-            // get the list of all processes by that name
-            Process[] processes = Process.GetProcessesByName(procName);
-
-            // if there is more than one process...
-            if (processes.Length > 1)
-            {
-                System.Threading.Thread.Sleep(1000);
-                Process[] processes2 = Process.GetProcessesByName(procName);
-                if (processes2.Length > 1)
-                {
-                    System.Threading.Thread.Sleep(3000);
-                    Process[] processes3 = Process.GetProcessesByName(procName);
-                    if (processes3.Length > 1)
-                    {
-                        CairoMessage.ShowAlert("If it's not responding, end it from Task Manager before trying to run Cairo again.", "Cairo is already running!", MessageBoxImage.Stop);
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                return true;
-            }
-        }*/
 
         /// <summary>
         /// Executes the first run sequence.
@@ -267,23 +217,6 @@
             IsShuttingDown = true;
 
             Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown(), DispatcherPriority.Normal);
-        }
-
-        /// <summary>
-        /// Initializes a new hidden toolwindow to be the owner for all other windows.
-        /// This hides the applications icons from the task switcher.
-        /// </summary>
-        private static void InitializeParentWindow(Window _parentWindow)
-        {
-            
-            _parentWindow.Top = -100; // Location of new window is outside of visible part of screen
-            _parentWindow.Left = -100;
-            _parentWindow.Width = 1; // size of window is enough small to avoid its appearance at the beginning
-            _parentWindow.Height = 1;
-            _parentWindow.WindowStyle = WindowStyle.ToolWindow; // Set window style as ToolWindow to avoid its icon in AltTab 
-            _parentWindow.ShowInTaskbar = false;
-            _parentWindow.Show(); // We need to show window before set is as owner to our main window
-            _parentWindow.Hide(); // Hide helper window just in case
         }
 
         #region Autorun

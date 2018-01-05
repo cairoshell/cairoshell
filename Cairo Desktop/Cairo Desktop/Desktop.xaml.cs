@@ -142,6 +142,8 @@ namespace CairoDesktop
                     catch { }
                 }
             }
+
+            Shell.HideWindowFromTasks(helper.Handle);
         }
 
         private void pasteFromClipboard()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CairoDesktop.Interop;
+using System;
 using System.Windows;
 using System.Windows.Interop;
 
@@ -48,6 +49,8 @@ namespace CairoDesktop
             HwndSource source = HwndSource.FromHwnd(helper.Handle);
 
             source.AddHook(new HwndSourceHook(WndProc));
+
+            Shell.HideWindowFromTasks(helper.Handle);
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)

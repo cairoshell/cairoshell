@@ -332,6 +332,8 @@ namespace CairoDesktop
             handle = helper.Handle;
 
             appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+
+            Shell.HideWindowFromTasks(handle);
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)

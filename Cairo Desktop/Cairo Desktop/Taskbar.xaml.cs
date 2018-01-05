@@ -258,6 +258,8 @@ namespace CairoDesktop
 
             if (Settings.TaskbarMode == 0)
                 appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, appBarEdge);
+
+            Shell.HideWindowFromTasks(handle);
         }
 
         private void TasksList_Changed(object sender, NotifyCollectionChangedEventArgs e)

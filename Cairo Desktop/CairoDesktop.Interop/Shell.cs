@@ -351,6 +351,11 @@ namespace CairoDesktop.Interop
 
         }
 
+        public static void HideWindowFromTasks(IntPtr hWnd)
+        {
+            SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW);
+        }
+
         public static void ToggleDesktopIcons(bool enable)
         {
             var toggleDesktopCommand = new IntPtr(0x7402);
