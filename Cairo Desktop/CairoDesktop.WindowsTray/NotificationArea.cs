@@ -103,14 +103,21 @@ namespace CairoDesktop.WindowsTray
                             }
 
                             trayIcon.Title = nicData.szTip;
-                            try
+                            if ((IntPtr)nicData.hIcon != IntPtr.Zero)
                             {
-                                trayIcon.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon((IntPtr)nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                                try
+                                {
+                                    trayIcon.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon((IntPtr)nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                                }
+                                catch
+                                {
+                                    if (trayIcon.Icon == null)
+                                        trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
+                                }
                             }
-                            catch
+                            else
                             {
-                                if (trayIcon.Icon == null)
-                                    trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
+                                trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
                             }
                             trayIcon.HWnd = (IntPtr)nicData.hWnd;
                             trayIcon.UID = nicData.uID;

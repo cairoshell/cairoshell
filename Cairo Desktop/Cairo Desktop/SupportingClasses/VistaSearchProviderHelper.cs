@@ -67,6 +67,12 @@ namespace VistaSearchProvider
 
         static void doSearch(Object state)
         {
+            // check if user wants to show file extensions. always show on windows < 8 due to property missing
+            string displayNameColumn = "System.ItemNameDisplayWithoutExtension";
+            object hideFileExt = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", false).GetValue("HideFileExt");
+            if ((hideFileExt != null && hideFileExt.ToString() == "0") || !CairoDesktop.Interop.Shell.IsWindows8OrBetter)
+                displayNameColumn = "System.ItemNameDisplay";
+
             SearchObjectState sos = (SearchObjectState)state;
             if (sos.SearchString == string.Empty)
             {
@@ -75,7 +81,7 @@ namespace VistaSearchProvider
                 return;
             }
             cHelper = cManager.GetCatalog("SYSTEMINDEX").GetQueryHelper();
-            cHelper.QuerySelectColumns = "\"System.ItemNameDisplay\",\"System.ItemUrl\",\"System.ItemPathDisplay\",\"System.DateModified\"";
+            cHelper.QuerySelectColumns = "\"" + displayNameColumn + "\",\"System.ItemUrl\",\"System.ItemPathDisplay\",\"System.DateModified\"";
             cHelper.QueryMaxResults = MAX_RESULT;
             cHelper.QuerySorting = "System.Search.Rank desc";
 
@@ -106,6 +112,10 @@ namespace VistaSearchProvider
                                         break;
 
                                     SearchResult result = new SearchResult() { Name = reader[0].ToString(), Path = reader[1].ToString(), PathDisplay = reader[2].ToString(), DateModified = reader[3].ToString() };
+
+                                    if (result.Name.EndsWith(".lnk"))
+                                        result.Name = result.Name.Substring(0, result.Name.Length - 4); // Windows always hides this regardless of setting, so do it
+
                                     m_results.Add(result);
                                     
                                 }
