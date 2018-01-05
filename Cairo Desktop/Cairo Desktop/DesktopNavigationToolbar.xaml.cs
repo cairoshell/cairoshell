@@ -79,6 +79,8 @@ namespace CairoDesktop
             fbd.ShowNewFolderButton = false;
             fbd.SelectedPath = (this.Owner as Desktop).Icons.Locations[0].FullName;
 
+            NativeMethods.SetForegroundWindow(helper.Handle);
+
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 DirectoryInfo dir = new DirectoryInfo(fbd.SelectedPath);
