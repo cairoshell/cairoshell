@@ -117,6 +117,13 @@
             if (theme != "Default")
                 if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
+            if (Settings.EnableTaskbar)
+            {
+                // hide Windows taskbar
+                AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
+                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
+            }
+
             MenuBarWindow = new MenuBar();
             app.MainWindow = MenuBarWindow;
             MenuBarWindow.Show();
@@ -135,10 +142,6 @@
 
             if (Settings.EnableTaskbar)
             {
-                // hide Windows taskbar
-                AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
-                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
-
                 TaskbarWindow = new Taskbar();
                 TaskbarWindow.Show();
             }
