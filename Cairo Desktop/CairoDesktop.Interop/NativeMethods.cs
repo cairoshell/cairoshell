@@ -593,7 +593,7 @@ namespace CairoDesktop.Interop
         [DllImport("user32.dll")]
         public static extern int GetWindowTextLength(IntPtr hwnd);
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern int GetWindowText(IntPtr hwnd, StringBuilder sb, int Length);
 
         [DllImport("user32.dll")]
