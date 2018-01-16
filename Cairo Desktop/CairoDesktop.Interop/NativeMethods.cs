@@ -286,7 +286,7 @@ namespace CairoDesktop.Interop
             CSIDL_FLAG_CREATE = 0x8000,
         }//CSIDL
 
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct SHFILEINFO
         {
             public IntPtr hIcon;
@@ -339,7 +339,7 @@ namespace CairoDesktop.Interop
             OverlayIndex = 0x000000040,
         }
 
-        [DllImport("shell32.dll")]
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
 
         [DllImport("User32.dll")]
