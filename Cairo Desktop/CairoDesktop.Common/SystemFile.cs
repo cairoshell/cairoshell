@@ -6,6 +6,7 @@ using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System.Diagnostics;
+using System.Windows;
 
 namespace CairoDesktop.Common
 {
@@ -171,8 +172,10 @@ namespace CairoDesktop.Common
             {
                 if (_icon == null)
                 {
-                    _icon = GetDisplayIcon(0);
-                    _icon.Freeze();
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => {
+                        Icon = GetDisplayIcon(0);
+                        Icon.Freeze();
+                    }));
                 }
 
                 return _icon;
@@ -194,8 +197,10 @@ namespace CairoDesktop.Common
             {
                 if (_largeIcon == null)
                 {
-                    _largeIcon = GetDisplayIcon(2);
-                    _largeIcon.Freeze();
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => {
+                        LargeIcon = GetDisplayIcon(2);
+                        LargeIcon.Freeze();
+                    }));
                 }
 
                 return _largeIcon;
