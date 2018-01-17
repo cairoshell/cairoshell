@@ -46,7 +46,7 @@ namespace CairoDesktop.UWPInterop
                     {
                         // packages can contain multiple apps
 
-                        XmlNode showEntry = app.SelectSingleNode("uap:VisualElements/@AppListEntry", xmlnsManager);
+                        XmlNode showEntry = getXmlNode("uap:VisualElements/@AppListEntry", app, xmlnsManager);
                         if (showEntry == null || showEntry.Value == "true")
                         {
                             // App is visible in the applist
@@ -100,14 +100,42 @@ namespace CairoDesktop.UWPInterop
             XmlNamespaceManager xmlnsManager = new XmlNamespaceManager(manifest.NameTable);
             xmlnsManager.AddNamespace("ns", "http://schemas.microsoft.com/appx/manifest/foundation/windows10");
             xmlnsManager.AddNamespace("uap", "http://schemas.microsoft.com/appx/manifest/uap/windows10");
+            xmlnsManager.AddNamespace("uap2", "http://schemas.microsoft.com/appx/manifest/uap/windows10/2");
+            xmlnsManager.AddNamespace("uap3", "http://schemas.microsoft.com/appx/manifest/uap/windows10/3");
+            xmlnsManager.AddNamespace("uap4", "http://schemas.microsoft.com/appx/manifest/uap/windows10/4");
+            xmlnsManager.AddNamespace("uap5", "http://schemas.microsoft.com/appx/manifest/uap/windows10/5");
 
             return xmlnsManager;
+        }
+
+        private static XmlNode getXmlNode(string nodeText, XmlNode app, XmlNamespaceManager xmlnsManager)
+        {
+            XmlNode node = app.SelectSingleNode(nodeText, xmlnsManager);
+
+            if (node == null && nodeText.Contains("uap:"))
+            {
+                int i = 0;
+                string[] namespaces = { "uap:", "uap2:", "uap3:", "uap4:", "uap5:" };
+                while (node == null && i <= 3)
+                {
+                    nodeText = nodeText.Replace(namespaces[i], namespaces[i + 1]);
+                    node = app.SelectSingleNode(nodeText, xmlnsManager);
+                    i++;
+                }
+            }
+
+            return node;
         }
 
         private static string getDisplayName(string packageName, string packagePath, XmlNode app, XmlNamespaceManager xmlnsManager)
         {
             Uri nameUri;
-            string nameKey = app.SelectSingleNode("uap:VisualElements/@DisplayName", xmlnsManager).Value;
+            XmlNode nameNode = getXmlNode("uap:VisualElements/@DisplayName", app, xmlnsManager);
+
+            if (nameNode == null)
+                return packageName;
+
+            string nameKey = nameNode.Value;
 
             if (!Uri.TryCreate(nameKey, UriKind.Absolute, out nameUri))
                 return nameKey;
@@ -133,7 +161,7 @@ namespace CairoDesktop.UWPInterop
 
         private static string getPlateColor(XmlNode app, XmlNamespaceManager xmlnsManager)
         {
-            XmlNode colorKey = app.SelectSingleNode("uap:VisualElements/@BackgroundColor", xmlnsManager);
+            XmlNode colorKey = getXmlNode("uap:VisualElements/@BackgroundColor", app, xmlnsManager);
 
             if (colorKey != null && !string.IsNullOrEmpty(colorKey.Value) && colorKey.Value.ToLower() != "transparent")
                 return colorKey.Value;
@@ -143,7 +171,12 @@ namespace CairoDesktop.UWPInterop
 
         private static string getIconPath(string path, XmlNode app, XmlNamespaceManager xmlnsManager, int size)
         {
-            string iconPath = path + "\\" + (app.SelectSingleNode("uap:VisualElements/@Square44x44Logo", xmlnsManager).Value).Replace(".png", "");
+            XmlNode iconNode = getXmlNode("uap:VisualElements/@Square44x44Logo", app, xmlnsManager);
+
+            if (iconNode == null)
+                return "";
+
+            string iconPath = path + "\\" + (iconNode.Value).Replace(".png", "");
 
             List<string> iconAssets = new List<string> {
                 ".png",
