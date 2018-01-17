@@ -736,7 +736,7 @@
                             <MenuItem.HeaderTemplate>
                                 <ItemContainerTemplate>
                                     <StackPanel Orientation="Horizontal" Margin="0" HorizontalAlignment="Stretch">
-                                        <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
+                                        <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                                         Height="32"
                                         Width="32" Margin="0,0,10,0" />
                                         <StackPanel Orientation="Vertical" VerticalAlignment="Center">
@@ -1536,7 +1536,7 @@
                                 CommandParameter="{Binding Path=FullName}"
                                 Style="{StaticResource CairoDesktopButtonStyle}" Height="97">
                         <DockPanel>
-                            <Image Source="{Binding Path=LargeIcon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="48" Height="48" DockPanel.Dock="Top" RenderOptions.BitmapScalingMode="LowQuality" />
+                            <Image Source="{Binding Path=LargeIcon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="48" Height="48" DockPanel.Dock="Top" RenderOptions.BitmapScalingMode="LowQuality" />
                             <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name, Mode=OneWay}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
                             <Border DockPanel.Dock="Bottom" Name="bdrFilename">
                                 <Border.Effect>
@@ -1595,7 +1595,7 @@
                                 CommandParameter="{Binding Path=FullName}"
                                 Style="{StaticResource CairoDesktopButtonStyle}">
                         <DockPanel>
-                            <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="32" Height="32" DockPanel.Dock="Top" RenderOptions.BitmapScalingMode="LowQuality" />
+                            <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="32" Height="32" DockPanel.Dock="Top" RenderOptions.BitmapScalingMode="LowQuality" />
                             <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name, Mode=OneWay}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
                             <Border DockPanel.Dock="Bottom" Name="bdrFilename">
                                 <Border.Effect>
@@ -1654,7 +1654,7 @@
                                 CommandParameter="{Binding Path=FullName}"
                                 Style="{StaticResource CairoDesktopButtonStyle}" Height="64" Margin="9,0,8,5">
                         <DockPanel>
-                            <Image Source="{Binding Path=LargeIcon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="48" Height="48" DockPanel.Dock="Left" RenderOptions.BitmapScalingMode="LowQuality" />
+                            <Image Source="{Binding Path=LargeIcon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="48" Height="48" DockPanel.Dock="Left" RenderOptions.BitmapScalingMode="LowQuality" />
                             <TextBox DockPanel.Dock="Right" Visibility="Collapsed" Text="{Binding Path=Name, Mode=OneWay}" Name="txtRename" Height="35" Width="130" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Left" />
                             <Border DockPanel.Dock="Right" Name="bdrFilename" Height="36">
                                 <Border.Effect>
@@ -1712,7 +1712,7 @@
                                 CommandParameter="{Binding Path=FullName}"
                                 Style="{StaticResource CairoDesktopButtonStyle}" Height="48" Margin="9,0,8,5">
                         <DockPanel>
-                            <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="32" Height="32" DockPanel.Dock="Left" RenderOptions.BitmapScalingMode="LowQuality" />
+                            <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="32" Height="32" DockPanel.Dock="Left" RenderOptions.BitmapScalingMode="LowQuality" />
                             <TextBox DockPanel.Dock="Right" Visibility="Collapsed" Text="{Binding Path=Name, Mode=OneWay}" Name="txtRename" Height="35" Width="130" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Left" />
                             <Border DockPanel.Dock="Right" Name="bdrFilename" Height="36">
                                 <Border.Effect>
@@ -1796,7 +1796,7 @@
                                     </TextBlock.ToolTip>
                                 </TextBlock>
                             </Border>
-                            <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="32" Height="32" RenderOptions.BitmapScalingMode="LowQuality" />
+                            <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Stretch="Uniform" Width="32" Height="32" RenderOptions.BitmapScalingMode="LowQuality" />
                         </DockPanel>
                         <Button.ContextMenu>
                             <ContextMenu Loaded="ctxFile_Loaded"

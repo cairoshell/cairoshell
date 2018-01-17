@@ -34,7 +34,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Image Source="{Binding Path=Icon, IsAsync=True, Mode=OneWay}" Name="imgIcon"
+            <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Name="imgIcon"
                     Width="16"
                     Height="16"
                     Grid.Column="0" Margin="0,0,5,0"/>

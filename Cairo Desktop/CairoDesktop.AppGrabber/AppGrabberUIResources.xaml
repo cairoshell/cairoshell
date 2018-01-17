@@ -319,8 +319,8 @@
                 <DataTemplate>
                     <DockPanel MinHeight="20"
                         VerticalAlignment="Center">
-                        <Border BorderThickness="0" Background="{Binding Path=IconColor, Mode=OneWay, IsAsync=True}" Height="16">
-                            <Image Source="{Binding Path=Icon, Mode=OneWay, IsAsync=True, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
+                        <Border BorderThickness="0" Background="{Binding Path=IconColor, Mode=OneWay}" Height="16">
+                            <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                             Width="16"
                             Height="16"
                             DockPanel.Dock="Left" />

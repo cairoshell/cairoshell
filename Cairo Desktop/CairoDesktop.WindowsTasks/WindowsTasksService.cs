@@ -228,7 +228,7 @@ namespace CairoDesktop.WindowsTasks
                                     win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
                                     win.OnPropertyChanged("ShowInTaskbar");
                                     win.OnPropertyChanged("Title");
-                                    win.OnPropertyChanged("Icon");
+                                    win.SetIcon();
 
                                     foreach (ApplicationWindow wind in this.Windows)
                                     {
@@ -236,7 +236,7 @@ namespace CairoDesktop.WindowsTasks
                                         {
                                             wind.OnPropertyChanged("ShowInTaskbar");
                                             win.OnPropertyChanged("Title");
-                                            win.OnPropertyChanged("Icon");
+                                            win.SetIcon();
                                         }
                                     }
                                 }
@@ -254,7 +254,7 @@ namespace CairoDesktop.WindowsTasks
                                     win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
                                     win.OnPropertyChanged("ShowInTaskbar");
                                     win.OnPropertyChanged("Title");
-                                    win.OnPropertyChanged("Icon");
+                                    win.SetIcon();
                                 }
                                 break;
                         }

@@ -10,98 +10,62 @@ namespace CairoDesktop.Interop
 {
     public partial class Shell
     {
-        /* ******************************************
-         * DLL Imports for getting special folders 
-         * that are not supported by .Net Framework
-         * *************************************** */
-
-        // Uses some code from https://gist.github.com/madd0/1433330
-
         private const int MAX_PATH = 260;
+        private static Object iconLock = new Object();
 
 
         public static IntPtr GetIconByFilename(string fileName, int size)
         {
-            /*switch (size)
-            {
-                case 0:
-                    return GetIcon(fileName, SHGFI.LargeIcon);
-                case 1:
-                    return GetIcon(fileName, SHGFI.SmallIcon);
-                case 2:
-                    return GetIcon_New(fileName, size);
-                default:
-                    return GetIcon(fileName, SHGFI.LargeIcon);
-            }*/
-            return GetIcon_New(fileName, size);
+            return GetIcon(fileName, size);
         }
-
-        /*private static IntPtr GetIcon(string filename, SHGFI flags)
-        {
-            try
-            {
-                SHFILEINFO shinfo = new SHFILEINFO();
-                IntPtr hIconInfo;
-
-                if (!filename.StartsWith("\\") && (File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
-                {
-                    hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex | flags));
-                }
-                else
-                {
-                    hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.UseFileAttributes | SHGFI.SysIconIndex | flags));
-                }
-
-                IntPtr hIcon = ImageList_GetIcon(hIconInfo, shinfo.iIcon, (int)0x00000001);
-
-                return hIcon;
-            }
-            catch
-            {
-                return IntPtr.Zero;
-            }
-        }*/
         
-        private static IntPtr GetIcon_New(string filename, int size)
+        private static IntPtr GetIcon(string filename, int size)
         {
-            try
+            lock (iconLock)
             {
-                SHFILEINFO shinfo = new SHFILEINFO();
-                IntPtr hIconInfo;
-
-                if (!filename.StartsWith("\\") && (File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
+                try
                 {
-                    hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex));
+                    SHFILEINFO shinfo = new SHFILEINFO();
+                    shinfo.szDisplayName = string.Empty;
+                    shinfo.szTypeName = string.Empty;
+                    IntPtr hIconInfo;
+
+                    if (!filename.StartsWith("\\") && (File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
+                    {
+                        hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex));
+                    }
+                    else
+                    {
+                        hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.UseFileAttributes | SHGFI.SysIconIndex));
+                    }
+
+                    var iconIndex = shinfo.iIcon;
+
+                    // Get the System IImageList object from the Shell:
+                    Guid iidImageList = new Guid("46EB5926-582E-4017-9FDF-E8998DAA0950");
+
+                    IImageList iml;
+                    SHGetImageList(size, ref iidImageList, out iml);
+
+                    IntPtr hIcon = IntPtr.Zero;
+                    int ILD_TRANSPARENT = 1;
+                    iml.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
+                    Marshal.ReleaseComObject(iml);
+
+                    return hIcon;
                 }
-                else
+                catch
                 {
-                    hIconInfo = SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.UseFileAttributes | SHGFI.SysIconIndex));
+                    return IntPtr.Zero;
                 }
-
-                var iconIndex = shinfo.iIcon;
-
-                // Get the System IImageList object from the Shell:
-                Guid iidImageList = new Guid("46EB5926-582E-4017-9FDF-E8998DAA0950");
-
-                IImageList iml;
-                var hres = SHGetImageList(size, ref iidImageList, out iml);
-
-                IntPtr hIcon = IntPtr.Zero;
-                int ILD_TRANSPARENT = 1;
-                hres = iml.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
-                Marshal.ReleaseComObject(iml);
-
-                return hIcon;
-            }
-            catch
-            {
-                return IntPtr.Zero;
             }
         }
 
         public static string GetDisplayName(string filename)
         {
             SHFILEINFO shinfo = new SHFILEINFO();
+            shinfo.szDisplayName = string.Empty;
+            shinfo.szTypeName = string.Empty;
             SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.DisplayName));
 
             return shinfo.szDisplayName;

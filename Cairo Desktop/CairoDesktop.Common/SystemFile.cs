@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using System.Windows.Threading;
 using System.Diagnostics;
-using System.Windows;
+using System.Threading;
 
 namespace CairoDesktop.Common
 {
@@ -20,6 +20,8 @@ namespace CairoDesktop.Common
         private string _fullName;
         private string _name;
         private List<string> _verbs = new List<string>();
+        private bool _iconLoading = false;
+        private bool _iconLargeLoading = false;
 
         public bool IsDirectory
         {
@@ -170,12 +172,19 @@ namespace CairoDesktop.Common
         {
             get
             {
-                if (_icon == null)
+                if (_icon == null && !_iconLoading)
                 {
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => {
+                    _iconLoading = true;
+                    
+                    var thread = new Thread(() =>
+                    {
                         Icon = GetDisplayIcon(0);
                         Icon.Freeze();
-                    }));
+                        _iconLoading = false;
+                    });
+                    thread.IsBackground = true;
+                    thread.SetApartmentState(ApartmentState.STA);
+                    thread.Start();
                 }
 
                 return _icon;
@@ -195,12 +204,19 @@ namespace CairoDesktop.Common
         {
             get
             {
-                if (_largeIcon == null)
+                if (_largeIcon == null && !_iconLargeLoading)
                 {
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => {
+                    _iconLargeLoading = true;
+                    
+                    var thread = new Thread(() =>
+                    {
                         LargeIcon = GetDisplayIcon(2);
                         LargeIcon.Freeze();
-                    }));
+                        _iconLargeLoading = false;
+                    });
+                    thread.IsBackground = true;
+                    thread.SetApartmentState(ApartmentState.STA);
+                    thread.Start();
                 }
 
                 return _largeIcon;

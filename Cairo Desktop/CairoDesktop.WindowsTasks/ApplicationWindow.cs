@@ -9,11 +9,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Windows;
 using CairoDesktop.Common;
+using System.Threading;
 
 namespace CairoDesktop.WindowsTasks
 {
     [DebuggerDisplay("Title: {Title}, Handle: {Handle}")]
-    public class ApplicationWindow : IEquatable<ApplicationWindow>, ICairoNotifyPropertyChanged
+    public class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPropertyChanged
     {
         public DispatcherTimer VisCheck;
 
@@ -30,8 +31,8 @@ namespace CairoDesktop.WindowsTasks
             {
                 VisCheck = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Background, delegate
                 {
-                // some windows don't send a redraw notification after a property changes, try to catch those cases here
-                OnPropertyChanged("Title");
+                    // some windows don't send a redraw notification after a property changes, try to catch those cases here
+                    OnPropertyChanged("Title");
                     OnPropertyChanged("ShowInTaskbar");
                 }, Application.Current.Dispatcher);
             }
@@ -184,55 +185,21 @@ namespace CairoDesktop.WindowsTasks
         {
             get
             {
-                if (WinFileName.Contains("ApplicationFrameHost.exe") && !string.IsNullOrEmpty(AppUserModelID))
-                {
-                    try
-                    {
-                        BitmapImage img = new BitmapImage();
-                        img.BeginInit();
-                        img.UriSource = new Uri(UWPInterop.StoreAppHelper.GetAppIcon(AppUserModelID, Configuration.Settings.TaskbarIconSize)[0], UriKind.Absolute);
-                        img.CacheOption = BitmapCacheOption.OnLoad;
-                        img.EndInit();
-                        img.Freeze();
-                        return img;
-                    }
-                    catch
-                    {
-                        return IconImageConverter.GetDefaultIcon();
-                    }
-                }
+                if (_icon == null)
+                    SetIcon();
 
-                if (this._icon != null)
-                {
-                    ImageSource icon = IconImageConverter.GetImageFromHIcon(this._icon);
-                    icon.Freeze();
-                    return icon;
-                }
-                else if (!_iconBeingRetried)
-                {
-                    iconTries = 0;
-                    _iconBeingRetried = true;
-                    DispatcherTimer getIcon = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
-                    getIcon.Interval = new TimeSpan(0, 0, 2);
-                    getIcon.Tick += getIcon_Tick;
-                    getIcon.Start();
-                }
-
-                return IconImageConverter.GetDefaultIcon();
+                return _icon;
             }
-        }
-
-        private bool _iconBeingRetried = false;
-
-        private IntPtr _icon
-        {
-            get
+            set
             {
-                IntPtr iconHandle = GetIconForWindow(this.Handle);
-                
-                return iconHandle;
+                _icon = value;
+                OnPropertyChanged("Icon");
             }
         }
+
+        private bool _iconLoading = false;
+
+        private ImageSource _icon = null;
 
         private WindowState _state;
 
@@ -312,66 +279,114 @@ namespace CairoDesktop.WindowsTasks
         {
             if (this._icon != null || iconTries > 5)
             {
-                OnPropertyChanged("Icon");
-                _iconBeingRetried = false;
                 (sender as DispatcherTimer).Stop();
             }
             else
+            {
                 iconTries++;
+                SetIcon();
+            }
         }
 
-        public static IntPtr GetIconForWindow(IntPtr hWnd)
+        public void SetIcon()
         {
-            IntPtr hIco = default(IntPtr);
-            uint WM_GETICON = 0x007f;
-            IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
-            int GCL_HICON = -14;
-            int GCL_HICONSM = -34;
-            int sizeSetting = Configuration.Settings.TaskbarIconSize;
+            if (!_iconLoading)
+            {
+                _iconLoading = true;
 
-            if (sizeSetting == 1)
-            {
-                NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 2, 0, 2, 1000, ref hIco);
-                if (hIco == IntPtr.Zero)
-                    NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 0, 0, 2, 1000, ref hIco);
-            }
-            else
-            {
-                NativeMethods.SendMessageTimeout(hWnd, WM_GETICON, 1, 0, 2, 1000, ref hIco);
-            }
-
-            if (hIco == IntPtr.Zero && sizeSetting == 1)
-            {
-                if (!Environment.Is64BitProcess)
-                    hIco = NativeMethods.GetClassLong(hWnd, GCL_HICONSM);
-                else
-                    hIco = NativeMethods.GetClassLongPtr(hWnd, GCL_HICONSM);
-            }
-
-            if (hIco == IntPtr.Zero)
-            {
-                if (!Environment.Is64BitProcess)
-                    hIco = NativeMethods.GetClassLong(hWnd, GCL_HICON);
-                else
-                    hIco = NativeMethods.GetClassLongPtr(hWnd, GCL_HICON);
-            }
-
-            if (hIco == IntPtr.Zero)
-            {
-                string winFileName = GetFileNameForWindow(hWnd);
-                if (Shell.Exists(winFileName))
+                var thread = new Thread(() =>
                 {
-                    int size = 1;
-                    if (sizeSetting != 1)
-                        size = 0;
+                    if (WinFileName.Contains("ApplicationFrameHost.exe") && !string.IsNullOrEmpty(AppUserModelID))
+                    {
+                        // UWP apps
+                        try
+                        {
+                            BitmapImage img = new BitmapImage();
+                            img.BeginInit();
+                            img.UriSource = new Uri(UWPInterop.StoreAppHelper.GetAppIcon(AppUserModelID, Configuration.Settings.TaskbarIconSize)[0], UriKind.Absolute);
+                            img.CacheOption = BitmapCacheOption.OnLoad;
+                            img.EndInit();
+                            img.Freeze();
+                            Icon = img;
+                        }
+                        catch
+                        {
+                            Icon = IconImageConverter.GetDefaultIcon();
+                        }
+                    }
+                    else
+                    {
+                        // non-UWP apps
+                        IntPtr hIco = default(IntPtr);
+                        uint WM_GETICON = 0x007f;
+                        IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
+                        int GCL_HICON = -14;
+                        int GCL_HICONSM = -34;
+                        int sizeSetting = Configuration.Settings.TaskbarIconSize;
 
-                    hIco = Shell.GetIconByFilename(winFileName, size);
-                }
+                        if (sizeSetting == 1)
+                        {
+                            NativeMethods.SendMessageTimeout(Handle, WM_GETICON, 2, 0, 2, 1000, ref hIco);
+                            if (hIco == IntPtr.Zero)
+                                NativeMethods.SendMessageTimeout(Handle, WM_GETICON, 0, 0, 2, 1000, ref hIco);
+                        }
+                        else
+                        {
+                            NativeMethods.SendMessageTimeout(Handle, WM_GETICON, 1, 0, 2, 1000, ref hIco);
+                        }
+
+                        if (hIco == IntPtr.Zero && sizeSetting == 1)
+                        {
+                            if (!Environment.Is64BitProcess)
+                                hIco = NativeMethods.GetClassLong(Handle, GCL_HICONSM);
+                            else
+                                hIco = NativeMethods.GetClassLongPtr(Handle, GCL_HICONSM);
+                        }
+
+                        if (hIco == IntPtr.Zero)
+                        {
+                            if (!Environment.Is64BitProcess)
+                                hIco = NativeMethods.GetClassLong(Handle, GCL_HICON);
+                            else
+                                hIco = NativeMethods.GetClassLongPtr(Handle, GCL_HICON);
+                        }
+
+                        if (hIco == IntPtr.Zero)
+                        {
+                            string winFileName = GetFileNameForWindow(Handle);
+                            if (Shell.Exists(winFileName))
+                            {
+                                int size = 1;
+                                if (sizeSetting != 1)
+                                    size = 0;
+
+                                hIco = Shell.GetIconByFilename(winFileName, size);
+                            }
+                        }
+
+                        if (hIco != IntPtr.Zero)
+                        {
+                            ImageSource icon = IconImageConverter.GetImageFromHIcon(hIco);
+                            icon.Freeze();
+                            Icon = icon;
+                        }
+                        else if (iconTries == 0)
+                        {
+                            DispatcherTimer getIcon = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
+                            getIcon.Interval = new TimeSpan(0, 0, 2);
+                            getIcon.Tick += getIcon_Tick;
+                            getIcon.Start();
+                        }
+                    }
+
+                    _iconLoading = false;
+                });
+                thread.IsBackground = true;
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
             }
-
-            return hIco;
         }
-
+        
         public void BringToFront()
         {
             // so that maximized windows stay that way

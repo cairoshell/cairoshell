@@ -6,6 +6,8 @@ using SearchAPILib;
 using System.Data.OleDb;
 using System.Data;
 using System.Windows.Media;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace VistaSearchProvider
 {
@@ -149,7 +151,7 @@ namespace VistaSearchProvider
         }
     }
 
-    public class SearchResult
+    public class SearchResult : INotifyPropertyChanged
     {
         public string Name { get; set; }
         public string Path { get; set; }
@@ -161,9 +163,48 @@ namespace VistaSearchProvider
         {
             get
             {
-                string iconPath = Path.Substring(Path.IndexOf(':') + 1).Replace("/", "\\");
-                return CairoDesktop.Common.IconImageConverter.GetImageFromAssociatedIcon(iconPath, 0);
+                if (icon == null && !_iconLoading)
+                {
+                    _iconLoading = true;
+
+                    var thread = new Thread(() =>
+                    {
+                        string iconPath = Path.Substring(Path.IndexOf(':') + 1).Replace("/", "\\");
+                        Icon = CairoDesktop.Common.IconImageConverter.GetImageFromAssociatedIcon(iconPath, 0);
+                        _iconLoading = false;
+                    });
+                    thread.IsBackground = true;
+                    thread.SetApartmentState(ApartmentState.STA);
+                    thread.Start();
+                }
+
+                return icon;
+            }
+            set
+            {
+                icon = value;
+                OnPropertyChanged("Icon");
             }
         }
+
+        private bool _iconLoading = false;
+        private ImageSource icon { get; set; }
+
+        #region INotifyPropertyChanged Members
+
+        /// <summary>
+        /// This Event is raised whenever a property of this object has changed. Necesary to sync state when binding.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [DebuggerNonUserCode]
+        private void OnPropertyChanged(string propName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
+        }
+        #endregion
     }
 }

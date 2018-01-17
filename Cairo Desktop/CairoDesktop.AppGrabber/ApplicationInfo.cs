@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Windows.Media;
 using System.ComponentModel;
-using System.Windows;
-using System.Windows.Threading;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Common;
+using System.Threading;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -36,6 +35,8 @@ namespace CairoDesktop.AppGrabber
             this.IconColor = iconColor;
             this.IconPath = iconPath;
         }
+
+        private bool _iconLoading = false;
 
         private string name;
         /// <summary>
@@ -169,18 +170,19 @@ namespace CairoDesktop.AppGrabber
         public ImageSource Icon {
             get
             {
-                if (icon == null)
+                if (icon == null && !_iconLoading)
                 {
-                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() => {
-
-                        icon = GetAssociatedIcon();
-                        icon.Freeze();
-                        // Notify Databindings of property change
-                        if (PropertyChanged != null)
-                        {
-                            PropertyChanged(this, new PropertyChangedEventArgs("Icon"));
-                        }
-                    }));
+                    _iconLoading = true;
+                    
+                    var thread = new Thread(() =>
+                    {
+                        Icon = GetAssociatedIcon();
+                        Icon.Freeze();
+                        _iconLoading = false;
+                    });
+                    thread.IsBackground = true;
+                    thread.SetApartmentState(ApartmentState.STA);
+                    thread.Start();
                 }
 
                 return icon;
