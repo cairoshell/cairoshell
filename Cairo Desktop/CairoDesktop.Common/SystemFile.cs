@@ -19,7 +19,7 @@ namespace CairoDesktop.Common
         private string _friendlyName;
         private string _fullName;
         private string _name;
-        private List<string> _verbs = new List<string>();
+        private List<string> _verbs;
         private bool _iconLoading = false;
         private bool _iconLargeLoading = false;
 
@@ -65,7 +65,7 @@ namespace CairoDesktop.Common
             {
                 this.FullName = filePath;
 
-                getVerbs();
+                //getVerbs();
 
                 return true;
             }
@@ -77,16 +77,21 @@ namespace CairoDesktop.Common
         /// </summary>
         private void getVerbs()
         {
-            Process refProc = new Process();
-            refProc.StartInfo.FileName = this.FullName;
+            _verbs = new List<string>();
 
-            try
+            if (!IsDirectory && !string.IsNullOrEmpty(FullName))
             {
-                this.Verbs.AddRange(refProc.StartInfo.Verbs);
-            }
-            catch { }
+                Process refProc = new Process();
+                refProc.StartInfo.FileName = this.FullName;
 
-            refProc.Dispose();
+                try
+                {
+                    this.Verbs.AddRange(refProc.StartInfo.Verbs);
+                }
+                catch { }
+
+                refProc.Dispose();
+            }
         }
 
         /// <summary>
@@ -235,6 +240,9 @@ namespace CairoDesktop.Common
         {
             get
             {
+                if (_verbs == null)
+                    getVerbs();
+
                 return _verbs;
             }
 
