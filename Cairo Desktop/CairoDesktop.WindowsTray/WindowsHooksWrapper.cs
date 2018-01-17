@@ -28,7 +28,7 @@ namespace CairoDesktop.WindowsTray
         /// </summary>
         public IntPtr InitializeSystray()
         {
-            return InteropCalls.InitializeSystray();
+            return InteropCalls.InitializeSystray(Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenWidth));
 
             /*IntPtr hInstance = Marshal.GetHINSTANCE(typeof(WindowsHooksWrapper).Module);
 
