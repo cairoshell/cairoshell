@@ -25,6 +25,8 @@ namespace CairoDesktop.Interop
             {
                 try
                 {
+                    filename = translateIconExceptions(filename);
+
                     SHFILEINFO shinfo = new SHFILEINFO();
                     shinfo.szDisplayName = string.Empty;
                     shinfo.szTypeName = string.Empty;
@@ -59,6 +61,14 @@ namespace CairoDesktop.Interop
                     return IntPtr.Zero;
                 }
             }
+        }
+
+        private static string translateIconExceptions(string filename)
+        {
+            if (filename.EndsWith(".settingcontent-ms"))
+                return "C:\\Windows\\ImmersiveControlPanel\\SystemSettings.exe";
+
+            return filename;
         }
 
         public static string GetDisplayName(string filename)
