@@ -219,7 +219,7 @@
                               Height="22" />
                     </MenuItem.Header>
                 </MenuItem>-->
-                <MenuItem x:Name="miOpenActionCenter" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click" ToolTip="{Binding sMenuBar_OpenActionCenter}">
+                <MenuItem x:Name="miOpenActionCenter" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click" MouseEnter="miOpenActionCenter_MouseEnter" MouseLeave="miOpenActionCenter_MouseLeave" ToolTip="{Binding sMenuBar_OpenActionCenter}">
                     <MenuItem.Header>
                         <Image Name="ActionCenterIcon" Source="{StaticResource ActionCenterIcon}"
                               Width="38"

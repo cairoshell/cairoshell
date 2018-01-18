@@ -557,6 +557,18 @@ namespace CairoDesktop
             Shell.ShowActionCenter();
         }
 
+        private void miOpenActionCenter_MouseEnter(object sender, MouseEventArgs e)
+        {
+            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
+                        NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
+        }
+
+        private void miOpenActionCenter_MouseLeave(object sender, MouseEventArgs e)
+        {
+            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
+                        NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) & ~NativeMethods.WS_EX_NOACTIVATE);
+        }
+
         #endregion
 
         #region Search menu
