@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Threading;
 using CairoDesktop.Configuration;
@@ -99,7 +100,7 @@ namespace CairoDesktop.Common {
         private void addFile(String filePath) {
             if (Interop.Shell.Exists(filePath) && isFileVisible(filePath))
             {
-                SystemFile newFile = new SystemFile(filePath, dispatcher);
+                SystemFile newFile = new SystemFile(filePath);
                 if (newFile.Name != null)
                     files.Add(newFile);
             }
@@ -166,23 +167,25 @@ namespace CairoDesktop.Common {
         private void initialize()
         {
             files.Clear();
-            bool showSubs = false;
-            if (Settings.EnableSubDirs)
-                showSubs = true;
 
-            foreach (DirectoryInfo subDir in dir.GetDirectories())
+            if (Settings.EnableSubDirs)
             {
-                if (showSubs && isFileVisible(subDir.FullName))
+                IEnumerable<string> dirs = Directory.EnumerateDirectories(this.DirectoryInfo.FullName);
+                foreach (string subDir in dirs)
                 {
-                    files.Add(new SystemFile(subDir.FullName, dispatcher));
+                    if (isFileVisible(subDir))
+                    {
+                        files.Add(new SystemFile(subDir));
+                    }
                 }
             }
 
-            foreach (String file in Directory.GetFiles(this.DirectoryInfo.FullName))
+            IEnumerable<string> dirFiles = Directory.EnumerateFiles(this.DirectoryInfo.FullName, "*");
+            foreach (String file in dirFiles)
             {
                 if (isFileVisible(file))
                 {
-                    files.Add(new SystemFile(file, dispatcher));
+                    files.Add(new SystemFile(file));
                 }
             }
 
