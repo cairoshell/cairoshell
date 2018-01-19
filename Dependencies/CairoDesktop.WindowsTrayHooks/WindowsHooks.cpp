@@ -38,7 +38,7 @@ void SetSystrayCallback(LPVOID theCallbackFunctionAddress)
 	ODS("Systray callback set.\n");
 }
 
-HWND InitializeSystray(int width)
+HWND InitializeSystray(int width, float scale)
 {
 	ShutdownSystray();
 
@@ -56,7 +56,7 @@ HWND InitializeSystray(int width)
 								NULL,
 								WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
 								0, 0,
-								width, 1,
+								width*scale, 23*scale,
 								NULL,
 								NULL,
 								m_hInstance,
@@ -77,7 +77,7 @@ HWND InitializeSystray(int width)
               L"TrayNotifyWnd", 
               NULL,
               WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
-              0, 0, width, 1,
+              0, 0, width*scale, 23*scale,
               m_hWndTray, NULL,
               m_hInstance,
               NULL);

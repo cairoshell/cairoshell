@@ -2,7 +2,6 @@
 namespace CairoDesktop.WindowsTray
 {
     using System;
-    using static Interop.NativeMethods;
 
     /// <summary>
     /// The wrapper class the for C++ Windows Hooks library.
@@ -28,7 +27,7 @@ namespace CairoDesktop.WindowsTray
         /// </summary>
         public IntPtr InitializeSystray()
         {
-            return InteropCalls.InitializeSystray(Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenWidth));
+            return InteropCalls.InitializeSystray(Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenWidth), (float)Interop.Shell.GetDpiScale());
 
             /*IntPtr hInstance = Marshal.GetHINSTANCE(typeof(WindowsHooksWrapper).Module);
 
