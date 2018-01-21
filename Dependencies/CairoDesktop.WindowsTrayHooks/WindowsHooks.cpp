@@ -56,7 +56,7 @@ HWND InitializeSystray(int width, float scale)
 								NULL,
 								WS_POPUP | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
 								0, 0,
-								width*scale, 23*scale,
+								width, static_cast<int>(23*scale),
 								NULL,
 								NULL,
 								m_hInstance,
@@ -77,7 +77,7 @@ HWND InitializeSystray(int width, float scale)
               L"TrayNotifyWnd", 
               NULL,
               WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS,
-              0, 0, width*scale, 23*scale,
+              0, 0, width, static_cast<int>(23 * scale),
               m_hWndTray, NULL,
               m_hInstance,
               NULL);
