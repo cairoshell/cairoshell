@@ -4,7 +4,6 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.ComponentModel;
-using System.Windows.Threading;
 using System.Diagnostics;
 using System.Threading;
 
@@ -13,7 +12,6 @@ namespace CairoDesktop.Common
     public class SystemFile : INotifyPropertyChanged
     {
         private static readonly string[] ImageFileTypes = new string[] { ".jpg", ".jpeg", ".gif", ".bmp", ".png" };
-        private Dispatcher _dispatcher;
         private ImageSource _icon;
         private ImageSource _largeIcon;
         private string _friendlyName;
@@ -39,22 +37,11 @@ namespace CairoDesktop.Common
         }
 
         /// <summary>
-        /// Initializes a new instance of the SystemFile class using the CurrentDispatcher.
-        /// </summary>
-        /// <param name="filePath">The file path of the file in question.</param>
-        public SystemFile(string filePath)
-            : this(filePath, Dispatcher.CurrentDispatcher)
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of the SystemFile class.
         /// </summary>
         /// <param name="filePath">The file path of the file in question.</param>
-        /// <param name="dispatcher">The current UI dispatcher.</param>
-        public SystemFile(string filePath, Dispatcher dispatcher)
+        public SystemFile(string filePath)
         {
-            this._dispatcher = dispatcher;
 
             SetFilePath(filePath);
         }
