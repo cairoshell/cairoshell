@@ -319,7 +319,7 @@
                 <DataTemplate>
                     <DockPanel MinHeight="20"
                         VerticalAlignment="Center">
-                        <Border BorderThickness="0" Background="{Binding Path=IconColor, Mode=OneWay}" Height="16">
+                        <Border DockPanel.Dock="Left" BorderThickness="0" Background="{Binding Path=IconColor, Mode=OneWay}" Height="16">
                             <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                             Width="16"
                             Height="16"
@@ -341,7 +341,7 @@
                                 </Style>
                             </Border.Style>
                         </Border>
-                        <TextBlock Text="{Binding Path=Name}"
+                        <TextBlock DockPanel.Dock="Right" Text="{Binding Path=Name}"
                             Margin="3"
                             FontFamily="Corbel"
                             FontSize="14"
@@ -365,8 +365,6 @@
     </Style>
     <Style x:Key="ApplicationInfoListItemStyle"
         TargetType="ListViewItem">
-        <Setter Property="MaxWidth"
-            Value="310" />
         <Style.Triggers>
             <Trigger Property="ItemsControl.AlternationIndex"
                 Value="0">
