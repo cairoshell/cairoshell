@@ -22,7 +22,9 @@ namespace CairoDesktop
     {
         public Stack<string> PathHistory = new Stack<string>();
         private WindowInteropHelper helper;
+        private IntPtr hEventHook = IntPtr.Zero;
         public DesktopIcons Icons;
+
         public Desktop()
         {
             InitializeComponent();
@@ -103,8 +105,11 @@ namespace CairoDesktop
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            int result = NativeMethods.SetShellWindow(helper.Handle);
-            Shell.ShowWindowBottomMost(helper.Handle);
+            if (!Topmost)
+            {
+                int result = NativeMethods.SetShellWindow(helper.Handle);
+                Shell.ShowWindowBottomMost(helper.Handle);
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -113,6 +118,9 @@ namespace CairoDesktop
             {
                 // show the windows desktop
                 Shell.ToggleDesktopIcons(true);
+
+                if (hEventHook != IntPtr.Zero)
+                    Shell.HideWindowWhenShowDesktop(hEventHook);
             }
             else
                 e.Cancel = true;
@@ -144,6 +152,8 @@ namespace CairoDesktop
             }
 
             Shell.HideWindowFromTasks(helper.Handle);
+
+            hEventHook = Shell.ShowWindowWhenShowDesktop(this);
         }
 
         private void pasteFromClipboard()
@@ -188,7 +198,8 @@ namespace CairoDesktop
 
         private void grid_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            NativeMethods.SetForegroundWindow(helper.Handle);
+            if (!Topmost)
+                NativeMethods.SetForegroundWindow(helper.Handle);
         }
 
         public void Navigate(string newLocation)

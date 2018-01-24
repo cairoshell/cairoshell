@@ -1531,6 +1531,17 @@ namespace CairoDesktop.Interop
             NoSeperateMemory = 0x0020
         }
 
+        public delegate void EventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc, EventDelegate lpfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);
+
+        [DllImport("user32.dll")]
+        public static extern bool UnhookWinEvent(IntPtr hWinEventHook);
+
+        public const uint WINEVENT_OUTOFCONTEXT = 0u;
+        public const uint EVENT_SYSTEM_FOREGROUND = 3u;
+
         [DllImport("shell32.dll", CharSet = CharSet.Auto, EntryPoint = "#61", SetLastError = true)]
         public static extern bool SHRunFileDialog(IntPtr hwndOwner,
                                    IntPtr hIcon,
