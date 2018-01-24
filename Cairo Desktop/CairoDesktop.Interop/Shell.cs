@@ -422,7 +422,9 @@ namespace CairoDesktop.Interop
 
                     if (string.Equals(className.ToString(), "WorkerW", StringComparison.Ordinal))
                     {
+                        System.Threading.Thread.Sleep(250); // :(
                         Trace.WriteLine(string.Format("Making {0} window topmost", window.Name));
+                        SetForegroundWindow(new System.Windows.Interop.WindowInteropHelper(window).Handle); // no hiding!
                         window.Topmost = true;
                     }
                     else if (window.Topmost)
