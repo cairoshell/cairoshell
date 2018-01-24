@@ -425,7 +425,7 @@ namespace CairoDesktop.Interop
                         Trace.WriteLine(string.Format("Making {0} window topmost", window.Name));
                         window.Topmost = true;
                     }
-                    else
+                    else if (window.Topmost)
                     {
                         Trace.WriteLine(string.Format("Revoking {0} window topmost", window.Name));
                         window.Topmost = false;
