@@ -2034,6 +2034,14 @@
         <Setter Property="FontSize" Value="12" />
         <Setter Property="Height" Value="24" />
         <Setter Property="MinWidth" Value="140" />
+        <Setter Property="MaxWidth" Value="220" />
+        <Setter Property="HeaderTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=DisplayName}" TextTrimming="CharacterEllipsis" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">

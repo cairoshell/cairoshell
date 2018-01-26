@@ -25,19 +25,23 @@ namespace CairoDesktop
         private IntPtr hEventHook = IntPtr.Zero;
         public DesktopIcons Icons;
 
+        int xOffset = 8;
+        int yOffset = 12;
+
         public Desktop()
         {
             InitializeComponent();
 
+            if (Settings.DesktopLabelPosition == 1)
+                xOffset = 0;
+            
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
             this.Height = AppBarHelper.PrimaryMonitorSize.Height-1;
+            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width - xOffset;
+            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height - yOffset;
+            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left + xOffset, System.Windows.Forms.SystemInformation.WorkingArea.Top + yOffset, 0, 0);
 
-            if (Settings.DesktopLabelPosition == 1)
-            {
-                grid.Margin = new Thickness(0, 35, 0, 0);
-            }
-
-                if (Startup.IsCairoUserShell)
+            if (Startup.IsCairoUserShell)
             {
                 string regWallpaper = (string)Registry.GetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop", "Wallpaper", "");
 
@@ -91,16 +95,24 @@ namespace CairoDesktop
         {
             this.Top = 0;
             this.Left = 0;
+
             this.Width = x;
-            this.Height = y;
+            this.Height = y - 1;
+            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width - xOffset;
+            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height - yOffset;
+            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left + xOffset, System.Windows.Forms.SystemInformation.WorkingArea.Top + yOffset, 0, 0);
         }
 
         public void ResetPosition()
         {
             this.Top = 0;
             this.Left = 0;
+
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
             this.Height = AppBarHelper.PrimaryMonitorSize.Height - 1;
+            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width - xOffset;
+            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height - yOffset;
+            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left + xOffset, System.Windows.Forms.SystemInformation.WorkingArea.Top + yOffset, 0, 0);
         }
 
         private void Window_Activated(object sender, EventArgs e)
@@ -119,8 +131,8 @@ namespace CairoDesktop
                 // show the windows desktop
                 Shell.ToggleDesktopIcons(true);
 
-                if (hEventHook != IntPtr.Zero)
-                    Shell.HideWindowWhenShowDesktop(hEventHook);
+                /*if (hEventHook != IntPtr.Zero)
+                    Shell.HideWindowWhenShowDesktop(hEventHook);*/
             }
             else
                 e.Cancel = true;
@@ -153,7 +165,7 @@ namespace CairoDesktop
 
             Shell.HideWindowFromTasks(helper.Handle);
 
-            hEventHook = Shell.ShowWindowWhenShowDesktop(this);
+            //hEventHook = Shell.ShowWindowWhenShowDesktop(this);
         }
 
         private void pasteFromClipboard()

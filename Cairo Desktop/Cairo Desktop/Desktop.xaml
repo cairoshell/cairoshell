@@ -8,8 +8,8 @@
     Left="0"
     AllowsTransparency="True"
     Focusable="False" UseLayoutRounding="True" Name="CairoDesktopWindow"
-    Background="{x:Null}" Topmost="False" Activated="Window_Activated" Closing="Window_Closing" SourceInitialized="Window_SourceInitialized" LocationChanged="CairoDesktopWindow_LocationChanged">
-    <Grid Name="grid" Margin="8,35,0,0" MouseRightButtonDown="grid_MouseRightButtonDown">
+    Background="Transparent" Topmost="False" Activated="Window_Activated" Closing="Window_Closing" SourceInitialized="Window_SourceInitialized" LocationChanged="CairoDesktopWindow_LocationChanged">
+    <Grid Name="grid" MouseRightButtonDown="grid_MouseRightButtonDown" HorizontalAlignment="Left" VerticalAlignment="Top">
     </Grid>
     <Window.ContextMenu>
         <ContextMenu Style="{StaticResource CairoContextMenuStyle}">

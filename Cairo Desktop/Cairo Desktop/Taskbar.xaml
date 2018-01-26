@@ -217,7 +217,7 @@
                                                     <ControlTemplate>
                                                         <StackPanel Orientation="Horizontal" Margin="0,3">
                                                                 <Border BorderThickness="0,0,1,0" BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}" Width="100" Margin="0,-3">
-                                                                    <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6,7,6,0" />
+                                                                    <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6,7,6,0" TextTrimming="CharacterEllipsis" />
                                                             </Border>
                                                             <ItemsPresenter />
                                                         </StackPanel>

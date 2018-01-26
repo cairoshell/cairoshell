@@ -221,6 +221,11 @@ namespace CairoDesktop.SupportingClasses
             abWindow.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
                 new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top);
 
+
+
+            if (Startup.DesktopWindow != null)
+                Startup.DesktopWindow.ResetPosition();
+
             if (h < sHeight)
                 ABSetPos(abWindow, width, height, edge);
         }
@@ -250,6 +255,14 @@ namespace CairoDesktop.SupportingClasses
             get
             {
                 return new System.Drawing.Size(NativeMethods.GetSystemMetrics(0), NativeMethods.GetSystemMetrics(1));
+            }
+        }
+
+        public static System.Drawing.Size PrimaryMonitorWorkArea
+        {
+            get
+            {
+                return new System.Drawing.Size(SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left, SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top);
             }
         }
 
@@ -288,6 +301,9 @@ namespace CairoDesktop.SupportingClasses
             }
 
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref rc, (1 | 2));
+
+            if (Startup.DesktopWindow != null)
+                Startup.DesktopWindow.ResetPosition();
         }
         
         public static void ResetWorkArea()
