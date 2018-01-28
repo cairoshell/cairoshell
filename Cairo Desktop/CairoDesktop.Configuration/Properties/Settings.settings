@@ -69,7 +69,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="TaskbarIconSize" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1</Value>
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="EnableDesktopOverlay" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
