@@ -334,6 +334,8 @@ namespace CairoDesktop
             appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
 
             Shell.HideWindowFromTasks(handle);
+
+            HotKey key = new HotKey(Key.C, KeyModifier.Shift | KeyModifier.Win, OnShowCairoMenu);
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
@@ -405,6 +407,12 @@ namespace CairoDesktop
         {
             if (ProgramsMenu.IsKeyboardFocusWithin && !(e.NewFocus is TextBox))
                 e.Handled = true;
+        }
+
+        private void OnShowCairoMenu(HotKey hotKey)
+        {
+            NativeMethods.SetForegroundWindow(helper.Handle);
+            CairoMenu.IsSubmenuOpen = true;
         }
         #endregion
 

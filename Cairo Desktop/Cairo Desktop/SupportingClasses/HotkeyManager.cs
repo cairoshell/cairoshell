@@ -68,6 +68,7 @@ namespace CairoDesktop.SupportingClasses
                     {
                         if (hotKey.Action != null)
                         {
+                            Trace.WriteLine(string.Format("Hotkey {0} pressed", hotKey.Key.ToString()));
                             hotKey.Action.Invoke(hotKey);
                         }
                         handled = true;
