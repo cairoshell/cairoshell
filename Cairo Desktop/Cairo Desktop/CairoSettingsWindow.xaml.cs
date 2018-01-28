@@ -179,39 +179,19 @@
             SupportingClasses.WinSparkle.win_sparkle_set_automatic_check_for_updates(Convert.ToInt32(chkEnableAutoUpdates.IsChecked));
         }
 
-        private void EnableDesktop_Click(object sender, RoutedEventArgs e)
+        private void showRestartButton()
         {
-            this.btnRestart.Visibility = Visibility.Visible;
+            btnRestart.Visibility = Visibility.Visible;
         }
 
-        private void EnableDynamicDesktop_Click(object sender, RoutedEventArgs e)
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
-        private void EnableSubDirs_Click(object sender, RoutedEventArgs e)
+        private void DropDown_Changed(object sender, EventArgs e)
         {
-            this.btnRestart.Visibility = Visibility.Visible;
-        }
-
-        private void EnableTaskbar_Click(object sender, RoutedEventArgs e)
-        {
-            this.btnRestart.Visibility = Visibility.Visible;
-        }
-
-        private void EnableMenuBarShadow_Click(object sender, RoutedEventArgs e)
-        {
-            this.btnRestart.Visibility = Visibility.Visible;
-        }
-
-        private void EnableSysTray_Click(object sender, RoutedEventArgs e)
-        {
-            this.btnRestart.Visibility = Visibility.Visible;
-        }
-
-        private void themeSetting_Changed(object sender, EventArgs e)
-        {
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void restartCairo(object sender, RoutedEventArgs e)
@@ -262,94 +242,79 @@
         private void radTaskbarMode0_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarMode = 0;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radTaskbarMode1_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarMode = 1;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radTaskbarPos0_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarPosition = 0;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radTaskbarPos1_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarPosition = 1;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarIconSize = 0;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radTaskbarSize1_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarIconSize = 1;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radTaskbarSize10_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarIconSize = 10;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radDesktopLabelPos0_Click(object sender, RoutedEventArgs e)
         {
             Settings.DesktopLabelPosition = 0;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radDesktopLabelPos1_Click(object sender, RoutedEventArgs e)
         {
             Settings.DesktopLabelPosition = 1;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radDesktopIconSize0_Click(object sender, RoutedEventArgs e)
         {
             Settings.DesktopIconSize = 0;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radDesktopIconSize2_Click(object sender, RoutedEventArgs e)
         {
             Settings.DesktopIconSize = 2;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radTrayMode0_Click(object sender, RoutedEventArgs e)
         {
             Settings.SysTrayAlwaysExpanded = false;
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
 
         private void radTrayMode1_Click(object sender, RoutedEventArgs e)
         {
             Settings.SysTrayAlwaysExpanded = true;
-            this.btnRestart.Visibility = Visibility.Visible;
-        }
-
-        private void chkEnableSysTrayRehook_Click(object sender, RoutedEventArgs e)
-        {
-            this.btnRestart.Visibility = Visibility.Visible;
-        }
-
-        private void chkEnableTaskbarPolling_Click(object sender, RoutedEventArgs e)
-        {
-            this.btnRestart.Visibility = Visibility.Visible;
-        }
-
-        private void chkForceSoftwareRendering_Click(object sender, RoutedEventArgs e)
-        {
-            this.btnRestart.Visibility = Visibility.Visible;
+            showRestartButton();
         }
     }
 }

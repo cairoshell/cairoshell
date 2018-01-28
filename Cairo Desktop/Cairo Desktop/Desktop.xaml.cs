@@ -154,8 +154,11 @@ namespace CairoDesktop
             }
 
             Shell.HideWindowFromTasks(helper.Handle);
-            
-            HotKey key = new HotKey(System.Windows.Input.Key.D, KeyModifier.Shift | KeyModifier.Win, OnShowDesktop);
+
+            if (Settings.EnableDesktopOverlay)
+            {
+                HotKey key = new HotKey(System.Windows.Input.Key.D, KeyModifier.Shift | KeyModifier.Win, OnShowDesktop);
+            }
         }
 
         private void pasteFromClipboard()

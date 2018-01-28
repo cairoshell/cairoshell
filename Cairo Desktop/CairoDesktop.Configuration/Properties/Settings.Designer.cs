@@ -298,5 +298,29 @@ namespace CairoDesktop.Configuration.Properties {
                 this["TaskbarIconSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableDesktopOverlay {
+            get {
+                return ((bool)(this["EnableDesktopOverlay"]));
+            }
+            set {
+                this["EnableDesktopOverlay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableCairoMenuHotKey {
+            get {
+                return ((bool)(this["EnableCairoMenuHotKey"]));
+            }
+            set {
+                this["EnableCairoMenuHotKey"] = value;
+            }
+        }
     }
 }

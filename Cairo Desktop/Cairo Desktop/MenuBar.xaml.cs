@@ -335,7 +335,10 @@ namespace CairoDesktop
 
             Shell.HideWindowFromTasks(handle);
 
-            HotKey key = new HotKey(Key.Z, KeyModifier.Shift | KeyModifier.Win, OnShowCairoMenu);
+            if (Settings.EnableCairoMenuHotKey)
+            {
+                HotKey key = new HotKey(Key.Z, KeyModifier.Shift | KeyModifier.Win, OnShowCairoMenu);
+            }
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)

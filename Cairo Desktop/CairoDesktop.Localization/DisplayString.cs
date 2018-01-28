@@ -1211,6 +1211,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_MenuBar_EnableCairoMenuHotKey
+        {
+            get
+            {
+                return getString("sSettings_MenuBar_EnableCairoMenuHotKey");
+            }
+        }
+
         public static string sSettings_Desktop_EnableDesktop
         {
             get
@@ -1264,6 +1272,14 @@ namespace CairoDesktop.Localization
             get
             {
                 return getString("sSettings_Desktop_EnableDynamicDesktop");
+            }
+        }
+
+        public static string sSettings_Desktop_EnableDesktopOverlay
+        {
+            get
+            {
+                return getString("sSettings_Desktop_EnableDesktopOverlay");
             }
         }
 

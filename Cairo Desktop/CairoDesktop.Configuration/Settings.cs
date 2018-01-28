@@ -39,6 +39,7 @@ namespace CairoDesktop.Configuration
         private static string _DesktopDirectory;
         private static int? _DesktopLabelPosition;
         private static int? _DesktopIconSize;
+        private static bool? _EnableDesktopOverlay;
 
         // Taskbar
         private static bool? _EnableTaskbar;
@@ -53,6 +54,7 @@ namespace CairoDesktop.Configuration
         private static bool? _EnableSysTray;
         private static bool? _SysTrayAlwaysExpanded;
         private static bool? _EnableSysTrayRehook;
+        private static bool? _EnableCairoMenuHotKey;
 
         #endregion
 
@@ -300,6 +302,23 @@ namespace CairoDesktop.Configuration
             }
         }
 
+        public static bool EnableDesktopOverlay
+        {
+            get
+            {
+                if (_EnableDesktopOverlay == null)
+                    _EnableDesktopOverlay = Properties.Settings.Default.EnableDesktopOverlay;
+
+                return (bool)_EnableDesktopOverlay;
+            }
+            set
+            {
+                _EnableDesktopOverlay = value;
+                Properties.Settings.Default.EnableDesktopOverlay = (bool)_EnableDesktopOverlay;
+                Save();
+            }
+        }
+
         // Taskbar
         public static bool EnableTaskbar
         {
@@ -468,6 +487,23 @@ namespace CairoDesktop.Configuration
             {
                 _EnableSysTrayRehook = value;
                 Properties.Settings.Default.EnableSysTrayRehook = (bool)_EnableSysTrayRehook;
+                Save();
+            }
+        }
+
+        public static bool EnableCairoMenuHotKey
+        {
+            get
+            {
+                if (_EnableCairoMenuHotKey == null)
+                    _EnableCairoMenuHotKey = Properties.Settings.Default.EnableCairoMenuHotKey;
+
+                return (bool)_EnableCairoMenuHotKey;
+            }
+            set
+            {
+                _EnableCairoMenuHotKey = value;
+                Properties.Settings.Default.EnableCairoMenuHotKey = (bool)_EnableCairoMenuHotKey;
                 Save();
             }
         }
