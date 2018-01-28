@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows;
 using static CairoDesktop.Interop.NativeMethods;
 
 namespace CairoDesktop.Interop
@@ -14,8 +12,6 @@ namespace CairoDesktop.Interop
     {
         private const int MAX_PATH = 260;
         private static Object iconLock = new Object();
-        private static Dictionary<IntPtr, Window> windowsOnShowDesktop = new Dictionary<IntPtr, Window>();
-        private static EventDelegate eventDelegate = new EventDelegate(eventCallback);
 
         public static IntPtr GetIconByFilename(string fileName, int size)
         {
@@ -391,49 +387,6 @@ namespace CairoDesktop.Interop
             info.cbSize = (uint)Marshal.SizeOf(info);
             GetWindowInfo(hWnd, ref info);
             return (info.dwStyle & 0x10000000) == 0x10000000;
-        }
-
-        public static IntPtr ShowWindowWhenShowDesktop(Window window)
-        {
-            IntPtr hHook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, eventDelegate, 0, 0, WINEVENT_OUTOFCONTEXT);
-            windowsOnShowDesktop.Add(hHook, window);
-
-            return hHook;
-        }
-
-        public static void HideWindowWhenShowDesktop(IntPtr hHook)
-        {
-            if (windowsOnShowDesktop.ContainsKey(hHook))
-            {
-                UnhookWinEvent(hHook);
-                windowsOnShowDesktop.Remove(hHook);
-            }
-        }
-
-        private static void eventCallback(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
-        {
-            if (eventType == EVENT_SYSTEM_FOREGROUND)
-            {
-                Window window;
-                if (windowsOnShowDesktop.TryGetValue(hWinEventHook, out window))
-                {
-                    StringBuilder className = new StringBuilder(32);
-                    GetClassName(hwnd, className, className.Capacity);
-
-                    if (string.Equals(className.ToString(), "WorkerW", StringComparison.Ordinal))
-                    {
-                        System.Threading.Thread.Sleep(250); // :(
-                        Trace.WriteLine(string.Format("Making {0} window topmost", window.Name));
-                        SetForegroundWindow(new System.Windows.Interop.WindowInteropHelper(window).Handle); // no hiding!
-                        window.Topmost = true;
-                    }
-                    else if (window.Topmost)
-                    {
-                        Trace.WriteLine(string.Format("Revoking {0} window topmost", window.Name));
-                        window.Topmost = false;
-                    }
-                }
-            }
         }
 
         /// <summary>

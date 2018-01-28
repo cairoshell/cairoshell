@@ -30,12 +30,18 @@ namespace CairoDesktop
                 else
                 {
                     proc.Start();
+
+                    if (Window.GetWindow(senderButton).Name == "CairoDesktopWindow")
+                        Startup.DesktopWindow.CloseOverlay();
                 }
             }
             catch
             {
                 // No 'Open' command associated with this filetype in the registry
                 Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
+
+                if (Window.GetWindow(senderButton).Name == "CairoDesktopWindow")
+                    Startup.DesktopWindow.CloseOverlay();
             }
         }
 

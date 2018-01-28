@@ -22,24 +22,17 @@ namespace CairoDesktop
     {
         public Stack<string> PathHistory = new Stack<string>();
         private WindowInteropHelper helper;
-        private IntPtr hEventHook = IntPtr.Zero;
         public DesktopIcons Icons;
-
-        int xOffset = 8;
-        int yOffset = 12;
 
         public Desktop()
         {
             InitializeComponent();
-
-            if (Settings.DesktopLabelPosition == 1)
-                xOffset = 0;
             
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
             this.Height = AppBarHelper.PrimaryMonitorSize.Height-1;
-            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width - xOffset;
-            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height - yOffset;
-            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left + xOffset, System.Windows.Forms.SystemInformation.WorkingArea.Top + yOffset, 0, 0);
+            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width;
+            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height;
+            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left, System.Windows.Forms.SystemInformation.WorkingArea.Top, 0, 0);
 
             if (Startup.IsCairoUserShell)
             {
@@ -98,9 +91,9 @@ namespace CairoDesktop
 
             this.Width = x;
             this.Height = y - 1;
-            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width - xOffset;
-            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height - yOffset;
-            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left + xOffset, System.Windows.Forms.SystemInformation.WorkingArea.Top + yOffset, 0, 0);
+            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width;
+            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height;
+            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left, System.Windows.Forms.SystemInformation.WorkingArea.Top, 0, 0);
         }
 
         public void ResetPosition()
@@ -110,9 +103,9 @@ namespace CairoDesktop
 
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
             this.Height = AppBarHelper.PrimaryMonitorSize.Height - 1;
-            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width - xOffset;
-            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height - yOffset;
-            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left + xOffset, System.Windows.Forms.SystemInformation.WorkingArea.Top + yOffset, 0, 0);
+            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width;
+            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height;
+            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left, System.Windows.Forms.SystemInformation.WorkingArea.Top, 0, 0);
         }
 
         private void Window_Activated(object sender, EventArgs e)
@@ -130,9 +123,6 @@ namespace CairoDesktop
             {
                 // show the windows desktop
                 Shell.ToggleDesktopIcons(true);
-
-                /*if (hEventHook != IntPtr.Zero)
-                    Shell.HideWindowWhenShowDesktop(hEventHook);*/
             }
             else
                 e.Cancel = true;
@@ -164,8 +154,8 @@ namespace CairoDesktop
             }
 
             Shell.HideWindowFromTasks(helper.Handle);
-
-            //hEventHook = Shell.ShowWindowWhenShowDesktop(this);
+            
+            HotKey key = new HotKey(System.Windows.Input.Key.D, KeyModifier.Shift | KeyModifier.Win, OnShowDesktop);
         }
 
         private void pasteFromClipboard()
@@ -223,6 +213,30 @@ namespace CairoDesktop
         private void CairoDesktopWindow_LocationChanged(object sender, EventArgs e)
         {
             ResetPosition();
+        }
+
+        private void OnShowDesktop(HotKey hotKey)
+        {
+            if (!Topmost)
+            {
+                Topmost = true;
+                NativeMethods.SetForegroundWindow(helper.Handle);
+                grid.Background = new SolidColorBrush(Color.FromArgb(0x88, 0, 0, 0));
+            }
+            else
+            {
+                CloseOverlay();
+            }
+        }
+
+        public void CloseOverlay()
+        {
+            if (Topmost)
+            {
+                Topmost = false;
+                Shell.ShowWindowBottomMost(helper.Handle);
+                grid.Background = Brushes.Transparent;
+            }
         }
     }
 }

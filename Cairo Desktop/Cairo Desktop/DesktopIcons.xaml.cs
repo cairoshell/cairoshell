@@ -13,6 +13,9 @@ namespace CairoDesktop {
     public partial class DesktopIcons : UserControl 
     {
         public static DependencyProperty locationsProperty = DependencyProperty.Register("Locations", typeof(InvokingObservableCollection<SystemDirectory>), typeof(DesktopIcons), new PropertyMetadata(new InvokingObservableCollection<SystemDirectory>(Dispatcher.CurrentDispatcher)));
+        
+        int xOffset = 8;
+        int yOffset = 12;
 
         public DesktopIcons()
         {
@@ -36,6 +39,11 @@ namespace CairoDesktop {
             }
 
             InitializeComponent();
+
+            if (Settings.DesktopLabelPosition == 1)
+                xOffset = 0;
+
+            panel.Margin = new Thickness(xOffset, yOffset, 0, 0);
 
             if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 0)
             {

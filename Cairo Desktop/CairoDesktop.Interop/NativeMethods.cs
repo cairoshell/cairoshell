@@ -670,6 +670,7 @@ namespace CairoDesktop.Interop
         public const uint WM_MOUSEHOVER = 0x2A1;
         public const uint WM_MOUSELAST = 0x20D;
         public const uint WM_MOUSELEAVE = 0x2A3;
+        public const uint WM_HOTKEY = 0x0312;
 
         public const uint NIN_SELECT = 0x400;
         public const uint NIN_POPUPOPEN = 0x406;
@@ -1531,17 +1532,6 @@ namespace CairoDesktop.Interop
             NoSeperateMemory = 0x0020
         }
 
-        public delegate void EventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc, EventDelegate lpfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);
-
-        [DllImport("user32.dll")]
-        public static extern bool UnhookWinEvent(IntPtr hWinEventHook);
-
-        public const uint WINEVENT_OUTOFCONTEXT = 0u;
-        public const uint EVENT_SYSTEM_FOREGROUND = 3u;
-
         [DllImport("shell32.dll", CharSet = CharSet.Auto, EntryPoint = "#61", SetLastError = true)]
         public static extern bool SHRunFileDialog(IntPtr hwndOwner,
                                    IntPtr hIcon,
@@ -1555,6 +1545,12 @@ namespace CairoDesktop.Interop
 
         [DllImport("user32.dll", SetLastError = false)]
         public static extern IntPtr GetMessageExtraInfo();
+
+        [DllImport("user32.dll")]
+        public static extern bool RegisterHotKey(IntPtr hWnd, int id, UInt32 fsModifiers, UInt32 vlc);
+
+        [DllImport("user32.dll")]
+        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
         public const int INPUT_KEYBOARD = 1;
         public const uint KEYEVENTF_KEYUP = 0x0002;

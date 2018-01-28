@@ -3,7 +3,7 @@
  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Name="CairoDesktopIcons" UseLayoutRounding="True">
-    <DockPanel Margin="0">
+    <DockPanel Name="panel" Margin="0">
         <ItemsControl Name="IconsControl" DataContext="{Binding ElementName=CairoDesktopIcons, Path=Locations[0]}" FocusVisualStyle="{x:Null}" Style="{StaticResource DesktopFolderViewHorizontalStyle}" ItemsSource="{Binding Path=Files, IsAsync=True}" />
     </DockPanel>
 </UserControl>
