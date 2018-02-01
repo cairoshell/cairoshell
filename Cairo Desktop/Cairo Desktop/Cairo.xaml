@@ -1150,6 +1150,8 @@
     </Style>
     <Style x:Key="CairoTaskbarTopButtonList"
         TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource CairoTaskbarButtonList}">
+        <Setter Property="Margin"
+            Value="1,0,-1,-1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -1230,6 +1232,8 @@
     </Style>
     <Style x:Key="CairoTaskbarTopButtonDesktopOverlay"
         TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource CairoTaskbarButtonDesktopOverlay}">
+        <Setter Property="Margin"
+            Value="-1,0,0,-1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
