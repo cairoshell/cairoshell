@@ -7,6 +7,7 @@ using CairoDesktop.Configuration;
 using System.Windows.Threading;
 using System.Collections.Specialized;
 using CairoDesktop.WindowsTray;
+using System.Windows.Controls.Primitives;
 
 namespace CairoDesktop
 {
@@ -70,6 +71,7 @@ namespace CairoDesktop
             this.Height = 29 + addToSize;
 
             ((INotifyCollectionChanged)TasksList.Items).CollectionChanged += TasksList_Changed;
+            btnDesktopOverlay.DataContext = Startup.DesktopWindow;
 
             // set taskbar edge based on preference
             if (Settings.TaskbarPosition == 1)
@@ -78,7 +80,9 @@ namespace CairoDesktop
                 appBarEdge = AppBarHelper.ABEdge.ABE_TOP;
                 bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarTopBorderStyle") as Style;
                 bdrTaskbarEnd.Style = Application.Current.FindResource("CairoTaskbarEndTopBorderStyle") as Style;
+                bdrTaskbarLeft.Style = Application.Current.FindResource("CairoTaskbarLeftTopBorderStyle") as Style;
                 btnTaskList.Style = Application.Current.FindResource("CairoTaskbarTopButtonList") as Style;
+                btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarTopButtonDesktopOverlay") as Style;
                 TaskbarGroupStyle.ContainerStyle = Application.Current.FindResource("CairoTaskbarTopGroupStyle") as Style;
                 TasksList.Margin = new Thickness(0);
                 bdrTaskListPopup.Margin = new Thickness(5, this.Top + this.Height - 1, 5, 11);
@@ -341,6 +345,11 @@ namespace CairoDesktop
             }
 
             e.Handled = true;
+        }
+
+        private void btnDesktopOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            Startup.DesktopWindow.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
         }
     }
 }

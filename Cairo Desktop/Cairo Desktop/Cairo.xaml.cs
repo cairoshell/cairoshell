@@ -32,7 +32,7 @@ namespace CairoDesktop
                     proc.Start();
 
                     if (Window.GetWindow(senderButton).Name == "CairoDesktopWindow")
-                        Startup.DesktopWindow.CloseOverlay();
+                        Startup.DesktopWindow.IsOverlayOpen = false;
                 }
             }
             catch
@@ -41,7 +41,7 @@ namespace CairoDesktop
                 Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
 
                 if (Window.GetWindow(senderButton).Name == "CairoDesktopWindow")
-                    Startup.DesktopWindow.CloseOverlay();
+                    Startup.DesktopWindow.IsOverlayOpen = false;
             }
         }
 

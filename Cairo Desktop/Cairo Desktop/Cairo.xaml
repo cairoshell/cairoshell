@@ -828,15 +828,13 @@
 
     <!-- Taskbar -->
     <Style x:Key="CairoTaskbarBorderStyle" TargetType="{x:Type Border}">
-        <Setter Property="BorderThickness" Value="1,1,0,0" />
-        <Setter Property="CornerRadius" Value="8,0,0,0" />
-        <Setter Property="Padding" Value="7,0,0,0" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="Padding" Value="0" />
         <Setter Property="Background" Value="{DynamicResource ResourceKey=TaskbarBottomBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarBottomBorder}" />
     </Style>
     <Style x:Key="CairoTaskbarTopBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarBorderStyle}">
-        <Setter Property="BorderThickness" Value="1,0,0,1" />
-        <Setter Property="CornerRadius" Value="0,0,0,8" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
         <Setter Property="Background" Value="{DynamicResource ResourceKey=TaskbarTopBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarTopBorder}" />
     </Style>
@@ -850,6 +848,14 @@
         <Setter Property="CornerRadius" Value="0,0,8,0" />
         <Setter Property="Padding" Value="0" />
     </Style>
+    <Style x:Key="CairoTaskbarLeftBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarEndBorderStyle}">
+        <Setter Property="BorderThickness" Value="1,1,0,0" />
+        <Setter Property="CornerRadius" Value="8,0,0,0" />
+    </Style>
+    <Style x:Key="CairoTaskbarLeftTopBorderStyle" TargetType="{x:Type Border}" BasedOn="{StaticResource CairoTaskbarEndTopBorderStyle}">
+        <Setter Property="BorderThickness" Value="1,0,0,1" />
+        <Setter Property="CornerRadius" Value="0,0,0,8" />
+    </Style>
     <!-- Button Style for Quick Launch -->
     <Style x:Key="CairoQuickLaunchButtonStyle"
         TargetType="{x:Type Button}">
@@ -860,7 +866,7 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
                         BorderThickness="0"
-                        Margin="0,0,0,0"
+                        Margin="0"
                         Background="Transparent"
                         BorderBrush="Transparent">
                         <ContentPresenter Margin="5,1,5,0"
@@ -1104,15 +1110,17 @@
             Value="24" />
         <Setter Property="VerticalAlignment"
             Value="Stretch" />
+        <Setter Property="Margin"
+            Value="1,-1,-1,0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border x:Name="Border"
                         BorderThickness="1"
                         CornerRadius="0,8,0,0"
-                        Margin="0,0,0,0" Background="Transparent" BorderBrush="Transparent">
-                        <ContentPresenter Margin="5,1,5,0"
-                            HorizontalAlignment="Left"
+                        Margin="0" Background="Transparent" BorderBrush="Transparent">
+                        <ContentPresenter Margin="0,1,0,0"
+                            HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -1148,9 +1156,89 @@
                     <Border x:Name="Border"
                         BorderThickness="1"
                         CornerRadius="0,0,8,0"
-                        Margin="0,0,0,0" Background="Transparent" BorderBrush="Transparent">
-                        <ContentPresenter Margin="5,1,5,0"
-                            HorizontalAlignment="Left"
+                        Margin="0" Background="Transparent" BorderBrush="Transparent">
+                        <ContentPresenter Margin="0,1,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBackground}" />
+                            <Setter TargetName="Border"
+                                Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBorder}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemInactivePressedBackground}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemActiveBackground}" />
+                            <Setter TargetName="Border"
+                                Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarItemActiveBorder}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CairoTaskbarButtonDesktopOverlay"
+        TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource CairoTaskbarButtonList}">
+        <Setter Property="Margin"
+            Value="-1,-1,0,0" />
+        <Setter Property="Width"
+            Value="26" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="Border"
+                        BorderThickness="1"
+                        CornerRadius="8,0,0,0"
+                        Margin="0" Background="Transparent" BorderBrush="Transparent">
+                        <ContentPresenter Margin="0,1,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBackground}" />
+                            <Setter TargetName="Border"
+                                Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBorder}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemInactivePressedBackground}" />
+                        </Trigger>
+                        <Trigger Property="IsChecked"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background" Value="{DynamicResource ResourceKey=TaskbarItemActiveBackground}" />
+                            <Setter TargetName="Border"
+                                Property="BorderBrush" Value="{DynamicResource ResourceKey=TaskbarItemActiveBorder}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CairoTaskbarTopButtonDesktopOverlay"
+        TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource CairoTaskbarButtonDesktopOverlay}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border x:Name="Border"
+                        BorderThickness="1"
+                        CornerRadius="0,0,0,8"
+                        Margin="0" Background="Transparent" BorderBrush="Transparent">
+                        <ContentPresenter Margin="0,1,0,0"
+                            HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>

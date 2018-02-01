@@ -30,6 +30,8 @@
                     Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                 <Setter Property="VerticalContentAlignment"
                     Value="Center" />
+                <Setter Property="VerticalAlignment"
+                    Value="Stretch" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListView}">
@@ -73,6 +75,14 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            <Style x:Key="QuickLaunchListStyle" BasedOn="{StaticResource TaskbarListView}"
+                TargetType="{x:Type ListView}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=quickLaunchList, Path=Items.Count}" Value="0">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
             <Style TargetType="ListViewItem">
                 <Style.Resources>
                     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
@@ -96,16 +106,21 @@
         </ResourceDictionary>
     </Window.Resources>
     <StackPanel Orientation="Horizontal" x:Name="grdTaskbar" HorizontalAlignment="Center">
+        <Border HorizontalAlignment="Left" Style="{StaticResource CairoTaskbarLeftBorderStyle}" Name="bdrTaskbarLeft">
+            <ToggleButton x:Name="btnDesktopOverlay" Style="{StaticResource CairoTaskbarButtonDesktopOverlay}" Click="btnDesktopOverlay_Click" IsChecked="{Binding Path=IsOverlayOpen, Mode=OneWay}">
+                <Image Source="Resources\desktopOverlayIcon.png"
+                           Width="15"
+                           Height="12"
+                           Margin="0"></Image>
+            </ToggleButton>
+        </Border>
         <Border HorizontalAlignment="Center" Style="{StaticResource CairoTaskbarBorderStyle}" Name="bdrTaskbar">
             <StackPanel Orientation="Horizontal">
                 <ListView HorizontalAlignment="Stretch"
                     Name="quickLaunchList"
-                    Background="{x:Null}"
-                    Foreground="{x:Null}"
-                    Style="{StaticResource TaskbarListView}"
-                    BorderThickness="0"
-                    Margin="0,0,3,0"
-                    VerticalAlignment="Stretch" Drop="quickLaunchList_Drop" DragEnter="quickLaunchList_DragEnter">
+                    Style="{StaticResource QuickLaunchListStyle}"
+                    Margin="0,0,5,0"
+                    Drop="quickLaunchList_Drop" DragEnter="quickLaunchList_DragEnter">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"
@@ -128,11 +143,8 @@
                 <ListView HorizontalAlignment="Stretch"
                     ItemsSource="{Binding Source={StaticResource groupedWindows}}"
                     DataContext="{StaticResource tasksSvc}"
-                    Background="{x:Null}"
-                    Foreground="{x:Null}"
                     Style="{StaticResource TaskbarListView}"
-                    BorderThickness="0"
-                    VerticalAlignment="Stretch" x:Name="TasksList" Margin="0,-1,0,0">
+                    x:Name="TasksList" Margin="-3,-1,0,0">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal"
@@ -186,22 +198,20 @@
         </Border>
         <Border HorizontalAlignment="Left" Style="{StaticResource CairoTaskbarEndBorderStyle}" Name="bdrTaskbarEnd">
             <StackPanel Orientation="Horizontal">
-                <ToggleButton x:Name="btnTaskList" Margin="1,-1,-1,0" Style="{StaticResource CairoTaskbarButtonList}" Click="btnTaskList_Click">
+                <ToggleButton x:Name="btnTaskList" Style="{StaticResource CairoTaskbarButtonList}" Click="btnTaskList_Click">
                     <Image Source="Resources\taskListIcon.png"
-                           Width="15"
+                           Width="14"
                            Height="12"
-                           Margin="0,0,0,0"></Image>
+                           Margin="0"></Image>
                 </ToggleButton>
                 <Popup Placement="Relative" PlacementTarget="{Binding ElementName=btnTaskList}" HorizontalOffset="-428" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{Binding ElementName=btnTaskList, Path=IsChecked}" StaysOpen="False">
                     <Border Name="bdrTaskListPopup" Style="{StaticResource CairoTaskListPopupStyle}">
                         <StackPanel Orientation="Vertical">
                         <ListView HorizontalAlignment="Stretch"
-                    ItemsSource="{Binding Source={StaticResource groupedWindows}}"
-                    Background="{x:Null}"
-                    Style="{StaticResource TaskListStyle}"
-                    BorderThickness="0,0,0,0"
-                              Margin="0,-3,0,3"
-                    VerticalAlignment="Stretch" x:Name="TasksList2">
+                            ItemsSource="{Binding Source={StaticResource groupedWindows}}"
+                            Style="{StaticResource TaskListStyle}"
+                            Margin="0,-3,0,3"
+                            x:Name="TasksList2">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Vertical"

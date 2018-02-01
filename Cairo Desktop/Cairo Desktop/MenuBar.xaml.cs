@@ -414,8 +414,15 @@ namespace CairoDesktop
 
         private void OnShowCairoMenu(HotKey hotKey)
         {
-            NativeMethods.SetForegroundWindow(helper.Handle);
-            CairoMenu.IsSubmenuOpen = true;
+            if (!CairoMenu.IsSubmenuOpen)
+            {
+                NativeMethods.SetForegroundWindow(helper.Handle);
+                CairoMenu.IsSubmenuOpen = true;
+            }
+            else
+            {
+                CairoMenu.IsSubmenuOpen = false;
+            }
         }
         #endregion
 

@@ -24,6 +24,21 @@ namespace CairoDesktop
         private WindowInteropHelper helper;
         public DesktopIcons Icons;
 
+        public DependencyProperty IsOverlayOpenProperty = DependencyProperty.Register("IsOverlayOpen", typeof(bool), typeof(Desktop), new PropertyMetadata(new bool()));
+        public bool IsOverlayOpen
+        {
+            get { return (bool)GetValue(IsOverlayOpenProperty); }
+            set
+            {
+                SetValue(IsOverlayOpenProperty, value);
+
+                if (value)
+                    showOverlay();
+                else
+                    closeOverlay();
+            }
+        }
+
         public Desktop()
         {
             InitializeComponent();
@@ -220,26 +235,33 @@ namespace CairoDesktop
 
         private void OnShowDesktop(HotKey hotKey)
         {
-            if (!Topmost)
+            ToggleOverlay();
+        }
+
+        public void ToggleOverlay()
+        {
+            if (!IsOverlayOpen)
             {
-                Topmost = true;
-                NativeMethods.SetForegroundWindow(helper.Handle);
-                grid.Background = new SolidColorBrush(Color.FromArgb(0x88, 0, 0, 0));
+                IsOverlayOpen = true;
             }
             else
             {
-                CloseOverlay();
+                IsOverlayOpen = false;
             }
         }
 
-        public void CloseOverlay()
+        private void showOverlay()
         {
-            if (Topmost)
-            {
-                Topmost = false;
-                Shell.ShowWindowBottomMost(helper.Handle);
-                grid.Background = Brushes.Transparent;
-            }
+            Topmost = true;
+            NativeMethods.SetForegroundWindow(helper.Handle);
+            grid.Background = new SolidColorBrush(Color.FromArgb(0x88, 0, 0, 0));
+        }
+
+        private void closeOverlay()
+        {
+            Topmost = false;
+            Shell.ShowWindowBottomMost(helper.Handle);
+            grid.Background = Brushes.Transparent;
         }
     }
 }
