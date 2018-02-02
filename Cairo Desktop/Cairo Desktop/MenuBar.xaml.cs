@@ -93,6 +93,16 @@ namespace CairoDesktop
             }
         }
 
+        private void setupPostInit()
+        {
+            appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+
+            Shell.HideWindowFromTasks(handle);
+
+            if (Settings.EnableCairoMenuHotKey)
+                HotKeyManager.RegisterHotKey(Settings.CairoMenuHotKey, OnShowCairoMenu);
+        }
+
         private void setupSearch()
         {
             this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
@@ -331,14 +341,7 @@ namespace CairoDesktop
 
             handle = helper.Handle;
 
-            appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
-
-            Shell.HideWindowFromTasks(handle);
-
-            if (Settings.EnableCairoMenuHotKey)
-            {
-                HotKey key = new HotKey(Key.Z, KeyModifier.Shift | KeyModifier.Win, OnShowCairoMenu);
-            }
+            setupPostInit();
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)

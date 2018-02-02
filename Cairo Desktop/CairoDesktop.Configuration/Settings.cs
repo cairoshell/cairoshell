@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace CairoDesktop.Configuration
 {
@@ -40,6 +41,7 @@ namespace CairoDesktop.Configuration
         private static int? _DesktopLabelPosition;
         private static int? _DesktopIconSize;
         private static bool? _EnableDesktopOverlay;
+        private static string _DesktopOverlayHotKey;
 
         // Taskbar
         private static bool? _EnableTaskbar;
@@ -55,12 +57,13 @@ namespace CairoDesktop.Configuration
         private static bool? _SysTrayAlwaysExpanded;
         private static bool? _EnableSysTrayRehook;
         private static bool? _EnableCairoMenuHotKey;
+        private static string _CairoMenuHotKey;
 
         #endregion
 
         #region Public properties
 
-        // General
+        #region General
         public static bool IsFirstRun
         {
             get
@@ -215,8 +218,9 @@ namespace CairoDesktop.Configuration
                 Save();
             }
         }
+        #endregion
 
-        // Desktop
+        #region Desktop
         public static bool EnableDesktop
         {
             get
@@ -319,7 +323,43 @@ namespace CairoDesktop.Configuration
             }
         }
 
-        // Taskbar
+        public static List<string> DesktopOverlayHotKey
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_DesktopOverlayHotKey))
+                    _DesktopOverlayHotKey = Properties.Settings.Default.DesktopOverlayHotKey;
+
+                List<string> parsed = new List<string>();
+
+                foreach (string key in _DesktopOverlayHotKey.Split('|'))
+                {
+                    if (!string.IsNullOrEmpty(key))
+                        parsed.Add(key);
+                }
+
+                return parsed;
+            }
+            set
+            {
+                string concatenated = "";
+
+                foreach (string key in value)
+                {
+                    if (!string.IsNullOrEmpty(concatenated))
+                        concatenated += "|";
+
+                    concatenated += key;
+                }
+
+                _DesktopOverlayHotKey = concatenated;
+                Properties.Settings.Default.DesktopOverlayHotKey = _DesktopOverlayHotKey;
+                Save();
+            }
+        }
+        #endregion
+
+        #region Taskbar
         public static bool EnableTaskbar
         {
             get
@@ -404,8 +444,9 @@ namespace CairoDesktop.Configuration
                 Save();
             }
         }
+        #endregion
 
-        // Menu Bar
+        #region Menu Bar
         public static string DefaultProgramsCategory
         {
             get
@@ -507,6 +548,42 @@ namespace CairoDesktop.Configuration
                 Save();
             }
         }
+
+        public static List<string> CairoMenuHotKey
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_CairoMenuHotKey))
+                    _CairoMenuHotKey = Properties.Settings.Default.CairoMenuHotKey;
+
+                List<string> parsed = new List<string>();
+
+                foreach (string key in _CairoMenuHotKey.Split('|'))
+                {
+                    if (!string.IsNullOrEmpty(key))
+                        parsed.Add(key);
+                }
+
+                return parsed;
+            }
+            set
+            {
+                string concatenated = "";
+
+                foreach (string key in value)
+                {
+                    if (!string.IsNullOrEmpty(concatenated))
+                        concatenated += "|";
+
+                    concatenated += key;
+                }
+
+                _CairoMenuHotKey = concatenated;
+                Properties.Settings.Default.CairoMenuHotKey = _CairoMenuHotKey;
+                Save();
+            }
+        }
+        #endregion
 
         #endregion
 

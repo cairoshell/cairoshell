@@ -67,6 +67,14 @@ namespace CairoDesktop
             }
         }
 
+        private void setupPostInit()
+        {
+            Shell.HideWindowFromTasks(helper.Handle);
+
+            if (Settings.EnableDesktopOverlay)
+                HotKeyManager.RegisterHotKey(Settings.DesktopOverlayHotKey, OnShowDesktop);
+        }
+
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (msg == NativeMethods.WM_MOUSEACTIVATE)
@@ -168,12 +176,7 @@ namespace CairoDesktop
                 }
             }
 
-            Shell.HideWindowFromTasks(helper.Handle);
-
-            if (Settings.EnableDesktopOverlay)
-            {
-                HotKey key = new HotKey(System.Windows.Input.Key.D, KeyModifier.Shift | KeyModifier.Win, OnShowDesktop);
-            }
+            setupPostInit();
         }
 
         private void pasteFromClipboard()

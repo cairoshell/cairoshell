@@ -7,7 +7,31 @@ using static CairoDesktop.Interop.NativeMethods;
 
 namespace CairoDesktop.SupportingClasses
 {
-    // TODO: load list of hotkeys from config
+    public class HotKeyManager
+    {
+        public static void RegisterHotKey(List<string> keys, Action<HotKey> action)
+        {
+            KeyModifier mod1 = KeyModifier.None;
+            KeyModifier mod2 = KeyModifier.None;
+            Key key = Key.None;
+
+            Enum.TryParse(keys[0], out mod1);
+
+            if (keys.Count > 2)
+            {
+                Enum.TryParse(keys[1], out mod2);
+                Enum.TryParse(keys[2], out key);
+            }
+            else if (keys.Count == 2)
+                Enum.TryParse(keys[1], out key);
+
+            HotKey hotkey;
+            if (mod1 != KeyModifier.None && mod2 != KeyModifier.None && key != Key.None)
+                hotkey = new HotKey(key, mod2 | mod1, action);
+            else if (mod1 != KeyModifier.None && key != Key.None)
+                hotkey = new HotKey(key, mod1, action);
+        }
+    }
 
     // thanks to https://stackoverflow.com/a/9330358
     public class HotKey : IDisposable

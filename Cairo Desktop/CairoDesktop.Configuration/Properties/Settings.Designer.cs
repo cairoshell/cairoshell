@@ -322,5 +322,29 @@ namespace CairoDesktop.Configuration.Properties {
                 this["EnableCairoMenuHotKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Win|Shift|D")]
+        public string DesktopOverlayHotKey {
+            get {
+                return ((string)(this["DesktopOverlayHotKey"]));
+            }
+            set {
+                this["DesktopOverlayHotKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Win|Shift|Z")]
+        public string CairoMenuHotKey {
+            get {
+                return ((string)(this["CairoMenuHotKey"]));
+            }
+            set {
+                this["CairoMenuHotKey"] = value;
+            }
+        }
     }
 }

@@ -146,7 +146,7 @@
       <DependentUpon>DesktopNavigationToolbar.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportingClasses\AppBarHelper.cs" />
-    <Compile Include="SupportingClasses\HotkeyManager.cs" />
+    <Compile Include="SupportingClasses\HotKeyManager.cs" />
     <Compile Include="SupportingClasses\StacksManager.cs" />
     <Compile Include="SupportingClasses\WinSparkle.cs" />
     <Compile Include="SystemTray.xaml.cs">

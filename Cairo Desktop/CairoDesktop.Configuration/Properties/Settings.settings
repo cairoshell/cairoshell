@@ -77,5 +77,11 @@
     <Setting Name="EnableCairoMenuHotKey" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="DesktopOverlayHotKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Win|Shift|D</Value>
+    </Setting>
+    <Setting Name="CairoMenuHotKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Win|Shift|Z</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
