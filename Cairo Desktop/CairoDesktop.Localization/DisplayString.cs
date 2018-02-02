@@ -947,6 +947,22 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sTaskbar_TaskListToolTip
+        {
+            get
+            {
+                return getString("sTaskbar_TaskListToolTip");
+            }
+        }
+
+        public static string sTaskbar_DesktopOverlayToolTip
+        {
+            get
+            {
+                return getString("sTaskbar_DesktopOverlayToolTip");
+            }
+        }
+
         public static string sError_OhNo
         {
             get

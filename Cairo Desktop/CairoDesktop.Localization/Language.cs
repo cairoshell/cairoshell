@@ -119,6 +119,8 @@ namespace CairoDesktop.Localization
             { "sTaskbar_Restore", "Restore" },
             { "sTaskbar_Close", "Close" },
             { "sTaskbar_TaskView", "Task View" },
+            { "sTaskbar_TaskListToolTip", "Task List" },
+            { "sTaskbar_DesktopOverlayToolTip", "Desktop Overlay" },
             { "sError_OhNo", "Oops!" },
             { "sError_FileNotFoundInfo", "The file could not be found.  If you just removed this program, try removing it using the right-click menu to make the icon go away." },
             { "sError_CantOpenAppWiz", "Unable to open the Programs and Features control panel." },
