@@ -45,9 +45,7 @@ namespace CairoDesktop
             
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
             this.Height = AppBarHelper.PrimaryMonitorSize.Height-1;
-            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width;
-            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height;
-            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left, System.Windows.Forms.SystemInformation.WorkingArea.Top, 0, 0);
+            setGridPosition();
 
             if (Startup.IsCairoUserShell)
             {
@@ -114,9 +112,7 @@ namespace CairoDesktop
 
             this.Width = x;
             this.Height = y - 1;
-            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width;
-            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height;
-            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left, System.Windows.Forms.SystemInformation.WorkingArea.Top, 0, 0);
+            setGridPosition();
         }
 
         public void ResetPosition()
@@ -126,9 +122,14 @@ namespace CairoDesktop
 
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
             this.Height = AppBarHelper.PrimaryMonitorSize.Height - 1;
-            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width;
-            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height;
-            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left, System.Windows.Forms.SystemInformation.WorkingArea.Top, 0, 0);
+            setGridPosition();
+        }
+
+        private void setGridPosition()
+        {
+            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width / Shell.GetDpiScale();
+            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height / Shell.GetDpiScale();
+            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.GetDpiScale(), System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.GetDpiScale(), 0, 0);
         }
 
         private void Window_Activated(object sender, EventArgs e)
