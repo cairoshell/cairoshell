@@ -25,6 +25,7 @@
             loadLanguages();
             loadRadioGroups();
             loadCategories();
+            loadHotKeys();
 
             checkUpdateConfig();
             checkTrayStatus();
@@ -152,6 +153,29 @@
                     string cboCat = cat.DisplayName;
                     cboDefaultProgramsCategory.Items.Add(cboCat);
                 }
+            }
+        }
+
+        private void loadHotKeys()
+        {
+            string[] modifiers = { "Win", "Shift", "Alt", "Ctrl" };
+            string[] keys = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+            
+            cboCairoMenuHotKeyMod2.Items.Add("None");
+            cboDesktopOverlayHotKeyMod2.Items.Add("None");
+
+            foreach (string modifier in modifiers)
+            {
+                cboCairoMenuHotKeyMod1.Items.Add(modifier);
+                cboCairoMenuHotKeyMod2.Items.Add(modifier);
+                cboDesktopOverlayHotKeyMod1.Items.Add(modifier);
+                cboDesktopOverlayHotKeyMod2.Items.Add(modifier);
+            }
+
+            foreach (string key in keys)
+            {
+                cboCairoMenuHotKeyKey.Items.Add(key);
+                cboDesktopOverlayHotKeyKey.Items.Add(key);
             }
         }
 
@@ -314,6 +338,22 @@
         private void radTrayMode1_Click(object sender, RoutedEventArgs e)
         {
             Settings.SysTrayAlwaysExpanded = true;
+            showRestartButton();
+        }
+
+        private void cboCairoMenuHotKey_DropDownClosed(object sender, EventArgs e)
+        {
+            List<string> hotkey = new List<string> { cboCairoMenuHotKeyMod1.SelectedValue.ToString(), cboCairoMenuHotKeyMod2.SelectedValue.ToString(), cboCairoMenuHotKeyKey.SelectedValue.ToString() };
+            Settings.CairoMenuHotKey = hotkey;
+
+            showRestartButton();
+        }
+
+        private void cboDesktopOverlayHotKey_DropDownClosed(object sender, EventArgs e)
+        {
+            List<string> hotkey = new List<string> { cboDesktopOverlayHotKeyMod1.SelectedValue.ToString(), cboDesktopOverlayHotKeyMod2.SelectedValue.ToString(), cboDesktopOverlayHotKeyKey.SelectedValue.ToString() };
+            Settings.DesktopOverlayHotKey = hotkey;
+
             showRestartButton();
         }
     }

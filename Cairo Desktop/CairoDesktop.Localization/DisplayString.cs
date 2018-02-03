@@ -1291,11 +1291,11 @@ namespace CairoDesktop.Localization
             }
         }
 
-        public static string sSettings_Desktop_EnableDesktopOverlay
+        public static string sSettings_Desktop_EnableDesktopOverlayHotKey
         {
             get
             {
-                return getString("sSettings_Desktop_EnableDesktopOverlay");
+                return getString("sSettings_Desktop_EnableDesktopOverlayHotKey");
             }
         }
 

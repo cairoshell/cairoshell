@@ -71,7 +71,7 @@ namespace CairoDesktop
         {
             Shell.HideWindowFromTasks(helper.Handle);
 
-            if (Settings.EnableDesktopOverlay)
+            if (Settings.EnableDesktopOverlayHotKey)
                 HotKeyManager.RegisterHotKey(Settings.DesktopOverlayHotKey, OnShowDesktop);
         }
 

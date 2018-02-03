@@ -214,10 +214,15 @@
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_DefaultProgramsCategory)}" MinWidth="160" />
                         <ComboBox Name="cboDefaultProgramsCategory" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=DefaultProgramsCategory}" Width="170" />
                     </StackPanel>
-                    <CheckBox IsChecked="{Binding Path=EnableCairoMenuHotKey}"
-                        Click="CheckBox_Click"  Name="chkEnableCairoMenuHotKey">
-                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableCairoMenuHotKey)}" />
-                    </CheckBox>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding Path=EnableCairoMenuHotKey}"
+                            Click="CheckBox_Click" Name="chkEnableCairoMenuHotKey">
+                            <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableCairoMenuHotKey)}" />
+                        </CheckBox>
+                        <ComboBox Name="cboCairoMenuHotKeyMod1" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[0]}" />
+                        <ComboBox Name="cboCairoMenuHotKeyMod2" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[1]}" />
+                        <ComboBox Name="cboCairoMenuHotKeyKey" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="40" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[2]}" />
+                    </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableMenuBarShadow}"
                         Click="CheckBox_Click" Name="chkEnableMenuBarShadow">
@@ -257,10 +262,15 @@
                             Name="txtDesktopHome" />
                         <Button Name="btnDesktopHomeSelect" Click="btnDesktopHomeSelect_Click" Height="24" Padding="10,0">...</Button>
                     </StackPanel>
-                    <CheckBox IsChecked="{Binding Path=EnableDesktopOverlay}"
-                        Click="CheckBox_Click"  Name="chkEnableDesktopOverlay">
-                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDesktopOverlay)}" />
-                    </CheckBox>
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox IsChecked="{Binding Path=EnableDesktopOverlayHotKey}"
+                        Click="CheckBox_Click" Name="chkEnableDesktopOverlayHotKey">
+                            <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDesktopOverlayHotKey)}" />
+                        </CheckBox>
+                        <ComboBox Name="cboDesktopOverlayHotKeyMod1" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[0]}" />
+                        <ComboBox Name="cboDesktopOverlayHotKeyMod2" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[1]}" />
+                        <ComboBox Name="cboDesktopOverlayHotKeyKey" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="40" Margin="5,-1,0,0" DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[2]}" />
+                    </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_IconSize)}" VerticalAlignment="Top" Margin="5,3,5,4" />

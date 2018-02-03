@@ -94,6 +94,12 @@ namespace CairoDesktop
                 setTopPosition(screen, true);
             }
 
+            // hide desktop overlay button if desktop is not enabled
+            if (!Settings.EnableDesktop)
+            {
+                btnDesktopOverlay.Visibility = Visibility.Collapsed;
+            }
+
             // show task view on windows >= 10, adjust margin if not shown
             if (Shell.IsWindows10OrBetter && !Startup.IsCairoUserShell)
                 bdrTaskView.Visibility = Visibility.Visible;

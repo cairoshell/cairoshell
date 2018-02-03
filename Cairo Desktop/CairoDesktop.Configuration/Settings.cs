@@ -40,7 +40,7 @@ namespace CairoDesktop.Configuration
         private static string _DesktopDirectory;
         private static int? _DesktopLabelPosition;
         private static int? _DesktopIconSize;
-        private static bool? _EnableDesktopOverlay;
+        private static bool? _EnableDesktopOverlayHotKey;
         private static string _DesktopOverlayHotKey;
 
         // Taskbar
@@ -306,19 +306,19 @@ namespace CairoDesktop.Configuration
             }
         }
 
-        public static bool EnableDesktopOverlay
+        public static bool EnableDesktopOverlayHotKey
         {
             get
             {
-                if (_EnableDesktopOverlay == null)
-                    _EnableDesktopOverlay = Properties.Settings.Default.EnableDesktopOverlay;
+                if (_EnableDesktopOverlayHotKey == null)
+                    _EnableDesktopOverlayHotKey = Properties.Settings.Default.EnableDesktopOverlayHotKey;
 
-                return (bool)_EnableDesktopOverlay;
+                return (bool)_EnableDesktopOverlayHotKey;
             }
             set
             {
-                _EnableDesktopOverlay = value;
-                Properties.Settings.Default.EnableDesktopOverlay = (bool)_EnableDesktopOverlay;
+                _EnableDesktopOverlayHotKey = value;
+                Properties.Settings.Default.EnableDesktopOverlayHotKey = (bool)_EnableDesktopOverlayHotKey;
                 Save();
             }
         }
@@ -330,29 +330,11 @@ namespace CairoDesktop.Configuration
                 if (string.IsNullOrEmpty(_DesktopOverlayHotKey))
                     _DesktopOverlayHotKey = Properties.Settings.Default.DesktopOverlayHotKey;
 
-                List<string> parsed = new List<string>();
-
-                foreach (string key in _DesktopOverlayHotKey.Split('|'))
-                {
-                    if (!string.IsNullOrEmpty(key))
-                        parsed.Add(key);
-                }
-
-                return parsed;
+                return parseConcatString(_DesktopOverlayHotKey, '|');
             }
             set
             {
-                string concatenated = "";
-
-                foreach (string key in value)
-                {
-                    if (!string.IsNullOrEmpty(concatenated))
-                        concatenated += "|";
-
-                    concatenated += key;
-                }
-
-                _DesktopOverlayHotKey = concatenated;
+                _DesktopOverlayHotKey = concatStringList(value, '|');
                 Properties.Settings.Default.DesktopOverlayHotKey = _DesktopOverlayHotKey;
                 Save();
             }
@@ -555,30 +537,12 @@ namespace CairoDesktop.Configuration
             {
                 if (string.IsNullOrEmpty(_CairoMenuHotKey))
                     _CairoMenuHotKey = Properties.Settings.Default.CairoMenuHotKey;
-
-                List<string> parsed = new List<string>();
-
-                foreach (string key in _CairoMenuHotKey.Split('|'))
-                {
-                    if (!string.IsNullOrEmpty(key))
-                        parsed.Add(key);
-                }
-
-                return parsed;
+                
+                return parseConcatString(_CairoMenuHotKey, '|');
             }
             set
             {
-                string concatenated = "";
-
-                foreach (string key in value)
-                {
-                    if (!string.IsNullOrEmpty(concatenated))
-                        concatenated += "|";
-
-                    concatenated += key;
-                }
-
-                _CairoMenuHotKey = concatenated;
+                _CairoMenuHotKey = concatStringList(value, '|');
                 Properties.Settings.Default.CairoMenuHotKey = _CairoMenuHotKey;
                 Save();
             }
@@ -586,6 +550,34 @@ namespace CairoDesktop.Configuration
         #endregion
 
         #endregion
+
+        private static List<string> parseConcatString(string concat, char separator)
+        {
+            List<string> parsed = new List<string>();
+
+            foreach (string key in concat.Split(separator))
+            {
+                if (!string.IsNullOrEmpty(key))
+                    parsed.Add(key);
+            }
+
+            return parsed;
+        }
+
+        private static string concatStringList(List<string> list, char separator)
+        {
+            string concatenated = "";
+
+            foreach (string key in list)
+            {
+                if (!string.IsNullOrEmpty(concatenated))
+                    concatenated += separator.ToString();
+
+                concatenated += key;
+            }
+
+            return concatenated;
+        }
 
         private static void Save()
         {

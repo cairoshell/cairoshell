@@ -302,12 +302,12 @@ namespace CairoDesktop.Configuration.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EnableDesktopOverlay {
+        public bool EnableDesktopOverlayHotKey {
             get {
-                return ((bool)(this["EnableDesktopOverlay"]));
+                return ((bool)(this["EnableDesktopOverlayHotKey"]));
             }
             set {
-                this["EnableDesktopOverlay"] = value;
+                this["EnableDesktopOverlayHotKey"] = value;
             }
         }
         
