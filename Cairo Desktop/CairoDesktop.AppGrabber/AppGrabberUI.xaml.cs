@@ -44,7 +44,7 @@ namespace CairoDesktop.AppGrabber
         private static readonly DependencyProperty bAppsHiddenProperty = DependencyProperty.Register("bAppsHidden", typeof(bool), typeof(AppGrabberUI), new PropertyMetadata(null));
 
         public AppGrabberUI()
-            : this(new AppGrabber())
+            : this(AppGrabber.Instance)
         {
         }
 

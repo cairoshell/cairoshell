@@ -17,13 +17,19 @@ namespace CairoDesktop.WindowsTasks
         private static int WM_SHELLHOOKMESSAGE = -1;
 
         public static bool IsStarting = false;
-
-        public WindowsTasksService()
+        
+        private static WindowsTasksService _instance = new WindowsTasksService();
+        public static WindowsTasksService Instance
         {
-            this.Initialize();
+            get { return _instance; }
         }
 
-        public void Initialize()
+        private WindowsTasksService()
+        {
+            this.initialize();
+        }
+
+        private void initialize()
         {
             IsStarting = true;
 
@@ -280,6 +286,6 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        private static DependencyProperty windowsProperty = DependencyProperty.Register("Windows", typeof(ObservableCollection<ApplicationWindow>), typeof(WindowsTasksService), new PropertyMetadata(new ObservableCollection<ApplicationWindow>()));
+        private DependencyProperty windowsProperty = DependencyProperty.Register("Windows", typeof(ObservableCollection<ApplicationWindow>), typeof(WindowsTasksService), new PropertyMetadata(new ObservableCollection<ApplicationWindow>()));
     }
 }

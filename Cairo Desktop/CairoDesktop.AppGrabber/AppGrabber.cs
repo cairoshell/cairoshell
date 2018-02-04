@@ -78,10 +78,10 @@ namespace CairoDesktop.AppGrabber
                 Interop.Shell.AllUsersStartMenuPath
         };
 
-        public AppGrabber()
+        private AppGrabber()
             : this(null) {}
 
-        public AppGrabber(String configFile)
+        private AppGrabber(String configFile)
         {
             this.ConfigFile = configFile ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";
 

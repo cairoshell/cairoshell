@@ -40,6 +40,8 @@ namespace CairoDesktop.WindowsTray
 
         private static DependencyProperty iconListProperty = DependencyProperty.Register("TrayIcons", typeof(ObservableCollection<NotifyIcon>), typeof(NotificationArea), new PropertyMetadata(new ObservableCollection<NotifyIcon>()));
 
+        private NotificationArea() { }
+
         public void Initialize()
         {
             try

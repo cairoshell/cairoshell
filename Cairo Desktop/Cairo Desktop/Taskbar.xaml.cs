@@ -49,6 +49,7 @@ namespace CairoDesktop
 
         private void setupTaskbar()
         {
+            this.DataContext = WindowsTasks.WindowsTasksService.Instance;
             AppGrabber.Category quickLaunch = appGrabber.QuickLaunch;
             
             this.quickLaunchList.ItemsSource = quickLaunch;
@@ -112,7 +113,7 @@ namespace CairoDesktop
             if (Startup.IsShuttingDown)
             {
                 // Manually call dispose on window close...
-                (TasksList.DataContext as WindowsTasks.WindowsTasksService).Dispose();
+                (this.DataContext as WindowsTasks.WindowsTasksService).Dispose();
 
                 // dispose system tray if it's still running to prevent conflicts when doing AppBar stuff
                 NotificationArea.Instance.Dispose();

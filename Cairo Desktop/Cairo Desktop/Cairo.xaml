@@ -858,7 +858,46 @@
         <Setter Property="CornerRadius" Value="0,0,0,8" />
         <Setter Property="MinWidth" Value="9" />
     </Style>
-    <!-- Button Style for Quick Launch -->
+    <Style x:Key="TaskbarListView" TargetType="{x:Type ListView}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource ResourceKey=MenuItemForeground}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListView}">
+                    <Border UseLayoutRounding="true"
+                                x:Name="Bd"
+                                Background="{TemplateBinding Background}">
+                        <ItemsPresenter Focusable="False" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled"
+                                    Value="false">
+                            <Setter Property="Background"
+                                        TargetName="Bd"
+                                        Value="{StaticResource {x:Static SystemColors.ControlBrushKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsGrouping"
+                                    Value="true">
+                            <Setter Property="ScrollViewer.CanContentScroll"
+                                        Value="false" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- Quick Launch -->
+    <Style x:Key="QuickLaunchListStyle" BasedOn="{StaticResource TaskbarListView}" TargetType="{x:Type ListView}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=quickLaunchList, Path=Items.Count}" Value="0">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
     <Style x:Key="CairoQuickLaunchButtonStyle"
         TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle"
@@ -1053,6 +1092,23 @@
         <Setter Property="CornerRadius" Value="5"/>
         <Setter Property="Padding" Value="0,3,0,3"/>
         <Setter Property="Effect" Value="{DynamicResource ResourceKey=MenuShadow}" />
+    </Style>
+    <Style x:Key="TaskListStyle" BasedOn="{StaticResource TaskbarListView}" TargetType="{x:Type ListView}">
+        <Style.Triggers>
+            <Trigger Property="HasItems" Value="False">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListView}">
+                            <StackPanel Orientation="Horizontal" Margin="0,3">
+                                <Border BorderThickness="0,0,1,0" BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}" Width="100" Margin="0,-3">
+                                </Border>
+                                <TextBlock Style="{StaticResource NoItemsTextBlock}" Padding="8,4,0,4" Width="350" Text="{Binding Path=(l10n:DisplayString.sTaskbar_Empty)}" />
+                            </StackPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="CairoTaskListButtonStyle"
         TargetType="{x:Type Button}">
