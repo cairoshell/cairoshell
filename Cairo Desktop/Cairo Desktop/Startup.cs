@@ -29,15 +29,11 @@
 
         public static Desktop DesktopWindow { get; set; }
 
-        public static Window DeskParent { get; set; }
-
         public static bool IsCairoUserShell;
 
         private static bool isRestart;
 
         public static bool IsShuttingDown { get; set; }
-
-        //private static string procName;
 
         // properties for startup
         private static string[] hklmStartupKeys = new string[] { "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Run" };
@@ -70,11 +66,6 @@
                 System.Threading.Thread.Sleep(2000);
             }
             #endregion
-
-            // Show a splash screen while WPF inits
-            // not needed any more
-            //SplashScreen splash = new SplashScreen("Resources/loadSplash.png");
-            //splash.Show(false, true);
 
             #region some real shell code
             int hShellReadyEvent;
@@ -159,10 +150,7 @@
 #if (ENABLEFIRSTRUN)
             FirstRun();
 #endif
-
-            // Close the splash screen
-            //splash.Close(new TimeSpan(0, 0, 0, 0, 800));
-
+            
             // login items only necessary if Explorer didn't start them
             if (IsCairoUserShell && !isRestart)
             {

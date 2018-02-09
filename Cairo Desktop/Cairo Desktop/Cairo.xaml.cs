@@ -31,8 +31,7 @@ namespace CairoDesktop
                 {
                     proc.Start();
 
-                    if (Window.GetWindow(senderButton).Name == "CairoDesktopWindow")
-                        Startup.DesktopWindow.IsOverlayOpen = false;
+                    Startup.DesktopWindow.IsOverlayOpen = false;
                 }
             }
             catch
@@ -40,8 +39,7 @@ namespace CairoDesktop
                 // No 'Open' command associated with this filetype in the registry
                 Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
 
-                if (Window.GetWindow(senderButton).Name == "CairoDesktopWindow")
-                    Startup.DesktopWindow.IsOverlayOpen = false;
+                Startup.DesktopWindow.IsOverlayOpen = false;
             }
         }
 

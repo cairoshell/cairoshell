@@ -177,6 +177,12 @@ namespace CairoDesktop.Interop
 
         public static bool Exists(string filename)
         {
+            foreach (char invalid in Path.GetInvalidPathChars())
+            {
+                if (filename.Contains(invalid.ToString()))
+                    return false;
+            }
+
             return !filename.StartsWith("\\\\") && (File.Exists(filename) || Directory.Exists(filename));
         }
 

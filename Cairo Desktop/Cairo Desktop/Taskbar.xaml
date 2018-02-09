@@ -125,7 +125,7 @@
                            Height="12"
                            Margin="0"></Image>
                 </ToggleButton>
-                <Popup Placement="Relative" PlacementTarget="{Binding ElementName=btnTaskList}" HorizontalOffset="-428" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{Binding ElementName=btnTaskList, Path=IsChecked}" StaysOpen="False">
+                <Popup Placement="Relative" PlacementTarget="{Binding ElementName=btnTaskList}" HorizontalOffset="-426" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{Binding ElementName=btnTaskList, Path=IsChecked}" StaysOpen="False">
                     <Border Name="bdrTaskListPopup" Style="{StaticResource CairoTaskListPopupStyle}">
                         <StackPanel Orientation="Vertical">
                         <ListView HorizontalAlignment="Stretch"
