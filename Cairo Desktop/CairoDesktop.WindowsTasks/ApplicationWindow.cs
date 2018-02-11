@@ -119,7 +119,7 @@ namespace CairoDesktop.WindowsTasks
                     string backupCategory = "";
                     foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
                     {
-                        if (ai.Target == WinFileName || (WinFileName.Contains("ApplicationFrameHost.exe") && ai.Target == AppUserModelID))
+                        if (ai.Target == WinFileName || (WinFileName.ToLower().Contains("applicationframehost.exe") && ai.Target == AppUserModelID))
                         {
                             _category = ai.Category.DisplayName;
                             break;
@@ -130,8 +130,12 @@ namespace CairoDesktop.WindowsTasks
                         }
                     }
 
-                    if (_category == null && !string.IsNullOrEmpty(backupCategory))
+                    if (_category == null && WinFileName.ToLower().Contains("cairodesktop.exe"))
+                        _category = "Cairo";
+                    else if (_category == null && !string.IsNullOrEmpty(backupCategory))
                         _category = backupCategory;
+                    else if (_category == null && WinFileName.ToLower().Contains("\\windows\\") && !WinFileName.ToLower().Contains("applicationframehost.exe"))
+                        _category = "Windows";
                     else if (_category == null)
                         _category = Localization.DisplayString.sAppGrabber_Uncategorized;
                 }

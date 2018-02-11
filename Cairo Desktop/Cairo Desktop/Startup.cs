@@ -33,6 +33,8 @@
 
         private static bool isRestart;
 
+        private static bool isTour;
+
         public static bool IsShuttingDown { get; set; }
 
         // properties for startup
@@ -46,10 +48,19 @@
         [STAThread]
         public static void Main(string[] args)
         {
+            #region Args
+
             if (args.Length > 0 && args[0] == "/restart")
                 isRestart = true;
             else
                 isRestart = false;
+
+            if (args.Length > 0 && args[0] == "/tour")
+                isTour = true;
+            else
+                isTour = false;
+
+            #endregion
 
             #region Single Instance Check
             bool ok;
@@ -146,7 +157,7 @@
             {
                 NotificationArea.Instance.Initialize();
             }
-            
+
 #if (ENABLEFIRSTRUN)
             FirstRun();
 #endif
@@ -167,10 +178,10 @@
         {
             try
             {
-                if (Settings.IsFirstRun == true)
+                if (Settings.IsFirstRun == true || isTour)
                 {
-                    Settings.IsFirstRun = false;
-                    AppGrabber.AppGrabber.Instance.ShowDialog();
+                    Welcome welcome = new Welcome();
+                    welcome.Show();
                 }
             }
             catch (Exception ex)

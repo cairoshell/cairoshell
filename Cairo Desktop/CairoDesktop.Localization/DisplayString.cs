@@ -4,6 +4,12 @@ namespace CairoDesktop.Localization
 {
     public class DisplayString
     {
+        public static List<KeyValuePair<string, string>> Languages = new List<KeyValuePair<string, string>>()
+        {
+            new KeyValuePair<string, string>("English", "en_US"),
+            new KeyValuePair<string, string>("Français", "fr_FR")
+        };
+
         public DisplayString()
         {
 
@@ -1384,6 +1390,278 @@ namespace CairoDesktop.Localization
             get
             {
                 return getString("sSettings_Taskbar_DisplayModeOverlap");
+            }
+        }
+
+        public static string sWelcome_StartTour
+        {
+            get
+            {
+                return getString("sWelcome_StartTour");
+            }
+        }
+
+        public static string sWelcome_FinishTour
+        {
+            get
+            {
+                return getString("sWelcome_FinishTour");
+            }
+        }
+
+        public static string sWelcome_Welcome
+        {
+            get
+            {
+                return getString("sWelcome_Welcome");
+            }
+        }
+
+        public static string sWelcome_SelectLanguage
+        {
+            get
+            {
+                return getString("sWelcome_SelectLanguage");
+            }
+        }
+
+        public static string sWelcome_ChangingLanguage
+        {
+            get
+            {
+                return getString("sWelcome_ChangingLanguage");
+            }
+        }
+
+        public static string sWelcome_ChangingLanguageText
+        {
+            get
+            {
+                return getString("sWelcome_ChangingLanguageText");
+            }
+        }
+
+        public static string sWelcome_MenuBar
+        {
+            get
+            {
+                return getString("sWelcome_MenuBar");
+            }
+        }
+
+        public static string sWelcome_DynamicDesktop
+        {
+            get
+            {
+                return getString("sWelcome_DynamicDesktop");
+            }
+        }
+
+        public static string sWelcome_Taskbar
+        {
+            get
+            {
+                return getString("sWelcome_Taskbar");
+            }
+        }
+
+        public static string sWelcome_MenuBarText
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarText");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec1Heading
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec1Heading");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec1Text
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec1Text");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec2Heading
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec2Heading");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec2Text
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec2Text");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec3Heading
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec3Heading");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec3Text
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec3Text");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec4Heading
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec4Heading");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec4Text
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec4Text");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec5Heading
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec5Heading");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec5Text
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec5Text");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec6Heading
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec6Heading");
+            }
+        }
+
+        public static string sWelcome_MenuBarSec6Text
+        {
+            get
+            {
+                return getString("sWelcome_MenuBarSec6Text");
+            }
+        }
+
+        public static string sWelcome_DesktopText
+        {
+            get
+            {
+                return getString("sWelcome_DesktopText");
+            }
+        }
+
+        public static string sWelcome_DesktopSec1Heading
+        {
+            get
+            {
+                return getString("sWelcome_DesktopSec1Heading");
+            }
+        }
+
+        public static string sWelcome_DesktopSec1Text
+        {
+            get
+            {
+                return getString("sWelcome_DesktopSec1Text");
+            }
+        }
+
+        public static string sWelcome_DesktopSec2Heading
+        {
+            get
+            {
+                return getString("sWelcome_DesktopSec2Heading");
+            }
+        }
+
+        public static string sWelcome_DesktopSec2Text
+        {
+            get
+            {
+                return getString("sWelcome_DesktopSec2Text");
+            }
+        }
+
+        public static string sWelcome_TaskbarText
+        {
+            get
+            {
+                return getString("sWelcome_TaskbarText");
+            }
+        }
+
+        public static string sWelcome_TaskbarSec1Heading
+        {
+            get
+            {
+                return getString("sWelcome_TaskbarSec1Heading");
+            }
+        }
+
+        public static string sWelcome_TaskbarSec1Text
+        {
+            get
+            {
+                return getString("sWelcome_TaskbarSec1Text");
+            }
+        }
+
+        public static string sWelcome_TaskbarSec2Heading
+        {
+            get
+            {
+                return getString("sWelcome_TaskbarSec2Heading");
+            }
+        }
+
+        public static string sWelcome_TaskbarSec2Text
+        {
+            get
+            {
+                return getString("sWelcome_TaskbarSec2Text");
+            }
+        }
+
+        public static string sWelcome_TaskbarSec3Heading
+        {
+            get
+            {
+                return getString("sWelcome_TaskbarSec3Heading");
+            }
+        }
+
+        public static string sWelcome_TaskbarSec3Text
+        {
+            get
+            {
+                return getString("sWelcome_TaskbarSec3Text");
             }
         }
     }

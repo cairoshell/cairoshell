@@ -83,6 +83,13 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Welcome.xaml.cs">
+      <DependentUpon>Welcome.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Welcome.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationFramework.Aero">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -372,6 +379,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\desktopOverlayIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Welcome\cairoIcon.png" />
+    <Resource Include="Resources\Welcome\desktop.jpg" />
+    <Resource Include="Resources\Welcome\menuBar.png" />
+    <Resource Include="Resources\Welcome\taskbar.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

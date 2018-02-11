@@ -173,7 +173,41 @@ namespace CairoDesktop.Localization
             { "sSettings_Taskbar_PositionTop", "Top" },
             { "sSettings_Taskbar_DisplayMode", "Display mode:" },
             { "sSettings_Taskbar_DisplayModeAppBar", "Taskbar reserves space" },
-            { "sSettings_Taskbar_DisplayModeOverlap", "Taskbar overlaps windows" }
+            { "sSettings_Taskbar_DisplayModeOverlap", "Taskbar overlaps windows" },
+            { "sWelcome_StartTour", "Start Tour" },
+            { "sWelcome_FinishTour", "Finish Tour" },
+            { "sWelcome_Welcome", "Welcome to Cairo" },
+            { "sWelcome_SelectLanguage", "Select a language:" },
+            { "sWelcome_ChangingLanguage", "Changing language" },
+            { "sWelcome_ChangingLanguageText", "Cairo will now restart to change the language." },
+            { "sWelcome_MenuBar", "Menu Bar" },
+            { "sWelcome_DynamicDesktop", "Dynamic Desktop" },
+            { "sWelcome_Taskbar", "Taskbar" },
+            { "sWelcome_MenuBarText", "Cairo's menu bar houses everything you need to take command of your desktop." },
+            { "sWelcome_MenuBarSec1Heading", "Cairo Menu" },
+            { "sWelcome_MenuBarSec1Text", "Change settings, sign out, restart or shut down your computer, and other system tasks." },
+            { "sWelcome_MenuBarSec2Heading", "Programs" },
+            { "sWelcome_MenuBarSec2Text", "Launch and organize your applications. After this tour, the App Grabber will open, allowing you to choose apps to include and organize them into categories." },
+            { "sWelcome_MenuBarSec3Heading", "Places" },
+            { "sWelcome_MenuBarSec3Text", "Open special folders such as Documents, Downloads, Music, Pictures, This PC, and Recycle Bin." },
+            { "sWelcome_MenuBarSec4Heading", "Stacks" },
+            { "sWelcome_MenuBarSec4Text", "Drag any folder to the menu bar to create a stack for easy access." },
+            { "sWelcome_MenuBarSec5Heading", "Notification Area" },
+            { "sWelcome_MenuBarSec5Text", "Click the arrow to see your notification icons." },
+            { "sWelcome_MenuBarSec6Heading", "Search" },
+            { "sWelcome_MenuBarSec6Text", "Find files, folders, system settings, and more." },
+            { "sWelcome_DesktopText", "Cairo's dynamic desktop transforms your desktop from a static workspace into an interactive file browser. Simply double-click a folder to navigate, or use the toolbar to browse." },
+            { "sWelcome_DesktopSec1Heading", "Toolbar" },
+            { "sWelcome_DesktopSec1Text", "Use the dynamic desktop toolbar to browse back or forward, go home, or pick a folder to view." },
+            { "sWelcome_DesktopSec2Heading", "Desktop Overlay" },
+            { "sWelcome_DesktopSec2Text", "Activate the desktop overlay (press Win-Shift-D or click the desktop icon in the taskbar) to access your desktop without hiding or interrupting your work." },
+            { "sWelcome_TaskbarText", "Cairo has replaced your taskbar with a smarter one that maximizes your productivity." },
+            { "sWelcome_TaskbarSec1Heading", "Quick Launch" },
+            { "sWelcome_TaskbarSec1Text", "Items pinned to your Windows taskbar were added to your Cairo quick launch. Drag programs in, or use the App Grabber to add more apps to quick launch." },
+            { "sWelcome_TaskbarSec2Heading", "Categorized Windows" },
+            { "sWelcome_TaskbarSec2Text", "Open windows in your taskbar are now organized the same way you choose to categorize your Programs menu. Now, all of your related tasks are grouped together for quick and easy use." },
+            { "sWelcome_TaskbarSec3Heading", "Task List" },
+            { "sWelcome_TaskbarSec3Text", "Lots of open windows? The task list shows your windows in a menu so that you can easily switch to the one you are looking for. You can also open the Windows 10 Task View from this menu." }
         };
 
         public static Dictionary<string, string> fr_FR = new Dictionary<string, string>
@@ -340,7 +374,14 @@ namespace CairoDesktop.Localization
             { "sSettings_Taskbar_PositionTop", "Haut" },
             { "sSettings_Taskbar_DisplayMode", "Mode d'affichage :" },
             { "sSettings_Taskbar_DisplayModeAppBar", "La barre des tâches réserve l'espace" },
-            { "sSettings_Taskbar_DisplayModeOverlap", "La barre des tâches chevauche les fenêtres" }
+            { "sSettings_Taskbar_DisplayModeOverlap", "La barre des tâches chevauche les fenêtres" },
+            { "sWelcome_MenuBar", "Barre de menu" },
+            { "sWelcome_DynamicDesktop", "Bureau dynamique" },
+            { "sWelcome_Taskbar", "Barre des tâches" },
+            { "sWelcome_MenuBarSec2Heading", "Applications" },
+            { "sWelcome_MenuBarSec3Heading", "Dossiers" },
+            { "sWelcome_MenuBarSec5Heading", "Zone de notification" },
+            { "sWelcome_TaskbarSec1Heading", "Lancement rapide" }
         };
     }
 }

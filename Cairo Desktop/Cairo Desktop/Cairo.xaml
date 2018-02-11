@@ -1329,7 +1329,32 @@
         </Setter>
     </Style>
 
-    <!-- Button Style for Dialogs -->
+    <!-- Dialogs -->
+    <Style x:Key="CairoWindowStyle" TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Margin" Value="12,7,12,17" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0"
+                    EndPoint="0,1">
+                    <LinearGradientBrush.GradientStops>
+                        <GradientStop Color="#FFFFFFFF"
+                            Offset="0" />
+                        <GradientStop Color="#FFEFEFEF"
+                            Offset="1" />
+                    </LinearGradientBrush.GradientStops>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="Black" ShadowDepth="6" Direction="270" Opacity="0.5" BlurRadius="15" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CairoWindowContainer" TargetType="{x:Type Border}">
+        <Setter Property="Margin" Value="12,7,12,17" />
+    </Style>
     <Style x:Key="CairoButtonStyle"
         TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle"
@@ -1417,7 +1442,28 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <!-- Welcome -->
+    <Style x:Key="WelcomeText" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily" Value="Corbel" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="LineHeight" Value="20" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Margin" Value="64,0,64,18" />
+    </Style>
+    <Style x:Key="WelcomeHeading" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource WelcomeText}">
+        <Setter Property="FontSize" Value="33" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+    <Style x:Key="WelcomeSubHeading" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource WelcomeHeading}">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="Margin" Value="64,0,64,2" />
+    </Style>
+    <Style x:Key="WelcomeSubText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource WelcomeText}">
+        <Setter Property="Foreground" Value="#FF555555" />
+    </Style>
+
     <Style x:Key="NoItemsTextBlock" TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground" Value="#FF9a9a9a" />
         <Setter Property="FontWeight" Value="Normal" />

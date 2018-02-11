@@ -20,23 +20,9 @@
 		</ResourceDictionary>
 	</Window.Resources>
 	<Grid>
-		<Border BorderThickness="0" Margin="12,7,12,17">
-			<Border.Effect>
-				<DropShadowEffect Color="Black" ShadowDepth="6" Direction="270" Opacity="0.5" BlurRadius="15" />
-			</Border.Effect>
-			<Border.Background>
-				<LinearGradientBrush StartPoint="0,0"
-			EndPoint="0,1">
-					<LinearGradientBrush.GradientStops>
-						<GradientStop Color="#FFFFFFFF"
-					Offset="0" />
-						<GradientStop Color="#FFF0F0F0"
-					Offset="1" />
-					</LinearGradientBrush.GradientStops>
-				</LinearGradientBrush>
-			</Border.Background>
-		</Border>
-		<Border Margin="12,7,12,17">
+        <Border Style="{StaticResource CairoWindowStyle}">
+        </Border>
+        <Border Style="{StaticResource CairoWindowContainer}">
 			<Grid UseLayoutRounding="True">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="32" />

@@ -1,28 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.AppGrabber.AppGrabberUIResources">
-    <Style x:Key="AppGrabberWindowStyle"
-        TargetType="{x:Type Border}">
-        <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Margin" Value="12,7,12,17" />
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0"
-                    EndPoint="0,1">
-                    <LinearGradientBrush.GradientStops>
-                        <GradientStop Color="#FFFFFFFF"
-                            Offset="0" />
-                        <GradientStop Color="#FFEFEFEF"
-                            Offset="1" />
-                    </LinearGradientBrush.GradientStops>
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Effect">
-            <Setter.Value>
-                <DropShadowEffect Color="Black" ShadowDepth="6" Direction="270" Opacity="0.5" BlurRadius="15" />
-            </Setter.Value>
-        </Setter>
-    </Style>
     <BitmapImage x:Key="NullIcon" UriSource="Resources/nullIcon.png"></BitmapImage>
     <Style x:Key="AppGrabberListBoxHeaderStyle"
         TargetType="{x:Type DockPanel}">

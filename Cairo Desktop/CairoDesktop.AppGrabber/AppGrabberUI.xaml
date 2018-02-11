@@ -14,9 +14,9 @@
         <l10n:DisplayString/>
     </Window.DataContext>
     <Grid>
-        <Border Style="{StaticResource AppGrabberWindowStyle}">
+        <Border Style="{StaticResource CairoWindowStyle}">
         </Border>
-        <Border Margin="12,7,12,17" Name="bdrLoad">
+        <Border Style="{StaticResource CairoWindowContainer}" Name="bdrLoad">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical">
                 <Image Source="Resources\cairoIcon.png" Width="107" Height="105" Margin="0,0,0,20" />
                 <TextBlock FontFamily="Corbel"
@@ -26,7 +26,7 @@
                             FontWeight="Bold" Text="{Binding sAppGrabber_PleaseWait}" />
             </StackPanel>
         </Border>
-        <Border Margin="12,7,12,17" Name="bdrMain" Visibility="Collapsed">
+        <Border Style="{StaticResource CairoWindowContainer}" Name="bdrMain" Visibility="Collapsed">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32" />
@@ -122,7 +122,7 @@
                 </StackPanel>
             </Grid>
         </Border>
-        <Border Margin="12,7,12,17" Name="bdrPage2" Visibility="Collapsed">
+        <Border Style="{StaticResource CairoWindowContainer}" Name="bdrPage2" Visibility="Collapsed">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="32" />
