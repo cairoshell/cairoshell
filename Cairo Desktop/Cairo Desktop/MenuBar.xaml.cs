@@ -13,6 +13,7 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.WindowsTray;
+using System.Threading;
 
 namespace CairoDesktop
 {
@@ -141,20 +142,32 @@ namespace CairoDesktop
 
         private void setSearchProvider()
         {
-            ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
-            vistaSearchProvider.ObjectType = typeof(VistaSearchProvider.VistaSearchProviderHelper);
-            CairoSearchMenu.DataContext = vistaSearchProvider;
+            var thread = new Thread(() =>
+            {
+                // this sometimes takes a while
+                Type provider = typeof(VistaSearchProvider.VistaSearchProviderHelper);
 
-            Binding bSearchText = new Binding("SearchText");
-            bSearchText.Mode = BindingMode.Default;
-            bSearchText.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
+                    vistaSearchProvider.ObjectType = provider;
+                    CairoSearchMenu.DataContext = vistaSearchProvider;
+                    
+                    Binding bSearchText = new Binding("SearchText");
+                    bSearchText.Mode = BindingMode.Default;
+                    bSearchText.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 
-            Binding bSearchResults = new Binding("Results");
-            bSearchResults.Mode = BindingMode.Default;
-            bSearchResults.IsAsync = true;
+                    Binding bSearchResults = new Binding("Results");
+                    bSearchResults.Mode = BindingMode.Default;
+                    bSearchResults.IsAsync = true;
 
-            searchStr.SetBinding(TextBox.TextProperty, bSearchText);
-            lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
+                    searchStr.SetBinding(TextBox.TextProperty, bSearchText);
+                    lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
+                }));
+            });
+            thread.IsBackground = true;
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
         }
 
         private void shutdown()
