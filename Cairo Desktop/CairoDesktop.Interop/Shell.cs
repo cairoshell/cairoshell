@@ -12,6 +12,8 @@ namespace CairoDesktop.Interop
     {
         private const int MAX_PATH = 260;
         private static Object iconLock = new Object();
+
+        // DPI at user logon to the system
         private static double? _oldDpiScale;
         public static double OldDpiScale
         {
@@ -27,6 +29,8 @@ namespace CairoDesktop.Interop
                 _oldDpiScale = value;
             }
         }
+
+        // Current system DPI; set on MenuBar startup and on WM_DPICHANGED
         private static double? _dpiScale;
         public static double DpiScale
         {
@@ -42,6 +46,8 @@ namespace CairoDesktop.Interop
                 _dpiScale = value;
             }
         }
+
+        // SystemParameters class returns values based on logon DPI only; this calculates how we should scale that number if logon DPI != current DPI.
         public static double DpiScaleAdjustment
         {
             get { return DpiScale / OldDpiScale; }

@@ -95,7 +95,7 @@ namespace CairoDesktop
 
         private void setupPostInit()
         {
-            // set initial dpi
+            // set initial DPI. We do it here so that we get the correct value when DPI has changed since initial user logon to the system.
             Shell.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
 
             appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
