@@ -657,6 +657,7 @@ namespace CairoDesktop.Interop
         public const int MA_NOACTIVATE = 0x0003;
         public const int WM_WINDOWPOSCHANGING = 0x0046;
         public const int WM_WINDOWPOSCHANGED = 0x0047;
+        public const int WM_DPICHANGED = 0x02E0;
         public const int WM_ACTIVATE = 0x0006;
         public const int WM_COMMAND = 0x111;
         public const uint WM_LBUTTONDOWN = 0x201;
@@ -1491,7 +1492,7 @@ namespace CairoDesktop.Interop
                         case VarEnum.VT_DISPATCH:
                             return p;
                         default:
-                            throw new NotSupportedException("The type of this variable is not support('" +vt.ToString() + "')");
+                            return "";
                     }
                 }
             }

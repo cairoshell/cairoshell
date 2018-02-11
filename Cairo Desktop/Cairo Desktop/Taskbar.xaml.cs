@@ -131,7 +131,7 @@ namespace CairoDesktop
 
         private void setTaskButtonSize()
         {
-            double size = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - bdrTaskbarEnd.ActualWidth - (TasksList.Items.Groups.Count * (5 * Shell.GetDpiScale())) - 14) / TasksList.Items.Count);
+            double size = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - bdrTaskbarEnd.ActualWidth - (TasksList.Items.Groups.Count * (5 * Shell.DpiScale)) - 14) / TasksList.Items.Count);
             if (size > (140 + addToSize))
                 ButtonWidth = 140 + addToSize;
             else
@@ -171,7 +171,7 @@ namespace CairoDesktop
             {
                 if (Settings.TaskbarPosition == 1)
                 {
-                    double workArea = SystemParameters.WorkArea.Top;
+                    double workArea = SystemParameters.WorkArea.Top / Shell.DpiScaleAdjustment;
 
                     // set to top of workspace
                     if (workArea >= this.Height + Startup.MenuBarWindow.Height)
@@ -237,6 +237,11 @@ namespace CairoDesktop
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.TaskbarMode == 0)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
+            }
+            else if (msg == NativeMethods.WM_DPICHANGED)
+            {
+                Shell.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
+                AppBarHelper.ABSetPos(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {

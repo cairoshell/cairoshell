@@ -27,7 +27,7 @@ namespace CairoDesktop.WindowsTray
         /// </summary>
         public IntPtr InitializeSystray()
         {
-            return InteropCalls.InitializeSystray(Interop.NativeMethods.GetSystemMetrics(0), (float)Interop.Shell.GetDpiScale());
+            return InteropCalls.InitializeSystray(Interop.NativeMethods.GetSystemMetrics(0), (float)Interop.Shell.DpiScale);
 
             /*IntPtr hInstance = Marshal.GetHINSTANCE(typeof(WindowsHooksWrapper).Module);
 

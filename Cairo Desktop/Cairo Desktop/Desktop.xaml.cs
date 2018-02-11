@@ -127,9 +127,9 @@ namespace CairoDesktop
 
         private void setGridPosition()
         {
-            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width / Shell.GetDpiScale();
-            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height / Shell.GetDpiScale();
-            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.GetDpiScale(), System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.GetDpiScale(), 0, 0);
+            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width / Shell.DpiScale;
+            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height / Shell.DpiScale;
+            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.DpiScale, System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.DpiScale, 0, 0);
         }
 
         private void Window_Activated(object sender, EventArgs e)

@@ -200,7 +200,7 @@ namespace CairoDesktop.UWPInterop
 
             // do some sorting based on DPI for prettiness
             if (scale == 0)
-                scale = Shell.GetDpiScale();
+                scale = Shell.DpiScale;
 
             int numMoved = 0;
             for (int i = 0; i < iconAssets.Count; i++)
@@ -259,10 +259,16 @@ namespace CairoDesktop.UWPInterop
         public static string[] GetAppIcon(string appUserModelId, int size)
         {
             string[] pkgAppId = appUserModelId.Split('!');
-            string packageFamilyName = pkgAppId[0];
-            string appId = pkgAppId[1];
+            string packageFamilyName = "";
+            string appId = "";
             string returnIcon = "";
             string returnColor = "";
+
+            if (pkgAppId.Count() > 1)
+            {
+                packageFamilyName = pkgAppId[0];
+                appId = pkgAppId[1];
+            }
 
             Windows.Management.Deployment.PackageManager pman = new Windows.Management.Deployment.PackageManager();
             IEnumerable<Windows.ApplicationModel.Package> packages = getPackages(pman, packageFamilyName);

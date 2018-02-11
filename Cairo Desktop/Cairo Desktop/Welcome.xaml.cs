@@ -1,4 +1,5 @@
 ﻿using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,12 +28,14 @@ namespace CairoDesktop
         {
             InitializeComponent();
 
-            double size = SystemParameters.MaximizedPrimaryScreenHeight - 100;
+            double size = SupportingClasses.AppBarHelper.PrimaryMonitorSize.Height - 100;
 
             if (size >= maxSize)
                 Height = maxSize;
             else
                 Height = size;
+
+            MaxHeight = SupportingClasses.AppBarHelper.PrimaryMonitorSize.Height;
 
             loadLanguages();
         }

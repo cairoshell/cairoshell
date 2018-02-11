@@ -183,7 +183,7 @@ namespace CairoDesktop.Localization
             { "sWelcome_MenuBar", "Menu Bar" },
             { "sWelcome_DynamicDesktop", "Dynamic Desktop" },
             { "sWelcome_Taskbar", "Taskbar" },
-            { "sWelcome_MenuBarText", "Cairo's menu bar houses everything you need to take command of your desktop." },
+            { "sWelcome_MenuBarText", "Cairo's menu bar contains everything you need to take command of your computer." },
             { "sWelcome_MenuBarSec1Heading", "Cairo Menu" },
             { "sWelcome_MenuBarSec1Text", "Change settings, sign out, restart or shut down your computer, and other system tasks." },
             { "sWelcome_MenuBarSec2Heading", "Programs" },

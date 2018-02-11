@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CairoDesktop.Interop;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -53,7 +54,8 @@ namespace CairoDesktop.AppGrabber
             this.appGrabber = appGrabber;
             InitializeComponent();
 
-            Height = SystemParameters.MaximizedPrimaryScreenHeight - 100;
+            Height = (SystemParameters.MaximizedPrimaryScreenHeight / Shell.DpiScaleAdjustment) - 100;
+            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight / Shell.DpiScaleAdjustment;
         }
 
         #region Button Clicks

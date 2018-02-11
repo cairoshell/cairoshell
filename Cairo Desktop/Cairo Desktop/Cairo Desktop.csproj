@@ -175,6 +175,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <None Include="app.config" />
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>

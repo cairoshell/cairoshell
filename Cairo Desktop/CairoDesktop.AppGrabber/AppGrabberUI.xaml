@@ -2,7 +2,6 @@
 <Window x:Class="CairoDesktop.AppGrabber.AppGrabberUI" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
     Title="{Binding sAppGrabber}"
     Width="774"
-    MaxHeight="{x:Static SystemParameters.MaximizedPrimaryScreenHeight}"
     AllowsTransparency="True"
     WindowStyle="None"
     Background="Transparent"

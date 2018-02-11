@@ -12,6 +12,40 @@ namespace CairoDesktop.Interop
     {
         private const int MAX_PATH = 260;
         private static Object iconLock = new Object();
+        private static double? _oldDpiScale;
+        public static double OldDpiScale
+        {
+            get
+            {
+                if (_oldDpiScale == null)
+                    _oldDpiScale = GetDpiScale();
+
+                return (double)_oldDpiScale;
+            }
+            set
+            {
+                _oldDpiScale = value;
+            }
+        }
+        private static double? _dpiScale;
+        public static double DpiScale
+        {
+            get
+            {
+                if (_dpiScale == null)
+                    _dpiScale = GetDpiScale();
+
+                return (double)_dpiScale;
+            }
+            set
+            {
+                _dpiScale = value;
+            }
+        }
+        public static double DpiScaleAdjustment
+        {
+            get { return DpiScale / OldDpiScale; }
+        }
 
         public static IntPtr GetIconByFilename(string fileName, int size)
         {
@@ -405,23 +439,17 @@ namespace CairoDesktop.Interop
         /// <param name="pixelY">returns the Y value in pixels</param>
         public static void TransformToPixels(double unitX, double unitY, out int pixelX, out int pixelY)
         {
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                pixelX = (int)((g.DpiX / 96) * unitX);
-                pixelY = (int)((g.DpiY / 96) * unitY);
-            }
+            pixelX = (int)(DpiScale * unitX);
+            pixelY = (int)(DpiScale * unitY);
         }
 
         public static void TransformFromPixels(double unitX, double unitY, out int pixelX, out int pixelY)
         {
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                pixelX = (int)(unitX / (g.DpiX / 96));
-                pixelY = (int)(unitY / (g.DpiY / 96));
-            }
+            pixelX = (int)(unitX / DpiScale);
+            pixelY = (int)(unitY / DpiScale);
         }
 
-        public static double GetDpiScale()
+        private static double GetDpiScale()
         {
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
             {

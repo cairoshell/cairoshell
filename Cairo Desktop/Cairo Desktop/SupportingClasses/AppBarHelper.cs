@@ -221,11 +221,6 @@ namespace CairoDesktop.SupportingClasses
             abWindow.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
                 new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top);
 
-
-
-            if (Startup.DesktopWindow != null)
-                Startup.DesktopWindow.ResetPosition();
-
             if (h < sHeight)
                 ABSetPos(abWindow, width, height, edge);
         }
@@ -240,13 +235,19 @@ namespace CairoDesktop.SupportingClasses
             {
                 SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
             }
+            
+            if (Startup.MenuBarShadowWindow != null)
+                Startup.MenuBarShadowWindow.SetPosition();
+
+            if (Startup.DesktopWindow != null)
+                Startup.DesktopWindow.ResetPosition();
         }
 
         public static System.Drawing.Size PrimaryMonitorSize
         {
             get
             {
-                return new System.Drawing.Size(Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenWidth), Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenHeight));
+                return new System.Drawing.Size(Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenWidth / Shell.DpiScaleAdjustment), Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenHeight / Shell.DpiScaleAdjustment));
             }
         }
 
@@ -285,18 +286,18 @@ namespace CairoDesktop.SupportingClasses
             {
                 if (Settings.TaskbarPosition == 1)
                 {
-                    rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.GetDpiScale()) + (int)(Startup.TaskbarWindow.ActualHeight * Shell.GetDpiScale());
+                    rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale) + (int)(Startup.TaskbarWindow.ActualHeight * Shell.DpiScale);
                     rc.bottom = SystemInformation.VirtualScreen.Bottom;
                 }
                 else
                 {
-                    rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.GetDpiScale());
-                    rc.bottom = SystemInformation.VirtualScreen.Bottom - (int)(Startup.TaskbarWindow.ActualHeight * Shell.GetDpiScale());
+                    rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale);
+                    rc.bottom = SystemInformation.VirtualScreen.Bottom - (int)(Startup.TaskbarWindow.ActualHeight * Shell.DpiScale);
                 }
             }
             else
             {
-                rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.GetDpiScale());
+                rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale);
                 rc.bottom = SystemInformation.VirtualScreen.Bottom;
             }
 

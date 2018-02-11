@@ -95,6 +95,9 @@ namespace CairoDesktop
 
         private void setupPostInit()
         {
+            // set initial dpi
+            Shell.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
+
             appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
 
             Shell.HideWindowFromTasks(handle);
@@ -255,8 +258,6 @@ namespace CairoDesktop
                     case NativeMethods.AppBarNotifications.PosChanged:
                         // Reposition to the top of the screen.
                         AppBarHelper.ABSetPos(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
-                        if (Startup.MenuBarShadowWindow != null)
-                            Startup.MenuBarShadowWindow.SetPosition();
                         break;
 
                     case NativeMethods.AppBarNotifications.FullScreenApp:
@@ -304,6 +305,11 @@ namespace CairoDesktop
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGED)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
+            }
+            else if (msg == NativeMethods.WM_DPICHANGED)
+            {
+                Shell.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
+                AppBarHelper.ABSetPos(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
