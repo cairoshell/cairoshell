@@ -68,6 +68,9 @@ Section "$(SECT_cairo)" cairo
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
 
+  IfSilent 0 +2
+    Sleep 3000
+
   System::Call 'kernel32::OpenMutex(i 0x100000, b 0, t "CairoShell") i .R1'
   IntCmp $R1 0 notRunning
     System::Call 'kernel32::CloseHandle(i $R1)'
@@ -121,7 +124,7 @@ Section "$(SECT_cairo)" cairo
 SectionEnd
 
 ; Run at startup
-Section "$(SECT_startupCU)" startupCU
+Section /o "$(SECT_startupCU)" startupCU
   
   WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "CairoShell" "$INSTDIR\CairoDesktop.exe"
   
@@ -259,4 +262,14 @@ Function LaunchCairo
   std_exec:
     Exec '$INSTDIR\CairoDesktop.exe /restart'
   end_launch:
+FunctionEnd
+
+Function .onInit
+  IfSilent +2
+    SectionSetFlags ${startupCU} 1
+FunctionEnd
+
+Function .onInstSuccess
+  IfSilent 0 +2
+    Call LaunchCairo
 FunctionEnd

@@ -176,6 +176,15 @@
         </Setter>
     </Style>
 
+    <Style x:Key="NoItemsTextBlock" TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="#FF9a9a9a" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
     <!-- Main menu bar -->
     <Style x:Key="MenuBarStyle"
         TargetType="{x:Type DockPanel}">
@@ -1462,15 +1471,6 @@
     </Style>
     <Style x:Key="WelcomeSubText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource WelcomeText}">
         <Setter Property="Foreground" Value="#FF555555" />
-    </Style>
-
-    <Style x:Key="NoItemsTextBlock" TargetType="{x:Type TextBlock}">
-        <Setter Property="Foreground" Value="#FF9a9a9a" />
-        <Setter Property="FontWeight" Value="Normal" />
-        <Setter Property="FontSize" Value="12" />
-        <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Margin" Value="0" />
     </Style>
    
     <!-- Stacks -->
