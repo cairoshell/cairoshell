@@ -391,6 +391,8 @@ namespace CairoDesktop.AppGrabber
                 appClone.IconPath = null;
 
                 quickLaunch.Add(appClone);
+
+                Save();
             }
         }
     }

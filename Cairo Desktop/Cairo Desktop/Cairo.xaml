@@ -1384,7 +1384,7 @@
                     <Border x:Name="Border"
                         BorderThickness="1"
                         CornerRadius="5"
-                        BorderBrush="#402e2e2e">
+                        BorderBrush="#402e2e2e" Padding="15,0">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0"
                                 EndPoint="0,1">
