@@ -408,7 +408,7 @@ namespace CairoDesktop.Localization
             { "sWelcome_DesktopSec2Heading", "Bureau en superposition" },
             { "sWelcome_DesktopSec2Text", "Activez le bureau en superposition (Appuyez sur Win-Shift-D ou cliquez sur l'icône du bureau dans la barre des tâches) pour accéder à votre bureau sans cacher ou interrompre votre travail." },
             { "sWelcome_TaskbarText", "Cairo a remplacé votre barre des tâches par une autre plus intelligente qui maximise votre productivité." },
-            { "sWelcome_TaskbarSec1Heading", "Lancement rapide" }
+            { "sWelcome_TaskbarSec1Heading", "Lancement rapide" },
             { "sWelcome_TaskbarSec1Text", "Les éléments épinglés à votre barre des tâches Windows ont été ajoutés au lancement rapide de votre Cairo. Glissez-y des applications, ou utilisez le sélecteur d'applications pour ajouter d'avantage d'applications au lancement rapide." },
             { "sWelcome_TaskbarSec2Heading", "Fenêtres classées" },
             { "sWelcome_TaskbarSec2Text", "Les fenêtres ouvertes dans votre barre des tâches sont maintenant organisées de la même façon que celle que vous avez choisie pour classer votre menu Applications. Maintenant, toutes vos tâches connexes sont regroupées ensemble pour une utilisation rapide et facile." },
