@@ -1530,7 +1530,7 @@
                                             </Grid>
                                         </Border>
                                     </Border>
-                                    <Image Source="{StaticResource MenubarShadow}" Stretch="Fill" Width="{StaticResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
+                                    <Image Source="{StaticResource MenubarShadow}" Stretch="Fill" Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" Height="16"/>
                                 </StackPanel>
                             </Popup>
                         </Grid>
@@ -1712,8 +1712,8 @@
                             <ColumnDefinition Width="30" />
                         </Grid.ColumnDefinitions>
                         <RepeatButton Grid.Column="0" Command="ScrollBar.PageLeftCommand" Style="{StaticResource StackScrollButton}" Content="3" />
-                        <ScrollContentPresenter Grid.Column="1" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Margin="{TemplateBinding Margin}" CanContentScroll="{TemplateBinding CanContentScroll}" Content="{TemplateBinding Content}" />
-                        <RepeatButton Grid.Column="2" Command="ScrollBar.PageRightCommand" Style="{StaticResource StackScrollButton}" Content="4" />
+                        <ScrollContentPresenter Grid.Column="1" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Margin="0,0,16,0" CanContentScroll="{TemplateBinding CanContentScroll}" Content="{TemplateBinding Content}" />
+                        <RepeatButton Grid.Column="2" Command="ScrollBar.PageRightCommand" Style="{StaticResource StackScrollButton}" Margin="-32,0,0,0" Content="4" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -2026,6 +2026,8 @@
         </Setter>
     </Style>
     <Style x:Key="FolderViewStyle" TargetType="ListView">
+        <Setter Property="Height" Value="85" />
+        <Setter Property="Width" Value="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="ListViewItem">
@@ -2089,7 +2091,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListView">
-                    <ScrollViewer Style="{StaticResource StackScrollViewer}" CanContentScroll="True">
+                    <ScrollViewer Style="{StaticResource StackScrollViewer}" CanContentScroll="True" VerticalScrollBarVisibility="Disabled">
                         <VirtualizingStackPanel Orientation="Horizontal" IsItemsHost="True" Margin="0,4,0,0" />
                     </ScrollViewer>
                 </ControlTemplate>
@@ -2107,7 +2109,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!-- Scrollbars -->
     <Style x:Key="ScrollBarPageButton"
         TargetType="{x:Type RepeatButton}">
