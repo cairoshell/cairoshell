@@ -68,6 +68,15 @@
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ItemsControl">
+                            <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" MaxHeight="576" Width="240" VerticalScrollBarVisibility="Auto">
+                                <VirtualizingStackPanel IsItemsHost="True" />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
                 <Style.Triggers>
                     <Trigger Property="HasItems" Value="False">
                         <Setter Property="Template">
@@ -156,11 +165,8 @@
                                 </TabControl.Resources>
                                 <TabControl.ContentTemplate>
                                     <DataTemplate>
-                                        <ScrollViewer MaxHeight="600" Width="240"
-                        VerticalScrollBarVisibility="Auto">
-                                            <ItemsControl ItemsSource="{Binding}"
+                                        <ItemsControl ItemsSource="{Binding}"
                                             Style="{StaticResource InnerProgramsListStyle}" />
-                                        </ScrollViewer>
                                     </DataTemplate>
                                 </TabControl.ContentTemplate>
                             </TabControl>
