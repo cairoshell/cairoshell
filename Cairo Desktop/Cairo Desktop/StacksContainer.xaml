@@ -36,17 +36,8 @@
                             <MenuItem>
                                 <MenuItem.Header>
                                     <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="30" />
-                                        </Grid.ColumnDefinitions>
-                                        <Button Grid.Column="0" Style="{StaticResource StackTopButton}" Click="Open_Click" CommandParameter="{Binding Path=FullName}" Content="2" ToolTip="{Binding Path=(l10n:DisplayString.sStacks_OpenInNewWindow)}" />
-                                        <Button Grid.Column="0" Style="{StaticResource StackScrollButton}" Command="ScrollBar.PageLeftCommand" CommandTarget="{Binding ElementName=Scroller}" Content="3" />
-                                        <ScrollViewer x:Name="Scroller" Grid.Column="1" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Hidden" Grid.ColumnSpan="1" FocusManager.IsFocusScope="True" Margin="-5,0,-5,-10" Height="85">
-                                            <ItemsControl Style="{StaticResource FolderViewStyle}" ItemsSource="{Binding Path=Files}" />
-                                        </ScrollViewer>
-                                        <Button Grid.Column="2" Style="{StaticResource StackScrollButton}" Command="ScrollBar.PageRightCommand" CommandTarget="{Binding ElementName=Scroller}" Content="4" />
+                                        <ListView x:Name="Scroller" FocusManager.IsFocusScope="True" Height="85" Style="{StaticResource FolderViewStyle}" ItemsSource="{Binding Path=Files}" />
+                                        <Button Style="{StaticResource StackTopButton}" Click="Open_Click" CommandParameter="{Binding Path=FullName}" Content="2" ToolTip="{Binding Path=(l10n:DisplayString.sStacks_OpenInNewWindow)}" />
                                     </Grid>
                                 </MenuItem.Header>
                             </MenuItem>

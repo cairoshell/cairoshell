@@ -213,10 +213,14 @@ namespace CairoDesktop
 
         private void miPersonalization_Click(object sender, RoutedEventArgs e)
         {
-            // doesn't work because Settings app requires Explorer :(
+            // doesn't work when shell because Settings app requires Explorer :(
             if (!Shell.StartProcess("desk.cpl"))
             {
-                CairoMessage.Show("Unable to open the Display control panel.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show("Unable to open Personalization settings.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else if (IsOverlayOpen)
+            {
+                IsOverlayOpen = false;
             }
         }
 

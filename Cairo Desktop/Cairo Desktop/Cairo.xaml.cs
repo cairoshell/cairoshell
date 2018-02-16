@@ -13,34 +13,46 @@ namespace CairoDesktop
 
         private void btnFile_Click(object sender, RoutedEventArgs e)
         {
-            Button senderButton = sender as Button;
-            System.Diagnostics.Process proc = new System.Diagnostics.Process();
-            proc.StartInfo.UseShellExecute = true;
-            proc.StartInfo.FileName = senderButton.CommandParameter as String;
-            try
+            if (sender != null)
             {
-                // get the file attributes for file or directory
-                FileAttributes attr = File.GetAttributes(senderButton.CommandParameter as String);
-
-                //detect whether its a directory or file
-                if ((attr & FileAttributes.Directory) == FileAttributes.Directory && Settings.EnableDynamicDesktop && Window.GetWindow(senderButton).Name == "CairoDesktopWindow")
+                Button senderButton = sender as Button;
+                if (senderButton != null && senderButton.CommandParameter != null)
                 {
-                    Startup.DesktopWindow.Navigate(senderButton.CommandParameter as String);
-                }
-                else
-                {
-                    proc.Start();
+                    System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                    proc.StartInfo.UseShellExecute = true;
+                    proc.StartInfo.FileName = senderButton.CommandParameter as String;
+                    try
+                    {
+                        // get the file attributes for file or directory
+                        FileAttributes attr = File.GetAttributes(senderButton.CommandParameter as String);
 
-                    Startup.DesktopWindow.IsOverlayOpen = false;
+                        //detect whether its a directory or file
+                        if ((attr & FileAttributes.Directory) == FileAttributes.Directory && Settings.EnableDynamicDesktop && Window.GetWindow(senderButton) != null && Window.GetWindow(senderButton).Name == "CairoDesktopWindow")
+                        {
+                            Startup.DesktopWindow.Navigate(senderButton.CommandParameter as String);
+                        }
+                        else
+                        {
+                            proc.Start();
+
+                            Startup.DesktopWindow.IsOverlayOpen = false;
+                        }
+
+                        return;
+                    }
+                    catch
+                    {
+                        // No 'Open' command associated with this filetype in the registry
+                        Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
+
+                        Startup.DesktopWindow.IsOverlayOpen = false;
+
+                        return;
+                    }
                 }
             }
-            catch
-            {
-                // No 'Open' command associated with this filetype in the registry
-                Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
 
-                Startup.DesktopWindow.IsOverlayOpen = false;
-            }
+            CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void miVerb_Click(object sender, RoutedEventArgs e)

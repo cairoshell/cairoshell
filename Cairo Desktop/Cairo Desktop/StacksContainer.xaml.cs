@@ -67,7 +67,7 @@ namespace CairoDesktop {
         {
             if (!Interop.Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), "\"" + directoryPath + "\""))
             {
-                CairoMessage.Show("Unable to open the file browser.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
