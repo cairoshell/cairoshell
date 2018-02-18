@@ -279,27 +279,17 @@
                                 <TextBlock MinWidth="100"
                                         Foreground="{DynamicResource ResourceKey=SearchTitleText}"
                                         FontSize="14"
-                                        FontFamily="Segoe UI" Margin="0,2,0,0" Text="{Binding Path=(l10n:DisplayString.sSearch_Title)}" />
-                                <TextBox FontFamily="Segoe UI"
-                                        FontSize="14"
-                                        Width="200"
-                                        Margin="10,0,0,0"
-                                        Background="{DynamicResource ResourceKey=SearchResultBackground1}"
-                                        Foreground="{DynamicResource ResourceKey=SearchResultText}"
-                                        BorderBrush="Transparent"
-                                        Padding="7,1,7,1"
-                                        Name="searchStr"
-                                        TextChanged="searchStr_TextChanged" PreviewKeyDown="searchStr_KeyDown">
-                                    <TextBox.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius" Value="10"/>
-                                        </Style>
-                                    </TextBox.Resources>
-                                </TextBox>
+                                        FontFamily="Segoe UI" Margin="0,1,0,0" Text="{Binding Path=(l10n:DisplayString.sSearch_Title)}" />
+                                <Border Background="{DynamicResource ResourceKey=SearchResultBackground1}" CornerRadius="10" Margin="10,0,0,0" Padding="7,1,4,1">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Style="{StaticResource SearchTextBox}" Name="searchStr" PreviewKeyDown="searchStr_KeyDown" />
+                                        <Button Style="{StaticResource SearchTextBoxClearButton}" Content="r" Name="btnClearSearch" Click="btnClearSearch_Click" />
+                                    </StackPanel>
+                                </Border>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Orientation="Vertical">
-                            <Button Style="{StaticResource CairoSearchResultsButtonStyle}" Name="btnViewResults" Click="btnViewResults_Click" Visibility="Collapsed" Content="{Binding Path=(l10n:DisplayString.sSearch_ViewAllResults)}" />
+                            <Button Style="{StaticResource CairoSearchResultsButtonStyle}" Name="btnViewResults" Click="btnViewResults_Click" Content="{Binding Path=(l10n:DisplayString.sSearch_ViewAllResults)}" />
                             <ListView BorderThickness="0"
                                     Background="{x:Null}"
                                     MinHeight="0"

@@ -726,6 +726,54 @@
     </Style>
     
     <!-- Search Results -->
+    <Style x:Key="SearchTextBox" TargetType="TextBox">
+        <Setter Property="Width" Value="185"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Background" Value="{DynamicResource ResourceKey=SearchResultBackground1}" />
+        <Setter Property="Foreground" Value="{DynamicResource ResourceKey=SearchResultText}" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style x:Key="SearchTextBoxClearButton" TargetType="{x:Type Button}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="FontFamily" Value="Marlett"/>
+        <Setter Property="Height" Value="15"/>
+        <Setter Property="Width" Value="15"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource ResourceKey=SearchResultText}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border"
+                        BorderThickness="0"
+                        CornerRadius="7"
+                        Background="Transparent">
+                        <ContentPresenter Margin="3,3"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed"
+                            Value="true">
+                            <Setter TargetName="Border"
+                                Property="Background" Value="{DynamicResource ResourceKey=SearchResultBackground0}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=searchStr, Path=Text}" Value="">
+                <Setter Property="Visibility" Value="Hidden" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
     <Style x:Key="CairoSearchResultsItemStyle"
         TargetType="ListViewItem">
         <Setter Property="Height" Value="60"/>
@@ -833,6 +881,11 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=searchStr, Path=Text}" Value="">
+                <Setter Property="Visibility" Value="Collapsed" />
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <!-- Taskbar -->

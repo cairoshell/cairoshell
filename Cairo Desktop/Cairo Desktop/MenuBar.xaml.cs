@@ -617,20 +617,18 @@ namespace CairoDesktop
             Shell.StartProcess("search:query=" + searchStr.Text);
         }
 
-        private void searchStr_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (searchStr.Text.Length > 0)
-                btnViewResults.Visibility = Visibility.Visible;
-            else
-                btnViewResults.Visibility = Visibility.Collapsed;
-        }
-
         private void searchStr_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Return)
             {
                 Shell.StartProcess("search:query=" + searchStr.Text);
             }
+        }
+
+        private void btnClearSearch_Click(object sender, RoutedEventArgs e)
+        {
+            searchStr.Text = "";
+            FocusSearchBox(sender, e);
         }
 
         public void FocusSearchBox(object sender, RoutedEventArgs e)
