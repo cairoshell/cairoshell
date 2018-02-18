@@ -156,6 +156,7 @@ namespace CairoDesktop.Localization
             { "sSettings_MenuBar_ShowNotifyIconsAlways", "Always" },
             { "sSettings_MenuBar_PeriodicallyRehook", "Periodically re-establish notification area hook" },
             { "sSettings_MenuBar_EnableCairoMenuHotKey", "Enable Cairo menu hotkey:" },
+            { "sSettings_MenuBar_EnableMenuBarBlur", "Blur behind the Menu Bar (Windows 10 only)" },
             { "sSettings_Desktop_EnableDesktop", "Enable Desktop" },
             { "sSettings_Desktop_DesktopHome", "Desktop home:" },
             { "sSettings_Desktop_LabelPosition", "Label position:" },

@@ -1249,6 +1249,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_MenuBar_EnableMenuBarBlur
+        {
+            get
+            {
+                return getString("sSettings_MenuBar_EnableMenuBarBlur");
+            }
+        }
+
         public static string sSettings_Desktop_EnableDesktop
         {
             get

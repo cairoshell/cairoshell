@@ -375,6 +375,38 @@ namespace CairoDesktop.Interop
             SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW);
         }
 
+        public static void EnableWindowBlur(IntPtr hWnd)
+        {
+            if (IsWindows10OrBetter)
+            {
+                // https://github.com/riverar/sample-win32-acrylicblur
+                // License: MIT
+                var accent = new AccentPolicy();
+                var accentStructSize = Marshal.SizeOf(accent);
+                if (IsWindows10RS4OrBetter)
+                {
+                    accent.AccentState = AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND;
+                    accent.GradientColor = (0 << 24) | (0xFFFFFF /* BGR */ & 0xFFFFFF);
+                }
+                else
+                {
+                    accent.AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND;
+                }
+
+                var accentPtr = Marshal.AllocHGlobal(accentStructSize);
+                Marshal.StructureToPtr(accent, accentPtr, false);
+
+                var data = new WindowCompositionAttributeData();
+                data.Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY;
+                data.SizeOfData = accentStructSize;
+                data.Data = accentPtr;
+
+                SetWindowCompositionAttribute(hWnd, ref data);
+
+                Marshal.FreeHGlobal(accentPtr);
+            }
+        }
+
         public static void ToggleDesktopIcons(bool enable)
         {
             var toggleDesktopCommand = new IntPtr(0x7402);
@@ -465,11 +497,13 @@ namespace CairoDesktop.Interop
 
         private static int osVersionMajor = 0;
         private static int osVersionMinor = 0;
+        private static int osVersionBuild = 0;
 
         private static void getOSVersion()
         {
             osVersionMajor = Environment.OSVersion.Version.Major;
             osVersionMinor = Environment.OSVersion.Version.Minor;
+            osVersionBuild = Environment.OSVersion.Version.Build;
         }
 
         public static bool IsWindows2kOrBetter
@@ -513,6 +547,17 @@ namespace CairoDesktop.Interop
                     getOSVersion();
 
                 return (osVersionMajor >= 10);
+            }
+        }
+
+        public static bool IsWindows10RS4OrBetter
+        {
+            get
+            {
+                if (osVersionMajor == 0)
+                    getOSVersion();
+
+                return (osVersionMajor >= 10 && osVersionBuild >= 16353);
             }
         }
     }

@@ -228,6 +228,10 @@
                         <ComboBox Name="cboCairoMenuHotKeyKey" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="40" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[2]}" />
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
+                    <CheckBox IsChecked="{Binding Path=EnableMenuBarBlur}"
+                        Click="CheckBox_Click" Name="chkEnableMenuBarBlur">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarBlur)}" />
+                    </CheckBox>
                     <CheckBox IsChecked="{Binding Path=EnableMenuBarShadow}"
                         Click="CheckBox_Click" Name="chkEnableMenuBarShadow">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarShadow)}" />

@@ -105,6 +105,9 @@ namespace CairoDesktop
 
             if (Settings.EnableCairoMenuHotKey)
                 HotKeyManager.RegisterHotKey(Settings.CairoMenuHotKey, OnShowCairoMenu);
+
+            if (Settings.EnableMenuBarBlur)
+                Shell.EnableWindowBlur(handle);
         }
 
         private void setupSearch()

@@ -59,6 +59,7 @@ namespace CairoDesktop.Configuration
         private static bool? _EnableSysTrayRehook;
         private static bool? _EnableCairoMenuHotKey;
         private static string _CairoMenuHotKey;
+        private static bool? _EnableMenuBarBlur;
 
         #endregion
 
@@ -562,6 +563,23 @@ namespace CairoDesktop.Configuration
             {
                 _CairoMenuHotKey = concatStringList(value, '|');
                 Properties.Settings.Default.CairoMenuHotKey = _CairoMenuHotKey;
+                Save();
+            }
+        }
+
+        public static bool EnableMenuBarBlur
+        {
+            get
+            {
+                if (_EnableMenuBarBlur == null)
+                    _EnableMenuBarBlur = Properties.Settings.Default.EnableMenuBarBlur;
+
+                return (bool)_EnableMenuBarBlur;
+            }
+            set
+            {
+                _EnableMenuBarBlur = value;
+                Properties.Settings.Default.EnableMenuBarBlur = (bool)_EnableMenuBarBlur;
                 Save();
             }
         }
