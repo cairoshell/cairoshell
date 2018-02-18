@@ -47,6 +47,11 @@ namespace CairoDesktop
             this.Height = AppBarHelper.PrimaryMonitorSize.Height-1;
             setGridPosition();
 
+            setBackground();
+        }
+
+        private void setBackground()
+        {
             if (Startup.IsCairoUserShell)
             {
                 string regWallpaper = (string)Registry.GetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop", "Wallpaper", "");
@@ -60,11 +65,12 @@ namespace CairoDesktop
                         bgBrush.ImageSource = new BitmapImage(new Uri(regWallpaper, UriKind.Absolute));
 
                         this.Background = bgBrush;
-                    } catch { }
+                    }
+                    catch { }
                 }
             }
         }
-
+        
         private void setupPostInit()
         {
             Shell.HideWindowFromTasks(helper.Handle);
@@ -263,6 +269,7 @@ namespace CairoDesktop
             Topmost = true;
             NativeMethods.SetForegroundWindow(helper.Handle);
             grid.Background = new SolidColorBrush(Color.FromArgb(0x88, 0, 0, 0));
+            this.Background = null;
         }
 
         private void closeOverlay()
@@ -270,6 +277,7 @@ namespace CairoDesktop
             Topmost = false;
             Shell.ShowWindowBottomMost(helper.Handle);
             grid.Background = Brushes.Transparent;
+            setBackground();
         }
     }
 }
