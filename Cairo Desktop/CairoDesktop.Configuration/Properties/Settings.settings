@@ -83,5 +83,8 @@
     <Setting Name="CairoMenuHotKey" Type="System.String" Scope="User">
       <Value Profile="(Default)">Win|Shift|Z</Value>
     </Setting>
+    <Setting Name="FoldersOpenDesktopOverlay" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

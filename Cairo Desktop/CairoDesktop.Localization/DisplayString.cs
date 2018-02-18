@@ -1161,6 +1161,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_General_FoldersOpenDesktopOverlay
+        {
+            get
+            {
+                return getString("sSettings_General_FoldersOpenDesktopOverlay");
+            }
+        }
+
         public static string sSettings_MenuBar_DefaultProgramsCategory
         {
             get

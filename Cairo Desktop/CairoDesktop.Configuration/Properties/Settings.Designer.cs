@@ -346,5 +346,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["CairoMenuHotKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FoldersOpenDesktopOverlay {
+            get {
+                return ((bool)(this["FoldersOpenDesktopOverlay"]));
+            }
+            set {
+                this["FoldersOpenDesktopOverlay"] = value;
+            }
+        }
     }
 }

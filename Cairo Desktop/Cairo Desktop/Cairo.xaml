@@ -1785,11 +1785,13 @@
     </Style>
     <!-- Folder Views -->
     <Style x:Key="DesktopFolderViewVerticalStyle" TargetType="ItemsControl">
-        <Setter Property="ItemsPanel">
+        <Setter Property="Template">
             <Setter.Value>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Vertical" />
-                </ItemsPanelTemplate>
+                <ControlTemplate TargetType="ItemsControl">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <WrapPanel Orientation="Vertical" IsItemsHost="True" />
+                    </ScrollViewer>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
         <Setter Property="ItemTemplate">

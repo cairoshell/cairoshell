@@ -541,47 +541,47 @@ namespace CairoDesktop
         #region Places menu items
         private void OpenMyDocs(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Documents));
+            FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Documents));
         }
 
         private void OpenMyPics(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Pictures));
+            FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Pictures));
         }
 
         private void OpenMyMusic(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Music));
+            FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Music));
         }
 
         private void OpenMyVideos(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Videos));
+            FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Videos));
         }
 
         private void OpenDownloads(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), KnownFolders.GetPath(KnownFolder.Downloads));
+            FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Downloads));
         }
 
         private void OpenMyComputer(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
+            FolderHelper.OpenLocation("::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
         }
 
         private void OpenUserFolder(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), System.Environment.GetEnvironmentVariable("USERPROFILE"));
+            FolderHelper.OpenLocation(Environment.GetEnvironmentVariable("USERPROFILE"));
         }
 
         private void OpenProgramFiles(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), System.Environment.GetEnvironmentVariable("ProgramFiles"));
+            FolderHelper.OpenLocation(Environment.GetEnvironmentVariable("ProgramFiles"));
         }
 
         private void OpenRecycleBin(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), "::{645FF040-5081-101B-9F08-00AA002F954E}");
+            FolderHelper.OpenLocation("::{645FF040-5081-101B-9F08-00AA002F954E}");
         }
         #endregion
 

@@ -1,5 +1,6 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Configuration;
+using CairoDesktop.SupportingClasses;
 using System;
 using System.IO;
 using System.Windows;
@@ -18,34 +19,42 @@ namespace CairoDesktop
                 Button senderButton = sender as Button;
                 if (senderButton != null && senderButton.CommandParameter != null)
                 {
+                    // get the file attributes for file or directory
+                    FileAttributes attr = File.GetAttributes(senderButton.CommandParameter as String);
+
+                    // if directory, perform special handling
+                    if ((attr & FileAttributes.Directory) == FileAttributes.Directory && Settings.EnableDynamicDesktop && Window.GetWindow(senderButton) != null && Window.GetWindow(senderButton).Name == "CairoDesktopWindow" && Startup.DesktopWindow != null)
+                    {
+                        Startup.DesktopWindow.Navigate(senderButton.CommandParameter as String);
+
+                        return;
+                    }
+                    else if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                    {
+                        FolderHelper.OpenLocation(senderButton.CommandParameter as String);
+
+                        return;
+                    }
+
                     System.Diagnostics.Process proc = new System.Diagnostics.Process();
                     proc.StartInfo.UseShellExecute = true;
                     proc.StartInfo.FileName = senderButton.CommandParameter as String;
                     try
                     {
-                        // get the file attributes for file or directory
-                        FileAttributes attr = File.GetAttributes(senderButton.CommandParameter as String);
-
-                        //detect whether its a directory or file
-                        if ((attr & FileAttributes.Directory) == FileAttributes.Directory && Settings.EnableDynamicDesktop && Window.GetWindow(senderButton) != null && Window.GetWindow(senderButton).Name == "CairoDesktopWindow")
-                        {
-                            Startup.DesktopWindow.Navigate(senderButton.CommandParameter as String);
-                        }
-                        else
-                        {
-                            proc.Start();
-
+                        if (Startup.DesktopWindow != null)
                             Startup.DesktopWindow.IsOverlayOpen = false;
-                        }
+
+                        proc.Start();
 
                         return;
                     }
                     catch
                     {
+                        if (Startup.DesktopWindow != null)
+                            Startup.DesktopWindow.IsOverlayOpen = false;
+
                         // No 'Open' command associated with this filetype in the registry
                         Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
-
-                        Startup.DesktopWindow.IsOverlayOpen = false;
 
                         return;
                     }

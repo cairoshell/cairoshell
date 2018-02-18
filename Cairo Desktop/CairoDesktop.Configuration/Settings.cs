@@ -33,6 +33,7 @@ namespace CairoDesktop.Configuration
         private static string _Language;
         private static bool? _EnableSubDirs;
         private static bool? _ForceSoftwareRendering;
+        private static bool? _FoldersOpenDesktopOverlay;
 
         // Desktop
         private static bool? _EnableDesktop;
@@ -215,6 +216,23 @@ namespace CairoDesktop.Configuration
             {
                 _ForceSoftwareRendering = value;
                 Properties.Settings.Default.ForceSoftwareRendering = (bool)_ForceSoftwareRendering;
+                Save();
+            }
+        }
+
+        public static bool FoldersOpenDesktopOverlay
+        {
+            get
+            {
+                if (_FoldersOpenDesktopOverlay == null)
+                    _FoldersOpenDesktopOverlay = Properties.Settings.Default.FoldersOpenDesktopOverlay;
+
+                return (bool)_FoldersOpenDesktopOverlay;
+            }
+            set
+            {
+                _FoldersOpenDesktopOverlay = value;
+                Properties.Settings.Default.FoldersOpenDesktopOverlay = (bool)_FoldersOpenDesktopOverlay;
                 Save();
             }
         }

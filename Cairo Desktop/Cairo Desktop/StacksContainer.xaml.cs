@@ -65,7 +65,7 @@ namespace CairoDesktop {
         /// <param name="directoryPath">Directory to open.</param>
         private void openDir(String directoryPath) 
         {
-            if (!Interop.Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), "\"" + directoryPath + "\""))
+            if (!FolderHelper.OpenLocation(directoryPath))
             {
                 CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
             }

@@ -41,15 +41,19 @@ namespace CairoDesktop
 
             if (verb == "open")
             {
+                if (Startup.DesktopWindow != null)
+                    Startup.DesktopWindow.IsOverlayOpen = false;
+
                 Interop.Shell.StartProcess(fileName);
-                Startup.DesktopWindow.IsOverlayOpen = false;
 
                 return;
             }
             else if (verb == "openwith")
             {
+                if (Startup.DesktopWindow != null)
+                    Startup.DesktopWindow.IsOverlayOpen = false;
+
                 Interop.Shell.ShowOpenWithDialog(fileName);
-                Startup.DesktopWindow.IsOverlayOpen = false;
 
                 return;
             }
@@ -93,8 +97,9 @@ namespace CairoDesktop
                 rename.SelectAll();
                 return;
             }
-
-            Startup.DesktopWindow.IsOverlayOpen = false;
+            
+            if (Startup.DesktopWindow != null)
+                Startup.DesktopWindow.IsOverlayOpen = false;
 
             Interop.Shell.StartProcess(fileName, "", verb);
         }

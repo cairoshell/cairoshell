@@ -72,7 +72,9 @@ namespace CairoDesktop
             this.Height = 29 + addToSize;
 
             ((INotifyCollectionChanged)TasksList.Items).CollectionChanged += TasksList_Changed;
-            btnDesktopOverlay.DataContext = Startup.DesktopWindow;
+
+            if (Startup.DesktopWindow != null)
+                btnDesktopOverlay.DataContext = Startup.DesktopWindow;
 
             // set taskbar edge based on preference
             if (Settings.TaskbarPosition == 1)
@@ -361,7 +363,8 @@ namespace CairoDesktop
 
         private void btnDesktopOverlay_Click(object sender, RoutedEventArgs e)
         {
-            Startup.DesktopWindow.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
+            if (Startup.DesktopWindow != null)
+                Startup.DesktopWindow.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
         }
     }
 }
