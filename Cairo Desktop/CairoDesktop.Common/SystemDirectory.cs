@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 using System.Windows.Threading;
 using CairoDesktop.Configuration;
 
@@ -58,17 +59,25 @@ namespace CairoDesktop.Common {
         /// <summary>
         /// Creates a new SystemDirectory object for the given directory path.
         /// </summary>
-        public SystemDirectory(string pathToDirectory, Dispatcher dispatcher) {
-            this.dispatcher = dispatcher;
-            files = new InvokingObservableCollection<SystemFile>(this.dispatcher);
-            this.DirectoryInfo = new DirectoryInfo(pathToDirectory);
-            fileWatcher.IncludeSubdirectories = false;
-            fileWatcher.Filter = "";
-            fileWatcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName;
-            fileWatcher.Created += new FileSystemEventHandler(fileWatcher_Created);
-            fileWatcher.Deleted += new FileSystemEventHandler(fileWatcher_Deleted);
-            fileWatcher.Renamed += new RenamedEventHandler(fileWatcher_Renamed);
-            fileWatcher.EnableRaisingEvents = true;
+        public SystemDirectory(string pathToDirectory, Dispatcher dispatcher)
+        {
+            try
+            {
+                this.dispatcher = dispatcher;
+                files = new InvokingObservableCollection<SystemFile>(this.dispatcher);
+                this.DirectoryInfo = new DirectoryInfo(pathToDirectory);
+                fileWatcher.IncludeSubdirectories = false;
+                fileWatcher.Filter = "";
+                fileWatcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName;
+                fileWatcher.Created += new FileSystemEventHandler(fileWatcher_Created);
+                fileWatcher.Deleted += new FileSystemEventHandler(fileWatcher_Deleted);
+                fileWatcher.Renamed += new RenamedEventHandler(fileWatcher_Renamed);
+                fileWatcher.EnableRaisingEvents = true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         void fileWatcher_Renamed(object sender, RenamedEventArgs e) {
@@ -167,7 +176,7 @@ namespace CairoDesktop.Common {
         private void initialize()
         {
             files.Clear();
-
+            
             if (Settings.EnableSubDirs)
             {
                 IEnumerable<string> dirs = Directory.EnumerateDirectories(this.DirectoryInfo.FullName);
@@ -188,7 +197,6 @@ namespace CairoDesktop.Common {
                     files.Add(new SystemFile(file));
                 }
             }
-
         }
 
         public override bool Equals(object other) {

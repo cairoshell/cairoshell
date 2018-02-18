@@ -279,5 +279,11 @@ namespace CairoDesktop
             grid.Background = Brushes.Transparent;
             setBackground();
         }
+
+        private void grid_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.ScrollViewer))
+                IsOverlayOpen = false;
+        }
     }
 }

@@ -9,7 +9,7 @@
     AllowsTransparency="True"
     Focusable="False" UseLayoutRounding="True" Name="CairoDesktopWindow"
     Background="Transparent" Topmost="False" Activated="Window_Activated" Closing="Window_Closing" SourceInitialized="Window_SourceInitialized" LocationChanged="CairoDesktopWindow_LocationChanged">
-    <Grid Name="grid" MouseRightButtonDown="grid_MouseRightButtonDown" HorizontalAlignment="Left" VerticalAlignment="Top">
+    <Grid Name="grid" MouseRightButtonDown="grid_MouseRightButtonDown" PreviewMouseLeftButtonDown="grid_PreviewMouseLeftButtonDown" HorizontalAlignment="Left" VerticalAlignment="Top">
     </Grid>
     <Window.ContextMenu>
         <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
