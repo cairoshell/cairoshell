@@ -66,10 +66,17 @@
                 case 0:
                     radTaskbarMode0.IsChecked = true;
                     radTaskbarMode1.IsChecked = false;
+                    radTaskbarMode2.IsChecked = false;
                     break;
                 case 1:
                     radTaskbarMode0.IsChecked = false;
                     radTaskbarMode1.IsChecked = true;
+                    radTaskbarMode2.IsChecked = false;
+                    break;
+                case 2:
+                    radTaskbarMode0.IsChecked = false;
+                    radTaskbarMode1.IsChecked = false;
+                    radTaskbarMode2.IsChecked = true;
                     break;
                 default:
                     break;
@@ -274,6 +281,12 @@
         private void radTaskbarMode1_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarMode = 1;
+            showRestartButton();
+        }
+
+        private void radTaskbarMode2_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.TaskbarMode = 2;
             showRestartButton();
         }
 

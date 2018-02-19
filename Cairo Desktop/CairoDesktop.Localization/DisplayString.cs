@@ -1409,6 +1409,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_Taskbar_DisplayModeAutoHide
+        {
+            get
+            {
+                return getString("sSettings_Taskbar_DisplayModeAutoHide");
+            }
+        }
+
         public static string sWelcome_StartTour
         {
             get

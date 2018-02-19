@@ -176,6 +176,7 @@ namespace CairoDesktop.Localization
             { "sSettings_Taskbar_DisplayMode", "Display mode:" },
             { "sSettings_Taskbar_DisplayModeAppBar", "Taskbar reserves space" },
             { "sSettings_Taskbar_DisplayModeOverlap", "Taskbar overlaps windows" },
+            { "sSettings_Taskbar_DisplayModeAutoHide", "Taskbar automatically hides" },
             { "sWelcome_StartTour", "Start Tour" },
             { "sWelcome_FinishTour", "Finish Tour" },
             { "sWelcome_Welcome", "Welcome to Cairo" },

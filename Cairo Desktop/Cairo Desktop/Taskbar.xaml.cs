@@ -40,6 +40,20 @@ namespace CairoDesktop
             set { SetValue(ButtonTextWidthProperty, value); }
         }
 
+        public DependencyProperty TaskbarModeProperty = DependencyProperty.Register("TaskbarMode", typeof(int), typeof(Taskbar), new PropertyMetadata(new int()));
+        public int TaskbarMode
+        {
+            get { return (int)GetValue(TaskbarModeProperty); }
+            set { SetValue(TaskbarModeProperty, value); }
+        }
+
+        public DependencyProperty TaskbarPositionProperty = DependencyProperty.Register("TaskbarPosition", typeof(int), typeof(Taskbar), new PropertyMetadata(new int()));
+        public int TaskbarPosition
+        {
+            get { return (int)GetValue(TaskbarPositionProperty); }
+            set { SetValue(TaskbarPositionProperty, value); }
+        }
+
         public Taskbar()
         {
             InitializeComponent();
@@ -55,6 +69,9 @@ namespace CairoDesktop
             this.quickLaunchList.ItemsSource = quickLaunch;
             this.bdrTaskbar.MaxWidth = AppBarHelper.PrimaryMonitorSize.Width - 36;
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
+
+            TaskbarMode = Settings.TaskbarMode;
+            TaskbarPosition = Settings.TaskbarPosition;
 
             switch (Settings.TaskbarIconSize)
             {
@@ -75,9 +92,11 @@ namespace CairoDesktop
 
             if (Startup.DesktopWindow != null)
                 btnDesktopOverlay.DataContext = Startup.DesktopWindow;
+            else
+                btnDesktopOverlay.Visibility = Visibility.Collapsed;
 
             // set taskbar edge based on preference
-            if (Settings.TaskbarPosition == 1)
+            if (TaskbarPosition == 1)
             {
                 this.Top = Startup.MenuBarWindow.Height;
                 appBarEdge = AppBarHelper.ABEdge.ABE_TOP;
@@ -95,12 +114,6 @@ namespace CairoDesktop
                 int screen = AppBarHelper.PrimaryMonitorSize.Height;
                 bdrTaskListPopup.Margin = new Thickness(5, 0, 5, this.Height - 1);
                 setTopPosition(screen, true);
-            }
-
-            // hide desktop overlay button if desktop is not enabled
-            if (!Settings.EnableDesktop)
-            {
-                btnDesktopOverlay.Visibility = Visibility.Collapsed;
             }
 
             // show task view on windows >= 10, adjust margin if not shown
@@ -169,9 +182,9 @@ namespace CairoDesktop
 
         private void setTopPosition(int top, bool force = false)
         {
-            if (Startup.IsCairoUserShell || Settings.TaskbarMode > 0 || this.Top < Startup.MenuBarWindow.Height || force)
+            if (Startup.IsCairoUserShell || TaskbarMode > 0 || this.Top < Startup.MenuBarWindow.Height || force)
             {
-                if (Settings.TaskbarPosition == 1)
+                if (TaskbarPosition == 1)
                 {
                     double workArea = SystemParameters.WorkArea.Top / Shell.DpiScaleAdjustment;
 
@@ -199,7 +212,7 @@ namespace CairoDesktop
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
             
-            if (msg == appbarMessageId && appbarMessageId != -1 && Settings.TaskbarMode == 0)
+            if (msg == appbarMessageId && appbarMessageId != -1 && TaskbarMode == 0)
             {
                 switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
                 {
@@ -232,11 +245,11 @@ namespace CairoDesktop
                 }
                 handled = true;
             }
-            else if (msg == NativeMethods.WM_ACTIVATE && Settings.TaskbarMode == 0)
+            else if (msg == NativeMethods.WM_ACTIVATE && TaskbarMode == 0)
             {
                 AppBarHelper.AppBarActivate(hwnd);
             }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.TaskbarMode == 0)
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && TaskbarMode == 0)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
             }
@@ -274,7 +287,7 @@ namespace CairoDesktop
             setPosition();
             setTaskButtonSize();
 
-            if (Settings.TaskbarMode == 0)
+            if (TaskbarMode == 0)
                 appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, appBarEdge);
 
             Shell.HideWindowFromTasks(handle);
@@ -304,7 +317,7 @@ namespace CairoDesktop
             {
                 displayChanged = false;
 
-                if (Settings.TaskbarMode > 0)
+                if (TaskbarMode > 0)
                 {
                     // set position after 2 seconds anyway in case we missed something
                     var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };

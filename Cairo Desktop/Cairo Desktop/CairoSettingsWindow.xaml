@@ -353,6 +353,9 @@
                             <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode1" Click="radTaskbarMode1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayModeOverlap)}" />
                             </RadioButton>
+                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode2" Click="radTaskbarMode2_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayModeAutoHide)}" />
+                            </RadioButton>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
