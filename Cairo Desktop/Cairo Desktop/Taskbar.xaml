@@ -27,15 +27,15 @@
             </CollectionViewSource>
         </ResourceDictionary>
     </Window.Resources>
-    <Border HorizontalAlignment="Center">
+    <Border HorizontalAlignment="Center" Name="bdrMain">
         <Border.Style>
             <Style TargetType="Border">
                 <Style.Triggers>
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
                             <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}" Value="False" />
-                            <Condition Binding="{Binding Path=TaskbarMode, ElementName=TaskbarWindow}" Value="2" />
-                            <Condition Binding="{Binding Path=TaskbarPosition, ElementName=TaskbarWindow}" Value="0" />
+                            <Condition Binding="{Binding TaskbarMode}" Value="2" />
+                            <Condition Binding="{Binding TaskbarPosition}" Value="0" />
                         </MultiDataTrigger.Conditions>
                         <MultiDataTrigger.Setters>
                             <Setter Property="Height" Value="3" />
@@ -45,8 +45,8 @@
                     <MultiDataTrigger>
                         <MultiDataTrigger.Conditions>
                             <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}" Value="False" />
-                            <Condition Binding="{Binding Path=TaskbarMode, ElementName=TaskbarWindow}" Value="2" />
-                            <Condition Binding="{Binding Path=TaskbarPosition, ElementName=TaskbarWindow}" Value="1" />
+                            <Condition Binding="{Binding TaskbarMode}" Value="2" />
+                            <Condition Binding="{Binding TaskbarPosition}" Value="1" />
                         </MultiDataTrigger.Conditions>
                         <MultiDataTrigger.Setters>
                             <Setter Property="Height" Value="3" />
