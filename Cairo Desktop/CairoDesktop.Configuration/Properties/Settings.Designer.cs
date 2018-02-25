@@ -370,5 +370,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["EnableMenuBarBlur"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableMultiMon {
+            get {
+                return ((bool)(this["EnableMultiMon"]));
+            }
+            set {
+                this["EnableMultiMon"] = value;
+            }
+        }
     }
 }

@@ -172,6 +172,11 @@
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_UpdateCheck)}" />
                     </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
+                    <CheckBox IsChecked="{Binding Path=EnableMultiMon}"
+                        Click="CheckBox_Click"
+                        Name="chkEnableMultiMon">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_EnableMultiMon)}" />
+                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_Language)}" />
                         <ComboBox Name="cboLangSelect" DropDownClosed="DropDown_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=Language}" />
@@ -190,11 +195,6 @@
                         <TextBox Text="{Binding Path=DateFormat}"
                             Name="dateSetting" ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormatTooltip)}" />
                     </StackPanel>
-                    <CheckBox IsChecked="{Binding Path=ForceSoftwareRendering}"
-                        Click="CheckBox_Click"
-                        Name="chkForceSoftwareRendering">
-                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_ForceSoftwareRendering)}" />
-                    </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FilesAndFolders)}" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableSubDirs}"
                         Click="CheckBox_Click"
@@ -204,6 +204,12 @@
                     <CheckBox IsChecked="{Binding Path=FoldersOpenDesktopOverlay}"
                         Name="chkFoldersOpenDesktopOverlay">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_FoldersOpenDesktopOverlay)}" />
+                    </CheckBox>
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Advanced)}" Style="{StaticResource SettingGroupHeader}" />
+                    <CheckBox IsChecked="{Binding Path=ForceSoftwareRendering}"
+                        Click="CheckBox_Click"
+                        Name="chkForceSoftwareRendering">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_ForceSoftwareRendering)}" />
                     </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FileManager)}" />

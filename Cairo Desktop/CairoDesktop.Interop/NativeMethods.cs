@@ -672,6 +672,7 @@ namespace CairoDesktop.Interop
         public const uint WM_MOUSELAST = 0x20D;
         public const uint WM_MOUSELEAVE = 0x2A3;
         public const uint WM_HOTKEY = 0x0312;
+        public const int WM_DEVICECHANGE = 0x219;
 
         public const uint NIN_SELECT = 0x400;
         public const uint NIN_POPUPOPEN = 0x406;

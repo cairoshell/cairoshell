@@ -22,10 +22,13 @@
         private static System.Threading.Mutex cairoMutex;
 
         public static MenuBar MenuBarWindow { get; set; }
+        public static List<MenuBar> MenuBarWindows = new List<MenuBar>();
 
         public static MenuBarShadow MenuBarShadowWindow { get; set; }
+        public static List<MenuBarShadow> MenuBarShadowWindows = new List<MenuBarShadow>();
 
         public static Taskbar TaskbarWindow { get; set; }
+        public static List<Taskbar> TaskbarWindows = new List<Taskbar>();
 
         public static Desktop DesktopWindow { get; set; }
 
@@ -36,6 +39,10 @@
         private static bool isTour;
 
         public static bool IsShuttingDown { get; set; }
+
+        public static bool IsSettingScreens { get; set; }
+
+        private static Object screenSetupLock = new Object();
 
         // properties for startup
         private static string[] hklmStartupKeys = new string[] { "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Run" };
@@ -129,6 +136,7 @@
             MenuBarWindow = new MenuBar();
             app.MainWindow = MenuBarWindow;
             MenuBarWindow.Show();
+            MenuBarWindows.Add(MenuBarWindow);
 
             if (Settings.EnableDesktop)
             {
@@ -138,15 +146,20 @@
 
             if (Settings.EnableMenuBarShadow)
             {
-                MenuBarShadowWindow = new MenuBarShadow();
+                MenuBarShadowWindow = new MenuBarShadow(MenuBarWindow);
                 MenuBarShadowWindow.Show();
+                MenuBarShadowWindows.Add(MenuBarShadowWindow);
             }
 
             if (Settings.EnableTaskbar)
             {
                 TaskbarWindow = new Taskbar();
                 TaskbarWindow.Show();
+                TaskbarWindows.Add(TaskbarWindow);
             }
+            
+            if (Settings.EnableMultiMon)
+                ScreenSetup(true);
 
             // Set desktop work area for when Explorer isn't running
             if (IsCairoUserShell)
@@ -169,6 +182,138 @@
             }
 
             app.Run();
+        }
+
+        /// <summary>
+        /// Compares the system screen list to the screens associated with Cairo windows, then creates or destroys windows as necessary.
+        /// Only affects non-primary screens, as Cairo always opens on at least the primary screen.
+        /// Runs at startup and when a WM_DISPLAYCHANGE message is received by the main MenuBar window.
+        /// </summary>
+        public static void ScreenSetup(bool skipChecks = false)
+        {
+            lock (screenSetupLock)
+            {
+                IsSettingScreens = true;
+
+                List<string> sysScreens = new List<string>();
+                List<string> openScreens = new List<string>();
+                List<string> addedScreens = new List<string>();
+                List<string> removedScreens = new List<string>();
+
+                if (!skipChecks)
+                {
+                    // enumerate screens
+
+                    foreach (MenuBar bar in MenuBarWindows)
+                    {
+                        if (bar.Screen != null)
+                            openScreens.Add(bar.Screen.DeviceName);
+                    }
+
+                    foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+                    {
+                        Trace.WriteLine(string.Format("{0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
+
+                        if (!screen.Primary)
+                            sysScreens.Add(screen.DeviceName);
+                    }
+
+                    // figure out which screens have been added vs removed
+
+                    foreach (string name in sysScreens)
+                    {
+                        if (!openScreens.Contains(name))
+                            addedScreens.Add(name);
+                    }
+
+                    foreach (string name in openScreens)
+                    {
+                        if (!sysScreens.Contains(name))
+                            removedScreens.Add(name);
+                    }
+
+                    // close windows associated with removed screens
+                    foreach (string name in removedScreens)
+                    {
+                        // close taskbars
+                        Taskbar taskbarToClose = null;
+                        foreach (Taskbar bar in TaskbarWindows)
+                        {
+                            if (bar.Screen != null && bar.Screen.DeviceName == name)
+                            {
+                                taskbarToClose = bar;
+                                break;
+                            }
+                        }
+
+                        if (taskbarToClose != null)
+                        {
+                            taskbarToClose.Close();
+                            TaskbarWindows.Remove(taskbarToClose);
+                        }
+
+                        // close menu bars
+                        MenuBar barToClose = null;
+                        foreach (MenuBar bar in MenuBarWindows)
+                        {
+                            if (bar.Screen != null && bar.Screen.DeviceName == name)
+                            {
+                                barToClose = bar;
+                                break;
+                            }
+                        }
+
+                        if (barToClose != null)
+                        {
+                            if (!barToClose.IsClosing)
+                                barToClose.Close();
+                            MenuBarWindows.Remove(barToClose);
+                        }
+
+                        // close menu bar shadows
+                        MenuBarShadow barShadowToClose = null;
+                        foreach (MenuBarShadow bar in MenuBarShadowWindows)
+                        {
+                            if (bar.Screen != null && bar.Screen.DeviceName == name)
+                            {
+                                barShadowToClose = bar;
+                                break;
+                            }
+                        }
+
+                        if (barShadowToClose != null)
+                        {
+                            if (!barShadowToClose.IsClosing)
+                                barShadowToClose.Close();
+                            MenuBarShadowWindows.Remove(barShadowToClose);
+                        }
+                    }
+                }
+
+                // open windows on newly added screens
+                foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+                {
+                    if (!screen.Primary && (skipChecks || addedScreens.Contains(screen.DeviceName)))
+                    {
+                        // menu bars
+                        MenuBar newMenuBar = new MenuBar(screen);
+                        newMenuBar.Show();
+                        MenuBarWindows.Add(newMenuBar);
+
+                        // menu bar shadows
+                        MenuBarShadow newMenuBarShadow = new MenuBarShadow(newMenuBar, screen);
+                        newMenuBarShadow.Show();
+                        MenuBarShadowWindows.Add(newMenuBarShadow);
+
+                        // taskbars
+                        Taskbar newTaskbar = new Taskbar(screen);
+                        newTaskbar.Show();
+                        TaskbarWindows.Add(newTaskbar);
+                    }
+                }
+
+                IsSettingScreens = false;
+            }
         }
 
         /// <summary>

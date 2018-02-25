@@ -34,6 +34,7 @@ namespace CairoDesktop.Configuration
         private static bool? _EnableSubDirs;
         private static bool? _ForceSoftwareRendering;
         private static bool? _FoldersOpenDesktopOverlay;
+        private static bool? _EnableMultiMon;
 
         // Desktop
         private static bool? _EnableDesktop;
@@ -234,6 +235,23 @@ namespace CairoDesktop.Configuration
             {
                 _FoldersOpenDesktopOverlay = value;
                 Properties.Settings.Default.FoldersOpenDesktopOverlay = (bool)_FoldersOpenDesktopOverlay;
+                Save();
+            }
+        }
+
+        public static bool EnableMultiMon
+        {
+            get
+            {
+                if (_EnableMultiMon == null)
+                    _EnableMultiMon = Properties.Settings.Default.EnableMultiMon;
+
+                return (bool)_EnableMultiMon;
+            }
+            set
+            {
+                _EnableMultiMon = value;
+                Properties.Settings.Default.EnableMultiMon = (bool)_EnableMultiMon;
                 Save();
             }
         }

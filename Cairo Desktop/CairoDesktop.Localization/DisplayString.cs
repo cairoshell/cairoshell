@@ -1033,6 +1033,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_Advanced
+        {
+            get
+            {
+                return getString("sSettings_Advanced");
+            }
+        }
+
         public static string sSettings_Default
         {
             get
@@ -1166,6 +1174,14 @@ namespace CairoDesktop.Localization
             get
             {
                 return getString("sSettings_General_FoldersOpenDesktopOverlay");
+            }
+        }
+
+        public static string sSettings_General_EnableMultiMon
+        {
+            get
+            {
+                return getString("sSettings_General_EnableMultiMon");
             }
         }
 

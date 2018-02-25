@@ -10,8 +10,28 @@ namespace CairoDesktop
     /// </summary>
     public partial class MenuBarShadow : Window
     {
-        public MenuBarShadow()
+        public System.Windows.Forms.Screen Screen;
+        public bool IsPrimaryInstance
         {
+            get
+            {
+                return Screen == null;
+            }
+        }
+        public bool IsClosing = false;
+
+        public MenuBar MenuBar;
+
+        public MenuBarShadow(MenuBar bar) : this(bar, null)
+        {
+            
+        }
+
+        public MenuBarShadow(MenuBar bar, System.Windows.Forms.Screen screen)
+        {
+            Screen = screen;
+            MenuBar = bar;
+
             InitializeComponent();
 
             SetPosition();
@@ -19,11 +39,11 @@ namespace CairoDesktop
 
         public void SetPosition()
         {
-            if (Startup.MenuBarWindow != null)
+            if (MenuBar != null)
             {
-                this.Width = Startup.MenuBarWindow.ActualWidth;
-                this.Top = Startup.MenuBarWindow.Top + Startup.MenuBarWindow.ActualHeight;
-                this.Left = Startup.MenuBarWindow.Left;
+                this.Width = MenuBar.ActualWidth;
+                this.Top = MenuBar.Top + MenuBar.ActualHeight;
+                this.Left = MenuBar.Left;
             }
         }
 
@@ -60,8 +80,12 @@ namespace CairoDesktop
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!Startup.IsShuttingDown)
+            IsClosing = true;
+            if (!Startup.IsShuttingDown && !Startup.IsSettingScreens)
+            {
+                IsClosing = false;
                 e.Cancel = true;
+            }
         }
     }
 }

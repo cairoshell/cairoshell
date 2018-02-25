@@ -19,10 +19,21 @@ namespace CairoDesktop
 {
     public partial class MenuBar
     {
+        public System.Windows.Forms.Screen Screen;
+        public bool IsPrimaryInstance
+        {
+            get
+            {
+                return Screen == null;
+            }
+        }
+
         // AppBar properties
         private WindowInteropHelper helper;
-        private IntPtr handle;
+        public IntPtr handle;
         private int appbarMessageId = -1;
+
+        public bool IsClosing = false;
 
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
@@ -31,11 +42,25 @@ namespace CairoDesktop
         private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
         private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
 
-        public MenuBar()
+        public MenuBar() : this(null)
+        {
+            
+        }
+
+        public MenuBar(System.Windows.Forms.Screen screen)
         {
             InitializeComponent();
 
-            Width = SystemParameters.WorkArea.Width;
+            if (screen == null)
+                Width = SystemParameters.WorkArea.Width;
+            else
+            {
+                Screen = screen;
+
+                Top = Screen.Bounds.Y / Shell.DpiScale;
+                Left = Screen.Bounds.X / Shell.DpiScale;
+                Width = Screen.WorkingArea.Width / Shell.DpiScale;
+            }
 
             setupMenu();
 
@@ -52,12 +77,15 @@ namespace CairoDesktop
 
         private void initSparkle()
         {
-            WinSparkle.win_sparkle_set_appcast_url("https://cairoshell.github.io/appdescriptor.rss");
-            canShutdownDelegate = canShutdown;
-            shutdownDelegate = shutdown;
-            WinSparkle.win_sparkle_set_can_shutdown_callback(canShutdownDelegate);
-            WinSparkle.win_sparkle_set_shutdown_request_callback(shutdownDelegate);
-            WinSparkle.win_sparkle_init();
+            if (IsPrimaryInstance)
+            {
+                WinSparkle.win_sparkle_set_appcast_url("https://cairoshell.github.io/appdescriptor.rss");
+                canShutdownDelegate = canShutdown;
+                shutdownDelegate = shutdown;
+                WinSparkle.win_sparkle_set_can_shutdown_callback(canShutdownDelegate);
+                WinSparkle.win_sparkle_set_shutdown_request_callback(shutdownDelegate);
+                WinSparkle.win_sparkle_init();
+            }
         }
 
         private void setupMenu()
@@ -99,11 +127,11 @@ namespace CairoDesktop
             // set initial DPI. We do it here so that we get the correct value when DPI has changed since initial user logon to the system.
             Shell.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
 
-            appbarMessageId = AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+            appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
 
             Shell.HideWindowFromTasks(handle);
 
-            if (Settings.EnableCairoMenuHotKey)
+            if (Settings.EnableCairoMenuHotKey && IsPrimaryInstance)
                 HotKeyManager.RegisterHotKey(Settings.CairoMenuHotKey, OnShowCairoMenu);
 
             if (Settings.EnableMenuBarBlur)
@@ -273,7 +301,7 @@ namespace CairoDesktop
                 {
                     case NativeMethods.AppBarNotifications.PosChanged:
                         // Reposition to the top of the screen.
-                        AppBarHelper.ABSetPos(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+                        AppBarHelper.ABSetPos(this, Screen, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
                         break;
 
                     case NativeMethods.AppBarNotifications.FullScreenApp:
@@ -325,12 +353,20 @@ namespace CairoDesktop
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
                 Shell.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
-                AppBarHelper.ABSetPos(this, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+                AppBarHelper.ABSetPos(this, Screen, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
+                if (IsPrimaryInstance && Settings.EnableMultiMon)
+                    Startup.ScreenSetup(); // update Cairo window list based on new screen setup
+
                 setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;
+            }
+            else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
+            {
+                if (IsPrimaryInstance && Settings.EnableMultiMon)
+                    Startup.ScreenSetup(); // update Cairo window list based on new screen setup
             }
 
             return IntPtr.Zero;
@@ -342,11 +378,29 @@ namespace CairoDesktop
             int sHeight;
             // adjust size for dpi
             Shell.TransformFromPixels(x, y, out sWidth, out sHeight);
-            this.Top = 0;
-            this.Left = 0;
+
+
+            double top = 0;
+            double left = 0;
+            if (!IsPrimaryInstance)
+            {
+                top = Screen.Bounds.Y / Shell.DpiScale;
+                left = Screen.Bounds.Y / Shell.DpiScale;
+            }
+
+            this.Top = top;
+            this.Left = left;
             this.Width = sWidth;
-            if (Startup.MenuBarShadowWindow != null)
-                Startup.MenuBarShadowWindow.SetPosition();
+            setShadowPosition();
+        }
+
+        private void setShadowPosition()
+        {
+            foreach (MenuBarShadow barShadow in Startup.MenuBarShadowWindows)
+            {
+                if (barShadow != null && barShadow.MenuBar == this)
+                    barShadow.SetPosition();
+            }
         }
 
         private void OnWindowInitialized(object sender, EventArgs e)
@@ -368,29 +422,41 @@ namespace CairoDesktop
 
         private void Window_LocationChanged(object sender, EventArgs e)
         {
-            if (this.Top != 0)
+            double top = 0;
+            if (!IsPrimaryInstance)
+                top = Screen.Bounds.Y / Shell.DpiScale;
+
+            if (this.Top != top)
             {
-                this.Top = 0;
-                if (Startup.MenuBarShadowWindow != null)
-                    Startup.MenuBarShadowWindow.SetPosition();
+                this.Top = top;
+                setShadowPosition();
             }
         }
 
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            if (Startup.IsShuttingDown)
+            IsClosing = true;
+
+            if (Startup.IsShuttingDown && IsPrimaryInstance)
             {
                 NotificationArea.Instance.Dispose();
 
-                AppBarHelper.RegisterBar(this, this.ActualWidth, this.ActualHeight);
+                AppBarHelper.RegisterBar(this, Screen, this.ActualWidth, this.ActualHeight);
 
                 WinSparkle.win_sparkle_cleanup();
 
                 if (Startup.IsCairoUserShell)
                     AppBarHelper.ResetWorkArea();
             }
+            else if (!IsPrimaryInstance && (Startup.IsSettingScreens || Startup.IsShuttingDown))
+            {
+                AppBarHelper.RegisterBar(this, Screen, this.ActualWidth, this.ActualHeight);
+            }
             else
+            {
+                IsClosing = false;
                 e.Cancel = true;
+            }
         }
 
         private void Programs_Drop(object sender, DragEventArgs e)

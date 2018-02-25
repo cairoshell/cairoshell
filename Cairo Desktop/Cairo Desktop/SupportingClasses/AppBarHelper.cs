@@ -28,7 +28,7 @@ namespace CairoDesktop.SupportingClasses
             OnTop = 0
         }
 
-        public static int RegisterBar(Window abWindow, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
+        public static int RegisterBar(Window abWindow, Screen screen, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
@@ -44,7 +44,7 @@ namespace CairoDesktop.SupportingClasses
                 appBars.Add(handle);
                 Trace.WriteLine("Created AppBar for handle " + handle.ToString());
 
-                ABSetPos(abWindow, width, height, edge);
+                ABSetPos(abWindow, screen, width, height, edge);
             }
             else
             {
@@ -144,7 +144,7 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
         }
 
-        public static void ABSetPos(Window abWindow, double width, double height, ABEdge edge)
+        public static void ABSetPos(Window abWindow, Screen screen, double width, double height, ABEdge edge)
         {
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
@@ -154,40 +154,53 @@ namespace CairoDesktop.SupportingClasses
             int sWidth;
             int sHeight;
 
+            int top = 0;
+            int left = SystemInformation.WorkingArea.Left;
+            int right = SystemInformation.WorkingArea.Right;
+            int bottom = PrimaryMonitorDeviceSize.Height;
+
+            if (screen != null)
+            {
+                top = screen.Bounds.Y;
+                left = screen.WorkingArea.Left;
+                right = screen.WorkingArea.Right;
+                bottom = screen.Bounds.Height;
+            }
+
             // adjust size for dpi
             Shell.TransformToPixels(width, height, out sWidth, out sHeight);
 
             if (abd.uEdge == (int)ABEdge.ABE_LEFT || abd.uEdge == (int)ABEdge.ABE_RIGHT)
             {
-                abd.rc.top = 0;
-                abd.rc.bottom = SystemInformation.WorkingArea.Bottom;
+                abd.rc.top = top;
+                abd.rc.bottom = bottom;
                 if (abd.uEdge == (int)ABEdge.ABE_LEFT)
                 {
-                    abd.rc.left = SystemInformation.WorkingArea.Left;
+                    abd.rc.left = left;
                     abd.rc.right = abd.rc.left + sWidth;
                 }
                 else
                 {
-                    abd.rc.right = SystemInformation.WorkingArea.Right;
+                    abd.rc.right = right;
                     abd.rc.left = abd.rc.right - sWidth;
                 }
 
             }
             else
             {
-                abd.rc.left = SystemInformation.WorkingArea.Left;
-                abd.rc.right = SystemInformation.WorkingArea.Right;
+                abd.rc.left = left;
+                abd.rc.right = right;
                 if (abd.uEdge == (int)ABEdge.ABE_TOP)
                 {
                     if (abWindow is Taskbar)
-                        abd.rc.top = Convert.ToInt32(Startup.MenuBarWindow.Height);
+                        abd.rc.top = top + Convert.ToInt32(Startup.MenuBarWindow.Height);
                     else
-                        abd.rc.top = 0;
+                        abd.rc.top = top;
                     abd.rc.bottom = abd.rc.top + sHeight;
                 }
                 else
                 {
-                    abd.rc.bottom = SystemInformation.VirtualScreen.Bottom;
+                    abd.rc.bottom = bottom;
                     abd.rc.top = abd.rc.bottom - sHeight;
                 }
             }
@@ -222,7 +235,7 @@ namespace CairoDesktop.SupportingClasses
                 new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top);
 
             if (h < sHeight)
-                ABSetPos(abWindow, width, height, edge);
+                ABSetPos(abWindow, screen, width, height, edge);
         }
 
         private delegate void ResizeDelegate(IntPtr hWnd, int x, int y, int cx, int cy);
@@ -235,9 +248,12 @@ namespace CairoDesktop.SupportingClasses
             {
                 SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
             }
-            
-            if (Startup.MenuBarShadowWindow != null)
-                Startup.MenuBarShadowWindow.SetPosition();
+
+            foreach (MenuBarShadow barShadow in Startup.MenuBarShadowWindows)
+            {
+                if (barShadow.MenuBar != null && barShadow.MenuBar.handle == hWnd)
+                    barShadow.SetPosition();
+            }
 
             if (Startup.DesktopWindow != null)
                 Startup.DesktopWindow.ResetPosition();
