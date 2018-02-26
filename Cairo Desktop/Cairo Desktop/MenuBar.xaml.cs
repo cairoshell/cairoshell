@@ -28,6 +28,8 @@ namespace CairoDesktop
 
         public bool IsClosing = false;
 
+        private static bool isHotkeyRegistered = false;
+
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
@@ -119,8 +121,11 @@ namespace CairoDesktop
 
             Shell.HideWindowFromTasks(handle);
 
-            if (Settings.EnableCairoMenuHotKey && Screen.Primary)
+            if (Settings.EnableCairoMenuHotKey && Screen.Primary && !isHotkeyRegistered)
+            {
                 HotKeyManager.RegisterHotKey(Settings.CairoMenuHotKey, OnShowCairoMenu);
+                isHotkeyRegistered = true;
+            }
 
             if (Settings.EnableMenuBarBlur)
                 Shell.EnableWindowBlur(handle);
@@ -440,7 +445,7 @@ namespace CairoDesktop
                 if (Startup.IsCairoUserShell)
                     AppBarHelper.ResetWorkArea();
             }
-            else if (!Screen.Primary && (Startup.IsSettingScreens || Startup.IsShuttingDown))
+            else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
             {
                 AppBarHelper.RegisterBar(this, Screen, this.ActualWidth, this.ActualHeight);
             }

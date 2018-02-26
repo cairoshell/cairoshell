@@ -140,7 +140,7 @@ namespace CairoDesktop
                 AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.OnTop);
                 AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_SHOWWINDOW);
             }
-            else if (!Screen.Primary && (Startup.IsSettingScreens || Startup.IsShuttingDown))
+            else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
             {
                 if (AppBarHelper.appBars.Contains(this.handle))
                     AppBarHelper.RegisterBar(this, Screen, this.ActualWidth, this.ActualHeight);
