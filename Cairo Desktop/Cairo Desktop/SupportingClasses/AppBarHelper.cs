@@ -287,6 +287,7 @@ namespace CairoDesktop.SupportingClasses
         
         public static void SetWorkArea()
         {
+            // TODO investigate why this method isn't working correctly on multi-mon systems
             // Save current Working Area size
             oldWorkArea.left = SystemInformation.WorkingArea.Left;
             oldWorkArea.top = SystemInformation.WorkingArea.Top;

@@ -11,18 +11,12 @@ namespace CairoDesktop
     public partial class MenuBarShadow : Window
     {
         public System.Windows.Forms.Screen Screen;
-        public bool IsPrimaryInstance
-        {
-            get
-            {
-                return Screen == null;
-            }
-        }
+        
         public bool IsClosing = false;
 
         public MenuBar MenuBar;
 
-        public MenuBarShadow(MenuBar bar) : this(bar, null)
+        public MenuBarShadow(MenuBar bar) : this(bar, System.Windows.Forms.Screen.PrimaryScreen)
         {
             
         }

@@ -20,13 +20,6 @@ namespace CairoDesktop
     public partial class MenuBar
     {
         public System.Windows.Forms.Screen Screen;
-        public bool IsPrimaryInstance
-        {
-            get
-            {
-                return Screen == null;
-            }
-        }
 
         // AppBar properties
         private WindowInteropHelper helper;
@@ -42,7 +35,7 @@ namespace CairoDesktop
         private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
         private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
 
-        public MenuBar() : this(null)
+        public MenuBar() : this(System.Windows.Forms.Screen.PrimaryScreen)
         {
             
         }
@@ -51,16 +44,11 @@ namespace CairoDesktop
         {
             InitializeComponent();
 
-            if (screen == null)
-                Width = SystemParameters.WorkArea.Width;
-            else
-            {
-                Screen = screen;
+            Screen = screen;
 
-                Top = Screen.Bounds.Y / Shell.DpiScale;
-                Left = Screen.Bounds.X / Shell.DpiScale;
-                Width = Screen.WorkingArea.Width / Shell.DpiScale;
-            }
+            Top = Screen.Bounds.Y / Shell.DpiScale;
+            Left = Screen.Bounds.X / Shell.DpiScale;
+            Width = Screen.WorkingArea.Width / Shell.DpiScale;
 
             setupMenu();
 
@@ -77,7 +65,7 @@ namespace CairoDesktop
 
         private void initSparkle()
         {
-            if (IsPrimaryInstance)
+            if (Screen.Primary)
             {
                 WinSparkle.win_sparkle_set_appcast_url("https://cairoshell.github.io/appdescriptor.rss");
                 canShutdownDelegate = canShutdown;
@@ -131,7 +119,7 @@ namespace CairoDesktop
 
             Shell.HideWindowFromTasks(handle);
 
-            if (Settings.EnableCairoMenuHotKey && IsPrimaryInstance)
+            if (Settings.EnableCairoMenuHotKey && Screen.Primary)
                 HotKeyManager.RegisterHotKey(Settings.CairoMenuHotKey, OnShowCairoMenu);
 
             if (Settings.EnableMenuBarBlur)
@@ -357,7 +345,7 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
-                if (IsPrimaryInstance && Settings.EnableMultiMon)
+                if (Settings.EnableMultiMon && Screen.Primary && !Startup.IsSettingScreens)
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
 
                 setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
@@ -365,7 +353,7 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
             {
-                if (IsPrimaryInstance && Settings.EnableMultiMon)
+                if (Settings.EnableMultiMon && Screen.Primary && !Startup.IsSettingScreens)
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
             }
 
@@ -380,13 +368,8 @@ namespace CairoDesktop
             Shell.TransformFromPixels(x, y, out sWidth, out sHeight);
 
 
-            double top = 0;
-            double left = 0;
-            if (!IsPrimaryInstance)
-            {
-                top = Screen.Bounds.Y / Shell.DpiScale;
-                left = Screen.Bounds.Y / Shell.DpiScale;
-            }
+            double top = Screen.Bounds.Y / Shell.DpiScale;
+            double left = Screen.Bounds.X / Shell.DpiScale;
 
             this.Top = top;
             this.Left = left;
@@ -422,9 +405,7 @@ namespace CairoDesktop
 
         private void Window_LocationChanged(object sender, EventArgs e)
         {
-            double top = 0;
-            if (!IsPrimaryInstance)
-                top = Screen.Bounds.Y / Shell.DpiScale;
+            double top = Screen.Bounds.Y / Shell.DpiScale;
 
             if (this.Top != top)
             {
@@ -437,7 +418,7 @@ namespace CairoDesktop
         {
             IsClosing = true;
 
-            if (Startup.IsShuttingDown && IsPrimaryInstance)
+            if (Startup.IsShuttingDown && Screen.Primary)
             {
                 NotificationArea.Instance.Dispose();
 
@@ -448,7 +429,7 @@ namespace CairoDesktop
                 if (Startup.IsCairoUserShell)
                     AppBarHelper.ResetWorkArea();
             }
-            else if (!IsPrimaryInstance && (Startup.IsSettingScreens || Startup.IsShuttingDown))
+            else if (!Screen.Primary && (Startup.IsSettingScreens || Startup.IsShuttingDown))
             {
                 AppBarHelper.RegisterBar(this, Screen, this.ActualWidth, this.ActualHeight);
             }

@@ -17,13 +17,7 @@ namespace CairoDesktop
     public partial class Taskbar : Window
     {
         public System.Windows.Forms.Screen Screen;
-        public bool IsPrimaryInstance
-        {
-            get
-            {
-                return Screen == null;
-            }
-        }
+        
         public bool IsClosing = false;
 
         // AppBar properties
@@ -50,7 +44,7 @@ namespace CairoDesktop
             set { SetValue(ButtonTextWidthProperty, value); }
         }
         
-        public Taskbar() : this(null)
+        public Taskbar() : this(System.Windows.Forms.Screen.PrimaryScreen)
         {
             
         }
@@ -66,15 +60,9 @@ namespace CairoDesktop
 
         private void setupTaskbar()
         {
-            double screenWidth = AppBarHelper.PrimaryMonitorSize.Width;
-            double screenHeight = AppBarHelper.PrimaryMonitorSize.Height;
-
-            if (!IsPrimaryInstance)
-            {
-                screenWidth = Screen.Bounds.Width / Shell.DpiScale;
-                screenHeight = Screen.Bounds.Height / Shell.DpiScale;
-                Left = Screen.Bounds.Left / Shell.DpiScale;
-            }
+            double screenWidth = screenWidth = Screen.Bounds.Width / Shell.DpiScale;
+            double screenHeight = Screen.Bounds.Height / Shell.DpiScale;
+            Left = Screen.Bounds.Left / Shell.DpiScale;
 
             this.DataContext = WindowsTasks.WindowsTasksService.Instance;
             bdrMain.DataContext = Settings.Instance;
@@ -137,7 +125,7 @@ namespace CairoDesktop
         private void Taskbar_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             IsClosing = true;
-            if (Startup.IsShuttingDown && IsPrimaryInstance)
+            if (Startup.IsShuttingDown && Screen.Primary)
             {
                 // Manually call dispose on window close...
                 (this.DataContext as WindowsTasks.WindowsTasksService).Dispose();
@@ -152,7 +140,7 @@ namespace CairoDesktop
                 AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.OnTop);
                 AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_SHOWWINDOW);
             }
-            else if (!IsPrimaryInstance && (Startup.IsSettingScreens || Startup.IsShuttingDown))
+            else if (!Screen.Primary && (Startup.IsSettingScreens || Startup.IsShuttingDown))
             {
                 if (AppBarHelper.appBars.Contains(this.handle))
                     AppBarHelper.RegisterBar(this, Screen, this.ActualWidth, this.ActualHeight);
@@ -176,21 +164,12 @@ namespace CairoDesktop
 
         private void setPosition()
         {
-            double screenWidth = AppBarHelper.PrimaryMonitorSize.Width;
-            double screenHeight = AppBarHelper.PrimaryMonitorSize.Height;
-
-            if (!IsPrimaryInstance)
-            {
-                screenWidth = Screen.Bounds.Width / Shell.DpiScale;
-                screenHeight = Screen.Bounds.Height / Shell.DpiScale;
-            }
+            double screenWidth = Screen.Bounds.Width / Shell.DpiScale;
+            double screenHeight = Screen.Bounds.Height / Shell.DpiScale;
 
             setTopPosition(screenHeight);
             
-            if (IsPrimaryInstance)
-                this.Left = 0;
-            else
-                this.Left = Screen.Bounds.Left / Shell.DpiScale;
+            this.Left = Screen.Bounds.Left / Shell.DpiScale;
 
             this.bdrTaskbar.MaxWidth = screenWidth - 36;
             this.Width = screenWidth;
@@ -206,10 +185,7 @@ namespace CairoDesktop
             
             setTopPosition(sHeight);
 
-            if (IsPrimaryInstance)
-                this.Left = 0;
-            else
-                this.Left = Screen.Bounds.Left / Shell.DpiScale;
+            this.Left = Screen.Bounds.Left / Shell.DpiScale;
 
             this.bdrTaskbar.MaxWidth = sWidth - 36;
             this.Width = sWidth;
@@ -221,10 +197,7 @@ namespace CairoDesktop
             {
                 if (Settings.TaskbarPosition == 1)
                 {
-                    double workArea = SystemParameters.WorkArea.Top / Shell.DpiScaleAdjustment;
-
-                    if (!IsPrimaryInstance)
-                        workArea = Screen.WorkingArea.Top / Shell.DpiScaleAdjustment;
+                    double workArea = Screen.WorkingArea.Top / Shell.DpiScaleAdjustment;
 
                     // set to top of workspace
                     if (workArea >= this.Height + Startup.MenuBarWindow.Height)

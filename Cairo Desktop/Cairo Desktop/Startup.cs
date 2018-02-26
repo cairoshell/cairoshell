@@ -133,7 +133,7 @@
                 AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
             }
 
-            MenuBarWindow = new MenuBar();
+            MenuBarWindow = new MenuBar(System.Windows.Forms.Screen.PrimaryScreen);
             app.MainWindow = MenuBarWindow;
             MenuBarWindow.Show();
             MenuBarWindows.Add(MenuBarWindow);
@@ -146,14 +146,14 @@
 
             if (Settings.EnableMenuBarShadow)
             {
-                MenuBarShadowWindow = new MenuBarShadow(MenuBarWindow);
+                MenuBarShadowWindow = new MenuBarShadow(MenuBarWindow, System.Windows.Forms.Screen.PrimaryScreen);
                 MenuBarShadowWindow.Show();
                 MenuBarShadowWindows.Add(MenuBarShadowWindow);
             }
 
             if (Settings.EnableTaskbar)
             {
-                TaskbarWindow = new Taskbar();
+                TaskbarWindow = new Taskbar(System.Windows.Forms.Screen.PrimaryScreen);
                 TaskbarWindow.Show();
                 TaskbarWindows.Add(TaskbarWindow);
             }
@@ -200,6 +200,9 @@
                 List<string> addedScreens = new List<string>();
                 List<string> removedScreens = new List<string>();
 
+                // use reflection to empty screens cache
+                typeof(System.Windows.Forms.Screen).GetField("screens", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
+
                 if (!skipChecks)
                 {
                     // enumerate screens
@@ -214,8 +217,7 @@
                     {
                         Trace.WriteLine(string.Format("{0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
 
-                        if (!screen.Primary)
-                            sysScreens.Add(screen.DeviceName);
+                        sysScreens.Add(screen.DeviceName);
                     }
 
                     // figure out which screens have been added vs removed
@@ -288,12 +290,58 @@
                             MenuBarShadowWindows.Remove(barShadowToClose);
                         }
                     }
+
+                    // update screens of stale windows
+                    foreach (MenuBar bar in MenuBarWindows)
+                    {
+                        if (bar.Screen != null)
+                        {
+                            foreach (System.Windows.Forms.Screen screen in System.Windows.Forms.Screen.AllScreens)
+                            {
+                                if (screen.DeviceName == bar.Screen.DeviceName)
+                                {
+                                    bar.Screen = screen;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    foreach (MenuBarShadow bar in MenuBarShadowWindows)
+                    {
+                        if (bar.Screen != null)
+                        {
+                            foreach (System.Windows.Forms.Screen screen in System.Windows.Forms.Screen.AllScreens)
+                            {
+                                if (screen.DeviceName == bar.Screen.DeviceName)
+                                {
+                                    bar.Screen = screen;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    foreach (Taskbar bar in TaskbarWindows)
+                    {
+                        if (bar.Screen != null)
+                        {
+                            foreach (System.Windows.Forms.Screen screen in System.Windows.Forms.Screen.AllScreens)
+                            {
+                                if (screen.DeviceName == bar.Screen.DeviceName)
+                                {
+                                    bar.Screen = screen;
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
 
                 // open windows on newly added screens
                 foreach (var screen in System.Windows.Forms.Screen.AllScreens)
                 {
-                    if (!screen.Primary && (skipChecks || addedScreens.Contains(screen.DeviceName)))
+                    if ((skipChecks && !screen.Primary) || addedScreens.Contains(screen.DeviceName))
                     {
                         // menu bars
                         MenuBar newMenuBar = new MenuBar(screen);
