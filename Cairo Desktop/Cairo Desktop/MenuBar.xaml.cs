@@ -340,20 +340,31 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
+                if (!Settings.EnableMultiMon)
+                {
+                    Startup.ResetScreenCache();
+                    Screen = System.Windows.Forms.Screen.PrimaryScreen;
+                }
+
                 Shell.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
                 AppBarHelper.ABSetPos(this, Screen, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
-                if (Settings.EnableMultiMon && Screen.Primary && !Startup.IsSettingScreens)
+                if (Settings.EnableMultiMon && !Startup.IsSettingScreens)
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
+                else if (!Settings.EnableMultiMon)
+                {
+                    Startup.ResetScreenCache();
+                    Screen = System.Windows.Forms.Screen.PrimaryScreen;
+                }
 
                 setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;
             }
             else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
             {
-                if (Settings.EnableMultiMon && Screen.Primary && !Startup.IsSettingScreens)
+                if (Settings.EnableMultiMon && !Startup.IsSettingScreens)
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
             }
 

@@ -162,7 +162,7 @@ namespace CairoDesktop
             ButtonTextWidth = ButtonWidth - 33 - addToSize;
         }
 
-        private void setPosition()
+        public void setPosition()
         {
             double screenWidth = Screen.Bounds.Width / Shell.DpiScale;
             double screenHeight = Screen.Bounds.Height / Shell.DpiScale;
@@ -266,11 +266,23 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
+                if (!Settings.EnableMultiMon)
+                {
+                    Startup.ResetScreenCache();
+                    Screen = System.Windows.Forms.Screen.PrimaryScreen;
+                }
+
                 Shell.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
                 AppBarHelper.ABSetPos(this, Screen, this.ActualWidth, this.ActualHeight, appBarEdge);
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
+                if (!Settings.EnableMultiMon)
+                {
+                    Startup.ResetScreenCache();
+                    Screen = System.Windows.Forms.Screen.PrimaryScreen;
+                }
+
                 setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;
             }

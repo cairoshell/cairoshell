@@ -184,6 +184,12 @@
             app.Run();
         }
 
+        public static void ResetScreenCache()
+        {
+            // use reflection to empty screens cache
+            typeof(System.Windows.Forms.Screen).GetField("screens", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
+        }
+
         /// <summary>
         /// Compares the system screen list to the screens associated with Cairo windows, then creates or destroys windows as necessary.
         /// Only affects non-primary screens, as Cairo always opens on at least the primary screen.
@@ -200,8 +206,7 @@
                 List<string> addedScreens = new List<string>();
                 List<string> removedScreens = new List<string>();
 
-                // use reflection to empty screens cache
-                typeof(System.Windows.Forms.Screen).GetField("screens", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
+                ResetScreenCache();
 
                 if (!skipChecks)
                 {
@@ -331,6 +336,7 @@
                                 if (screen.DeviceName == bar.Screen.DeviceName)
                                 {
                                     bar.Screen = screen;
+                                    bar.setPosition();
                                     break;
                                 }
                             }
