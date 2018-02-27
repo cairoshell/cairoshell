@@ -151,8 +151,8 @@ namespace CairoDesktop.SupportingClasses
             IntPtr handle = new WindowInteropHelper(abWindow).Handle;
             abd.hWnd = handle;
             abd.uEdge = (int)edge;
-            int sWidth;
-            int sHeight;
+            int sWidth = (int)width;
+            int sHeight = (int)height;
 
             int top = 0;
             int left = SystemInformation.WorkingArea.Left;
@@ -166,10 +166,7 @@ namespace CairoDesktop.SupportingClasses
                 right = screen.WorkingArea.Right;
                 bottom = screen.Bounds.Height;
             }
-
-            // adjust size for dpi
-            Shell.TransformToPixels(width, height, out sWidth, out sHeight);
-
+            
             if (abd.uEdge == (int)ABEdge.ABE_LEFT || abd.uEdge == (int)ABEdge.ABE_RIGHT)
             {
                 abd.rc.top = top;

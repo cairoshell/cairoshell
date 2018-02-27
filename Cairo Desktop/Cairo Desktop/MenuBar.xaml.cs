@@ -20,6 +20,7 @@ namespace CairoDesktop
     public partial class MenuBar
     {
         public System.Windows.Forms.Screen Screen;
+        private double dpiScale = 1.0;
 
         // AppBar properties
         private WindowInteropHelper helper;
@@ -48,9 +49,7 @@ namespace CairoDesktop
 
             Screen = screen;
 
-            Top = Screen.Bounds.Y / Shell.DpiScale;
-            Left = Screen.Bounds.X / Shell.DpiScale;
-            Width = Screen.WorkingArea.Width / Shell.DpiScale;
+            setPosition();
 
             setupMenu();
 
@@ -115,9 +114,14 @@ namespace CairoDesktop
         private void setupPostInit()
         {
             // set initial DPI. We do it here so that we get the correct value when DPI has changed since initial user logon to the system.
-            Shell.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
+            if (Screen.Primary)
+                Shell.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
 
-            appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+            this.dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
+
+            setPosition();
+
+            appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, AppBarHelper.ABEdge.ABE_TOP);
 
             Shell.HideWindowFromTasks(handle);
 
@@ -294,7 +298,7 @@ namespace CairoDesktop
                 {
                     case NativeMethods.AppBarNotifications.PosChanged:
                         // Reposition to the top of the screen.
-                        AppBarHelper.ABSetPos(this, Screen, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+                        AppBarHelper.ABSetPos(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, AppBarHelper.ABEdge.ABE_TOP);
                         break;
 
                     case NativeMethods.AppBarNotifications.FullScreenApp:
@@ -345,14 +349,19 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
-                if (!Settings.EnableMultiMon)
+                if (Settings.EnableMultiMon && !Startup.IsSettingScreens)
+                    Startup.ScreenSetup(); // update Cairo window list based on new screen setup
+                else if (!Settings.EnableMultiMon)
                 {
                     Startup.ResetScreenCache();
                     Screen = System.Windows.Forms.Screen.PrimaryScreen;
                 }
 
-                Shell.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
-                AppBarHelper.ABSetPos(this, Screen, this.ActualWidth, this.ActualHeight, AppBarHelper.ABEdge.ABE_TOP);
+                if (Screen.Primary)
+                    Shell.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
+                this.dpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
+                setPosition();
+                AppBarHelper.ABSetPos(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, AppBarHelper.ABEdge.ABE_TOP);
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
@@ -376,6 +385,14 @@ namespace CairoDesktop
             return IntPtr.Zero;
         }
 
+        private void setPosition()
+        {
+            Top = Screen.Bounds.Y / dpiScale;
+            Left = Screen.Bounds.X / dpiScale;
+            Width = Screen.WorkingArea.Width / dpiScale;
+            setShadowPosition();
+        }
+
         private void setPosition(uint x, uint y)
         {
             int sWidth;
@@ -384,8 +401,8 @@ namespace CairoDesktop
             Shell.TransformFromPixels(x, y, out sWidth, out sHeight);
 
 
-            double top = Screen.Bounds.Y / Shell.DpiScale;
-            double left = Screen.Bounds.X / Shell.DpiScale;
+            double top = Screen.Bounds.Y / dpiScale;
+            double left = Screen.Bounds.X / dpiScale;
 
             this.Top = top;
             this.Left = left;
@@ -421,7 +438,7 @@ namespace CairoDesktop
 
         private void Window_LocationChanged(object sender, EventArgs e)
         {
-            double top = Screen.Bounds.Y / Shell.DpiScale;
+            double top = Screen.Bounds.Y / dpiScale;
 
             if (this.Top != top)
             {
@@ -438,7 +455,7 @@ namespace CairoDesktop
             {
                 NotificationArea.Instance.Dispose();
 
-                AppBarHelper.RegisterBar(this, Screen, this.ActualWidth, this.ActualHeight);
+                AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale);
 
                 WinSparkle.win_sparkle_cleanup();
 
