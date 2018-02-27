@@ -164,7 +164,7 @@ namespace CairoDesktop.SupportingClasses
                 top = screen.Bounds.Y;
                 left = screen.WorkingArea.Left;
                 right = screen.WorkingArea.Right;
-                bottom = screen.Bounds.Height;
+                bottom = screen.Bounds.Bottom;
             }
             
             if (abd.uEdge == (int)ABEdge.ABE_LEFT || abd.uEdge == (int)ABEdge.ABE_RIGHT)
@@ -279,17 +279,10 @@ namespace CairoDesktop.SupportingClasses
                 return new System.Drawing.Size(SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left, SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top);
             }
         }
-
-        private static NativeMethods.RECT oldWorkArea;
         
         public static void SetWorkArea()
         {
             // TODO investigate why this method isn't working correctly on multi-mon systems
-            // Save current Working Area size
-            oldWorkArea.left = SystemInformation.WorkingArea.Left;
-            oldWorkArea.top = SystemInformation.WorkingArea.Top;
-            oldWorkArea.right = SystemInformation.WorkingArea.Right;
-            oldWorkArea.bottom = SystemInformation.WorkingArea.Bottom;
 
             NativeMethods.RECT rc;
             rc.left = SystemInformation.VirtualScreen.Left;
@@ -323,6 +316,13 @@ namespace CairoDesktop.SupportingClasses
         
         public static void ResetWorkArea()
         {
+            // set work area back to full screen size. we can't assume what pieces of the old workarea may or may not be still used
+            NativeMethods.RECT oldWorkArea;
+            oldWorkArea.left = SystemInformation.VirtualScreen.Left;
+            oldWorkArea.top = SystemInformation.VirtualScreen.Top;
+            oldWorkArea.right = SystemInformation.VirtualScreen.Right;
+            oldWorkArea.bottom = SystemInformation.VirtualScreen.Bottom;
+
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
         }
     }

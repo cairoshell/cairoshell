@@ -62,7 +62,6 @@ namespace CairoDesktop
         private void setupTaskbar()
         {
             double screenWidth = screenWidth = Screen.Bounds.Width / dpiScale;
-            double screenHeight = Screen.Bounds.Height / dpiScale;
             Left = Screen.Bounds.Left / dpiScale;
 
             this.DataContext = WindowsTasks.WindowsTasksService.Instance;
@@ -113,7 +112,7 @@ namespace CairoDesktop
             else
             {
                 bdrTaskListPopup.Margin = new Thickness(5, 0, 5, this.Height - 1);
-                setTopPosition(screenHeight, true);
+                setTopPosition(Screen.Bounds.Bottom / dpiScale);
             }
 
             // show task view on windows >= 10, adjust margin if not shown
@@ -168,7 +167,7 @@ namespace CairoDesktop
             double screenWidth = Screen.Bounds.Width / dpiScale;
             double screenHeight = Screen.Bounds.Height / dpiScale;
 
-            setTopPosition(screenHeight);
+            setTopPosition(Screen.Bounds.Bottom / dpiScale);
             
             this.Left = Screen.Bounds.Left / dpiScale;
 
@@ -184,7 +183,7 @@ namespace CairoDesktop
             // adjust size for dpi
             Shell.TransformFromPixels(x, y, out sWidth, out sHeight);
             
-            setTopPosition(sHeight);
+            setTopPosition(Screen.Bounds.Bottom / dpiScale);
 
             this.Left = Screen.Bounds.Left / dpiScale;
 
@@ -192,27 +191,17 @@ namespace CairoDesktop
             this.Width = sWidth;
         }
 
-        private void setTopPosition(double top, bool force = false)
+        private void setTopPosition(double top)
         {
-            if (Startup.IsCairoUserShell || Settings.TaskbarMode > 0 || this.Top < Startup.MenuBarWindow.Height || force)
+            if (Settings.TaskbarPosition == 1)
             {
-                if (Settings.TaskbarPosition == 1)
-                {
-                    double workArea = Screen.WorkingArea.Top / (dpiScale / Shell.OldDpiScale);
-
-                    // set to top of workspace
-                    if (workArea >= this.Height + Startup.MenuBarWindow.Height)
-                        this.Top = workArea - this.Height;
-                    else if (workArea == 0)
-                        this.Top = Startup.MenuBarWindow.Height;
-                    else
-                        this.Top = workArea;
-                }
-                else
-                {
-                    // set to bottom of workspace
-                    this.Top = top - this.Height;
-                }
+                // set to bottom of menu bar
+                this.Top = (Screen.Bounds.Y / dpiScale) + Startup.MenuBarWindow.Height;
+            }
+            else
+            {
+                // set to bottom of workspace
+                this.Top = top - this.Height;
             }
         }
 
