@@ -54,9 +54,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Xml" />
-    <Reference Include="Windows.ApplicationModel" />
-    <Reference Include="Windows.Management" />
-    <Reference Include="Windows.Storage" />
+    <Reference Include="Windows.ApplicationModel">
+      <HintPath>C:\WINDOWS\System32\WinMetadata\Windows.ApplicationModel.winmd</HintPath>
+    </Reference>
+    <Reference Include="Windows.Management">
+      <HintPath>C:\WINDOWS\System32\WinMetadata\Windows.Management.winmd</HintPath>
+    </Reference>
+    <Reference Include="Windows.Storage">
+      <HintPath>C:\WINDOWS\System32\WinMetadata\Windows.Storage.winmd</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
