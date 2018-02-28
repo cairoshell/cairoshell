@@ -239,6 +239,12 @@
                             removedScreens.Add(name);
                     }
 
+                    if (removedScreens.Count == sysScreens.Count)
+                    {
+                        // remove everything?! no way!
+                        return;
+                    }
+
                     // close windows associated with removed screens
                     foreach (string name in removedScreens)
                     {

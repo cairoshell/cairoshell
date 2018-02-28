@@ -173,6 +173,10 @@ namespace CairoDesktop.WindowsTasks
                 try
                 {
                     int len = NativeMethods.GetWindowTextLength(this.Handle);
+
+                    if (len < 1)
+                        return "";
+
                     StringBuilder sb = new StringBuilder(len);
                     NativeMethods.GetWindowText(this.Handle, sb, len + 1);
 
