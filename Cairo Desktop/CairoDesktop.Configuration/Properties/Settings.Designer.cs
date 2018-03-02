@@ -374,12 +374,24 @@ namespace CairoDesktop.Configuration.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EnableMultiMon {
+        public bool EnableMenuBarMultiMon {
             get {
-                return ((bool)(this["EnableMultiMon"]));
+                return ((bool)(this["EnableMenuBarMultiMon"]));
             }
             set {
-                this["EnableMultiMon"] = value;
+                this["EnableMenuBarMultiMon"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableTaskbarMultiMon {
+            get {
+                return ((bool)(this["EnableTaskbarMultiMon"]));
+            }
+            set {
+                this["EnableTaskbarMultiMon"] = value;
             }
         }
     }

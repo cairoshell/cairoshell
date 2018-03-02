@@ -89,7 +89,10 @@
     <Setting Name="EnableMenuBarBlur" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="EnableMultiMon" Type="System.Boolean" Scope="User">
+    <Setting Name="EnableMenuBarMultiMon" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="EnableTaskbarMultiMon" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

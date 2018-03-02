@@ -256,7 +256,7 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
-                if (!Settings.EnableMultiMon)
+                if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
                     Screen = System.Windows.Forms.Screen.PrimaryScreen;
@@ -269,7 +269,7 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
-                if (!Settings.EnableMultiMon)
+                if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
                     Screen = System.Windows.Forms.Screen.PrimaryScreen;

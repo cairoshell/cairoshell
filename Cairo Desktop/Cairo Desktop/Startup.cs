@@ -158,7 +158,7 @@
                 TaskbarWindows.Add(TaskbarWindow);
             }
             
-            if (Settings.EnableMultiMon)
+            if (Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon)
                 ScreenSetup(true);
 
             // Set desktop work area for when Explorer isn't running
@@ -212,11 +212,24 @@
                 {
                     // enumerate screens
 
-                    foreach (MenuBar bar in MenuBarWindows)
+                    if (Settings.EnableMenuBarMultiMon)
                     {
-                        if (bar.Screen != null)
-                            openScreens.Add(bar.Screen.DeviceName);
+                        foreach (MenuBar bar in MenuBarWindows)
+                        {
+                            if (bar.Screen != null)
+                                openScreens.Add(bar.Screen.DeviceName);
+                        }
                     }
+                    else if (Settings.EnableTaskbarMultiMon)
+                    {
+                        foreach (Taskbar bar in TaskbarWindows)
+                        {
+                            if (bar.Screen != null)
+                                openScreens.Add(bar.Screen.DeviceName);
+                        }
+                    }
+                    else
+                        return;
 
                     foreach (var screen in System.Windows.Forms.Screen.AllScreens)
                     {
@@ -355,20 +368,26 @@
                 {
                     if ((skipChecks && !screen.Primary) || addedScreens.Contains(screen.DeviceName))
                     {
-                        // menu bars
-                        MenuBar newMenuBar = new MenuBar(screen);
-                        newMenuBar.Show();
-                        MenuBarWindows.Add(newMenuBar);
+                        if (Settings.EnableMenuBarMultiMon)
+                        {
+                            // menu bars
+                            MenuBar newMenuBar = new MenuBar(screen);
+                            newMenuBar.Show();
+                            MenuBarWindows.Add(newMenuBar);
 
-                        // menu bar shadows
-                        MenuBarShadow newMenuBarShadow = new MenuBarShadow(newMenuBar, screen);
-                        newMenuBarShadow.Show();
-                        MenuBarShadowWindows.Add(newMenuBarShadow);
+                            // menu bar shadows
+                            MenuBarShadow newMenuBarShadow = new MenuBarShadow(newMenuBar, screen);
+                            newMenuBarShadow.Show();
+                            MenuBarShadowWindows.Add(newMenuBarShadow);
+                        }
 
-                        // taskbars
-                        Taskbar newTaskbar = new Taskbar(screen);
-                        newTaskbar.Show();
-                        TaskbarWindows.Add(newTaskbar);
+                        if (Settings.EnableTaskbarMultiMon)
+                        {
+                            // taskbars
+                            Taskbar newTaskbar = new Taskbar(screen);
+                            newTaskbar.Show();
+                            TaskbarWindows.Add(newTaskbar);
+                        }
                     }
                 }
 

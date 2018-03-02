@@ -172,11 +172,6 @@
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_UpdateCheck)}" />
                     </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Path=EnableMultiMon}"
-                        Click="CheckBox_Click"
-                        Name="chkEnableMultiMon">
-                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_EnableMultiMon)}" />
-                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_Language)}" />
                         <ComboBox Name="cboLangSelect" DropDownClosed="DropDown_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=Language}" />
@@ -241,6 +236,11 @@
                     <CheckBox IsChecked="{Binding Path=EnableMenuBarShadow}"
                         Click="CheckBox_Click" Name="chkEnableMenuBarShadow">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarShadow)}" />
+                    </CheckBox>
+                    <CheckBox IsChecked="{Binding Path=EnableMenuBarMultiMon}"
+                        Click="CheckBox_Click"
+                        Name="chkEnableMenuBarMultiMon">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarMultiMon)}" />
                     </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableSysTray}"
@@ -364,6 +364,11 @@
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
+                    <CheckBox IsChecked="{Binding Path=EnableTaskbarMultiMon}"
+                        Click="CheckBox_Click"
+                        Name="chkEnableTaskbarMultiMon">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableTaskbarMultiMon)}" />
+                    </CheckBox>
                 </StackPanel>
             </TabItem>
             <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}" Name="btnRestart" MouseLeftButtonUp="restartCairo" Visibility="Hidden">

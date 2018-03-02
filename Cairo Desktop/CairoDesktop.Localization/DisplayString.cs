@@ -1177,14 +1177,6 @@ namespace CairoDesktop.Localization
             }
         }
 
-        public static string sSettings_General_EnableMultiMon
-        {
-            get
-            {
-                return getString("sSettings_General_EnableMultiMon");
-            }
-        }
-
         public static string sSettings_MenuBar_DefaultProgramsCategory
         {
             get
@@ -1270,6 +1262,14 @@ namespace CairoDesktop.Localization
             get
             {
                 return getString("sSettings_MenuBar_EnableMenuBarBlur");
+            }
+        }
+
+        public static string sSettings_MenuBar_EnableMenuBarMultiMon
+        {
+            get
+            {
+                return getString("sSettings_MenuBar_EnableMenuBarMultiMon");
             }
         }
 
@@ -1430,6 +1430,14 @@ namespace CairoDesktop.Localization
             get
             {
                 return getString("sSettings_Taskbar_DisplayModeAutoHide");
+            }
+        }
+
+        public static string sSettings_Taskbar_EnableTaskbarMultiMon
+        {
+            get
+            {
+                return getString("sSettings_Taskbar_EnableTaskbarMultiMon");
             }
         }
 

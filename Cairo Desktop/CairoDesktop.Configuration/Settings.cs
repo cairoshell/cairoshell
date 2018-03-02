@@ -34,7 +34,6 @@ namespace CairoDesktop.Configuration
         private static bool? _EnableSubDirs;
         private static bool? _ForceSoftwareRendering;
         private static bool? _FoldersOpenDesktopOverlay;
-        private static bool? _EnableMultiMon;
 
         // Desktop
         private static bool? _EnableDesktop;
@@ -51,6 +50,7 @@ namespace CairoDesktop.Configuration
         private static bool? _EnableTaskbarPolling;
         private static int? _TaskbarPosition;
         private static int? _TaskbarIconSize;
+        private static bool? _EnableTaskbarMultiMon;
 
         // Menu Bar
         private static string _DefaultProgramsCategory;
@@ -61,6 +61,7 @@ namespace CairoDesktop.Configuration
         private static bool? _EnableCairoMenuHotKey;
         private static string _CairoMenuHotKey;
         private static bool? _EnableMenuBarBlur;
+        private static bool? _EnableMenuBarMultiMon;
 
         #endregion
 
@@ -235,23 +236,6 @@ namespace CairoDesktop.Configuration
             {
                 _FoldersOpenDesktopOverlay = value;
                 Properties.Settings.Default.FoldersOpenDesktopOverlay = (bool)_FoldersOpenDesktopOverlay;
-                Save();
-            }
-        }
-
-        public static bool EnableMultiMon
-        {
-            get
-            {
-                if (_EnableMultiMon == null)
-                    _EnableMultiMon = Properties.Settings.Default.EnableMultiMon;
-
-                return (bool)_EnableMultiMon;
-            }
-            set
-            {
-                _EnableMultiMon = value;
-                Properties.Settings.Default.EnableMultiMon = (bool)_EnableMultiMon;
                 Save();
             }
         }
@@ -463,6 +447,23 @@ namespace CairoDesktop.Configuration
                 Save();
             }
         }
+
+        public static bool EnableTaskbarMultiMon
+        {
+            get
+            {
+                if (_EnableTaskbarMultiMon == null)
+                    _EnableTaskbarMultiMon = Properties.Settings.Default.EnableTaskbarMultiMon;
+
+                return (bool)_EnableTaskbarMultiMon;
+            }
+            set
+            {
+                _EnableTaskbarMultiMon = value;
+                Properties.Settings.Default.EnableTaskbarMultiMon = (bool)_EnableTaskbarMultiMon;
+                Save();
+            }
+        }
         #endregion
 
         #region Menu Bar
@@ -598,6 +599,23 @@ namespace CairoDesktop.Configuration
             {
                 _EnableMenuBarBlur = value;
                 Properties.Settings.Default.EnableMenuBarBlur = (bool)_EnableMenuBarBlur;
+                Save();
+            }
+        }
+
+        public static bool EnableMenuBarMultiMon
+        {
+            get
+            {
+                if (_EnableMenuBarMultiMon == null)
+                    _EnableMenuBarMultiMon = Properties.Settings.Default.EnableMenuBarMultiMon;
+
+                return (bool)_EnableMenuBarMultiMon;
+            }
+            set
+            {
+                _EnableMenuBarMultiMon = value;
+                Properties.Settings.Default.EnableMenuBarMultiMon = (bool)_EnableMenuBarMultiMon;
                 Save();
             }
         }

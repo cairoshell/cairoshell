@@ -349,9 +349,9 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
-                if (Settings.EnableMultiMon && !Startup.IsSettingScreens)
+                if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens)
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
-                else if (!Settings.EnableMultiMon)
+                else if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
                     Screen = System.Windows.Forms.Screen.PrimaryScreen;
@@ -365,9 +365,9 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
-                if (Settings.EnableMultiMon && !Startup.IsSettingScreens)
+                if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens)
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
-                else if (!Settings.EnableMultiMon)
+                else if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
                     Screen = System.Windows.Forms.Screen.PrimaryScreen;
@@ -378,7 +378,7 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
             {
-                if (Settings.EnableMultiMon && !Startup.IsSettingScreens)
+                if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens)
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
             }
 
