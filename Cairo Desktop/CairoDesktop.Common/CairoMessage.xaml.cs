@@ -188,5 +188,10 @@
         {
             this.DialogResult = false;
         }
+
+        private void messageWindow_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            DragMove();
+        }
     }
 }

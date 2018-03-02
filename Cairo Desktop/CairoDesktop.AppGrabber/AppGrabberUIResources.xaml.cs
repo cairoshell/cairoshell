@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CairoDesktop.Interop;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -163,10 +164,35 @@ namespace CairoDesktop.AppGrabber
                     (sourceView.ItemsSource as IList<ApplicationInfo>).Remove(dropData);
                     (dropTarget.ItemsSource as IList<ApplicationInfo>).Add(dropData);
                 }
-
-                if (dropTarget.Items.Contains(dropData))
+            }
+            else if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+                if (fileNames != null)
                 {
-                    dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.IndexOf(dropData)]);
+                    ListView dropTarget = sender as ListView;
+
+                    if (!(dropTarget.ItemsSource is Category))
+                    {
+                        foreach (String fileName in fileNames)
+                        {
+                            System.Diagnostics.Debug.WriteLine(fileName);
+
+                            if (Shell.Exists(fileName))
+                            {
+                                ApplicationInfo customApp = AppGrabber.PathToApp(fileName, false);
+                                if (!object.ReferenceEquals(customApp, null))
+                                {
+                                    (dropTarget.ItemsSource as IList<ApplicationInfo>).Add(customApp);
+
+                                    if (dropTarget.Items.Contains(customApp))
+                                    {
+                                        dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.IndexOf(customApp)]);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             

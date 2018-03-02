@@ -111,7 +111,7 @@ namespace CairoDesktop.AppGrabber
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            appGrabber.CategoryList.Add(new Category("New"));
+            appGrabber.CategoryList.Add(new Category(Localization.DisplayString.sAppGrabber_Untitled));
             scrollViewer.ScrollToEnd();
         }
 

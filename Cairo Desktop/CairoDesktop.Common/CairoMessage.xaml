@@ -12,7 +12,7 @@
     Topmost="True"
 	AllowsTransparency="True"
 	Background="Transparent" UseLayoutRounding="True"
-	WindowStartupLocation="CenterScreen">
+	WindowStartupLocation="CenterScreen" MouseLeftButtonDown="messageWindow_MouseLeftButtonDown">
 	<Window.Resources>
         <ResourceDictionary>
             <self:MessageBoxImageConverter x:Key="MessageBoxImageConverter" />

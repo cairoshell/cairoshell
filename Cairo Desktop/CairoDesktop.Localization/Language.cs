@@ -60,6 +60,7 @@ namespace CairoDesktop.Localization
             { "sAppGrabber_QuickLaunch", "Quick Launch" },
             { "sAppGrabber_Uncategorized", "Uncategorized" },
             { "sAppGrabber_All", "All" },
+            { "sAppGrabber_Untitled", "Untitled" },
             { "sAppGrabber_Category_Accessories", "Accessories" },
             { "sAppGrabber_Category_Productivity", "Productivity" },
             { "sAppGrabber_Category_Development", "Development" },

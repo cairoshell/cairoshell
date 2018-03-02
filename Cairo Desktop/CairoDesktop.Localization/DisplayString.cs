@@ -481,6 +481,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sAppGrabber_Untitled
+        {
+            get
+            {
+                return getString("sAppGrabber_Untitled");
+            }
+        }
+
         public static string sAppGrabber_Category_Accessories
         {
             get

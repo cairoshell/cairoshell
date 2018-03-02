@@ -98,7 +98,10 @@ namespace CairoDesktop.AppGrabber {
                     case 3:
                         return Localization.DisplayString.sAppGrabber_QuickLaunch;
                     default:
-                        return Name;
+                        if (Name.Length > 0)
+                            return Name;
+                        else
+                            return Localization.DisplayString.sAppGrabber_Untitled;
                 }
             }
         }
