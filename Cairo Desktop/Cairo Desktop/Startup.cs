@@ -212,7 +212,7 @@
                 {
                     // enumerate screens
 
-                    if (Settings.EnableMenuBarMultiMon)
+                    if (Settings.EnableMenuBarMultiMon || !Settings.EnableTaskbar)
                     {
                         foreach (MenuBar bar in MenuBarWindows)
                         {
@@ -375,13 +375,16 @@
                             newMenuBar.Show();
                             MenuBarWindows.Add(newMenuBar);
 
-                            // menu bar shadows
-                            MenuBarShadow newMenuBarShadow = new MenuBarShadow(newMenuBar, screen);
-                            newMenuBarShadow.Show();
-                            MenuBarShadowWindows.Add(newMenuBarShadow);
+                            if (Settings.EnableMenuBarShadow)
+                            {
+                                // menu bar shadows
+                                MenuBarShadow newMenuBarShadow = new MenuBarShadow(newMenuBar, screen);
+                                newMenuBarShadow.Show();
+                                MenuBarShadowWindows.Add(newMenuBarShadow);
+                            }
                         }
 
-                        if (Settings.EnableTaskbarMultiMon)
+                        if (Settings.EnableTaskbarMultiMon && Settings.EnableTaskbar)
                         {
                             // taskbars
                             Taskbar newTaskbar = new Taskbar(screen);
