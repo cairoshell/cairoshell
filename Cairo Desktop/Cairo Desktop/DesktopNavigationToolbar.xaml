@@ -145,14 +145,14 @@
         <Button Style="{StaticResource CairoDesktopNavItem2Style}"
                     Margin="23,-5,0,0" Click="Home_Click">
             <Image Source="Resources\controlsHome.png"
-                        Width="21"
+                        Width="19"
                         Height="19" />
         </Button>
         <Button Style="{StaticResource CairoDesktopNavItem2Style}"
                     Margin="22,-5,0,0" Click="Browse_Click">
             <Image Source="Resources\controlsBrowse.png"
                         Width="21"
-                        Height="19" />
+                        Height="17" />
         </Button>
         <Button Style="{StaticResource CairoDesktopNavItemStyle}"
                     Margin="23,-4,0,0" Click="Fwd_Click">
