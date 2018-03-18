@@ -1449,6 +1449,78 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_Advanced_Shell
+        {
+            get
+            {
+                return getString("sSettings_Advanced_Shell");
+            }
+        }
+
+        public static string sSettings_Advanced_CairoIsShell
+        {
+            get
+            {
+                return getString("sSettings_Advanced_CairoIsShell");
+            }
+        }
+
+        public static string sSettings_Advanced_ExplorerIsShell
+        {
+            get
+            {
+                return getString("sSettings_Advanced_ExplorerIsShell");
+            }
+        }
+
+        public static string sSettings_Advanced_SetCairoAsShell
+        {
+            get
+            {
+                return getString("sSettings_Advanced_SetCairoAsShell");
+            }
+        }
+
+        public static string sSettings_Advanced_SetExplorerAsShell
+        {
+            get
+            {
+                return getString("sSettings_Advanced_SetExplorerAsShell");
+            }
+        }
+
+        public static string sSettings_Advanced_ShellChanged
+        {
+            get
+            {
+                return getString("sSettings_Advanced_ShellChanged");
+            }
+        }
+
+        public static string sSettings_Advanced_ShellChangedText
+        {
+            get
+            {
+                return getString("sSettings_Advanced_ShellChangedText");
+            }
+        }
+
+        public static string sSettings_Advanced_LogOffNow
+        {
+            get
+            {
+                return getString("sSettings_Advanced_LogOffNow");
+            }
+        }
+
+        public static string sSettings_Advanced_LogOffLater
+        {
+            get
+            {
+                return getString("sSettings_Advanced_LogOffLater");
+            }
+        }
+
         public static string sWelcome_StartTour
         {
             get

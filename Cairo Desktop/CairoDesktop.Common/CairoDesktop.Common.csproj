@@ -66,6 +66,7 @@
     <Compile Include="MessageBoxButtonConverter.cs" />
     <Compile Include="MessageBoxImageConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShellHelper.cs" />
     <Compile Include="SystemDirectory.cs" />
     <Compile Include="SystemFile.cs" />
   </ItemGroup>

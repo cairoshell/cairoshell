@@ -101,12 +101,8 @@
             #endregion
 
             // check if we are the current user's shell
-            object userShell = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell");
-            //procName = Process.GetCurrentProcess().ProcessName;
-            if (userShell != null)
-                IsCairoUserShell = userShell.ToString().ToLower().Contains("cairodesktop");
-            else
-                IsCairoUserShell = false;
+            // set here as well so that we don't behave differently once user changes setting
+            IsCairoUserShell = ShellHelper.IsCairoUserShell;
 
             // Before we do anything, check if settings need to be upgraded
             if (Settings.IsFirstRun == true)

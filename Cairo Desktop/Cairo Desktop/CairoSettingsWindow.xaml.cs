@@ -11,6 +11,7 @@
     using AppGrabber;
     using System.Collections.Generic;
     using CairoDesktop.WindowsTray;
+    using CairoDesktop.Common;
 
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
@@ -370,6 +371,18 @@
             Settings.DesktopOverlayHotKey = hotkey;
 
             showRestartButton();
+        }
+
+        private void btnChangeShell_Click(object sender, RoutedEventArgs e)
+        {
+            btnChangeShell.IsEnabled = false;
+
+            ShellHelper.IsCairoUserShell = !ShellHelper.IsCairoUserShell;
+
+            bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, Localization.DisplayString.sSettings_Advanced_ShellChanged, "Resources/logoffIcon.png", Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater);
+
+            if (LogoffChoice.HasValue && LogoffChoice.Value)
+                NativeMethods.Logoff();
         }
     }
 }

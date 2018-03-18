@@ -26,13 +26,9 @@ namespace CairoDesktop.Configuration
 
         // General
         private static bool? _IsFirstRun;
-        private static string _TimeFormat;
-        private static string _DateFormat;
-        private static string _FileManager;
         private static string _CairoTheme;
         private static string _Language;
         private static bool? _EnableSubDirs;
-        private static bool? _ForceSoftwareRendering;
         private static bool? _FoldersOpenDesktopOverlay;
 
         // Desktop
@@ -57,11 +53,17 @@ namespace CairoDesktop.Configuration
         private static bool? _EnableMenuBarShadow;
         private static bool? _EnableSysTray;
         private static bool? _SysTrayAlwaysExpanded;
-        private static bool? _EnableSysTrayRehook;
         private static bool? _EnableCairoMenuHotKey;
         private static string _CairoMenuHotKey;
         private static bool? _EnableMenuBarBlur;
         private static bool? _EnableMenuBarMultiMon;
+
+        // Advanced
+        private static string _TimeFormat;
+        private static string _DateFormat;
+        private static string _FileManager;
+        private static bool? _EnableSysTrayRehook;
+        private static bool? _ForceSoftwareRendering;
 
         #endregion
 
@@ -81,70 +83,6 @@ namespace CairoDesktop.Configuration
             {
                 _IsFirstRun = value;
                 Properties.Settings.Default.IsFirstRun = (bool)_IsFirstRun;
-                Save();
-            }
-        }
-
-        public static string TimeFormat
-        {
-            get
-            {
-                if (_TimeFormat == null)
-                    _TimeFormat = Properties.Settings.Default.TimeFormat;
-
-                // if still null, means we are using the default or user removed from configuration
-                if (string.IsNullOrEmpty(_TimeFormat))
-                {
-                    DateTimeFormatInfo dtfi = CultureInfo.CurrentCulture.DateTimeFormat;
-                    _TimeFormat = "ddd " + dtfi.ShortTimePattern;
-                }
-
-                return _TimeFormat;
-            }
-            set
-            {
-                _TimeFormat = value;
-                Properties.Settings.Default.TimeFormat = _TimeFormat;
-                Save();
-            }
-        }
-
-        public static string DateFormat
-        {
-            get
-            {
-                if (_DateFormat == null)
-                    _DateFormat = Properties.Settings.Default.DateFormat;
-
-                // if still null, means user removed from configuration
-                if (string.IsNullOrEmpty(_DateFormat))
-                {
-                    _DateFormat = "D";
-                }
-
-                return _DateFormat;
-            }
-            set
-            {
-                _DateFormat = value;
-                Properties.Settings.Default.DateFormat = _DateFormat;
-                Save();
-            }
-        }
-        
-        public static string FileManager
-        {
-            get
-            {
-                if (_FileManager == null)
-                    _FileManager = Properties.Settings.Default.FileManager;
-
-                return _FileManager;
-            }
-            set
-            {
-                _FileManager = value;
-                Properties.Settings.Default.FileManager = _FileManager;
                 Save();
             }
         }
@@ -202,23 +140,6 @@ namespace CairoDesktop.Configuration
             {
                 _EnableSubDirs = value;
                 Properties.Settings.Default.EnableSubDirs = (bool)_EnableSubDirs;
-                Save();
-            }
-        }
-
-        public static bool ForceSoftwareRendering
-        {
-            get
-            {
-                if (_ForceSoftwareRendering == null)
-                    _ForceSoftwareRendering = Properties.Settings.Default.ForceSoftwareRendering;
-
-                return (bool)_ForceSoftwareRendering;
-            }
-            set
-            {
-                _ForceSoftwareRendering = value;
-                Properties.Settings.Default.ForceSoftwareRendering = (bool)_ForceSoftwareRendering;
                 Save();
             }
         }
@@ -535,23 +456,6 @@ namespace CairoDesktop.Configuration
             }
         }
 
-        public static bool EnableSysTrayRehook
-        {
-            get
-            {
-                if (_EnableSysTrayRehook == null)
-                    _EnableSysTrayRehook = Properties.Settings.Default.EnableSysTrayRehook;
-
-                return (bool)_EnableSysTrayRehook;
-            }
-            set
-            {
-                _EnableSysTrayRehook = value;
-                Properties.Settings.Default.EnableSysTrayRehook = (bool)_EnableSysTrayRehook;
-                Save();
-            }
-        }
-
         public static bool EnableCairoMenuHotKey
         {
             get
@@ -619,6 +523,108 @@ namespace CairoDesktop.Configuration
                 Save();
             }
         }
+        #endregion
+
+        #region Advanced
+
+        public static string TimeFormat
+        {
+            get
+            {
+                if (_TimeFormat == null)
+                    _TimeFormat = Properties.Settings.Default.TimeFormat;
+
+                // if still null, means we are using the default or user removed from configuration
+                if (string.IsNullOrEmpty(_TimeFormat))
+                {
+                    DateTimeFormatInfo dtfi = CultureInfo.CurrentCulture.DateTimeFormat;
+                    _TimeFormat = "ddd " + dtfi.ShortTimePattern;
+                }
+
+                return _TimeFormat;
+            }
+            set
+            {
+                _TimeFormat = value;
+                Properties.Settings.Default.TimeFormat = _TimeFormat;
+                Save();
+            }
+        }
+
+        public static string DateFormat
+        {
+            get
+            {
+                if (_DateFormat == null)
+                    _DateFormat = Properties.Settings.Default.DateFormat;
+
+                // if still null, means user removed from configuration
+                if (string.IsNullOrEmpty(_DateFormat))
+                {
+                    _DateFormat = "D";
+                }
+
+                return _DateFormat;
+            }
+            set
+            {
+                _DateFormat = value;
+                Properties.Settings.Default.DateFormat = _DateFormat;
+                Save();
+            }
+        }
+
+        public static string FileManager
+        {
+            get
+            {
+                if (_FileManager == null)
+                    _FileManager = Properties.Settings.Default.FileManager;
+
+                return _FileManager;
+            }
+            set
+            {
+                _FileManager = value;
+                Properties.Settings.Default.FileManager = _FileManager;
+                Save();
+            }
+        }
+
+        public static bool ForceSoftwareRendering
+        {
+            get
+            {
+                if (_ForceSoftwareRendering == null)
+                    _ForceSoftwareRendering = Properties.Settings.Default.ForceSoftwareRendering;
+
+                return (bool)_ForceSoftwareRendering;
+            }
+            set
+            {
+                _ForceSoftwareRendering = value;
+                Properties.Settings.Default.ForceSoftwareRendering = (bool)_ForceSoftwareRendering;
+                Save();
+            }
+        }
+
+        public static bool EnableSysTrayRehook
+        {
+            get
+            {
+                if (_EnableSysTrayRehook == null)
+                    _EnableSysTrayRehook = Properties.Settings.Default.EnableSysTrayRehook;
+
+                return (bool)_EnableSysTrayRehook;
+            }
+            set
+            {
+                _EnableSysTrayRehook = value;
+                Properties.Settings.Default.EnableSysTrayRehook = (bool)_EnableSysTrayRehook;
+                Save();
+            }
+        }
+
         #endregion
 
         #endregion
