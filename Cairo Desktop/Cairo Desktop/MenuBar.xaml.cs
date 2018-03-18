@@ -14,6 +14,7 @@ using CairoDesktop.Common;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.WindowsTray;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace CairoDesktop
 {
@@ -129,6 +130,13 @@ namespace CairoDesktop
             {
                 HotKeyManager.RegisterHotKey(Settings.CairoMenuHotKey, OnShowCairoMenu);
                 isHotkeyRegistered = true;
+            }
+
+            // Register Windows key to open Programs menu
+            if (Startup.IsCairoUserShell)
+            {
+                HotKeyManager.RegisterHotKey(new List<string> { "Win", "LWin" }, OnShowProgramsMenu);
+                HotKeyManager.RegisterHotKey(new List<string> { "Win", "RWin" }, OnShowProgramsMenu);
             }
 
             if (Settings.EnableMenuBarBlur)
@@ -527,6 +535,19 @@ namespace CairoDesktop
             else
             {
                 CairoMenu.IsSubmenuOpen = false;
+            }
+        }
+
+        private void OnShowProgramsMenu(HotKey hotKey)
+        {
+            if (!ProgramsMenu.IsSubmenuOpen)
+            {
+                NativeMethods.SetForegroundWindow(helper.Handle);
+                ProgramsMenu.IsSubmenuOpen = true;
+            }
+            else
+            {
+                ProgramsMenu.IsSubmenuOpen = false;
             }
         }
         #endregion
