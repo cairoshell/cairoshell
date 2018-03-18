@@ -50,13 +50,13 @@ namespace CairoDesktop.AppGrabber
             CategoryList catList = actionableCategory.ParentCategoryList;
             switch (button.Content as String)
             {
-                case "<":
+                case "5":
                     catList.MoveCategory(actionableCategory, -1);
                     break;
-                case ">":
+                case "6":
                     catList.MoveCategory(actionableCategory, 1);
                     break;
-                case "X":
+                case "r":
                     //Don't allow removal of special category
                     if (actionableCategory.Type > 0) return;
 

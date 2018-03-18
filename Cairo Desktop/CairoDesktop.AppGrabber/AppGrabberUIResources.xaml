@@ -366,6 +366,8 @@
         TargetType="Button">
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
+        <Setter Property="FontFamily"
+            Value="Webdings" />
         <Setter Property="Foreground"
             Value="White" />
         <Setter Property="FontSize"
@@ -385,21 +387,6 @@
         </Setter>
         <EventSetter Event="Click"
             Handler="CategoryButtonClicked" />
-    </Style>
-    <Style x:Key="ButtonRotateStyle"
-        BasedOn="{StaticResource CategoryManipulationButtonStyle}"
-        TargetType="Button">
-        <Setter Property="Padding"
-            Value="0,0,0,3" />
-        <Setter Property="Foreground"
-            Value="White" />
-        <Setter Property="RenderTransform">
-            <Setter.Value>
-                <RotateTransform Angle="90" />
-            </Setter.Value>
-        </Setter>
-        <Setter Property="RenderTransformOrigin"
-            Value=".5,.5" />
     </Style>
     <Style x:Key="CategoryDisplayStyle"
         TargetType="ItemsControl">
@@ -424,7 +411,13 @@
                                 </DockPanel.Background>
                                 <Button DockPanel.Dock="Right"
                                     Style="{StaticResource CategoryManipulationButtonStyle}"
-                                    CommandParameter="{Binding}" Name="CatDelButton" Initialized="DelCatButtonShown">X</Button>
+                                    CommandParameter="{Binding}" Name="CatDelButton" Initialized="DelCatButtonShown">r</Button>
+                                <Button DockPanel.Dock="Right"
+                                    Style="{StaticResource CategoryManipulationButtonStyle}"
+                                    CommandParameter="{Binding}" Name="CatDownButton" Initialized="DelCatButtonShown">6</Button>
+                                <Button DockPanel.Dock="Right"
+                                    Style="{StaticResource CategoryManipulationButtonStyle}"
+                                    CommandParameter="{Binding}" Name="CatUpButton" Initialized="DelCatButtonShown">5</Button>
                                 <TextBox DockPanel.Dock="Left"
                                     Visibility="Collapsed"
                                     Text="{Binding Path=Name}"
