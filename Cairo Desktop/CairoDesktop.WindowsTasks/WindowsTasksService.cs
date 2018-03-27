@@ -32,7 +32,7 @@ namespace CairoDesktop.WindowsTasks
         private void initialize()
         {
             IsStarting = true;
-
+            
             try
             {
                 Trace.WriteLine("Starting WindowsTasksService");
@@ -65,7 +65,7 @@ namespace CairoDesktop.WindowsTasks
             {
                 Debug.Print(ex.Message);
             }
-
+            
             IsStarting = false;
         }
 
@@ -272,6 +272,8 @@ namespace CairoDesktop.WindowsTasks
                     Debugger.Break();
                 }
             }
+            
+            msg.Result = DefWindowProc(msg.HWnd, msg.Msg, msg.WParam, msg.LParam);
         }
 
         public ObservableCollection<ApplicationWindow> Windows

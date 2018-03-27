@@ -8,6 +8,8 @@
 #include "stdafx.h"
 #include <ShellAPI.h>
 #include <Winuser.h>
+#include <tchar.h>
+#include <stdio.h>
 #include "WindowsHooks.h"
 
 	// Callbacks for the delegates
@@ -19,6 +21,12 @@
  	WNDCLASS	   m_NotifyClass;
  	HWND		   m_hWndNotify;
 	HINSTANCE	   m_hInstance;
+
+	HWND			m_FwdHwnd;
+	UINT			m_FwdMsg;
+	WPARAM			m_FwdWParam;
+	LPARAM			m_FwdLParam;
+	LRESULT			m_FwdResult;
 
 	// Forward declaration for WndProc
 	extern "C" 
@@ -125,38 +133,63 @@ BOOL CallSystrayDelegate(int message, NOTIFYICONDATA nicData)
 	}
 }
 
+BOOL CALLBACK fwdProc(HWND hWnd, LPARAM lParam)
+{
+	if (hWnd != m_hWndTray && hWnd != m_FwdHwnd)
+	{
+		TCHAR className[256];
+		GetClassName(hWnd, className, 256);
+
+		if (_tcscmp(className, _T("Shell_TrayWnd")) == 0)
+		{
+			m_FwdResult = SendMessage(hWnd, m_FwdMsg, m_FwdWParam, m_FwdLParam);
+		}
+	}
+
+	return true;
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	ODS("WndProc called.\n");
-	switch(msg)
+	switch (msg)
 	{
-	case WM_COPYDATA:
+		case WM_COPYDATA:
 		{
 			COPYDATASTRUCT *copyData = (COPYDATASTRUCT *)lParam;
-			if(copyData == NULL)
+			if (copyData == NULL)
 			{
 				ODS("CopyData is null. Returning.");
 				return DefWindowProc(hWnd, msg, wParam, lParam);
 			}
 
-			switch(copyData->dwData)
+			switch (copyData->dwData)
 			{
-			case 0:
-				// This is supposed to just 'pass it along' to the default handler, but it doesn't
-				// Currently i'm just setting up the app bar before we initialize this, but we need to research this
-				// further and find a final solution.. (broc)
-				return FALSE;
-				break;
-			case 1:
-				NOTIFYICONDATA *nicData = (NOTIFYICONDATA *)(((BYTE *)copyData->lpData) + 8);
-				int TrayCmd = *(INT *) (((BYTE *)copyData->lpData) + 4);
+				case 0:
+					// pass it along to the default handler
+					break;
+				case 1:
+					NOTIFYICONDATA * nicData = (NOTIFYICONDATA *)(((BYTE *)copyData->lpData) + 8);
+					int TrayCmd = *(INT *)(((BYTE *)copyData->lpData) + 4);
 
-				BOOL result = CallSystrayDelegate(TrayCmd, *nicData);
-				if(result) OutputDebugString(L"Result is true.");
-				else OutputDebugString(L"Result is false");
-				return 0;
+					BOOL result = CallSystrayDelegate(TrayCmd, *nicData);
+					if (result) OutputDebugString(L"Result is true.");
+					else OutputDebugString(L"Result is false");
+					return 0;
 			}
 		}
 	}
+
+	if (msg == WM_COPYDATA || msg == WM_ACTIVATEAPP)
+	{
+		m_FwdLParam = lParam;
+		m_FwdMsg = msg;
+		m_FwdWParam = wParam;
+		m_FwdHwnd = hWnd;
+
+		EnumWindows(fwdProc, NULL);
+		return m_FwdResult;
+	}
+
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }

@@ -1856,5 +1856,8 @@ namespace CairoDesktop.Interop
             ref Guid riid,
             out IImageList ppv
             );
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr DefWindowProc(IntPtr hWnd, int uMsg, IntPtr wParam, IntPtr lParam);
     }
 }
