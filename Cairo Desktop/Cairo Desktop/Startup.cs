@@ -164,7 +164,15 @@
             // initialize system tray if enabled
             if (Settings.EnableSysTray == true)
             {
-                NotificationArea.Instance.Initialize();
+                // delay for a few seconds to reduce z-order races
+                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+                timer.Start();
+                timer.Tick += (sender1, args1) =>
+                {
+                    NotificationArea.Instance.Initialize();
+                    timer.Stop();
+                };
+                
             }
 
 #if (ENABLEFIRSTRUN)
