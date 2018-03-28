@@ -1249,14 +1249,6 @@ namespace CairoDesktop.Localization
             }
         }
 
-        public static string sSettings_MenuBar_PeriodicallyRehook
-        {
-            get
-            {
-                return getString("sSettings_MenuBar_PeriodicallyRehook");
-            }
-        }
-
         public static string sSettings_MenuBar_EnableCairoMenuHotKey
         {
             get

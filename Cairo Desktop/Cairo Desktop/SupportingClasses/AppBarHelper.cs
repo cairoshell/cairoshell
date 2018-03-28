@@ -134,6 +134,10 @@ namespace CairoDesktop.SupportingClasses
             {
                 SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.Hide);
             }
+
+            // if taskbar z-order changed, need to move up notification area
+            if (Settings.EnableSysTray == true)
+                NotificationArea.Instance.MakeActive();
         }
 
         public static void AppBarWindowPosChanged(IntPtr hwnd)
@@ -254,6 +258,10 @@ namespace CairoDesktop.SupportingClasses
 
             if (Startup.DesktopWindow != null)
                 Startup.DesktopWindow.ResetPosition();
+
+            // if taskbar z-order changed, need to move up notification area
+            if (Settings.EnableSysTray == true)
+                NotificationArea.Instance.MakeActive();
         }
 
         public static System.Drawing.Size PrimaryMonitorSize
