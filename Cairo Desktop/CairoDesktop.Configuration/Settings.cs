@@ -62,7 +62,6 @@ namespace CairoDesktop.Configuration
         private static string _TimeFormat;
         private static string _DateFormat;
         private static string _FileManager;
-        private static bool? _EnableSysTrayRehook;
         private static bool? _ForceSoftwareRendering;
 
         #endregion
@@ -604,23 +603,6 @@ namespace CairoDesktop.Configuration
             {
                 _ForceSoftwareRendering = value;
                 Properties.Settings.Default.ForceSoftwareRendering = (bool)_ForceSoftwareRendering;
-                Save();
-            }
-        }
-
-        public static bool EnableSysTrayRehook
-        {
-            get
-            {
-                if (_EnableSysTrayRehook == null)
-                    _EnableSysTrayRehook = Properties.Settings.Default.EnableSysTrayRehook;
-
-                return (bool)_EnableSysTrayRehook;
-            }
-            set
-            {
-                _EnableSysTrayRehook = value;
-                Properties.Settings.Default.EnableSysTrayRehook = (bool)_EnableSysTrayRehook;
                 Save();
             }
         }

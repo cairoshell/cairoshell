@@ -350,9 +350,6 @@
             </TabItem>
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Advanced)}">
                 <StackPanel Orientation="Vertical">
-                    <CheckBox IsChecked="{Binding Path=EnableSysTrayRehook}" Click="CheckBox_Click" Name="chkEnableSysTrayRehook">
-                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_PeriodicallyRehook)}" />
-                    </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormat)}" />

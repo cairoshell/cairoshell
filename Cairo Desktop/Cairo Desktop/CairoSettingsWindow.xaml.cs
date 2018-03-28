@@ -202,7 +202,6 @@
 
                 chkEnableSysTray.IsEnabled = false;
                 pnlTraySettings.Visibility = Visibility.Collapsed;
-                chkEnableSysTrayRehook.Visibility = Visibility.Collapsed;
 
                 lblTrayWarning.Visibility = Visibility.Visible;
             }

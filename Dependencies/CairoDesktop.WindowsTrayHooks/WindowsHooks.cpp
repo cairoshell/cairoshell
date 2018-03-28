@@ -98,6 +98,9 @@ HWND InitializeSystray(int width, float scale)
 
 void Run()
 {
+	// move to top of z-order
+	SetWindowPos(m_hWndTray, 0, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOSIZE);
+
 	SendNotifyMessage(HWND_BROADCAST, RegisterWindowMessage(L"TaskbarCreated"), 0, 0);
 	ODS("Sent TaskbarCreated message.\n");
 }
@@ -151,7 +154,6 @@ BOOL CALLBACK fwdProc(HWND hWnd, LPARAM lParam)
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	ODS("WndProc called.\n");
 	switch (msg)
 	{
 		case WM_COPYDATA:
@@ -173,8 +175,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					int TrayCmd = *(INT *)(((BYTE *)copyData->lpData) + 4);
 
 					BOOL result = CallSystrayDelegate(TrayCmd, *nicData);
-					if (result) OutputDebugString(L"Result is true.");
-					else OutputDebugString(L"Result is false");
+					if (!result) OutputDebugString(L"Result is false");
 					return 0;
 			}
 		}
@@ -182,6 +183,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	if (msg == WM_COPYDATA || msg == WM_ACTIVATEAPP)
 	{
+		OutputDebugString(L"Forwarding message to all Shell_TrayWnd");
 		m_FwdLParam = lParam;
 		m_FwdMsg = msg;
 		m_FwdWParam = wParam;

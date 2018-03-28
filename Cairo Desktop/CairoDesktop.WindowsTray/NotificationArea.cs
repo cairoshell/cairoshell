@@ -50,14 +50,6 @@ namespace CairoDesktop.WindowsTray
                 hooksWrapper.SetSystrayCallback(trayDelegate);
                 Handle = hooksWrapper.InitializeSystray();
                 hooksWrapper.Run();
-
-                if (Configuration.Settings.EnableSysTrayRehook)
-                {
-                    DispatcherTimer trayRehook = new DispatcherTimer(DispatcherPriority.Background, this.Dispatcher);
-                    trayRehook.Interval = new TimeSpan(0, 0, 10);
-                    trayRehook.Tick += trayRehook_Tick;
-                    trayRehook.Start();
-                }
             }
             catch
             {
@@ -65,18 +57,9 @@ namespace CairoDesktop.WindowsTray
             }
         }
 
-        private void trayRehook_Tick(object sender, EventArgs e)
+        public void MakeActive()
         {
-            // check if setting has changed
-            if (Configuration.Settings.EnableSysTrayRehook)
-            {
-                Handle = hooksWrapper.InitializeSystray();
-                hooksWrapper.Run();
-            }
-            else
-            {
-                (sender as DispatcherTimer).Stop();
-            }
+            SetWindowPos(Handle, IntPtr.Zero, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
         }
 
         private bool SysTrayCallback(uint message, NOTIFYICONDATA nicData)
