@@ -49,7 +49,15 @@ namespace CairoDesktop.WindowsTray
                 trayDelegate = new SystrayDelegate(SysTrayCallback);
                 hooksWrapper.SetSystrayCallback(trayDelegate);
                 Handle = hooksWrapper.InitializeSystray();
-                hooksWrapper.Run();
+                
+                // delay for a few seconds to reduce z-order races
+                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+                timer.Start();
+                timer.Tick += (sender1, args1) =>
+                {
+                    hooksWrapper.Run();
+                    timer.Stop();
+                };
             }
             catch
             {
