@@ -756,11 +756,7 @@ namespace CairoDesktop
                 CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        public static implicit operator Window(MenuBar v)
-        {
-            throw new NotImplementedException();
-        }
+        
         #endregion
     }
 }
