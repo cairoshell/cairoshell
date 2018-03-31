@@ -45,6 +45,13 @@ namespace CairoDesktop
             
             this.Width = AppBarHelper.PrimaryMonitorSize.Width;
             this.Height = AppBarHelper.PrimaryMonitorSize.Height-1;
+
+            if (Startup.IsCairoUserShell)
+            {
+                sepPersonalization.Visibility = Visibility.Collapsed;
+                miPersonalization.Visibility = Visibility.Collapsed;
+            }
+
             setGridPosition();
 
             setBackground();

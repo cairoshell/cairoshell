@@ -14,7 +14,7 @@
     <Window.ContextMenu>
         <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
             <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Paste)}" Style="{StaticResource CairoMenuItemStyle}" Click="miPaste_Click"  Name="miPaste" />
-            <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
+            <Separator Style="{StaticResource CairoMenuSeparatorStyle}" Name="sepPersonalization" />
             <MenuItem Header="{Binding Path=(l10n:DisplayString.sDesktop_Personalize)}" Style="{StaticResource CairoMenuItemStyle}" Click="miPersonalization_Click"  Name="miPersonalization" />
         </ContextMenu>
     </Window.ContextMenu>
