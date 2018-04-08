@@ -7,7 +7,8 @@ namespace CairoDesktop.Localization
         public static List<KeyValuePair<string, string>> Languages = new List<KeyValuePair<string, string>>()
         {
             new KeyValuePair<string, string>("English", "en_US"),
-            new KeyValuePair<string, string>("Français", "fr_FR")
+            new KeyValuePair<string, string>("Français", "fr_FR"),
+            new KeyValuePair<string, string>("Chinese (Simplified) 简体中文", "zh_CN")
         };
 
         public DisplayString()
@@ -26,6 +27,10 @@ namespace CairoDesktop.Localization
             if (useLang.StartsWith("fr_"))
             {
                 lang = Language.fr_FR;
+            }
+            else if (useLang.StartsWith("zh_"))
+            {
+                lang = Language.zh_CN;
             }
             else
             {

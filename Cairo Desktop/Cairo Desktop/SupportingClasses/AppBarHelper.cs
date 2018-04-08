@@ -65,6 +65,7 @@ namespace CairoDesktop.SupportingClasses
         public static void SetWinTaskbarPos(int swp)
         {
             IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
+            IntPtr taskbarInsertAfter = (IntPtr)1;
 
             if (NotificationArea.Instance.Handle != null && NotificationArea.Instance.Handle != IntPtr.Zero)
             {
@@ -75,9 +76,9 @@ namespace CairoDesktop.SupportingClasses
             }
 
             IntPtr startButtonHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
-            NativeMethods.SetWindowPos(taskbarHwnd, IntPtr.Zero, 0, 0, 0, 0, swp);
-            NativeMethods.SetWindowPos(startButtonHwnd, IntPtr.Zero, 0, 0, 0, 0, swp);
-
+            NativeMethods.SetWindowPos(taskbarHwnd, taskbarInsertAfter, 0, 0, 0, 0, swp | (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
+            NativeMethods.SetWindowPos(startButtonHwnd, taskbarInsertAfter, 0, 0, 0, 0, swp | (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
+            
             // adjust secondary taskbars for multi-mon
             if (swp == (int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW)
                 SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.Hide);
@@ -134,10 +135,6 @@ namespace CairoDesktop.SupportingClasses
             {
                 SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.Hide);
             }
-
-            // if taskbar z-order changed, need to move up notification area
-            if (Settings.EnableSysTray == true)
-                NotificationArea.Instance.MakeActive();
         }
 
         public static void AppBarWindowPosChanged(IntPtr hwnd)
@@ -258,10 +255,6 @@ namespace CairoDesktop.SupportingClasses
 
             if (Startup.DesktopWindow != null)
                 Startup.DesktopWindow.ResetPosition();
-
-            // if taskbar z-order changed, need to move up notification area
-            if (Settings.EnableSysTray == true)
-                NotificationArea.Instance.MakeActive();
         }
 
         public static System.Drawing.Size PrimaryMonitorSize
