@@ -54,6 +54,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -63,6 +64,7 @@
     </Compile>
     <Compile Include="IconImageConverter.cs" />
     <Compile Include="InvokingObservableCollection.cs" />
+    <Compile Include="KeyboardUtilities.cs" />
     <Compile Include="MessageBoxButtonConverter.cs" />
     <Compile Include="MessageBoxImageConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

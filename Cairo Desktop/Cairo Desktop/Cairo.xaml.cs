@@ -1,5 +1,6 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Configuration;
+using CairoDesktop.Localization;
 using CairoDesktop.SupportingClasses;
 using System;
 using System.IO;
@@ -11,57 +12,59 @@ namespace CairoDesktop
 {
     partial class Cairo : ResourceDictionary
     {
-
         private void btnFile_Click(object sender, RoutedEventArgs e)
         {
-            if (sender != null)
+            Button senderButton = sender as Button;
+            if (senderButton != null && senderButton.CommandParameter != null)
             {
-                Button senderButton = sender as Button;
-                if (senderButton != null && senderButton.CommandParameter != null)
+                string commandString = senderButton.CommandParameter as String;
+                if (!string.IsNullOrWhiteSpace(commandString))
                 {
-                    // get the file attributes for file or directory
-                    FileAttributes attr = File.GetAttributes(senderButton.CommandParameter as String);
-
-                    // if directory, perform special handling
-                    if ((attr & FileAttributes.Directory) == FileAttributes.Directory && Settings.EnableDynamicDesktop && Window.GetWindow(senderButton) != null && Window.GetWindow(senderButton).Name == "CairoDesktopWindow" && Startup.DesktopWindow != null)
+                    // Determine if [SHIFT] key is held. Bypass Directory Processing, which will use the Shell to open the item.
+                    if (!KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
                     {
-                        Startup.DesktopWindow.Navigate(senderButton.CommandParameter as String);
+                        // get the file attributes for file or directory
+                        FileAttributes attr = File.GetAttributes(commandString);
+                        bool isDirectory = (attr & FileAttributes.Directory) == FileAttributes.Directory;
 
-                        return;
-                    }
-                    else if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-                    {
-                        FolderHelper.OpenLocation(senderButton.CommandParameter as String);
-
-                        return;
+                        // if directory, perform special handling
+                        if (isDirectory
+                            && Settings.EnableDynamicDesktop
+                            && Window.GetWindow(senderButton)?.Name == "CairoDesktopWindow"
+                            && Startup.DesktopWindow != null)
+                        {
+                            Startup.DesktopWindow.Navigate(commandString);
+                            return;
+                        }
+                        else if (isDirectory)
+                        {
+                            FolderHelper.OpenLocation(commandString);
+                            return;
+                        }
                     }
 
                     System.Diagnostics.Process proc = new System.Diagnostics.Process();
                     proc.StartInfo.UseShellExecute = true;
-                    proc.StartInfo.FileName = senderButton.CommandParameter as String;
+                    proc.StartInfo.FileName = commandString;
+
+                    if (Startup.DesktopWindow != null)
+                        Startup.DesktopWindow.IsOverlayOpen = false;
+
                     try
                     {
-                        if (Startup.DesktopWindow != null)
-                            Startup.DesktopWindow.IsOverlayOpen = false;
-
                         proc.Start();
-
                         return;
                     }
                     catch
                     {
-                        if (Startup.DesktopWindow != null)
-                            Startup.DesktopWindow.IsOverlayOpen = false;
-
                         // No 'Open' command associated with this filetype in the registry
                         Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
-
                         return;
                     }
                 }
             }
 
-            CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+            CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private void miVerb_Click(object sender, RoutedEventArgs e)
@@ -83,21 +86,16 @@ namespace CairoDesktop
                 box.Text = Path.GetFileName(orig);
 
             foreach (UIElement peer in (box.Parent as DockPanel).Children)
-            {
                 if (peer is Border)
-                {
                     peer.Visibility = Visibility.Visible;
-                }
-            }
+
             box.Visibility = Visibility.Collapsed;
         }
 
         private void txtRename_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-            {
                 (sender as TextBox).MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-            }
         }
 
         private void btnAppGrabber_Click(object sender, RoutedEventArgs e)
@@ -109,9 +107,7 @@ namespace CairoDesktop
         private void btnUninstallApps_Click(object sender, RoutedEventArgs e)
         {
             if (!Interop.Shell.StartProcess("appwiz.cpl"))
-            {
-                CairoMessage.Show(Localization.DisplayString.sError_CantOpenAppWiz, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                CairoMessage.Show(DisplayString.sError_CantOpenAppWiz, DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

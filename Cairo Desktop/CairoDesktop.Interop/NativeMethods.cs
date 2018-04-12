@@ -1859,5 +1859,8 @@ namespace CairoDesktop.Interop
 
         [DllImport("user32.dll")]
         public static extern IntPtr DefWindowProc(IntPtr hWnd, int uMsg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("User32.dll")]
+        public extern static short GetAsyncKeyState(int key);
     }
 }
