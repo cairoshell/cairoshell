@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="CairoDesktop.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization" xmlns:Common="clr-namespace:CairoDesktop.Common;assembly=CairoDesktop.Common"
+<Window x:Class="CairoDesktop.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization" xmlns:interop="clr-namespace:CairoDesktop.Interop;assembly=CairoDesktop.Interop"
     Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
     SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterScreen"
     Closing="Window_Closing" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
         <Settings:Settings x:Key="settings" />
-        <Common:ShellHelper x:Key="shellHelper" />
+        <interop:Shell x:Key="shellHelper" />
         <Style x:Key="CairoSettingsBarRestartStyle"
             TargetType="{x:Type TabItem}">
             <Setter Property="Foreground"

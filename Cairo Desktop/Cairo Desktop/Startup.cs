@@ -102,7 +102,7 @@
 
             // check if we are the current user's shell
             // set here as well so that we don't behave differently once user changes setting
-            IsCairoUserShell = ShellHelper.IsCairoUserShell;
+            IsCairoUserShell = Shell.IsCairoUserShell;
 
             // Before we do anything, check if settings need to be upgraded
             if (Settings.IsFirstRun == true)
@@ -156,10 +156,8 @@
             
             if (Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon)
                 ScreenSetup(true);
-
-            // Set desktop work area for when Explorer isn't running
-            if (IsCairoUserShell)
-                AppBarHelper.SetWorkArea();
+            else if (IsCairoUserShell) // Set desktop work area for when Explorer isn't running
+                AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
 
             // initialize system tray if enabled
             if (Settings.EnableSysTray == true)
@@ -388,6 +386,10 @@
                             TaskbarWindows.Add(newTaskbar);
                         }
                     }
+
+                    // Set desktop work area for when Explorer isn't running
+                    if (IsCairoUserShell)
+                        AppBarHelper.SetWorkArea(screen);
                 }
 
                 IsSettingScreens = false;

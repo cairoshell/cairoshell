@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Interop
 {
-    class WinSparkle
+    public class WinSparkle
     {
         [DllImport("WinSparkle.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void win_sparkle_init();
@@ -30,7 +30,7 @@ namespace CairoDesktop.SupportingClasses
         public delegate void win_sparkle_shutdown_request_callback_t();
 
         [DllImport("WinSparkle.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        internal static extern long win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback);
+        public static extern long win_sparkle_set_can_shutdown_callback(win_sparkle_can_shutdown_callback_t callback);
 
         [DllImport("WinSparkle.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern long win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t callback);

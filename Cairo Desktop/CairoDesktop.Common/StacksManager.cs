@@ -6,7 +6,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Common
 {
     public class StacksManager
     {

@@ -57,9 +57,16 @@ namespace CairoDesktop.WindowsTray
             }
         }
 
+        public void Suspend()
+        {
+            if (Handle != null)
+                SetWindowPos(Handle, (IntPtr)1, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
+        }
+
         public void MakeActive()
         {
-            SetWindowPos(Handle, IntPtr.Zero, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
+            if (Handle != null)
+                SetWindowPos(Handle, IntPtr.Zero, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
         }
 
         private bool SysTrayCallback(uint message, NOTIFYICONDATA nicData)

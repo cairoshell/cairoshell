@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace CairoDesktop
 {
-    public partial class MenuBar
+    public partial class MenuBar : Window
     {
         public System.Windows.Forms.Screen Screen;
         private double dpiScale = 1.0;
@@ -30,7 +30,8 @@ namespace CairoDesktop
 
         public bool IsClosing = false;
 
-        private static bool isHotkeyRegistered = false;
+        private static bool isCairoMenuHotkeyRegistered = false;
+        private static bool isProgramsMenuHotkeyRegistered = false;
 
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
@@ -126,17 +127,18 @@ namespace CairoDesktop
 
             Shell.HideWindowFromTasks(handle);
 
-            if (Settings.EnableCairoMenuHotKey && Screen.Primary && !isHotkeyRegistered)
+            if (Settings.EnableCairoMenuHotKey && Screen.Primary && !isCairoMenuHotkeyRegistered)
             {
                 HotKeyManager.RegisterHotKey(Settings.CairoMenuHotKey, OnShowCairoMenu);
-                isHotkeyRegistered = true;
+                isCairoMenuHotkeyRegistered = true;
             }
 
             // Register Windows key to open Programs menu
-            if (Startup.IsCairoUserShell)
+            if (Startup.IsCairoUserShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
             {
                 HotKeyManager.RegisterHotKey(new List<string> { "Win", "LWin" }, OnShowProgramsMenu);
                 HotKeyManager.RegisterHotKey(new List<string> { "Win", "RWin" }, OnShowProgramsMenu);
+                isProgramsMenuHotkeyRegistered = true;
             }
 
             if (Settings.EnableMenuBarBlur)
@@ -181,7 +183,7 @@ namespace CairoDesktop
             var thread = new Thread(() =>
             {
                 // this sometimes takes a while
-                Type provider = typeof(VistaSearchProvider.VistaSearchProviderHelper);
+                Type provider = typeof(SearchHelper);
 
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
@@ -749,7 +751,7 @@ namespace CairoDesktop
 
         public void ExecuteOpenSearchResult(object sender, ExecutedRoutedEventArgs e)
         {
-            var searchObj = (VistaSearchProvider.SearchResult)e.Parameter;
+            var searchObj = (SearchResult)e.Parameter;
 
             if (!Shell.StartProcess(searchObj.Path))
             {

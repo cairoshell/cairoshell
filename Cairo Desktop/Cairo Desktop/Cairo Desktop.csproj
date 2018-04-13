@@ -95,11 +95,6 @@
     <Reference Include="PresentationFramework.Aero">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="SearchAPILib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>..\..\Dependencies\SearchAPILib\SearchAPILib.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -110,10 +105,9 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -154,9 +148,6 @@
       <DependentUpon>DesktopNavigationToolbar.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportingClasses\AppBarHelper.cs" />
-    <Compile Include="SupportingClasses\HotKeyManager.cs" />
-    <Compile Include="SupportingClasses\StacksManager.cs" />
-    <Compile Include="SupportingClasses\WinSparkle.cs" />
     <Compile Include="SystemTray.xaml.cs">
       <DependentUpon>SystemTray.xaml</DependentUpon>
     </Compile>
@@ -221,7 +212,6 @@
       <DependentUpon>MenuBar.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SupportingClasses\WindowsServices.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DesktopIcons.xaml.cs">
@@ -231,7 +221,6 @@
     <Compile Include="Desktop.xaml.cs">
       <DependentUpon>Desktop.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SupportingClasses\DragDropHandler.cs" />
     <Compile Include="MenuBarShadow.xaml.cs">
       <DependentUpon>MenuBarShadow.xaml</DependentUpon>
     </Compile>
@@ -247,15 +236,13 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
-    <Compile Include="SupportingClasses\TaskbuttonStyleConverter.cs" />
+    <Compile Include="SupportingClasses\TaskButtonStyleConverter.cs" />
     <Compile Include="Taskbar.xaml.cs">
       <DependentUpon>Taskbar.xaml</DependentUpon>
     </Compile>
     <Compile Include="TaskListButton.xaml.cs">
       <DependentUpon>TaskListButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SupportingClasses\ThreadSafeObservableCollection.cs" />
-    <Compile Include="SupportingClasses\VistaSearchProviderHelper.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -356,16 +343,6 @@
       <Project>{5FABAD0F-D28C-4EE6-A826-77968087864E}</Project>
       <Name>CairoDesktop.WindowsTasks</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Platform)' == 'x64' ">
-    <Content Include="..\..\Dependencies\WinSparkle\x64\WinSparkle.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Platform)' == 'AnyCPU' ">
-    <Content Include="..\..\Dependencies\WinSparkle\x86\WinSparkle.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\actionCenterDefault.png" />

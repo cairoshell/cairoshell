@@ -8,11 +8,11 @@
     Drop="locationDisplay_Drop"
     Background="Transparent"
     ToolTip="{Binding Path=(l10n:DisplayString.sStacks_Tooltip)}" ToolTipService.ShowDuration="1000"
-    ToolTipService.InitialShowDelay="1000" MinWidth="600" xmlns:stacksManager="clr-namespace:CairoDesktop.SupportingClasses"
+    ToolTipService.InitialShowDelay="1000" MinWidth="600" xmlns:common="clr-namespace:CairoDesktop.Common;assembly=CairoDesktop.Common"
     x:Name="CairoStacksContainer">
     <UserControl.Resources>
         <ResourceDictionary>
-            <stacksManager:StacksManager x:Key="StacksManager" x:Name="StacksManager" />
+            <common:StacksManager x:Key="StacksManager" x:Name="StacksManager" />
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel Margin="0">

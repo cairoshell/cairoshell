@@ -40,7 +40,9 @@ namespace CairoDesktop.SupportingClasses
                 uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage");
                 abd.uCallbackMessage = uCallBack;
 
+                prepareForInterop();
                 uint ret = NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_NEW, ref abd);
+                interopDone();
                 appBars.Add(handle);
                 Trace.WriteLine("Created AppBar for handle " + handle.ToString());
 
@@ -48,7 +50,9 @@ namespace CairoDesktop.SupportingClasses
             }
             else
             {
+                prepareForInterop();
                 NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_REMOVE, ref abd);
+                interopDone();
                 appBars.Remove(handle);
                 Trace.WriteLine("Removed AppBar for handle " + handle.ToString());
 
@@ -61,6 +65,20 @@ namespace CairoDesktop.SupportingClasses
         public static List<IntPtr> appBars = new List<IntPtr>();
 
         private static int uCallBack = 0;
+
+        private static void prepareForInterop()
+        {
+            // get shell window back so we can do appbar stuff
+            if (Settings.EnableSysTray)
+                NotificationArea.Instance.Suspend();
+        }
+
+        private static void interopDone()
+        {
+            // take back over
+            if (Settings.EnableSysTray)
+                NotificationArea.Instance.MakeActive();
+        }
 
         public static void SetWinTaskbarPos(int swp)
         {
@@ -101,7 +119,9 @@ namespace CairoDesktop.SupportingClasses
             }
 
             abd.lParam = (IntPtr)state;
+            prepareForInterop();
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETSTATE, ref abd);
+            interopDone();
         }
 
         private static void SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle shw)
@@ -128,7 +148,9 @@ namespace CairoDesktop.SupportingClasses
             abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
             abd.hWnd = hwnd;
             abd.lParam = (IntPtr)Convert.ToInt32(true);
+            prepareForInterop();
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_ACTIVATE, ref abd);
+            interopDone();
 
             // apparently the taskbars like to pop up when app bars change
             if (Settings.EnableTaskbar)
@@ -142,7 +164,9 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
             abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
             abd.hWnd = hwnd;
+            prepareForInterop();
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
+            interopDone();
         }
 
         public static void ABSetPos(Window abWindow, Screen screen, double width, double height, ABEdge edge)
@@ -203,7 +227,9 @@ namespace CairoDesktop.SupportingClasses
                 }
             }
 
+            prepareForInterop();
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_QUERYPOS, ref abd);
+            interopDone();
 
             // system doesn't adjust all edges for us, do some adjustments
             switch (abd.uEdge)		
@@ -222,7 +248,9 @@ namespace CairoDesktop.SupportingClasses
                     break;		
             }
 
+            prepareForInterop();
             NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETPOS, ref abd);
+            interopDone();
 
             // tracing
             int h = abd.rc.bottom - abd.rc.top;
@@ -281,32 +309,30 @@ namespace CairoDesktop.SupportingClasses
             }
         }
         
-        public static void SetWorkArea()
+        public static void SetWorkArea(Screen screen)
         {
-            // TODO investigate why this method isn't working correctly on multi-mon systems
-
             NativeMethods.RECT rc;
-            rc.left = SystemInformation.VirtualScreen.Left;
-            rc.right = SystemInformation.VirtualScreen.Right;
+            rc.left = screen.Bounds.Left;
+            rc.right = screen.Bounds.Right;
 
             // only allocate space for taskbar if enabled
             if (Settings.EnableTaskbar && Settings.TaskbarMode == 0)
             {
                 if (Settings.TaskbarPosition == 1)
                 {
-                    rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale) + (int)(Startup.TaskbarWindow.ActualHeight * Shell.DpiScale);
-                    rc.bottom = SystemInformation.VirtualScreen.Bottom;
+                    rc.top = screen.Bounds.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale) + (int)(Startup.TaskbarWindow.ActualHeight * Shell.DpiScale);
+                    rc.bottom = screen.Bounds.Bottom;
                 }
                 else
                 {
-                    rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale);
-                    rc.bottom = SystemInformation.VirtualScreen.Bottom - (int)(Startup.TaskbarWindow.ActualHeight * Shell.DpiScale);
+                    rc.top = screen.Bounds.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale);
+                    rc.bottom = screen.Bounds.Bottom - (int)(Startup.TaskbarWindow.ActualHeight * Shell.DpiScale);
                 }
             }
             else
             {
-                rc.top = SystemInformation.VirtualScreen.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale);
-                rc.bottom = SystemInformation.VirtualScreen.Bottom;
+                rc.top = screen.Bounds.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale);
+                rc.bottom = screen.Bounds.Bottom;
             }
 
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref rc, (1 | 2));

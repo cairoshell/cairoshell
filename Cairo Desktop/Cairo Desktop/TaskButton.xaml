@@ -6,7 +6,7 @@
     d:DesignHeight="29" xmlns:self="clr-namespace:CairoDesktop">
     <UserControl.Resources>
         <ResourceDictionary>
-            <self:TaskbuttonStyleConverter x:Key="styleConverter" />
+            <self:TaskButtonStyleConverter x:Key="styleConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Button x:Name="btn"

@@ -6,7 +6,7 @@ using CairoDesktop.WindowsTasks;
 namespace CairoDesktop
 {
     [ValueConversion(typeof(bool), typeof(Style))]
-    public class TaskbuttonStyleConverter : IMultiValueConverter
+    public class TaskButtonStyleConverter : IMultiValueConverter
     {
         #region IMultiValueConverter Members
 

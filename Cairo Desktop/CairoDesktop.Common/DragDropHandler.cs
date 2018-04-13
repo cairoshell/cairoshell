@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace CairoDesktop
+namespace CairoDesktop.Common
 {
     public class DragDropHandler
     {

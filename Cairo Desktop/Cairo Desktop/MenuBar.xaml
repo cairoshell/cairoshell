@@ -105,55 +105,55 @@
                             Width="38"
                             Height="22"/>
                     </MenuItem.Header>
-                    <MenuItem Header="{Binding sCairoMenu_AboutCairo}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_AboutCairo)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="AboutCairo"
                         Name="OpenAboutCairo" />
-                    <MenuItem Header="{Binding sCairoMenu_CheckForUpdates}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_CheckForUpdates)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="CheckForUpdates"
                         Name="OpenCheckForUpdates" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
-                    <MenuItem Header="{Binding sAppGrabber}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sAppGrabber)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="InitAppGrabberWindow" />
-                    <MenuItem Header="{Binding sCairoMenu_CairoSettings}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="InitCairoSettingsWindow" />
-                    <MenuItem Header="{Binding sCairoMenu_WindowsControlPanel}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_WindowsControlPanel)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenControlPanel" />
-                    <MenuItem Header="{Binding sCairoMenu_WindowsSettings}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_WindowsSettings)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Visibility="Collapsed"
                         Name="miOpenUWPSettings"
                         Click="miOpenUWPSettings_Click" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
-                    <MenuItem Header="{Binding sCairoMenu_Run}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Run)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenRunWindow" />
-                    <MenuItem Header="{Binding sCairoMenu_TaskManager}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_TaskManager)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenTaskManager" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
-                    <MenuItem Header="{Binding sCairoMenu_ExitCairo}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_ExitCairo)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenCloseCairoBox" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
-                    <MenuItem Header="{Binding sCairoMenu_Sleep}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Sleep)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="SysSleep" />
-                    <MenuItem Header="{Binding sCairoMenu_Restart}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Restart)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenRebootBox" />
-                    <MenuItem Header="{Binding sCairoMenu_ShutDown}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_ShutDown)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenShutDownBox" />
-                    <MenuItem Header="{Binding sCairoMenu_LogOff}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_LogOff)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenLogoffBox" />
                 </MenuItem>
-                <MenuItem Header="{Binding sProgramsMenu}" Name="ProgramsMenu"
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu)}" Name="ProgramsMenu"
                     Style="{StaticResource CairoMenuItemStyle}" Drop="Programs_Drop"
                     ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" TextBlock.FontWeight="SemiBold" StaysOpenOnClick="True">
                     <MenuItem StaysOpenOnClick="True">
@@ -173,37 +173,37 @@
                         </MenuItem.Header>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="{Binding sPlacesMenu}"
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu)}"
                     Style="{StaticResource CairoMenuItemStyle}" TextBlock.FontWeight="SemiBold">
                     <MenuItem xmlns:s="clr-namespace:System;assembly=mscorlib" Name="miUserName"
                         Style="{StaticResource CairoMenuItemStyle}"
                         FontWeight="Bold"
                         Click="OpenUserFolder" />
-                    <MenuItem Header="{Binding sPlacesMenu_Documents}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu_Documents)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenMyDocs" />
-                    <MenuItem Header="{Binding sPlacesMenu_Downloads}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu_Downloads)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenDownloads" x:Name="PlacesDownloadsItem" />
-                    <MenuItem Header="{Binding sPlacesMenu_Music}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu_Music)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenMyMusic" />
-                    <MenuItem Header="{Binding sPlacesMenu_Pictures}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu_Pictures)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenMyPics" />
-                    <MenuItem Header="{Binding sPlacesMenu_Videos}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu_Videos)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenMyVideos" x:Name="PlacesVideosItem" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
-                    <MenuItem Header="{Binding sPlacesMenu_ThisPC}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu_ThisPC)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         FontWeight="Bold"
                         Click="OpenMyComputer" />
-                    <MenuItem Header="{Binding sPlacesMenu_ProgramFiles}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu_ProgramFiles)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenProgramFiles" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
-                    <MenuItem Header="{Binding sPlacesMenu_RecycleBin}"
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu_RecycleBin)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenRecycleBin" />
                 </MenuItem>
@@ -225,7 +225,7 @@
                               Height="22" />
                     </MenuItem.Header>
                 </MenuItem>-->
-                <MenuItem x:Name="miOpenActionCenter" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click" MouseEnter="miOpenActionCenter_MouseEnter" MouseLeave="miOpenActionCenter_MouseLeave" ToolTip="{Binding sMenuBar_OpenActionCenter}">
+                <MenuItem x:Name="miOpenActionCenter" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click" MouseEnter="miOpenActionCenter_MouseEnter" MouseLeave="miOpenActionCenter_MouseLeave" ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_OpenActionCenter)}">
                     <MenuItem.Header>
                         <Image Name="ActionCenterIcon" Source="{StaticResource ActionCenterIcon}"
                               Width="38"
@@ -255,7 +255,7 @@
                         </MenuItem.Template>
                     </MenuItem>
                     <MenuItem Style="{StaticResource CairoMenuItemStyle}"
-                            Click="OpenTimeDateCPL" Header="{Binding sMenuBar_OpenDateTimeSettings}">
+                            Click="OpenTimeDateCPL" Header="{Binding Path=(l10n:DisplayString.sMenuBar_OpenDateTimeSettings)}">
                         <MenuItem.Icon>
                             <Image Source="Resources\dateTimeIcon.png"
                                     Width="16"

@@ -9,7 +9,7 @@
 using System;
 using System.ServiceProcess;
 
-namespace CairoDesktop
+namespace CairoDesktop.Interop
 {
     /// <summary>
     /// Basic class for querying the status of Windows Services.

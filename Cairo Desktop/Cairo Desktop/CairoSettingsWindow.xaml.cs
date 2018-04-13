@@ -191,7 +191,7 @@
 
         private void checkUpdateConfig()
         {
-            chkEnableAutoUpdates.IsChecked = Convert.ToBoolean(SupportingClasses.WinSparkle.win_sparkle_get_automatic_check_for_updates());
+            chkEnableAutoUpdates.IsChecked = Convert.ToBoolean(WinSparkle.win_sparkle_get_automatic_check_for_updates());
         }
 
         private void checkTrayStatus()
@@ -209,7 +209,7 @@
 
         private void EnableAutoUpdates_Click(object sender, RoutedEventArgs e)
         {
-            SupportingClasses.WinSparkle.win_sparkle_set_automatic_check_for_updates(Convert.ToInt32(chkEnableAutoUpdates.IsChecked));
+            WinSparkle.win_sparkle_set_automatic_check_for_updates(Convert.ToInt32(chkEnableAutoUpdates.IsChecked));
         }
 
         private void showRestartButton()
@@ -376,7 +376,7 @@
         {
             btnChangeShell.IsEnabled = false;
 
-            ShellHelper.IsCairoUserShell = !ShellHelper.IsCairoUserShell;
+            Shell.IsCairoUserShell = !Shell.IsCairoUserShell;
 
             bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, Localization.DisplayString.sSettings_Advanced_ShellChanged, "Resources/logoffIcon.png", Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater);
 
