@@ -157,6 +157,7 @@
     <BitmapImage x:Key="MenuIcon" UriSource="Resources\cairoMenuDefault.png"></BitmapImage>
     <BitmapImage x:Key="SearchIcon" UriSource="Resources\searchDefault.png"></BitmapImage>
     <BitmapImage x:Key="ActionCenterIcon" UriSource="Resources\actionCenterDefault.png"></BitmapImage>
+    <BitmapImage x:Key="VolumeIcon" UriSource="Resources\volumeIconDefault.png"></BitmapImage>
     <BitmapImage x:Key="MenubarShadow" UriSource="Resources\menubarShadow.png"></BitmapImage>
     <BitmapImage x:Key="NullIcon" UriSource="Resources\nullIcon.png"></BitmapImage>
     
@@ -2889,7 +2890,7 @@
                         Margin="0,0,0,0"
                         Background="Transparent"
                         BorderBrush="Transparent" Opacity="0.7">
-                        <Path x:Name="Path" Margin="5,-2,13,0"
+                        <Path x:Name="Path" Margin="5,-2,5,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M 6 0 L 6 8 L 0 4 Z" />
                     </Border>

@@ -85,8 +85,11 @@ namespace CairoDesktop
             {
                 // show Windows 10 features
                 miOpenUWPSettings.Visibility = Visibility.Visible;
-                MenuExtras.Visibility = Visibility.Visible;
+                miOpenActionCenter.Visibility = Visibility.Visible;
             }
+
+            if (Settings.EnableSysTray)
+                miOpenVolume.Visibility = Visibility.Visible;
         }
 
         private void setupPrograms()
@@ -695,7 +698,12 @@ namespace CairoDesktop
 
         private void miOpenVolume_Click(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("sndvol.exe", "-f " + (int)(((ushort)1880) | (uint)(23 << 16)));
+            Shell.StartProcess("sndvol.exe", "-f " + (int)(((ushort)(System.Windows.Forms.Cursor.Position.X / Shell.DpiScaleAdjustment)) | (uint)((int)ActualHeight << 16)));
+        }
+
+        private void miOpenSoundSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("mmsys.cpl");
         }
 
         private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)

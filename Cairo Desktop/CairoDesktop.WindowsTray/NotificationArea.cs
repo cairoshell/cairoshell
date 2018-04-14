@@ -9,6 +9,7 @@ namespace CairoDesktop.WindowsTray
 {
     public class NotificationArea : DependencyObject, IDisposable
     {
+        const string VOLUME_GUID = "7820ae73-23e3-4229-82c1-e41cb67d5b9c";
         IWindowsHooksWrapper hooksWrapper = new WindowsHooksWrapper();
         private SystrayDelegate trayDelegate;
         private IconDataDelegate iconDataDelegate;
@@ -102,7 +103,7 @@ namespace CairoDesktop.WindowsTray
                 }
             }
 
-            if (icon != null)
+            if (icon != null || iconData.guidItem == new Guid(VOLUME_GUID))
             {
                 if (iconData.dwMessage == 1)
                     return Interop.Shell.MakeLParam(GetSystemMetrics(0) - 23, 0);
@@ -128,6 +129,9 @@ namespace CairoDesktop.WindowsTray
 
                         if (nicData.dwState != 1)
                         {
+                            if (nicData.guidItem == new Guid(VOLUME_GUID))
+                                return false;
+
                             foreach (NotifyIcon ti in TrayIcons)
                             {
                                 if ((nicData.guidItem != Guid.Empty && nicData.guidItem == ti.GUID) || (ti.HWnd == (IntPtr)nicData.hWnd && ti.UID == nicData.uID))
@@ -288,7 +292,7 @@ namespace CairoDesktop.WindowsTray
                 }
 
                 PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, WM_LBUTTONUP);
-                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, (NIN_SELECT | (icon.UID << 16)));
+                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, mouse, (NIN_SELECT | (icon.UID << 16)));
 
                 _lastLClick = DateTime.Now;
             }
@@ -304,7 +308,7 @@ namespace CairoDesktop.WindowsTray
                 }
 
                 PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, WM_RBUTTONUP);
-                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, (WM_CONTEXTMENU | (icon.UID << 16)));
+                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, mouse, (WM_CONTEXTMENU | (icon.UID << 16)));
 
                 _lastRClick = DateTime.Now;
             }

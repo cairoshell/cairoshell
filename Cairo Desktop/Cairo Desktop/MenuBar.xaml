@@ -216,16 +216,21 @@
             HorizontalAlignment="Right"
             x:Name="CairoMenuBarRight"
             Margin="0,0,0,0">
-            <control:SystemTray x:Name="SysTray" />
-            <Menu x:Name="MenuExtras" Style="{StaticResource CairoMenuBarMainContainerStyle}" Visibility="Collapsed">
-                <!--<MenuItem x:Name="miOpenVolume" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenVolume_Click"  ToolTip="{Binding sMenuBar_OpenActionCenter}">
+            <control:SystemTray x:Name="SysTray" Margin="0,0,8,0" />
+            <Menu x:Name="MenuExtras" Style="{StaticResource CairoMenuBarMainContainerStyle}">
+                <MenuItem x:Name="miOpenVolume" Visibility="Collapsed" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenVolume_Click"  ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_Volume)}">
                     <MenuItem.Header>
-                        <Image Source="{StaticResource ActionCenterIcon}"
+                        <Image Source="{StaticResource VolumeIcon}"
                               Width="38"
                               Height="22" />
                     </MenuItem.Header>
-                </MenuItem>-->
-                <MenuItem x:Name="miOpenActionCenter" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click" MouseEnter="miOpenActionCenter_MouseEnter" MouseLeave="miOpenActionCenter_MouseLeave" ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_OpenActionCenter)}">
+                    <MenuItem.ContextMenu>
+                        <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
+                            <MenuItem Header="{Binding Path=(l10n:DisplayString.sMenuBar_OpenSoundSettings)}" Style="{StaticResource CairoMenuItemStyle}" Click="miOpenSoundSettings_Click"  Name="miOpenSoundSettings" />
+                        </ContextMenu>
+                    </MenuItem.ContextMenu>
+                </MenuItem>
+                <MenuItem x:Name="miOpenActionCenter" Visibility="Collapsed" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click" MouseEnter="miOpenActionCenter_MouseEnter" MouseLeave="miOpenActionCenter_MouseLeave" ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_OpenActionCenter)}">
                     <MenuItem.Header>
                         <Image Name="ActionCenterIcon" Source="{StaticResource ActionCenterIcon}"
                               Width="38"
