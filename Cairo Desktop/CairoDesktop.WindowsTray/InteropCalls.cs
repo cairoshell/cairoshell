@@ -10,6 +10,9 @@ namespace CairoDesktop.WindowsTray
         internal static extern void SetSystrayCallback(Delegate theDelegate);
 
         [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.StdCall)]
+        internal static extern void SetIconDataCallback(Delegate theDelegate);
+
+        [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.StdCall)]
         internal static extern IntPtr InitializeSystray(int width, float scale);
 
         [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.StdCall)]

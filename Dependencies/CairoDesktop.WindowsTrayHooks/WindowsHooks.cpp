@@ -14,6 +14,7 @@
 
 	// Callbacks for the delegates
 	CALLBACK_NOTIFYICON_FUNCTION pSystrayFunction;
+	CALLBACK_NOTIFYICONID_FUNCTION pIconDataFunction;
 	
 	// Member variables&
 	WNDCLASS	   m_TrayClass;
@@ -44,6 +45,12 @@ void SetSystrayCallback(LPVOID theCallbackFunctionAddress)
 {
 	pSystrayFunction = (CALLBACK_NOTIFYICON_FUNCTION)theCallbackFunctionAddress;
 	ODS("Systray callback set.\n");
+}
+
+void SetIconDataCallback(LPVOID theCallbackFunctionAddress)
+{
+	pIconDataFunction = (CALLBACK_NOTIFYICONID_FUNCTION)theCallbackFunctionAddress;
+	ODS("IconData callback set.\n");
 }
 
 HWND InitializeSystray(int width, float scale)
@@ -136,6 +143,20 @@ BOOL CallSystrayDelegate(int message, NOTIFYICONDATA nicData)
 	}
 }
 
+LRESULT CallIconDataDelegate(CAIROWINNOTIFYICONIDENTIFIER iconData)
+{
+	if (pIconDataFunction != NULL)
+	{
+		ODS("Calling IconData Delegate");
+		return (pIconDataFunction)(iconData);
+	}
+	else
+	{
+		ODS("Attempted to call the IconData Delegate, however the pointer is null");
+		return FALSE;
+	}
+}
+
 BOOL CALLBACK fwdProc(HWND hWnd, LPARAM lParam)
 {
 	if (hWnd != m_hWndTray && hWnd != m_FwdHwnd)
@@ -148,7 +169,7 @@ BOOL CALLBACK fwdProc(HWND hWnd, LPARAM lParam)
 			m_FwdResult = SendMessage(hWnd, m_FwdMsg, m_FwdWParam, m_FwdLParam);
 		}
 	}
-
+	
 	return true;
 }
 
@@ -171,12 +192,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					// pass it along to the default handler
 					break;
 				case 1:
+				{
 					NOTIFYICONDATA * nicData = (NOTIFYICONDATA *)(((BYTE *)copyData->lpData) + 8);
 					int TrayCmd = *(INT *)(((BYTE *)copyData->lpData) + 4);
-
+					
 					BOOL result = CallSystrayDelegate(TrayCmd, *nicData);
 					if (!result) OutputDebugString(L"Result is false");
 					return 0;
+				}
+				break;
+				case 3:
+				{
+					CAIROWINNOTIFYICONIDENTIFIER iconData = (CAIROWINNOTIFYICONIDENTIFIER)copyData->lpData;
+
+					return CallIconDataDelegate(iconData);
+				}
+				break;
 			}
 		}
 	}

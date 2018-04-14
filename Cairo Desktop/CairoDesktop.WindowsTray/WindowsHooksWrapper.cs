@@ -23,6 +23,15 @@ namespace CairoDesktop.WindowsTray
         }
 
         /// <summary>
+        /// Sets the delegate for the icon data callback.
+        /// </summary>
+        /// <param name="theDelegate">The system tray callback delegate.</param>
+        public void SetIconDataCallback(IconDataDelegate theDelegate)
+        {
+            InteropCalls.SetIconDataCallback(theDelegate);
+        }
+
+        /// <summary>
         /// Initializes the system tray hooks.
         /// </summary>
         public IntPtr InitializeSystray()
