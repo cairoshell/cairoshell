@@ -173,7 +173,7 @@
                         </MenuItem.Header>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Header="{Binding sPlacesMenu}"
+                <MenuItem Name="PlacesMenu"  Header="{Binding sPlacesMenu}"
                     Style="{StaticResource CairoMenuItemStyle}" TextBlock.FontWeight="SemiBold">
                     <MenuItem xmlns:s="clr-namespace:System;assembly=mscorlib" Name="miUserName"
                         Style="{StaticResource CairoMenuItemStyle}"

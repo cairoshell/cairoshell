@@ -1,7 +1,9 @@
 ﻿using CairoDesktop.Common.DesignPatterns;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace CairoDesktop.Extensibility.ObjectModel
@@ -16,6 +18,8 @@ namespace CairoDesktop.Extensibility.ObjectModel
 
         private _Application()
         {
+            PlacesMenu = new List<MenuItem>();
+
             OnStart += (x) => { };
             OnQuit += (x) => { };
         }
@@ -56,5 +60,6 @@ namespace CairoDesktop.Extensibility.ObjectModel
         /// </summary>
         public static string StartupPath { get { return Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).Location); } }
 
+        public List<MenuItem> PlacesMenu { get; private set; }
     }
 }

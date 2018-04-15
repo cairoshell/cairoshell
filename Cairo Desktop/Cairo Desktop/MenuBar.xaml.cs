@@ -15,6 +15,7 @@ using CairoDesktop.AppGrabber;
 using CairoDesktop.WindowsTray;
 using System.Threading;
 using System.Collections.Generic;
+using CairoDesktop.Extensibility.ObjectModel;
 
 namespace CairoDesktop
 {
@@ -41,7 +42,7 @@ namespace CairoDesktop
 
         public MenuBar() : this(System.Windows.Forms.Screen.PrimaryScreen)
         {
-            
+
         }
 
         public MenuBar(System.Windows.Forms.Screen screen)
@@ -110,6 +111,11 @@ namespace CairoDesktop
                 PlacesDownloadsItem.Visibility = Visibility.Collapsed;
                 PlacesVideosItem.Visibility = Visibility.Collapsed;
             }
+
+            // Add _Application PlacesMenu MenuItems
+            PlacesMenu.Items.Add(new System.Windows.Controls.Separator());
+            foreach (var menutem in _Application.Instance.PlacesMenu)
+                PlacesMenu.Items.Add(menutem);
         }
 
         private void setupPostInit()
@@ -188,7 +194,7 @@ namespace CairoDesktop
                     ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
                     vistaSearchProvider.ObjectType = provider;
                     CairoSearchMenu.DataContext = vistaSearchProvider;
-                    
+
                     Binding bSearchText = new Binding("SearchText");
                     bSearchText.Mode = BindingMode.Default;
                     bSearchText.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
@@ -723,7 +729,7 @@ namespace CairoDesktop
 
         private void searchStr_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Return)
+            if (e.Key == Key.Return)
             {
                 Shell.StartProcess("search:query=" + searchStr.Text);
             }
@@ -756,7 +762,7 @@ namespace CairoDesktop
                 CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
+
         #endregion
     }
 }
