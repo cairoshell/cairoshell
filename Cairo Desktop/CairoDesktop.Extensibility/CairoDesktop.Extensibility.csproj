@@ -62,7 +62,7 @@
     <Compile Include="Providers\PluginProvider.cs" />
     <Compile Include="Providers\PluginProviderCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ObjectModel\_Application.cs" />
+    <Compile Include="ObjectModel\_CairoShell.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">

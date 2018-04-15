@@ -16,6 +16,7 @@ using CairoDesktop.WindowsTray;
 using System.Threading;
 using System.Collections.Generic;
 using CairoDesktop.Extensibility.ObjectModel;
+using System.Linq;
 
 namespace CairoDesktop
 {
@@ -39,6 +40,10 @@ namespace CairoDesktop
         // delegates for WinSparkle
         private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
         private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
+
+        private LowLevelKeyboardListener _listener;
+
+        private Action WinKeyOverride;
 
         public MenuBar() : this(System.Windows.Forms.Screen.PrimaryScreen)
         {
@@ -64,6 +69,25 @@ namespace CairoDesktop
             setupPrograms();
 
             initSparkle();
+
+            _listener = new LowLevelKeyboardListener();
+            _listener.OnKeyPressed += _listener_OnKeyPressed;
+            _listener.HookKeyboard();
+
+            if (true)
+            {
+                WinKeyOverride = ToggleProgramsMenu;
+            }
+        }
+
+        void _listener_OnKeyPressed(object sender, KeyPressedArgs e)
+        {
+            Debug.WriteLine(e.KeyPressed.ToString() + " Key Pressed");
+            if (e.KeyPressed == Key.LWin && WinKeyOverride != null)
+            {
+                e.Handled = true;
+                WinKeyOverride.Invoke();
+            }
         }
 
         private void initSparkle()
@@ -113,9 +137,18 @@ namespace CairoDesktop
             }
 
             // Add _Application PlacesMenu MenuItems
-            PlacesMenu.Items.Add(new System.Windows.Controls.Separator());
-            foreach (var menutem in _Application.Instance.PlacesMenu)
-                PlacesMenu.Items.Add(menutem);
+            if (_CairoShell.Instance.PlacesMenu.Count > 0)
+            {
+                var separatorStyle = PlacesMenu.Items.OfType<Separator>().First().Style;
+                var menuItemStyle = PlacesMenu.Items.OfType<MenuItem>().First().Style;
+
+                PlacesMenu.Items.Add(new Separator() { Style = separatorStyle });
+                foreach (var menuItem in _CairoShell.Instance.PlacesMenu)
+                {
+                    menuItem.Style = menuItemStyle;
+                    PlacesMenu.Items.Add(menuItem);
+                }
+            }
         }
 
         private void setupPostInit()
@@ -485,6 +518,8 @@ namespace CairoDesktop
                 IsClosing = false;
                 e.Cancel = true;
             }
+
+            _listener.UnHookKeyboard();
         }
 
         private void Programs_Drop(object sender, DragEventArgs e)
@@ -546,16 +581,10 @@ namespace CairoDesktop
 
         private void OnShowProgramsMenu(HotKey hotKey)
         {
-            if (!ProgramsMenu.IsSubmenuOpen)
-            {
-                NativeMethods.SetForegroundWindow(helper.Handle);
-                ProgramsMenu.IsSubmenuOpen = true;
-            }
-            else
-            {
-                ProgramsMenu.IsSubmenuOpen = false;
-            }
+            ToggleProgramsMenu();
+
         }
+
         #endregion
 
         #region Cairo menu items
@@ -764,5 +793,18 @@ namespace CairoDesktop
         }
 
         #endregion
+
+        private void ToggleProgramsMenu()
+        {
+            if (!ProgramsMenu.IsSubmenuOpen)
+            {
+                NativeMethods.SetForegroundWindow(helper.Handle);
+                ProgramsMenu.IsSubmenuOpen = true;
+            }
+            else
+            {
+                ProgramsMenu.IsSubmenuOpen = false;
+            }
+        }
     }
 }

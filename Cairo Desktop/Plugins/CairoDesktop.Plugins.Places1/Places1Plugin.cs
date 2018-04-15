@@ -22,7 +22,7 @@ namespace CairoDesktop.Plugins.Places1
             MenuItem.Header = "GodMode";
             MenuItem.Click += MenuItem_Click;
 
-            _Application.Instance.PlacesMenu.Add(MenuItem);
+            _CairoShell.Instance.PlacesMenu.Add(MenuItem);
         }
 
         private void MenuItem_Click(object sender, System.Windows.RoutedEventArgs e)

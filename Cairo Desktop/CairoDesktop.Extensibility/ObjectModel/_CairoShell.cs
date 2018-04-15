@@ -8,15 +8,15 @@ using System.Windows.Threading;
 
 namespace CairoDesktop.Extensibility.ObjectModel
 {
-    public sealed class _Application : SingletonObject<_Application>
+    public sealed class _CairoShell : SingletonObject<_CairoShell>
     {
-        static _Application()
+        static _CairoShell()
         {
             OnStart += (a) => { };
             OnQuit += (a) => { };
         }
 
-        private _Application()
+        private _CairoShell()
         {
             PlacesMenu = new List<MenuItem>();
 
@@ -24,9 +24,9 @@ namespace CairoDesktop.Extensibility.ObjectModel
             OnQuit += (x) => { };
         }
 
-        public static event Action<_Application> OnStart;
+        public static event Action<_CairoShell> OnStart;
 
-        public static event Action<_Application> OnQuit;
+        public static event Action<_CairoShell> OnQuit;
 
         public static void Start()
         {

@@ -37,7 +37,7 @@ namespace CairoDesktop
 
             pluginContext.Initialize(pluginProviders);
             pluginContext.Start();
-            _Application.OnQuit += a => pluginContext.Stop();
+            _CairoShell.OnQuit += a => pluginContext.Stop();
         }
 
 

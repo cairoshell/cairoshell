@@ -34,7 +34,7 @@ namespace CairoDesktop.Extensibility.Providers.Custom
 
                 // starting in the startup path
                // var directoryInfo = new DirectoryInfo(Application.StartupPath);
-                var directoryInfo = new DirectoryInfo(_Application.StartupPath); 
+                var directoryInfo = new DirectoryInfo(_CairoShell.StartupPath); 
 
                 // look for all the dlls
                 FileInfo[] files = directoryInfo.GetFiles("*.dll");

@@ -13,6 +13,7 @@
     using SupportingClasses;
     using Common;
     using CairoDesktop.WindowsTray;
+    using System.Threading;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
@@ -100,8 +101,11 @@
             }
             #endregion
 
-            #region InitializationRoutines
+           // an attempt to relaunch explorer it the application gets closed. doesnt work if VS terminates execution
+           // AppDomain.CurrentDomain.ProcessExit += (o, e) => Shutdown();
 
+            #region InitializationRoutines
+            
             SetupLoggingSystem();
             WriteApplicationDebugInfoToConsole();
 
@@ -450,7 +454,7 @@
 
             IsShuttingDown = true;
 
-            Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown(), DispatcherPriority.Normal);
+            Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
         }
 
         #region Autorun

@@ -38,7 +38,7 @@ namespace CairoDesktop.Extensibility.Plugins
                 // inform the plugin that it should start its services
                 Start(context, e);
 
-                _Application.DoEvents(); // Since we are WPF we use this DoEvents instead of the Application.DoEvents from System.Windows.Forms
+                _CairoShell.DoEvents(); // Since we are WPF we use this DoEvents instead of the Application.DoEvents from System.Windows.Forms
 
                 // fire the PluginStarted event of the PluginContext
                 context.OnPluginStarted(e);
