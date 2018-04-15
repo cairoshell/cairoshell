@@ -75,6 +75,7 @@ namespace CairoDesktop
             _listener.OnKeyPressed += _listener_OnKeyPressed;
             _listener.HookKeyboard();
 
+            // Need to add a CairoSetting to Set this as an Override When Explorer is Shell.
             if (true)
             {
                 WinKeyOverride = ToggleProgramsMenu;
