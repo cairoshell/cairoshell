@@ -17,7 +17,7 @@
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
     /// </summary>
-    public class Startup
+    public partial class Startup
     {
         private static System.Threading.Mutex cairoMutex;
 
@@ -98,6 +98,15 @@
                 NativeMethods.SetEvent(hShellReadyEvent);
                 NativeMethods.CloseHandle(hShellReadyEvent);
             }
+            #endregion
+
+            #region InitializationRoutines
+
+            SetupLoggingSystem();
+            WriteApplicationDebugInfoToConsole();
+
+            SetupPluginSystem();
+
             #endregion
 
             // check if we are the current user's shell

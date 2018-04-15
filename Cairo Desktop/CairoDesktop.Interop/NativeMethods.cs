@@ -820,6 +820,13 @@ namespace CairoDesktop.Interop
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool IsWindowVisible(IntPtr hWnd);
 
+        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWow64Process(
+            [In] IntPtr hProcess,
+            [Out] out bool wow64Process
+        );
+
         [DllImport("user32.dll")]
         public static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
