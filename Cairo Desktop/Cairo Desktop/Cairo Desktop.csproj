@@ -83,6 +83,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Startup.InitializationRoutines.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
     <Compile Include="Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
@@ -318,6 +319,10 @@
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">
       <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
       <Name>CairoDesktop.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.Extensibility\CairoDesktop.Extensibility.csproj">
+      <Project>{015a0ea4-b61a-4a16-a71f-dfa1df4ab17c}</Project>
+      <Name>CairoDesktop.Extensibility</Name>
     </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj">
       <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>

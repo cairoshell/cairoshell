@@ -15,6 +15,8 @@ using CairoDesktop.AppGrabber;
 using CairoDesktop.WindowsTray;
 using System.Threading;
 using System.Collections.Generic;
+using CairoDesktop.Extensibility.ObjectModel;
+using System.Linq;
 
 namespace CairoDesktop
 {
@@ -40,9 +42,13 @@ namespace CairoDesktop
         private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
         private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
 
+        private LowLevelKeyboardListener _listener;
+
+        private Action WinKeyOverride;
+
         public MenuBar() : this(System.Windows.Forms.Screen.PrimaryScreen)
         {
-            
+
         }
 
         public MenuBar(System.Windows.Forms.Screen screen)
@@ -64,6 +70,26 @@ namespace CairoDesktop
             setupPrograms();
 
             initSparkle();
+
+            _listener = new LowLevelKeyboardListener();
+            _listener.OnKeyPressed += _listener_OnKeyPressed;
+            _listener.HookKeyboard();
+
+            // Need to add a CairoSetting to Set this as an Override When Explorer is Shell.
+            if (true)
+            {
+                WinKeyOverride = ToggleProgramsMenu;
+            }
+        }
+
+        void _listener_OnKeyPressed(object sender, KeyPressedArgs e)
+        {
+            Debug.WriteLine(e.KeyPressed.ToString() + " Key Pressed");
+            if (e.KeyPressed == Key.LWin && WinKeyOverride != null)
+            {
+                e.Handled = true;
+                WinKeyOverride.Invoke();
+            }
         }
 
         private void initSparkle()
@@ -113,6 +139,20 @@ namespace CairoDesktop
             {
                 PlacesDownloadsItem.Visibility = Visibility.Collapsed;
                 PlacesVideosItem.Visibility = Visibility.Collapsed;
+            }
+
+            // Add _Application PlacesMenu MenuItems
+            if (_CairoShell.Instance.PlacesMenu.Count > 0)
+            {
+                var separatorStyle = PlacesMenu.Items.OfType<Separator>().First().Style;
+                var menuItemStyle = PlacesMenu.Items.OfType<MenuItem>().First().Style;
+
+                PlacesMenu.Items.Add(new Separator() { Style = separatorStyle });
+                foreach (var menuItem in _CairoShell.Instance.PlacesMenu)
+                {
+                    menuItem.Style = menuItemStyle;
+                    PlacesMenu.Items.Add(menuItem);
+                }
             }
         }
 
@@ -193,7 +233,7 @@ namespace CairoDesktop
                     ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
                     vistaSearchProvider.ObjectType = provider;
                     CairoSearchMenu.DataContext = vistaSearchProvider;
-                    
+
                     Binding bSearchText = new Binding("SearchText");
                     bSearchText.Mode = BindingMode.Default;
                     bSearchText.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
@@ -484,6 +524,8 @@ namespace CairoDesktop
                 IsClosing = false;
                 e.Cancel = true;
             }
+
+            _listener.UnHookKeyboard();
         }
 
         private void Programs_Drop(object sender, DragEventArgs e)
@@ -545,16 +587,10 @@ namespace CairoDesktop
 
         private void OnShowProgramsMenu(HotKey hotKey)
         {
-            if (!ProgramsMenu.IsSubmenuOpen)
-            {
-                NativeMethods.SetForegroundWindow(helper.Handle);
-                ProgramsMenu.IsSubmenuOpen = true;
-            }
-            else
-            {
-                ProgramsMenu.IsSubmenuOpen = false;
-            }
+            ToggleProgramsMenu();
+
         }
+
         #endregion
 
         #region Cairo menu items
@@ -733,7 +769,7 @@ namespace CairoDesktop
 
         private void searchStr_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Return)
+            if (e.Key == Key.Return)
             {
                 Shell.StartProcess("search:query=" + searchStr.Text);
             }
@@ -766,6 +802,20 @@ namespace CairoDesktop
                 CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         #endregion
+
+        private void ToggleProgramsMenu()
+        {
+            if (!ProgramsMenu.IsSubmenuOpen)
+            {
+                NativeMethods.SetForegroundWindow(helper.Handle);
+                ProgramsMenu.IsSubmenuOpen = true;
+            }
+            else
+            {
+                ProgramsMenu.IsSubmenuOpen = false;
+            }
+        }
     }
 }

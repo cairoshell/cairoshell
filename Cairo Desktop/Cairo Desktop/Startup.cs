@@ -13,11 +13,12 @@
     using SupportingClasses;
     using Common;
     using CairoDesktop.WindowsTray;
+    using System.Threading;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
     /// </summary>
-    public class Startup
+    public partial class Startup
     {
         private static System.Threading.Mutex cairoMutex;
 
@@ -98,6 +99,18 @@
                 NativeMethods.SetEvent(hShellReadyEvent);
                 NativeMethods.CloseHandle(hShellReadyEvent);
             }
+            #endregion
+
+           // an attempt to relaunch explorer it the application gets closed. doesnt work if VS terminates execution
+           // AppDomain.CurrentDomain.ProcessExit += (o, e) => Shutdown();
+
+            #region InitializationRoutines
+            
+            SetupLoggingSystem();
+            WriteApplicationDebugInfoToConsole();
+
+            SetupPluginSystem();
+
             #endregion
 
             // check if we are the current user's shell
@@ -443,7 +456,7 @@
 
             IsShuttingDown = true;
 
-            Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown(), DispatcherPriority.Normal);
+            Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
         }
 
         #region Autorun

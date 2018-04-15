@@ -59,6 +59,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
     <Reference Include="WindowsBase" />
@@ -67,16 +68,37 @@
     <Compile Include="CairoMessage.xaml.cs">
       <DependentUpon>CairoMessage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DesignPatterns\Provider.cs" />
+    <Compile Include="DesignPatterns\ProviderCollection.cs" />
+    <Compile Include="DesignPatterns\SingletonObject.cs" />
+    <Compile Include="DisposableCollection.cs" />
+    <Compile Include="DisposableObject.cs" />
+    <Compile Include="LowLevelKeyboardListener.cs" />
+    <Compile Include="Helpers\ConsoleWindowHelper.cs" />
+    <Compile Include="Helpers\EventHandlerHelper.cs" />
+    <Compile Include="Helpers\TypeHelper.cs" />
     <Compile Include="DragDropHandler.cs" />
     <Compile Include="HotKeyManager.cs" />
     <Compile Include="IconImageConverter.cs" />
     <Compile Include="InvokingObservableCollection.cs" />
+    <Compile Include="KeyboardUtilities.cs" />
+    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\LogEventArgs.cs" />
+    <Compile Include="Logging\LogSeverity.cs" />
+    <Compile Include="Logging\Observers\ConsoleLog.cs" />
+    <Compile Include="Logging\Observers\DisposableLogBase.cs" />
+    <Compile Include="Logging\Observers\FileLog.cs" />
+    <Compile Include="Logging\SingletonLogger.cs" />
     <Compile Include="MessageBoxButtonConverter.cs" />
     <Compile Include="MessageBoxImageConverter.cs" />
+    <Compile Include="ObjectActions.cs" />
+    <Compile Include="ObjectEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StacksManager.cs" />
     <Compile Include="SystemDirectory.cs" />
     <Compile Include="SystemFile.cs" />
+    <Compile Include="TypeCollection.cs" />
+    <Compile Include="TypeCollectionEventArgs.cs" />
     <Compile Include="ThreadSafeObservableCollection.cs" />
     <Compile Include="SearchHelper.cs" />
   </ItemGroup>
