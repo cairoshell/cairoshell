@@ -2,7 +2,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using System.Threading;
 
-namespace VistaSearchProvider
+namespace CairoDesktop.Common
 {
     public class ThreadSafeObservableCollection<T> : ObservableCollection<T>
     {

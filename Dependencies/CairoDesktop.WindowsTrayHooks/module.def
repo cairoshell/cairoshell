@@ -1,6 +1,7 @@
 LIBRARY	"CairoDesktop.WindowsTrayHooks.dll"
 EXPORTS
 SetSystrayCallback
+SetIconDataCallback
 InitializeSystray
 ShutdownSystray
 Run

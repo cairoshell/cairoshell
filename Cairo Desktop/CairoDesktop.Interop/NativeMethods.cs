@@ -996,6 +996,13 @@ namespace CairoDesktop.Interop
             NIM_SETVERSION = 4
         }
 
+        public enum NIF : uint
+        {
+            NIF_MESSAGE = 1,
+            NIF_ICON = 2,
+            NIF_TIP = 4
+        }
+
         /// <summary>
         /// Notify icon data structure type
         /// </summary>
@@ -1004,8 +1011,8 @@ namespace CairoDesktop.Interop
         {
             public int cbSize;
             public int hWnd;
-            public int uID;
-            public int uFlags;
+            public uint uID;
+            public uint uFlags;
             public int uCallbackMessage;
             public int hIcon;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
@@ -1020,6 +1027,21 @@ namespace CairoDesktop.Interop
             public int dwInfoFlags;
             public Guid guidItem;
             public IntPtr hBalloonIcon;
+        }
+
+        /// <summary>
+        /// Notify icon data identifier structure type
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct CAIROWINNOTIFYICONIDENTIFIER
+        {
+            public int dwMagic;
+            public int dwMessage;
+            public int cbSize;
+            public int dwPadding;
+            public int hWnd;
+            public uint uID;
+            public Guid guidItem;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

@@ -1,4 +1,5 @@
-﻿using static CairoDesktop.Interop.NativeMethods;
+﻿using System;
+using static CairoDesktop.Interop.NativeMethods;
 
 namespace CairoDesktop.WindowsTray
 {
@@ -9,4 +10,11 @@ namespace CairoDesktop.WindowsTray
     /// <param name="nicData">The NotifyIconData structure</param>
     /// <returns>Indication of message outcome.</returns>
     public delegate bool SystrayDelegate(uint msg, NOTIFYICONDATA nicData);
+
+    /// <summary>
+    /// Delegate signature for the icon data callback.
+    /// </summary>
+    /// <param name="iconData">The NotifyIconIdentifier structure</param>
+    /// <returns>Indication of message outcome.</returns>
+    public delegate IntPtr IconDataDelegate(CAIROWINNOTIFYICONIDENTIFIER iconData);
 }

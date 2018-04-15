@@ -91,7 +91,7 @@ namespace CairoDesktop.WindowsTray
         /// <summary>
         /// Gets or sets the UID of the Icon.
         /// </summary>
-        public int UID
+        public uint UID
         {
             get;
             set;
@@ -101,6 +101,12 @@ namespace CairoDesktop.WindowsTray
         /// Gets or sets the GUID of the Icon.
         /// </summary>
         public Guid GUID
+        {
+            get;
+            set;
+        }
+
+        public uint Version
         {
             get;
             set;

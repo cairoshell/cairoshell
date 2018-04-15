@@ -5,7 +5,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using static CairoDesktop.Interop.NativeMethods;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Common
 {
     public class HotKeyManager
     {

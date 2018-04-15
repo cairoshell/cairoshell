@@ -90,7 +90,6 @@ Section "$(SECT_cairo)" cairo
   File "..\Cairo Desktop\Build\Release\CairoDesktop.Localization.dll"
   File "..\Cairo Desktop\Build\Release\CairoDesktop.UWPInterop.dll"
   File "..\Cairo Desktop\Build\Release\Interop.IWshRuntimeLibrary.dll"
-  File "..\Cairo Desktop\Build\Release\SearchAPILib.dll"
   File "..\Cairo Desktop\Build\Release\CairoDesktop.WindowsTasks.dll"
   File "..\Cairo Desktop\Build\Release\White.xaml"
   File "..\Cairo Desktop\Build\Release\WinSparkle.dll"

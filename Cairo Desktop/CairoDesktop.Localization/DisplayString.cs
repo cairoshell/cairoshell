@@ -862,6 +862,22 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sMenuBar_Volume
+        {
+            get
+            {
+                return getString("sMenuBar_Volume");
+            }
+        }
+
+        public static string sMenuBar_OpenSoundSettings
+        {
+            get
+            {
+                return getString("sMenuBar_OpenSoundSettings");
+            }
+        }
+
         public static string sSearch_Title
         {
             get

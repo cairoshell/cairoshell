@@ -9,9 +9,9 @@ using System.Windows.Media;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace VistaSearchProvider
+namespace CairoDesktop.Common
 {
-    class VistaSearchProviderHelper:DependencyObject
+    public class SearchHelper : DependencyObject
     {
         static CSearchManager cManager;
         static ISearchQueryHelper cHelper;
@@ -41,13 +41,13 @@ namespace VistaSearchProvider
         }
         static SearchObjectState searchObjState = new SearchObjectState();
 
-        static VistaSearchProviderHelper()
+        static SearchHelper()
         {
             m_results = new ThreadSafeObservableCollection<SearchResult>();
-            cManager = new CSearchManagerClass();
+            cManager = new CSearchManager();
         }
 
-        public static readonly DependencyProperty SearchTextProperty = DependencyProperty.Register("SearchText", typeof(string), typeof(VistaSearchProviderHelper), new UIPropertyMetadata(default(string),
+        public static readonly DependencyProperty SearchTextProperty = DependencyProperty.Register("SearchText", typeof(string), typeof(SearchHelper), new UIPropertyMetadata(default(string),
             new PropertyChangedCallback(OnSearchTextChanged)));
 
         static void OnSearchTextChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
