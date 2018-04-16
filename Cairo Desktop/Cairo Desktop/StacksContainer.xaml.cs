@@ -58,6 +58,21 @@ namespace CairoDesktop {
         {
             openDir((sender as ICommandSource).CommandParameter.ToString());
         }
+		
+		private void NameLabel_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+		{
+			// Open folders with middle button clicks.
+			if (e.MiddleButton == MouseButtonState.Pressed)
+			{
+				// Some checks just in case.
+				ICommandSource cmdsrc = sender as ICommandSource;
+				if (cmdsrc?.CommandParameter is SystemDirectory cmdparam)
+				{
+					openDir(cmdparam.FullName); 
+					e.Handled = true;
+				}
+			}
+		}
         
         /// <summary>
         /// Launches the FileManager specified in the application Settings object to the specified directory.
@@ -163,5 +178,5 @@ namespace CairoDesktop {
         }
 
         #endregion
-    }
+	}
 }
