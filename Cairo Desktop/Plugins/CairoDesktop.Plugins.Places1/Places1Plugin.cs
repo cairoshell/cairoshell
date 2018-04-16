@@ -10,7 +10,7 @@ namespace CairoDesktop.Plugins.Places1
     [PluginAuthors("Joe LaFountain")]
     [PluginDescription("Provides private labeling of WelcomeScreen")]
     [PluginId("e658f49a-244b-4db8-9e9d-b4ec2623024")]
-    [PluginManufacturer("OptionSoft Technologies, Inc.")]
+    [PluginManufacturer("Cairo Development Team")]
     [PluginVersion("0.0.0.1")]
     public sealed class Places1Plugin : Plugin
     {

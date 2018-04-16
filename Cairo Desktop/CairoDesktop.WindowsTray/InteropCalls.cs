@@ -6,19 +6,19 @@ namespace CairoDesktop.WindowsTray
 
     internal class InteropCalls
     {
-        [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void SetSystrayCallback(Delegate theDelegate);
 
-        [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void SetIconDataCallback(Delegate theDelegate);
 
-        [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern IntPtr InitializeSystray(int width, float scale);
 
-        [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void Run();
 
-        [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.StdCall)]
+        [DllImport("CairoDesktop.WindowsTrayHooks.dll", CallingConvention = CallingConvention.Cdecl)]
         internal static extern void ShutdownSystray();
     }
 }

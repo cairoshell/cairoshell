@@ -142,7 +142,7 @@ namespace CairoDesktop
             }
 
             // Add _Application PlacesMenu MenuItems
-            if (_CairoShell.Instance.PlacesMenu.Count > 0)
+            if (Screen.Primary && _CairoShell.Instance.PlacesMenu.Count > 0)
             {
                 var separatorStyle = PlacesMenu.Items.OfType<Separator>().First().Style;
                 var menuItemStyle = PlacesMenu.Items.OfType<MenuItem>().First().Style;
