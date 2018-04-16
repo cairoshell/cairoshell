@@ -15,7 +15,6 @@ using CairoDesktop.AppGrabber;
 using CairoDesktop.WindowsTray;
 using System.Threading;
 using System.Collections.Generic;
-using CairoDesktop.Extensibility.ObjectModel;
 using System.Linq;
 
 namespace CairoDesktop
@@ -142,14 +141,16 @@ namespace CairoDesktop
             }
 
             // Add _Application PlacesMenu MenuItems
-            if (_CairoShell.Instance.PlacesMenu.Count > 0)
+            if (Extensibility.ObjectModel._CairoShell.Instance.PlacesMenu.Count > 0)
             {
                 var separatorStyle = PlacesMenu.Items.OfType<Separator>().First().Style;
                 var menuItemStyle = PlacesMenu.Items.OfType<MenuItem>().First().Style;
 
                 PlacesMenu.Items.Add(new Separator() { Style = separatorStyle });
-                foreach (var menuItem in _CairoShell.Instance.PlacesMenu)
+                foreach (var placesMenuItem in Extensibility.ObjectModel._CairoShell.Instance.PlacesMenu)
                 {
+                    MenuItem menuItem = new MenuItem { Header = placesMenuItem.Header };
+                    menuItem.Click += placesMenuItem.MenuItem_Click;
                     menuItem.Style = menuItemStyle;
                     PlacesMenu.Items.Add(menuItem);
                 }
@@ -263,7 +264,7 @@ namespace CairoDesktop
 
         private void LaunchProgram(object sender, RoutedEventArgs e)
         {
-            MenuItem item = (MenuItem)sender;
+            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
             appGrabber.LaunchProgram(app);
@@ -271,7 +272,7 @@ namespace CairoDesktop
 
         private void LaunchProgramAdmin(object sender, RoutedEventArgs e)
         {
-            MenuItem item = (MenuItem)sender;
+            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
             appGrabber.LaunchProgramAdmin(app);
@@ -279,7 +280,7 @@ namespace CairoDesktop
 
         private void programsMenu_AddToQuickLaunch(object sender, RoutedEventArgs e)
         {
-            MenuItem item = (MenuItem)sender;
+            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
             appGrabber.AddToQuickLaunch(app);
@@ -287,8 +288,8 @@ namespace CairoDesktop
 
         private void programsMenu_Rename(object sender, RoutedEventArgs e)
         {
-            MenuItem item = (MenuItem)sender;
-            DockPanel parent = ((MenuItem)((ContextMenu)item.Parent).PlacementTarget).Header as DockPanel;
+            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
+            DockPanel parent = ((System.Windows.Controls.MenuItem)((ContextMenu)item.Parent).PlacementTarget).Header as DockPanel;
             TextBox rename = parent.FindName("txtProgramRename") as TextBox;
             TextBlock label = parent.FindName("lblProgramName") as TextBlock;
 
@@ -300,7 +301,7 @@ namespace CairoDesktop
 
         private void programsMenu_Remove(object sender, RoutedEventArgs e)
         {
-            MenuItem item = (MenuItem)sender;
+            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
             appGrabber.RemoveAppConfirm(app);
@@ -308,7 +309,7 @@ namespace CairoDesktop
 
         private void programsMenu_Properties(object sender, RoutedEventArgs e)
         {
-            MenuItem item = (MenuItem)sender;
+            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
             AppGrabber.AppGrabber.ShowAppProperties(app);
@@ -540,7 +541,7 @@ namespace CairoDesktop
         private void txtProgramRename_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox box = e.OriginalSource as TextBox;
-            ApplicationInfo app = ((box.Parent as DockPanel).Parent as MenuItem).DataContext as ApplicationInfo;
+            ApplicationInfo app = ((box.Parent as DockPanel).Parent as System.Windows.Controls.MenuItem).DataContext as ApplicationInfo;
 
             if (!object.ReferenceEquals(app, null))
             {

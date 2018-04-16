@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\PluginDefinitionAttribute.cs" />
+    <Compile Include="ObjectModel\MenuItem.cs" />
     <Compile Include="Plugins\Plugin.cs" />
     <Compile Include="Attributes\PluginAuthorsAttribute.cs" />
     <Compile Include="Plugins\PluginContext.cs" />
