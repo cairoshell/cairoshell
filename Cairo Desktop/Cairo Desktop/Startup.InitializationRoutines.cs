@@ -18,7 +18,7 @@ namespace CairoDesktop
         private static void SetupLoggingSystem()
         {
             var dateTimeNow = DateTime.Now;
-            string logsDirectoryPath = Path.Combine(Application.StartupPath, "Logs");
+            string logsDirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team");
             string logFilePath = Path.Combine(logsDirectoryPath, string.Format(@"{0:yyyy-MM-dd}_{1}.log", dateTimeNow, dateTimeNow.Ticks));
 
             var fileLog = new FileLog(logFilePath);
@@ -58,8 +58,6 @@ namespace CairoDesktop
             SingletonLogger.Instance.Info(string.Format(@"Startup Path: {0}", Application.StartupPath));
             SingletonLogger.Instance.Info(string.Format(@"Running As: {0}-bit Process", IntPtr.Size * 8));
             SingletonLogger.Instance.Info(@break);
-            SingletonLogger.Instance.Info(string.Format(@"Client User Agent: {0}", GetWebBrowserUserAgent()));
-            SingletonLogger.Instance.Info(@break);
         }
 
         internal static bool InternalCheckIsWow64()
@@ -85,13 +83,6 @@ namespace CairoDesktop
                 }
             }
             return false;
-        }
-
-        private static string GetWebBrowserUserAgent()
-        {
-            var wb = new WebBrowser { Url = new Uri("about:blank") };
-            wb.Document.Write("<script type='text/javascript'>function getUserAgent(){return navigator.userAgent}</script>");
-            return wb.Document.InvokeScript("getUserAgent") as string;
         }
     }
 }

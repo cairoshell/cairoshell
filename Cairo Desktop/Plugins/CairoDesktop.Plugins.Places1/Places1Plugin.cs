@@ -8,8 +8,8 @@ namespace CairoDesktop.Plugins.Places1
     [PluginAuthors("Josuave")]
     [PluginDescription("Plugin that adds an 'GodMode' to the Places Menu")]
     [PluginId("e658f49a-244b-4db8-9e9d-b4ec2623024")]
-    [PluginManufacturer("CairoShell")]
-    [PluginVersion("0.0.0.2")]
+    [PluginManufacturer("Cairo Development Team")]
+    [PluginVersion("0.0.0.1")]
     public sealed class Places1Plugin : Plugin
     {
         public GodModeMenuItem MenuItem { get; private set; }
