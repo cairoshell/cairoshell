@@ -12,13 +12,14 @@ using CairoDesktop.SupportingClasses;
 using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using System.Windows.Threading;
+using System.ComponentModel;
 
 namespace CairoDesktop
 {
     /// <summary>
     /// Interaction logic for Desktop.xaml
     /// </summary>
-    public partial class Desktop : Window
+    public partial class Desktop : Window, INotifyPropertyChanged
     {
         public Stack<string> PathHistory = new Stack<string>();
         private WindowInteropHelper helper;
@@ -247,6 +248,7 @@ namespace CairoDesktop
         {
             PathHistory.Push(Icons.Locations[0].FullName);
             Icons.Locations[0] = new SystemDirectory(newLocation, Dispatcher.CurrentDispatcher);
+            OnPropertyChanged("CurrentDirectoryFriendly");
         }
 
         private void CairoDesktopWindow_LocationChanged(object sender, EventArgs e)
@@ -291,6 +293,23 @@ namespace CairoDesktop
         {
             if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.ScrollViewer))
                 IsOverlayOpen = false;
+        }
+
+        public string CurrentDirectoryFriendly
+        {
+            get
+            {
+                return Localization.DisplayString.sDesktop_CurrentFolder + " " + Icons.Locations[0].FullName;
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

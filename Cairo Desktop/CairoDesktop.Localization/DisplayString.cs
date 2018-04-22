@@ -942,6 +942,46 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sDesktop_CurrentFolder
+        {
+            get
+            {
+                return getString("sDesktop_CurrentFolder");
+            }
+        }
+
+        public static string sDesktop_Back
+        {
+            get
+            {
+                return getString("sDesktop_Back");
+            }
+        }
+
+        public static string sDesktop_Forward
+        {
+            get
+            {
+                return getString("sDesktop_Forward");
+            }
+        }
+
+        public static string sDesktop_Browse
+        {
+            get
+            {
+                return getString("sDesktop_Browse");
+            }
+        }
+
+        public static string sDesktop_Home
+        {
+            get
+            {
+                return getString("sDesktop_Home");
+            }
+        }
+
         public static string sTaskbar_Empty
         {
             get

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
         mc:Ignorable="d"
         WindowStyle="None"
     ResizeMode="NoResize"
@@ -10,7 +11,7 @@
         Focusable="False"
             AllowsTransparency="True"
         Background="Transparent"
-            Width="200"
+            Width="200" x:Name="DesktopToolbar"
             Height="54" SourceInitialized="Window_SourceInitialized" MouseLeftButtonDown="Window_MouseLeftButtonDown" Closing="Window_Closing">
     <Window.Resources>
         <Style x:Key="CairoDesktopNavItemStyle"
@@ -110,10 +111,13 @@
     </Window.Resources>
     <StackPanel Orientation="Horizontal"
                 Width="200"
-                Height="54" Opacity="0.8">
+                Height="54" Opacity="0.8" DataContext="{Binding ElementName=DesktopToolbar}">
         <StackPanel.Background>
             <ImageBrush ImageSource="Resources\desktopControlsBg.png" />
         </StackPanel.Background>
+        <StackPanel.ToolTip>
+            <ToolTip Content="{Binding Path=ToolbarOwner.CurrentDirectoryFriendly}" />
+        </StackPanel.ToolTip>
         <StackPanel.Style>
             <Style TargetType="{x:Type StackPanel}">
                 <Style.Triggers>
@@ -137,25 +141,25 @@
             </Style>
         </StackPanel.Style>
         <Button Style="{StaticResource CairoDesktopNavItemStyle}"
-                    Margin="29,-4,0,0" Click="Back_Click">
+                    Margin="29,-4,0,0" Click="Back_Click" ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Back)}">
             <Image Source="Resources\controlsBack.png"
                         Width="16"
                         Height="18" />
         </Button>
         <Button Style="{StaticResource CairoDesktopNavItem2Style}"
-                    Margin="23,-5,0,0" Click="Home_Click">
+                    Margin="23,-5,0,0" Click="Home_Click" ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Home)}">
             <Image Source="Resources\controlsHome.png"
                         Width="19"
                         Height="19" />
         </Button>
         <Button Style="{StaticResource CairoDesktopNavItem2Style}"
-                    Margin="22,-5,0,0" Click="Browse_Click">
+                    Margin="22,-5,0,0" Click="Browse_Click" ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Browse)}">
             <Image Source="Resources\controlsBrowse.png"
                         Width="21"
                         Height="17" />
         </Button>
         <Button Style="{StaticResource CairoDesktopNavItemStyle}"
-                    Margin="23,-4,0,0" Click="Fwd_Click">
+                    Margin="23,-4,0,0" Click="Fwd_Click" ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Forward)}">
             <Image Source="Resources\controlsForward.png"
                         Width="16"
                         Height="18" />

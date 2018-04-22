@@ -17,6 +17,15 @@ namespace CairoDesktop
     public partial class DesktopNavigationToolbar : Window
     {
         private WindowInteropHelper helper;
+
+        public Desktop ToolbarOwner
+        {
+            get
+            {
+                return (Owner as Desktop);
+            }
+        }
+
         public DesktopNavigationToolbar()
         {
             InitializeComponent();
