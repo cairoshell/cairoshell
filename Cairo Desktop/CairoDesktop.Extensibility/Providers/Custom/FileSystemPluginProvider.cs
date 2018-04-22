@@ -96,7 +96,7 @@ namespace CairoDesktop.Extensibility.Providers.Custom
                 }
                 catch (Exception ex)
                 {
-                    SingletonLogger.Instance.Debug(ex.Message, ex);
+                    CairoLogger.Instance.Debug(ex.Message, ex);
                 }
                 return assembly;
             }
@@ -129,7 +129,7 @@ namespace CairoDesktop.Extensibility.Providers.Custom
                 }
                 catch (Exception ex)
                 {
-                    SingletonLogger.Instance.Debug(ex.Message, ex);
+                    CairoLogger.Instance.Debug(ex.Message, ex);
                 }
 
                 return types;

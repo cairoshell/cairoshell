@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows;
 using CairoDesktop.Common;
 using System.Threading;
+using CairoDesktop.Common.Logging;
 
 namespace CairoDesktop.WindowsTasks
 {
@@ -255,7 +256,7 @@ namespace CairoDesktop.WindowsTasks
 
                     if (cloaked)
                     {
-                        Trace.WriteLine(string.Format("Cloaked window ({0}) hidden from taskbar", this.Title));
+                        CairoLogger.Instance.Info(string.Format("Cloaked window ({0}) hidden from taskbar", this.Title));
                         return false;
                     }
                 }
@@ -418,7 +419,7 @@ namespace CairoDesktop.WindowsTasks
 
             if (retval != IntPtr.Zero)
             {
-                Trace.WriteLine(string.Format("Removing window {0} from collection due to no response", this.Title));
+                CairoLogger.Instance.Info(string.Format("Removing window {0} from collection due to no response", this.Title));
                 TasksService.Windows.Remove(this);
             }
         }

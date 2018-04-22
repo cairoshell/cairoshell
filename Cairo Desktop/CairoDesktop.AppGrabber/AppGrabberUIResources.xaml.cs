@@ -1,4 +1,5 @@
-﻿using CairoDesktop.Interop;
+﻿using CairoDesktop.Common.Logging;
+using CairoDesktop.Interop;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -111,7 +112,7 @@ namespace CairoDesktop.AppGrabber
         {
             if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
             {
-                System.Diagnostics.Debug.WriteLine(e.Data.GetData(typeof(ApplicationInfo)).ToString());
+                CairoLogger.Instance.Info(e.Data.GetData(typeof(ApplicationInfo)).ToString());
                 ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
                 ListView dropTarget = sender as ListView;
 
@@ -176,7 +177,7 @@ namespace CairoDesktop.AppGrabber
                     {
                         foreach (String fileName in fileNames)
                         {
-                            System.Diagnostics.Debug.WriteLine(fileName);
+                            CairoLogger.Instance.Info(fileName);
 
                             if (Shell.Exists(fileName))
                             {
@@ -223,7 +224,7 @@ namespace CairoDesktop.AppGrabber
                     catch (Exception ex)
                     {
                         //Output the reason to the debugger
-                        System.Diagnostics.Debug.WriteLine("Error doing Drag-Drop from appgrabber. Details: " + ex.Message + "\n" + ex.StackTrace);
+                        CairoLogger.Instance.Error("Error doing Drag-Drop from appgrabber. Details: " + ex.Message + "\n" + ex.StackTrace);
                     }
                 }
             }
@@ -254,7 +255,7 @@ namespace CairoDesktop.AppGrabber
 
             if (e.Data.GetDataPresent(typeof(Category)))
             {
-                System.Diagnostics.Debug.WriteLine(e.Data.GetData(typeof(Category)).ToString());
+                CairoLogger.Instance.Info(e.Data.GetData(typeof(Category)).ToString());
                 Category dropData = e.Data.GetData(typeof(Category)) as Category;
 
                 CategoryList parent = dropCategory.ParentCategoryList;
@@ -309,7 +310,7 @@ namespace CairoDesktop.AppGrabber
                 catch (Exception ex)
                 {
                     //Output the reason to the debugger
-                    System.Diagnostics.Debug.WriteLine("Error doing Drag-Drop from AppGrabber TextBlock. Details: " + ex.Message + "\n" + ex.StackTrace);
+                    CairoLogger.Instance.Error("Error doing Drag-Drop from AppGrabber TextBlock. Details: " + ex.Message + "\n" + ex.StackTrace);
                 }
             }
         }

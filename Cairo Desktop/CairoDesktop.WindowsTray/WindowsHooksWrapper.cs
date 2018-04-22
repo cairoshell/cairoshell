@@ -54,7 +54,7 @@ namespace CairoDesktop.WindowsTray
             if (trayClassReg == 0)
             {
                 // error
-                System.Diagnostics.Trace.WriteLine(Marshal.GetLastWin32Error());
+                SingletonLogger.Instance.Info(Marshal.GetLastWin32Error());
             }
 
             IntPtr hWndTray = CreateWindowEx(WindowStylesEx.WS_EX_TOPMOST | WindowStylesEx.WS_EX_TOOLWINDOW, trayClassReg, "", WindowStyles.WS_POPUP, 0, 0, 0, 0, IntPtr.Zero, IntPtr.Zero, hInstance, IntPtr.Zero);
@@ -62,7 +62,7 @@ namespace CairoDesktop.WindowsTray
             if(hWndTray == IntPtr.Zero)
             {
                 // error
-                System.Diagnostics.Trace.WriteLine(Marshal.GetLastWin32Error());
+                SingletonLogger.Instance.Info(Marshal.GetLastWin32Error());
             }
 
             // create TrayNotifyWnd
@@ -76,7 +76,7 @@ namespace CairoDesktop.WindowsTray
             if (trayNotifyClassReg == 0)
             {
                 // error
-                System.Diagnostics.Trace.WriteLine(Marshal.GetLastWin32Error());
+                SingletonLogger.Instance.Info(Marshal.GetLastWin32Error());
             }
 
             IntPtr hWndNotify = CreateWindowEx(0, trayNotifyClassReg, null, WindowStyles.WS_CHILD, 0, 0, 0, 0, hWndTray, IntPtr.Zero, hInstance, IntPtr.Zero);
@@ -84,7 +84,7 @@ namespace CairoDesktop.WindowsTray
             if (hWndNotify == IntPtr.Zero)
             {
                 // error
-                System.Diagnostics.Trace.WriteLine(Marshal.GetLastWin32Error());
+                SingletonLogger.Instance.Info(Marshal.GetLastWin32Error());
             }*/
         }
 
@@ -106,7 +106,7 @@ namespace CairoDesktop.WindowsTray
 
         /*public IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
         {
-            System.Diagnostics.Trace.WriteLine(msg);
+            SingletonLogger.Instance.Info(msg);
             if (msg == WM_COPYDATA)
             {
                 COPYDATASTRUCT copyData = (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT));

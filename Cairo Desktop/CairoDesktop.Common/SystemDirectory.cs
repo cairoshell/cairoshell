@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
+using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 
 namespace CairoDesktop.Common {
@@ -87,7 +88,7 @@ namespace CairoDesktop.Common {
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                CairoLogger.Instance.Error(ex.Message);
             }
         }
 
@@ -98,7 +99,7 @@ namespace CairoDesktop.Common {
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                CairoLogger.Instance.Error(ex.Message);
             }
         }
 

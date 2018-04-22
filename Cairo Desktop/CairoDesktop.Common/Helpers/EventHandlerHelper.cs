@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CairoDesktop.Common.Logging;
+using System;
 using System.Diagnostics;
 
 namespace CairoDesktop.Common.Helpers
@@ -20,7 +21,7 @@ namespace CairoDesktop.Common.Helpers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                CairoLogger.Instance.Error(ex.Message);
             }
         }
 
@@ -32,7 +33,7 @@ namespace CairoDesktop.Common.Helpers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                CairoLogger.Instance.Error(ex.Message);
             }
         }
     }

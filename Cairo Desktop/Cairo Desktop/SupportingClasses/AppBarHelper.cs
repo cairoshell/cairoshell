@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Threading;
 using CairoDesktop.WindowsTray;
+using CairoDesktop.Common.Logging;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -48,7 +49,7 @@ namespace CairoDesktop.SupportingClasses
                     uint ret = NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_NEW, ref abd);
                     interopDone();
                     appBars.Add(handle);
-                    Trace.WriteLine("Created AppBar for handle " + handle.ToString());
+                    CairoLogger.Instance.Info("Created AppBar for handle " + handle.ToString());
 
                     ABSetPos(abWindow, screen, width, height, edge);
                 }
@@ -58,7 +59,7 @@ namespace CairoDesktop.SupportingClasses
                     NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_REMOVE, ref abd);
                     interopDone();
                     appBars.Remove(handle);
-                    Trace.WriteLine("Removed AppBar for handle " + handle.ToString());
+                    CairoLogger.Instance.Info("Removed AppBar for handle " + handle.ToString());
 
                     return 0;
                 }
@@ -261,8 +262,7 @@ namespace CairoDesktop.SupportingClasses
 
                 // tracing
                 int h = abd.rc.bottom - abd.rc.top;
-                Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_TOP, "Top AppBar height is " + h.ToString());
-                Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_BOTTOM, "Bottom AppBar height is " + h.ToString());
+                CairoLogger.Instance.Info(abWindow.Name + " AppBar height is " + h.ToString());
 
                 abWindow.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
                     new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top);

@@ -33,7 +33,7 @@ namespace CairoDesktop.Extensibility.Plugins
         {
             try
             {
-                SingletonLogger.Instance.Debug(string.Format("Starting Plugin, Plugin: '{0}'.", e.Descriptor.PluginName));
+                CairoLogger.Instance.Debug(string.Format("Starting Plugin, Plugin: '{0}'.", e.Descriptor.PluginName));
 
                 // inform the plugin that it should start its services
                 Start(context, e);
@@ -45,7 +45,7 @@ namespace CairoDesktop.Extensibility.Plugins
             }
             catch (Exception ex)
             {
-                SingletonLogger.Instance.Debug(ex.Message, ex);
+                CairoLogger.Instance.Debug(ex.Message, ex);
             }
         }
 
@@ -58,7 +58,7 @@ namespace CairoDesktop.Extensibility.Plugins
         {
             try
             {
-                SingletonLogger.Instance.Debug(string.Format("Stopping Plugin, Plugin: '{0}'.", e.Descriptor.PluginName));
+                CairoLogger.Instance.Debug(string.Format("Stopping Plugin, Plugin: '{0}'.", e.Descriptor.PluginName));
 
                 // inform the plugin that it should stop its services
                 Stop(context, e);
@@ -68,7 +68,7 @@ namespace CairoDesktop.Extensibility.Plugins
             }
             catch (Exception ex)
             {
-                SingletonLogger.Instance.Debug(ex.Message, ex);
+                CairoLogger.Instance.Debug(ex.Message, ex);
             }
         }
     }

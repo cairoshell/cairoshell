@@ -19,14 +19,13 @@ namespace CairoDesktop
         {
             var dateTimeNow = DateTime.Now;
             string logsDirectoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team");
-            string logFilePath = Path.Combine(logsDirectoryPath, string.Format(@"{0:yyyy-MM-dd}_{1}.log", dateTimeNow, dateTimeNow.Ticks));
+            string logFilePath = Path.Combine(logsDirectoryPath, "CairoDesktop.log");
 
             var fileLog = new FileLog(logFilePath);
             fileLog.Open();
-
-            SingletonLogger.Instance.Severity = LogSeverity.Debug;
-            SingletonLogger.Instance.Attach(fileLog);
-            SingletonLogger.Instance.Attach(new ConsoleLog());
+            
+            CairoLogger.Instance.Attach(fileLog);
+            CairoLogger.Instance.Attach(new ConsoleLog());
         }
 
         internal static void SetupPluginSystem()
@@ -43,21 +42,17 @@ namespace CairoDesktop
 
         internal static void WriteApplicationDebugInfoToConsole()
         {
-            const string @break = @"##################################################################################";
+            const string @break = @"#############################################";
 
-            SingletonLogger.Instance.Info(@break);
-            SingletonLogger.Instance.Info(string.Format(@"Product: {0}", Application.ProductName));
-            SingletonLogger.Instance.Info(string.Format(@"Version: {0}", Application.ProductVersion));
-            SingletonLogger.Instance.Info(@break);
-            SingletonLogger.Instance.Info(string.Format(@"Operating System: {0}", new ComputerInfo().OSFullName)); //outputs the OS type based on version
-            SingletonLogger.Instance.Info(@break);
-            SingletonLogger.Instance.Info(string.Format(@"Processor Type: {0}", string.Format(@"{0}-bit", IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)));
-            SingletonLogger.Instance.Info(string.Format(@"Count: {0}", Environment.ProcessorCount));
-            SingletonLogger.Instance.Info(@break);
-            SingletonLogger.Instance.Info(string.Format(@"Process: {0}", Process.GetCurrentProcess().ProcessName));
-            SingletonLogger.Instance.Info(string.Format(@"Startup Path: {0}", Application.StartupPath));
-            SingletonLogger.Instance.Info(string.Format(@"Running As: {0}-bit Process", IntPtr.Size * 8));
-            SingletonLogger.Instance.Info(@break);
+            CairoLogger.Instance.Info(@break);
+            CairoLogger.Instance.Info(string.Format(@"{0}", Application.ProductName));
+            CairoLogger.Instance.Info(string.Format(@"Version: {0}", Application.ProductVersion));
+            CairoLogger.Instance.Info(string.Format(@"Operating System: {0}", new ComputerInfo().OSFullName)); //outputs the OS type based on version
+            CairoLogger.Instance.Info(string.Format(@"OS Build: {0}", new ComputerInfo().OSVersion));
+            CairoLogger.Instance.Info(string.Format(@"Processor Type: {0}", string.Format(@"{0}-bit", IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)));
+            CairoLogger.Instance.Info(string.Format(@"Startup Path: {0}", Application.StartupPath));
+            CairoLogger.Instance.Info(string.Format(@"Running As: {0}-bit Process", IntPtr.Size * 8));
+            CairoLogger.Instance.Info(@break);
         }
 
         internal static bool InternalCheckIsWow64()

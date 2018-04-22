@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Windows;
 using System.Collections.ObjectModel;
 using static CairoDesktop.Interop.NativeMethods;
+using CairoDesktop.Common.Logging;
 
 namespace CairoDesktop.WindowsTasks
 {
@@ -35,7 +36,7 @@ namespace CairoDesktop.WindowsTasks
             
             try
             {
-                Trace.WriteLine("Starting WindowsTasksService");
+                CairoLogger.Instance.Info("Starting WindowsTasksService");
 
                 // create window to receive task events
                 _HookWin = new NativeWindowEx();
@@ -71,7 +72,7 @@ namespace CairoDesktop.WindowsTasks
 
         public void Dispose()
         {
-            Trace.WriteLine("Disposing of WindowsTasksService");
+            CairoLogger.Instance.Info("Disposing of WindowsTasksService");
             DeregisterShellHookWindow(_HookWin.Handle);
             // May be contributing to #95
             //RegisterShellHook(_HookWin.Handle, 0);// 0 = RSH_UNREGISTER - this seems to be undocumented....
@@ -136,17 +137,17 @@ namespace CairoDesktop.WindowsTasks
                         switch (msg.WParam.ToInt32())
                         {
                             case HSHELL_WINDOWCREATED:
-                                Trace.WriteLine("Created: " + msg.LParam.ToString());
+                                CairoLogger.Instance.Info("Created: " + msg.LParam.ToString());
                                 addWindow(win);
                                 break;
 
                             case HSHELL_WINDOWDESTROYED:
-                                Trace.WriteLine("Destroyed: " + msg.LParam.ToString());
+                                CairoLogger.Instance.Info("Destroyed: " + msg.LParam.ToString());
                                 removeWindow(win);
                                 break;
 
                             case HSHELL_WINDOWREPLACING:
-                                Trace.WriteLine("Replacing: " + msg.LParam.ToString());
+                                CairoLogger.Instance.Info("Replacing: " + msg.LParam.ToString());
                                 if (this.Windows.Contains(win))
                                 {
                                     win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
@@ -160,13 +161,13 @@ namespace CairoDesktop.WindowsTasks
                                 }
                                 break;
                             case HSHELL_WINDOWREPLACED:
-                                Trace.WriteLine("Replaced: " + msg.LParam.ToString());
+                                CairoLogger.Instance.Info("Replaced: " + msg.LParam.ToString());
                                 removeWindow(win);
                                 break;
 
                             case HSHELL_WINDOWACTIVATED:
                             case HSHELL_RUDEAPPACTIVATED:
-                                Trace.WriteLine("Activated: " + msg.LParam.ToString());
+                                CairoLogger.Instance.Info("Activated: " + msg.LParam.ToString());
 
                                 foreach (var aWin in this.Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
                                 {
@@ -197,7 +198,7 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL_FLASH:
-                                Trace.WriteLine("Flashing window: " + msg.LParam.ToString());
+                                CairoLogger.Instance.Info("Flashing window: " + msg.LParam.ToString());
                                 if (this.Windows.Contains(win))
                                 {
                                     win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
@@ -211,16 +212,16 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL_ACTIVATESHELLWINDOW:
-                                Trace.WriteLine("Activate shell window called.");
+                                CairoLogger.Instance.Info("Activate shell window called.");
                                 break;
 
                             case HSHELL_ENDTASK:
-                                Trace.WriteLine("EndTask called: " + msg.LParam.ToString());
+                                CairoLogger.Instance.Info("EndTask called: " + msg.LParam.ToString());
                                 removeWindow(win);
                                 break;
 
                             case HSHELL_GETMINRECT:
-                                Trace.WriteLine("GetMinRect called: " + msg.LParam.ToString());
+                                CairoLogger.Instance.Info("GetMinRect called: " + msg.LParam.ToString());
                                 SHELLHOOKINFO winHandle = (SHELLHOOKINFO)Marshal.PtrToStructure(msg.LParam, typeof(SHELLHOOKINFO));
                                 winHandle.rc = new RECT { bottom = 100, left = 0, right = 100, top = 0 };
                                 Marshal.StructureToPtr(winHandle, msg.LParam, true);
@@ -228,7 +229,7 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL_REDRAW:
-                                Trace.WriteLine("Redraw called: " + msg.LParam.ToString());
+                                CairoLogger.Instance.Info("Redraw called: " + msg.LParam.ToString());
                                 if (this.Windows.Contains(win))
                                 {
                                     win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
@@ -250,11 +251,10 @@ namespace CairoDesktop.WindowsTasks
 
                             // TaskMan needs to return true if we provide our own task manager to prevent explorers.
                             // case HSHELL_TASKMAN:
-                            //     Trace.WriteLine("TaskMan Message received.");
+                            //     SingletonLogger.Instance.Info("TaskMan Message received.");
                             //     break;
 
                             default:
-                                Trace.WriteLine("Unknown called: " + msg.LParam.ToString() + " Message " + msg.Msg.ToString());
                                 if (this.Windows.Contains(win))
                                 {
                                     win = this.Windows.First(wnd => wnd.Handle == msg.LParam);
@@ -268,7 +268,7 @@ namespace CairoDesktop.WindowsTasks
                 }
                 catch (Exception ex)
                 {
-                    Trace.WriteLine("Exception: " + ex.ToString());
+                    CairoLogger.Instance.Info("Exception: " + ex.ToString());
                     Debugger.Break();
                 }
             }

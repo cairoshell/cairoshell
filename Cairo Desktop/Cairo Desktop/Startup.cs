@@ -14,6 +14,7 @@
     using Common;
     using CairoDesktop.WindowsTray;
     using System.Threading;
+    using CairoDesktop.Common.Logging;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
@@ -235,7 +236,7 @@
 
                     foreach (var screen in System.Windows.Forms.Screen.AllScreens)
                     {
-                        Trace.WriteLine(string.Format("{0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
+                        CairoLogger.Instance.Info(string.Format("{0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
 
                         sysScreens.Add(screen.DeviceName);
                     }
@@ -632,7 +633,7 @@
                 startInfo.FileName = procInfo[0];
                 startInfo.Arguments = procInfo[1];
 
-                Debug.WriteLine("Starting program: " + startInfo.FileName);
+                CairoLogger.Instance.Info("Starting program: " + startInfo.FileName);
 
                 try
                 {

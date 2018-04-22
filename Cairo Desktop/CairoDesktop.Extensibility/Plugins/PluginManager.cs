@@ -26,7 +26,7 @@ namespace CairoDesktop.Extensibility.Plugins
             {
                 try
                 {
-                    SingletonLogger.Instance.Debug(string.Format("Loading Plugin Types. PluginProvider: '{0}'.", provider.Name));
+                    CairoLogger.Instance.Debug(string.Format("Loading Plugin Types. PluginProvider: '{0}'.", provider.Name));
 
                     TypeCollection types = provider.LoadPluginTypes();
                     if (types != null)
@@ -36,7 +36,7 @@ namespace CairoDesktop.Extensibility.Plugins
                 }
                 catch (Exception ex)
                 {
-                    SingletonLogger.Instance.Debug(ex.Message, ex);
+                    CairoLogger.Instance.Debug(ex.Message, ex);
                 }
             }
             return pluginTypes;
@@ -50,7 +50,7 @@ namespace CairoDesktop.Extensibility.Plugins
         /// <returns></returns>
         public static PluginDescriptorCollection Sort(PluginDescriptorCollection descriptorCollection, bool leastDependentFirst)
         {
-            SingletonLogger.Instance.Debug(string.Format("Sorting PluginDescriptor Collection. LeastDependentFirst: '{0}'.", leastDependentFirst.ToString()));
+            CairoLogger.Instance.Debug(string.Format("Sorting PluginDescriptor Collection. LeastDependentFirst: '{0}'.", leastDependentFirst.ToString()));
 
 
 
@@ -75,7 +75,7 @@ namespace CairoDesktop.Extensibility.Plugins
             {
                 try
                 {
-                    SingletonLogger.Instance.Debug(string.Format("Creating PluginDescriptor, Type: '{0}'.", type.FullName));
+                    CairoLogger.Instance.Debug(string.Format("Creating PluginDescriptor, Type: '{0}'.", type.FullName));
 
                     var descriptor = new PluginDescriptor(type);
 
@@ -83,7 +83,7 @@ namespace CairoDesktop.Extensibility.Plugins
                 }
                 catch (Exception ex)
                 {
-                    SingletonLogger.Instance.Debug(ex.Message, ex);
+                    CairoLogger.Instance.Debug(ex.Message, ex);
                 }
             }
             return descriptors;
@@ -117,7 +117,7 @@ namespace CairoDesktop.Extensibility.Plugins
                 }
                 catch (Exception ex)
                 {
-                    SingletonLogger.Instance.Debug(ex.Message, ex);
+                    CairoLogger.Instance.Debug(ex.Message, ex);
                 }
             }
 
@@ -134,7 +134,7 @@ namespace CairoDesktop.Extensibility.Plugins
                 }
                 catch (Exception ex)
                 {
-                    SingletonLogger.Instance.Debug(ex.Message, ex);
+                    CairoLogger.Instance.Debug(ex.Message, ex);
                 }
             }
 
@@ -155,7 +155,7 @@ namespace CairoDesktop.Extensibility.Plugins
         /// <param name="descriptors">The collection of PluginDescriptors that describe the Plugins to be loaded.</param>
         public static void CreatePluginInstances(PluginDescriptorCollection descriptors)
         {
-            SingletonLogger.Instance.Debug(string.Format("Creating Plugins. # of Plugins: '{0}'.", descriptors.Count.ToString()));
+            CairoLogger.Instance.Debug(string.Format("Creating Plugins. # of Plugins: '{0}'.", descriptors.Count.ToString()));
 
             foreach (PluginDescriptor descriptor in descriptors)
             {
@@ -175,7 +175,7 @@ namespace CairoDesktop.Extensibility.Plugins
         /// <param name="descriptors">The collection of PluginDescriptors that describe the Plugins to be loaded.</param>
         public static void StartPlugins(PluginDescriptorCollection descriptors)
         {
-            SingletonLogger.Instance.Debug(string.Format("Starting Plugins. # of Plugins: '{0}'.", descriptors.Count.ToString()));
+            CairoLogger.Instance.Debug(string.Format("Starting Plugins. # of Plugins: '{0}'.", descriptors.Count.ToString()));
 
             // start all of the plugins
             foreach (PluginDescriptor descriptor in descriptors)
@@ -186,7 +186,7 @@ namespace CairoDesktop.Extensibility.Plugins
                 }
                 else
                 {
-                    SingletonLogger.Instance.Debug(string.Format("Skipped Plugin: '{0}' was not created.", descriptor.PluginName));
+                    CairoLogger.Instance.Debug(string.Format("Skipped Plugin: '{0}' was not created.", descriptor.PluginName));
                 }
             }
 
@@ -200,7 +200,7 @@ namespace CairoDesktop.Extensibility.Plugins
         /// <param name="descriptors">The collection of PluginDescriptors that describe the Plugins to be loaded.</param>
         public static void StopPlugins(PluginDescriptorCollection descriptors)
         {
-            SingletonLogger.Instance.Debug(string.Format("Stopping Plugins. # of Plugins: '{0}'.", descriptors.Count.ToString()));
+            CairoLogger.Instance.Debug(string.Format("Stopping Plugins. # of Plugins: '{0}'.", descriptors.Count.ToString()));
 
             // fire the BeforePluginsStopped event of the PluginContext
             PluginContext.Current.OnBeforePluginsStopped(new PluginContextEventArgs(PluginContext.Current));
@@ -214,7 +214,7 @@ namespace CairoDesktop.Extensibility.Plugins
                 }
                 else
                 {
-                    SingletonLogger.Instance.Debug(string.Format("Skipped Plugin: '{0}' was not created.", descriptor.PluginName));
+                    CairoLogger.Instance.Debug(string.Format("Skipped Plugin: '{0}' was not created.", descriptor.PluginName));
                 }
             }
         }
@@ -311,7 +311,7 @@ namespace CairoDesktop.Extensibility.Plugins
             {
                 TypeHelper.AssertTypeIsSubclassOfBaseType(descriptor.PluginType, typeof(Plugin));
 
-                SingletonLogger.Instance.Debug(string.Format("Creating Plugin: '{0}'.", descriptor.PluginName));
+                CairoLogger.Instance.Debug(string.Format("Creating Plugin: '{0}'.", descriptor.PluginName));
 
                 var plugin = (Plugin)TypeHelper.CreateInstanceOfType(descriptor.PluginType, Type.EmptyTypes, new object[] { });
 
@@ -319,7 +319,7 @@ namespace CairoDesktop.Extensibility.Plugins
             }
             catch (Exception ex)
             {
-                SingletonLogger.Instance.Debug(ex.Message, ex);
+                CairoLogger.Instance.Debug(ex.Message, ex);
             }
         }
 

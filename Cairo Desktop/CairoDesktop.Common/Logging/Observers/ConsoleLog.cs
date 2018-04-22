@@ -26,7 +26,7 @@ namespace CairoDesktop.Common.Logging.Observers
             string message = string.Format("[{0}] {1}: {2}", e.Date, e.SeverityString, e.Message);
 
             // Writes message to debug output window
-            Debugger.Log(0, null, message + "\r\n\r\n");
+            Debugger.Log(0, null, message + "\r\n");
         }
 
         #endregion

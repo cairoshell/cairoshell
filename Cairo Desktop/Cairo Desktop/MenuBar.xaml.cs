@@ -16,6 +16,7 @@ using CairoDesktop.WindowsTray;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+using CairoDesktop.Common.Logging;
 
 namespace CairoDesktop
 {
@@ -343,7 +344,7 @@ namespace CairoDesktop
                     case NativeMethods.AppBarNotifications.FullScreenApp:
                         if ((int)lParam == 1)
                         {
-                            Trace.WriteLine("Cairo leaving on-top");
+                            CairoLogger.Instance.Info("Cairo leaving on-top");
                             this.Topmost = false;
                             Shell.ShowWindowBottomMost(this.handle);
 
@@ -355,7 +356,7 @@ namespace CairoDesktop
                         }
                         else
                         {
-                            Trace.WriteLine("Cairo entering on-top");
+                            CairoLogger.Instance.Info("Cairo entering on-top");
                             this.Topmost = true;
                             Shell.ShowWindowTopMost(this.handle);
 
@@ -578,7 +579,7 @@ namespace CairoDesktop
 
         void keyboardListener_OnKeyPressed(object sender, KeyPressedArgs e)
         {
-            Debug.WriteLine(e.KeyPressed.ToString() + " Key Pressed");
+            CairoLogger.Instance.Info(e.KeyPressed.ToString() + " Key Pressed");
             if (e.KeyPressed == Key.LWin)
             {
                 e.Handled = true;

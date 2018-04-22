@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CairoDesktop.Common.Logging;
+using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Interop;
@@ -33,7 +34,7 @@ namespace CairoDesktop
 
             string msg = "Would you like to restart Cairo?\r\n\r\nPlease submit a bug report with a screenshot of this error. Thanks! \r\nMessage: " + e.Exception.Message + "\r\nTarget Site: " + e.Exception.TargetSite + "\r\nVersion: " + version + "\r\n\r\n" + e.Exception.StackTrace + inner;
 
-            Trace.WriteLine(msg);
+            CairoLogger.Instance.Info(msg);
 
             string dMsg;
 

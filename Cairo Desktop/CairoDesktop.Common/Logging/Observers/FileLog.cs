@@ -30,6 +30,27 @@ namespace CairoDesktop.Common.Logging.Observers
             if (!Directory.Exists(_fileInfo.DirectoryName))
                 Directory.CreateDirectory(_fileInfo.DirectoryName);
 
+            // trim existing log file
+            if (File.Exists(_fileInfo.FullName))
+            {
+                int size = 512 * 1024; // 512 KB is enough log for us, but trim at 1 MB so that we aren't trimming every startup
+                if (_fileInfo.Length > (size * 2))
+                {
+                    using (MemoryStream ms = new MemoryStream(size))
+                    {
+                        using (FileStream s = new FileStream(_fileInfo.FullName, FileMode.Open, FileAccess.ReadWrite))
+                        {
+                            s.Seek(-size, SeekOrigin.End);
+                            s.CopyTo(ms);
+                            s.SetLength(size);
+                            s.Position = 0;
+                            ms.Position = 0; // Begin from the start of the memory stream
+                            ms.CopyTo(s);
+                        }
+                    }
+                }
+            }
+
             var stream = File.AppendText(_fileInfo.FullName);
             stream.AutoFlush = true;
 

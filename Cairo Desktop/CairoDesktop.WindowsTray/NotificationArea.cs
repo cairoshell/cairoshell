@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CairoDesktop.Common.Logging;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
@@ -177,15 +178,15 @@ namespace CairoDesktop.WindowsTray
                             if (!exists)
                             {
                                 TrayIcons.Add(trayIcon);
-                                Trace.WriteLine("Added tray icon: " + trayIcon.Title);
+                                CairoLogger.Instance.Info("Added tray icon: " + trayIcon.Title);
                             }
                             else
-                                Trace.WriteLine("Modified tray icon: " + trayIcon.Title);
+                                CairoLogger.Instance.Info("Modified tray icon: " + trayIcon.Title);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Trace.WriteLine("Unable to modify the icon in the collection. Error: " + ex.ToString());
+                        CairoLogger.Instance.Error("Unable to modify the icon in the collection. Error: " + ex.ToString());
                     }
                 }
                 else if ((NIM)message == NIM.NIM_DELETE)
@@ -201,11 +202,11 @@ namespace CairoDesktop.WindowsTray
                         // Woo! Using Linq to avoid iterating!
                         TrayIcons.Remove(trayIcon);
 
-                        Trace.WriteLine("Removed tray icon: " + nicData.szTip);
+                        CairoLogger.Instance.Info("Removed tray icon: " + nicData.szTip);
                     }
                     catch (Exception ex)
                     {
-                        Trace.WriteLine("Unable to remove the icon from the collection. Error: " + ex.ToString());
+                        CairoLogger.Instance.Error("Unable to remove the icon from the collection. Error: " + ex.ToString());
                     }
                 }
                 else if ((NIM)message == NIM.NIM_SETVERSION)
@@ -273,7 +274,7 @@ namespace CairoDesktop.WindowsTray
 
         public void IconMouseClick(NotifyIcon icon, MouseButton button, uint mouse, int doubleClickTime)
         {
-            Trace.WriteLine(String.Format("{0} mouse button clicked icon: {1}", button.ToString(), icon.Title));
+            CairoLogger.Instance.Info(String.Format("{0} mouse button clicked icon: {1}", button.ToString(), icon.Title));
 
             uint wparam = icon.UID;
 

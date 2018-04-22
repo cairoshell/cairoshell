@@ -9,7 +9,7 @@ namespace CairoDesktop.Common.Logging
     /// <remarks>
     /// GoF Design Patterns: Singleton, Observer.
     /// </remarks>
-    public sealed class SingletonLogger : SingletonObject<SingletonLogger>
+    public sealed class CairoLogger : SingletonObject<CairoLogger>
     {
         #region Delegates
 
@@ -39,12 +39,12 @@ namespace CairoDesktop.Common.Logging
         private LogSeverity _severity;
 
         /// <summary>
-        /// Private constructor. Initializes default severity to "Error".
+        /// Private constructor. Initializes default severity to "Debug".
         /// </summary>
-        private SingletonLogger()
+        private CairoLogger()
         {
-            // Default severity is Error level
-            Severity = LogSeverity.Error;
+            // Default severity is Debug level
+            Severity = LogSeverity.Debug;
         }
 
         /// <summary>

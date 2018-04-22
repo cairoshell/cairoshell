@@ -8,6 +8,7 @@ using System.Data;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.Diagnostics;
+using CairoDesktop.Common.Logging;
 
 namespace CairoDesktop.Common
 {
@@ -131,7 +132,7 @@ namespace CairoDesktop.Common
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex);
+                CairoLogger.Instance.Error(ex.Message);
             }
 
             sos.Reset.Set();

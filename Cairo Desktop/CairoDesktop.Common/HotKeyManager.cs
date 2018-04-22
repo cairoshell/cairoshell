@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CairoDesktop.Common.Logging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Input;
@@ -92,7 +93,7 @@ namespace CairoDesktop.Common
                     {
                         if (hotKey.Action != null)
                         {
-                            Trace.WriteLine(string.Format("Hotkey {0} pressed", hotKey.Key.ToString()));
+                            CairoLogger.Instance.Info(string.Format("Hotkey {0} pressed", hotKey.Key.ToString()));
                             hotKey.Action.Invoke(hotKey);
                         }
                         handled = true;

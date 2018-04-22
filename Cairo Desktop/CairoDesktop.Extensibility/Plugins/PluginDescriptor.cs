@@ -55,7 +55,7 @@ namespace CairoDesktop.Extensibility.Plugins
                         }
                         catch (Exception ex)
                         {
-                            SingletonLogger.Instance.Debug(ex.Message, ex);
+                            CairoLogger.Instance.Debug(ex.Message, ex);
                         }
                     }
                     return dependencies;
@@ -68,7 +68,7 @@ namespace CairoDesktop.Extensibility.Plugins
                 // missing a dependency. 
                 IsMissingDependency = true;
 
-                SingletonLogger.Instance.Debug(string.Format("Plugin: '{0}' is missing a dependency. Additional Info: '{1}'", PluginName, ex.Message), ex);
+                CairoLogger.Instance.Debug(string.Format("Plugin: '{0}' is missing a dependency. Additional Info: '{1}'", PluginName, ex.Message), ex);
 
             }
             return new Type[] { };
@@ -212,7 +212,7 @@ namespace CairoDesktop.Extensibility.Plugins
             }
             catch (Exception ex)
             {
-                SingletonLogger.Instance.Debug(ex.Message, ex);
+                CairoLogger.Instance.Debug(ex.Message, ex);
             }
 
             return false;
@@ -299,7 +299,7 @@ namespace CairoDesktop.Extensibility.Plugins
             }
             catch (Exception ex)
             {
-                SingletonLogger.Instance.Debug(ex.Message, ex);
+                CairoLogger.Instance.Debug(ex.Message, ex);
             }
             return false;
         }
