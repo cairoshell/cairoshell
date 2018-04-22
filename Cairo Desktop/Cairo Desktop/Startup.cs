@@ -45,11 +45,6 @@
 
         private static Object screenSetupLock = new Object();
 
-        // properties for startup
-        private static string[] hklmStartupKeys = new string[] { "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Run" };
-        
-        private static string[] hkcuStartupKeys = new string[] { "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce" };
-
         /// <summary>
         /// The main entry point for the application
         /// </summary>
@@ -465,69 +460,128 @@
         {
             List<string> startupApps = new List<string>();
 
-            // HKLM Run
-            foreach(string keyString in hklmStartupKeys)
+            // Registry startup keys
+            Dictionary<string, string> startupKeys = new Dictionary<string, string>()
             {
-                RegistryKey key;
+                { "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run" },
+                { "Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Run", "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run32" },
+                { "Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce", "" }
+            };
 
-                key = Registry.LocalMachine.OpenSubKey(keyString, false);
-
-                if(key != null && key.ValueCount > 0)
+            // loop twice, once for HKLM once for HKCU
+            for (int i = 0; i <= 1; i++)
+            {
+                foreach (KeyValuePair<string, string> regKey in startupKeys)
                 {
-                    foreach(string valueName in key.GetValueNames())
-                        startupApps.Add(((string)key.GetValue(valueName)).Replace("\"", ""));
-                }
+                    bool isRunOnce = regKey.Key.Contains("RunOnce");
 
-                if (key != null)
-                    key.Close();
+                    // key is the reg key with the app path, value is the startupapproved key telling us if the item is disabled
+                    RegistryKey root = null;
+                    RegistryKey key = null;
+                    RegistryKey approvedKey = null;
+
+                    try
+                    {
+                        if (i == 0)
+                            root = Registry.LocalMachine;
+                        else
+                            root = Registry.CurrentUser;
+
+                        if (isRunOnce && i != 0)
+                            key = root.OpenSubKey(regKey.Key, true);
+                        else if (isRunOnce)
+                            continue; // skip processing HKLM RunOnce because we can't remove things from there
+                        else
+                        {
+                            key = root.OpenSubKey(regKey.Key, false);
+                            approvedKey = root.OpenSubKey(regKey.Value, false);
+                        }
+                    }
+                    catch { continue; } // in case of unable to load registry key
+                    
+                    if (key != null && key.ValueCount > 0)
+                    {
+                        foreach (string valueName in key.GetValueNames())
+                        {
+                            bool canRun = true;
+
+                            if (approvedKey != null)
+                            {
+                                foreach (string approvedName in approvedKey.GetValueNames())
+                                {
+                                    try
+                                    {
+                                        string s = ((byte[])approvedKey.GetValue(approvedName))[0].ToString();
+                                        if (approvedName == valueName && ((byte[])approvedKey.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
+                                        {
+                                            canRun = false;
+                                            break;
+                                        }
+                                        else if (approvedName == valueName)
+                                            break;
+                                    }
+                                    catch { } // in case of invalid registry key values
+                                }
+                            }
+
+                            if (canRun)
+                                startupApps.Add(((string)key.GetValue(valueName)).Replace("\"", ""));
+
+                            // if this is a runonce key, remove the value after we grab it
+                            if (isRunOnce)
+                            {
+                                try
+                                {
+                                    key.DeleteValue(valueName);
+                                }
+                                catch { }
+                            }
+                        }
+                    }
+
+                    if (key != null)
+                        key.Close();
+
+                    if (approvedKey != null)
+                        approvedKey.Close();
+                }
             }
 
-            // HKCU Run
-            foreach (string keyString in hkcuStartupKeys)
+            // startup folders
+            Dictionary<SystemDirectory, RegistryKey> startupFolderKeys = new Dictionary<SystemDirectory, RegistryKey>()
             {
-                RegistryKey key;
-
-                if (keyString.Contains("RunOnce"))
-                    key = Registry.CurrentUser.OpenSubKey(keyString, true);
-                else
-                    key = Registry.CurrentUser.OpenSubKey(keyString, false);
-
-                if (key != null && key.ValueCount > 0)
+                { new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), Dispatcher.CurrentDispatcher), Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false) },
+                { new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Dispatcher.CurrentDispatcher), Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false) }
+            };
+            
+            foreach (KeyValuePair<SystemDirectory, RegistryKey> startupFolder in startupFolderKeys)
+            {
+                foreach (SystemFile startupFile in startupFolder.Key.Files)
                 {
-                    foreach (string valueName in key.GetValueNames())
-                    {
-                        startupApps.Add(((string)key.GetValue(valueName)).Replace("\"", ""));
+                    bool canRun = true;
 
-                        // if this is a runonce key, remove the value after we grab it
-                        if (keyString.Contains("RunOnce"))
+                    if (startupFolder.Value != null)
+                    {
+                        foreach (string approvedName in startupFolder.Value.GetValueNames())
                         {
                             try
                             {
-                                key.DeleteValue(valueName);
+                                string s = ((byte[])startupFolder.Value.GetValue(approvedName))[0].ToString();
+                                if (approvedName == startupFile.Name && ((byte[])startupFolder.Value.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
+                                {
+                                    canRun = false;
+                                    break;
+                                }
+                                else if (approvedName == startupFile.Name)
+                                    break;
                             }
-                            catch { }
+                            catch { } // in case of invalid registry key values
                         }
                     }
+
+                    if (canRun)
+                        startupApps.Add(startupFile.FullName);
                 }
-
-                if (key != null)
-                    key.Close();
-            }
-
-            // Common Start Menu - Startup folder
-            SystemDirectory comStartupDir = new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), Dispatcher.CurrentDispatcher);
-
-            foreach(SystemFile startupFile in comStartupDir.Files)
-            {
-                startupApps.Add(startupFile.FullName);
-            }
-
-            // Start Menu - Startup folder
-            SystemDirectory startupDir = new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Dispatcher.CurrentDispatcher);
-
-            foreach (SystemFile startupFile in startupDir.Files)
-            {
-                startupApps.Add(startupFile.FullName);
             }
 
             return startupApps;
@@ -577,6 +631,8 @@
                 startInfo.UseShellExecute = true;
                 startInfo.FileName = procInfo[0];
                 startInfo.Arguments = procInfo[1];
+
+                Debug.WriteLine("Starting program: " + startInfo.FileName);
 
                 try
                 {

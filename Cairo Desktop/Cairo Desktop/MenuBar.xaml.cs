@@ -41,9 +41,7 @@ namespace CairoDesktop
         private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
         private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
 
-        private LowLevelKeyboardListener _listener;
-
-        private Action WinKeyOverride;
+        private static LowLevelKeyboardListener keyboardListener;
 
         public MenuBar() : this(System.Windows.Forms.Screen.PrimaryScreen)
         {
@@ -69,26 +67,6 @@ namespace CairoDesktop
             setupPrograms();
 
             initSparkle();
-
-            _listener = new LowLevelKeyboardListener();
-            _listener.OnKeyPressed += _listener_OnKeyPressed;
-            _listener.HookKeyboard();
-
-            // Need to add a CairoSetting to Set this as an Override When Explorer is Shell.
-            if (true)
-            {
-                WinKeyOverride = ToggleProgramsMenu;
-            }
-        }
-
-        void _listener_OnKeyPressed(object sender, KeyPressedArgs e)
-        {
-            Debug.WriteLine(e.KeyPressed.ToString() + " Key Pressed");
-            if (e.KeyPressed == Key.LWin && WinKeyOverride != null)
-            {
-                e.Handled = true;
-                WinKeyOverride.Invoke();
-            }
         }
 
         private void initSparkle()
@@ -183,6 +161,13 @@ namespace CairoDesktop
                 HotKeyManager.RegisterHotKey(new List<string> { "Win", "LWin" }, OnShowProgramsMenu);
                 HotKeyManager.RegisterHotKey(new List<string> { "Win", "RWin" }, OnShowProgramsMenu);
                 isProgramsMenuHotkeyRegistered = true;
+            }
+
+            if (Screen.Primary && keyboardListener == null)
+            {
+                keyboardListener = new LowLevelKeyboardListener();
+                keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
+                keyboardListener.HookKeyboard();
             }
 
             if (Settings.EnableMenuBarBlur)
@@ -513,6 +498,8 @@ namespace CairoDesktop
 
                 WinSparkle.win_sparkle_cleanup();
 
+                keyboardListener.UnHookKeyboard();
+
                 if (Startup.IsCairoUserShell)
                     AppBarHelper.ResetWorkArea();
             }
@@ -525,8 +512,6 @@ namespace CairoDesktop
                 IsClosing = false;
                 e.Cancel = true;
             }
-
-            _listener.UnHookKeyboard();
         }
 
         private void Programs_Drop(object sender, DragEventArgs e)
@@ -589,7 +574,16 @@ namespace CairoDesktop
         private void OnShowProgramsMenu(HotKey hotKey)
         {
             ToggleProgramsMenu();
+        }
 
+        void keyboardListener_OnKeyPressed(object sender, KeyPressedArgs e)
+        {
+            Debug.WriteLine(e.KeyPressed.ToString() + " Key Pressed");
+            if (e.KeyPressed == Key.LWin)
+            {
+                e.Handled = true;
+                ToggleProgramsMenu();
+            }
         }
 
         #endregion

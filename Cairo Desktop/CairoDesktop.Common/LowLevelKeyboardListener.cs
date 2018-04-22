@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
@@ -17,7 +18,9 @@ namespace CairoDesktop.Common
     {
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
+        private const int WM_KEYUP = 0x0101;
         private const int WM_SYSKEYDOWN = 0x0104;
+        private const int WM_SYSKEYUP = 0x0105;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
@@ -38,6 +41,8 @@ namespace CairoDesktop.Common
 
         private LowLevelKeyboardProc _proc;
         private IntPtr _hookID = IntPtr.Zero;
+
+        private List<int> keysPressed = new List<int>();
 
         public LowLevelKeyboardListener()
         {
@@ -65,16 +70,31 @@ namespace CairoDesktop.Common
 
         private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
+            if (nCode >= 0)
             {
                 int vkCode = Marshal.ReadInt32(lParam);
 
-                if (OnKeyPressed != null)
+                // keep track of pressed keys so we don't intercept hotkeys
+                if (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
                 {
-                    var kpa = new KeyPressedArgs(KeyInterop.KeyFromVirtualKey(vkCode));
-                    OnKeyPressed(this, kpa);
-                    if (kpa.Handled)
-                        return new IntPtr(1);
+                    if (!keysPressed.Contains(vkCode))
+                        keysPressed.Add(vkCode);
+                }
+
+                // act only when key is raised
+                if (wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP)
+                {
+                    // if more than one key was pressed before a key was raised, user attempted hotkey
+                    if (keysPressed.Count == 1 && OnKeyPressed != null)
+                    {
+                        var kpa = new KeyPressedArgs(KeyInterop.KeyFromVirtualKey(vkCode));
+                        OnKeyPressed(this, kpa);
+                        if (kpa.Handled)
+                            return new IntPtr(1);
+                    }
+
+                    // reset pressed keys
+                    keysPressed.Clear();
                 }
             }
 

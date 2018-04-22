@@ -59,10 +59,10 @@ namespace CairoDesktop {
             openDir((sender as ICommandSource).CommandParameter.ToString());
         }
         
-        private void NameLabel_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void NameLabel_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             // Open folders with middle button clicks.
-            if (e.MiddleButton == MouseButtonState.Pressed)
+            if (e.ChangedButton == MouseButton.Middle)
             {
                 // Some checks just in case.
                 ICommandSource cmdsrc = sender as ICommandSource;

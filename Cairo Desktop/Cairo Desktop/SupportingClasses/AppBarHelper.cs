@@ -28,35 +28,40 @@ namespace CairoDesktop.SupportingClasses
             OnTop = 0
         }
 
+        private static object appBarLock = new object();
+
         public static int RegisterBar(Window abWindow, Screen screen, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
         {
-            NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-            abd.cbSize = Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
-            IntPtr handle = new WindowInteropHelper(abWindow).Handle;
-            abd.hWnd = handle;
-
-            if (!appBars.Contains(handle))
+            lock (appBarLock)
             {
-                uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage");
-                abd.uCallbackMessage = uCallBack;
+                NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
+                abd.cbSize = Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
+                IntPtr handle = new WindowInteropHelper(abWindow).Handle;
+                abd.hWnd = handle;
 
-                prepareForInterop();
-                uint ret = NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_NEW, ref abd);
-                interopDone();
-                appBars.Add(handle);
-                Trace.WriteLine("Created AppBar for handle " + handle.ToString());
+                if (!appBars.Contains(handle))
+                {
+                    uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage");
+                    abd.uCallbackMessage = uCallBack;
 
-                ABSetPos(abWindow, screen, width, height, edge);
-            }
-            else
-            {
-                prepareForInterop();
-                NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_REMOVE, ref abd);
-                interopDone();
-                appBars.Remove(handle);
-                Trace.WriteLine("Removed AppBar for handle " + handle.ToString());
+                    prepareForInterop();
+                    uint ret = NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_NEW, ref abd);
+                    interopDone();
+                    appBars.Add(handle);
+                    Trace.WriteLine("Created AppBar for handle " + handle.ToString());
 
-                return 0;
+                    ABSetPos(abWindow, screen, width, height, edge);
+                }
+                else
+                {
+                    prepareForInterop();
+                    NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_REMOVE, ref abd);
+                    interopDone();
+                    appBars.Remove(handle);
+                    Trace.WriteLine("Removed AppBar for handle " + handle.ToString());
+
+                    return 0;
+                }
             }
             
             return uCallBack;
@@ -171,97 +176,100 @@ namespace CairoDesktop.SupportingClasses
 
         public static void ABSetPos(Window abWindow, Screen screen, double width, double height, ABEdge edge)
         {
-            NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-            abd.cbSize = Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
-            IntPtr handle = new WindowInteropHelper(abWindow).Handle;
-            abd.hWnd = handle;
-            abd.uEdge = (int)edge;
-            int sWidth = (int)width;
-            int sHeight = (int)height;
-
-            int top = 0;
-            int left = SystemInformation.WorkingArea.Left;
-            int right = SystemInformation.WorkingArea.Right;
-            int bottom = PrimaryMonitorDeviceSize.Height;
-
-            if (screen != null)
+            lock (appBarLock)
             {
-                top = screen.Bounds.Y;
-                left = screen.WorkingArea.Left;
-                right = screen.WorkingArea.Right;
-                bottom = screen.Bounds.Bottom;
-            }
-            
-            if (abd.uEdge == (int)ABEdge.ABE_LEFT || abd.uEdge == (int)ABEdge.ABE_RIGHT)
-            {
-                abd.rc.top = top;
-                abd.rc.bottom = bottom;
-                if (abd.uEdge == (int)ABEdge.ABE_LEFT)
+                NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
+                abd.cbSize = Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
+                IntPtr handle = new WindowInteropHelper(abWindow).Handle;
+                abd.hWnd = handle;
+                abd.uEdge = (int)edge;
+                int sWidth = (int)width;
+                int sHeight = (int)height;
+
+                int top = 0;
+                int left = SystemInformation.WorkingArea.Left;
+                int right = SystemInformation.WorkingArea.Right;
+                int bottom = PrimaryMonitorDeviceSize.Height;
+
+                if (screen != null)
+                {
+                    top = screen.Bounds.Y;
+                    left = screen.WorkingArea.Left;
+                    right = screen.WorkingArea.Right;
+                    bottom = screen.Bounds.Bottom;
+                }
+
+                if (abd.uEdge == (int)ABEdge.ABE_LEFT || abd.uEdge == (int)ABEdge.ABE_RIGHT)
+                {
+                    abd.rc.top = top;
+                    abd.rc.bottom = bottom;
+                    if (abd.uEdge == (int)ABEdge.ABE_LEFT)
+                    {
+                        abd.rc.left = left;
+                        abd.rc.right = abd.rc.left + sWidth;
+                    }
+                    else
+                    {
+                        abd.rc.right = right;
+                        abd.rc.left = abd.rc.right - sWidth;
+                    }
+
+                }
+                else
                 {
                     abd.rc.left = left;
-                    abd.rc.right = abd.rc.left + sWidth;
-                }
-                else
-                {
                     abd.rc.right = right;
-                    abd.rc.left = abd.rc.right - sWidth;
-                }
-
-            }
-            else
-            {
-                abd.rc.left = left;
-                abd.rc.right = right;
-                if (abd.uEdge == (int)ABEdge.ABE_TOP)
-                {
-                    if (abWindow is Taskbar)
-                        abd.rc.top = top + Convert.ToInt32(Startup.MenuBarWindow.Height);
+                    if (abd.uEdge == (int)ABEdge.ABE_TOP)
+                    {
+                        if (abWindow is Taskbar)
+                            abd.rc.top = top + Convert.ToInt32(Startup.MenuBarWindow.Height);
+                        else
+                            abd.rc.top = top;
+                        abd.rc.bottom = abd.rc.top + sHeight;
+                    }
                     else
-                        abd.rc.top = top;
-                    abd.rc.bottom = abd.rc.top + sHeight;
+                    {
+                        abd.rc.bottom = bottom;
+                        abd.rc.top = abd.rc.bottom - sHeight;
+                    }
                 }
-                else
+
+                prepareForInterop();
+                NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_QUERYPOS, ref abd);
+                interopDone();
+
+                // system doesn't adjust all edges for us, do some adjustments
+                switch (abd.uEdge)
                 {
-                    abd.rc.bottom = bottom;
-                    abd.rc.top = abd.rc.bottom - sHeight;
+                    case (int)ABEdge.ABE_LEFT:
+                        abd.rc.right = abd.rc.left + sWidth;
+                        break;
+                    case (int)ABEdge.ABE_RIGHT:
+                        abd.rc.left = abd.rc.right - sWidth;
+                        break;
+                    case (int)ABEdge.ABE_TOP:
+                        abd.rc.bottom = abd.rc.top + sHeight;
+                        break;
+                    case (int)ABEdge.ABE_BOTTOM:
+                        abd.rc.top = abd.rc.bottom - sHeight;
+                        break;
                 }
+
+                prepareForInterop();
+                NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETPOS, ref abd);
+                interopDone();
+
+                // tracing
+                int h = abd.rc.bottom - abd.rc.top;
+                Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_TOP, "Top AppBar height is " + h.ToString());
+                Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_BOTTOM, "Bottom AppBar height is " + h.ToString());
+
+                abWindow.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
+                    new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top);
+
+                if (h < sHeight)
+                    ABSetPos(abWindow, screen, width, height, edge);
             }
-
-            prepareForInterop();
-            NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_QUERYPOS, ref abd);
-            interopDone();
-
-            // system doesn't adjust all edges for us, do some adjustments
-            switch (abd.uEdge)		
-            {		
-                case (int)ABEdge.ABE_LEFT:		
-                    abd.rc.right = abd.rc.left + sWidth;		
-                    break;		
-                case (int)ABEdge.ABE_RIGHT:		
-                    abd.rc.left = abd.rc.right - sWidth;		
-                    break;		
-                case (int)ABEdge.ABE_TOP:		
-                    abd.rc.bottom = abd.rc.top + sHeight;		
-                    break;		
-                case (int)ABEdge.ABE_BOTTOM:		
-                    abd.rc.top = abd.rc.bottom - sHeight;		
-                    break;		
-            }
-
-            prepareForInterop();
-            NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETPOS, ref abd);
-            interopDone();
-
-            // tracing
-            int h = abd.rc.bottom - abd.rc.top;
-            Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_TOP, "Top AppBar height is " + h.ToString());
-            Trace.WriteLineIf(abd.uEdge == (int)ABEdge.ABE_BOTTOM, "Bottom AppBar height is " + h.ToString());
-
-            abWindow.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
-                new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top);
-
-            if (h < sHeight)
-                ABSetPos(abWindow, screen, width, height, edge);
         }
 
         private delegate void ResizeDelegate(IntPtr hWnd, int x, int y, int cx, int cy);
