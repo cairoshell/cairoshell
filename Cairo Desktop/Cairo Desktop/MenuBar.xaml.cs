@@ -579,9 +579,9 @@ namespace CairoDesktop
 
         void keyboardListener_OnKeyPressed(object sender, KeyPressedArgs e)
         {
-            CairoLogger.Instance.Info(e.KeyPressed.ToString() + " Key Pressed");
             if (e.KeyPressed == Key.LWin)
             {
+                CairoLogger.Instance.Info(e.KeyPressed.ToString() + " Key Pressed");
                 e.Handled = true;
                 ToggleProgramsMenu();
             }
