@@ -92,5 +92,8 @@
     <Setting Name="EnableTaskbarMultiMon" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="LogSeverity" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Info</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

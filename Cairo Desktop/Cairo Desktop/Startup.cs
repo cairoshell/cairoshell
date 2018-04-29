@@ -36,8 +36,8 @@
 
         public static bool IsCairoUserShell;
 
+        private static CommandLineParser commandLineParser;
         private static bool isRestart;
-
         private static bool isTour;
 
         public static bool IsShuttingDown { get; set; }
@@ -52,61 +52,17 @@
         [STAThread]
         public static void Main(string[] args)
         {
-            #region Args
+            #region Initialization Routines
 
-            if (args.Length > 0 && args[0] == "/restart")
-                isRestart = true;
-            else
-                isRestart = false;
-
-            if (args.Length > 0 && args[0] == "/tour")
-                isTour = true;
-            else
-                isTour = false;
-
-            #endregion
-
-            #region Single Instance Check
-            bool ok;
-            cairoMutex = new System.Threading.Mutex(true, "CairoShell", out ok);
-
-            if (!ok && !isRestart)
-            {
-                // Another instance is already running.
-                return;
-            }
-            else if (!ok && isRestart)
-            {
-                // this is a restart so let's wait for the old instance to end
-                System.Threading.Thread.Sleep(2000);
-            }
-            #endregion
-
-            #region some real shell code
-            int hShellReadyEvent;
-
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT && Shell.IsWindows2kOrBetter)
-                hShellReadyEvent = NativeMethods.OpenEvent(NativeMethods.EVENT_MODIFY_STATE, true, @"Global\msgina: ShellReadyEvent");
-            else
-                hShellReadyEvent = NativeMethods.OpenEvent(NativeMethods.EVENT_MODIFY_STATE, false, "msgina: ShellReadyEvent");
-
-            if (hShellReadyEvent != 0)
-            {
-                NativeMethods.SetEvent(hShellReadyEvent);
-                NativeMethods.CloseHandle(hShellReadyEvent);
-            }
-            #endregion
-
-           // an attempt to relaunch explorer it the application gets closed. doesnt work if VS terminates execution
-           // AppDomain.CurrentDomain.ProcessExit += (o, e) => Shutdown();
-
-            #region InitializationRoutines
+            ProcessCommandLineArgs(args);
+            SingleInstanceCheck();
+            SetShellReadyEvent();
             
             SetupLoggingSystem();
             WriteApplicationDebugInfoToConsole();
 
             SetupPluginSystem();
-
+            
             #endregion
 
             // check if we are the current user's shell

@@ -68,6 +68,7 @@
     <Compile Include="CairoMessage.xaml.cs">
       <DependentUpon>CairoMessage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CommandLineParser.cs" />
     <Compile Include="DesignPatterns\Provider.cs" />
     <Compile Include="DesignPatterns\ProviderCollection.cs" />
     <Compile Include="DesignPatterns\SingletonObject.cs" />
