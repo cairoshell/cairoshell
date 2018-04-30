@@ -192,7 +192,7 @@
 
                     foreach (var screen in System.Windows.Forms.Screen.AllScreens)
                     {
-                        CairoLogger.Instance.Info(string.Format("{0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
+                        CairoLogger.Instance.Debug(string.Format("{0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
 
                         sysScreens.Add(screen.DeviceName);
                     }
@@ -589,7 +589,7 @@
                 startInfo.FileName = procInfo[0];
                 startInfo.Arguments = procInfo[1];
 
-                CairoLogger.Instance.Info("Starting program: " + startInfo.FileName);
+                CairoLogger.Instance.Debug("Starting program: " + startInfo.FileName);
 
                 try
                 {

@@ -49,7 +49,7 @@ namespace CairoDesktop.SupportingClasses
                     uint ret = NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_NEW, ref abd);
                     interopDone();
                     appBars.Add(handle);
-                    CairoLogger.Instance.Info("Created AppBar for handle " + handle.ToString());
+                    CairoLogger.Instance.Debug("Created AppBar for handle " + handle.ToString());
 
                     ABSetPos(abWindow, screen, width, height, edge);
                 }
@@ -59,7 +59,7 @@ namespace CairoDesktop.SupportingClasses
                     NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_REMOVE, ref abd);
                     interopDone();
                     appBars.Remove(handle);
-                    CairoLogger.Instance.Info("Removed AppBar for handle " + handle.ToString());
+                    CairoLogger.Instance.Debug("Removed AppBar for handle " + handle.ToString());
 
                     return 0;
                 }
@@ -262,7 +262,7 @@ namespace CairoDesktop.SupportingClasses
 
                 // tracing
                 int h = abd.rc.bottom - abd.rc.top;
-                CairoLogger.Instance.Info(abWindow.Name + " AppBar height is " + h.ToString());
+                CairoLogger.Instance.Debug(abWindow.Name + " AppBar height is " + h.ToString());
 
                 abWindow.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
                     new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top);

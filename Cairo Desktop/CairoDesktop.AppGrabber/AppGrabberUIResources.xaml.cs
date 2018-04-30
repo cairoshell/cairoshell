@@ -29,7 +29,7 @@ namespace CairoDesktop.AppGrabber
                 TextBlock block = sender as TextBlock;
                 // Do not allow special category to be renamed.
                 if ((block.DataContext as Category).Type > 0) return;
-                
+
                 foreach (UIElement peer in (block.Parent as DockPanel).Children)
                 {
                     if (peer is TextBox)
@@ -112,7 +112,7 @@ namespace CairoDesktop.AppGrabber
         {
             if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
             {
-                CairoLogger.Instance.Info(e.Data.GetData(typeof(ApplicationInfo)).ToString());
+                CairoLogger.Instance.Debug(e.Data.GetData(typeof(ApplicationInfo)).ToString());
                 ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
                 ListView dropTarget = sender as ListView;
 
@@ -151,7 +151,7 @@ namespace CairoDesktop.AppGrabber
                         Category source = sourceView.ItemsSource as Category;
 
                         source.Remove(dropData);
-                        
+
                         if (source.Type != 3)
                         {
                             target.Add(dropData); // if coming from quick launch, simply remove from quick launch
@@ -177,7 +177,7 @@ namespace CairoDesktop.AppGrabber
                     {
                         foreach (String fileName in fileNames)
                         {
-                            CairoLogger.Instance.Info(fileName);
+                            CairoLogger.Instance.Debug(fileName);
 
                             if (Shell.Exists(fileName))
                             {
@@ -196,7 +196,7 @@ namespace CairoDesktop.AppGrabber
                     }
                 }
             }
-            
+
             sourceView = null;
             isDragging = false;
         }
@@ -224,7 +224,7 @@ namespace CairoDesktop.AppGrabber
                     catch (Exception ex)
                     {
                         //Output the reason to the debugger
-                        CairoLogger.Instance.Error("Error doing Drag-Drop from appgrabber. Details: " + ex.Message + "\n" + ex.StackTrace);
+                        CairoLogger.Instance.Error("Error doing Drag-Drop from appgrabber:" + ex.Message, ex);
                     }
                 }
             }
@@ -255,7 +255,7 @@ namespace CairoDesktop.AppGrabber
 
             if (e.Data.GetDataPresent(typeof(Category)))
             {
-                CairoLogger.Instance.Info(e.Data.GetData(typeof(Category)).ToString());
+                CairoLogger.Instance.Debug(e.Data.GetData(typeof(Category)).ToString());
                 Category dropData = e.Data.GetData(typeof(Category)) as Category;
 
                 CategoryList parent = dropCategory.ParentCategoryList;
@@ -289,7 +289,7 @@ namespace CairoDesktop.AppGrabber
                         dropCategory.Add(dropData);
                     }
                 }
-                
+
                 sourceView = null;
             }
 
@@ -310,7 +310,7 @@ namespace CairoDesktop.AppGrabber
                 catch (Exception ex)
                 {
                     //Output the reason to the debugger
-                    CairoLogger.Instance.Error("Error doing Drag-Drop from AppGrabber TextBlock. Details: " + ex.Message + "\n" + ex.StackTrace);
+                    CairoLogger.Instance.Error("Error doing Drag-Drop from AppGrabber TextBlock. Details: " + ex.Message , ex);
                 }
             }
         }

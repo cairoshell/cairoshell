@@ -89,7 +89,7 @@
     <Compile Include="Logging\Observers\ConsoleLog.cs" />
     <Compile Include="Logging\Observers\DisposableLogBase.cs" />
     <Compile Include="Logging\Observers\FileLog.cs" />
-    <Compile Include="Logging\SingletonLogger.cs" />
+    <Compile Include="Logging\CairoLogger.cs" />
     <Compile Include="MessageBoxButtonConverter.cs" />
     <Compile Include="MessageBoxImageConverter.cs" />
     <Compile Include="ObjectActions.cs" />

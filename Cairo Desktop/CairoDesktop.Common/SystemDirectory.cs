@@ -88,7 +88,7 @@ namespace CairoDesktop.Common {
             }
             catch (Exception ex)
             {
-                CairoLogger.Instance.Error(ex.Message);
+                CairoLogger.Instance.Error("Error in fileWatcher_Renamed.", ex);
             }
         }
 
@@ -99,7 +99,7 @@ namespace CairoDesktop.Common {
             }
             catch (Exception ex)
             {
-                CairoLogger.Instance.Error(ex.Message);
+                CairoLogger.Instance.Error("Error in fileWatcher_Deleted.", ex);
             }
         }
 
