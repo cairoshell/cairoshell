@@ -256,7 +256,7 @@ namespace CairoDesktop.WindowsTasks
 
                     if (cloaked)
                     {
-                        CairoLogger.Instance.Info(string.Format("Cloaked window ({0}) hidden from taskbar", this.Title));
+                        CairoLogger.Instance.Debug(string.Format("Cloaked window ({0}) hidden from taskbar", this.Title));
                         return false;
                     }
                 }
@@ -419,7 +419,7 @@ namespace CairoDesktop.WindowsTasks
 
             if (retval != IntPtr.Zero)
             {
-                CairoLogger.Instance.Info(string.Format("Removing window {0} from collection due to no response", this.Title));
+                CairoLogger.Instance.Debug(string.Format("Removing window {0} from collection due to no response", this.Title));
                 TasksService.Windows.Remove(this);
             }
         }

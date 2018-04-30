@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace CairoDesktop.Common.Logging.Observers
 {
@@ -79,16 +81,23 @@ namespace CairoDesktop.Common.Logging.Observers
         /// <param name="e">Parameters of the log request.</param>
         public override void Log(object sender, LogEventArgs e)
         {
-            string message = string.Format("[{0}] {1}: {2}", e.Date, e.SeverityString, e.Message);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(string.Format("[{0}] {1}: {2}", e.Date, e.SeverityString, e.Message));
+            if (e.Exception != null)
+            {
+                stringBuilder.AppendLine("\t:::Exception Details:::");
+                foreach (string line in e.Exception.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                    stringBuilder.AppendLine("\t" + line);
+            }
 
             try
             {
-                _textWriter.WriteLine(message);
+                _textWriter.WriteLine(stringBuilder.ToString());
                 _textWriter.Flush();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                /* do nothing */
+                Debug.WriteLine("Error writting to FileLog: " + ex.ToString());
             }
         }
     }

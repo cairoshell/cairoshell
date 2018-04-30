@@ -344,7 +344,7 @@ namespace CairoDesktop
                     case NativeMethods.AppBarNotifications.FullScreenApp:
                         if ((int)lParam == 1)
                         {
-                            CairoLogger.Instance.Info("Cairo leaving on-top");
+                            CairoLogger.Instance.Debug("Cairo leaving on-top");
                             this.Topmost = false;
                             Shell.ShowWindowBottomMost(this.handle);
 
@@ -356,7 +356,7 @@ namespace CairoDesktop
                         }
                         else
                         {
-                            CairoLogger.Instance.Info("Cairo entering on-top");
+                            CairoLogger.Instance.Debug("Cairo entering on-top");
                             this.Topmost = true;
                             Shell.ShowWindowTopMost(this.handle);
 
@@ -581,7 +581,7 @@ namespace CairoDesktop
         {
             if (e.KeyPressed == Key.LWin)
             {
-                CairoLogger.Instance.Info(e.KeyPressed.ToString() + " Key Pressed");
+                CairoLogger.Instance.Debug(e.KeyPressed.ToString() + " Key Pressed");
                 e.Handled = true;
                 ToggleProgramsMenu();
             }

@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace CairoDesktop.Extensibility.ObjectModel
@@ -19,9 +18,7 @@ namespace CairoDesktop.Extensibility.ObjectModel
         private _CairoShell()
         {
             PlacesMenu = new List<MenuItem>();
-
-            OnStart += (x) => { };
-            OnQuit += (x) => { };
+            ShellServices = new Dictionary<Type, ShellService>();
         }
 
         public static event Action<_CairoShell> OnStart;
@@ -56,10 +53,18 @@ namespace CairoDesktop.Extensibility.ObjectModel
         }
 
         /// <summary>
-        /// Compatibility System.Windows.Forms.Application.StartupPath
+        /// Compatibility System.Windows.Forms.Application
         /// </summary>
         public static string StartupPath { get { return Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).Location); } }
+        public static string ProductName { get { return (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Name; } }
+        public static Version ProductVersion { get { return (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Version; } }
+
+        public static string CairoApplicarionDataFolder { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team"); } }
+        public static string LogsFolder { get { return Path.Combine(CairoApplicarionDataFolder, "Logs"); } }
+
 
         public List<MenuItem> PlacesMenu { get; private set; }
+
+        public Dictionary<Type, ShellService> ShellServices { get; private set; }
     }
 }

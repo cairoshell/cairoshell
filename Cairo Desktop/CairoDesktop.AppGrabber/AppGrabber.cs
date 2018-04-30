@@ -212,7 +212,7 @@ namespace CairoDesktop.AppGrabber
                     {
                         if (!String.IsNullOrEmpty(target) && !ExecutableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
                         {
-                            CairoLogger.Instance.Info("Not an app: " + file + ": " + target);
+                            CairoLogger.Instance.Debug("Not an app: " + file + ": " + target);
                             return null;
                         }
 
@@ -221,7 +221,7 @@ namespace CairoDesktop.AppGrabber
                         {
                             if (ai.Name.ToLower().Contains(word))
                             {
-                                CairoLogger.Instance.Info("Excluded item: " + file + ": " + target);
+                                CairoLogger.Instance.Debug("Excluded item: " + file + ": " + target);
                                 return null;
                             }
                         }
@@ -231,7 +231,7 @@ namespace CairoDesktop.AppGrabber
                 }
                 catch (Exception ex)
                 {
-                    CairoLogger.Instance.Error("Error creating ApplicationInfo object in appgrabber. " + ex.Message);
+                    CairoLogger.Instance.Error("Error creating ApplicationInfo object in appgrabber. " + ex.Message,ex);
                     return null;
                 }
             }

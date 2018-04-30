@@ -64,6 +64,9 @@ namespace CairoDesktop.Configuration
         private static string _FileManager;
         private static bool? _ForceSoftwareRendering;
 
+        // Logging
+        private static string _LogSeverity;
+
         #endregion
 
         #region Public properties
@@ -478,7 +481,7 @@ namespace CairoDesktop.Configuration
             {
                 if (string.IsNullOrEmpty(_CairoMenuHotKey))
                     _CairoMenuHotKey = Properties.Settings.Default.CairoMenuHotKey;
-                
+
                 return parseConcatString(_CairoMenuHotKey, '|');
             }
             set
@@ -603,6 +606,27 @@ namespace CairoDesktop.Configuration
             {
                 _ForceSoftwareRendering = value;
                 Properties.Settings.Default.ForceSoftwareRendering = (bool)_ForceSoftwareRendering;
+                Save();
+            }
+        }
+
+        #endregion
+
+        #region Logging
+
+        public static string LogSeverity
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_LogSeverity))
+                    _LogSeverity = Properties.Settings.Default.LogSeverity;
+
+                return _LogSeverity;
+            }
+            set
+            {
+                _LogSeverity = value;
+                Properties.Settings.Default.FileManager = _LogSeverity;
                 Save();
             }
         }

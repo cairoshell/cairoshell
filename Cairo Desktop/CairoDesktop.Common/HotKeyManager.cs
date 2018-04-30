@@ -93,7 +93,7 @@ namespace CairoDesktop.Common
                     {
                         if (hotKey.Action != null)
                         {
-                            CairoLogger.Instance.Info(string.Format("Hotkey {0} pressed", hotKey.Key.ToString()));
+                            CairoLogger.Instance.Debug(string.Format("Hotkey {0} pressed", hotKey.Key.ToString()));
                             hotKey.Action.Invoke(hotKey);
                         }
                         handled = true;

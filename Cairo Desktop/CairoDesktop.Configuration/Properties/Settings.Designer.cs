@@ -382,5 +382,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["EnableTaskbarMultiMon"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Info")]
+        public string LogSeverity {
+            get {
+                return ((string)(this["LogSeverity"]));
+            }
+            set {
+                this["LogSeverity"] = value;
+            }
+        }
     }
 }

@@ -88,7 +88,7 @@ namespace CairoDesktop.WindowsTray
                     taskbarHwnd = FindWindowEx(IntPtr.Zero, taskbarHwnd, "Shell_TrayWnd", "");
                 }
             }
-            
+
             SetWindowPos(taskbarHwnd, (IntPtr)1, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
         }
 
@@ -178,15 +178,15 @@ namespace CairoDesktop.WindowsTray
                             if (!exists)
                             {
                                 TrayIcons.Add(trayIcon);
-                                CairoLogger.Instance.Info("Added tray icon: " + trayIcon.Title);
+                                CairoLogger.Instance.Debug("Added tray icon: " + trayIcon.Title);
                             }
                             else
-                                CairoLogger.Instance.Info("Modified tray icon: " + trayIcon.Title);
+                                CairoLogger.Instance.Debug("Modified tray icon: " + trayIcon.Title);
                         }
                     }
                     catch (Exception ex)
                     {
-                        CairoLogger.Instance.Error("Unable to modify the icon in the collection. Error: " + ex.ToString());
+                        CairoLogger.Instance.Error("Unable to modify the icon in the collection.", ex);
                     }
                 }
                 else if ((NIM)message == NIM.NIM_DELETE)
@@ -202,11 +202,11 @@ namespace CairoDesktop.WindowsTray
                         // Woo! Using Linq to avoid iterating!
                         TrayIcons.Remove(trayIcon);
 
-                        CairoLogger.Instance.Info("Removed tray icon: " + nicData.szTip);
+                        CairoLogger.Instance.Debug("Removed tray icon: " + nicData.szTip);
                     }
                     catch (Exception ex)
                     {
-                        CairoLogger.Instance.Error("Unable to remove the icon from the collection. Error: " + ex.ToString());
+                        CairoLogger.Instance.Error("Unable to remove the icon from the collection.", ex);
                     }
                 }
                 else if ((NIM)message == NIM.NIM_SETVERSION)
@@ -274,7 +274,7 @@ namespace CairoDesktop.WindowsTray
 
         public void IconMouseClick(NotifyIcon icon, MouseButton button, uint mouse, int doubleClickTime)
         {
-            CairoLogger.Instance.Info(String.Format("{0} mouse button clicked icon: {1}", button.ToString(), icon.Title));
+            CairoLogger.Instance.Debug(String.Format("{0} mouse button clicked icon: {1}", button.ToString(), icon.Title));
 
             uint wparam = icon.UID;
 

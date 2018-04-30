@@ -181,17 +181,23 @@ namespace CairoDesktop.AppGrabber {
 
                 foreach (XmlElement appElement in catElement.ChildNodes) {
                     // get application
-                    ApplicationInfo app = new ApplicationInfo();
-                    app.Name = appElement.ChildNodes[0].InnerText;
-                    app.Path = appElement.ChildNodes[1].InnerText;
+                    ApplicationInfo app = new ApplicationInfo
+                    {
+                        Name = appElement.ChildNodes[0].InnerText,
+                        Path = appElement.ChildNodes[1].InnerText
+                    };
+
                     if (appElement.Attributes["AskAlwaysAdmin"] != null)
                         app.AskAlwaysAdmin = Convert.ToBoolean(appElement.Attributes["AskAlwaysAdmin"].Value);
+
                     if (appElement.Attributes["AlwaysAdmin"] != null)
                         app.AlwaysAdmin = Convert.ToBoolean(appElement.Attributes["AlwaysAdmin"].Value);
+
                     if (appElement.ChildNodes.Count > 2)
                         app.Target = appElement.ChildNodes[2].InnerText;
+
                     if (!app.IsStoreApp && !Interop.Shell.Exists(app.Path)) {
-                        CairoLogger.Instance.Error(app.Path + " does not exist");
+                        CairoLogger.Instance.Debug(app.Path + " does not exist");
                         continue;
                     }
                     
