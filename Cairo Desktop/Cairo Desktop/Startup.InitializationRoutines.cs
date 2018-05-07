@@ -198,7 +198,7 @@ namespace CairoDesktop
             {
                 // look for all of the log files
                 DirectoryInfo info = new DirectoryInfo(logsFolder);
-                FileInfo[] files = info.GetFiles(string.Format("*.{1}", DefaultLogFileExtension), SearchOption.TopDirectoryOnly);
+                FileInfo[] files = info.GetFiles(string.Format("*.{0}", DefaultLogFileExtension), SearchOption.TopDirectoryOnly);
 
                 // delete any files that are more than a week old
                 DateTime now = DateTime.Now;
