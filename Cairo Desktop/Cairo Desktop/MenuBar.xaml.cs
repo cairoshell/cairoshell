@@ -264,6 +264,14 @@ namespace CairoDesktop
             appGrabber.LaunchProgramAdmin(app);
         }
 
+        private void LaunchProgramRunAs(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            appGrabber.LaunchProgramVerb(app, "runasuser");
+        }
+
         private void programsMenu_AddToQuickLaunch(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
@@ -521,6 +529,34 @@ namespace CairoDesktop
             if (fileNames != null)
             {
                 appGrabber.AddByPath(fileNames, 2);
+            }
+        }
+
+        private void ctxProgramsItem_Opened(object sender, RoutedEventArgs e)
+        {
+            if (KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
+            {
+                ContextMenu menu = (sender as ContextMenu);
+                foreach (Control item in menu.Items)
+                {
+                    if (item.Name == "miProgramsItemRunAs")
+                    {
+                        item.Visibility = Visibility.Visible;
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                ContextMenu menu = (sender as ContextMenu);
+                foreach (Control item in menu.Items)
+                {
+                    if (item.Name == "miProgramsItemRunAs")
+                    {
+                        item.Visibility = Visibility.Collapsed;
+                        return;
+                    }
+                }
             }
         }
 

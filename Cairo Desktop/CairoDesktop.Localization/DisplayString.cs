@@ -262,6 +262,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sInterface_RunAsUser
+        {
+            get
+            {
+                return getString("sInterface_RunAsUser");
+            }
+        }
+
         public static string sInterface_AddToStacks
         {
             get

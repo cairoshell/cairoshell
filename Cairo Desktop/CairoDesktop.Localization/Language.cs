@@ -32,6 +32,7 @@ namespace CairoDesktop.Localization
             { "sInterface_Open", "Open" },
             { "sInterface_OpenWith", "Open with..." },
             { "sInterface_OpenAsAdministrator", "Open as administrator" },
+            { "sInterface_RunAsUser", "Run as different user" },
             { "sInterface_AddToStacks", "Add to Stacks" },
             { "sInterface_Copy", "Copy" },
             { "sInterface_Paste", "Paste" },

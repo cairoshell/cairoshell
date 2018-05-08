@@ -39,7 +39,7 @@
                                         Width="16" />
                                 </MenuItem.Icon>
                                 <MenuItem.ContextMenu>
-                                    <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
+                                    <ContextMenu Name="ctxProgramsItem" Style="{StaticResource CairoContextMenuStyle}" Opened="ctxProgramsItem_Opened">
                                         <ContextMenu.Resources>
                                             <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
 
@@ -50,6 +50,7 @@
                                         </ContextMenu.Resources>
                                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Open)}" Click="LaunchProgram" />
                                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_OpenAsAdministrator)}" Click="LaunchProgramAdmin" />
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_RunAsUser)}" Click="LaunchProgramRunAs" Visibility="Collapsed" Name="miProgramsItemRunAs" />
                                         <Separator />
                                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu_AddToQuickLaunch)}" Click="programsMenu_AddToQuickLaunch" />
                                         <Separator />

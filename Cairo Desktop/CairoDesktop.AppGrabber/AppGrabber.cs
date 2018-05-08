@@ -302,6 +302,14 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
+        public void LaunchProgramVerb(ApplicationInfo app, string verb)
+        {
+            if (!Shell.StartProcess(app.Path, "", verb))
+            {
+                CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         public void LaunchProgramAdmin(ApplicationInfo app)
         {
             if (!app.IsStoreApp)
