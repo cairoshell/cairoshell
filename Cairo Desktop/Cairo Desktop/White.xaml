@@ -10,6 +10,9 @@
     <BitmapImage x:Key="SearchIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/searchBlack.png"></BitmapImage>
     <BitmapImage x:Key="ActionCenterIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/actionCenterBlack.png"></BitmapImage>
     <BitmapImage x:Key="VolumeIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeIconBlack.png"></BitmapImage>
+    <BitmapImage x:Key="VolumeLowIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeLowIconBlack.png"></BitmapImage>
+    <BitmapImage x:Key="VolumeOffIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeOffIconBlack.png"></BitmapImage>
+    <BitmapImage x:Key="VolumeMuteIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeMuteIconBlack.png"></BitmapImage>
     <BitmapImage x:Key="WhiteBarBackground" UriSource="pack://application:,,,/CairoDesktop;component/Resources/menubarWhite.png"></BitmapImage>
 
     <ImageBrush x:Key="MenuBarBackground" ImageSource="{StaticResource WhiteBarBackground}" />

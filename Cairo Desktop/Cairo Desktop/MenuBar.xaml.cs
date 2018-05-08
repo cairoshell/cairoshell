@@ -17,6 +17,7 @@ using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
 using CairoDesktop.Common.Logging;
+using System.Windows.Media;
 
 namespace CairoDesktop
 {
@@ -93,7 +94,41 @@ namespace CairoDesktop
             }
 
             if (Settings.EnableSysTray)
-                miOpenVolume.Visibility = Visibility.Visible;
+            {
+                initializeVolumeIcon();
+            }
+        }
+
+        private void initializeVolumeIcon()
+        {
+            miOpenVolume.Visibility = Visibility.Visible;
+            volumeIcon_Tick();
+            
+            // update volume icon periodically
+            DispatcherTimer volumeIconTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 2), DispatcherPriority.Background, delegate
+            {
+                volumeIcon_Tick();
+            }, this.Dispatcher);
+        }
+
+        private void volumeIcon_Tick()
+        {
+            if (VolumeUtilities.IsVolumeMuted())
+            {
+                imgOpenVolume.Source = this.FindResource("VolumeMuteIcon") as ImageSource;
+            }
+            else if (VolumeUtilities.GetMasterVolume() <= 0)
+            {
+                imgOpenVolume.Source = this.FindResource("VolumeOffIcon") as ImageSource;
+            }
+            else if (VolumeUtilities.GetMasterVolume() < 0.5)
+            {
+                imgOpenVolume.Source = this.FindResource("VolumeLowIcon") as ImageSource;
+            }
+            else
+            {
+                imgOpenVolume.Source = this.FindResource("VolumeIcon") as ImageSource;
+            }
         }
 
         private void setupPrograms()

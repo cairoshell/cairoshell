@@ -102,6 +102,7 @@
     <Compile Include="TypeCollectionEventArgs.cs" />
     <Compile Include="ThreadSafeObservableCollection.cs" />
     <Compile Include="SearchHelper.cs" />
+    <Compile Include="VolumeUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj">

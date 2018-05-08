@@ -223,7 +223,7 @@
                     <MenuItem.Header>
                         <Image Source="{StaticResource VolumeIcon}"
                               Width="38"
-                              Height="22" />
+                              Height="22" Name="imgOpenVolume" />
                     </MenuItem.Header>
                     <MenuItem.ContextMenu>
                         <ContextMenu Style="{StaticResource CairoContextMenuStyle}">

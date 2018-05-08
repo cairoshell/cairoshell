@@ -158,6 +158,9 @@
     <BitmapImage x:Key="SearchIcon" UriSource="Resources\searchDefault.png"></BitmapImage>
     <BitmapImage x:Key="ActionCenterIcon" UriSource="Resources\actionCenterDefault.png"></BitmapImage>
     <BitmapImage x:Key="VolumeIcon" UriSource="Resources\volumeIconDefault.png"></BitmapImage>
+    <BitmapImage x:Key="VolumeLowIcon" UriSource="Resources\volumeLowIconDefault.png"></BitmapImage>
+    <BitmapImage x:Key="VolumeOffIcon" UriSource="Resources\volumeOffIconDefault.png"></BitmapImage>
+    <BitmapImage x:Key="VolumeMuteIcon" UriSource="Resources\volumeMuteIconDefault.png"></BitmapImage>
     <BitmapImage x:Key="MenubarShadow" UriSource="Resources\menubarShadow.png"></BitmapImage>
     <BitmapImage x:Key="NullIcon" UriSource="Resources\nullIcon.png"></BitmapImage>
     
