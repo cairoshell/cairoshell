@@ -54,6 +54,12 @@ namespace CairoDesktop
             }
         }
 
+        private static void SetupSettings()
+        {
+            if (Settings.IsFirstRun == true)
+                Settings.Upgrade();
+        }
+
         private static void SetupLoggingSystem()
         {
             // use the default logs folder

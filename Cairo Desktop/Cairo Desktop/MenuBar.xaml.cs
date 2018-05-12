@@ -199,12 +199,12 @@ namespace CairoDesktop
                 isProgramsMenuHotkeyRegistered = true;
             }
 
-            if (Screen.Primary && keyboardListener == null)
+            /*if (Screen.Primary && keyboardListener == null)
             {
                 keyboardListener = new LowLevelKeyboardListener();
                 keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
                 keyboardListener.HookKeyboard();
-            }
+            }*/
 
             if (Settings.EnableMenuBarBlur)
                 Shell.EnableWindowBlur(handle);
@@ -542,7 +542,8 @@ namespace CairoDesktop
 
                 WinSparkle.win_sparkle_cleanup();
 
-                keyboardListener.UnHookKeyboard();
+                if (keyboardListener != null)
+                    keyboardListener.UnHookKeyboard();
 
                 if (Startup.IsCairoUserShell)
                     AppBarHelper.ResetWorkArea();

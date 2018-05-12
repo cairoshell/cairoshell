@@ -1510,6 +1510,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_Advanced_LoggingLevel
+        {
+            get
+            {
+                return getString("sSettings_Advanced_LoggingLevel");
+            }
+        }
+
         public static string sSettings_Advanced_Shell
         {
             get

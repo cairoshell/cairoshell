@@ -626,7 +626,7 @@ namespace CairoDesktop.Configuration
             set
             {
                 _LogSeverity = value;
-                Properties.Settings.Default.FileManager = _LogSeverity;
+                Properties.Settings.Default.LogSeverity = _LogSeverity;
                 Save();
             }
         }

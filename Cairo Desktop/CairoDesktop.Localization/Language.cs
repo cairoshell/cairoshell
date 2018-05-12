@@ -188,6 +188,7 @@ namespace CairoDesktop.Localization
             { "sSettings_Taskbar_DisplayModeOverlap", "Taskbar overlaps windows" },
             { "sSettings_Taskbar_DisplayModeAutoHide", "Taskbar automatically hides" },
             { "sSettings_Taskbar_EnableTaskbarMultiMon", "Show Taskbar on multiple monitors" },
+            { "sSettings_Advanced_LoggingLevel", "Logging level:" },
             { "sSettings_Advanced_Shell", "Shell" },
             { "sSettings_Advanced_CairoIsShell", "Cairo is currently set as your shell." },
             { "sSettings_Advanced_ExplorerIsShell", "Windows Explorer is currently set as your shell." },

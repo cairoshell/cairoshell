@@ -27,6 +27,7 @@
             loadRadioGroups();
             loadCategories();
             loadHotKeys();
+            loadLoggingLevels();
 
             checkUpdateConfig();
             checkTrayStatus();
@@ -186,6 +187,14 @@
             {
                 cboCairoMenuHotKeyKey.Items.Add(key);
                 cboDesktopOverlayHotKeyKey.Items.Add(key);
+            }
+        }
+
+        private void loadLoggingLevels()
+        {
+            foreach (string sev in Enum.GetNames(typeof(Common.Logging.LogSeverity)))
+            {
+                cboLogSeverity.Items.Add(sev);
             }
         }
 

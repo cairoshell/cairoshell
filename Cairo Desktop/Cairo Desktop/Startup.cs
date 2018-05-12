@@ -57,7 +57,8 @@
             ProcessCommandLineArgs(args);
             SingleInstanceCheck();
             SetShellReadyEvent();
-            
+
+            SetupSettings(); // run this before logging setup so that preferences are always used
             SetupLoggingSystem();
             WriteApplicationDebugInfoToConsole();
 
@@ -68,10 +69,6 @@
             // check if we are the current user's shell
             // set here as well so that we don't behave differently once user changes setting
             IsCairoUserShell = Shell.IsCairoUserShell;
-
-            // Before we do anything, check if settings need to be upgraded
-            if (Settings.IsFirstRun == true)
-                Settings.Upgrade();
 
             if (Settings.EnableDesktop)
             {
