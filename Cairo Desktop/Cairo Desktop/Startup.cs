@@ -155,6 +155,7 @@
         {
             lock (screenSetupLock)
             {
+                CairoLogger.Instance.Debug("Beginning screen setup");
                 IsSettingScreens = true;
 
                 List<string> sysScreens = new List<string>();
@@ -217,6 +218,8 @@
                     // close windows associated with removed screens
                     foreach (string name in removedScreens)
                     {
+                        CairoLogger.Instance.Debug("Removing windows associated with screen " + name);
+
                         // close taskbars
                         Taskbar taskbarToClose = null;
                         foreach (Taskbar bar in TaskbarWindows)
@@ -271,6 +274,8 @@
                         }
                     }
 
+                    CairoLogger.Instance.Debug("Refreshing screen information for stale windows");
+
                     // update screens of stale windows
                     foreach (MenuBar bar in MenuBarWindows)
                     {
@@ -322,6 +327,8 @@
                 // open windows on newly added screens
                 foreach (var screen in System.Windows.Forms.Screen.AllScreens)
                 {
+                    CairoLogger.Instance.Debug("Opening windows on new screen " + screen.DeviceName);
+
                     if ((skipChecks && !screen.Primary) || addedScreens.Contains(screen.DeviceName))
                     {
                         if (Settings.EnableMenuBarMultiMon)
@@ -355,6 +362,7 @@
                 }
 
                 IsSettingScreens = false;
+                CairoLogger.Instance.Debug("Completed screen setup");
             }
         }
 
