@@ -44,6 +44,7 @@
 
         public static bool IsSettingScreens { get; set; }
 
+        private static System.Windows.Forms.Screen[] screenState = { }; 
         private static Object screenSetupLock = new Object();
 
         /// <summary>
@@ -158,6 +159,8 @@
                 CairoLogger.Instance.Debug("Beginning screen setup");
                 IsSettingScreens = true;
 
+                bool shouldSetScreens = true;
+
                 List<string> sysScreens = new List<string>();
                 List<string> openScreens = new List<string>();
                 List<string> addedScreens = new List<string>();
@@ -165,200 +168,227 @@
 
                 ResetScreenCache();
 
-                if (!skipChecks)
+                if (screenState.Length == System.Windows.Forms.Screen.AllScreens.Length)
                 {
-                    // enumerate screens
-
-                    if (Settings.EnableMenuBarMultiMon || !Settings.EnableTaskbar)
+                    bool same = true;
+                    for (int i = 0; i < screenState.Length; i++)
                     {
-                        foreach (MenuBar bar in MenuBarWindows)
+                        System.Windows.Forms.Screen current = System.Windows.Forms.Screen.AllScreens[i];
+                        if (!(screenState[i].Bounds == current.Bounds && screenState[i].DeviceName == current.DeviceName && screenState[i].Primary == current.Primary && screenState[i].WorkingArea == current.WorkingArea))
                         {
-                            if (bar.Screen != null)
-                                openScreens.Add(bar.Screen.DeviceName);
+                            same = false;
+                            break;
                         }
                     }
-                    else if (Settings.EnableTaskbarMultiMon)
+
+                    if (same)
                     {
-                        foreach (Taskbar bar in TaskbarWindows)
-                        {
-                            if (bar.Screen != null)
-                                openScreens.Add(bar.Screen.DeviceName);
-                        }
+                        CairoLogger.Instance.Debug("Skipping screen setup due to no differences");
+                        shouldSetScreens = false;
                     }
                     else
-                        return;
+                        screenState = System.Windows.Forms.Screen.AllScreens;
+                }
+                else
+                    screenState = System.Windows.Forms.Screen.AllScreens;
 
-                    foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+                if (shouldSetScreens)
+                {
+                    if (!skipChecks)
                     {
-                        CairoLogger.Instance.Debug(string.Format("{0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
+                        // enumerate screens
 
-                        sysScreens.Add(screen.DeviceName);
-                    }
-
-                    // figure out which screens have been added vs removed
-
-                    foreach (string name in sysScreens)
-                    {
-                        if (!openScreens.Contains(name))
-                            addedScreens.Add(name);
-                    }
-
-                    foreach (string name in openScreens)
-                    {
-                        if (!sysScreens.Contains(name))
-                            removedScreens.Add(name);
-                    }
-
-                    if (removedScreens.Count == sysScreens.Count)
-                    {
-                        // remove everything?! no way!
-                        return;
-                    }
-
-                    // close windows associated with removed screens
-                    foreach (string name in removedScreens)
-                    {
-                        CairoLogger.Instance.Debug("Removing windows associated with screen " + name);
-
-                        // close taskbars
-                        Taskbar taskbarToClose = null;
-                        foreach (Taskbar bar in TaskbarWindows)
+                        if (Settings.EnableMenuBarMultiMon || !Settings.EnableTaskbar)
                         {
-                            if (bar.Screen != null && bar.Screen.DeviceName == name)
+                            foreach (MenuBar bar in MenuBarWindows)
                             {
-                                taskbarToClose = bar;
-                                break;
+                                if (bar.Screen != null)
+                                    openScreens.Add(bar.Screen.DeviceName);
+                            }
+                        }
+                        else if (Settings.EnableTaskbarMultiMon)
+                        {
+                            foreach (Taskbar bar in TaskbarWindows)
+                            {
+                                if (bar.Screen != null)
+                                    openScreens.Add(bar.Screen.DeviceName);
+                            }
+                        }
+                        else
+                            return;
+
+                        foreach (var screen in screenState)
+                        {
+                            CairoLogger.Instance.Debug(string.Format("{0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
+
+                            sysScreens.Add(screen.DeviceName);
+                        }
+
+                        // figure out which screens have been added vs removed
+
+                        foreach (string name in sysScreens)
+                        {
+                            if (!openScreens.Contains(name))
+                                addedScreens.Add(name);
+                        }
+
+                        foreach (string name in openScreens)
+                        {
+                            if (!sysScreens.Contains(name))
+                                removedScreens.Add(name);
+                        }
+
+                        if (removedScreens.Count == sysScreens.Count)
+                        {
+                            // remove everything?! no way!
+                            return;
+                        }
+
+                        // close windows associated with removed screens
+                        foreach (string name in removedScreens)
+                        {
+                            CairoLogger.Instance.Debug("Removing windows associated with screen " + name);
+
+                            // close taskbars
+                            Taskbar taskbarToClose = null;
+                            foreach (Taskbar bar in TaskbarWindows)
+                            {
+                                if (bar.Screen != null && bar.Screen.DeviceName == name)
+                                {
+                                    taskbarToClose = bar;
+                                    break;
+                                }
+                            }
+
+                            if (taskbarToClose != null)
+                            {
+                                taskbarToClose.Close();
+                                TaskbarWindows.Remove(taskbarToClose);
+                            }
+
+                            // close menu bars
+                            MenuBar barToClose = null;
+                            foreach (MenuBar bar in MenuBarWindows)
+                            {
+                                if (bar.Screen != null && bar.Screen.DeviceName == name)
+                                {
+                                    barToClose = bar;
+                                    break;
+                                }
+                            }
+
+                            if (barToClose != null)
+                            {
+                                if (!barToClose.IsClosing)
+                                    barToClose.Close();
+                                MenuBarWindows.Remove(barToClose);
+                            }
+
+                            // close menu bar shadows
+                            MenuBarShadow barShadowToClose = null;
+                            foreach (MenuBarShadow bar in MenuBarShadowWindows)
+                            {
+                                if (bar.Screen != null && bar.Screen.DeviceName == name)
+                                {
+                                    barShadowToClose = bar;
+                                    break;
+                                }
+                            }
+
+                            if (barShadowToClose != null)
+                            {
+                                if (!barShadowToClose.IsClosing)
+                                    barShadowToClose.Close();
+                                MenuBarShadowWindows.Remove(barShadowToClose);
                             }
                         }
 
-                        if (taskbarToClose != null)
-                        {
-                            taskbarToClose.Close();
-                            TaskbarWindows.Remove(taskbarToClose);
-                        }
+                        CairoLogger.Instance.Debug("Refreshing screen information for stale windows");
 
-                        // close menu bars
-                        MenuBar barToClose = null;
+                        // update screens of stale windows
                         foreach (MenuBar bar in MenuBarWindows)
                         {
-                            if (bar.Screen != null && bar.Screen.DeviceName == name)
+                            if (bar.Screen != null)
                             {
-                                barToClose = bar;
-                                break;
+                                foreach (System.Windows.Forms.Screen screen in screenState)
+                                {
+                                    if (screen.DeviceName == bar.Screen.DeviceName)
+                                    {
+                                        bar.Screen = screen;
+                                        break;
+                                    }
+                                }
                             }
                         }
 
-                        if (barToClose != null)
-                        {
-                            if (!barToClose.IsClosing)
-                                barToClose.Close();
-                            MenuBarWindows.Remove(barToClose);
-                        }
-
-                        // close menu bar shadows
-                        MenuBarShadow barShadowToClose = null;
                         foreach (MenuBarShadow bar in MenuBarShadowWindows)
                         {
-                            if (bar.Screen != null && bar.Screen.DeviceName == name)
+                            if (bar.Screen != null)
                             {
-                                barShadowToClose = bar;
-                                break;
+                                foreach (System.Windows.Forms.Screen screen in screenState)
+                                {
+                                    if (screen.DeviceName == bar.Screen.DeviceName)
+                                    {
+                                        bar.Screen = screen;
+                                        break;
+                                    }
+                                }
                             }
                         }
 
-                        if (barShadowToClose != null)
+                        foreach (Taskbar bar in TaskbarWindows)
                         {
-                            if (!barShadowToClose.IsClosing)
-                                barShadowToClose.Close();
-                            MenuBarShadowWindows.Remove(barShadowToClose);
-                        }
-                    }
-
-                    CairoLogger.Instance.Debug("Refreshing screen information for stale windows");
-
-                    // update screens of stale windows
-                    foreach (MenuBar bar in MenuBarWindows)
-                    {
-                        if (bar.Screen != null)
-                        {
-                            foreach (System.Windows.Forms.Screen screen in System.Windows.Forms.Screen.AllScreens)
+                            if (bar.Screen != null)
                             {
-                                if (screen.DeviceName == bar.Screen.DeviceName)
+                                foreach (System.Windows.Forms.Screen screen in screenState)
                                 {
-                                    bar.Screen = screen;
-                                    break;
+                                    if (screen.DeviceName == bar.Screen.DeviceName)
+                                    {
+                                        bar.Screen = screen;
+                                        bar.setPosition();
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
 
-                    foreach (MenuBarShadow bar in MenuBarShadowWindows)
+                    // open windows on newly added screens
+                    foreach (var screen in screenState)
                     {
-                        if (bar.Screen != null)
+                        if ((skipChecks && !screen.Primary) || addedScreens.Contains(screen.DeviceName))
                         {
-                            foreach (System.Windows.Forms.Screen screen in System.Windows.Forms.Screen.AllScreens)
+                            CairoLogger.Instance.Debug("Opening windows on screen " + screen.DeviceName);
+
+                            if (Settings.EnableMenuBarMultiMon)
                             {
-                                if (screen.DeviceName == bar.Screen.DeviceName)
+                                // menu bars
+                                MenuBar newMenuBar = new MenuBar(screen);
+                                newMenuBar.Show();
+                                MenuBarWindows.Add(newMenuBar);
+
+                                if (Settings.EnableMenuBarShadow)
                                 {
-                                    bar.Screen = screen;
-                                    break;
+                                    // menu bar shadows
+                                    MenuBarShadow newMenuBarShadow = new MenuBarShadow(newMenuBar, screen);
+                                    newMenuBarShadow.Show();
+                                    MenuBarShadowWindows.Add(newMenuBarShadow);
                                 }
                             }
-                        }
-                    }
 
-                    foreach (Taskbar bar in TaskbarWindows)
-                    {
-                        if (bar.Screen != null)
-                        {
-                            foreach (System.Windows.Forms.Screen screen in System.Windows.Forms.Screen.AllScreens)
+                            if (Settings.EnableTaskbarMultiMon && Settings.EnableTaskbar)
                             {
-                                if (screen.DeviceName == bar.Screen.DeviceName)
-                                {
-                                    bar.Screen = screen;
-                                    bar.setPosition();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // open windows on newly added screens
-                foreach (var screen in System.Windows.Forms.Screen.AllScreens)
-                {
-                    CairoLogger.Instance.Debug("Opening windows on new screen " + screen.DeviceName);
-
-                    if ((skipChecks && !screen.Primary) || addedScreens.Contains(screen.DeviceName))
-                    {
-                        if (Settings.EnableMenuBarMultiMon)
-                        {
-                            // menu bars
-                            MenuBar newMenuBar = new MenuBar(screen);
-                            newMenuBar.Show();
-                            MenuBarWindows.Add(newMenuBar);
-
-                            if (Settings.EnableMenuBarShadow)
-                            {
-                                // menu bar shadows
-                                MenuBarShadow newMenuBarShadow = new MenuBarShadow(newMenuBar, screen);
-                                newMenuBarShadow.Show();
-                                MenuBarShadowWindows.Add(newMenuBarShadow);
+                                // taskbars
+                                Taskbar newTaskbar = new Taskbar(screen);
+                                newTaskbar.Show();
+                                TaskbarWindows.Add(newTaskbar);
                             }
                         }
 
-                        if (Settings.EnableTaskbarMultiMon && Settings.EnableTaskbar)
-                        {
-                            // taskbars
-                            Taskbar newTaskbar = new Taskbar(screen);
-                            newTaskbar.Show();
-                            TaskbarWindows.Add(newTaskbar);
-                        }
+                        // Set desktop work area for when Explorer isn't running
+                        if (IsCairoUserShell)
+                            AppBarHelper.SetWorkArea(screen);
                     }
-
-                    // Set desktop work area for when Explorer isn't running
-                    if (IsCairoUserShell)
-                        AppBarHelper.SetWorkArea(screen);
                 }
 
                 IsSettingScreens = false;
