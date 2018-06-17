@@ -146,14 +146,18 @@
                         Width="16"
                         Height="18" />
         </Button>
-        <Button Style="{StaticResource CairoDesktopNavItem2Style}"
-                    Margin="23,-5,0,0" Click="Home_Click" ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Home)}">
+        <Button Name="HomeButton" Style="{StaticResource CairoDesktopNavItem2Style}"
+                    Margin="23,-5,0,0" PreviewMouseDown="HomeButton_PreviewMouseDown"  ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Home)}">
+           
             <Image Source="Resources\controlsHome.png"
                         Width="19"
                         Height="19" />
         </Button>
-        <Button Style="{StaticResource CairoDesktopNavItem2Style}"
+        <Button Name="BrowseButton" Style="{StaticResource CairoDesktopNavItem2Style}"
                     Margin="22,-5,0,0" Click="Browse_Click" ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Browse)}">
+            <Button.ContextMenu>
+                <ContextMenu Name="BrowseButtonContextMenu" ContextMenuService.ContextMenuOpening="BrowseButtonContextMenu_ContextMenuOpening" />
+            </Button.ContextMenu>
             <Image Source="Resources\controlsBrowse.png"
                         Width="21"
                         Height="17" />
