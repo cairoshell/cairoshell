@@ -214,8 +214,7 @@ namespace CairoDesktop
             }
             else
             {
-                if (Settings.TaskbarMode != 0)
-                    takeFocus(); // unable to set topmost unless we do this
+                takeFocus(); // unable to set topmost unless we do this
 
                 this.Topmost = true;
                 Shell.ShowWindowTopMost(handle);
