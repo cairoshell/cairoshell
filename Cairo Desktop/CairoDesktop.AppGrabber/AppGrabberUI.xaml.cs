@@ -383,7 +383,8 @@ namespace CairoDesktop.AppGrabber
                     else
                     {
                         // not a known app, add to Uncategorized
-                        uncat.Add(app);
+                        if (uncat != null)
+                            uncat.Add(app);
                     }
                 }
             }

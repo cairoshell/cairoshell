@@ -205,6 +205,23 @@ namespace CairoDesktop
             }
         }
 
+        public void SetFullScreenMode(bool entering)
+        {
+            if (entering)
+            {
+                this.Topmost = false;
+                Shell.ShowWindowBottomMost(handle);
+            }
+            else
+            {
+                if (Settings.TaskbarMode != 0)
+                    takeFocus(); // unable to set topmost unless we do this
+
+                this.Topmost = true;
+                Shell.ShowWindowTopMost(handle);
+            }
+        }
+
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (msg == NativeMethods.WM_MOUSEACTIVATE)
@@ -223,16 +240,7 @@ namespace CairoDesktop
                         break;
 
                     case NativeMethods.AppBarNotifications.FullScreenApp:
-                        if ((int)lParam == 1)
-                        {
-                            this.Topmost = false;
-                            Shell.ShowWindowBottomMost(this.handle);
-                        }
-                        else
-                        {
-                            this.Topmost = true;
-                            Shell.ShowWindowTopMost(this.handle);
-                        }
+                        SetFullScreenMode((int)lParam == 1);
 
                         break;
 
