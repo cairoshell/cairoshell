@@ -36,7 +36,7 @@
                             <MenuItem>
                                 <MenuItem.Header>
                                     <Grid>
-                                        <ListView x:Name="Scroller" FocusManager.IsFocusScope="True" Style="{StaticResource FolderViewStyle}" ItemsSource="{Binding Path=Files}" />
+                                        <ListView x:Name="Scroller" FocusManager.IsFocusScope="True" Style="{StaticResource FolderViewStyle}" ItemsSource="{Binding Path=Files}" PreviewMouseWheel="Scroller_PreviewMouseWheel" />
                                         <Button Style="{StaticResource StackTopButton}" Click="Open_Click" CommandParameter="{Binding Path=FullName}" Content="2" ToolTip="{Binding Path=(l10n:DisplayString.sStacks_OpenInNewWindow)}" />
                                     </Grid>
                                 </MenuItem.Header>
