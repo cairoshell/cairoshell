@@ -272,6 +272,9 @@
                             {
                                 if (bar.Screen != null && bar.Screen.DeviceName == name)
                                 {
+                                    if (bar.Screen.Primary)
+                                        CairoLogger.Instance.Debug("Closing menu bar on primary display");
+
                                     barToClose = bar;
                                     break;
                                 }
@@ -362,6 +365,9 @@
 
                             if (Settings.EnableMenuBarMultiMon)
                             {
+                                if (screen.Primary)
+                                    CairoLogger.Instance.Debug("Opening menu bar on new primary display");
+
                                 // menu bars
                                 MenuBar newMenuBar = new MenuBar(screen);
                                 newMenuBar.Show();
