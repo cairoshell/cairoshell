@@ -79,8 +79,18 @@ namespace CairoDesktop.Common.Logging
         /// <param name="message">Log message</param>
         public void Debug(string message)
         {
-            if (_isDebug)
-                Debug(message, null);
+            // if (_isDebug) // Removed due to the same condition exisiting in the DebugIf call
+            DebugIf(true, message, null);
+        }
+
+        /// <summary>
+        /// Log a message when severity level is "Debug" or higher AND condition is met.
+        /// </summary>
+        /// <param name="message">Log message</param>
+        public void DebugIf(bool condition, string message)
+        {
+            // if (_isDebug) // Removed due to the same condition exisiting in the DebugIf call
+            DebugIf(condition, message, null);
         }
 
         /// <summary>
@@ -90,9 +100,22 @@ namespace CairoDesktop.Common.Logging
         /// <param name="exception">Inner exception.</param>
         public void Debug(string message, Exception exception)
         {
-            if (_isDebug)
+            // if (_isDebug) // Removed due to the same condition exisiting in the DebugIf call
+            DebugIf(true, message, exception);
+        }
+
+        /// <summary>
+        /// Log a message when severity level is "Debug" or higher AND condition is met.
+        /// </summary>
+        /// <param name="message">Log message.</param>
+        /// <param name="exception">Inner exception.</param>
+        public void DebugIf(bool condition, string message, Exception exception)
+        {
+            if (_isDebug && condition)
                 OnLog(new LogEventArgs(LogSeverity.Debug, message, exception, DateTime.Now));
         }
+
+
 
         /// <summary>
         /// Log a message when severity level is "Info" or higher.

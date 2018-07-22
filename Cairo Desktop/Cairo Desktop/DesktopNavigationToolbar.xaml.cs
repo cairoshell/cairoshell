@@ -18,7 +18,7 @@ namespace CairoDesktop
     public partial class DesktopNavigationToolbar : Window
     {
         private WindowInteropHelper helper;
-        private System.Windows.Controls.ContextMenu homeContextMenu;
+        private System.Windows.Controls.ContextMenu browseContextMenu = new System.Windows.Controls.ContextMenu();
 
         public Desktop ToolbarOwner
         {
@@ -78,32 +78,43 @@ namespace CairoDesktop
             }
             else if (e.RightButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-
             }
         }
-
-        private void BrowseButtonContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        private void BrowseButton_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            BrowseButtonContextMenu.Items.Clear();
-
-            if (Owner is Desktop owningDesktop)
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-                foreach (string location in owningDesktop.PathHistory)
-                {
-                    System.Windows.Controls.MenuItem locationMenuItem = new System.Windows.Controls.MenuItem();
-                    locationMenuItem.Header = Path.GetFileName(location);
-                    locationMenuItem.Tag = location;
-                    locationMenuItem.Click += LocationMenuItem_Click;
-                    BrowseButtonContextMenu.Items.Add(locationMenuItem);
-                }
 
-                if (owningDesktop.PathHistory.Count > 0)
-                {
-                    BrowseButtonContextMenu.Items.Add(new System.Windows.Controls.Separator());
+            }
+            else if (e.RightButton == System.Windows.Input.MouseButtonState.Pressed)
+            {
 
-                    System.Windows.Controls.MenuItem clearHistoryMenuItem = new System.Windows.Controls.MenuItem { Header = "Clear History" };
-                    clearHistoryMenuItem.Click += ClearHistoryMenuItem_Click;
-                    BrowseButtonContextMenu.Items.Add(clearHistoryMenuItem);
+                if (Owner is Desktop owningDesktop)
+                {
+                    if (owningDesktop.PathHistory.Count > 0)
+                    {
+                        browseContextMenu.Items.Clear();
+
+                        foreach (string location in owningDesktop.PathHistory)
+                        {
+                            System.Windows.Controls.MenuItem locationMenuItem = new System.Windows.Controls.MenuItem();
+                            locationMenuItem.Header = Path.GetFileName(location);
+                            locationMenuItem.Tag = location;
+                            locationMenuItem.Click += LocationMenuItem_Click;
+
+                            browseContextMenu.Items.Add(locationMenuItem);
+                        }
+
+                        browseContextMenu.Items.Add(new System.Windows.Controls.Separator());
+
+                        System.Windows.Controls.MenuItem clearHistoryMenuItem = new System.Windows.Controls.MenuItem { Header = "Clear History" };
+                        clearHistoryMenuItem.Click += ClearHistoryMenuItem_Click;
+                        browseContextMenu.Items.Add(clearHistoryMenuItem);
+
+                        browseContextMenu.IsOpen = true;
+
+                        e.Handled = true;
+                    }
                 }
             }
         }
