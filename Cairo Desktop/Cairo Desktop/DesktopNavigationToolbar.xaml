@@ -154,10 +154,7 @@
                         Height="19" />
         </Button>
         <Button Name="BrowseButton" Style="{StaticResource CairoDesktopNavItem2Style}"
-                    Margin="22,-5,0,0" Click="Browse_Click" ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Browse)}">
-            <Button.ContextMenu>
-                <ContextMenu Name="BrowseButtonContextMenu" ContextMenuService.ContextMenuOpening="BrowseButtonContextMenu_ContextMenuOpening" />
-            </Button.ContextMenu>
+                    Margin="22,-5,0,0" Click="Browse_Click" PreviewMouseDown="BrowseButton_PreviewMouseDown" ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Browse)}">
             <Image Source="Resources\controlsBrowse.png"
                         Width="21"
                         Height="17" />
