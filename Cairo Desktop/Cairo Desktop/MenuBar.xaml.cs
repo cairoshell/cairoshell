@@ -392,10 +392,7 @@ namespace CairoDesktop
                             Shell.ShowWindowBottomMost(this.handle);
 
                             if (Settings.EnableTaskbar)
-                            {
-                                Startup.TaskbarWindow.Topmost = false;
-                                Shell.ShowWindowBottomMost(Startup.TaskbarWindow.handle);
-                            }
+                                Startup.TaskbarWindow.SetFullScreenMode(true);
                         }
                         else
                         {
@@ -404,10 +401,7 @@ namespace CairoDesktop
                             Shell.ShowWindowTopMost(this.handle);
 
                             if (Settings.EnableTaskbar)
-                            {
-                                Startup.TaskbarWindow.Topmost = true;
-                                Shell.ShowWindowTopMost(Startup.TaskbarWindow.handle);
-                            }
+                                Startup.TaskbarWindow.SetFullScreenMode(false);
                         }
 
                         break;

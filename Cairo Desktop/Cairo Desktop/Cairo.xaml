@@ -1508,14 +1508,19 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <!-- Welcome -->
-    <Style x:Key="WelcomeText" TargetType="{x:Type TextBlock}">
+    
+    <!-- Wizards -->
+    <Style x:Key="WizardText" TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily" Value="Corbel" />
         <Setter Property="FontSize" Value="14" />
         <Setter Property="Foreground" Value="Black" />
-        <Setter Property="LineHeight" Value="20" />
         <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+
+    <!-- Welcome -->
+    <Style x:Key="WelcomeText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource WizardText}">
+        <Setter Property="LineHeight" Value="20" />
         <Setter Property="Margin" Value="64,0,64,18" />
     </Style>
     <Style x:Key="WelcomeHeading" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource WelcomeText}">

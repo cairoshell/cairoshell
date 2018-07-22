@@ -178,5 +178,20 @@ namespace CairoDesktop {
         }
 
         #endregion
+
+        private void Scroller_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var scrollViewer = System.Windows.Media.VisualTreeHelper.GetChild(sender as ListView, 0) as ScrollViewer;
+
+            if (scrollViewer == null)
+                return;
+
+            if (e.Delta < 0)
+                scrollViewer.LineRight();
+            else
+                scrollViewer.LineLeft();
+
+            e.Handled = true;
+        }
     }
 }
