@@ -44,7 +44,7 @@
 
         public static bool IsSettingScreens { get; set; }
 
-        private static System.Windows.Forms.Screen[] screenState = { }; 
+        private static System.Windows.Forms.Screen[] screenState = { };
         private static Object screenSetupLock = new Object();
 
         /// <summary>
@@ -64,7 +64,7 @@
             WriteApplicationDebugInfoToConsole();
 
             SetupPluginSystem();
-            
+
             #endregion
 
             // check if we are the current user's shell
@@ -76,7 +76,7 @@
                 // hide the windows desktop
                 Shell.ToggleDesktopIcons(false);
             }
-            
+
             App app = new App();
             app.InitializeComponent();
 
@@ -116,7 +116,7 @@
                 TaskbarWindow.Show();
                 TaskbarWindows.Add(TaskbarWindow);
             }
-            
+
             if (Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon)
                 ScreenSetup(true);
             else if (IsCairoUserShell) // Set desktop work area for when Explorer isn't running
@@ -131,7 +131,7 @@
 #if (ENABLEFIRSTRUN)
             FirstRun();
 #endif
-            
+
             // login items only necessary if Explorer didn't start them
             if (IsCairoUserShell && !isRestart)
             {
@@ -272,8 +272,7 @@
                             {
                                 if (bar.Screen != null && bar.Screen.DeviceName == name)
                                 {
-                                    if (bar.Screen.Primary)
-                                        CairoLogger.Instance.Debug("Closing menu bar on primary display");
+                                    CairoLogger.Instance.DebugIf(bar.Screen.Primary, "Closing menu bar on primary display");
 
                                     barToClose = bar;
                                     break;
@@ -365,8 +364,7 @@
 
                             if (Settings.EnableMenuBarMultiMon)
                             {
-                                if (screen.Primary)
-                                    CairoLogger.Instance.Debug("Opening menu bar on new primary display");
+                                CairoLogger.Instance.DebugIf(screen.Primary, "Opening MenuBar on new primary display");
 
                                 // menu bars
                                 MenuBar newMenuBar = new MenuBar(screen);
@@ -417,8 +415,8 @@
             }
             catch (Exception ex)
             {
-                CairoMessage.ShowAlert(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex), 
-                    "Unexpected error!", 
+                CairoMessage.ShowAlert(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex),
+                    "Unexpected error!",
                     MessageBoxImage.Error);
             }
         }
@@ -496,7 +494,7 @@
                         }
                     }
                     catch { continue; } // in case of unable to load registry key
-                    
+
                     if (key != null && key.ValueCount > 0)
                     {
                         foreach (string valueName in key.GetValueNames())
@@ -551,7 +549,7 @@
                 { new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), Dispatcher.CurrentDispatcher), Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false) },
                 { new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Dispatcher.CurrentDispatcher), Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false) }
             };
-            
+
             foreach (KeyValuePair<SystemDirectory, RegistryKey> startupFolder in startupFolderKeys)
             {
                 foreach (SystemFile startupFile in startupFolder.Key.Files)
@@ -591,7 +589,7 @@
 
             int exeIndex = startupPath.IndexOf(".exe");
 
-            if(exeIndex > 0)
+            if (exeIndex > 0)
             {
                 // we may have args for an executable
                 if (exeIndex + 4 != startupPath.Length)

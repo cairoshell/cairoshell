@@ -75,7 +75,6 @@
     <Compile Include="DisposableCollection.cs" />
     <Compile Include="DisposableObject.cs" />
     <Compile Include="LowLevelKeyboardListener.cs" />
-    <Compile Include="Helpers\ConsoleWindowHelper.cs" />
     <Compile Include="Helpers\EventHandlerHelper.cs" />
     <Compile Include="Helpers\TypeHelper.cs" />
     <Compile Include="DragDropHandler.cs" />

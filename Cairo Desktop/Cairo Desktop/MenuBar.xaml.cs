@@ -103,7 +103,7 @@ namespace CairoDesktop
         {
             miOpenVolume.Visibility = Visibility.Visible;
             volumeIcon_Tick();
-            
+
             // update volume icon periodically
             DispatcherTimer volumeIconTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 2), DispatcherPriority.Background, delegate
             {
@@ -157,8 +157,8 @@ namespace CairoDesktop
             // Add _Application PlacesMenu MenuItems
             if (Extensibility.ObjectModel._CairoShell.Instance.PlacesMenu.Count > 0)
             {
-                var separatorStyle = PlacesMenu.Items.OfType<Separator>().First().Style;
-                var menuItemStyle = PlacesMenu.Items.OfType<MenuItem>().First().Style;
+                var separatorStyle = FindResource("CairoMenuSeparatorStyle") as Style;
+                var menuItemStyle = FindResource("CairoMenuItemStyle") as Style;
 
                 PlacesMenu.Items.Add(new Separator() { Style = separatorStyle });
                 foreach (var placesMenuItem in Extensibility.ObjectModel._CairoShell.Instance.PlacesMenu)

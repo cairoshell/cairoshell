@@ -2,13 +2,10 @@
 using System.Windows;
 using System.IO;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
 using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
-using CairoDesktop.Common;
-using System.Windows.Controls;
 
 namespace CairoDesktop
 {
@@ -18,7 +15,7 @@ namespace CairoDesktop
     public partial class DesktopNavigationToolbar : Window
     {
         private WindowInteropHelper helper;
-        private System.Windows.Controls.ContextMenu browseContextMenu = new System.Windows.Controls.ContextMenu();
+        private System.Windows.Controls.ContextMenu browseContextMenu;
 
         public Desktop ToolbarOwner
         {
@@ -32,6 +29,11 @@ namespace CairoDesktop
         {
             InitializeComponent();
             SetPosition();
+
+            browseContextMenu = new System.Windows.Controls.ContextMenu
+            {
+                Style = FindResource("CairoContextMenuStyle") as Style
+            };
         }
 
         private void SetPosition()
@@ -88,7 +90,6 @@ namespace CairoDesktop
             }
             else if (e.RightButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-
                 if (Owner is Desktop owningDesktop)
                 {
                     if (owningDesktop.PathHistory.Count > 0)
@@ -98,17 +99,21 @@ namespace CairoDesktop
                         foreach (string location in owningDesktop.PathHistory)
                         {
                             System.Windows.Controls.MenuItem locationMenuItem = new System.Windows.Controls.MenuItem();
-                            locationMenuItem.Header = Path.GetFileName(location);
+                            locationMenuItem.Header = GetCleanFolderName(location);
                             locationMenuItem.Tag = location;
                             locationMenuItem.Click += LocationMenuItem_Click;
+
+                            locationMenuItem.Style = FindResource("CairoMenuItemStyle") as Style;
 
                             browseContextMenu.Items.Add(locationMenuItem);
                         }
 
-                        browseContextMenu.Items.Add(new System.Windows.Controls.Separator());
+                        browseContextMenu.Items.Add(new System.Windows.Controls.Separator { Style = FindResource("CairoMenuSeparatorStyle") as Style});
 
                         System.Windows.Controls.MenuItem clearHistoryMenuItem = new System.Windows.Controls.MenuItem { Header = "Clear History" };
                         clearHistoryMenuItem.Click += ClearHistoryMenuItem_Click;
+
+                        clearHistoryMenuItem.Style = FindResource("CairoMenuItemStyle") as Style;
                         browseContextMenu.Items.Add(clearHistoryMenuItem);
 
                         browseContextMenu.IsOpen = true;
@@ -117,6 +122,14 @@ namespace CairoDesktop
                     }
                 }
             }
+        }
+
+        private string GetCleanFolderName(string path)
+        {
+            if (Directory.GetDirectoryRoot(path) == path)
+                return path;
+            else
+                return Path.GetFileName(path);
         }
 
         private void ClearHistoryMenuItem_Click(object sender, RoutedEventArgs e)
@@ -135,8 +148,9 @@ namespace CairoDesktop
 
         private void Fwd_Click(object sender, RoutedEventArgs e)
         {
+            // Should this be handled by a new method? owningDesktop.MoveForward() ???
             if (Owner is Desktop owningDesktop && owningDesktop.PathHistory.Count > 0)
-                owningDesktop.Icons.Locations[0] = new SystemDirectory(owningDesktop.PathHistory.Pop(), Dispatcher.CurrentDispatcher);
+                owningDesktop.CurrentLocation = owningDesktop.PathHistory.Pop();
         }
 
         private void Browse_Click(object sender, RoutedEventArgs e)
@@ -146,16 +160,15 @@ namespace CairoDesktop
                 {
                     Description = Localization.DisplayString.sDesktop_BrowseTitle,
                     ShowNewFolderButton = false,
-                    SelectedPath = owningDesktop.Icons.Locations[0].FullName
+                    SelectedPath = owningDesktop.CurrentLocation
                 })
                 {
                     NativeMethods.SetForegroundWindow(helper.Handle);
                     if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
-                        string selectedPath = fbd.SelectedPath;
-                        if (Directory.Exists(selectedPath))
-                            owningDesktop.Navigate(selectedPath);
-                    }
+                        if (owningDesktop.CurrentLocation != fbd.SelectedPath) // added to prevent duplicate entries into the PathHistory... Should we reimpliment the DynamicDesktop to handle this on its own???
+                            if (Directory.Exists(fbd.SelectedPath))
+                                owningDesktop.Navigate(fbd.SelectedPath);
+
                 }
         }
 

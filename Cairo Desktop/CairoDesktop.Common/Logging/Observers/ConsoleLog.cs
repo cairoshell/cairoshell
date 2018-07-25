@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows.Threading;
 
 namespace CairoDesktop.Common.Logging.Observers
 {
@@ -27,6 +28,8 @@ namespace CairoDesktop.Common.Logging.Observers
 
             // Writes message to debug output window
             Debugger.Log(0, null, message + "\r\n");
+
+            Console.WriteLine(message);
         }
 
         #endregion

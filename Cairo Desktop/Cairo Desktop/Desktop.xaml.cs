@@ -222,6 +222,19 @@ namespace CairoDesktop
             OnPropertyChanged("CurrentDirectoryFriendly");
         }
 
+        public string CurrentLocation
+        {
+            get
+            {
+                return Icons.Locations[0].FullName;
+            }
+            set
+            {
+                Icons.Locations[0] = new SystemDirectory(value, Dispatcher.CurrentDispatcher);
+                OnPropertyChanged("CurrentDirectoryFriendly");
+            }
+        }
+
         private void CairoDesktopWindow_LocationChanged(object sender, EventArgs e)
         {
             ResetPosition();
