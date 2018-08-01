@@ -28,24 +28,27 @@ namespace CairoDesktop
         public DependencyProperty IsOverlayOpenProperty = DependencyProperty.Register("IsOverlayOpen", typeof(bool), typeof(Desktop), new PropertyMetadata(new bool()));
         public bool IsOverlayOpen
         {
-            get { return (bool)GetValue(IsOverlayOpenProperty); }
+            get
+            {
+                return (bool)GetValue(IsOverlayOpenProperty);
+            }
             set
             {
                 SetValue(IsOverlayOpenProperty, value);
 
                 if (value)
-                    showOverlay();
+                    ShowOverlay();
                 else
-                    closeOverlay();
+                    CloseOverlay();
             }
         }
 
         public Desktop()
         {
             InitializeComponent();
-            
-            this.Width = AppBarHelper.PrimaryMonitorSize.Width;
-            this.Height = AppBarHelper.PrimaryMonitorSize.Height-1;
+
+            Width = AppBarHelper.PrimaryMonitorSize.Width;
+            Height = AppBarHelper.PrimaryMonitorSize.Height - 1;
 
             if (Startup.IsCairoUserShell)
             {
@@ -54,7 +57,6 @@ namespace CairoDesktop
             }
 
             setGridPosition();
-
             setBackground();
         }
 
@@ -62,24 +64,14 @@ namespace CairoDesktop
         {
             if (Startup.IsCairoUserShell)
             {
-                string regWallpaper = (string)Registry.GetValue("HKEY_CURRENT_USER\\Control Panel\\Desktop", "Wallpaper", "");
-
-                if (regWallpaper != string.Empty && Shell.Exists(regWallpaper))
-                {
-                    // draw wallpaper
-                    try
-                    {
-                        ImageBrush bgBrush = new ImageBrush();
-                        bgBrush.ImageSource = new BitmapImage(new Uri(regWallpaper, UriKind.Absolute));
-
-                        this.Background = bgBrush;
-                    }
-                    catch { }
-                }
+                // draw wallpaper
+                string regWallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", "") as string;
+                if (!string.IsNullOrWhiteSpace(regWallpaper) && Shell.Exists(regWallpaper))
+                    TryAndEat(() => Background = new ImageBrush { ImageSource = new BitmapImage(new Uri(regWallpaper, UriKind.Absolute)) });
             }
         }
-        
-        private void setupPostInit()
+
+        private void SetupPostInit()
         {
             Shell.HideWindowFromTasks(helper.Handle);
 
@@ -112,30 +104,30 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE && (Startup.IsCairoUserShell))
             {
-                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                SetPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;
             }
 
             return IntPtr.Zero;
         }
 
-        private void setPosition(uint x, uint y)
+        private void SetPosition(uint x, uint y)
         {
-            this.Top = 0;
-            this.Left = 0;
+            Top = 0;
+            Left = 0;
 
-            this.Width = x;
-            this.Height = y - 1;
+            Width = x;
+            Height = y - 1;
             setGridPosition();
         }
 
         public void ResetPosition()
         {
-            this.Top = 0;
-            this.Left = 0;
+            Top = 0;
+            Left = 0;
 
-            this.Width = AppBarHelper.PrimaryMonitorSize.Width;
-            this.Height = AppBarHelper.PrimaryMonitorSize.Height - 1;
+            Width = AppBarHelper.PrimaryMonitorSize.Width;
+            Height = AppBarHelper.PrimaryMonitorSize.Height - 1;
             setGridPosition();
         }
 
@@ -155,87 +147,66 @@ namespace CairoDesktop
             }
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (Startup.IsShuttingDown)
-            {
                 // show the windows desktop
                 Shell.ToggleDesktopIcons(true);
-            }
             else
                 e.Cancel = true;
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
-            this.Top = 0;
-
+            Top = 0;
             helper = new WindowInteropHelper(this);
-
-            HwndSource source = HwndSource.FromHwnd(helper.Handle);
-            source.AddHook(new HwndSourceHook(WndProc));
+            HwndSource.FromHwnd(helper.Handle).AddHook(new HwndSourceHook(WndProc));
 
             if (Settings.EnableDesktop && Icons == null)
             {
-                Icons = new DesktopIcons();
-                grid.Children.Add(Icons);
-
+                grid.Children.Add(Icons = new DesktopIcons());
                 if (Settings.EnableDynamicDesktop)
-                {
-                    try
-                    {
-                        DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this };
-                        nav.Show();
-                    }
-                    catch { }
-                }
+                    TryAndEat(() =>
+                         {
+                             DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this };
+                             nav.Show();
+                         });
             }
 
-            setupPostInit();
+            SetupPostInit();
         }
 
-        private void pasteFromClipboard()
+        private void PasteFromClipboard()
         {
             IDataObject clipFiles = Clipboard.GetDataObject();
+            if (clipFiles.GetDataPresent(DataFormats.FileDrop))
+                if (clipFiles.GetData(DataFormats.FileDrop) is string[] files)
+                    foreach (string file in files)
+                        if (Shell.Exists(file))
+                            TryAndEat(() =>
+                            {
+                                FileAttributes attr = File.GetAttributes(file);
+                                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                                    FileSystem.CopyDirectory(file, Icons.Locations[0].FullName + "\\" + new DirectoryInfo(file).Name, UIOption.AllDialogs);
+                                else
+                                    FileSystem.CopyFile(file, Icons.Locations[0].FullName + "\\" + Path.GetFileName(file), UIOption.AllDialogs);
+                            });
 
-            if(clipFiles.GetDataPresent(DataFormats.FileDrop))
-            {
-                string[] files = (string[])clipFiles.GetData(DataFormats.FileDrop);
-
-                foreach(string file in files)
-                {
-                    if(Shell.Exists(file))
-                    {
-                        try
-                        {
-                            FileAttributes attr = File.GetAttributes(file);
-                            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-                                FileSystem.CopyDirectory(file, Icons.Locations[0].FullName + "\\" + new DirectoryInfo(file).Name, UIOption.AllDialogs);
-                            else
-                                FileSystem.CopyFile(file, Icons.Locations[0].FullName + "\\" + Path.GetFileName(file), UIOption.AllDialogs);
-                        }
-                        catch { }
-                    }
-                }
-            }
         }
+
 
         private void miPaste_Click(object sender, RoutedEventArgs e)
         {
-            pasteFromClipboard();
+            PasteFromClipboard();
         }
 
         private void miPersonalization_Click(object sender, RoutedEventArgs e)
         {
             // doesn't work when shell because Settings app requires Explorer :(
             if (!Shell.StartProcess("desk.cpl"))
-            {
                 CairoMessage.Show("Unable to open Personalization settings.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
             else if (IsOverlayOpen)
-            {
                 IsOverlayOpen = false;
-            }
         }
 
         private void grid_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -251,6 +222,19 @@ namespace CairoDesktop
             OnPropertyChanged("CurrentDirectoryFriendly");
         }
 
+        public string CurrentLocation
+        {
+            get
+            {
+                return Icons.Locations[0].FullName;
+            }
+            set
+            {
+                Icons.Locations[0] = new SystemDirectory(value, Dispatcher.CurrentDispatcher);
+                OnPropertyChanged("CurrentDirectoryFriendly");
+            }
+        }
+
         private void CairoDesktopWindow_LocationChanged(object sender, EventArgs e)
         {
             ResetPosition();
@@ -263,25 +247,18 @@ namespace CairoDesktop
 
         public void ToggleOverlay()
         {
-            if (!IsOverlayOpen)
-            {
-                IsOverlayOpen = true;
-            }
-            else
-            {
-                IsOverlayOpen = false;
-            }
+            IsOverlayOpen = !IsOverlayOpen;
         }
 
-        private void showOverlay()
+        private void ShowOverlay()
         {
             Topmost = true;
             NativeMethods.SetForegroundWindow(helper.Handle);
             grid.Background = new SolidColorBrush(Color.FromArgb(0x88, 0, 0, 0));
-            this.Background = null;
+            Background = null;
         }
 
-        private void closeOverlay()
+        private void CloseOverlay()
         {
             Topmost = false;
             Shell.ShowWindowBottomMost(helper.Handle);
@@ -306,10 +283,13 @@ namespace CairoDesktop
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void TryAndEat(Action action)
+        {
+            try { action.Invoke(); }
+            catch { }
         }
     }
 }
