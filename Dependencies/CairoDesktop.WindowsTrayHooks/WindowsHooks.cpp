@@ -173,6 +173,23 @@ BOOL CALLBACK fwdProc(HWND hWnd, LPARAM lParam)
 	return true;
 }
 
+LRESULT appBarMessageAction(PSHELLAPPBARDATA abmd)
+{
+	// only handle ABM_GETTASKBARPOS, send other AppBar messages to default handler
+	switch (abmd->dwMessage)
+	{
+	case ABM_GETTASKBARPOS:
+		APPBARDATAV2& abd = abmd->abd;
+		abd.rc = { 0, 0, 1920, 23 };
+		abd.uEdge = ABE_TOP;
+		OutputDebugString(L"Responded");
+		return 0;
+		break;
+	}
+
+	return 1;
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
@@ -189,16 +206,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			switch (copyData->dwData)
 			{
 				case 0:
-					// pass it along to the default handler
-					break;
+				{
+					// AppBar message
+					/*switch (copyData->cbData)
+					{
+						default :
+						{
+							PSHELLAPPBARDATA sbd = (PSHELLAPPBARDATA)copyData->lpData;
+							
+							if (appBarMessageAction(sbd) == 0)
+								return 0;
+						}
+						break;
+
+					}*/
+				}
+				break;
 				case 1:
 				{
 					NOTIFYICONDATA * nicData = (NOTIFYICONDATA *)(((BYTE *)copyData->lpData) + 8);
 					int TrayCmd = *(INT *)(((BYTE *)copyData->lpData) + 4);
 					
 					BOOL result = CallSystrayDelegate(TrayCmd, *nicData);
-					if (!result) OutputDebugString(L"Result is false");
-					return 0;
+					if (!result) OutputDebugString(L"Ignored notify icon message");
+					return result;
 				}
 				break;
 				case 3:
@@ -208,6 +239,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					return CallIconDataDelegate(iconData);
 				}
 				break;
+				default:
+				{
+					// do nothing
+				}
 			}
 		}
 	}
