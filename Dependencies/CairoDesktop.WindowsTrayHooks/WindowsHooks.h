@@ -31,6 +31,28 @@ typedef struct _WINNOTIFYICONIDENTIFIER
 	GUID guidItem;
 } WINNOTIFYICONIDENTIFIER, *CAIROWINNOTIFYICONIDENTIFIER;
 
+typedef struct _APPBARDATAV2
+{
+	UINT cbSize;
+	UINT hWnd;
+	UINT uCallbackMessage;
+	UINT uEdge;
+	RECT rc;
+	int lParam;
+} APPBARDATAV2, *PAPPBARDATAV2;
+
+// Data sent with AppBar Message
+typedef struct _SHELLAPPBARDATA {
+	APPBARDATAV2 abd;
+	DWORD lparamExtensionTo64bit; // The cbSize of APPBARDATA is incremented by 4
+	DWORD dwMessage;
+	DWORD unused1; // random (often 0), probably a leak from a calling process
+	DWORD dataAtom;
+	DWORD unknown1; // always zero during my tests
+	DWORD destinationProcessId;
+	DWORD unused2;  // random (often 0), probably a leak from the calling process
+} SHELLAPPBARDATA, *PSHELLAPPBARDATA;
+
 // Type definitions for the callback signatures
 typedef BOOL (__stdcall *CALLBACK_NOTIFYICON_FUNCTION)(UINT, NOTIFYICONDATA);
 typedef BOOL (__stdcall *CALLBACK_NOTIFYICONID_FUNCTION)(CAIROWINNOTIFYICONIDENTIFIER);
