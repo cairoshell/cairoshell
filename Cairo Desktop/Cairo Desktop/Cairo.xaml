@@ -30,6 +30,7 @@
     <SolidColorBrush Color="#FF9a9a9a" x:Key="ProgramsMenuCategoryForeground" />
     <SolidColorBrush Color="#40FFFFFF" x:Key="MenuSeparator" />
     <SolidColorBrush Color="#FFFFFFFF" x:Key="SysTrayExpanderColor" />
+    <SolidColorBrush Color="#AF707070" x:Key="MenuBarBorder" />
     <DropShadowEffect x:Key="MenuShadow" Color="Black" ShadowDepth="4" Direction="270" Opacity="0.6" BlurRadius="10" />
     <DropShadowEffect Color="Black" x:Key="MenuHeaderShadow" ShadowDepth="1" Direction="90" Opacity="0.6" BlurRadius="0" />
     
@@ -190,6 +191,13 @@
     </Style>
 
     <!-- Main menu bar -->
+    <Style x:Key="MenuBarWindowStyle"
+        TargetType="{x:Type Window}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ResourceKey=MenuBarBorder}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Margin" Value="0" />
+    </Style>
     <Style x:Key="MenuBarStyle"
         TargetType="{x:Type DockPanel}">
         <Setter Property="Background" Value="{DynamicResource ResourceKey=MenuBarBackground}" />
