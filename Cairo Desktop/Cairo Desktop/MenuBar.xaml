@@ -6,10 +6,8 @@
     AllowsTransparency="True"
     Height="23"
     Top="0"
-    BorderBrush="#AF707070"
-    BorderThickness="0,0,0,1"
+    Style="{StaticResource MenuBarWindowStyle}"
     Left="0"
-    Margin="0,0,0,0"
     Topmost="True"
     ResizeMode="NoResize"
     ShowInTaskbar="False"
@@ -20,8 +18,7 @@
     Closing="OnWindowClosing"
     LocationChanged="Window_LocationChanged"
     UseLayoutRounding="True"
-    MaxHeight="23"
-    Background="Transparent">
+    MaxHeight="23">
     <Window.DataContext>
         <l10n:DisplayString/>
     </Window.DataContext>
