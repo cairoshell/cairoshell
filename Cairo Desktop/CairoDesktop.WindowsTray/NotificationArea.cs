@@ -117,6 +117,9 @@ namespace CairoDesktop.WindowsTray
 
         private bool SysTrayCallback(uint message, NOTIFYICONDATA nicData)
         {
+            if (nicData.hWnd == 0)
+                return false;
+
             NotifyIcon trayIcon = new NotifyIcon((IntPtr)nicData.hWnd);
             trayIcon.UID = nicData.uID;
 
