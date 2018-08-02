@@ -80,20 +80,20 @@ Section "$(SECT_cairo)" cairo
   notRunning:
   
   ; Put file there
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.exe"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.WindowsTray.dll"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.WindowsTrayHooks.dll"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.Common.dll"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.AppGrabber.dll"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.Configuration.dll"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.Extensibility.dll"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.Interop.dll"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.Localization.dll"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.UWPInterop.dll"
-  File "..\Cairo Desktop\Build\Release\Interop.IWshRuntimeLibrary.dll"
-  File "..\Cairo Desktop\Build\Release\CairoDesktop.WindowsTasks.dll"
-  File "..\Cairo Desktop\Build\Release\White.xaml"
-  File "..\Cairo Desktop\Build\Release\WinSparkle.dll"
+  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.exe"
+  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.WindowsTray.dll"
+  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.WindowsTrayHooks.dll"
+  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.Common.dll"
+  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.AppGrabber.dll"
+  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.Configuration.dll"
+  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.Extensibility.dll"
+  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.Interop.dll"
+  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.Localization.dll"
+  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.UWPInterop.dll"
+  File "..\Cairo Desktop\Build\x86\Release\Interop.IWshRuntimeLibrary.dll"
+  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.WindowsTasks.dll"
+  File "..\Cairo Desktop\Build\x86\Release\White.xaml"
+  File "..\Cairo Desktop\Build\x86\Release\WinSparkle.dll"
 
   ; Set shell context to All Users
   SetShellVarContext all
