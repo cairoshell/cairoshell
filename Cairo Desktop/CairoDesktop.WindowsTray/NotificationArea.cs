@@ -177,6 +177,9 @@ namespace CairoDesktop.WindowsTray
 
                             if (!exists)
                             {
+                                if (trayIcon.Icon == null)
+                                    trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
+
                                 TrayIcons.Add(trayIcon);
                                 CairoLogger.Instance.Debug("Added tray icon: " + trayIcon.Title);
                             }
