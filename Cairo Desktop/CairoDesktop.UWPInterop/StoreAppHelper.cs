@@ -47,7 +47,7 @@ namespace CairoDesktop.UWPInterop
                         // packages can contain multiple apps
 
                         XmlNode showEntry = getXmlNode("uap:VisualElements/@AppListEntry", app, xmlnsManager);
-                        if (showEntry == null || showEntry.Value == "true")
+                        if (showEntry == null || showEntry.Value.ToLower() == "true" || showEntry.Value.ToLower() == "default")
                         {
                             // App is visible in the applist
 
@@ -171,6 +171,7 @@ namespace CairoDesktop.UWPInterop
 
         private static string getIconPath(string path, XmlNode app, XmlNamespaceManager xmlnsManager, int size)
         {
+            // TODO rewrite this so that we build an ordered list of acceptable icons based on full contents of folder and snippets of file name (qualifiers)
             XmlNode iconNode = getXmlNode("uap:VisualElements/@Square44x44Logo", app, xmlnsManager);
 
             if (iconNode == null)
@@ -179,23 +180,42 @@ namespace CairoDesktop.UWPInterop
             string iconPath = path + "\\" + (iconNode.Value).Replace(".png", "");
 
             List<string> iconAssets = new List<string> {
-                ".png",
                 ".targetsize-32_altform-unplated.png",
+                ".targetsize-32_altform-unplated_contrast-black.png",
                 ".targetsize-36_altform-unplated.png",
+                ".targetsize-36_altform-unplated_contrast-black.png",
                 ".targetsize-40_altform-unplated.png",
+                ".targetsize-40_altform-unplated_contrast-black.png",
                 ".targetsize-48_altform-unplated.png",
+                ".targetsize-48_altform-unplated_contrast-black.png",
+                ".png",
+                "_contrast-black.png",
                 ".targetsize-32.png",
+                ".targetsize-32_contrast-black.png",
                 ".targetsize-36.png",
+                ".targetsize-36_contrast-black.png",
                 ".targetsize-40.png",
+                ".targetsize-40_contrast-black.png",
+                ".targetsize-44.png",
+                ".targetsize-44_contrast-black.png",
                 ".targetsize-48.png",
+                ".targetsize-48_contrast-black.png",
                 ".targetsize-256_altform-unplated.png",
+                ".targetsize-256_altform-unplated_contrast-black.png",
                 ".scale-200.png",
+                ".scale-200_contrast-black.png",
                 ".targetsize-24_altform-unplated.png",
+                ".targetsize-24_altform-unplated_contrast-black.png",
                 ".targetsize-16_altform-unplated.png",
+                ".targetsize-16_altform-unplated_contrast-black.png",
                 ".targetsize-24.png",
+                ".targetsize-24_contrast-black.png",
                 ".targetsize-16.png",
+                ".targetsize-16_contrast-black.png",
                 ".scale-100.png",
-                ".targetsize-256.png"
+                ".scale-100_contrast-black.png",
+                ".targetsize-256.png",
+                ".targetsize-256_contrast-black.png"
             };
 
             // do some sorting based on DPI for prettiness
@@ -209,16 +229,23 @@ namespace CairoDesktop.UWPInterop
                 {
                     string copy = iconAssets[i];
                     iconAssets.RemoveAt(i);
-                    iconAssets.Insert(1 + numMoved, copy);
+                    iconAssets.Insert(numMoved, copy);
                     numMoved++;
                 }
             }
 
+            // get all resources, then use the first match
+            string[] files = Directory.GetFiles(Path.GetDirectoryName(iconPath + ".png"), "*.png", SearchOption.AllDirectories);
+            string baseName = Path.GetFileNameWithoutExtension(iconPath + ".png");
+
             foreach (string iconName in iconAssets)
             {
-                if (File.Exists(iconPath + iconName))
+                foreach (string fileName in files)
                 {
-                    return iconPath + iconName;
+                    if (Path.GetFileName(fileName).ToLower() == (baseName + iconName).ToLower() && File.Exists(fileName))
+                    {
+                        return fileName;
+                    }
                 }
             }
 
