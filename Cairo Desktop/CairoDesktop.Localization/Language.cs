@@ -878,6 +878,7 @@ namespace CairoDesktop.Localization
             { "sSettings_Taskbar_DisplayModeOverlap", "La barre des tâches chevauche les fenêtres" },
             { "sSettings_Taskbar_DisplayModeAutoHide", "La barre des tâches est masquée automatiquement" },
             { "sSettings_Taskbar_EnableTaskbarMultiMon", "Afficher la barre des tâches sur des affichages multiples" },
+            { "sSettings_Advanced_LoggingLevel", "Niveau de journalisation :" },
             { "sSettings_Advanced_Shell", "Shell" },
             { "sSettings_Advanced_CairoIsShell", "Cairo est actuellement défini comme votre shell." },
             { "sSettings_Advanced_ExplorerIsShell", "L'explorateur Windows est actuellement défini comme votre shell." },
