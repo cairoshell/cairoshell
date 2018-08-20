@@ -1,32 +1,3 @@
-
-Skip to content
-
-    Pull requests
-    Issues
-    Marketplace
-    Explore
-
-    @zen0bit
-
-37
-298
-
-    58
-
-cairoshell/cairoshell
-Code
-Issues 56
-Pull requests 1
-Wiki
-Insights
-cairoshell/Cairo Desktop/CairoDesktop.Localization/Language.cs
-572d99d 5 days ago
-@mdmk mdmk Update French
-@dremin
-@mdmk
-@jonathands
-@m0gg3
-1147 lines (1141 sloc) 92.7 KB
 using System.Collections.Generic;
 
 namespace CairoDesktop.Localization
