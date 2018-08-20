@@ -1142,8 +1142,8 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarSec3Heading", "任务列表" },
             { "sWelcome_TaskbarSec3Text", "很多敞开的窗户吗?任务列表在菜单中显示你的窗口，这样你就可以轻松切换到你要找的那个。您也可以从这个菜单打开Windows 10任务视图。" }
         };
-		
-	public static Dictionary<string, string> cs_CZ = new Dictionary<string, string>	    
+
+	    public static Dictionary<string, string> cs_CZ = new Dictionary<string, string>	    
         {
             { "sProgramsMenu", "Programy" },
             { "sPlacesMenu", "Místa" },
@@ -1371,6 +1371,6 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarSec2Text", "Otevřené úlohy jsou nyní organizovány stejným způsobem, jako v nabídce programů. Nyní jsou všechny vaše související úkoly seskupeny pro rychlé a snadné použití.." },
             { "sWelcome_TaskbarSec3Heading", "Seznam úloh" },
             { "sWelcome_TaskbarSec3Text", "Spousta otevřených oken? Seznam úkolů zobrazuje okna v nabídce, takže můžete snadno přepínat na požadované okno." }
-	};     
+        };
     }
 }
