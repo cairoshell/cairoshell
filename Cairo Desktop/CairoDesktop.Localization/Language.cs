@@ -1367,10 +1367,10 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarText", "Cairo nahradila váš panel úloh chytřejším, který maximalizuje vaši produktivitu." },
             { "sWelcome_TaskbarSec1Heading", "Oblast rychlého spuštění" },
             { "sWelcome_TaskbarSec1Text", "Položky přichycené k hlavnímu panelu Windows byly přidány k rychlému spuštění. Přetáhněte programy nebo použijte Přidat Program pro přidání dalších programů do rychlého spuštění." },
-            { "sWelcome_TaskbarSec2Heading", "Categorized Windows" },
-            { "sWelcome_TaskbarSec2Text", "Otevřené úlohy jsou nyní organizovány stejným způsobem, jako v nabídce programů. Nyní jsou všechny vaše související úkoly seskupeny pro rychlé a snadné použití.." },
+            { "sWelcome_TaskbarSec2Heading", "Organizace otevřených oken" },
+            { "sWelcome_TaskbarSec2Text", "Otevřené úlohy jsou nyní organizovány stejným způsobem, jako v nabídce programů. Nyní jsou všechny vaše související úlohy seskupeny pro rychlé a snadné použití.." },
             { "sWelcome_TaskbarSec3Heading", "Seznam úloh" },
-            { "sWelcome_TaskbarSec3Text", "Spousta otevřených oken? Seznam úkolů zobrazuje okna v nabídce, takže můžete snadno přepínat na požadované okno." }
+            { "sWelcome_TaskbarSec3Text", "Spousta otevřených oken? Seznam úloh zobrazuje okna v nabídce, takže můžete snadno přepínat na požadované okno." }
         };
     }
 }
