@@ -242,9 +242,9 @@
                     <MenuItem.Header>
                         <TextBlock Name="dateText" />
                     </MenuItem.Header>
-                    <MenuItem StaysOpenOnClick="True">
+                    <MenuItem Name="calendarMenuItem" StaysOpenOnClick="True">
                         <MenuItem.Header>
-                            <Calendar Name="monthCalendar" Style="{StaticResource CairoCalendarStyle}"
+                            <Calendar Name="monthCalendar"  Style="{StaticResource CairoCalendarStyle}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center" />
                         </MenuItem.Header>

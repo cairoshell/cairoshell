@@ -14,8 +14,7 @@ namespace CairoDesktop
     {
         private void btnFile_Click(object sender, RoutedEventArgs e)
         {
-            Button senderButton = sender as Button;
-            if (senderButton != null && senderButton.CommandParameter != null)
+            if ( sender is Button senderButton && senderButton.CommandParameter != null)
             {
                 string commandString = senderButton.CommandParameter as String;
                 if (!string.IsNullOrWhiteSpace(commandString))
@@ -79,23 +78,28 @@ namespace CairoDesktop
 
         private void txtRename_LostFocus(object sender, RoutedEventArgs e)
         {
-            TextBox box = sender as TextBox;
-            string orig = ((Button)((DockPanel)box.Parent).Parent).CommandParameter as string;
+            if (sender is TextBox box)
+                if (box.Parent is DockPanel dockPanel)
+                    if (dockPanel.Parent is Button button)
+                    {
+                        string orig = button.CommandParameter as string;
 
-            if (!SystemFile.RenameFile(orig, box.Text))
-                box.Text = Path.GetFileName(orig);
+                        if (!SystemFile.RenameFile(orig, box.Text))
+                            box.Text = Path.GetFileName(orig);
 
-            foreach (UIElement peer in (box.Parent as DockPanel).Children)
-                if (peer is Border)
-                    peer.Visibility = Visibility.Visible;
+                        foreach (UIElement peer in dockPanel.Children)
+                            if (peer is Border)
+                                peer.Visibility = Visibility.Visible;
 
-            box.Visibility = Visibility.Collapsed;
+                        box.Visibility = Visibility.Collapsed;
+                    }
         }
 
         private void txtRename_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-                (sender as TextBox).MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+               if(sender is TextBox textBox)
+                    textBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
         }
 
         private void btnAppGrabber_Click(object sender, RoutedEventArgs e)
