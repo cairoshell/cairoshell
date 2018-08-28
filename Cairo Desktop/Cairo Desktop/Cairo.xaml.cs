@@ -14,8 +14,7 @@ namespace CairoDesktop
     {
         private void btnFile_Click(object sender, RoutedEventArgs e)
         {
-            Button senderButton = sender as Button;
-            if (senderButton != null && senderButton.CommandParameter != null)
+            if ( sender is Button senderButton && senderButton.CommandParameter != null)
             {
                 string commandString = senderButton.CommandParameter as String;
                 if (!string.IsNullOrWhiteSpace(commandString))

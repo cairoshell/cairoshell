@@ -194,8 +194,10 @@ namespace CairoDesktop
             // Register Windows key to open Programs menu
             if (Startup.IsCairoUserShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
             {
-                HotKeyManager.RegisterHotKey(new List<string> { "Win", "LWin" }, OnShowProgramsMenu);
-                HotKeyManager.RegisterHotKey(new List<string> { "Win", "RWin" }, OnShowProgramsMenu);
+                // HotKeyManager.RegisterHotKey(new List<string> { "Win", "LWin" }, OnShowProgramsMenu);
+                new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+                // HotKeyManager.RegisterHotKey(new List<string> { "Win", "RWin" }, OnShowProgramsMenu);
+                new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
                 isProgramsMenuHotkeyRegistered = true;
             }
 
@@ -367,7 +369,7 @@ namespace CairoDesktop
 
             if (calendarMenuItem.Header is Calendar monthCalendar)
                 if (monthCalendar.DisplayDate.Date != DateTime.Today)
-                    monthCalendar.DisplayDate = DateTime.Today;                
+                    monthCalendar.DisplayDate = DateTime.Today;
         }
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
