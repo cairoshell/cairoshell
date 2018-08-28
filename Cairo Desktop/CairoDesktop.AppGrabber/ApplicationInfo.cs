@@ -68,6 +68,26 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
+        public string PathDirectory
+        {
+            get
+            {
+                if (IsStoreApp)
+                    return Localization.DisplayString.sProgramsMenu;
+                else
+                {
+                    try
+                    {
+                        return System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(Path));
+                    }
+                    catch
+                    {
+                        return "";
+                    }
+                }
+            }
+        }
+
         private string target;
         /// <summary>
         /// Path to the executable.
