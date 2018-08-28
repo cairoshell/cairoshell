@@ -84,7 +84,7 @@
                     BorderBrush="#FF888888">
                     <ListView x:Name="InstalledAppsView"
                         ItemContainerStyle="{StaticResource ApplicationInfoListItemStyle}"
-                        Style="{StaticResource ApplicationInfoListStyle}"
+                        Style="{StaticResource ApplicationInfoDetailListStyle}"
                         MouseDoubleClick="InstalledAppsView_MouseDoubleClick"
                         Width="330"
                         AlternationCount="2" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" UseLayoutRounding="True" HorizontalContentAlignment="Stretch" />

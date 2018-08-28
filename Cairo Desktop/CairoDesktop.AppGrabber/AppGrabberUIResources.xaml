@@ -354,6 +354,50 @@
         <EventSetter Event="PreviewMouseMove"
             Handler="ListView_MouseMove" />
     </Style>
+    <Style x:Key="ApplicationInfoDetailListStyle" BasedOn="{StaticResource ApplicationInfoListStyle}"
+        TargetType="ListView">
+        <Setter Property="ItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <DockPanel>
+                        <Border DockPanel.Dock="Left" BorderThickness="0" Background="{Binding Path=IconColor, Mode=OneWay}" Height="16">
+                            <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
+                            Width="16"
+                            Height="16"
+                            DockPanel.Dock="Left" />
+                            <Border.Style>
+                                <Style TargetType="{x:Type Border}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IconColor}" Value="#00111111">
+                                            <Setter Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect Color="Black"
+                                                        ShadowDepth="0.5"
+                                                        Direction="270"
+                                                        Opacity="1" BlurRadius="2" />
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                        </Border>
+                        <TextBlock DockPanel.Dock="Left" Text="{Binding Path=Name}"
+                            Margin="4,0,0,0"
+                            FontFamily="Corbel"
+                            FontSize="14"
+                            TextTrimming="CharacterEllipsis" />
+                        <TextBlock DockPanel.Dock="Right" Text="{Binding Path=PathDirectory}"
+                            Margin="10,0,0,0"
+                            FontFamily="Corbel"
+                            FontSize="10"
+                            Foreground="#FF999999"
+                            TextTrimming="CharacterEllipsis" TextAlignment="Right" VerticalAlignment="Center" />
+                    </DockPanel>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style x:Key="ApplicationInfoListItemStyle"
         TargetType="ListViewItem">
         <Setter Property="Template">
