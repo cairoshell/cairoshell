@@ -155,7 +155,10 @@ namespace CairoDesktop.WindowsTray
                                 {
                                     try
                                     {
-                                        trayIcon.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon((IntPtr)nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                                        System.Windows.Media.Imaging.BitmapSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon((IntPtr)nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+
+                                        if (bs != null)
+                                            trayIcon.Icon = bs;
                                     }
                                     catch
                                     {
@@ -165,7 +168,7 @@ namespace CairoDesktop.WindowsTray
                                 }
                                 else
                                 {
-                                    trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
+                                    trayIcon.Icon = null;
                                 }
                             }
                             trayIcon.HWnd = (IntPtr)nicData.hWnd;
