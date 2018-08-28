@@ -364,6 +364,10 @@ namespace CairoDesktop
         {
             dateText.Text = DateTime.Now.ToString(Settings.TimeFormat);
             dateText.ToolTip = DateTime.Now.ToString(Settings.DateFormat);
+
+            if (calendarMenuItem.Header is Calendar monthCalendar)
+                if (monthCalendar.DisplayDate.Date != DateTime.Today)
+                    monthCalendar.DisplayDate = DateTime.Today;                
         }
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
