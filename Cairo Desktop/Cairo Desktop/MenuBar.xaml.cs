@@ -821,6 +821,11 @@ namespace CairoDesktop
                         NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) & ~NativeMethods.WS_EX_NOACTIVATE);
         }
 
+        private void miClock_SubmenuOpened(object sender, RoutedEventArgs e)
+        {
+            monthCalendar.DisplayDate = DateTime.Now;
+        }
+
         #endregion
 
         #region Search menu

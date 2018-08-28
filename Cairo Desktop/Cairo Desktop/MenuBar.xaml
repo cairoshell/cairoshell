@@ -237,8 +237,8 @@
                 </MenuItem>
             </Menu>
             <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
-                <MenuItem Style="{StaticResource CairoMenuItemStyle}"
-                          ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}">
+                <MenuItem Style="{StaticResource CairoMenuItemStyle}" x:Name="miClock"
+                          ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" SubmenuOpened="miClock_SubmenuOpened">
                     <MenuItem.Header>
                         <TextBlock Name="dateText" />
                     </MenuItem.Header>
