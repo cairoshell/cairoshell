@@ -13,6 +13,7 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using System.Windows.Threading;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace CairoDesktop
 {
@@ -21,11 +22,14 @@ namespace CairoDesktop
     /// </summary>
     public partial class Desktop : Window, INotifyPropertyChanged
     {
-        public Stack<string> PathHistory = new Stack<string>();
         private WindowInteropHelper helper;
-        public DesktopIcons Icons;
+        private bool altF4Pressed;
 
+        public Stack<string> PathHistory = new Stack<string>();
+        public DesktopIcons Icons;
         public DependencyProperty IsOverlayOpenProperty = DependencyProperty.Register("IsOverlayOpen", typeof(bool), typeof(Desktop), new PropertyMetadata(new bool()));
+
+
         public bool IsOverlayOpen
         {
             get
@@ -149,11 +153,24 @@ namespace CairoDesktop
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (Startup.IsShuttingDown)
-                // show the windows desktop
+            if (Startup.IsShuttingDown) // show the windows desktop
                 Shell.ToggleDesktopIcons(true);
-            else
+            else if (altF4Pressed) // Show the Shutdown Confirmation Window
+            {
+                Cairo.ShowShutdownConfirmation();
                 e.Cancel = true;
+            }
+            else // Eat it !!!
+                e.Cancel = true;
+        }
+
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (Keyboard.Modifiers == ModifierKeys.Alt && e.SystemKey == Key.F4)
+            {
+                altF4Pressed = true;
+            }
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)
