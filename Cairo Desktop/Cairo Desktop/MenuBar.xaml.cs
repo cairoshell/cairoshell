@@ -194,8 +194,16 @@ namespace CairoDesktop
             // Register Windows key to open Programs menu
             if (Startup.IsCairoUserShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
             {
-                HotKeyManager.RegisterHotKey(new List<string> { "Win", "LWin" }, OnShowProgramsMenu);
-                HotKeyManager.RegisterHotKey(new List<string> { "Win", "RWin" }, OnShowProgramsMenu);
+                /*
+                 * This was modified to fix issue: Cairo incorrectly handles the [Win] key #193 
+                 */
+
+                // HotKeyManager.RegisterHotKey(new List<string> { "Win", "LWin" }, OnShowProgramsMenu);
+                new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+
+                // HotKeyManager.RegisterHotKey(new List<string> { "Win", "RWin" }, OnShowProgramsMenu);
+                new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+
                 isProgramsMenuHotkeyRegistered = true;
             }
 
@@ -674,29 +682,17 @@ namespace CairoDesktop
 
         private void OpenLogoffBox(object sender, RoutedEventArgs e)
         {
-            bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sLogoff_Info, Localization.DisplayString.sLogoff_Title, "Resources/logoffIcon.png", Localization.DisplayString.sLogoff_Logoff, Localization.DisplayString.sInterface_Cancel);
-            if (LogoffChoice.HasValue && LogoffChoice.Value)
-            {
-                NativeMethods.Logoff();
-            }
+            Cairo.ShowLogOffConfirmation();            
         }
 
         private void OpenRebootBox(object sender, RoutedEventArgs e)
         {
-            bool? RebootChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sRestart_Info, Localization.DisplayString.sRestart_Title, "Resources/restartIcon.png", Localization.DisplayString.sRestart_Restart, Localization.DisplayString.sInterface_Cancel);
-            if (RebootChoice.HasValue && RebootChoice.Value)
-            {
-                NativeMethods.Reboot();
-            }
+            Cairo.ShowRebootConfirmation();
         }
 
         private void OpenShutDownBox(object sender, RoutedEventArgs e)
         {
-            bool? ShutdownChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sShutDown_Info, Localization.DisplayString.sShutDown_Title, "Resources/shutdownIcon.png", Localization.DisplayString.sShutDown_ShutDown, Localization.DisplayString.sInterface_Cancel);
-            if (ShutdownChoice.HasValue && ShutdownChoice.Value)
-            {
-                NativeMethods.Shutdown();
-            }
+            Cairo.ShowShutdownConfirmation();
         }
 
         private void OpenRunWindow(object sender, RoutedEventArgs e)
