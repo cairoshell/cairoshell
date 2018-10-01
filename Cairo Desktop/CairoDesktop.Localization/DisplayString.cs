@@ -13,6 +13,7 @@ namespace CairoDesktop.Localization
             new KeyValuePair<string, string>("Chinese (Simplified) 简体中文", "zh_CN"),
             new KeyValuePair<string, string>("Czech", "cs_CZ"),
             new KeyValuePair<string, string>("German", "de_DE"),
+            ew KeyValuePair<string, string>("Spanish (Español)", "es_ES"),
         };
 
         public DisplayString()
@@ -51,6 +52,10 @@ namespace CairoDesktop.Localization
             else if (useLang.StartsWith("de_"))
             {
                 lang = Language.de_DE;
+            }
+            else if (useLang.StartsWith("es_"))
+            {
+                lang = Language.es_ES;
             }
             else
             {
