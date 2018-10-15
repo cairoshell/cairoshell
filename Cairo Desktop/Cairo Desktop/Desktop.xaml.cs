@@ -204,9 +204,9 @@ namespace CairoDesktop
                             {
                                 FileAttributes attr = File.GetAttributes(file);
                                 if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-                                    FileSystem.CopyDirectory(file, Icons.Locations[0].FullName + "\\" + new DirectoryInfo(file).Name, UIOption.AllDialogs);
+                                    FileSystem.CopyDirectory(file, Icons.Location.FullName + "\\" + new DirectoryInfo(file).Name, UIOption.AllDialogs);
                                 else
-                                    FileSystem.CopyFile(file, Icons.Locations[0].FullName + "\\" + Path.GetFileName(file), UIOption.AllDialogs);
+                                    FileSystem.CopyFile(file, Icons.Location.FullName + "\\" + Path.GetFileName(file), UIOption.AllDialogs);
                             });
 
         }
@@ -234,9 +234,9 @@ namespace CairoDesktop
 
         public void Navigate(string newLocation)
         {
-            PathHistory.Push(Icons.Locations[0].FullName);
-            Icons.Locations[0].Dispose();
-            Icons.Locations[0] = new SystemDirectory(newLocation, Dispatcher.CurrentDispatcher);
+            PathHistory.Push(Icons.Location.FullName);
+            Icons.Location.Dispose();
+            Icons.Location = new SystemDirectory(newLocation, Dispatcher.CurrentDispatcher);
             OnPropertyChanged("CurrentDirectoryFriendly");
         }
 
@@ -244,11 +244,11 @@ namespace CairoDesktop
         {
             get
             {
-                return Icons.Locations[0].FullName;
+                return Icons.Location.FullName;
             }
             set
             {
-                Icons.Locations[0] = new SystemDirectory(value, Dispatcher.CurrentDispatcher);
+                Icons.Location = new SystemDirectory(value, Dispatcher.CurrentDispatcher);
                 OnPropertyChanged("CurrentDirectoryFriendly");
             }
         }
@@ -294,7 +294,7 @@ namespace CairoDesktop
         {
             get
             {
-                return Localization.DisplayString.sDesktop_CurrentFolder + " " + Icons.Locations[0].FullName;
+                return Localization.DisplayString.sDesktop_CurrentFolder + " " + Icons.Location.FullName;
             }
         }
 

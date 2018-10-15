@@ -55,7 +55,7 @@ namespace CairoDesktop
         {
             if (Owner is Desktop owningDesktop)
             {
-                DirectoryInfo parent = owningDesktop.Icons.Locations[0].DirectoryInfo.Parent;
+                DirectoryInfo parent = owningDesktop.Icons.Location.DirectoryInfo.Parent;
                 if (parent != null)
                     owningDesktop.Navigate(parent.FullName);
             }
