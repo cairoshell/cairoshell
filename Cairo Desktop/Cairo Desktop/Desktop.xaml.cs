@@ -235,6 +235,7 @@ namespace CairoDesktop
         public void Navigate(string newLocation)
         {
             PathHistory.Push(Icons.Locations[0].FullName);
+            Icons.Locations[0].Dispose();
             Icons.Locations[0] = new SystemDirectory(newLocation, Dispatcher.CurrentDispatcher);
             OnPropertyChanged("CurrentDirectoryFriendly");
         }

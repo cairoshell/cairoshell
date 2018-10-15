@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
@@ -11,7 +13,7 @@ namespace CairoDesktop.Common {
     /// <summary>
     /// A wrapper for System.IO.DirectoryInfo which exposes File and Directory list calls as properties
     /// </summary>
-    public class SystemDirectory : IEquatable<SystemDirectory> {
+    public class SystemDirectory : IEquatable<SystemDirectory>, INotifyPropertyChanged, IDisposable {
 
         private Dispatcher dispatcher;
 
@@ -57,6 +59,10 @@ namespace CairoDesktop.Common {
             get { return dir.FullName; }
         }
 
+        private FileSystemEventHandler createdHandler;
+        private FileSystemEventHandler deletedHandler;
+        private RenamedEventHandler renamedHandler;
+
         /// <summary>
         /// Creates a new SystemDirectory object for the given directory path.
         /// </summary>
@@ -70,9 +76,14 @@ namespace CairoDesktop.Common {
                 fileWatcher.IncludeSubdirectories = false;
                 fileWatcher.Filter = "";
                 fileWatcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName;
-                fileWatcher.Created += new FileSystemEventHandler(fileWatcher_Created);
-                fileWatcher.Deleted += new FileSystemEventHandler(fileWatcher_Deleted);
-                fileWatcher.Renamed += new RenamedEventHandler(fileWatcher_Renamed);
+
+                createdHandler = new FileSystemEventHandler(fileWatcher_Created);
+                deletedHandler = new FileSystemEventHandler(fileWatcher_Deleted);
+                renamedHandler = new RenamedEventHandler(fileWatcher_Renamed);
+
+                fileWatcher.Created += createdHandler;
+                fileWatcher.Deleted += deletedHandler;
+                fileWatcher.Renamed += renamedHandler;
                 fileWatcher.EnableRaisingEvents = true;
             }
             catch (UnauthorizedAccessException)
@@ -112,7 +123,10 @@ namespace CairoDesktop.Common {
             {
                 SystemFile newFile = new SystemFile(filePath);
                 if (newFile.Name != null)
+                {
                     files.Add(newFile);
+                    OnPropertyChanged("Files");
+                }
             }
         }
 
@@ -126,7 +140,10 @@ namespace CairoDesktop.Common {
             }
 
             if (removalIndex > -1)
+            {
                 files.RemoveAt(removalIndex);
+                OnPropertyChanged("Files");
+            }
         }
 
         private void changeFile(string oldPath, string newPath)
@@ -198,6 +215,15 @@ namespace CairoDesktop.Common {
                     files.Add(new SystemFile(file));
                 }
             }
+
+            OnPropertyChanged("Files");
+        }
+
+        public void Dispose()
+        {
+            fileWatcher.Created -= createdHandler;
+            fileWatcher.Deleted -= deletedHandler;
+            fileWatcher.Renamed -= renamedHandler;
         }
 
         public override bool Equals(object other) {
@@ -216,6 +242,23 @@ namespace CairoDesktop.Common {
             return this.FullName.Equals((other as SystemDirectory).FullName, StringComparison.OrdinalIgnoreCase);
         }
 
+        #endregion
+
+        #region INotifyPropertyChanged Members
+
+        /// <summary>
+        /// This Event is raised whenever a property of this object has changed. Necesary to sync state when binding.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [DebuggerNonUserCode]
+        private void OnPropertyChanged(string propName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
+        }
         #endregion
     }
 }
