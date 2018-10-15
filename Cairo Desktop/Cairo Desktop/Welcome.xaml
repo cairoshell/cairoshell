@@ -31,7 +31,7 @@
                     <TextBlock Style="{StaticResource WelcomeHeading}" HorizontalAlignment="Center" Text="{Binding sWelcome_Welcome}" Margin="0,10,0,60" />
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" DataContext="{StaticResource settings}">
                         <TextBlock Style="{StaticResource WelcomeText}" Text="{Binding Path=(l10n:DisplayString.sWelcome_SelectLanguage)}" VerticalAlignment="Center" Margin="0,0,10,0" />
-                        <ComboBox Name="cboLangSelect" DropDownClosed="cboLangSelect_DropDownClosed"  IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=Language}" />
+                        <ComboBox Name="cboLangSelect" DropDownClosed="cboLangSelect_DropDownClosed"  IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=Language, Mode=OneTime}" />
                     </StackPanel>
                 </StackPanel>
             </DockPanel>
