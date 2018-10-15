@@ -13,11 +13,11 @@ namespace CairoDesktop
     /// </summary>
     public partial class DesktopIcons : UserControl
     {
-        public static DependencyProperty locationsProperty =
-            DependencyProperty.Register("Locations",
-                typeof(InvokingObservableCollection<SystemDirectory>),
+        public static DependencyProperty locationProperty =
+            DependencyProperty.Register("Location",
+                typeof(SystemDirectory),
                 typeof(DesktopIcons),
-                new PropertyMetadata(new InvokingObservableCollection<SystemDirectory>(Dispatcher.CurrentDispatcher)));
+                new PropertyMetadata(null));
 
         int xOffset = 8;
         int yOffset = 12;
@@ -57,24 +57,24 @@ namespace CairoDesktop
         private void SetDesktopDir(string desktopDir)
         {
             SystemDirectory desktop = new SystemDirectory(desktopDir, Dispatcher.CurrentDispatcher);
-            Locations.Add(desktop);
+            Location = desktop;
         }
 
-        public InvokingObservableCollection<SystemDirectory> Locations
+        public SystemDirectory Location
         {
             get
             {
-                return GetValue(locationsProperty) as InvokingObservableCollection<SystemDirectory>;
+                return GetValue(locationProperty) as SystemDirectory;
             }
             set
             {
                 if (!Dispatcher.CheckAccess())
                 {
-                    Dispatcher.Invoke(() => Locations = value);
+                    Dispatcher.Invoke(() => Location = value);
                     return;
                 }
 
-                SetValue(locationsProperty, value);
+                SetValue(locationProperty, value);
             }
         }
     }
