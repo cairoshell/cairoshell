@@ -21,7 +21,9 @@ namespace CairoDesktop.Interop
             get
             {
                 if (_oldDpiScale == null)
+                {
                     _oldDpiScale = GetDpiScale();
+                }
 
                 return (double)_oldDpiScale;
             }
@@ -38,7 +40,9 @@ namespace CairoDesktop.Interop
             get
             {
                 if (_dpiScale == null)
+                {
                     _dpiScale = GetDpiScale();
+                }
 
                 return (double)_dpiScale;
             }
@@ -58,7 +62,7 @@ namespace CairoDesktop.Interop
         {
             return GetIcon(fileName, size);
         }
-        
+
         private static IntPtr GetIcon(string filename, int size)
         {
             lock (iconLock)
@@ -86,8 +90,7 @@ namespace CairoDesktop.Interop
                     // Get the System IImageList object from the Shell:
                     Guid iidImageList = new Guid("46EB5926-582E-4017-9FDF-E8998DAA0950");
 
-                    IImageList iml;
-                    SHGetImageList(size, ref iidImageList, out iml);
+                    SHGetImageList(size, ref iidImageList, out IImageList iml);
 
                     IntPtr hIcon = IntPtr.Zero;
                     int ILD_TRANSPARENT = 1;
@@ -106,7 +109,9 @@ namespace CairoDesktop.Interop
         private static string translateIconExceptions(string filename)
         {
             if (filename.EndsWith(".settingcontent-ms"))
+            {
                 return "C:\\Windows\\ImmersiveControlPanel\\SystemSettings.exe";
+            }
 
             return filename;
         }
@@ -123,14 +128,16 @@ namespace CairoDesktop.Interop
 
         public static string UsersStartMenuPath
         {
-            get {
+            get
+            {
                 return GetSpecialFolderPath((int)CSIDL.CSIDL_STARTMENU);
             }
         }
 
         public static string AllUsersStartMenuPath
         {
-            get {
+            get
+            {
                 return GetSpecialFolderPath((int)CSIDL.CSIDL_COMMON_STARTMENU);
             }
         }
@@ -152,11 +159,17 @@ namespace CairoDesktop.Interop
                 }
 
                 if (filename.StartsWith("appx:"))
+                {
                     Process.Start("LaunchWinApp.exe", "shell:appsFolder\\" + filename.Substring(5));
+                }
                 else if (filename.Contains("://"))
+                {
                     Process.Start("explorer.exe", filename);
+                }
                 else
+                {
                     Process.Start(filename);
+                }
 
                 return true;
             }
@@ -221,7 +234,9 @@ namespace CairoDesktop.Interop
             foreach (char invalid in Path.GetInvalidPathChars())
             {
                 if (filename.Contains(invalid.ToString()))
+                {
                     return false;
+                }
             }
 
             return !filename.StartsWith("\\\\") && (File.Exists(filename) || Directory.Exists(filename));
@@ -434,10 +449,12 @@ namespace CairoDesktop.Interop
             }
 
             if (IsDesktopVisible() != enable)
+            {
                 SendMessageTimeout(hWnd, WM_COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
+            }
         }
 
-        static bool IsDesktopVisible()
+        private static bool IsDesktopVisible()
         {
             //IntPtr hWnd = GetWindow(GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD), GetWindow_Cmd.GW_CHILD);
             IntPtr hWnd = GetWindow(FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", ""), GetWindow_Cmd.GW_CHILD);
@@ -512,7 +529,9 @@ namespace CairoDesktop.Interop
             get
             {
                 if (osVersionMajor == 0)
+                {
                     getOSVersion();
+                }
 
                 return (osVersionMajor >= 5);
             }
@@ -523,7 +542,9 @@ namespace CairoDesktop.Interop
             get
             {
                 if (osVersionMajor == 0)
+                {
                     getOSVersion();
+                }
 
                 return (osVersionMajor >= 6);
             }
@@ -534,7 +555,9 @@ namespace CairoDesktop.Interop
             get
             {
                 if (osVersionMajor == 0)
+                {
                     getOSVersion();
+                }
 
                 return (osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2));
             }
@@ -545,7 +568,9 @@ namespace CairoDesktop.Interop
             get
             {
                 if (osVersionMajor == 0)
+                {
                     getOSVersion();
+                }
 
                 return (osVersionMajor >= 10);
             }
@@ -556,7 +581,9 @@ namespace CairoDesktop.Interop
             get
             {
                 if (osVersionMajor == 0)
+                {
                     getOSVersion();
+                }
 
                 return (osVersionMajor >= 10 && osVersionBuild >= 16353);
             }
@@ -567,12 +594,24 @@ namespace CairoDesktop.Interop
             get
             {
                 // check if we are the current user's shell
-                object userShell = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell");
-
-                if (userShell != null)
+                string userShell = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell") as string;
+                if (userShell != null) // CurrentUser Shell
+                {
                     return userShell.ToString().ToLower().Contains("cairodesktop");
+                }
                 else
-                    return false;
+                {
+                    // check if we are the current system's shell
+                    string systemShell = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell") as string;
+                    if (systemShell != null)
+                    {
+                        return systemShell.ToLower().Contains("cairodesktop");
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
             }
             set
             {
@@ -591,7 +630,9 @@ namespace CairoDesktop.Interop
                         object userShell = regKey.GetValue("Shell");
 
                         if (userShell != null)
+                        {
                             regKey.DeleteValue("Shell");
+                        }
                     }
                 }
             }
