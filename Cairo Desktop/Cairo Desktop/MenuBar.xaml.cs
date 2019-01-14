@@ -1,23 +1,21 @@
+using CairoDesktop.AppGrabber;
+using CairoDesktop.Common;
+using CairoDesktop.Common.Logging;
+using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
+using CairoDesktop.SupportingClasses;
+using CairoDesktop.WindowsTray;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Threading;
-using CairoDesktop.Interop;
 using System.Windows.Input;
-using CairoDesktop.SupportingClasses;
 using System.Windows.Interop;
-using CairoDesktop.Configuration;
-using CairoDesktop.Common;
-using CairoDesktop.AppGrabber;
-using CairoDesktop.WindowsTray;
-using System.Threading;
-using System.Collections.Generic;
-using System.Linq;
-using CairoDesktop.Common.Logging;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -93,9 +91,31 @@ namespace CairoDesktop
                 miOpenActionCenter.Visibility = Visibility.Visible;
             }
 
+            // I didnt like the Exit Cairo option available when Cairo was set as Shell
+            if (Startup.IsCairoUserShell)
+            {
+                miExitCairo.Visibility = Visibility.Collapsed;
+            }
+
             if (Settings.EnableSysTray)
             {
                 initializeVolumeIcon();
+            }
+
+            // Fix for concurrent seperators
+            Type previousType = null;
+            foreach (UIElement item in CairoMenu.Items)
+            {
+                if (item.Visibility == Visibility.Visible)
+                {
+                    Type currentType = item.GetType();
+                    if (previousType == typeof(Separator) && currentType == typeof(Separator))
+                    {
+                        ((Separator)item).Visibility = Visibility.Collapsed;
+                    }
+
+                    previousType = currentType;
+                }
             }
         }
 
@@ -175,7 +195,9 @@ namespace CairoDesktop
         {
             // set initial DPI. We do it here so that we get the correct value when DPI has changed since initial user logon to the system.
             if (Screen.Primary)
+            {
                 Shell.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
+            }
 
             this.dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
 
@@ -215,7 +237,9 @@ namespace CairoDesktop
             }*/
 
             if (Settings.EnableMenuBarBlur)
+            {
                 Shell.EnableWindowBlur(handle);
+            }
         }
 
         private void setupSearch()
@@ -400,7 +424,9 @@ namespace CairoDesktop
                             Shell.ShowWindowBottomMost(this.handle);
 
                             if (Settings.EnableTaskbar)
+                            {
                                 Startup.TaskbarWindow.SetFullScreenMode(true);
+                            }
                         }
                         else
                         {
@@ -409,16 +435,22 @@ namespace CairoDesktop
                             Shell.ShowWindowTopMost(this.handle);
 
                             if (Settings.EnableTaskbar)
+                            {
                                 Startup.TaskbarWindow.SetFullScreenMode(false);
+                            }
                         }
 
                         break;
 
                     case NativeMethods.AppBarNotifications.WindowArrange:
                         if ((int)lParam != 0)    // before
+                        {
                             this.Visibility = Visibility.Collapsed;
+                        }
                         else                         // after
+                        {
                             this.Visibility = Visibility.Visible;
+                        }
 
                         break;
                 }
@@ -435,7 +467,9 @@ namespace CairoDesktop
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
                 if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens)
+                {
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
+                }
                 else if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
@@ -443,7 +477,10 @@ namespace CairoDesktop
                 }
 
                 if (Screen.Primary)
+                {
                     Shell.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
+                }
+
                 this.dpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
                 setPosition();
                 AppBarHelper.ABSetPos(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, AppBarHelper.ABEdge.ABE_TOP);
@@ -451,7 +488,9 @@ namespace CairoDesktop
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
                 if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
+                {
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
+                }
                 else if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
@@ -464,7 +503,9 @@ namespace CairoDesktop
             else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
             {
                 if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
+                {
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
+                }
             }
 
             return IntPtr.Zero;
@@ -480,10 +521,8 @@ namespace CairoDesktop
 
         private void setPosition(uint x, uint y)
         {
-            int sWidth;
-            int sHeight;
             // adjust size for dpi
-            Shell.TransformFromPixels(x, y, out sWidth, out sHeight);
+            Shell.TransformFromPixels(x, y, out int sWidth, out int sHeight);
 
 
             double top = Screen.Bounds.Y / dpiScale;
@@ -500,7 +539,9 @@ namespace CairoDesktop
             foreach (MenuBarShadow barShadow in Startup.MenuBarShadowWindows)
             {
                 if (barShadow != null && barShadow.MenuBar == this)
+                {
                     barShadow.SetPosition();
+                }
             }
         }
 
@@ -545,10 +586,14 @@ namespace CairoDesktop
                 WinSparkle.win_sparkle_cleanup();
 
                 if (keyboardListener != null)
+                {
                     keyboardListener.UnHookKeyboard();
+                }
 
                 if (Startup.IsCairoUserShell)
+                {
                     AppBarHelper.ResetWorkArea();
+                }
             }
             else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
             {
@@ -630,7 +675,9 @@ namespace CairoDesktop
         private void txtProgramRename_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
         {
             if (ProgramsMenu.IsKeyboardFocusWithin && !(e.NewFocus is TextBox))
+            {
                 e.Handled = true;
+            }
         }
 
         private void OnShowCairoMenu(HotKey hotKey)
@@ -651,7 +698,7 @@ namespace CairoDesktop
             ToggleProgramsMenu();
         }
 
-        void keyboardListener_OnKeyPressed(object sender, KeyPressedArgs e)
+        private void keyboardListener_OnKeyPressed(object sender, KeyPressedArgs e)
         {
             if (e.KeyPressed == Key.LWin)
             {
@@ -682,7 +729,7 @@ namespace CairoDesktop
 
         private void OpenLogoffBox(object sender, RoutedEventArgs e)
         {
-            Cairo.ShowLogOffConfirmation();            
+            Cairo.ShowLogOffConfirmation();
         }
 
         private void OpenRebootBox(object sender, RoutedEventArgs e)

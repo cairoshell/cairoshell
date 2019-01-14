@@ -136,6 +136,7 @@
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_ExitCairo)}"
                         Style="{StaticResource CairoMenuItemStyle}"
+                              Name ="miExitCairo"
                         Click="OpenCloseCairoBox" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Sleep)}"
