@@ -121,7 +121,7 @@ namespace CairoDesktop
                     break;
             }
 
-            return GetCairoBackgroundBrush_Image(regTileWallpaper, style);
+            return GetCairoBackgroundBrush_Image(regWallpaper, style);
         }
 
         private System.Windows.Media.Brush GetCairoBackgroundBrush_Image()
