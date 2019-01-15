@@ -68,65 +68,157 @@ namespace CairoDesktop
             setBackground();
         }
 
+        private System.Windows.Media.Brush BackgroundBrush { get; set; }
         private void setBackground()
         {
             if (Startup.IsCairoUserShell)
             {
-                // draw wallpaper
-                string regWallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", "") as string;
-                string regWallpaperStyle = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", "") as string;
-                string regTileWallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", "") as string;
-                                               
-                if (!string.IsNullOrWhiteSpace(regWallpaper) && Shell.Exists(regWallpaper))
-                {
-                    TryAndEat(() =>
-                    {
-                        Uri backgroundImageUri = new Uri(regWallpaper, UriKind.Absolute);
-                        BitmapImage backgroundBitmapImage = new BitmapImage(backgroundImageUri);
-                        ImageBrush backgroundImageBrush = new ImageBrush(backgroundBitmapImage);
+                if (BackgroundBrush == null)
+                    BackgroundBrush = GetCairoBackgroundBrush();
 
-                        https://docs.microsoft.com/en-us/windows/desktop/Controls/themesfileformat-overview
-                        switch ($"{regWallpaperStyle}{regTileWallpaper}")
-                        {
-                            case "01": // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
-                                backgroundImageBrush.AlignmentX = AlignmentX.Left;
-                                backgroundImageBrush.AlignmentY = AlignmentY.Top;
-                                backgroundImageBrush.TileMode = TileMode.Tile;
-                                break;
-                            case "00": // Centered { WallpaperStyle = 1; TileWallpaper = 0 }
-                                backgroundImageBrush.AlignmentX = AlignmentX.Center;
-                                backgroundImageBrush.AlignmentY = AlignmentY.Center;
-                                backgroundImageBrush.TileMode = TileMode.None;
-                                backgroundImageBrush.Stretch = Stretch.None;
-                                break;
-                            case "60": // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
-                                backgroundImageBrush.AlignmentX = AlignmentX.Center;
-                                backgroundImageBrush.AlignmentY = AlignmentY.Center;
-                                backgroundImageBrush.TileMode = TileMode.None;
-                                backgroundImageBrush.Stretch = Stretch.Uniform;
-                                break;
-                            case "100": // Fill { WallpaperStyle = 10; TileWallpaper = 0 }
-                            case "220": // Span { WallpaperStyle = 10; TileWallpaper = 0 }
-                                backgroundImageBrush.AlignmentX = AlignmentX.Center;
-                                backgroundImageBrush.AlignmentY = AlignmentY.Center;
-                                backgroundImageBrush.TileMode = TileMode.None;
-                                backgroundImageBrush.Stretch = Stretch.UniformToFill;
-                                break;
-                            case "20": // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
-                            default:
-                                backgroundImageBrush.AlignmentX = AlignmentX.Center;
-                                backgroundImageBrush.AlignmentY = AlignmentY.Center;
-                                backgroundImageBrush.TileMode = TileMode.None;
-                                backgroundImageBrush.Stretch = Stretch.Fill;
-                                break;
-                        }
-
-                        Background = backgroundImageBrush;
-                    });
-                }
+                Background = BackgroundBrush;
             }
         }
 
+        private System.Windows.Media.Brush GetCairoBackgroundBrush()
+        {
+            // TODO: impliment Cairo settings for Background
+            return GetCairoBackgroundBrush_Windows();
+            // return GetCairoBackgroundBrush_Image();
+            // return GetCairoBackgroundBrush_Color();
+            // return GetCairoBackgroundBrush_Video();
+        }
+
+        private System.Windows.Media.Brush GetCairoBackgroundBrush_Windows()
+        {
+            // draw wallpaper
+            string regWallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", "") as string;
+            string regWallpaperStyle = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", "") as string;
+            string regTileWallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", "") as string;
+
+            CairoWallpaperStyle style = CairoWallpaperStyle.Stretch;
+            // https://docs.microsoft.com/en-us/windows/desktop/Controls/themesfileformat-overview
+            switch ($"{regWallpaperStyle}{regTileWallpaper}")
+            {
+                case "01": // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
+                    style = CairoWallpaperStyle.Tile;
+                    break;
+                case "00": // Centered { WallpaperStyle = 1; TileWallpaper = 0 }
+                    style = CairoWallpaperStyle.Center;
+                    break;
+                case "60": // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
+                    style = CairoWallpaperStyle.Fit;
+                    break;
+                case "100": // Fill { WallpaperStyle = 10; TileWallpaper = 0 }
+                    style = CairoWallpaperStyle.Fill;
+                    break;
+                case "220": // Span { WallpaperStyle = 10; TileWallpaper = 0 }
+                    style = CairoWallpaperStyle.Span;
+                    break;
+                case "20": // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
+                default:
+                    style = CairoWallpaperStyle.Stretch;
+                    break;
+            }
+
+            return GetCairoBackgroundBrush_Image(regWallpaper, style);
+        }
+
+        private System.Windows.Media.Brush GetCairoBackgroundBrush_Image()
+        {
+
+            string wallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", "") as string;
+            CairoWallpaperStyle wallpaperStyle = CairoWallpaperStyle.Stretch;
+
+            return GetCairoBackgroundBrush_Image(wallpaper, wallpaperStyle);
+        }
+
+        private System.Windows.Media.Brush GetCairoBackgroundBrush_Color()
+        {
+            // TODO: Impliment settings for Color and ColorGradients
+
+            System.Drawing.Color drawingColor1 = System.Drawing.Color.CornflowerBlue; // Come on XNA!
+            System.Drawing.Color drawingColor2 = System.Drawing.Color.DarkRed;
+
+            var mediaColor1 = System.Windows.Media.Color.FromRgb(drawingColor1.R, drawingColor1.G, drawingColor1.B);
+            var mediaColor2 = System.Windows.Media.Color.FromRgb(drawingColor2.R, drawingColor2.G, drawingColor2.B);
+
+            return new SolidColorBrush(mediaColor1);
+            // return new LinearGradientBrush(mediaColor1, mediaColor2, 45);
+            // return new RadialGradientBrush(mediaColor1, mediaColor2);
+        }
+
+        private System.Windows.Media.Brush GetCairoBackgroundBrush_Video()
+        {
+            // TODO: Impliment Settings
+            // https://docs.microsoft.com/en-us/dotnet/framework/wpf/graphics-multimedia/how-to-paint-an-area-with-a-video
+            System.Windows.Controls.MediaElement myMediaElement = new System.Windows.Controls.MediaElement();
+            myMediaElement.Source = new Uri(@"C:\Users\josua\Videos\Wallpaper.mp4", UriKind.Relative); // Get this from settings
+            myMediaElement.LoadedBehavior = System.Windows.Controls.MediaState.Play;
+            myMediaElement.IsMuted = true;
+            myMediaElement.MediaEnded += (o, a) => myMediaElement.Position = new TimeSpan(0, 0, 1);
+
+            VisualBrush myVisualBrush = new VisualBrush();
+            myVisualBrush.Visual = myMediaElement;
+            myVisualBrush.AlignmentX = AlignmentX.Center;
+            myVisualBrush.AlignmentY = AlignmentY.Center;
+            myVisualBrush.TileMode = TileMode.None;
+            myVisualBrush.Stretch = Stretch.UniformToFill;
+
+            return myVisualBrush;
+        }
+
+        private System.Windows.Media.Brush GetCairoBackgroundBrush_Image(string wallpaper, CairoWallpaperStyle wallpaperStyle)
+        {
+            ImageBrush backgroundImageBrush = null;
+            if (!string.IsNullOrWhiteSpace(wallpaper) && Shell.Exists(wallpaper))
+            {
+                TryAndEat(() =>
+                {
+                    Uri backgroundImageUri = new Uri(wallpaper, UriKind.Absolute);
+                    BitmapImage backgroundBitmapImage = new BitmapImage(backgroundImageUri);
+                    backgroundImageBrush = new ImageBrush(backgroundBitmapImage);
+
+                    switch (wallpaperStyle)
+                    {
+                        case CairoWallpaperStyle.Tile:
+                            backgroundImageBrush.AlignmentX = AlignmentX.Left;
+                            backgroundImageBrush.AlignmentY = AlignmentY.Top;
+                            backgroundImageBrush.TileMode = TileMode.Tile;
+                            backgroundImageBrush.Stretch = Stretch.None;
+                            break;
+                        case CairoWallpaperStyle.Center:
+                            backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                            backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                            backgroundImageBrush.TileMode = TileMode.None;
+                            backgroundImageBrush.Stretch = Stretch.None;
+                            break;
+                        case CairoWallpaperStyle.Fit:
+                            backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                            backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                            backgroundImageBrush.TileMode = TileMode.None;
+                            backgroundImageBrush.Stretch = Stretch.Uniform;
+                            break;
+                        case CairoWallpaperStyle.Fill:
+                        case CairoWallpaperStyle.Span: // TODO: Impliment multiple monitor backgrounds
+                            backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                            backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                            backgroundImageBrush.TileMode = TileMode.None;
+                            backgroundImageBrush.Stretch = Stretch.UniformToFill;
+                            break;
+                        case CairoWallpaperStyle.Stretch:
+                        default:
+                            backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                            backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                            backgroundImageBrush.TileMode = TileMode.None;
+                            backgroundImageBrush.Stretch = Stretch.Fill;
+                            break;
+                    }
+                });
+            }
+            return backgroundImageBrush;
+        }
+               
         private void SetupPostInit()
         {
             Shell.HideWindowFromTasks(helper.Handle);
@@ -385,7 +477,8 @@ namespace CairoDesktop
 
         private void TryAndEat(Action action)
         {
-            try { action.Invoke(); }
+            try
+            { action.Invoke(); }
             catch { }
         }
     }
