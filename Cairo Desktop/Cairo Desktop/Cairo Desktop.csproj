@@ -83,6 +83,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CairoWallpaperStyle.cs" />
     <Compile Include="Startup.InitializationRoutines.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
     <Compile Include="Welcome.xaml.cs">
