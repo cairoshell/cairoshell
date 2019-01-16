@@ -126,7 +126,6 @@ namespace CairoDesktop
 
         private System.Windows.Media.Brush GetCairoBackgroundBrush_Image()
         {
-
             string wallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", "") as string;
             CairoWallpaperStyle wallpaperStyle = CairoWallpaperStyle.Stretch;
 
@@ -186,6 +185,8 @@ namespace CairoDesktop
                             backgroundImageBrush.AlignmentY = AlignmentY.Top;
                             backgroundImageBrush.TileMode = TileMode.Tile;
                             backgroundImageBrush.Stretch = Stretch.None;
+                            backgroundImageBrush.Viewport = new Rect(0,0, backgroundImageBrush.ImageSource.Width, backgroundImageBrush.ImageSource.Height);
+                            backgroundImageBrush.ViewportUnits = BrushMappingMode.Absolute;
                             break;
                         case CairoWallpaperStyle.Center:
                             backgroundImageBrush.AlignmentX = AlignmentX.Center;
@@ -256,6 +257,13 @@ namespace CairoDesktop
             {
                 SetPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;
+            }
+            else if(msg                 == (int)NativeMethods.WM.SETTINGCHANGE && 
+                    wParam.ToInt32()    == (int)NativeMethods.SPI.SPI_SETDESKWALLPAPER)
+            {
+                BackgroundBrush = null;
+                setBackground();
+                return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
 
             return IntPtr.Zero;
