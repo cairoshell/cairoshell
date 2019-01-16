@@ -205,8 +205,14 @@ namespace CairoDesktop
 
             appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, AppBarHelper.ABEdge.ABE_TOP);
 
-            Shell.HideWindowFromTasks(handle);
+            // register time changed handler to receive time zone updates for the clock to update correctly
+            if (Screen.Primary)
+            {
+                Microsoft.Win32.SystemEvents.TimeChanged += new EventHandler(TimeChanged);
+            }
 
+            Shell.HideWindowFromTasks(handle);
+            
             if (Settings.EnableCairoMenuHotKey && Screen.Primary && !isCairoMenuHotkeyRegistered)
             {
                 HotKeyManager.RegisterHotKey(Settings.CairoMenuHotKey, OnShowCairoMenu);
@@ -511,6 +517,11 @@ namespace CairoDesktop
             return IntPtr.Zero;
         }
 
+        private void TimeChanged(object sender, EventArgs e)
+        {
+            TimeZoneInfo.ClearCachedData();
+        }
+
         private void setPosition()
         {
             Top = Screen.Bounds.Y / dpiScale;
@@ -594,6 +605,8 @@ namespace CairoDesktop
                 {
                     AppBarHelper.ResetWorkArea();
                 }
+
+                Microsoft.Win32.SystemEvents.TimeChanged -= new EventHandler(TimeChanged);
             }
             else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
             {
