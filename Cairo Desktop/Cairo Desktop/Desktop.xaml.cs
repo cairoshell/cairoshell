@@ -176,6 +176,7 @@ namespace CairoDesktop
                 {
                     Uri backgroundImageUri = new Uri(wallpaper, UriKind.Absolute);
                     BitmapImage backgroundBitmapImage = new BitmapImage(backgroundImageUri);
+                    backgroundBitmapImage.Freeze();
                     backgroundImageBrush = new ImageBrush(backgroundBitmapImage);
 
                     switch (wallpaperStyle)
@@ -184,11 +185,12 @@ namespace CairoDesktop
                             backgroundImageBrush.AlignmentX = AlignmentX.Left;
                             backgroundImageBrush.AlignmentY = AlignmentY.Top;
                             backgroundImageBrush.TileMode = TileMode.Tile;
-                            backgroundImageBrush.Stretch = Stretch.None;
-                            backgroundImageBrush.Viewport = new Rect(0,0, backgroundImageBrush.ImageSource.Width, backgroundImageBrush.ImageSource.Height);
+                            backgroundImageBrush.Stretch = Stretch.Fill; // stretch to fill viewport, which is pixel size of image, as WPF is DPI-aware
+                            backgroundImageBrush.Viewport = new Rect(0,0, (backgroundImageBrush.ImageSource as BitmapSource).PixelWidth, (backgroundImageBrush.ImageSource as BitmapSource).PixelHeight);
                             backgroundImageBrush.ViewportUnits = BrushMappingMode.Absolute;
                             break;
                         case CairoWallpaperStyle.Center:
+                            // need to find a way to ignore image DPI for this case
                             backgroundImageBrush.AlignmentX = AlignmentX.Center;
                             backgroundImageBrush.AlignmentY = AlignmentY.Center;
                             backgroundImageBrush.TileMode = TileMode.None;
@@ -217,6 +219,7 @@ namespace CairoDesktop
                     }
                 });
             }
+            backgroundImageBrush.Freeze();
             return backgroundImageBrush;
         }
                
@@ -256,6 +259,8 @@ namespace CairoDesktop
             else if (msg == NativeMethods.WM_DISPLAYCHANGE && (Startup.IsCairoUserShell))
             {
                 SetPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                BackgroundBrush = null;
+                setBackground();
                 handled = true;
             }
             else if(msg                 == (int)NativeMethods.WM.SETTINGCHANGE && 
