@@ -178,7 +178,7 @@ namespace CairoDesktop
                     BitmapImage backgroundBitmapImage = new BitmapImage(backgroundImageUri);
                     backgroundBitmapImage.Freeze();
                     backgroundImageBrush = new ImageBrush(backgroundBitmapImage);
-
+                    
                     switch (wallpaperStyle)
                     {
                         case CairoWallpaperStyle.Tile:
@@ -218,8 +218,8 @@ namespace CairoDesktop
                             break;
                     }
                 });
+                backgroundImageBrush.Freeze();
             }
-            backgroundImageBrush.Freeze();
             return backgroundImageBrush;
         }
                
