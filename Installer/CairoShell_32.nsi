@@ -178,6 +178,14 @@ Section "Uninstall"
   ; Set shell context to All Users
   SetShellVarContext all
 
+  System::Call 'kernel32::OpenMutex(i 0x100000, b 0, t "CairoShell") i .R1'
+  IntCmp $R1 0 notRunning
+    System::Call 'kernel32::CloseHandle(i $R1)'
+    MessageBox MB_OK|MB_ICONEXCLAMATION "$(DLOG_RunningText)" /SD IDOK
+    Quit
+  
+  notRunning:
+
   ; Remove registry keys
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell"
   DeleteRegKey HKLM SOFTWARE\CairoShell
