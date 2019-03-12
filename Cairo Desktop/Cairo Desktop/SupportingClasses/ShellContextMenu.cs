@@ -250,7 +250,7 @@ namespace CairoDesktop.SupportingClasses
                     if (Interop.Shell.Exists(paths[0]) && (File.GetAttributes(this.paths[0]) & FileAttributes.Directory) == FileAttributes.Directory)
                     {
                         ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.SEPARATOR, 1, string.Empty);
-                        ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.AddToStacks, "Add to Stacks");
+                        ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.AddToStacks, Localization.DisplayString.sInterface_AddToStacks);
                     }
 
                     Marshal.QueryInterface(iContextMenuPtr, ref ShellFolders.IID_IContextMenu2, out iContextMenuPtr2);
@@ -349,7 +349,7 @@ namespace CairoDesktop.SupportingClasses
             {
                 contextMenu = ShellFolders.CreatePopupMenu();
                 
-                ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.Paste, "Paste");
+                ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.Paste, Localization.DisplayString.sInterface_Paste);
 
                 if (GetNewContextMenu(out newContextMenuPtr, out newContextMenu))
                 {
@@ -378,7 +378,7 @@ namespace CairoDesktop.SupportingClasses
                 }
                 
                 ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.SEPARATOR, 0, string.Empty);
-                ShellFolders.AppendMenu(contextMenu, 0, (int)CairoContextMenuItem.Properties, "Properties");
+                ShellFolders.AppendMenu(contextMenu, 0, (int)CairoContextMenuItem.Properties, Localization.DisplayString.sInterface_Properties);
 
                 CairoContextMenuItem selected = (CairoContextMenuItem)ShellFolders.TrackPopupMenuEx(
                                     contextMenu,
