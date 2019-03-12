@@ -37,8 +37,17 @@ namespace CairoDesktop
             string tag = item.Tag as string;
             string verb = tag.Substring(0, tag.IndexOf('|'));
             string fileName = tag.Substring(tag.IndexOf('|') + 1);
-            string displayName = Interop.Shell.GetDisplayName(fileName);
 
+            PerformAction(verb, fileName, ((Button)((ContextMenu)item.Parent).PlacementTarget));
+            
+            if (Startup.DesktopWindow != null)
+                Startup.DesktopWindow.IsOverlayOpen = false;
+
+            Interop.Shell.StartProcess(fileName, "", verb);
+        }
+
+        public static void PerformAction(string verb, string fileName)
+        {
             if (verb == "open")
             {
                 if (Startup.DesktopWindow != null)
@@ -59,6 +68,7 @@ namespace CairoDesktop
             }
             else if (verb == "delete")
             {
+                string displayName = Interop.Shell.GetDisplayName(fileName);
                 bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sDesktop_DeleteInfo, displayName), Localization.DisplayString.sDesktop_DeleteTitle, "Resources/cairoIcon.png", Localization.DisplayString.sInterface_Delete, Localization.DisplayString.sInterface_Cancel);
                 if (deleteChoice.HasValue && deleteChoice.Value)
                 {
@@ -85,9 +95,13 @@ namespace CairoDesktop
                 StacksManager.AddLocation(fileName);
                 return;
             }
-            else if (verb == "rename")
+        }
+
+        public static void PerformAction(string verb, string fileName, Button btn)
+        {
+            if (verb == "rename")
             {
-                DockPanel parent = ((Button)((ContextMenu)item.Parent).PlacementTarget).Content as DockPanel;
+                DockPanel parent = btn.Content as DockPanel;
                 TextBox rename = parent.FindName("txtRename") as TextBox;
                 Border label = parent.FindName("bdrFilename") as Border;
 
@@ -97,11 +111,10 @@ namespace CairoDesktop
                 rename.SelectAll();
                 return;
             }
-            
-            if (Startup.DesktopWindow != null)
-                Startup.DesktopWindow.IsOverlayOpen = false;
-
-            Interop.Shell.StartProcess(fileName, "", verb);
+            else
+            {
+                PerformAction(verb, fileName);
+            }
         }
 
         public static void Icon_ContextMenu_Loaded(object sender, RoutedEventArgs e)

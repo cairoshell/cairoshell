@@ -19,14 +19,7 @@
         Closing="Window_Closing" 
         SourceInitialized="Window_SourceInitialized"
         LocationChanged="CairoDesktopWindow_LocationChanged"
-        KeyDown="Window_KeyDown">
+        KeyDown="Window_KeyDown" MouseRightButtonUp="CairoDesktopWindow_MouseRightButtonUp">
     <Grid Name="grid" MouseRightButtonDown="grid_MouseRightButtonDown" PreviewMouseLeftButtonDown="grid_PreviewMouseLeftButtonDown" HorizontalAlignment="Left" VerticalAlignment="Top">
     </Grid>
-    <Window.ContextMenu>
-        <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
-            <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Paste)}" Style="{StaticResource CairoMenuItemStyle}" Click="miPaste_Click"  Name="miPaste" />
-            <Separator Style="{StaticResource CairoMenuSeparatorStyle}" Name="sepPersonalization" />
-            <MenuItem Header="{Binding Path=(l10n:DisplayString.sDesktop_Personalize)}" Style="{StaticResource CairoMenuItemStyle}" Click="miPersonalization_Click"  Name="miPersonalization" />
-        </ContextMenu>
-    </Window.ContextMenu>
 </Window>

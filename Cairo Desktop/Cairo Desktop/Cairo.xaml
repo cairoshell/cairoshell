@@ -1903,20 +1903,6 @@
                                 </TextBlock>
                             </Border>
                         </DockPanel>
-                        <Button.ContextMenu>
-                            <ContextMenu Loaded="ctxFile_Loaded"
-                                        Tag="{Binding Path=FullName}"
-                                        Style="{StaticResource CairoContextMenuStyle}">
-                                <ContextMenu.Resources>
-                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
-                                        <EventSetter Event="Click" Handler="miVerb_Click" />
-                                    </Style>
-                                    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </Style>
-                                </ContextMenu.Resources>
-                            </ContextMenu>
-                        </Button.ContextMenu>
                     </Button>
                 </DataTemplate>
             </Setter.Value>
@@ -1962,20 +1948,6 @@
                                 </TextBlock>
                             </Border>
                         </DockPanel>
-                        <Button.ContextMenu>
-                            <ContextMenu Loaded="ctxFile_Loaded"
-                                        Tag="{Binding Path=FullName}"
-                                        Style="{StaticResource CairoContextMenuStyle}">
-                                <ContextMenu.Resources>
-                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
-                                        <EventSetter Event="Click" Handler="miVerb_Click" />
-                                    </Style>
-                                    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </Style>
-                                </ContextMenu.Resources>
-                            </ContextMenu>
-                        </Button.ContextMenu>
                     </Button>
                 </DataTemplate>
             </Setter.Value>
@@ -2020,20 +1992,6 @@
                                 </TextBlock>
                             </Border>
                         </DockPanel>
-                        <Button.ContextMenu>
-                            <ContextMenu Loaded="ctxFile_Loaded"
-                                        Tag="{Binding Path=FullName}"
-                                        Style="{StaticResource CairoContextMenuStyle}">
-                                <ContextMenu.Resources>
-                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
-                                        <EventSetter Event="Click" Handler="miVerb_Click" />
-                                    </Style>
-                                    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </Style>
-                                </ContextMenu.Resources>
-                            </ContextMenu>
-                        </Button.ContextMenu>
                     </Button>
                 </DataTemplate>
             </Setter.Value>
@@ -2078,20 +2036,6 @@
                                 </TextBlock>
                             </Border>
                         </DockPanel>
-                        <Button.ContextMenu>
-                            <ContextMenu Loaded="ctxFile_Loaded"
-                                        Tag="{Binding Path=FullName}"
-                                        Style="{StaticResource CairoContextMenuStyle}">
-                                <ContextMenu.Resources>
-                                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
-                                        <EventSetter Event="Click" Handler="miVerb_Click" />
-                                    </Style>
-                                    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
-                                        <Setter Property="Visibility" Value="Visible" />
-                                    </Style>
-                                </ContextMenu.Resources>
-                            </ContextMenu>
-                        </Button.ContextMenu>
                     </Button>
                 </DataTemplate>
             </Setter.Value>
