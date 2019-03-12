@@ -1,4 +1,5 @@
 ﻿using CairoDesktop.Common;
+using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
@@ -66,10 +67,17 @@ namespace CairoDesktop
         {
             if (Startup.IsCairoUserShell)
             {
-                if (BackgroundBrush == null)
-                    BackgroundBrush = GetCairoBackgroundBrush();
+                try
+                {
+                    if (BackgroundBrush == null)
+                        BackgroundBrush = GetCairoBackgroundBrush();
 
-                Background = BackgroundBrush;
+                    Background = BackgroundBrush;
+                }
+                catch
+                {
+                    CairoLogger.Instance.Error("Failed setting desktop background.");
+                }
             }
         }
 
