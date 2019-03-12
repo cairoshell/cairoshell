@@ -12,7 +12,7 @@ namespace CairoDesktop.Interop
     public partial class Shell
     {
         private const int MAX_PATH = 260;
-        private static Object iconLock = new Object();
+        public static Object ComLock = new Object();
 
         // DPI at user logon to the system
         private static double? _oldDpiScale;
@@ -65,7 +65,7 @@ namespace CairoDesktop.Interop
 
         private static IntPtr GetIcon(string filename, int size)
         {
-            lock (iconLock)
+            lock (ComLock)
             {
                 try
                 {

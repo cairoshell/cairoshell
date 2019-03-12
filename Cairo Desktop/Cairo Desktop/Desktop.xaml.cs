@@ -2,13 +2,12 @@
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
-using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -57,12 +56,6 @@ namespace CairoDesktop
 
             Width = AppBarHelper.PrimaryMonitorSize.Width;
             Height = AppBarHelper.PrimaryMonitorSize.Height - 1;
-
-            if (Startup.IsCairoUserShell)
-            {
-                sepPersonalization.Visibility = Visibility.Collapsed;
-                miPersonalization.Visibility = Visibility.Collapsed;
-            }
 
             setGridPosition();
             setBackground();
@@ -358,54 +351,6 @@ namespace CairoDesktop
             SetupPostInit();
         }
 
-        private void PasteFromClipboard()
-        {
-            IDataObject clipFiles = Clipboard.GetDataObject();
-            if (clipFiles.GetDataPresent(DataFormats.FileDrop))
-            {
-                if (clipFiles.GetData(DataFormats.FileDrop) is string[] files)
-                {
-                    foreach (string file in files)
-                    {
-                        if (Shell.Exists(file))
-                        {
-                            TryAndEat(() =>
-                            {
-                                FileAttributes attr = File.GetAttributes(file);
-                                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-                                {
-                                    FileSystem.CopyDirectory(file, Icons.Location.FullName + "\\" + new DirectoryInfo(file).Name, UIOption.AllDialogs);
-                                }
-                                else
-                                {
-                                    FileSystem.CopyFile(file, Icons.Location.FullName + "\\" + Path.GetFileName(file), UIOption.AllDialogs);
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-        }
-
-
-        private void miPaste_Click(object sender, RoutedEventArgs e)
-        {
-            PasteFromClipboard();
-        }
-
-        private void miPersonalization_Click(object sender, RoutedEventArgs e)
-        {
-            // doesn't work when shell because Settings app requires Explorer :(
-            if (!Shell.StartProcess("desk.cpl"))
-            {
-                CairoMessage.Show("Unable to open Personalization settings.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            else if (IsOverlayOpen)
-            {
-                IsOverlayOpen = false;
-            }
-        }
-
         private void grid_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (!Topmost)
@@ -493,6 +438,66 @@ namespace CairoDesktop
             try
             { action.Invoke(); }
             catch { }
+        }
+
+        private void CairoDesktopWindow_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            // handle icon and desktop context menus
+            if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.ScrollViewer))
+            {
+                ShellContextMenu cm = new ShellContextMenu(Icons.Location.FullName, executeCustomAction);
+            }
+            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Image))
+            {
+                Image img = e.OriginalSource as Image;
+                DockPanel dock = img.Parent as DockPanel;
+                Button btn = dock.Parent as Button;
+                string filePath = btn.CommandParameter as string;
+
+                ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);
+            }
+            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.TextBlock))
+            {
+                TextBlock txt = e.OriginalSource as TextBlock;
+                Border bdr = txt.Parent as Border;
+                DockPanel dock = bdr.Parent as DockPanel;
+                Button btn = dock.Parent as Button;
+                string filePath = btn.CommandParameter as string;
+
+                ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);
+            }
+            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border))
+            {
+                Border bdr = e.OriginalSource as Border;
+                DockPanel dock = bdr.Parent as DockPanel;
+                Button btn = dock.Parent as Button;
+                string filePath = btn.CommandParameter as string;
+
+                ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);
+            }
+            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.DockPanel))
+            {
+                DockPanel dock = e.OriginalSource as DockPanel;
+                Button btn = dock.Parent as Button;
+                string filePath = btn.CommandParameter as string;
+
+                ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);
+            }
+        }
+
+        private void executeCustomAction(string action, string path)
+        {
+            if (action == "paste")
+            {
+                Icons.Location.PasteFromClipboard();
+            }
+            else if (action != "")
+            {
+                CustomCommands.PerformAction(action, path);
+
+                if (Startup.DesktopWindow != null)
+                    Startup.DesktopWindow.IsOverlayOpen = false;
+            }
         }
     }
 }

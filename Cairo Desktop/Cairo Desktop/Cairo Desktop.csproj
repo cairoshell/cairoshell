@@ -86,6 +86,7 @@
     <Compile Include="CairoWallpaperStyle.cs" />
     <Compile Include="Startup.InitializationRoutines.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
+    <Compile Include="SupportingClasses\ShellContextMenu.cs" />
     <Compile Include="Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
     </Compile>
