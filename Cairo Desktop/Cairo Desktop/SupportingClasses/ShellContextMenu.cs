@@ -41,6 +41,7 @@ namespace CairoDesktop.SupportingClasses
         private IntPtr folderRelPidl;
         private int x;
         private int y;
+        private string parent;
         private IShellFolder parentShellFolder;
         private System.Windows.Controls.Button sender;
 
@@ -51,6 +52,7 @@ namespace CairoDesktop.SupportingClasses
                 this.CreateHandle(new CreateParams());
                 this.paths = files;
 
+                this.parent = getParentDir(this.paths[0]);
                 this.parentShellFolder = getParentShellFolder(this.paths[0]);
                 this.pidls = pathsToPidls(this.paths);
                 this.x = Cursor.Position.X;
@@ -70,6 +72,7 @@ namespace CairoDesktop.SupportingClasses
                 this.CreateHandle(new CreateParams());
                 this.folder = folder;
 
+                this.parent = getParentDir(this.folder);
                 this.parentShellFolder = getParentShellFolder(this.folder);
                 this.folderPidl = pathToFullPidl(this.folder);
                 this.folderRelPidl = pathToRelPidl(this.folder);
@@ -144,20 +147,27 @@ namespace CairoDesktop.SupportingClasses
             return pidl;
         }
 
-        private IShellFolder getParentShellFolder(string path)
+        private string getParentDir(string path)
         {
             FileInfo fi = new FileInfo(path);
-            IntPtr parentPidl;
+            string dir;
 
             // directory is null on drive root
             if (fi.Directory != null)
             {
-                parentPidl = pathToFullPidl(fi.Directory.FullName);
+                dir = fi.Directory.FullName;
             }
             else
             {
-                parentPidl = pathToFullPidl(fi.FullName);
+                dir = fi.FullName;
             }
+
+            return dir;
+        }
+
+        private IShellFolder getParentShellFolder(string path)
+        {
+            IntPtr parentPidl = pathToFullPidl(parent);
 
             IntPtr desktopFolderPtr;
             ShellFolders.SHGetDesktopFolder(out desktopFolderPtr);
@@ -292,7 +302,7 @@ namespace CairoDesktop.SupportingClasses
                             ShellFolders.InvokeCommand(
                                 iContextMenu,
                                 selected - ShellFolders.CMD_FIRST,
-                                paths[0],
+                                parent,
                                 new Point(this.x, this.y));
                         }
 
