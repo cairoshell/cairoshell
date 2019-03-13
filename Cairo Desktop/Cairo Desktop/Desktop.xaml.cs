@@ -241,6 +241,11 @@ namespace CairoDesktop
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
+            else if (msg == NativeMethods.WM_SETFOCUS)
+            {
+                Shell.ShowWindowBottomMost(helper.Handle);
+                handled = true;
+            }
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
             {
                 /*// Extract the WINDOWPOS structure corresponding to this message
@@ -264,8 +269,8 @@ namespace CairoDesktop
                 setBackground();
                 handled = true;
             }
-            else if(msg                 == (int)NativeMethods.WM.SETTINGCHANGE && 
-                    wParam.ToInt32()    == (int)NativeMethods.SPI.SPI_SETDESKWALLPAPER)
+            else if (msg == (int)NativeMethods.WM.SETTINGCHANGE &&
+                    wParam.ToInt32() == (int)NativeMethods.SPI.SPI_SETDESKWALLPAPER)
             {
                 BackgroundBrush = null;
                 setBackground();
