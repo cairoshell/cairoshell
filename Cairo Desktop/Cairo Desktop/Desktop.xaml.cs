@@ -455,42 +455,44 @@ namespace CairoDesktop
             {
                 ShellContextMenu cm = new ShellContextMenu(Icons.Location.FullName, executeCustomAction);
             }
-            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Image))
+            else
             {
-                Image img = e.OriginalSource as Image;
-                DockPanel dock = img.Parent as DockPanel;
-                Button btn = dock.Parent as Button;
-                string filePath = btn.CommandParameter as string;
+                DockPanel dock = null;
+                if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Image))
+                {
+                    Image img = e.OriginalSource as Image;
+                    dock = img.Parent as DockPanel;
+                }
+                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.TextBlock))
+                {
+                    TextBlock txt = e.OriginalSource as TextBlock;
+                    Border bdr = txt.Parent as Border;
+                    dock = bdr.Parent as DockPanel;
+                }
+                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border))
+                {
+                    Border bdr = e.OriginalSource as Border;
+                    dock = bdr.Parent as DockPanel;
+                }
+                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.DockPanel))
+                {
+                    dock = e.OriginalSource as DockPanel;
+                }
 
-                ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);
-            }
-            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.TextBlock))
-            {
-                TextBlock txt = e.OriginalSource as TextBlock;
-                Border bdr = txt.Parent as Border;
-                DockPanel dock = bdr.Parent as DockPanel;
-                Button btn = dock.Parent as Button;
-                string filePath = btn.CommandParameter as string;
+                if (dock != null)
+                {
+                    Button btn = dock.Parent as Button;
+                    string filePath = btn.CommandParameter as string;
 
-                ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);
+                    ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);
+                }
+                else
+                {
+                    CairoLogger.Instance.Debug("Desktop was right-clicked but it wasn't a recognized object.");
+                }
             }
-            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border))
-            {
-                Border bdr = e.OriginalSource as Border;
-                DockPanel dock = bdr.Parent as DockPanel;
-                Button btn = dock.Parent as Button;
-                string filePath = btn.CommandParameter as string;
 
-                ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);
-            }
-            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.DockPanel))
-            {
-                DockPanel dock = e.OriginalSource as DockPanel;
-                Button btn = dock.Parent as Button;
-                string filePath = btn.CommandParameter as string;
-
-                ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);
-            }
+            e.Handled = true;
         }
 
         private void executeCustomAction(string action, string path)

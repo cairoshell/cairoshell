@@ -43,9 +43,8 @@ namespace CairoDesktop
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
         {
-            int WM_NCHITTEST = 0x0084;
             int HTTRANSPARENT = (-1);
-            if (msg == WM_NCHITTEST)
+            if (msg == NativeMethods.WM_NCHITTEST)
             {
                 handled = true;
                 return (IntPtr)HTTRANSPARENT;
@@ -64,7 +63,9 @@ namespace CairoDesktop
 
             source.AddHook(new HwndSourceHook(WndProc));
 
-            Shell.HideWindowFromTasks(helper.Handle);
+            // Makes click-through by adding transparent style
+            // basically same as Shell.HideWindowFromTasks(helper.Handle);
+            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE, NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TRANSPARENT);
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
