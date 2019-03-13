@@ -163,11 +163,12 @@ namespace CairoDesktop
                     SelectedPath = owningDesktop.CurrentLocation
                 })
                 {
-                    NativeMethods.SetForegroundWindow(helper.Handle);
+                    NativeMethods.SetForegroundWindow(helper.Handle); // bring browse window to front
                     if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                         if (owningDesktop.CurrentLocation != fbd.SelectedPath) // added to prevent duplicate entries into the PathHistory... Should we reimpliment the DynamicDesktop to handle this on its own???
                             if (Directory.Exists(fbd.SelectedPath))
                                 owningDesktop.Navigate(fbd.SelectedPath);
+                    ToolbarOwner.Activate(); // activate desktop, which should actually put it back to the bottom
 
                 }
         }
