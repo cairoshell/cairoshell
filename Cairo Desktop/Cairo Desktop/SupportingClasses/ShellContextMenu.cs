@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using CairoDesktop.Common.Logging;
 using CairoDesktop.Interop;
 
 namespace CairoDesktop.SupportingClasses
@@ -45,38 +46,38 @@ namespace CairoDesktop.SupportingClasses
 
         public ShellContextMenu(string[] files, System.Windows.Controls.Button sender, ItemSelectAction itemSelected)
         {
-            this.CreateHandle(new CreateParams());
-            this.paths = files;
-
-            this.parentShellFolder = getParentShellFolder(this.paths[0]);
-            this.pidls = pathsToPidls(this.paths);
-            this.x = Cursor.Position.X;
-            this.y = Cursor.Position.Y;
-
-            this.itemSelected = itemSelected;
-            this.sender = sender;
-
             lock (Shell.ComLock)
             {
+                this.CreateHandle(new CreateParams());
+                this.paths = files;
+
+                this.parentShellFolder = getParentShellFolder(this.paths[0]);
+                this.pidls = pathsToPidls(this.paths);
+                this.x = Cursor.Position.X;
+                this.y = Cursor.Position.Y;
+
+                this.itemSelected = itemSelected;
+                this.sender = sender;
+
                 ShowContextMenu();
             }
         }
 
         public ShellContextMenu(string folder, FolderItemSelectAction folderItemSelected)
         {
-            this.CreateHandle(new CreateParams());
-            this.folder = folder;
-
-            this.parentShellFolder = getParentShellFolder(this.folder);
-            this.folderPidl = pathToFullPidl(this.folder);
-            this.folderRelPidl = pathToRelPidl(this.folder);
-            this.x = Cursor.Position.X;
-            this.y = Cursor.Position.Y;
-
-            this.folderItemSelected = folderItemSelected;
-
             lock (Shell.ComLock)
             {
+                this.CreateHandle(new CreateParams());
+                this.folder = folder;
+
+                this.parentShellFolder = getParentShellFolder(this.folder);
+                this.folderPidl = pathToFullPidl(this.folder);
+                this.folderRelPidl = pathToRelPidl(this.folder);
+                this.x = Cursor.Position.X;
+                this.y = Cursor.Position.Y;
+
+                this.folderItemSelected = folderItemSelected;
+
                 ShowFolderMenu();
             }
         }
@@ -114,28 +115,30 @@ namespace CairoDesktop.SupportingClasses
 
             string file = Path.GetFileName(path);
 
-            parentShellFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, file, ref pchEaten, out pidl, ref pdwAttributes);
-            
-            return pidl;
+            if (parentShellFolder != null)
+            {
+                int result = parentShellFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, file, ref pchEaten, out pidl, ref pdwAttributes);
+
+                if (pidl == IntPtr.Zero)
+                {
+                    CairoLogger.Instance.Debug("HRESULT " + result + " retrieving pidl for " + path);
+                }
+                
+                return pidl;
+            }
+            else
+            {
+                CairoLogger.Instance.Debug("Parent IShellFolder for " + path + " is null");
+                return IntPtr.Zero;
+            }
         }
 
         private IntPtr pathToFullPidl(string path)
         {
             IntPtr pidl = ShellFolders.ILCreateFromPath(path);
-            if (pidl != IntPtr.Zero)
+            if (pidl == IntPtr.Zero)
             {
-                try
-                {
-                    // nothing
-                }
-                finally
-                {
-                    Marshal.FreeCoTaskMem(pidl);
-                }
-            }
-            else
-            {
-                pidl = IntPtr.Zero;
+                CairoLogger.Instance.Debug("Unable to get pidl for " + path);
             }
 
             return pidl;
@@ -163,11 +166,12 @@ namespace CairoDesktop.SupportingClasses
             IntPtr parentPtr;
             if (desktop.BindToObject(parentPidl, IntPtr.Zero, ref ShellFolders.IID_IShellFolder, out parentPtr) == ShellFolders.S_OK)
             {
-                Marshal.ReleaseComObject(desktop);
+                Marshal.FinalReleaseComObject(desktop);
                 return (IShellFolder)Marshal.GetTypedObjectForIUnknown(parentPtr, typeof(IShellFolder));
             }
             else
             {
+                CairoLogger.Instance.Debug("Unable to bind IShellFolder");
                 return null;
             }
         }
@@ -296,31 +300,35 @@ namespace CairoDesktop.SupportingClasses
                             itemSelected(command, paths[0], sender);
                     }
                 }
+                else
+                {
+                    CairoLogger.Instance.Debug("Error retrieving IContextMenu");
+                }
             }
             catch (Exception) { }
             finally
             {
                 if (iContextMenu != null)
                 {
-                    Marshal.ReleaseComObject(iContextMenu);
+                    Marshal.FinalReleaseComObject(iContextMenu);
                     iContextMenu = null;
                 }
 
                 if (iContextMenu2 != null)
                 {
-                    Marshal.ReleaseComObject(iContextMenu2);
+                    Marshal.FinalReleaseComObject(iContextMenu2);
                     iContextMenu2 = null;
                 }
 
                 if (iContextMenu3 != null)
                 {
-                    Marshal.ReleaseComObject(iContextMenu3);
+                    Marshal.FinalReleaseComObject(iContextMenu3);
                     iContextMenu3 = null;
                 }
 
                 if (parentShellFolder != null)
                 {
-                    Marshal.ReleaseComObject(parentShellFolder);
+                    Marshal.FinalReleaseComObject(parentShellFolder);
                     parentShellFolder = null;
                 }
 
@@ -335,6 +343,12 @@ namespace CairoDesktop.SupportingClasses
 
                 if (iContextMenuPtr3 != IntPtr.Zero)
                     Marshal.Release(iContextMenuPtr3);
+
+                for (int i = 0; i < pidls.Length; i++)
+                {
+                    Marshal.FreeCoTaskMem(pidls[i]);
+                    pidls[i] = IntPtr.Zero;
+                }
             }
         }
 
@@ -435,19 +449,19 @@ namespace CairoDesktop.SupportingClasses
             {
                 if (newContextMenu != null)
                 {
-                    Marshal.ReleaseComObject(newContextMenu);
+                    Marshal.FinalReleaseComObject(newContextMenu);
                     newContextMenu = null;
                 }
 
                 if (newContextMenu2 != null)
                 {
-                    Marshal.ReleaseComObject(newContextMenu2);
+                    Marshal.FinalReleaseComObject(newContextMenu2);
                     newContextMenu2 = null;
                 }
 
                 if (newContextMenu3 != null)
                 {
-                    Marshal.ReleaseComObject(newContextMenu3);
+                    Marshal.FinalReleaseComObject(newContextMenu3);
                     newContextMenu3 = null;
                 }
 
@@ -467,6 +481,11 @@ namespace CairoDesktop.SupportingClasses
                     Marshal.Release(newContextMenuPtr3);
 
                 newSubmenuPtr = IntPtr.Zero;
+
+                Marshal.FreeCoTaskMem(folderPidl);
+                Marshal.FreeCoTaskMem(folderRelPidl);
+                folderPidl = IntPtr.Zero;
+                folderRelPidl = IntPtr.Zero;
             }
         }
 
