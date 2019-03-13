@@ -1630,6 +1630,7 @@ namespace CairoDesktop.Interop
         public const int WM_NCHITTEST = 0x0084;
         public const int WM_DPICHANGED = 0x02E0;
         public const int WM_ACTIVATE = 0x0006;
+        public const int WM_SETFOCUS = 0x0007;
         public const int WM_COMMAND = 0x111;
         public const uint WM_LBUTTONDOWN = 0x201;
         public const uint WM_LBUTTONUP = 0x202;
