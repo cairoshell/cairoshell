@@ -25,6 +25,8 @@ namespace CairoDesktop
         private WindowInteropHelper helper;
         private bool altF4Pressed;
 
+        public bool IsFbdOpen = false;
+
         public Stack<string> PathHistory = new Stack<string>();
         public DesktopIcons Icons;
         public DependencyProperty IsOverlayOpenProperty = DependencyProperty.Register("IsOverlayOpen", typeof(bool), typeof(Desktop), new PropertyMetadata(new bool()));
@@ -241,23 +243,31 @@ namespace CairoDesktop
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
-            else if (msg == NativeMethods.WM_SETFOCUS)
+            else if (msg == NativeMethods.WM_SETFOCUS || msg == NativeMethods.WM_WINDOWPOSCHANGED)
             {
-                Shell.ShowWindowBottomMost(helper.Handle);
-                handled = true;
+                if (!IsOverlayOpen && !IsFbdOpen)
+                {
+                    Shell.ShowWindowBottomMost(helper.Handle);
+                    handled = true;
+                }
             }
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
             {
-                /*// Extract the WINDOWPOS structure corresponding to this message
-                NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
-
-                // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
-                if (!((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == NativeMethods.SetWindowPosFlags.SWP_NOZORDER))
+                if (IsFbdOpen)
                 {
-                    // add the SWP_NOZORDER flag
-                    wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOZORDER;
-                    wndPos.UpdateMessage(lParam);
-                }*/
+                    // workaround so that folder browser window comes to front, but not the desktop
+
+                    // Extract the WINDOWPOS structure corresponding to this message
+                    NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
+
+                    // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
+                    if (!((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == NativeMethods.SetWindowPosFlags.SWP_NOZORDER))
+                    {
+                        // add the SWP_NOZORDER flag
+                        wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOZORDER;
+                        wndPos.UpdateMessage(lParam);
+                    }
+                }
 
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
