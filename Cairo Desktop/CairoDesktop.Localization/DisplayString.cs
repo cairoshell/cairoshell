@@ -775,6 +775,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sProgramsMenu_ChangeCategory
+        {
+            get
+            {
+                return getString("sProgramsMenu_ChangeCategory");
+            }
+        }
+
         public static string sPlacesMenu_Documents
         {
             get

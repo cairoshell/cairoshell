@@ -51,8 +51,12 @@
                                         <Separator />
                                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu_AddToQuickLaunch)}" Click="programsMenu_AddToQuickLaunch" />
                                         <Separator />
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu_ChangeCategory)}" Name="miProgramsChangeCategory" SubmenuOpened="miProgramsChangeCategory_SubmenuOpened">
+                                            <MenuItem Header="" />
+                                        </MenuItem>
                                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Rename)}" Click="programsMenu_Rename" />
                                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu_RemoveFromMenu)}" Click="programsMenu_Remove" />
+                                        <Separator />
                                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Properties)}" Click="programsMenu_Properties" />
                                     </ContextMenu>
                                 </MenuItem.ContextMenu>
