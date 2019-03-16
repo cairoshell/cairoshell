@@ -93,6 +93,7 @@ namespace CairoDesktop.Localization
             { "sProgramsMenu_Remove", "Remove" },
             { "sProgramsMenu_UWPInfo", "This is a Universal Windows Platform (UWP) application." },
             { "sProgramsMenu_AddToQuickLaunch", "Add to Quick Launch" },
+            { "sProgramsMenu_ChangeCategory", "Change category" },
             { "sPlacesMenu_Documents", "Documents" },
             { "sPlacesMenu_Downloads", "Downloads" },
             { "sPlacesMenu_Music", "Music" },

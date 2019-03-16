@@ -298,7 +298,7 @@
                                 Focusable="false"
                                 PopupAnimation="Fade"
                                 AllowsTransparency="True">
-                                <Border x:Name="SubMenuBorder">
+                                <Border x:Name="SubMenuBorderTop">
                                     <Border.Style>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="BorderBrush"
@@ -311,7 +311,7 @@
                                                 Value="{DynamicResource ResourceKey=MenuShadow}" />
                                         </Style>
                                     </Border.Style>
-                                    <Border>
+                                    <Border x:Name="SubMenuBorder">
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="Background" Value="{DynamicResource ResourceKey=MenuBackgroundGradient}" />
@@ -423,7 +423,7 @@
                             <Setter Property="Background"
                                 TargetName="Border" Value="{DynamicResource ResourceKey=MenuItemHoverGradient}"/>
                         </MultiTrigger>
-                        <!-- Role = SubMenuHeader : this is a child menu item which does not have children -->
+                        <!-- Role = SubMenuHeader : this is a child menu item which has children -->
                         <Trigger Property="Role"
                             Value="SubmenuHeader">
                             <Setter Property="DockPanel.Dock"
@@ -438,6 +438,14 @@
                                 Value="12" />
                             <Setter Property="FontFamily"
                                 Value="Segoe UI" />
+                            <Setter Property="BorderThickness"
+                                TargetName="SubMenuBorderTop" Value="0" />
+                            <Setter Property="BorderThickness"
+                                TargetName="SubMenuBorder" Value="1" />
+                            <Setter Property="CornerRadius"
+                                TargetName="SubMenuBorder" Value="5" />
+                            <Setter Property="VerticalOffset"
+                                TargetName="SubMenuPopup" Value="-4" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -449,7 +457,7 @@
                             <Setter Property="Background"
                                 TargetName="Border" Value="{DynamicResource ResourceKey=MenuItemHoverGradient}"/>
                         </MultiTrigger>
-                        <!-- Role = SubMenuItem : this is a child menu item which has children-->
+                        <!-- Role = SubMenuItem : this is a child menu item which does not have children-->
                         <Trigger Property="Role"
                             Value="SubmenuItem">
                             <Setter Property="DockPanel.Dock"
@@ -510,7 +518,7 @@
                                 Focusable="false"
                                 PopupAnimation="Fade"
                                 AllowsTransparency="True">
-                                    <Border x:Name="SubMenuBorder" Margin="11,0,5,11">
+                                    <Border x:Name="SubMenuBorderTop" Margin="11,0,5,11">
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="BorderBrush"
@@ -521,7 +529,7 @@
                                                 Value="{DynamicResource ResourceKey=MenuShadow}" />
                                             </Style>
                                         </Border.Style>
-                                        <Border>
+                                        <Border x:Name="SubMenuBorder">
                                             <Border.Style>
                                                 <Style TargetType="{x:Type Border}">
                                                     <Setter Property="Background" Value="{DynamicResource ResourceKey=MenuBackgroundGradient}" />
@@ -1571,7 +1579,7 @@
                                 PopupAnimation="Slide"
                                 AllowsTransparency="True">
                                 <StackPanel>
-                                    <Border x:Name="SubMenuBorder">
+                                    <Border x:Name="SubMenuBorderTop">
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="BorderBrush"
@@ -1580,7 +1588,7 @@
                                                 Value="0,1,0,0" />
                                             </Style>
                                         </Border.Style>
-                                        <Border>
+                                        <Border x:Name="SubMenuBorder">
                                             <Border.Style>
                                                 <Style TargetType="{x:Type Border}">
                                                     <Setter Property="Background" Value="{DynamicResource ResourceKey=MenuBackgroundGradient}" />
