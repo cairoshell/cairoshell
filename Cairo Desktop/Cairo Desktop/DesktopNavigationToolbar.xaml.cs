@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows;
+﻿using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
+using CairoDesktop.SupportingClasses;
+using System;
 using System.IO;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
-using CairoDesktop.Interop;
-using CairoDesktop.Configuration;
-using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop
 {
@@ -29,6 +29,7 @@ namespace CairoDesktop
         {
             InitializeComponent();
             SetPosition();
+            this.LocationChanged += DesktopNavigationToolbar_LocationChanged;
 
             browseContextMenu = new System.Windows.Controls.ContextMenu
             {
@@ -36,10 +37,36 @@ namespace CairoDesktop
             };
         }
 
+        private void DesktopNavigationToolbar_LocationChanged(object sender, EventArgs e)
+        {
+            if (Settings.Exists("DesktopNavigationToolbarTop") &&
+               Settings.Exists("DesktopNavigationToolbarLeft"))
+            {
+                Settings.Instance["DesktopNavigationToolbarTop"] = Top;
+                Settings.Instance["DesktopNavigationToolbarLeft"] = Left;
+                Settings.Save();
+            }
+        }
+
         private void SetPosition()
         {
-            Top = AppBarHelper.PrimaryMonitorSize.Height - Height - 150;
-            Left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (Width / 2);
+            var top = AppBarHelper.PrimaryMonitorSize.Height - Height - 150;
+            var left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (Width / 2);
+
+            if (Settings.Exists("DesktopNavigationToolbarTop") &&
+                Settings.Exists("DesktopNavigationToolbarLeft"))
+            {
+                var dwtTop = Settings.Instance["DesktopNavigationToolbarTop"] as double?;
+                if (dwtTop.HasValue)
+                    top = dwtTop.Value;
+
+                var dwtLeft = Settings.Instance["DesktopNavigationToolbarLeft"] as double?;
+                if (dwtLeft.HasValue)
+                    left = dwtLeft.Value;
+            }
+
+            Top = top;
+            Left = left;
         }
 
         private void SetPosition(uint x, uint y)
@@ -108,7 +135,7 @@ namespace CairoDesktop
                             browseContextMenu.Items.Add(locationMenuItem);
                         }
 
-                        browseContextMenu.Items.Add(new System.Windows.Controls.Separator { Style = FindResource("CairoMenuSeparatorStyle") as Style});
+                        browseContextMenu.Items.Add(new System.Windows.Controls.Separator { Style = FindResource("CairoMenuSeparatorStyle") as Style });
 
                         System.Windows.Controls.MenuItem clearHistoryMenuItem = new System.Windows.Controls.MenuItem { Header = "Clear History" };
                         clearHistoryMenuItem.Click += ClearHistoryMenuItem_Click;

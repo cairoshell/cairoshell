@@ -1,20 +1,19 @@
 ﻿namespace CairoDesktop
 {
-    using System;
-    using System.Diagnostics;
-    using System.Windows;
-    using Microsoft.Win32;
-    using Interop;
-    using System.Collections.Generic;
-    using System.Windows.Threading;
-    using System.Windows.Markup;
-    using System.Threading.Tasks;
-    using CairoDesktop.Configuration;
-    using SupportingClasses;
-    using Common;
-    using CairoDesktop.WindowsTray;
-    using System.Threading;
     using CairoDesktop.Common.Logging;
+    using CairoDesktop.Configuration;
+    using CairoDesktop.WindowsTray;
+    using Common;
+    using Interop;
+    using Microsoft.Win32;
+    using SupportingClasses;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Markup;
+    using System.Windows.Threading;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
@@ -65,6 +64,9 @@
 
             SetupPluginSystem();
 
+            // ??? Kick off the plug-able settings
+            var foo = Settings.Instance;
+
             #endregion
 
             // check if we are the current user's shell
@@ -83,7 +85,8 @@
             // Set custom theme if selected
             string theme = Settings.CairoTheme;
             if (theme != "Default")
-                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
+                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme))
+                    app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
             if (Settings.EnableTaskbar)
             {
@@ -612,7 +615,7 @@
             return procInfo;
         }
 
-        private async static void RunStartupApps()
+        private static async void RunStartupApps()
         {
             await Task.Run(() => LoopStartupApps());
         }
