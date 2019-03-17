@@ -472,31 +472,39 @@ namespace CairoDesktop
             }
             else
             {
-                DockPanel dock = null;
+                Button btn = null;
                 if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Image))
                 {
                     Image img = e.OriginalSource as Image;
-                    dock = img.Parent as DockPanel;
+                    DockPanel dock = img.Parent as DockPanel;
+                    btn = dock.Parent as Button;
                 }
                 else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.TextBlock))
                 {
                     TextBlock txt = e.OriginalSource as TextBlock;
                     Border bdr = txt.Parent as Border;
-                    dock = bdr.Parent as DockPanel;
+                    DockPanel dock = bdr.Parent as DockPanel;
+                    btn = dock.Parent as Button;
+                }
+                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border) && (e.OriginalSource as Border).Parent != null)
+                {
+                    Border bdr = e.OriginalSource as Border;
+                    DockPanel dock = bdr.Parent as DockPanel;
+                    btn = dock.Parent as Button;
+                }
+                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.DockPanel))
+                {
+                    DockPanel dock = e.OriginalSource as DockPanel;
+                    btn = dock.Parent as Button;
                 }
                 else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border))
                 {
                     Border bdr = e.OriginalSource as Border;
-                    dock = bdr.Parent as DockPanel;
-                }
-                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.DockPanel))
-                {
-                    dock = e.OriginalSource as DockPanel;
+                    btn = bdr.TemplatedParent as Button;
                 }
 
-                if (dock != null)
+                if (btn != null)
                 {
-                    Button btn = dock.Parent as Button;
                     string filePath = btn.CommandParameter as string;
 
                     ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);

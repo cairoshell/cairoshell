@@ -321,6 +321,7 @@ namespace CairoDesktop
             return 1;
         }
 
+        #region Programs menu
         private void LaunchProgram(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
@@ -381,6 +382,55 @@ namespace CairoDesktop
 
             AppGrabber.AppGrabber.ShowAppProperties(app);
         }
+
+        private void ToggleProgramsMenu()
+        {
+            if (!ProgramsMenu.IsSubmenuOpen)
+            {
+                NativeMethods.SetForegroundWindow(helper.Handle);
+                ProgramsMenu.IsSubmenuOpen = true;
+            }
+            else
+            {
+                ProgramsMenu.IsSubmenuOpen = false;
+            }
+        }
+
+        private void miProgramsChangeCategory_SubmenuOpened(object sender, RoutedEventArgs e)
+        {
+            MenuItem mi = sender as MenuItem;
+            ApplicationInfo ai = mi.DataContext as ApplicationInfo;
+            mi.Items.Clear();
+
+            foreach (Category cat in appGrabber.CategoryList)
+            {
+                if (cat.Type == 0 && cat != ai.Category)
+                {
+                    MenuItem newItem = new MenuItem();
+                    newItem.Header = cat.DisplayName;
+
+                    object[] appNewCat = new object[] { ai, cat };
+                    newItem.DataContext = appNewCat;
+
+                    newItem.Click += new RoutedEventHandler(miProgramsChangeCategory_Click);
+                    mi.Items.Add(newItem);
+                }
+            }
+        }
+
+        private void miProgramsChangeCategory_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem mi = sender as MenuItem;
+            object[] appNewCat = mi.DataContext as object[];
+            ApplicationInfo ai = appNewCat[0] as ApplicationInfo;
+            Category newCat = appNewCat[1] as Category;
+
+            ai.Category.Remove(ai);
+            newCat.Add(ai);
+
+            appGrabber.Save();
+        }
+        #endregion
 
         #region Date/time
         /// <summary>
@@ -927,18 +977,5 @@ namespace CairoDesktop
         }
 
         #endregion
-
-        private void ToggleProgramsMenu()
-        {
-            if (!ProgramsMenu.IsSubmenuOpen)
-            {
-                NativeMethods.SetForegroundWindow(helper.Handle);
-                ProgramsMenu.IsSubmenuOpen = true;
-            }
-            else
-            {
-                ProgramsMenu.IsSubmenuOpen = false;
-            }
-        }
     }
 }
