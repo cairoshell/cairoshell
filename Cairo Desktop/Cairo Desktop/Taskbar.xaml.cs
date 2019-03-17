@@ -91,9 +91,16 @@ namespace CairoDesktop
             ((INotifyCollectionChanged)TasksList.Items).CollectionChanged += TasksList_Changed;
 
             if (Startup.DesktopWindow != null)
+            {
                 btnDesktopOverlay.DataContext = Startup.DesktopWindow;
+                bdrBackground.DataContext = Startup.DesktopWindow;
+            }
             else
+            {
                 btnDesktopOverlay.Visibility = Visibility.Collapsed;
+                btnDesktopOverlay.DataContext = null;
+                bdrBackground.DataContext = null;
+            }
 
             // set taskbar edge based on preference
             if (Settings.TaskbarPosition == 1)

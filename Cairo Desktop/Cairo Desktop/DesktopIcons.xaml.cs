@@ -19,8 +19,8 @@ namespace CairoDesktop
                 typeof(DesktopIcons),
                 new PropertyMetadata(null));
 
-        int xOffset = 8;
-        int yOffset = 12;
+        int xOffset = 7;
+        int yOffset = 13;
 
         public DesktopIcons()
         {

@@ -12,7 +12,7 @@
     AllowDrop="True"
     Visibility="Visible"
     Focusable="False"
-    Background="{x:Null}"
+    Background="Transparent"
     Closing="Taskbar_Closing" SourceInitialized="TaskbarWindow_SourceInitialized" LocationChanged="TaskbarWindow_LocationChanged" UseLayoutRounding="True" HorizontalAlignment="Center"
     Topmost="True">
     <Window.Resources>
@@ -27,7 +27,18 @@
             </CollectionViewSource>
         </ResourceDictionary>
     </Window.Resources>
-    <Border HorizontalAlignment="Center" Name="bdrMain">
+    <Border Name="bdrBackground">
+        <Border.Style>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=IsOverlayOpen}" Value="True">
+                        <Setter Property="Background" Value="#88000000"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <Border HorizontalAlignment="Center" Name="bdrMain">
         <Border.Style>
             <Style TargetType="Border">
                 <Style.Triggers>
@@ -230,5 +241,6 @@
                 </StackPanel>
             </Border>
         </StackPanel>
+    </Border>
     </Border>
 </Window>
