@@ -16,4 +16,12 @@
     <BitmapImage x:Key="WhiteBarBackground" UriSource="pack://application:,,,/CairoDesktop;component/Resources/menubarWhite.png"></BitmapImage>
 
     <ImageBrush x:Key="MenuBarBackground" ImageSource="{StaticResource WhiteBarBackground}" />
+    
+    <!-- Desktop -->
+    <SolidColorBrush Color="#33DDDDDD" x:Key="DesktopHoverBackground" />
+    <SolidColorBrush Color="#88DDDDDD" x:Key="DesktopHoverTopBorder" />
+    <SolidColorBrush Color="#40000000" x:Key="DesktopHoverBottomBorder" />
+    <SolidColorBrush Color="#60DDDDDD" x:Key="DesktopPressedBackground" />
+    <SolidColorBrush Color="#99DDDDDD" x:Key="DesktopPressedTopBorder" />
+    <SolidColorBrush Color="#66000000" x:Key="DesktopPressedBottomBorder" />
 </ResourceDictionary>
