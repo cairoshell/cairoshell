@@ -65,11 +65,16 @@
     <!-- Folder view resources -->
     <SolidColorBrush Color="#FFFFFFFF" x:Key="DesktopIconText" />
     <SolidColorBrush Color="#FFFFFFFF" x:Key="StacksIconText" />
-    <SolidColorBrush Color="#24DDDDDD" x:Key="DesktopHoverBackground" />
-    <SolidColorBrush Color="#66DDDDDD" x:Key="DesktopHoverBorder" />
-    <SolidColorBrush Color="#40DDDDDD" x:Key="DesktopPressedBackground" />
-    <SolidColorBrush Color="#80DDDDDD" x:Key="DesktopPressedBorder" />
-    
+    <LinearGradientBrush x:Key="DesktopHoverBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#44282828" Offset="0.0" />
+        <GradientStop Color="#44333333" Offset="1.0" />
+    </LinearGradientBrush>
+    <SolidColorBrush Color="#44FFFFFF" x:Key="DesktopHoverTopBorder" />
+    <SolidColorBrush Color="#77282828" x:Key="DesktopHoverBottomBorder" />
+    <SolidColorBrush Color="#70333333" x:Key="DesktopPressedBackground" />
+    <SolidColorBrush Color="#60FFFFFF" x:Key="DesktopPressedTopBorder" />
+    <SolidColorBrush Color="#99282828" x:Key="DesktopPressedBottomBorder" />
+
     <!-- Taskbar resources -->
     <LinearGradientBrush x:Key="TaskbarBottomBackground" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="#AF1d1d1d" Offset="0.0" />
@@ -1896,37 +1901,25 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Border" CornerRadius="5" BorderBrush="Transparent" BorderThickness="1">
-                    <ContentPresenter Margin="5,7,5,5"
+                    <Border x:Name="Border" Margin="2,4,2,2" CornerRadius="3" BorderBrush="Transparent" BorderThickness="0,1,0,0">
+                        <Border x:Name="Border2" CornerRadius="3" BorderBrush="Transparent" BorderThickness="0,0,0,1">
+                            <ContentPresenter Margin="3"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
+                        </Border>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver"
                             Value="true">
                             <Setter TargetName="Border" Property="Background" Value="{DynamicResource ResourceKey=DesktopHoverBackground}" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ResourceKey=DesktopHoverBorder}" />
-                            <!--<Setter Property="Button.Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="Black"
-                                                        ShadowDepth="0"
-                                                        Direction="0"
-                                                        Opacity="0.5" BlurRadius="6" />
-                                </Setter.Value>
-                            </Setter>-->
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ResourceKey=DesktopHoverTopBorder}" />
+                            <Setter TargetName="Border2" Property="BorderBrush" Value="{DynamicResource ResourceKey=DesktopHoverBottomBorder}" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
                             <Setter TargetName="Border" Property="Background" Value="{DynamicResource ResourceKey=DesktopPressedBackground}" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ResourceKey=DesktopPressedBorder}" />
-                            <!--<Setter Property="Button.Effect">
-                                <Setter.Value>
-                                    <DropShadowEffect Color="Black"
-                                                        ShadowDepth="0"
-                                                        Direction="0"
-                                                        Opacity="1" BlurRadius="7" />
-                                </Setter.Value>
-                            </Setter>-->
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ResourceKey=DesktopPressedTopBorder}" />
+                            <Setter TargetName="Border2" Property="BorderBrush" Value="{DynamicResource ResourceKey=DesktopPressedBottomBorder}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

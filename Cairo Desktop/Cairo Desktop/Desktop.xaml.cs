@@ -469,6 +469,8 @@ namespace CairoDesktop
             if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.ScrollViewer))
             {
                 ShellContextMenu cm = new ShellContextMenu(Icons.Location.FullName, executeCustomAction);
+
+                e.Handled = true;
             }
             else
             {
@@ -486,7 +488,7 @@ namespace CairoDesktop
                     DockPanel dock = bdr.Parent as DockPanel;
                     btn = dock.Parent as Button;
                 }
-                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border) && (e.OriginalSource as Border).Parent != null)
+                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border) && (e.OriginalSource as Border).Parent != null && (e.OriginalSource as Border).Parent.GetType() == typeof(System.Windows.Controls.DockPanel))
                 {
                     Border bdr = e.OriginalSource as Border;
                     DockPanel dock = bdr.Parent as DockPanel;
@@ -508,14 +510,14 @@ namespace CairoDesktop
                     string filePath = btn.CommandParameter as string;
 
                     ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);
+
+                    e.Handled = true;
                 }
                 else
                 {
                     CairoLogger.Instance.Debug("Desktop was right-clicked but it wasn't a recognized object.");
                 }
             }
-
-            e.Handled = true;
         }
 
         private void executeCustomAction(string action, string path)
