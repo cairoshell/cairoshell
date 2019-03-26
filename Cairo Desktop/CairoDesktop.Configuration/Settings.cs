@@ -15,7 +15,7 @@ namespace CairoDesktop.Configuration
 
         private static Settings instance;
 
-        private Settings() { }
+        public Settings() { }
 
         public static Settings Instance
         {
