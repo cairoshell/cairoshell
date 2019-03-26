@@ -1,13 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 
 namespace CairoDesktop.Configuration
 {
     public class Settings
     {
+        public delegate void SettingsEvent(object sender, EventArgs args);
+        public static event SettingsEvent Initializing = delegate { }; // add empty delegate!
+        public static event SettingsEvent Initialized = delegate { }; // add empty delegate!
+
+        private static bool _initialized = false;
+
         private static Settings instance;
 
-        public Settings() { }
+        private Settings() { }
 
         public static Settings Instance
         {
@@ -15,7 +23,16 @@ namespace CairoDesktop.Configuration
             {
                 if (instance == null)
                 {
+                    // add SettingsInitializing event handler
+                    // this should be where plugins can register PropertySettings with our core
+                    Initializing(null, null);
+
                     instance = new Settings();
+                    _initialized = true;
+
+                    // add SettingsInitialized event handler
+                    // This should inform the system that all PropertySettings should be added and can now be accessed safely
+                    Initialized(instance, null);
                 }
 
                 return instance;
@@ -635,6 +652,7 @@ namespace CairoDesktop.Configuration
 
         #endregion
 
+        #region Helpers
         private static List<string> parseConcatString(string concat, char separator)
         {
             List<string> parsed = new List<string>();
@@ -662,8 +680,10 @@ namespace CairoDesktop.Configuration
 
             return concatenated;
         }
+        #endregion
 
-        private static void Save()
+
+        public static void Save()
         {
             Properties.Settings.Default.Save();
         }
@@ -675,5 +695,51 @@ namespace CairoDesktop.Configuration
             // clear cached value since it may be wrong after upgrade
             _IsFirstRun = null;
         }
+
+        public object this[string propertyName]
+        {
+            get
+            {
+                return Properties.Settings.Default[propertyName];
+            }
+            set
+            {
+                Properties.Settings.Default[propertyName] = value;
+            }
+        }
+
+        public static bool Exists(string name)
+        {
+            return Properties.Settings.Default.Properties[name] != null;
+        }
+
+        public static void AddPropertySetting(string name, Type type, object defaultValue)
+        {
+            // Only allow settings to be added during initialization
+            if (!_initialized)
+            {
+                string providerName = "LocalFileSettingsProvider";
+
+                SettingsAttributeDictionary attributes = new SettingsAttributeDictionary();
+                UserScopedSettingAttribute attr = new UserScopedSettingAttribute();
+                attributes.Add(attr.TypeId, attr);
+
+                var prop = new SettingsProperty(
+                    new SettingsProperty(name
+                    , type
+                    , Properties.Settings.Default.Providers[providerName]
+                    , false
+                    , defaultValue
+                    , SettingsSerializeAs.String
+                    , attributes
+                    , false
+                    , false));
+
+                Properties.Settings.Default.Properties.Add(prop);
+                Properties.Settings.Default.Save();
+                Properties.Settings.Default.Reload();
+            }
+        }
+
     }
 }
