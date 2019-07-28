@@ -56,9 +56,14 @@ namespace CairoDesktop {
         
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            openDir((sender as ICommandSource).CommandParameter.ToString());
+            openDir((sender as ICommandSource).CommandParameter.ToString(), true);
         }
-        
+
+        private void OpenDesktop_Click(object sender, RoutedEventArgs e)
+        {
+            openDir((sender as ICommandSource).CommandParameter.ToString(), false);
+        }
+
         private void NameLabel_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             // Open folders with middle button clicks.
@@ -68,7 +73,7 @@ namespace CairoDesktop {
                 ICommandSource cmdsrc = sender as ICommandSource;
                 if (cmdsrc?.CommandParameter is SystemDirectory cmdparam)
                 {
-                    openDir(cmdparam.FullName); 
+                    openDir(cmdparam.FullName, false); 
                     e.Handled = true;
                 }
             }
@@ -78,9 +83,9 @@ namespace CairoDesktop {
         /// Launches the FileManager specified in the application Settings object to the specified directory.
         /// </summary>
         /// <param name="directoryPath">Directory to open.</param>
-        private void openDir(String directoryPath) 
+        private void openDir(string directoryPath, bool openWithShell) 
         {
-            if (!FolderHelper.OpenLocation(directoryPath))
+            if ((!openWithShell && !FolderHelper.OpenLocation(directoryPath)) || (openWithShell && !FolderHelper.OpenWithShell(directoryPath)))
             {
                 CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -170,6 +175,19 @@ namespace CairoDesktop {
         {
             startPoint = null;
             ctxOpen = true;
+
+            if (!Settings.EnableDynamicDesktop)
+            {
+                ContextMenu menu = (sender as ContextMenu);
+                foreach (Control item in menu.Items)
+                {
+                    if (item.Name == "miOpenOnDesktop")
+                    {
+                        item.Visibility = Visibility.Collapsed;
+                        return;
+                    }
+                }
+            }
         }
 
         private void ContextMenu_Closed(object sender, RoutedEventArgs e)

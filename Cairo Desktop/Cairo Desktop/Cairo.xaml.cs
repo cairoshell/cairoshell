@@ -16,52 +16,35 @@ namespace CairoDesktop
         private void btnFile_Click(object sender, RoutedEventArgs e)
         {
             Button senderButton = sender as Button;
-            if (senderButton != null && senderButton.CommandParameter != null)
+            if (senderButton != null && senderButton.DataContext != null)
             {
-                string commandString = senderButton.CommandParameter as String;
-                if (!string.IsNullOrWhiteSpace(commandString))
+                SystemFile file = senderButton.DataContext as SystemFile;
+                if (!string.IsNullOrWhiteSpace(file.FullName))
                 {
                     // Determine if [SHIFT] key is held. Bypass Directory Processing, which will use the Shell to open the item.
                     if (!KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
                     {
-                        // get the file attributes for file or directory
-                        FileAttributes attr = File.GetAttributes(commandString);
-                        bool isDirectory = (attr & FileAttributes.Directory) == FileAttributes.Directory;
-
                         // if directory, perform special handling
-                        if (isDirectory
+                        if (file.IsDirectory
                             && Settings.EnableDynamicDesktop
                             && Window.GetWindow(senderButton)?.Name == "CairoDesktopWindow"
                             && Startup.DesktopWindow != null)
                         {
-                            Startup.DesktopWindow.Navigate(commandString);
+                            Startup.DesktopWindow.Navigate(file.FullName);
                             return;
                         }
-                        else if (isDirectory)
+                        else if (file.IsDirectory)
                         {
-                            FolderHelper.OpenLocation(commandString);
+                            FolderHelper.OpenLocation(file.FullName);
                             return;
                         }
                     }
-
-                    System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                    proc.StartInfo.UseShellExecute = true;
-                    proc.StartInfo.FileName = commandString;
 
                     if (Startup.DesktopWindow != null)
                         Startup.DesktopWindow.IsOverlayOpen = false;
 
-                    try
-                    {
-                        proc.Start();
-                        return;
-                    }
-                    catch
-                    {
-                        // No 'Open' command associated with this filetype in the registry
-                        Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
-                        return;
-                    }
+                    Shell.ExecuteProcess(file.FullName);
+                    return;
                 }
             }
 

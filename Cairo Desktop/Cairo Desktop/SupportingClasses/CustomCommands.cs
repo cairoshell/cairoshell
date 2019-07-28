@@ -95,6 +95,11 @@ namespace CairoDesktop
                 StacksManager.AddLocation(fileName);
                 return;
             }
+            else if (verb == "removeStack")
+            {
+                StacksManager.StackLocations.Remove(new SystemDirectory(fileName, _dispatcher));
+                return;
+            }
         }
 
         public static void PerformAction(string verb, string fileName, Button btn)

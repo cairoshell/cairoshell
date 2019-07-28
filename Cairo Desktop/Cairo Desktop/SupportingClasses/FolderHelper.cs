@@ -8,7 +8,7 @@ namespace CairoDesktop.SupportingClasses
     {
         public static bool OpenLocation(string path)
         {
-            if (Settings.FoldersOpenDesktopOverlay && Startup.DesktopWindow != null && !path.StartsWith("::{"))
+            if (Settings.EnableDynamicDesktop && Settings.FoldersOpenDesktopOverlay && Startup.DesktopWindow != null && !path.StartsWith("::{"))
             {
                 try
                 {
@@ -23,11 +23,16 @@ namespace CairoDesktop.SupportingClasses
             }
             else 
             {
-                if (Startup.DesktopWindow != null)
-                    Startup.DesktopWindow.IsOverlayOpen = false;
-
-                return Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), path);
+                return OpenWithShell(path);
             }
+        }
+
+        public static bool OpenWithShell(string path)
+        {
+            if (Startup.DesktopWindow != null)
+                Startup.DesktopWindow.IsOverlayOpen = false;
+
+            return Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), path);
         }
     }
 }

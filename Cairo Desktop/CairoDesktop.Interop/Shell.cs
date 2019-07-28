@@ -149,6 +149,24 @@ namespace CairoDesktop.Interop
             return sbPath.ToString();
         }
 
+        public static bool ExecuteProcess(string filename)
+        {
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo.UseShellExecute = true;
+            proc.StartInfo.FileName = filename;
+
+            try
+            {
+                return proc.Start();
+            }
+            catch
+            {
+                // No 'Open' command associated with this filetype in the registry
+                Interop.Shell.ShowOpenWithDialog(proc.StartInfo.FileName);
+                return false;
+            }
+        }
+
         public static bool StartProcess(string filename)
         {
             try

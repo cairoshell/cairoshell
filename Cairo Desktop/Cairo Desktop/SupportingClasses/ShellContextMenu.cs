@@ -3,7 +3,10 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Windows.Threading;
+using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
+using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 
 namespace CairoDesktop.SupportingClasses
@@ -19,7 +22,9 @@ namespace CairoDesktop.SupportingClasses
         {
             Paste = (int)ShellFolders.CMD_LAST + 1,
             Properties,
-            AddToStacks
+            AddToStacks,
+            RemoveFromStacks,
+            OpenInNewWindow
         }
         
         // Properties
@@ -35,7 +40,8 @@ namespace CairoDesktop.SupportingClasses
         private IntPtr newSubmenuPtr;
 
         private IntPtr[] pidls;
-        private string[] paths;
+        private SystemFile[] paths;
+        private SystemDirectory directory;
         private string folder;
         private IntPtr folderPidl;
         private IntPtr folderRelPidl;
@@ -45,15 +51,15 @@ namespace CairoDesktop.SupportingClasses
         private IShellFolder parentShellFolder;
         private System.Windows.Controls.Button sender;
 
-        public ShellContextMenu(string[] files, System.Windows.Controls.Button sender, ItemSelectAction itemSelected)
+        public ShellContextMenu(SystemFile[] files, System.Windows.Controls.Button sender, ItemSelectAction itemSelected)
         {
             lock (Shell.ComLock)
             {
                 this.CreateHandle(new CreateParams());
                 this.paths = files;
 
-                this.parent = getParentDir(this.paths[0]);
-                this.parentShellFolder = getParentShellFolder(this.paths[0]);
+                this.parent = getParentDir(this.paths[0].FullName);
+                this.parentShellFolder = getParentShellFolder(this.paths[0].FullName);
                 this.pidls = pathsToPidls(this.paths);
                 this.x = Cursor.Position.X;
                 this.y = Cursor.Position.Y;
@@ -65,12 +71,13 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public ShellContextMenu(string folder, FolderItemSelectAction folderItemSelected)
+        public ShellContextMenu(SystemDirectory directory, FolderItemSelectAction folderItemSelected)
         {
             lock (Shell.ComLock)
             {
                 this.CreateHandle(new CreateParams());
-                this.folder = folder;
+                this.directory = directory;
+                this.folder = directory.FullName;
 
                 this.parent = getParentDir(this.folder);
                 this.parentShellFolder = getParentShellFolder(this.folder);
@@ -85,26 +92,62 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public static void ExecuteAction(string action, string path, System.Windows.Controls.Button sender)
+        // Helper method for common icon invokation code.
+        public static void OpenContextMenuFromIcon(System.Windows.Input.MouseButtonEventArgs e, ItemSelectAction action)
         {
-            if (action == "rename" || action == "addStack")
+            System.Windows.Controls.Button btn = null;
+            if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Image))
             {
-                CustomCommands.PerformAction(action, path, sender);
+                System.Windows.Controls.Image img = e.OriginalSource as System.Windows.Controls.Image;
+                System.Windows.Controls.DockPanel dock = img.Parent as System.Windows.Controls.DockPanel;
+                btn = dock.Parent as System.Windows.Controls.Button;
             }
-            else if (action != "cut" && action != "copy" && action != "link")
+            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.TextBlock))
             {
-                if (Startup.DesktopWindow != null)
-                    Startup.DesktopWindow.IsOverlayOpen = false;
+                System.Windows.Controls.TextBlock txt = e.OriginalSource as System.Windows.Controls.TextBlock;
+                System.Windows.Controls.Border bdr = txt.Parent as System.Windows.Controls.Border;
+                System.Windows.Controls.DockPanel dock = bdr.Parent as System.Windows.Controls.DockPanel;
+                btn = dock.Parent as System.Windows.Controls.Button;
+            }
+            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border) && (e.OriginalSource as System.Windows.Controls.Border).Parent != null && (e.OriginalSource as System.Windows.Controls.Border).Parent.GetType() == typeof(System.Windows.Controls.DockPanel))
+            {
+                System.Windows.Controls.Border bdr = e.OriginalSource as System.Windows.Controls.Border;
+                System.Windows.Controls.DockPanel dock = bdr.Parent as System.Windows.Controls.DockPanel;
+                btn = dock.Parent as System.Windows.Controls.Button;
+            }
+            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.DockPanel))
+            {
+                System.Windows.Controls.DockPanel dock = e.OriginalSource as System.Windows.Controls.DockPanel;
+                btn = dock.Parent as System.Windows.Controls.Button;
+            }
+            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border))
+            {
+                System.Windows.Controls.Border bdr = e.OriginalSource as System.Windows.Controls.Border;
+                btn = bdr.TemplatedParent as System.Windows.Controls.Button;
+            }
+
+            if (btn != null)
+            {
+                //string filePath = btn.CommandParameter as string;
+                SystemFile file = btn.DataContext as SystemFile;
+
+                ShellContextMenu cm = new ShellContextMenu(new SystemFile[] { file }, btn, action);
+
+                e.Handled = true;
+            }
+            else
+            {
+                CairoLogger.Instance.Debug("Surface was right-clicked but it wasn't a recognized object.");
             }
         }
 
-        private IntPtr[] pathsToPidls(string[] files)
+        private IntPtr[] pathsToPidls(SystemFile[] files)
         {
             IntPtr[] pidls = new IntPtr[files.Length];
 
             for(int i = 0; i < files.Length; i++)
             {
-                pidls[i] = pathToRelPidl(files[i]);
+                pidls[i] = pathToRelPidl(files[i].FullName);
             }
 
             return pidls;
@@ -237,6 +280,43 @@ namespace CairoDesktop.SupportingClasses
                 return false;
             }
         }
+
+        private uint prependItems(IntPtr contextMenu, bool allFolders, bool allInStacks)
+        {
+            // add items to the top of the context menu here
+
+            uint numPrepended = 0;
+            
+            // add open in new window option to files that are folders if dynamic desktop is enabled
+            if (allFolders && Settings.EnableDynamicDesktop)
+            {
+                ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.OpenInNewWindow, Localization.DisplayString.sStacks_OpenInNewWindow);
+                numPrepended++;
+            }
+
+            // add stacks options for files that are folders
+            if (allFolders)
+            {
+                if (!allInStacks)
+                {
+                    ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.AddToStacks, Localization.DisplayString.sInterface_AddToStacks);
+                }
+                else
+                {
+                    ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.RemoveFromStacks, Localization.DisplayString.sInterface_RemoveFromStacks);
+                }
+
+                ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.SEPARATOR, 1, string.Empty);
+                numPrepended += 2;
+            }
+
+            return numPrepended;
+        }
+
+        private void appendItems(IntPtr contextMenu, bool allFolders, bool allInStacks)
+        {
+            // add items to the bottom of the context menu here
+        }
         
         public void ShowContextMenu()
         {
@@ -249,23 +329,45 @@ namespace CairoDesktop.SupportingClasses
             {
                 if (ShellFolders.GetIContextMenu(parentShellFolder, pidls, out iContextMenuPtr, out iContextMenu))
                 {
+                    // get some properties about our file(s)
+                    bool allFolders = true;
+                    bool allInStacks = true;
+                    foreach (SystemFile file in paths)
+                    {
+                        if (!file.IsDirectory)
+                        {
+                            allFolders = false;
+                        }
+                        else
+                        {
+                            bool contains = false;
+                            foreach(SystemDirectory dir in StacksManager.StackLocations)
+                            {
+                                if (dir.Equals(file.FullName))
+                                {
+                                    contains = true;
+                                    break;
+                                }
+                            }
+
+                            if (!contains) allInStacks = false;
+                        }
+                    }
+
                     contextMenu = ShellFolders.CreatePopupMenu();
+
+                    uint numPrepended = prependItems(contextMenu, allFolders, allInStacks);
 
                     iContextMenu.QueryContextMenu(
                         contextMenu,
-                        0,
+                        numPrepended,
                         ShellFolders.CMD_FIRST,
                         ShellFolders.CMD_LAST,
                         ShellFolders.CMF.EXPLORE |
                         ShellFolders.CMF.CANRENAME |
                         ((Control.ModifierKeys & Keys.Shift) != 0 ? ShellFolders.CMF.EXTENDEDVERBS : 0));
 
-                    // add to stacks option for folders
-                    if (Interop.Shell.Exists(paths[0]) && (File.GetAttributes(this.paths[0]) & FileAttributes.Directory) == FileAttributes.Directory)
-                    {
-                        ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.SEPARATOR, 1, string.Empty);
-                        ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.AddToStacks, Localization.DisplayString.sInterface_AddToStacks);
-                    }
+                    appendItems(contextMenu, allFolders, allInStacks);
 
                     Marshal.QueryInterface(iContextMenuPtr, ref ShellFolders.IID_IContextMenu2, out iContextMenuPtr2);
                     Marshal.QueryInterface(iContextMenuPtr, ref ShellFolders.IID_IContextMenu3, out iContextMenuPtr3);
@@ -293,21 +395,40 @@ namespace CairoDesktop.SupportingClasses
                     {
                         string command = ShellFolders.GetCommandString(iContextMenu, selected - ShellFolders.CMD_FIRST, true);
 
-                        if ((CairoContextMenuItem)selected == CairoContextMenuItem.AddToStacks)
+                        // set action strings for us to use in our custom execution function
+                        switch ((CairoContextMenuItem)selected)
                         {
-                            command = "addStack";
-                        }
-                        else
-                        {
-                            ShellFolders.InvokeCommand(
-                                iContextMenu,
-                                selected - ShellFolders.CMD_FIRST,
-                                parent,
-                                new Point(this.x, this.y));
+                            case CairoContextMenuItem.AddToStacks:
+                                command = "addStack";
+                                break;
+
+                            case CairoContextMenuItem.RemoveFromStacks:
+                                command = "removeStack";
+                                break;
+
+                            case CairoContextMenuItem.OpenInNewWindow:
+                                command = "openWithShell";
+                                break;
+
+                            default:
+                                if (command == "open" && allFolders)
+                                {
+                                    // suppress running system code
+                                    command = "openFolder";
+                                }
+                                else
+                                {
+                                    ShellFolders.InvokeCommand(
+                                    iContextMenu,
+                                    selected - ShellFolders.CMD_FIRST,
+                                    parent,
+                                    new Point(this.x, this.y));
+                                }
+                                break;
                         }
 
                         if (this.itemSelected != null)
-                            itemSelected(command, paths[0], sender);
+                            itemSelected(command, paths[0].FullName, sender);
                     }
                 }
                 else
@@ -372,7 +493,19 @@ namespace CairoDesktop.SupportingClasses
             try
             {
                 contextMenu = ShellFolders.CreatePopupMenu();
-                
+
+                ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.OpenInNewWindow, Localization.DisplayString.sStacks_OpenInNewWindow);
+                if (!StacksManager.StackLocations.Contains(directory))
+                {
+                    ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.AddToStacks, Localization.DisplayString.sInterface_AddToStacks);
+                }
+                else
+                {
+                    ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.RemoveFromStacks, Localization.DisplayString.sInterface_RemoveFromStacks);
+                }
+
+                ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.SEPARATOR, 1, string.Empty);
+
                 ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.Paste, Localization.DisplayString.sInterface_Paste);
 
                 if (GetNewContextMenu(out newContextMenuPtr, out newContextMenu))
@@ -380,7 +513,7 @@ namespace CairoDesktop.SupportingClasses
                     ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.SEPARATOR, 1, string.Empty);
                     newContextMenu.QueryContextMenu(
                         contextMenu,
-                        2,
+                        5,
                         ShellFolders.CMD_FIRST,
                         ShellFolders.CMD_LAST,
                         ShellFolders.CMF.NORMAL);
@@ -417,6 +550,17 @@ namespace CairoDesktop.SupportingClasses
                     string command = "";
                     switch (selected)
                     {
+                        case CairoContextMenuItem.OpenInNewWindow:
+                            command = "openWithShell";
+                            break;
+
+                        case CairoContextMenuItem.AddToStacks:
+                            command = "addStack";
+                            break;
+
+                        case CairoContextMenuItem.RemoveFromStacks:
+                            command = "removeStack";
+                            break;
 
                         case CairoContextMenuItem.Properties:
                             command = "properties";

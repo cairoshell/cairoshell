@@ -308,6 +308,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sInterface_RemoveFromStacks
+        {
+            get
+            {
+                return getString("sInterface_RemoveFromStacks");
+            }
+        }
+
         public static string sInterface_Copy
         {
             get
@@ -865,6 +873,14 @@ namespace CairoDesktop.Localization
             get
             {
                 return getString("sStacks_OpenInNewWindow");
+            }
+        }
+
+        public static string sStacks_OpenOnDesktop
+        {
+            get
+            {
+                return getString("sStacks_OpenOnDesktop");
             }
         }
 
