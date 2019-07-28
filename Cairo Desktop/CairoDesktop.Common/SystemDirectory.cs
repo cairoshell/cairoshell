@@ -229,6 +229,10 @@ namespace CairoDesktop.Common {
         }
 
         public override bool Equals(object other) {
+            if (other is string)
+            {
+                return this.FullName.Equals(other as string, StringComparison.OrdinalIgnoreCase);
+            }
             if (!(other is SystemDirectory)) return false;
             return this.FullName.Equals((other as SystemDirectory).FullName, StringComparison.OrdinalIgnoreCase);
         }

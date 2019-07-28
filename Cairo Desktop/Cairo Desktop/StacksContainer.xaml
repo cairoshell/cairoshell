@@ -28,6 +28,7 @@
                         <Menu.ContextMenu>
                             <ContextMenu Style="{StaticResource CairoContextMenuStyle}" Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
                                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_OpenInNewWindow)}" Click="Open_Click" CommandParameter="{Binding Path=FullName}" Style="{StaticResource CairoMenuItemStyle}" />
+                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_OpenOnDesktop)}" Name="miOpenOnDesktop" Click="OpenDesktop_Click"  CommandParameter="{Binding Path=FullName}" Style="{StaticResource CairoMenuItemStyle}" />
                                 <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_Remove)}" Click="Remove_Click" CommandParameter="{Binding}" Style="{StaticResource CairoMenuItemStyle}" />
                             </ContextMenu>

@@ -468,63 +468,60 @@ namespace CairoDesktop
             // handle icon and desktop context menus
             if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.ScrollViewer))
             {
-                ShellContextMenu cm = new ShellContextMenu(Icons.Location.FullName, executeCustomAction);
+                ShellContextMenu cm = new ShellContextMenu(Icons.Location, executeFolderAction);
 
                 e.Handled = true;
             }
             else
             {
-                Button btn = null;
-                if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Image))
-                {
-                    Image img = e.OriginalSource as Image;
-                    DockPanel dock = img.Parent as DockPanel;
-                    btn = dock.Parent as Button;
-                }
-                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.TextBlock))
-                {
-                    TextBlock txt = e.OriginalSource as TextBlock;
-                    Border bdr = txt.Parent as Border;
-                    DockPanel dock = bdr.Parent as DockPanel;
-                    btn = dock.Parent as Button;
-                }
-                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border) && (e.OriginalSource as Border).Parent != null && (e.OriginalSource as Border).Parent.GetType() == typeof(System.Windows.Controls.DockPanel))
-                {
-                    Border bdr = e.OriginalSource as Border;
-                    DockPanel dock = bdr.Parent as DockPanel;
-                    btn = dock.Parent as Button;
-                }
-                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.DockPanel))
-                {
-                    DockPanel dock = e.OriginalSource as DockPanel;
-                    btn = dock.Parent as Button;
-                }
-                else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border))
-                {
-                    Border bdr = e.OriginalSource as Border;
-                    btn = bdr.TemplatedParent as Button;
-                }
-
-                if (btn != null)
-                {
-                    string filePath = btn.CommandParameter as string;
-
-                    ShellContextMenu cm = new ShellContextMenu(new string[] { filePath }, btn, ShellContextMenu.ExecuteAction);
-
-                    e.Handled = true;
-                }
-                else
-                {
-                    CairoLogger.Instance.Debug("Desktop was right-clicked but it wasn't a recognized object.");
-                }
+                ShellContextMenu.OpenContextMenuFromIcon(e, executeFileAction);
             }
         }
 
-        private void executeCustomAction(string action, string path)
+        private void executeFileAction(string action, string path, Button sender)
+        {
+            SystemFile file = new SystemFile(path);
+
+            if (action == "openFolder")
+            {
+                if (Settings.EnableDynamicDesktop)
+                {
+                    Navigate(path);
+                }
+                else
+                {
+                    FolderHelper.OpenLocation(path);
+                }
+            }
+            else if (action == "openWithShell")
+            {
+                FolderHelper.OpenWithShell(path);
+            }
+            else if (action == "rename" || action == "addStack" || action == "removeStack")
+            {
+                CustomCommands.PerformAction(action, path, sender);
+            }
+            else if (action != "cut" && action != "copy" && action != "link")
+            {
+                if (Startup.DesktopWindow != null)
+                    Startup.DesktopWindow.IsOverlayOpen = false;
+            }
+        }
+
+        private void executeFolderAction(string action, string path)
         {
             if (action == "paste")
             {
                 Icons.Location.PasteFromClipboard();
+            }
+            else if (action == "openWithShell")
+            {
+                FolderHelper.OpenWithShell(path);
+            }
+            else if (action == "addStack" || action == "removeStack")
+            {
+                CustomCommands.PerformAction(action, path);
+                // no need to dismiss overlay for this action
             }
             else if (action != "")
             {
