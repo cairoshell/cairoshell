@@ -90,6 +90,8 @@ namespace CairoDesktop
             // return GetCairoBackgroundBrush_Image();
             // return GetCairoBackgroundBrush_Color();
             // return GetCairoBackgroundBrush_Video();
+            // return GetCairoBackgroundBrush_BingImageOfTheDay();
+
         }
 
         private System.Windows.Media.Brush GetCairoBackgroundBrush_Windows()
@@ -225,7 +227,67 @@ namespace CairoDesktop
             }
             return backgroundImageBrush;
         }
-               
+
+
+        private System.Windows.Media.Brush GetCairoBackgroundBrush_BingImageOfTheDay()
+        {
+            ImageBrush backgroundImageBrush = null;
+            TryAndEat(() =>
+            {
+
+                SupportingClasses.BingPhotoOfDayClient.BingWallPaperClient client = new SupportingClasses.BingPhotoOfDayClient.BingWallPaperClient();
+                client.DownLoad();
+
+                BitmapImage backgroundBitmapImage = client.WPFPhotoOfTheDay as BitmapImage;
+                backgroundBitmapImage.Freeze();
+                backgroundImageBrush = new ImageBrush(backgroundBitmapImage);
+
+                CairoWallpaperStyle wallpaperStyle = CairoWallpaperStyle.Stretch;
+                switch (wallpaperStyle)
+                {
+                    case CairoWallpaperStyle.Tile:
+                        backgroundImageBrush.AlignmentX = AlignmentX.Left;
+                        backgroundImageBrush.AlignmentY = AlignmentY.Top;
+                        backgroundImageBrush.TileMode = TileMode.Tile;
+                        backgroundImageBrush.Stretch = Stretch.Fill; // stretch to fill viewport, which is pixel size of image, as WPF is DPI-aware
+                        backgroundImageBrush.Viewport = new Rect(0, 0, (backgroundImageBrush.ImageSource as BitmapSource).PixelWidth, (backgroundImageBrush.ImageSource as BitmapSource).PixelHeight);
+                        backgroundImageBrush.ViewportUnits = BrushMappingMode.Absolute;
+                        break;
+                    case CairoWallpaperStyle.Center:
+                        // need to find a way to ignore image DPI for this case
+                        backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                        backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                        backgroundImageBrush.TileMode = TileMode.None;
+                        backgroundImageBrush.Stretch = Stretch.None;
+                        break;
+                    case CairoWallpaperStyle.Fit:
+                        backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                        backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                        backgroundImageBrush.TileMode = TileMode.None;
+                        backgroundImageBrush.Stretch = Stretch.Uniform;
+                        break;
+                    case CairoWallpaperStyle.Fill:
+                    case CairoWallpaperStyle.Span: // TODO: Impliment multiple monitor backgrounds
+                        backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                        backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                        backgroundImageBrush.TileMode = TileMode.None;
+                        backgroundImageBrush.Stretch = Stretch.UniformToFill;
+                        break;
+                    case CairoWallpaperStyle.Stretch:
+                    default:
+                        backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                        backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                        backgroundImageBrush.TileMode = TileMode.None;
+                        backgroundImageBrush.Stretch = Stretch.Fill;
+                        break;
+                }
+            });
+
+            backgroundImageBrush.Freeze();
+
+            return backgroundImageBrush;
+        }
+
         private void SetupPostInit()
         {
             Shell.HideWindowFromTasks(helper.Handle);

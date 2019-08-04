@@ -1,23 +1,23 @@
-﻿using System;
-using System.Windows.Media;
+﻿using CairoDesktop.Common;
+using System;
 using System.ComponentModel;
-using System.Windows.Media.Imaging;
-using CairoDesktop.Common;
 using System.Threading;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace CairoDesktop.AppGrabber
 {
     [Serializable()]
     public class ApplicationInfo : IEquatable<ApplicationInfo>, IComparable<ApplicationInfo>, INotifyPropertyChanged
-	{
+    {
         /// <summary>
         /// This object holds the basic information necessary for identifying an application.
         /// </summary>
 		public ApplicationInfo()
-		{
-			this.Name = "";
-			this.Path = "";
-		}
+        {
+            this.Name = "";
+            this.Path = "";
+        }
 
         /// <summary>
         /// This object holds the basic information necessary for identifying an application.
@@ -27,9 +27,9 @@ namespace CairoDesktop.AppGrabber
         /// <param name="target">Path to the executable.</param>
         /// <param name="icon">ImageSource used to denote the application's icon in a graphical environment.</param>
         public ApplicationInfo(string name, string path, string target, ImageSource icon, string iconColor, string iconPath)
-		{
-			this.Name = name;
-			this.Path = path;
+        {
+            this.Name = name;
+            this.Path = path;
             this.Target = target;
             this.Icon = icon;
             this.IconColor = iconColor;
@@ -42,27 +42,33 @@ namespace CairoDesktop.AppGrabber
         /// <summary>
         /// The friendly name of this application.
         /// </summary>
-        public string Name {
+        public string Name
+        {
             get { return name; }
-            set {
+            set
+            {
                 name = value;
                 // Notify Databindings of property change
-                if (PropertyChanged != null) {
+                if (PropertyChanged != null)
+                {
                     PropertyChanged(this, new PropertyChangedEventArgs("Name"));
                 }
             }
         }
-        
+
         private string path;
-		/// <summary>
+        /// <summary>
         /// Path to the shortcut.
-		/// </summary>
-        public string Path {
+        /// </summary>
+        public string Path
+        {
             get { return path; }
-            set {
+            set
+            {
                 path = value;
                 // Notify Databindings of property change
-                if (PropertyChanged != null) {
+                if (PropertyChanged != null)
+                {
                     PropertyChanged(this, new PropertyChangedEventArgs("Path"));
                 }
             }
@@ -112,7 +118,8 @@ namespace CairoDesktop.AppGrabber
         /// </summary>
         public string IconColor
         {
-            get {
+            get
+            {
                 if (!string.IsNullOrEmpty(iconColor))
                     return iconColor;
                 else
@@ -187,13 +194,14 @@ namespace CairoDesktop.AppGrabber
         /// <summary>
         /// ImageSource used to denote the application's icon in a graphical environment.
         /// </summary>
-        public ImageSource Icon {
+        public ImageSource Icon
+        {
             get
             {
                 if (icon == null && !_iconLoading)
                 {
                     _iconLoading = true;
-                    
+
                     var thread = new Thread(() =>
                     {
                         Icon = GetAssociatedIcon();
@@ -207,10 +215,12 @@ namespace CairoDesktop.AppGrabber
 
                 return icon;
             }
-            set {
+            set
+            {
                 icon = value;
                 // Notify Databindings of property change
-                if (PropertyChanged != null) {
+                if (PropertyChanged != null)
+                {
                     PropertyChanged(this, new PropertyChangedEventArgs("Icon"));
                 }
             }
@@ -229,76 +239,91 @@ namespace CairoDesktop.AppGrabber
         /// The Category object to which this ApplicationInfo object belongs.
         /// Note: DO NOT ASSIGN MANUALLY. This property should only be set by a Category oject when adding/removing from its internal list.
         /// </summary>
-        public Category Category {
+        public Category Category
+        {
             get { return category; }
-            set {
+            set
+            {
                 category = value;
                 // Notify Databindings of property change
-                if (PropertyChanged != null) {
+                if (PropertyChanged != null)
+                {
                     PropertyChanged(this, new PropertyChangedEventArgs("Category"));
                 }
             }
         }
-		
+
         /// <summary>
         /// Determines if this ApplicationInfo object refers to the same application as another ApplicationInfo object.
         /// </summary>
         /// <param name="other">ApplicationInfo object to compare to.</param>
         /// <returns>True if the Name and Path values are equal, False if not.</returns>
-		public bool Equals(ApplicationInfo other) {
+        public bool Equals(ApplicationInfo other)
+        {
             //if (this.Name != other.Name) return false; -- because apps can be renamed, this is no longer valid
-            if (this.Path == other.Path ) {
+            if (this.Path == other.Path)
+            {
                 return true;
             }
-            if (System.IO.Path.GetExtension(this.Path).Equals(".lnk", StringComparison.OrdinalIgnoreCase)) {
-                if ((this.Target == other.Target) && (this.Name == other.Name)) {
+            if (System.IO.Path.GetExtension(this.Path).Equals(".lnk", StringComparison.OrdinalIgnoreCase))
+            {
+                if ((this.Target == other.Target) && (this.Name == other.Name))
+                {
                     return true;
                 }
             }
-			return false;
-		}
-		
+            return false;
+        }
+
         /// <summary>
         /// Determines if this ApplicationInfo object refers to the same application as another ApplicationInfo object.
         /// </summary>
         /// <param name="obj">Object to compare to.</param>
         /// <returns>True if the Name and Path values are equal, False if not.</returns>
-		public override bool Equals(object obj)
-		{
-			if (!(obj is ApplicationInfo)) return false;
-			return this.Equals((ApplicationInfo) obj);
-		}
-		
-		public override int GetHashCode()
-		{
-			int hashCode = 0;
-			if (Name != null) hashCode ^= Name.GetHashCode();
-			if (Path != null) hashCode ^= Path.GetHashCode();
-			return hashCode;
-		}
-		
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ApplicationInfo))
+                return false;
+            return this.Equals((ApplicationInfo)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            if (Name != null)
+                hashCode ^= Name.GetHashCode();
+            if (Path != null)
+                hashCode ^= Path.GetHashCode();
+            return hashCode;
+        }
+
         /// <summary>
         /// Is this object greater than, less than, or equal to another ApplicationInfo? (For sorting purposes only)
         /// </summary>
         /// <param name="other">Object to compare to.</param>
         /// <returns>0 if same, negative if less, positive if more.</returns>
-		public int CompareTo(ApplicationInfo other)
-		{
-			return this.Name.CompareTo(other.Name);
-		}
-		
-		public override string ToString()
-		{
-			return string.Format("Name={0} Path={1}", this.Name, this.Path);
-		}
-		
-		public static bool operator ==(ApplicationInfo x, ApplicationInfo y) {
-            return x.Equals(y);
-		}
+        public int CompareTo(ApplicationInfo other)
+        {
+            return this.Name.CompareTo(other.Name);
+        }
 
-		public static bool operator !=(ApplicationInfo x, ApplicationInfo y) {
-			return !(x == y);
-		}
+        public override string ToString()
+        {
+            return string.Format("Name={0} Path={1}", this.Name, this.Path);
+        }
+
+        public static bool operator ==(ApplicationInfo x, ApplicationInfo y)
+        {
+            if (x == null)
+               return false;
+
+            return x.Equals(y);
+        }
+
+        public static bool operator !=(ApplicationInfo x, ApplicationInfo y)
+        {
+            return !(x == y);
+        }
 
         /// <summary>
         /// This Event is raised whenever a property of this object has changed. Necesary to sync state when binding.
@@ -353,7 +378,8 @@ namespace CairoDesktop.AppGrabber
         /// Create a copy of this object.
         /// </summary>
         /// <returns>A new ApplicationInfo object with the same data as this object, not bound to a Category.</returns>
-        internal ApplicationInfo Clone() {
+        internal ApplicationInfo Clone()
+        {
             ApplicationInfo rval = new ApplicationInfo(this.Name, this.Path, this.Target, this.Icon, this.IconColor, this.IconPath);
             return rval;
         }

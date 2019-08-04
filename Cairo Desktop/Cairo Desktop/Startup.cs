@@ -1,20 +1,19 @@
 ﻿namespace CairoDesktop
 {
-    using System;
-    using System.Diagnostics;
-    using System.Windows;
-    using Microsoft.Win32;
-    using Interop;
-    using System.Collections.Generic;
-    using System.Windows.Threading;
-    using System.Windows.Markup;
-    using System.Threading.Tasks;
-    using CairoDesktop.Configuration;
-    using SupportingClasses;
-    using Common;
-    using CairoDesktop.WindowsTray;
-    using System.Threading;
     using CairoDesktop.Common.Logging;
+    using CairoDesktop.Configuration;
+    using CairoDesktop.WindowsTray;
+    using Common;
+    using Interop;
+    using Microsoft.Win32;
+    using SupportingClasses;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Markup;
+    using System.Windows.Threading;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
@@ -63,46 +62,54 @@
             SetupLoggingSystem();
             WriteApplicationDebugInfoToConsole();
 
-            SetupPluginSystem();
+            SetSystemKeyboardShortcuts();
+
+            // Move to App??? app.SetupPluginSystem();
+            SetupPluginSystem(); // This will Load the Core Plugin and all other, will either reference it as a dependancy or dont need it to be started first
+
 
             #endregion
 
             // check if we are the current user's shell
             // set here as well so that we don't behave differently once user changes setting
-            IsCairoUserShell = Shell.IsCairoUserShell;
+            IsCairoUserShell = Shell.IsCairoUserShell;       // Move to CairoDesktop.Plugins.CairoShellCoreServices.... Make this more robust, to account for system-shell or per-user-shell;
 
-            if (Settings.EnableDesktop)
+            if (Settings.EnableDesktop) // Future: This should be moved to whatever plugin is responsible for desktop stuff
             {
                 // hide the windows desktop
                 Shell.ToggleDesktopIcons(false);
             }
 
             App app = new App();
-            app.InitializeComponent();
+            app.InitializeComponent();  // This sets up the Unhandled Exception stuff... 
 
-            // Set custom theme if selected
+            // Themes are very UI centric. We should devise a way of having Plugins/Extensions contribute to this.
             string theme = Settings.CairoTheme;
             if (theme != "Default")
-                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme)) app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
+                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme))
+                    app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
 
+            // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
             if (Settings.EnableTaskbar)
             {
-                // hide Windows taskbar
                 AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
                 AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
             }
 
+            // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
             MenuBarWindow = new MenuBar(System.Windows.Forms.Screen.PrimaryScreen);
             app.MainWindow = MenuBarWindow;
             MenuBarWindow.Show();
             MenuBarWindows.Add(MenuBarWindow);
 
+            // Future: This should be moved to whatever plugin is responsible for Desktop stuff
             if (Settings.EnableDesktop)
             {
                 DesktopWindow = new Desktop();
                 DesktopWindow.Show();
             }
 
+            // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
             if (Settings.EnableMenuBarShadow)
             {
                 MenuBarShadowWindow = new MenuBarShadow(MenuBarWindow, System.Windows.Forms.Screen.PrimaryScreen);
@@ -110,6 +117,7 @@
                 MenuBarShadowWindows.Add(MenuBarShadowWindow);
             }
 
+            // Future: This should be moved to whatever plugin is responsible for Taskbar stuff
             if (Settings.EnableTaskbar)
             {
                 TaskbarWindow = new Taskbar(System.Windows.Forms.Screen.PrimaryScreen);
@@ -117,18 +125,19 @@
                 TaskbarWindows.Add(TaskbarWindow);
             }
 
+            // Future: This should be moved to whatever plugin is responsible for Taskbar/MennuBart stuff
             if (Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon)
                 ScreenSetup(true);
             else if (IsCairoUserShell) // Set desktop work area for when Explorer isn't running
                 AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
 
-            // initialize system tray if enabled
+            // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
             if (Settings.EnableSysTray == true)
             {
                 NotificationArea.Instance.Initialize();
             }
 
-#if (ENABLEFIRSTRUN)
+#if ENABLEFIRSTRUN
             FirstRun();
 #endif
 
@@ -140,6 +149,267 @@
 
             app.Run();
         }
+
+        /// <summary>
+        /// Executes the first run sequence.
+        /// </summary>
+        private static void FirstRun()
+        {
+            try
+            {
+                if (Settings.IsFirstRun == true || isTour)
+                {
+                    Welcome welcome = new Welcome();
+                    welcome.Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                CairoMessage.ShowAlert(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex),
+                    "Unexpected error!",
+                    MessageBoxImage.Error);
+            }
+        }
+
+        public static void Restart()
+        {
+            try
+            {
+                // run the program again
+                Process current = new Process();
+                current.StartInfo.FileName = AppDomain.CurrentDomain.BaseDirectory + "CairoDesktop.exe";
+                current.StartInfo.Arguments = "/restart";
+                current.Start();
+
+                // close this instance
+                Shutdown();
+            }
+            catch
+            { }
+        }
+
+        public static void Shutdown()
+        {
+            if (IsCairoUserShell)
+            {
+                Shell.StartProcess("explorer.exe");
+            }
+
+            IsShuttingDown = true;
+
+            Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
+        }
+
+        #region Shell: Autorun Apps
+
+        private static async void RunStartupApps()
+        {
+            await Task.Run(() => LoopStartupApps());
+        }
+
+        private static void LoopStartupApps()
+        {
+            foreach (string app in FetchStartupApps())
+            {
+                string[] procInfo = expandArgs(app);
+
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.UseShellExecute = true;
+                startInfo.FileName = procInfo[0];
+                startInfo.Arguments = procInfo[1];
+
+                CairoLogger.Instance.Debug("Starting program: " + startInfo.FileName);
+
+                try
+                {
+                    Process.Start(startInfo);
+                }
+                catch { }
+            }
+        }
+
+        private static List<string> FetchStartupApps()
+        {
+            List<string> startupApps = new List<string>();
+
+            // Registry startup keys
+            Dictionary<string, string> startupKeys = new Dictionary<string, string>()
+            {
+                {
+                    "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run"
+                },
+                {
+                    "Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Run",
+                    "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run32"
+                },
+                {
+                    "Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce",
+                    ""
+                }
+            };
+
+            // TODO: foreach(RegistryKey root in new[] { Registry.LocalMachine ,Registry.CurrentUser}) ... Would this be a more readable solution ???
+            // loop twice, once for HKLM once for HKCU
+            for (int i = 0; i <= 1; i++)
+            {
+                foreach (KeyValuePair<string, string> regKey in startupKeys)
+                {
+                    bool isRunOnce = regKey.Key.Contains("RunOnce");
+
+                    RegistryKey root = null; // HKLM or HKCU
+                    RegistryKey key = null; // AppPath
+                    RegistryKey approvedKey = null; // the startupapproved key tells us if the item is disabled
+
+                    try
+                    {
+                        if (i == 0)
+                            root = Registry.LocalMachine;
+                        else
+                            root = Registry.CurrentUser;
+
+                        if (isRunOnce && i != 0)
+                            key = root.OpenSubKey(regKey.Key, true);
+                        else if (isRunOnce)
+                            continue; // skip processing HKLM RunOnce because we can't remove things from there
+                        else
+                        {
+                            key = root.OpenSubKey(regKey.Key, false);
+                            approvedKey = root.OpenSubKey(regKey.Value, false);
+                        }
+                    }
+                    catch
+                    {
+                        continue; // in case of unable to load registry key
+                    }
+
+                    if (key != null && key.ValueCount > 0)
+                    {
+                        foreach (string valueName in key.GetValueNames())
+                        {
+                            bool canRun = true;
+
+                            if (approvedKey != null)
+                            {
+                                foreach (string approvedName in approvedKey.GetValueNames())
+                                {
+                                    try
+                                    {
+                                        string s = ((byte[])approvedKey.GetValue(approvedName))[0].ToString();
+                                        if (approvedName == valueName && ((byte[])approvedKey.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
+                                        {
+                                            canRun = false;
+                                            break;
+                                        }
+                                        else if (approvedName == valueName)
+                                            break;
+                                    }
+                                    catch { } // in case of invalid registry key values
+                                }
+                            }
+
+                            if (canRun)
+                                startupApps.Add(((string)key.GetValue(valueName)).Replace("\"", ""));
+
+                            // if this is a runonce key, remove the value after we grab it
+                            if (isRunOnce)
+                            {
+                                try
+                                {
+                                    key.DeleteValue(valueName);
+                                }
+                                catch { }
+                            }
+                        }
+                    }
+
+                    if (key != null)
+                        key.Close();
+
+                    if (approvedKey != null)
+                        approvedKey.Close();
+                }
+            }
+
+            // startup folders
+            Dictionary<SystemDirectory, RegistryKey> startupFolderKeys = new Dictionary<SystemDirectory, RegistryKey>()
+            {
+                {
+                    new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), Dispatcher.CurrentDispatcher),
+                    Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false)
+                },
+                {
+                    new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Dispatcher.CurrentDispatcher),
+                    Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false) }
+              };
+
+            foreach (KeyValuePair<SystemDirectory, RegistryKey> startupFolder in startupFolderKeys)
+            {
+                foreach (SystemFile startupFile in startupFolder.Key.Files)
+                {
+                    bool canRun = true;
+
+                    if (startupFolder.Value != null)
+                    {
+                        foreach (string approvedName in startupFolder.Value.GetValueNames())
+                        {
+                            try
+                            {
+                                string s = ((byte[])startupFolder.Value.GetValue(approvedName))[0].ToString();
+                                if (approvedName == startupFile.Name && ((byte[])startupFolder.Value.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
+                                {
+                                    canRun = false;
+                                    break;
+                                }
+                                else if (approvedName == startupFile.Name)
+                                    break;
+                            }
+                            catch { } // in case of invalid registry key values
+                        }
+                    }
+
+                    if (canRun)
+                        startupApps.Add(startupFile.FullName);
+                }
+            }
+
+            return startupApps;
+        }
+
+        private static string[] expandArgs(string startupPath)
+        {
+            string[] procInfo = new string[2];
+
+            int exeIndex = startupPath.IndexOf(".exe");
+
+            if (exeIndex > 0)
+            {
+                // we may have args for an executable
+                if (exeIndex + 4 != startupPath.Length)
+                {
+                    // argh, args!
+                    procInfo[0] = startupPath.Substring(0, exeIndex + 4);
+                    procInfo[1] = startupPath.Substring(exeIndex + 5, startupPath.Length - exeIndex - 5);
+                }
+                else
+                {
+                    procInfo[0] = startupPath;
+                }
+            }
+            else
+            {
+                // no args to parse out
+                procInfo[0] = startupPath;
+            }
+
+            return procInfo;
+        }
+
+
+
+        #endregion
+
+
 
         public static void ResetScreenCache()
         {
@@ -399,245 +669,5 @@
                 CairoLogger.Instance.Debug("Completed screen setup");
             }
         }
-
-        /// <summary>
-        /// Executes the first run sequence.
-        /// </summary>
-        private static void FirstRun()
-        {
-            try
-            {
-                if (Settings.IsFirstRun == true || isTour)
-                {
-                    Welcome welcome = new Welcome();
-                    welcome.Show();
-                }
-            }
-            catch (Exception ex)
-            {
-                CairoMessage.ShowAlert(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex),
-                    "Unexpected error!",
-                    MessageBoxImage.Error);
-            }
-        }
-
-        public static void Restart()
-        {
-            try
-            {
-                // run the program again
-                Process current = new Process();
-                current.StartInfo.FileName = AppDomain.CurrentDomain.BaseDirectory + "CairoDesktop.exe";
-                current.StartInfo.Arguments = "/restart";
-                current.Start();
-
-                // close this instance
-                Shutdown();
-            }
-            catch
-            { }
-        }
-
-        public static void Shutdown()
-        {
-            if (IsCairoUserShell)
-            {
-                Shell.StartProcess("explorer.exe");
-            }
-
-            IsShuttingDown = true;
-
-            Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
-        }
-
-        #region Autorun
-
-        private static List<string> FetchStartupApps()
-        {
-            List<string> startupApps = new List<string>();
-
-            // Registry startup keys
-            Dictionary<string, string> startupKeys = new Dictionary<string, string>()
-            {
-                { "Software\\Microsoft\\Windows\\CurrentVersion\\Run", "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run" },
-                { "Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Run", "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\Run32" },
-                { "Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce", "" }
-            };
-
-            // loop twice, once for HKLM once for HKCU
-            for (int i = 0; i <= 1; i++)
-            {
-                foreach (KeyValuePair<string, string> regKey in startupKeys)
-                {
-                    bool isRunOnce = regKey.Key.Contains("RunOnce");
-
-                    // key is the reg key with the app path, value is the startupapproved key telling us if the item is disabled
-                    RegistryKey root = null;
-                    RegistryKey key = null;
-                    RegistryKey approvedKey = null;
-
-                    try
-                    {
-                        if (i == 0)
-                            root = Registry.LocalMachine;
-                        else
-                            root = Registry.CurrentUser;
-
-                        if (isRunOnce && i != 0)
-                            key = root.OpenSubKey(regKey.Key, true);
-                        else if (isRunOnce)
-                            continue; // skip processing HKLM RunOnce because we can't remove things from there
-                        else
-                        {
-                            key = root.OpenSubKey(regKey.Key, false);
-                            approvedKey = root.OpenSubKey(regKey.Value, false);
-                        }
-                    }
-                    catch { continue; } // in case of unable to load registry key
-
-                    if (key != null && key.ValueCount > 0)
-                    {
-                        foreach (string valueName in key.GetValueNames())
-                        {
-                            bool canRun = true;
-
-                            if (approvedKey != null)
-                            {
-                                foreach (string approvedName in approvedKey.GetValueNames())
-                                {
-                                    try
-                                    {
-                                        string s = ((byte[])approvedKey.GetValue(approvedName))[0].ToString();
-                                        if (approvedName == valueName && ((byte[])approvedKey.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
-                                        {
-                                            canRun = false;
-                                            break;
-                                        }
-                                        else if (approvedName == valueName)
-                                            break;
-                                    }
-                                    catch { } // in case of invalid registry key values
-                                }
-                            }
-
-                            if (canRun)
-                                startupApps.Add(((string)key.GetValue(valueName)).Replace("\"", ""));
-
-                            // if this is a runonce key, remove the value after we grab it
-                            if (isRunOnce)
-                            {
-                                try
-                                {
-                                    key.DeleteValue(valueName);
-                                }
-                                catch { }
-                            }
-                        }
-                    }
-
-                    if (key != null)
-                        key.Close();
-
-                    if (approvedKey != null)
-                        approvedKey.Close();
-                }
-            }
-
-            // startup folders
-            Dictionary<SystemDirectory, RegistryKey> startupFolderKeys = new Dictionary<SystemDirectory, RegistryKey>()
-            {
-                { new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), Dispatcher.CurrentDispatcher), Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false) },
-                { new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Dispatcher.CurrentDispatcher), Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false) }
-            };
-
-            foreach (KeyValuePair<SystemDirectory, RegistryKey> startupFolder in startupFolderKeys)
-            {
-                foreach (SystemFile startupFile in startupFolder.Key.Files)
-                {
-                    bool canRun = true;
-
-                    if (startupFolder.Value != null)
-                    {
-                        foreach (string approvedName in startupFolder.Value.GetValueNames())
-                        {
-                            try
-                            {
-                                string s = ((byte[])startupFolder.Value.GetValue(approvedName))[0].ToString();
-                                if (approvedName == startupFile.Name && ((byte[])startupFolder.Value.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
-                                {
-                                    canRun = false;
-                                    break;
-                                }
-                                else if (approvedName == startupFile.Name)
-                                    break;
-                            }
-                            catch { } // in case of invalid registry key values
-                        }
-                    }
-
-                    if (canRun)
-                        startupApps.Add(startupFile.FullName);
-                }
-            }
-
-            return startupApps;
-        }
-
-        private static string[] expandArgs(string startupPath)
-        {
-            string[] procInfo = new string[2];
-
-            int exeIndex = startupPath.IndexOf(".exe");
-
-            if (exeIndex > 0)
-            {
-                // we may have args for an executable
-                if (exeIndex + 4 != startupPath.Length)
-                {
-                    // argh, args!
-                    procInfo[0] = startupPath.Substring(0, exeIndex + 4);
-                    procInfo[1] = startupPath.Substring(exeIndex + 5, startupPath.Length - exeIndex - 5);
-                }
-                else
-                {
-                    procInfo[0] = startupPath;
-                }
-            }
-            else
-            {
-                // no args to parse out
-                procInfo[0] = startupPath;
-            }
-
-            return procInfo;
-        }
-
-        private async static void RunStartupApps()
-        {
-            await Task.Run(() => LoopStartupApps());
-        }
-
-        private static void LoopStartupApps()
-        {
-            foreach (string app in FetchStartupApps())
-            {
-                string[] procInfo = expandArgs(app);
-
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.UseShellExecute = true;
-                startInfo.FileName = procInfo[0];
-                startInfo.Arguments = procInfo[1];
-
-                CairoLogger.Instance.Debug("Starting program: " + startInfo.FileName);
-
-                try
-                {
-                    Process.Start(startInfo);
-                }
-                catch { }
-            }
-        }
-
-        #endregion
     }
 }

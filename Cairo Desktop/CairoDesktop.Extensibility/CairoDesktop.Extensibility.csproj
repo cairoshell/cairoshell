@@ -66,6 +66,7 @@
     <Compile Include="Attributes\PluginDefinitionAttribute.cs" />
     <Compile Include="ObjectModel\MenuItem.cs" />
     <Compile Include="ObjectModel\Services\PluginService.cs" />
+    <Compile Include="ObjectModel\Services\SettingsService.cs" />
     <Compile Include="ObjectModel\ShellExtension.cs" />
     <Compile Include="ObjectModel\ShellService.cs" />
     <Compile Include="Plugins\Plugin.cs" />

@@ -1564,6 +1564,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_Taskbar_FullWidthTaskBar
+        {
+            get
+            {
+                return getString("sSettings_Taskbar_FullWidthTaskBar");
+            }
+        }
+
         public static string sSettings_Advanced_LoggingLevel
         {
             get

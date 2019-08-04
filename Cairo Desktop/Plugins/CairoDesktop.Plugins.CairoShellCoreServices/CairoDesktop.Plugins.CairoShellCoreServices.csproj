@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
-    <ProjectGuid>{2825E205-7588-482F-8C84-7D1A3A33E58A}</ProjectGuid>
+    <ProjectGuid>{D744C35D-F35E-4F84-9C61-5703BD2A48FC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CairoDesktop.Plugins.ShellExtensionSupport</RootNamespace>
-    <AssemblyName>CairoDesktop.Plugins.ShellExtensionSupport</AssemblyName>
+    <RootNamespace>CairoDesktop.Plugins.CairoShellCoreServicesPlugin</RootNamespace>
+    <AssemblyName>CairoDesktop.Plugins.CairoShellCoreServices</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -55,8 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShellExtensionService.cs" />
-    <Compile Include="ShellExtensionSupportPlugin.cs" />
+    <Compile Include="CairoShellCoreServicesPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\CairoDesktop.Common\CairoDesktop.Common.csproj">
@@ -66,10 +65,6 @@
     <ProjectReference Include="..\..\CairoDesktop.Extensibility\CairoDesktop.Extensibility.csproj">
       <Project>{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}</Project>
       <Name>CairoDesktop.Extensibility</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Plugins.CairoShellCoreServices\CairoDesktop.Plugins.CairoShellCoreServices.csproj">
-      <Project>{D744C35D-F35E-4F84-9C61-5703BD2A48FC}</Project>
-      <Name>CairoDesktop.Plugins.CairoShellCoreServices</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

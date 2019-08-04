@@ -85,8 +85,10 @@
   <ItemGroup>
     <Compile Include="CairoWallpaperStyle.cs" />
     <Compile Include="Startup.InitializationRoutines.cs" />
+    <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
     <Compile Include="SupportingClasses\ShellContextMenu.cs" />
+    <Compile Include="SystemHotKeys.cs" />
     <Compile Include="Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
     </Compile>
@@ -108,9 +110,11 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>

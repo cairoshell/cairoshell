@@ -346,6 +346,11 @@
                         Name="chkEnableTaskbarMultiMon">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableTaskbarMultiMon)}" />
                     </CheckBox>
+                    <CheckBox IsChecked="{Binding Path=FullWidthTaskBar}"
+                        Click="CheckBox_Click"
+                        Name="chkFullWidthTaskBar">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_FullWidthTaskBar)}" />
+                    </CheckBox>
                 </StackPanel>
             </TabItem>
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Advanced)}">

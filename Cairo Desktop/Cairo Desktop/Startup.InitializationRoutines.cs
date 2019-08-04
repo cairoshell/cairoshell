@@ -24,8 +24,7 @@ namespace CairoDesktop
 
         private static void SingleInstanceCheck()
         {
-            bool ok;
-            cairoMutex = new System.Threading.Mutex(true, "CairoShell", out ok);
+            cairoMutex = new System.Threading.Mutex(true, "CairoShell", out bool ok);
 
             if (!ok && !isRestart)
             {
@@ -268,6 +267,14 @@ namespace CairoDesktop
                 }
             }
             return false;
+        }
+
+        internal static void SetSystemKeyboardShortcuts()
+        {
+            if (Shell.IsCairoUserShell)
+            {
+                SystemHotKeys.RegisterSystemHotkeys();
+            }
         }
     }
 }
