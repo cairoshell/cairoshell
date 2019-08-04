@@ -12,7 +12,7 @@
     <Button x:Name="btn"
         BorderThickness="0"
         VerticalAlignment="Stretch"
-        Click="btnClick" ToolTip="{Binding Path=Title}" MouseUp="btn_MouseUp">
+        Click="btnClick" ToolTip="{Binding Path=Title}" MouseUp="btn_MouseUp" ContextMenuOpening="HandlerForCMO">
         <Button.Style>
             <MultiBinding Converter="{StaticResource styleConverter}" NotifyOnSourceUpdated="True">
                 <Binding RelativeSource="{RelativeSource Self}" />
@@ -20,9 +20,11 @@
             </MultiBinding>
         </Button.Style>
         <Button.ContextMenu>
-            <ContextMenu Style="{StaticResource CairoContextMenuStyle}">
+            <ContextMenu Style="{StaticResource CairoContextMenuStyle}" >
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_TaskManager)}" Style="{StaticResource CairoMenuItemStyle}" Click="miTaskMan_Click" />
                 <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
+                <MenuItem Name="miPin"  Header="{Binding Path=(l10n:DisplayString.sProgramsMenu_AddToQuickLaunch)}" Style="{StaticResource CairoMenuItemStyle}" Click="miPin_Click" />
+                <Separator Name="miPinSeperator" Style="{StaticResource CairoMenuSeparatorStyle}" />
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Minimize)}" Style="{StaticResource CairoMenuItemStyle}" Click="Min_Click" Name="MinItem" />
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Restore)}" Style="{StaticResource CairoMenuItemStyle}" Click="Max_Click" Name="MaxItem" />
                 <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />

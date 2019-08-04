@@ -1,5 +1,7 @@
 ﻿using CairoDesktop.Extensibility.Attributes;
 using CairoDesktop.Extensibility.Plugins;
+using CairoDesktop.Plugins.CairoShellCoreServices;
+
 
 namespace CairoDesktop.Plugins.ShellExtensionSupport
 {
@@ -9,10 +11,10 @@ namespace CairoDesktop.Plugins.ShellExtensionSupport
     [PluginId("63C24EEB-8998-4F0A-B6D4-97EEFB23D759")]
     [PluginManufacturer("Cairo Development Team")]
     [PluginVersion("0.0.0.1")]
+    [PluginDependency(typeof(CairoShellCoreServicesPlugin))]
     public sealed class ShellExtensionSupportPlugin : Plugin
     {
-        ShellExtensionService shellExtensionService = new ShellExtensionService();
-
+        private ShellExtensionService shellExtensionService = new ShellExtensionService();
 
         protected override void Start(PluginContext context, PluginDescriptorEventArgs e)
         {
