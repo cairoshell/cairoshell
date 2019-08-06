@@ -127,6 +127,12 @@ namespace CairoDesktop
                 bdrTaskView.Visibility = Visibility.Visible;
             else
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);
+
+            if(Settings.FullWidthTaskBar)
+            {
+                bdrTaskbarLeft.CornerRadius = new CornerRadius(0);
+                bdrTaskbarEnd.CornerRadius = new CornerRadius(0);
+            }
         }
 
         private void Taskbar_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -179,7 +185,7 @@ namespace CairoDesktop
             Left = Screen.Bounds.Left / dpiScale;
 
             if (Settings.FullWidthTaskBar)
-                bdrTaskbar.Width = screenWidth * .7;
+                bdrTaskbar.Width = screenWidth * .975;
             else
                 bdrTaskbar.MaxWidth = screenWidth - 36;
 
@@ -200,7 +206,7 @@ namespace CairoDesktop
             double screenWidth = Screen.Bounds.Width / dpiScale;
 
             if (Settings.FullWidthTaskBar)
-                bdrTaskbar.Width = screenWidth * .7;
+                bdrTaskbar.Width = screenWidth * .975;
             else
                 bdrTaskbar.MaxWidth = sWidth - 36;
 
