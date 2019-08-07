@@ -3,6 +3,7 @@
     xmlns:cairo="clr-namespace:CairoDesktop" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization">
     <!-- Menu resources -->
     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="MenuBarBackground">
+        <GradientStop Color="#CF000000" Offset="0.0" />
         <GradientStop Color="#8F4a4a4a" Offset="1.0" />
     </LinearGradientBrush>
     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="MenuBackgroundGradient">
