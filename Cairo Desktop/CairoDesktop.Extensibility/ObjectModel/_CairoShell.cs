@@ -17,6 +17,7 @@ namespace CairoDesktop.Extensibility.ObjectModel
 
         private _CairoShell()
         {
+            CairoMenu = new List<MenuItem>();
             PlacesMenu = new List<MenuItem>();
             ShellServices = new Dictionary<Type, ShellService>();
         }
@@ -63,6 +64,7 @@ namespace CairoDesktop.Extensibility.ObjectModel
         public static string LogsFolder { get { return Path.Combine(CairoApplicarionDataFolder, "Logs"); } }
 
 
+        public List<MenuItem> CairoMenu { get; private set; }
         public List<MenuItem> PlacesMenu { get; private set; }
 
         public Dictionary<Type, ShellService> ShellServices { get; private set; }
