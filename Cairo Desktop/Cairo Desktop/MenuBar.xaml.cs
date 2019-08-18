@@ -58,7 +58,9 @@ namespace CairoDesktop
 
             setupMenu();
 
-            setupPlaces();
+            setupCairoMenu();
+
+            setupPlacesMenu();
 
             setupSearch();
 
@@ -161,7 +163,26 @@ namespace CairoDesktop
             categorizedProgramsList.SelectedIndex = i;
         }
 
-        private void setupPlaces()
+        private void setupCairoMenu()
+        {
+            // Add _Application CairoMenu MenuItems
+            if (Extensibility.ObjectModel._CairoShell.Instance.CairoMenu.Count > 0)
+            {
+                var separatorStyle = FindResource("CairoMenuSeparatorStyle") as Style;
+                var menuItemStyle = FindResource("CairoMenuItemStyle") as Style;
+
+                CairoMenu.Items.Insert(7,new Separator() { Style = separatorStyle });
+                foreach (var cairoMenuItem in Extensibility.ObjectModel._CairoShell.Instance.CairoMenu)
+                {
+                    MenuItem menuItem = new MenuItem { Header = cairoMenuItem.Header };
+                    menuItem.Click += cairoMenuItem.MenuItem_Click;
+                    menuItem.Style = menuItemStyle;
+                    CairoMenu.Items.Insert(8, menuItem);
+                }
+            }
+        }
+
+        private void setupPlacesMenu()
         {
             // Set username
             string username = Environment.UserName.Replace("_", "__");
@@ -212,7 +233,7 @@ namespace CairoDesktop
             }
 
             Shell.HideWindowFromTasks(handle);
-            
+
             if (Settings.EnableCairoMenuHotKey && Screen.Primary && !isCairoMenuHotkeyRegistered)
             {
                 HotKeyManager.RegisterHotKey(Settings.CairoMenuHotKey, OnShowCairoMenu);
