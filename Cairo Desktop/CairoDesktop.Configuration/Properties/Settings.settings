@@ -95,5 +95,8 @@
     <Setting Name="LogSeverity" Type="System.String" Scope="User">
       <Value Profile="(Default)">Info</Value>
     </Setting>
+    <Setting Name="FullWidthTaskBar" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

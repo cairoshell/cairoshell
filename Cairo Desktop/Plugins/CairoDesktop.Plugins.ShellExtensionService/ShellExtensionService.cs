@@ -9,7 +9,7 @@ namespace CairoDesktop.Plugins.ShellExtensionSupport
     public sealed class ShellExtensionService : ShellService
     {
         [ImportMany(typeof(ShellExtension))]
-        IEnumerable<ShellExtension> ShellExtensions;
+        private IEnumerable<ShellExtension> _shellExtensions;
 
         private string pluginsPath;
         private AggregateCatalog catalog;
@@ -23,6 +23,8 @@ namespace CairoDesktop.Plugins.ShellExtensionSupport
 
             _CairoShell.Instance.ShellServices.Add(GetType(), this);
         }
+
+        public IEnumerable<ShellExtension> ShellExtensions { get => _shellExtensions; private set => _shellExtensions = value; }
 
         public override void Start()
         {

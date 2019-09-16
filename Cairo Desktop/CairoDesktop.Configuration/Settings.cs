@@ -64,6 +64,8 @@ namespace CairoDesktop.Configuration
         private static int? _TaskbarPosition;
         private static int? _TaskbarIconSize;
         private static bool? _EnableTaskbarMultiMon;
+        private static bool? _FullWidthTaskBar;
+
 
         // Menu Bar
         private static string _DefaultProgramsCategory;
@@ -401,6 +403,23 @@ namespace CairoDesktop.Configuration
             {
                 _EnableTaskbarMultiMon = value;
                 Properties.Settings.Default.EnableTaskbarMultiMon = (bool)_EnableTaskbarMultiMon;
+                Save();
+            }
+        }
+
+        public static bool FullWidthTaskBar
+        {
+            get
+            {
+                if (_FullWidthTaskBar == null)
+                    _FullWidthTaskBar = Properties.Settings.Default.FullWidthTaskBar;
+
+                return (bool)_FullWidthTaskBar;
+            }
+            set
+            {
+                _FullWidthTaskBar = value;
+                Properties.Settings.Default.FullWidthTaskBar = (bool)_FullWidthTaskBar;
                 Save();
             }
         }
