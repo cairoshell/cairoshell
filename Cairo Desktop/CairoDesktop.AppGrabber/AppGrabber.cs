@@ -50,7 +50,7 @@ namespace CairoDesktop.AppGrabber
             get
             {
                 if (_quickLaunch == null)
-                    _quickLaunch = CategoryList.GetSpecialCategory(3);
+                    _quickLaunch = CategoryList.GetSpecialCategory(AppCategoryType.QuickLaunch);
 
                 return _quickLaunch;
             }
@@ -343,7 +343,7 @@ namespace CairoDesktop.AppGrabber
         public void RemoveAppConfirm(ApplicationInfo app)
         {
             string menu;
-            if (app.Category.Type == 3)
+            if (app.Category.Type == AppCategoryType.QuickLaunch)
                 menu = Localization.DisplayString.sAppGrabber_QuickLaunch;
             else
                 menu = Localization.DisplayString.sProgramsMenu;
@@ -360,7 +360,7 @@ namespace CairoDesktop.AppGrabber
             app.Name = newName;
             Save();
 
-            CollectionViewSource.GetDefaultView(CategoryList.GetSpecialCategory(1)).Refresh();
+            CollectionViewSource.GetDefaultView(CategoryList.GetSpecialCategory(AppCategoryType.All)).Refresh();
             CollectionViewSource.GetDefaultView(app.Category).Refresh();
         }
 
@@ -372,7 +372,7 @@ namespace CairoDesktop.AppGrabber
                 Shell.ShowFileProperties(app.Path);
         }
 
-        public void AddByPath(string[] fileNames, int categoryType)
+        public void AddByPath(string[] fileNames, AppCategoryType categoryType)
         {
             int count = 0;
             foreach (String fileName in fileNames)
@@ -389,6 +389,37 @@ namespace CairoDesktop.AppGrabber
             }
 
             if (count > 0)
+                Save();
+        }
+
+        public void AddStoreApp(string appUserModelId, AppCategoryType categoryType)
+        {
+            bool success = false;
+            // not great but gets the job done I suppose
+            foreach (string[] app in UWPInterop.StoreAppHelper.GetStoreApps())
+            {
+                if (app[0] == appUserModelId)
+                {
+                    // bringo
+                    ApplicationInfo ai = new ApplicationInfo();
+                    ai.Name = app[1];
+                    ai.Path = "appx:" + appUserModelId;
+                    ai.Target = appUserModelId;
+                    ai.IconPath = app[2];
+                    ai.IconColor = app[3];
+
+                    // add it
+                    if (!object.ReferenceEquals(ai, null))
+                    {
+                        CategoryList.GetSpecialCategory(categoryType).Add(ai);
+                        success = true;
+                    }
+
+                    break;
+                }
+            }
+
+            if (success)
                 Save();
         }
 

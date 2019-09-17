@@ -8,32 +8,37 @@ namespace CairoDesktop
 {
     public partial class TaskButton
     {
-
-        private WindowsTasks.ApplicationWindow _applicationWindow;
-        public WindowsTasks.ApplicationWindow Window
-        {
-            get => _applicationWindow;
-            set
-            {
-                _applicationWindow = value;
-                InitializeApplicationInfo();
-            }
-        }
-
-        private bool hasInitializedApplicationInfoYet = false;
-        private ApplicationInfo _applicationInfo;
-        public ApplicationInfo App
+        private ApplicationInfo _quickLaunchAppInfo;
+        public ApplicationInfo QuickLaunchAppInfo
         {
             get
             {
-                if (!hasInitializedApplicationInfoYet)
-                    InitializeApplicationInfo();
+                if (_quickLaunchAppInfo == null)
+                {
+                    var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
+                    if (Window != null)
+                    {
+                        foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.QuickLaunch)
+                        {
+                            if (ai.Target == Window.WinFileName || (Window.WinFileName.ToLower().Contains("applicationframehost.exe") && ai.Target == Window.AppUserModelID))
+                            {
+                                _quickLaunchAppInfo = ai;
+                                break;
+                            }
+                            else if (Window.Title.ToLower().Contains(ai.Name.ToLower()))
+                            {
+                                _quickLaunchAppInfo = ai;
+                            }
+                        }
+                    }
+                }
 
-
-                return _applicationInfo;
+                return _quickLaunchAppInfo;
             }
-
-            set => _applicationInfo = value;
+            set
+            {
+                _quickLaunchAppInfo = value;
+            }
         }
 
 
@@ -120,38 +125,17 @@ namespace CairoDesktop
         private void HandlerForCMO(object sender, ContextMenuEventArgs e)
         {
 
-            //if (ShouldShowMiPin())
-            //{
-            //    miPin.Visibility = Visibility.Visible;
-            //    miPinSeperator.Visibility = Visibility.Visible;
-            //}
-            //else
-            //{
-            //    miPin.Visibility = Visibility.Hidden;
-            //    miPinSeperator.Visibility = Visibility.Hidden;
-            //}
+            if (QuickLaunchAppInfo == null)
+            {
+                miPin.Visibility = Visibility.Visible;
+                miPinSeperator.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                miPin.Visibility = Visibility.Collapsed;
+                miPinSeperator.Visibility = Visibility.Collapsed;
+            }
 
-        }
-
-        private bool ShouldShowMiPin()
-        {
-            bool result = true;
-
-            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
-            if (Window != null)
-                if (!object.ReferenceEquals(App, null))
-                    if (AppGrabber.AppGrabber.Instance.QuickLaunch.Contains(App))
-                        result = false;
-
-            return result;
-        }
-
-        [System.Runtime.InteropServices.DllImport("user32")]
-        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
-        private static int GetWindowProcessID(IntPtr hwnd)
-        {
-            GetWindowThreadProcessId(hwnd, out int pid);
-            return pid;
         }
 
         private void miPin_Click(object sender, RoutedEventArgs e)
@@ -159,53 +143,15 @@ namespace CairoDesktop
             var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
-                if (!object.ReferenceEquals(App, null))
+                if (Window.WinFileName.ToLower().Contains("applicationframehost.exe"))
                 {
-                    AppGrabber.AppGrabber.Instance.AddToQuickLaunch(App);
+                    // store app, do special stuff
+                    AppGrabber.AppGrabber.Instance.AddStoreApp(Window.AppUserModelID, AppCategoryType.QuickLaunch);
                 }
-            }
-        }
-
-        private ApplicationInfo GetAppGrabberApplicationInfoFromFilePath(string filePath)
-        {
-            ApplicationInfo result = null;
-
-            var apps = AppGrabber.AppGrabber.Instance.ProgramList;
-            foreach (ApplicationInfo app in apps)
-            {
-                var suppliedPath = System.IO.Path.GetFullPath(filePath).TrimEnd('\\');
-
-                var applicationInfoPath = string.Empty;
-                if (!string.IsNullOrWhiteSpace(app.Target))
-                    applicationInfoPath = System.IO.Path.GetFullPath(app.Target).TrimEnd('\\');
-
-
-                if (string.Compare(suppliedPath, applicationInfoPath, StringComparison.InvariantCultureIgnoreCase) == 0)
+                else
                 {
-                    result = app;
-                    break;
+                    AppGrabber.AppGrabber.Instance.AddByPath(new string[] { Window.WinFileName }, AppCategoryType.QuickLaunch);
                 }
-            }
-
-            return result;
-        }
-
-        private void InitializeApplicationInfo()
-        {
-            var Window = (DataContext as WindowsTasks.ApplicationWindow);
-            if (Window != null)
-            {
-                int pid = GetWindowProcessID(Window.Handle);
-                System.Diagnostics.Process p = System.Diagnostics.Process.GetProcessById(pid);
-
-                string file = string.Empty;
-                using (System.Management.ManagementObjectSearcher mos = new System.Management.ManagementObjectSearcher($"SELECT ExecutablePath FROM Win32_Process WHERE ProcessId = {p.Id}"))
-                    foreach (System.Management.ManagementObject mo in mos.Get())
-                        file = mo["ExecutablePath"] as string;
-
-                _applicationInfo = GetAppGrabberApplicationInfoFromFilePath(file);
-
-                hasInitializedApplicationInfoYet = true;
             }
         }
 

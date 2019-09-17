@@ -61,7 +61,7 @@ namespace CairoDesktop.AppGrabber
                     //Don't allow removal of special category
                     if (actionableCategory.Type > 0) return;
 
-                    Category uncategorized = catList.GetSpecialCategory(2);
+                    Category uncategorized = catList.GetSpecialCategory(AppCategoryType.Uncategorized);
                     for (int i = actionableCategory.Count - 1; i >= 0; i--)
                     {
                         ApplicationInfo app = actionableCategory[i];
@@ -120,7 +120,7 @@ namespace CairoDesktop.AppGrabber
                 {
                     Category target = dropTarget.ItemsSource as Category;
 
-                    if (target.Type == 3)
+                    if (target.Type == AppCategoryType.QuickLaunch)
                     {
                         e.Effects = DragDropEffects.Copy;
 
@@ -152,7 +152,7 @@ namespace CairoDesktop.AppGrabber
 
                         source.Remove(dropData);
 
-                        if (source.Type != 3)
+                        if (source.Type != AppCategoryType.QuickLaunch)
                         {
                             target.Add(dropData); // if coming from quick launch, simply remove from quick launch
                         }
@@ -266,7 +266,7 @@ namespace CairoDesktop.AppGrabber
             else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
             {
                 ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
-                if (dropCategory.Type == 3)
+                if (dropCategory.Type == AppCategoryType.QuickLaunch)
                 {
                     e.Effects = DragDropEffects.Copy;
 
@@ -284,7 +284,7 @@ namespace CairoDesktop.AppGrabber
                     e.Effects = DragDropEffects.Move;
 
                     (sourceView.ItemsSource as Category).Remove(dropData);
-                    if ((sourceView.ItemsSource as Category).Type != 3)
+                    if ((sourceView.ItemsSource as Category).Type != AppCategoryType.QuickLaunch)
                     {
                         dropCategory.Add(dropData);
                     }
