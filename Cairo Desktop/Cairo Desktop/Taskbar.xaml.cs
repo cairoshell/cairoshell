@@ -404,7 +404,7 @@ namespace CairoDesktop
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
-                appGrabber.AddByPath(fileNames, 3);
+                appGrabber.AddByPath(fileNames, AppGrabber.AppCategoryType.QuickLaunch);
             }
 
             e.Handled = true;

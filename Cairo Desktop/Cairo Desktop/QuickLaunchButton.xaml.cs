@@ -87,7 +87,7 @@ namespace CairoDesktop
             {
                 foreach (String fileName in fileNames)
                 {
-                    appGrabber.AddByPath(fileNames, 3);
+                    appGrabber.AddByPath(fileNames, AppCategoryType.QuickLaunch);
                     int dropIndex = appGrabber.QuickLaunch.IndexOf(replacedApp);
 
                     ApplicationInfo addedApp = appGrabber.QuickLaunch[appGrabber.QuickLaunch.Count - 1];

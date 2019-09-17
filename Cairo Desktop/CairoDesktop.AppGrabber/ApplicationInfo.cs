@@ -314,7 +314,10 @@ namespace CairoDesktop.AppGrabber
 
         public static bool operator ==(ApplicationInfo x, ApplicationInfo y)
         {
-            if (x == null)
+            // cast to object to prevent stack overflow
+            if ((object)x == null && (object)y == null)
+                return true;
+            else if ((object)x == null || (object)y == null)
                return false;
 
             return x.Equals(y);
@@ -336,7 +339,7 @@ namespace CairoDesktop.AppGrabber
         public ImageSource GetAssociatedIcon()
         {
             int size = 1;
-            if (this.Category != null && this.Category.Type == 3 && Configuration.Settings.TaskbarIconSize != 1)
+            if (this.Category != null && this.Category.Type == AppCategoryType.QuickLaunch && Configuration.Settings.TaskbarIconSize != 1)
                 size = 0;
 
             if (this.IsStoreApp)

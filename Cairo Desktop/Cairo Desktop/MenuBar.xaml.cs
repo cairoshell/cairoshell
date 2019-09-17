@@ -695,7 +695,7 @@ namespace CairoDesktop
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
-                appGrabber.AddByPath(fileNames, 2);
+                appGrabber.AddByPath(fileNames, AppCategoryType.Uncategorized);
             }
         }
 

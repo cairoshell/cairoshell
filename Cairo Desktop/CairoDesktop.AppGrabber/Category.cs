@@ -57,11 +57,11 @@ namespace CairoDesktop.AppGrabber {
             }
         }
 
-        private int type = 0;
+        private AppCategoryType type = AppCategoryType.Standard;
         /// <summary>
         /// Gets/Sets the type of this Category. 0 = standard; 1 = all; 2 = uncategorized; 3 = quick launch
         /// </summary>
-        public int Type
+        public AppCategoryType Type
         {
             get
             {
@@ -71,7 +71,7 @@ namespace CairoDesktop.AppGrabber {
             {
                 type = value;
 
-                if (type == 3)
+                if (type == AppCategoryType.QuickLaunch)
                     CollectionViewSource.GetDefaultView(this).SortDescriptions.Clear();
 
                 // Notify Databindings of property change
@@ -91,11 +91,11 @@ namespace CairoDesktop.AppGrabber {
             {
                 switch (Type)
                 {
-                    case 1:
+                    case AppCategoryType.All:
                         return Localization.DisplayString.sAppGrabber_All;
-                    case 2:
+                    case AppCategoryType.Uncategorized:
                         return Localization.DisplayString.sAppGrabber_Uncategorized;
-                    case 3:
+                    case AppCategoryType.QuickLaunch:
                         return Localization.DisplayString.sAppGrabber_QuickLaunch;
                     default:
                         if (Name.Length > 0)
@@ -147,7 +147,7 @@ namespace CairoDesktop.AppGrabber {
         /// <param name="name">The name of the category - retrievable from the Name property.</param>
         /// <param name="showInMenu">Should the category appear in the Programs menu</param>
         /// <param name="type">Type of category</param>
-        public Category(String name, bool showInMenu, int type)
+        public Category(String name, bool showInMenu, AppCategoryType type)
         {
             this.Name = name;
             this.ShowInMenu = showInMenu;
@@ -162,12 +162,22 @@ namespace CairoDesktop.AppGrabber {
         public CategoryList ParentCategoryList { get; set; }
 
         /// <summary>
+        /// Removes the item from the All category, if it isn't an item currently in the All or Quick Launch categories.
+        /// </summary>
+        /// <param name="item">Application info to remove.</param>
+        private void RemoveFromAllCategory(ApplicationInfo item)
+        {
+            if (this.Type != AppCategoryType.All && this.Type != AppCategoryType.QuickLaunch)
+                this.ParentCategoryList.GetSpecialCategory(AppCategoryType.All).Remove(item);
+        }
+
+        /// <summary>
         /// Adds the items to this Category.
         /// </summary>
         /// <param name="items">List of Application infos to add.</param>
         public void Add(ApplicationInfo ai) {
             this.internalList.Add(ai);
-            if (this.Type != 1)
+            if (this.Type != AppCategoryType.All)
                 ai.Category = this;
             if (CollectionChanged != null) {
                 CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, ai));
@@ -177,8 +187,8 @@ namespace CairoDesktop.AppGrabber {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
 
-            if (this.Type != 1 && this.Type != 3)
-                this.ParentCategoryList.GetSpecialCategory(1).Add(ai);
+            if (this.Type != AppCategoryType.All && this.Type != AppCategoryType.QuickLaunch)
+                this.ParentCategoryList.GetSpecialCategory(AppCategoryType.All).Add(ai);
         }
 
         /// <summary>
@@ -222,7 +232,7 @@ namespace CairoDesktop.AppGrabber {
         /// <param name="item">ApplicationInfo object to insert.</param>
         public void Insert(int index, ApplicationInfo item) {
             internalList.Insert(index, item);
-            if (this.Type != 1)
+            if (this.Type != AppCategoryType.All)
                 item.Category = this;
             if (CollectionChanged != null) {
                 CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
@@ -232,8 +242,8 @@ namespace CairoDesktop.AppGrabber {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
 
-            if (this.Type != 1 && this.Type != 3)
-                this.ParentCategoryList.GetSpecialCategory(1).Insert(0, item);
+            if (this.Type != AppCategoryType.All && this.Type != AppCategoryType.QuickLaunch)
+                this.ParentCategoryList.GetSpecialCategory(AppCategoryType.All).Insert(0, item);
         }
 
         /// <summary>
@@ -252,8 +262,7 @@ namespace CairoDesktop.AppGrabber {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
 
-            if (this.Type != 1 && this.Type != 3)
-                this.ParentCategoryList.GetSpecialCategory(1).Remove(app);
+            RemoveFromAllCategory(app);
         }
 
         public void Move(int oldIndex, int newIndex)
@@ -302,6 +311,8 @@ namespace CairoDesktop.AppGrabber {
         public void Clear() {
             foreach (ApplicationInfo ai in internalList) {
                 ai.Category = null;
+
+                RemoveFromAllCategory(ai);
             }
             internalList.Clear();
             if (CollectionChanged != null) {
@@ -311,9 +322,6 @@ namespace CairoDesktop.AppGrabber {
             if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
-
-            if (this.Type != 1 && this.Type != 3)
-                this.ParentCategoryList.GetSpecialCategory(1).Clear();
         }
 
         /// <summary>
@@ -366,9 +374,8 @@ namespace CairoDesktop.AppGrabber {
                 if (PropertyChanged != null) {
                     PropertyChanged(this, new PropertyChangedEventArgs("Count"));
                 }
-
-                if (this.Type != 1 && this.Type != 3)
-                    this.ParentCategoryList.GetSpecialCategory(1).Remove(item);
+                
+                RemoveFromAllCategory(item);
 
                 return true;
             } catch {
@@ -408,5 +415,13 @@ namespace CairoDesktop.AppGrabber {
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         #endregion
+    }
+
+    public enum AppCategoryType: int
+    {
+        Standard = 0,
+        All = 1,
+        Uncategorized = 2,
+        QuickLaunch = 3
     }
 }
