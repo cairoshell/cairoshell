@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CairoDesktop.UWPInterop</RootNamespace>
     <AssemblyName>CairoDesktop.UWPInterop</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetPlatformVersion>8.0</TargetPlatformVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,15 +55,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Runtime" />
     <Reference Include="System.Xml" />
-    <Reference Include="Windows.ApplicationModel">
-      <HintPath>C:\WINDOWS\System32\WinMetadata\Windows.ApplicationModel.winmd</HintPath>
-    </Reference>
-    <Reference Include="Windows.Management">
-      <HintPath>C:\WINDOWS\System32\WinMetadata\Windows.Management.winmd</HintPath>
-    </Reference>
-    <Reference Include="Windows.Storage">
-      <HintPath>C:\WINDOWS\System32\WinMetadata\Windows.Storage.winmd</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +66,11 @@
       <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
       <Name>CairoDesktop.Interop</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts">
+      <Version>10.0.18362.2005</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

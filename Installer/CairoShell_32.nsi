@@ -17,6 +17,9 @@ InstallDir "$PROGRAMFILES\Cairo Shell"
 InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
 !define MUI_ABORTWARNING
 
+; Minimum .NET Framework release (4.7.1)
+!define MIN_FRA_RELEASE "461308"
+
 ;--------------------------------
 ; Pages
 
@@ -59,11 +62,8 @@ Section "$(SECT_cairo)" cairo
 
   SectionIn RO
 
-  ; Get .NET directory so we can ngen, error if not found
-  Push "v4.0"
-  Call GetDotNetDir
-  Pop $R0
-  StrCmpS "" $R0 noDotNetFound
+  ; Check .NET version
+  Call AbortIfBadFramework
   
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
@@ -116,10 +116,6 @@ Section "$(SECT_cairo)" cairo
   WriteUninstaller "RemoveCairo.exe"
 
   Return
- 
-  noDotNetFound:
-    MessageBox MB_OK|MB_ICONSTOP "$(DLOG_DotNetText)" /SD IDOK
-    Quit
 
 SectionEnd
 
@@ -139,22 +135,22 @@ Section /o "$(SECT_shellCU)" shellCU
 SectionEnd
 
   ;Language strings
-  LangString PAGE_Welcome_Text ${LANG_ENGLISH} "This installer will guide you through the installation of Cairo.\r\n\r\nBefore installing, please ensure .NET Framework 4.5.2 or higher is installed, and that any running instance of Cairo is ended.\r\n\r\nClick Next to continue."
+  LangString PAGE_Welcome_Text ${LANG_ENGLISH} "This installer will guide you through the installation of Cairo.\r\n\r\nBefore installing, please ensure .NET Framework 4.7.1 or higher is installed, and that any running instance of Cairo is ended.\r\n\r\nClick Next to continue."
   LangString PAGE_Finish_RunText ${LANG_ENGLISH} "Start Cairo Desktop Environment"
   LangString PAGE_UnDir_TopText ${LANG_ENGLISH} "Please be sure that you have closed Cairo before uninstalling to ensure that all files are removed."
   LangString DLOG_RunningText ${LANG_ENGLISH} "Cairo is currently running. Please exit Cairo from the Cairo menu and run this installer again."
-  LangString DLOG_DotNetText ${LANG_ENGLISH} "Cairo requires Microsoft .NET Framework 4.5.2 or higher. Please install this from the Microsoft web site and install Cairo again."
+  LangString DLOG_DotNetText ${LANG_ENGLISH} "Cairo requires Microsoft .NET Framework 4.7.1 or higher. Please install this from the Microsoft web site and install Cairo again."
   LangString SECT_cairo ${LANG_ENGLISH} "Cairo Desktop (required)"
   LangString SECT_startupCU ${LANG_ENGLISH} "Run at startup (current user)"
   LangString SECT_shellCU ${LANG_ENGLISH} "Advanced users only: Replace Explorer (current user)"
   LangString DESC_cairo ${LANG_ENGLISH} "Installs Cairo and its required components."
   LangString DESC_startupCU ${LANG_ENGLISH} "Makes Cairo start up when you log in."
   LangString DESC_shellCU ${LANG_ENGLISH} "Run Cairo instead of Windows Explorer. Note this also disables many new features in Windows."
-  LangString PAGE_Welcome_Text ${LANG_FRENCH} "Cet installateur va vous guider au long de l'installation de Cairo.\r\n\r\nAvant d'installer, veuillez vous assurer que le .NET Framework 4.5.2 ou plus récent est installé, et que vous avez quitté toute instance de Cairo encore en cours de fonctionnement.\r\n\r\nCliquez sur Suivant pour continuer."
+  LangString PAGE_Welcome_Text ${LANG_FRENCH} "Cet installateur va vous guider au long de l'installation de Cairo.\r\n\r\nAvant d'installer, veuillez vous assurer que le .NET Framework 4.7.1 ou plus récent est installé, et que vous avez quitté toute instance de Cairo encore en cours de fonctionnement.\r\n\r\nCliquez sur Suivant pour continuer."
   LangString PAGE_Finish_RunText ${LANG_FRENCH} "Démarrer l'environnement de bureau Cairo"
   LangString PAGE_UnDir_TopText ${LANG_FRENCH} "Veuillez vérifier que vous avez fermé Cairo avant de le désinstaller pour assurer que tous les fichiers soient supprimés."
   LangString DLOG_RunningText ${LANG_FRENCH} "Cairo est en cours de fonctionnement. Veuillez quitter Cairo depuis le menu Cairo et lancer de nouveau cet installateur."
-  LangString DLOG_DotNetText ${LANG_FRENCH} "Cairo nécessite le Microsoft .NET Framework 4.5.2 ou plus récent. Veuillez l'installer depuis le site web de Microsoft et installer de nouveau Cairo."
+  LangString DLOG_DotNetText ${LANG_FRENCH} "Cairo nécessite le Microsoft .NET Framework 4.7.1 ou plus récent. Veuillez l'installer depuis le site web de Microsoft et installer de nouveau Cairo."
   LangString SECT_cairo ${LANG_FRENCH} "Bureau Cairo (requis)"
   LangString SECT_startupCU ${LANG_FRENCH} "Lancer au démarrage (utilisateur actuel)"
   LangString SECT_shellCU ${LANG_FRENCH} "Utilisateurs avancés uniquement : remplacer l'Explorateur Windows (utilisateur actuel)"
@@ -230,40 +226,6 @@ SectionEnd
 ;--------------------------------
 ; Functions
 
-; Given a .NET version number, this function returns that .NET framework's
-; install directory. Returns "" if the given .NET version is not installed.
-; Params: [version] (eg. "v2.0")
-; Return: [dir] (eg. "C:\WINNT\Microsoft.NET\Framework\v2.0.50727")
-Function GetDotNetDir
-  Exch $R0 ; Set R0 to .net version major
-  Push $R1
-  Push $R2
-
-  ; set R1 to minor version number of the installed .NET runtime
-  EnumRegValue $R1 HKLM \
-    "Software\Microsoft\.NetFramework\policy\$R0" 0
-  IfErrors getdotnetdir_err
- 
-  ; set R2 to .NET install dir root
-  ReadRegStr $R2 HKLM \
-    "Software\Microsoft\.NetFramework" "InstallRoot"
-  IfErrors getdotnetdir_err
- 
-  ; set R0 to the .NET install dir full
-  StrCpy $R0 "$R2$R0.$R1"
- 
-  getdotnetdir_end:
-    Pop $R2
-    Pop $R1
-    Exch $R0 ; return .net install dir full
-    Return
- 
-  getdotnetdir_err:
-    StrCpy $R0 ""
-    Goto getdotnetdir_end
- 
-FunctionEnd
-
 Function LaunchCairo
   IfFileExists "$WINDIR\explorer.exe" 0 std_exec
     Exec '"$WINDIR\explorer.exe" "$INSTDIR\CairoDesktop.exe"' ; use the shell to launch as current user (otherwise notification area breaks)
@@ -281,4 +243,140 @@ FunctionEnd
 Function .onInstSuccess
   IfSilent 0 +2
     Call LaunchCairo
+FunctionEnd
+
+; https://nsis.sourceforge.io/How_to_Detect_any_.NET_Framework
+; Check .NET framework release version and quit if too old
+Function AbortIfBadFramework
+ 
+  ; Save the variables in case something else is using them
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  Push $4
+  Push $R1
+  Push $R2
+  Push $R3
+  Push $R4
+  Push $R5
+  Push $R6
+  Push $R7
+  Push $R8
+ 
+  ; Major
+  StrCpy $R5 "0"
+ 
+  ; Minor
+  StrCpy $R6 "0"
+ 
+  ; Build
+  StrCpy $R7 "0"
+ 
+  ; No Framework
+  StrCpy $R8 "0.0.0"
+ 
+  StrCpy $0 0
+ 
+  loop:
+ 
+  ; Get each sub key under "SOFTWARE\Microsoft\NET Framework Setup\NDP"
+  EnumRegKey $1 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP" $0
+  StrCmp $1 "" done ;jump to end if no more registry keys
+  IntOp $0 $0 + 1
+  StrCpy $2 $1 1 ;Cut off the first character
+  StrCpy $3 $1 "" 1 ;Remainder of string
+ 
+  ; Loop if first character is not a 'v'
+  StrCmpS $2 "v" start_parse loop
+ 
+  ; Parse the string
+  start_parse:
+  StrCpy $R1 ""
+  StrCpy $R2 ""
+  StrCpy $R3 ""
+  StrCpy $R4 $3
+ 
+  StrCpy $4 1
+ 
+  parse:
+  StrCmp $3 "" parse_done ; If string is empty, we are finished
+  StrCpy $2 $3 1 ; Cut off the first character
+  StrCpy $3 $3 "" 1 ; Remainder of string
+  StrCmp $2 "." is_dot not_dot ; Move to next part if it's a dot
+ 
+  is_dot:
+  IntOp $4 $4 + 1 ; Move to the next section
+  goto parse ; Carry on parsing
+ 
+  not_dot:
+  IntCmp $4 1 major_ver
+  IntCmp $4 2 minor_ver
+  IntCmp $4 3 build_ver
+  IntCmp $4 4 parse_done
+ 
+  major_ver:
+  StrCpy $R1 $R1$2
+  goto parse ; Carry on parsing
+ 
+  minor_ver:
+  StrCpy $R2 $R2$2
+  goto parse ; Carry on parsing
+ 
+  build_ver:
+  StrCpy $R3 $R3$2
+  goto parse ; Carry on parsing
+ 
+  parse_done:
+ 
+  IntCmp $R1 $R5 this_major_same loop this_major_more
+  this_major_more:
+  StrCpy $R5 $R1
+  StrCpy $R6 $R2
+  StrCpy $R7 $R3
+  StrCpy $R8 $R4
+ 
+  goto loop
+ 
+  this_major_same:
+  IntCmp $R2 $R6 this_minor_same loop this_minor_more
+  this_minor_more:
+  StrCpy $R6 $R2
+  StrCpy $R7 $R3
+  StrCpy $R8 $R4
+  goto loop
+ 
+  this_minor_same:
+  IntCmp R3 $R7 loop loop this_build_more
+  this_build_more:
+  StrCpy $R7 $R3
+  StrCpy $R8 $R4
+  goto loop
+ 
+  done:
+ 
+  ReadRegDWORD $R9 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" Release
+  IntCmp $R9 ${MIN_FRA_RELEASE} end wrong_framework end
+ 
+  wrong_framework:
+  MessageBox MB_OK|MB_ICONSTOP "$(DLOG_DotNetText)" /SD IDOK
+  Quit
+ 
+  end:
+ 
+  ; Pop the variables we pushed earlier
+  Pop $R8
+  Pop $R7
+  Pop $R6
+  Pop $R5
+  Pop $R4
+  Pop $R3
+  Pop $R2
+  Pop $R1
+  Pop $4
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+ 
 FunctionEnd
