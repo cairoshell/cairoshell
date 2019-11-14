@@ -185,9 +185,10 @@ namespace CairoDesktop
             Left = Screen.Bounds.Left / dpiScale;
 
             if (Settings.FullWidthTaskBar)
-                bdrTaskbar.Width = screenWidth * .975;
-            else
-                bdrTaskbar.MaxWidth = screenWidth - 36;
+                bdrTaskbar.Width = screenWidth - btnDesktopOverlay.Width - btnTaskList.Width + 1; // account for border
+
+            // set maxwidth always
+            bdrTaskbar.MaxWidth = screenWidth - btnDesktopOverlay.Width - btnTaskList.Width + 1;
 
             Width = screenWidth;
         }
@@ -206,9 +207,10 @@ namespace CairoDesktop
             double screenWidth = Screen.Bounds.Width / dpiScale;
 
             if (Settings.FullWidthTaskBar)
-                bdrTaskbar.Width = screenWidth * .975;
-            else
-                bdrTaskbar.MaxWidth = sWidth - 36;
+                bdrTaskbar.Width = screenWidth - btnDesktopOverlay.Width - btnTaskList.Width + 1; // push the border off the edge
+
+            // set maxwidth always
+            bdrTaskbar.MaxWidth = sWidth - btnDesktopOverlay.Width - btnTaskList.Width + 1;
 
             Width = sWidth;
         }
