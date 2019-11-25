@@ -245,6 +245,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				}
 			}
 		}
+		break;
+		case WM_WINDOWPOSCHANGED:
+		{
+			// remove WS_VISIBLE if gremlins added it.
+			// Nvidia Surround seems to add this, because it does 'things' to the default Windows taskbar, which is normally a Shell_TrayWnd with WS_VISIBLE.
+			WINDOWPOS* wpos;
+			wpos = (WINDOWPOS*)lParam;
+			if (wpos->flags & SWP_SHOWWINDOW) {
+				LONG lStyle = GetWindowLong(m_hWndTray, GWL_STYLE);
+				lStyle &= ~(WS_VISIBLE);
+				SetWindowLong(m_hWndTray, GWL_STYLE, lStyle);
+				OutputDebugString(L"Shell_TrayWnd became visible, hiding");
+			}
+		}
 	}
 
 	if (msg == WM_COPYDATA || msg == WM_ACTIVATEAPP)
