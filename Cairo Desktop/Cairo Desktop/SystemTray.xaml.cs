@@ -49,7 +49,7 @@ namespace CairoDesktop
 
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            var trayIcon = (sender as Image).DataContext as NotifyIcon;
+            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
             
             if (trayIcon != null)
             {
@@ -59,7 +59,7 @@ namespace CairoDesktop
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
         {
-            var trayIcon = (sender as Image).DataContext as NotifyIcon;
+            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
             
             if (trayIcon != null)
             {
@@ -69,7 +69,7 @@ namespace CairoDesktop
 
         private void Image_MouseLeave(object sender, MouseEventArgs e)
         {
-            var trayIcon = (sender as Image).DataContext as NotifyIcon;
+            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
 
             if (trayIcon != null)
             {
