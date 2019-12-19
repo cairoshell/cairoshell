@@ -133,12 +133,12 @@ BOOL CallSystrayDelegate(int message, NOTIFYICONDATA nicData)
 {
 	if(pSystrayFunction != NULL)
 	{
-		ODS("Calling Systray Delegate");
+		ODS("Calling Systray Delegate\n");
 		return (pSystrayFunction)(message, nicData);	
 	}
 	else
 	{
-		ODS("Attempted to call the Systray Delegate, however the pointer is null");
+		ODS("Attempted to call the Systray Delegate, however the pointer is null\n");
 		return FALSE;
 	}
 }
@@ -147,12 +147,12 @@ LRESULT CallIconDataDelegate(CAIROWINNOTIFYICONIDENTIFIER iconData)
 {
 	if (pIconDataFunction != NULL)
 	{
-		ODS("Calling IconData Delegate");
+		ODS("Calling IconData Delegate\n");
 		return (pIconDataFunction)(iconData);
 	}
 	else
 	{
-		ODS("Attempted to call the IconData Delegate, however the pointer is null");
+		ODS("Attempted to call the IconData Delegate, however the pointer is null\n");
 		return FALSE;
 	}
 }
@@ -182,7 +182,7 @@ LRESULT appBarMessageAction(PSHELLAPPBARDATA abmd)
 		APPBARDATAV2& abd = abmd->abd;
 		abd.rc = { 0, 0, 1920, 23 };
 		abd.uEdge = ABE_TOP;
-		OutputDebugString(L"Responded");
+		ODS("Responded to GetTaskbarPos\n");
 		return 0;
 		break;
 	}
@@ -199,7 +199,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			COPYDATASTRUCT *copyData = (COPYDATASTRUCT *)lParam;
 			if (copyData == NULL)
 			{
-				ODS("CopyData is null. Returning.");
+				ODS("CopyData is null. Returning.\n");
 				return DefWindowProc(hWnd, msg, wParam, lParam);
 			}
 
@@ -228,7 +228,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					int TrayCmd = *(INT *)(((BYTE *)copyData->lpData) + 4);
 					
 					BOOL result = CallSystrayDelegate(TrayCmd, *nicData);
-					if (!result) OutputDebugString(L"Ignored notify icon message");
+					if (!result) ODS("Ignored notify icon message\n");
 					return result;
 				}
 				break;
@@ -256,14 +256,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				LONG lStyle = GetWindowLong(m_hWndTray, GWL_STYLE);
 				lStyle &= ~(WS_VISIBLE);
 				SetWindowLong(m_hWndTray, GWL_STYLE, lStyle);
-				OutputDebugString(L"Shell_TrayWnd became visible, hiding");
+				ODS("Shell_TrayWnd became visible, hiding\n");
 			}
 		}
 	}
 
 	if (msg == WM_COPYDATA || msg == WM_ACTIVATEAPP)
 	{
-		OutputDebugString(L"Forwarding message to all Shell_TrayWnd");
+		ODS("Forwarding message to all Shell_TrayWnd\n");
 		m_FwdLParam = lParam;
 		m_FwdMsg = msg;
 		m_FwdWParam = wParam;
