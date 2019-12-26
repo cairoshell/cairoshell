@@ -12,7 +12,7 @@
     using System.Collections.Generic;
     using CairoDesktop.WindowsTray;
     using CairoDesktop.Common;
-
+    using Microsoft.Win32;
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
     /// </summary>
@@ -22,18 +22,18 @@
         {
             InitializeComponent();
 
-            loadThemes();
-            loadLanguages();
-            loadRadioGroups();
-            loadCategories();
-            loadHotKeys();
-            loadLoggingLevels();
+            LoadThemes();
+            LoadLanguages();
+            LoadRadioGroups();
+            LoadCategories();
+            LoadHotKeys();
+            LoadLoggingLevels();
 
-            checkUpdateConfig();
-            checkTrayStatus();
+            CheckUpdateConfig();
+            CheckTrayStatus();
         }
 
-        private void loadRadioGroups()
+        private void LoadRadioGroups()
         {
             switch (Settings.DesktopLabelPosition)
             {
@@ -134,10 +134,10 @@
             }
         }
 
-        private void loadThemes()
+        private void LoadThemes()
         {
             cboThemeSelect.Items.Add("Default");
-            
+
             foreach (string subStr in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory).Where(s => Path.GetExtension(s).Contains("xaml")))
             {
                 string theme = Path.GetFileName(subStr);
@@ -145,7 +145,7 @@
             }
         }
 
-        private void loadLanguages()
+        private void LoadLanguages()
         {
             cboLangSelect.DisplayMemberPath = "Key";
             cboLangSelect.SelectedValuePath = "Value";
@@ -155,7 +155,7 @@
             }
         }
 
-        private void loadCategories()
+        private void LoadCategories()
         {
             foreach (Category cat in AppGrabber.AppGrabber.Instance.CategoryList)
             {
@@ -167,11 +167,11 @@
             }
         }
 
-        private void loadHotKeys()
+        private void LoadHotKeys()
         {
             string[] modifiers = { "Win", "Shift", "Alt", "Ctrl" };
             string[] keys = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
-            
+
             cboCairoMenuHotKeyMod2.Items.Add("None");
             cboDesktopOverlayHotKeyMod2.Items.Add("None");
 
@@ -190,7 +190,7 @@
             }
         }
 
-        private void loadLoggingLevels()
+        private void LoadLoggingLevels()
         {
             foreach (string sev in Enum.GetNames(typeof(Common.Logging.LogSeverity)))
             {
@@ -198,12 +198,12 @@
             }
         }
 
-        private void checkUpdateConfig()
+        private void CheckUpdateConfig()
         {
             chkEnableAutoUpdates.IsChecked = Convert.ToBoolean(WinSparkle.win_sparkle_get_automatic_check_for_updates());
         }
 
-        private void checkTrayStatus()
+        private void CheckTrayStatus()
         {
             if (NotificationArea.Instance.IsFailed)
             {
@@ -221,24 +221,24 @@
             WinSparkle.win_sparkle_set_automatic_check_for_updates(Convert.ToInt32(chkEnableAutoUpdates.IsChecked));
         }
 
-        private void showRestartButton()
+        private void ShowRestartButton()
         {
             btnRestart.Visibility = Visibility.Visible;
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            showRestartButton();
+            ShowRestartButton();
         }
 
         private void DropDown_Changed(object sender, EventArgs e)
         {
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void restartCairo(object sender, RoutedEventArgs e)
+        private void RestartCairo(object sender, RoutedEventArgs e)
         {
-            saveChanges();
+            SaveChanges();
 
             Startup.Restart();
         }
@@ -250,10 +250,10 @@
         /// <param name="e">Arguments for the event.</param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            saveChanges();
+            SaveChanges();
         }
 
-        private void saveChanges()
+        private void SaveChanges()
         {
             // placeholder in case we need to do extra work in the future
         }
@@ -263,7 +263,7 @@
             NativeMethods.SetForegroundWindow(new WindowInteropHelper(this).Handle);
         }
 
-        private void btnDesktopHomeSelect_Click(object sender, RoutedEventArgs e)
+        private void BtnDesktopHomeSelect_Click(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.Description = Localization.DisplayString.sDesktop_BrowseTitle;
@@ -281,107 +281,107 @@
             }
         }
 
-        private void radTaskbarMode0_Click(object sender, RoutedEventArgs e)
+        private void RadTaskbarMode0_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarMode = 0;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radTaskbarMode1_Click(object sender, RoutedEventArgs e)
+        private void RadTaskbarMode1_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarMode = 1;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radTaskbarMode2_Click(object sender, RoutedEventArgs e)
+        private void RadTaskbarMode2_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarMode = 2;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radTaskbarPos0_Click(object sender, RoutedEventArgs e)
+        private void RadTaskbarPos0_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarPosition = 0;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radTaskbarPos1_Click(object sender, RoutedEventArgs e)
+        private void RadTaskbarPos1_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarPosition = 1;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)
+        private void RadTaskbarSize0_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarIconSize = 0;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radTaskbarSize1_Click(object sender, RoutedEventArgs e)
+        private void RadTaskbarSize1_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarIconSize = 1;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radTaskbarSize10_Click(object sender, RoutedEventArgs e)
+        private void RadTaskbarSize10_Click(object sender, RoutedEventArgs e)
         {
             Settings.TaskbarIconSize = 10;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radDesktopLabelPos0_Click(object sender, RoutedEventArgs e)
+        private void RadDesktopLabelPos0_Click(object sender, RoutedEventArgs e)
         {
             Settings.DesktopLabelPosition = 0;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radDesktopLabelPos1_Click(object sender, RoutedEventArgs e)
+        private void RadDesktopLabelPos1_Click(object sender, RoutedEventArgs e)
         {
             Settings.DesktopLabelPosition = 1;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radDesktopIconSize0_Click(object sender, RoutedEventArgs e)
+        private void RadDesktopIconSize0_Click(object sender, RoutedEventArgs e)
         {
             Settings.DesktopIconSize = 0;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radDesktopIconSize2_Click(object sender, RoutedEventArgs e)
+        private void RadDesktopIconSize2_Click(object sender, RoutedEventArgs e)
         {
             Settings.DesktopIconSize = 2;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radTrayMode0_Click(object sender, RoutedEventArgs e)
+        private void RadTrayMode0_Click(object sender, RoutedEventArgs e)
         {
             Settings.SysTrayAlwaysExpanded = false;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void radTrayMode1_Click(object sender, RoutedEventArgs e)
+        private void RadTrayMode1_Click(object sender, RoutedEventArgs e)
         {
             Settings.SysTrayAlwaysExpanded = true;
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void cboCairoMenuHotKey_DropDownClosed(object sender, EventArgs e)
+        private void CboCairoMenuHotKey_DropDownClosed(object sender, EventArgs e)
         {
             List<string> hotkey = new List<string> { cboCairoMenuHotKeyMod1.SelectedValue.ToString(), cboCairoMenuHotKeyMod2.SelectedValue.ToString(), cboCairoMenuHotKeyKey.SelectedValue.ToString() };
             Settings.CairoMenuHotKey = hotkey;
 
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void cboDesktopOverlayHotKey_DropDownClosed(object sender, EventArgs e)
+        private void CboDesktopOverlayHotKey_DropDownClosed(object sender, EventArgs e)
         {
             List<string> hotkey = new List<string> { cboDesktopOverlayHotKeyMod1.SelectedValue.ToString(), cboDesktopOverlayHotKeyMod2.SelectedValue.ToString(), cboDesktopOverlayHotKeyKey.SelectedValue.ToString() };
             Settings.DesktopOverlayHotKey = hotkey;
 
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void btnChangeShell_Click(object sender, RoutedEventArgs e)
+        private void BtnChangeShell_Click(object sender, RoutedEventArgs e)
         {
             btnChangeShell.IsEnabled = false;
 
@@ -391,6 +391,25 @@
 
             if (LogoffChoice.HasValue && LogoffChoice.Value)
                 NativeMethods.Logoff();
+        }
+
+        private void ChkRunAtLogOn_Click(object sender, RoutedEventArgs e)
+        {
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+            var chkBox = (System.Windows.Controls.CheckBox)sender;
+
+            if (chkBox.IsChecked.Equals(false))
+            {
+                //Delete SubKey
+                key.DeleteValue("Cairo");
+            }
+            else
+            {
+                //Write SubKey
+                Settings.RunAtLogOn = true;
+                key.SetValue("Cairo", @"C:\Program Files\Cairo Shell\CairoDesktop.exe");
+                key.Close();
+            }
         }
     }
 }
