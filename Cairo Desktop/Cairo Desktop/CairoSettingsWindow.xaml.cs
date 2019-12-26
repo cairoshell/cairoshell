@@ -406,7 +406,7 @@
             else
             {
                 //Write SubKey
-                Settings.RunAtLogOn = true;
+                //Settings.RunAtLogOn = true;
                 key.SetValue("Cairo", @"C:\Program Files\Cairo Shell\CairoDesktop.exe");
                 key.Close();
             }

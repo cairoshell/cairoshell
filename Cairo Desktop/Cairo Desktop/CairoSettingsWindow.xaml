@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="CairoDesktop.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization" xmlns:interop="clr-namespace:CairoDesktop.Interop;assembly=CairoDesktop.Interop"
+<Window x:Class="CairoDesktop.CairoSettingsWindow" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+        xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization" 
+        xmlns:interop="clr-namespace:CairoDesktop.Interop;assembly=CairoDesktop.Interop"
     Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
     SizeToContent="WidthAndHeight"
     WindowStartupLocation="CenterScreen"
@@ -204,9 +209,9 @@
                             Click="CheckBox_Click" Name="chkEnableCairoMenuHotKey">
                             <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableCairoMenuHotKey)}" />
                         </CheckBox>
-                        <ComboBox Name="cboCairoMenuHotKeyMod1" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[0]}" />
-                        <ComboBox Name="cboCairoMenuHotKeyMod2" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[1]}" />
-                        <ComboBox Name="cboCairoMenuHotKeyKey" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="40" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[2]}" />
+                        <ComboBox Name="cboCairoMenuHotKeyMod1" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="CboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[0]}" />
+                        <ComboBox Name="cboCairoMenuHotKeyMod2" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="CboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[1]}" />
+                        <ComboBox Name="cboCairoMenuHotKeyKey" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="40" Margin="5,-1,0,0" DropDownClosed="CboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[2]}" />
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableMenuBarBlur}"
@@ -231,10 +236,10 @@
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}" Name="pnlTraySettings">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIcons)}" MinWidth="165" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTrayMode" Name="radTrayMode0" Click="radTrayMode0_Click">
+                            <RadioButton GroupName="rdoTrayMode" Name="radTrayMode0" Click="RadTrayMode0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIconsCollapsed)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTrayMode" Name="radTrayMode1" Click="radTrayMode1_Click">
+                            <RadioButton GroupName="rdoTrayMode" Name="radTrayMode1" Click="RadTrayMode1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIconsAlways)}" />
                             </RadioButton>
                         </StackPanel>
@@ -251,25 +256,25 @@
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DesktopHome)}" />
                         <TextBox Text="{Binding Path=DesktopDirectory}"
                             Name="txtDesktopHome" />
-                        <Button Name="btnDesktopHomeSelect" Click="btnDesktopHomeSelect_Click" Height="24" Padding="10,0">...</Button>
+                        <Button Name="btnDesktopHomeSelect" Click="BtnDesktopHomeSelect_Click" Height="24" Padding="10,0">...</Button>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <CheckBox IsChecked="{Binding Path=EnableDesktopOverlayHotKey}"
                         Click="CheckBox_Click" Name="chkEnableDesktopOverlayHotKey">
                             <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDesktopOverlayHotKey)}" />
                         </CheckBox>
-                        <ComboBox Name="cboDesktopOverlayHotKeyMod1" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[0]}" />
-                        <ComboBox Name="cboDesktopOverlayHotKeyMod2" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[1]}" />
-                        <ComboBox Name="cboDesktopOverlayHotKeyKey" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="40" Margin="5,-1,0,0" DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[2]}" />
+                        <ComboBox Name="cboDesktopOverlayHotKeyMod1" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="CboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[0]}" />
+                        <ComboBox Name="cboDesktopOverlayHotKeyMod2" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="CboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[1]}" />
+                        <ComboBox Name="cboDesktopOverlayHotKeyKey" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="40" Margin="5,-1,0,0" DropDownClosed="CboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[2]}" />
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_IconSize)}" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize2" Click="radDesktopIconSize2_Click">
+                            <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize2" Click="RadDesktopIconSize2_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeLarge)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize0" Click="radDesktopIconSize0_Click">
+                            <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize0" Click="RadDesktopIconSize0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeSmall)}" />
                             </RadioButton>
                         </StackPanel>
@@ -277,10 +282,10 @@
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPosition)}" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoDesktopLabelPos" Name="radDesktopLabelPos0" Click="radDesktopLabelPos0_Click">
+                            <RadioButton GroupName="rdoDesktopLabelPos" Name="radDesktopLabelPos0" Click="RadDesktopLabelPos0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPositionRight)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoDesktopLabelPos" Name="radDesktopLabelPos1" Click="radDesktopLabelPos1_Click">
+                            <RadioButton GroupName="rdoDesktopLabelPos" Name="radDesktopLabelPos1" Click="RadDesktopLabelPos1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPositionBottom)}" />
                             </RadioButton>
                         </StackPanel>
@@ -305,13 +310,13 @@
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_IconSize)}" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize1" Click="radTaskbarSize1_Click">
+                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize1" Click="RadTaskbarSize1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeSmall)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize10" Click="radTaskbarSize10_Click">
+                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize10" Click="RadTaskbarSize10_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeMedium)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize0" Click="radTaskbarSize0_Click">
+                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize0" Click="RadTaskbarSize0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeLarge)}" />
                             </RadioButton>
                         </StackPanel>
@@ -319,10 +324,10 @@
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_TaskbarPosition)}" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos0" Click="radTaskbarPos0_Click">
+                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos0" Click="RadTaskbarPos0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_PositionBottom)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos1" Click="radTaskbarPos1_Click">
+                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos1" Click="RadTaskbarPos1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_PositionTop)}" />
                             </RadioButton>
                         </StackPanel>
@@ -330,13 +335,13 @@
                     <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayMode)}" VerticalAlignment="Top" Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click">
+                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="RadTaskbarMode0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayModeAppBar)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode1" Click="radTaskbarMode1_Click">
+                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode1" Click="RadTaskbarMode1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayModeOverlap)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode2" Click="radTaskbarMode2_Click">
+                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode2" Click="RadTaskbarMode2_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayModeAutoHide)}" />
                             </RadioButton>
                         </StackPanel>
@@ -398,7 +403,7 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                        <Button Height="24" Padding="10,0" Margin="5,4" HorizontalAlignment="Left" Name="btnChangeShell" Click="btnChangeShell_Click">
+                        <Button Height="24" Padding="10,0" Margin="5,4" HorizontalAlignment="Left" Name="btnChangeShell" Click="BtnChangeShell_Click">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Content" Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetCairoAsShell)}" />
@@ -413,7 +418,7 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}" Name="btnRestart" MouseLeftButtonUp="restartCairo" Visibility="Hidden">
+            <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}" Name="btnRestart" MouseLeftButtonUp="RestartCairo" Visibility="Hidden">
                 <TabItem.Header>
                     <StackPanel>
                         <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="{Binding Path=(l10n:DisplayString.sSettings_RestartCairo)}" />
