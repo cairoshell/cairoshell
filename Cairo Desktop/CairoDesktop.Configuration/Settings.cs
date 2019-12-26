@@ -47,6 +47,7 @@ namespace CairoDesktop.Configuration
         private static string _Language;
         private static bool? _EnableSubDirs;
         private static bool? _FoldersOpenDesktopOverlay;
+        private static bool? _RunAtLogOn;
 
         // Desktop
         private static bool? _EnableDesktop;
@@ -104,6 +105,23 @@ namespace CairoDesktop.Configuration
             {
                 _IsFirstRun = value;
                 Properties.Settings.Default.IsFirstRun = (bool)_IsFirstRun;
+                Save();
+            }
+        }
+
+        public static bool RunAtLogOn
+        {
+            get
+            {
+                if (_RunAtLogOn == null)
+                    _RunAtLogOn = Properties.Settings.Default.RunAtLogOn;
+
+                return (bool)_RunAtLogOn;
+            }
+            set
+            {
+                _RunAtLogOn = value;
+                Properties.Settings.Default.RunAtLogOn = (bool)_RunAtLogOn;
                 Save();
             }
         }

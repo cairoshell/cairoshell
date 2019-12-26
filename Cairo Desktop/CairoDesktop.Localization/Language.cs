@@ -6,6 +6,7 @@ namespace CairoDesktop.Localization
     {
         public static Dictionary<string, string> en_US = new Dictionary<string, string>
         {
+            { "sRunAtLogon", "Run at log-on" },
             { "sProgramsMenu", "Programs" },
             { "sPlacesMenu", "Places" },
             { "sCairoMenu_AboutCairo", "About Cairo" },
