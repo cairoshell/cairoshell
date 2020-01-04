@@ -221,7 +221,7 @@
             Margin="0,0,0,0">
             <control:SystemTray x:Name="SysTray" Margin="0,0,8,0" />
             <Menu x:Name="MenuExtras" Style="{StaticResource CairoMenuBarMainContainerStyle}">
-                <MenuItem x:Name="miOpenVolume" Visibility="Collapsed" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenVolume_Click"  ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_Volume)}">
+                <MenuItem x:Name="miOpenVolume" Visibility="Collapsed" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenVolume_Click"  ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_Volume)}" ToolTipService.Placement="Bottom">
                     <MenuItem.Header>
                         <Image Source="{StaticResource VolumeIcon}"
                               Width="38"
@@ -233,7 +233,7 @@
                         </ContextMenu>
                     </MenuItem.ContextMenu>
                 </MenuItem>
-                <MenuItem x:Name="miOpenActionCenter" Visibility="Collapsed" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click" MouseEnter="miOpenActionCenter_MouseEnter" MouseLeave="miOpenActionCenter_MouseLeave" ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_OpenActionCenter)}">
+                <MenuItem x:Name="miOpenActionCenter" Visibility="Collapsed" Style="{StaticResource CairoMenuItemButtonMenuStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Click="miOpenActionCenter_Click" MouseEnter="miOpenActionCenter_MouseEnter" MouseLeave="miOpenActionCenter_MouseLeave" ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_OpenActionCenter)}" ToolTipService.Placement="Bottom">
                     <MenuItem.Header>
                         <Image Name="ActionCenterIcon" Source="{StaticResource ActionCenterIcon}"
                               Width="38"
@@ -245,7 +245,7 @@
                 <MenuItem Style="{StaticResource CairoMenuItemStyle}" x:Name="miClock"
                           ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" SubmenuOpened="miClock_SubmenuOpened">
                     <MenuItem.Header>
-                        <TextBlock Name="dateText" />
+                        <TextBlock Name="dateText" ToolTipService.Placement="Bottom" />
                     </MenuItem.Header>
                     <MenuItem StaysOpenOnClick="True">
                         <MenuItem.Header>

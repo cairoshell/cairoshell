@@ -12,7 +12,7 @@
     <Button x:Name="btn"
         BorderThickness="0"
         VerticalAlignment="Stretch"
-        Click="btnClick" ToolTip="{Binding Path=Title}" MouseUp="btn_MouseUp" ContextMenuOpening="HandlerForCMO">
+        Click="btnClick" ToolTip="{Binding Path=Title}" ToolTipService.Placement="Top" MouseUp="btn_MouseUp" ContextMenuOpening="HandlerForCMO">
         <Button.Style>
             <MultiBinding Converter="{StaticResource styleConverter}" NotifyOnSourceUpdated="True">
                 <Binding RelativeSource="{RelativeSource Self}" />

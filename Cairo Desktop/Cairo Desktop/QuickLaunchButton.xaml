@@ -9,7 +9,7 @@
             CommandParameter="{Binding Path=Path}"
             Click="LaunchProgram"
             Style="{StaticResource CairoQuickLaunchButtonStyle}"
-            ToolTip="{Binding Path=Name}" DragEnter="btn_DragEnter" Drop="btn_Drop" PreviewMouseLeftButtonDown="btn_PreviewMouseLeftButtonDown" PreviewMouseMove="btn_PreviewMouseMove" PreviewMouseLeftButtonUp="btn_PreviewMouseLeftButtonUp">
+            ToolTip="{Binding Path=Name}" ToolTipService.Placement="Top" ToolTipService.VerticalOffset="-1" DragEnter="btn_DragEnter" Drop="btn_Drop" PreviewMouseLeftButtonDown="btn_PreviewMouseLeftButtonDown" PreviewMouseMove="btn_PreviewMouseMove" PreviewMouseLeftButtonUp="btn_PreviewMouseLeftButtonUp">
             <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Name="imgIcon"
                 Width="16"
                 Height="16" />
