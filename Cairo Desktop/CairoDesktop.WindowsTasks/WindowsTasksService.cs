@@ -106,7 +106,7 @@ namespace CairoDesktop.WindowsTasks
 
         private void addWindow(ApplicationWindow win)
         {
-            if (win.ShowInTaskbar && !Windows.Contains(win))
+            if (!Windows.Contains(win))
                 Windows.Add(win);
         }
 
