@@ -140,6 +140,7 @@
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="TaskbarItemFlashingDisabledBackground" StartPoint="0,1" EndPoint="0,0">
         <GradientStop Color="#CFDBA715" Offset="1.0" />
+        <GradientStop Color="#6fff5400" Offset="0.3" />
         <GradientStop Color="#8FDB570B" Offset="0.0" />
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="TaskbarItemFlashingHoverBackground" StartPoint="0,0" EndPoint="0,1">
@@ -166,6 +167,36 @@
             <SplineColorKeyFrame KeyTime="00:00:00.8000000" Value="#3affffff"/>
         </ColorAnimationUsingKeyFrames>
     </Storyboard>
+
+    <!-- Dialog resources -->
+    <LinearGradientBrush x:Key="DialogWindowBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFFFF" Offset="0" />
+        <GradientStop Color="#FFEFEFEF" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="DialogButtonNormalBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFFFFFFF" Offset="0" />
+        <GradientStop Color="#FFDFDFDF" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush Color="#402e2e2e" x:Key="DialogButtonNormalBorder" />
+    <LinearGradientBrush x:Key="DialogButtonHoverBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFDCE1E6" Offset="0" />
+        <GradientStop Color="#FFC0C5C9" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush Color="#4028292a" x:Key="DialogButtonHoverBorder" />
+    <LinearGradientBrush x:Key="DialogButtonPressedBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FFc6cbcf" Offset="0" />
+        <GradientStop Color="#FFadb2b5" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush Color="#40242525" x:Key="DialogButtonPressedBorder" />
+    <LinearGradientBrush x:Key="DialogButtonDisabledBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="Gray" Offset="0" />
+        <GradientStop Color="DarkGray" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush Color="#80242525" x:Key="DialogButtonDefaultBorder" />
+    <SolidColorBrush Color="Black" x:Key="DialogWindowForeground" />
+
+    <!-- Welcome resources -->
+    <SolidColorBrush Color="#FF555555" x:Key="WelcomeForeground" />
 
     <!-- Image resources -->
     <BitmapImage x:Key="MenuIcon" UriSource="Resources\cairoMenuDefault.png"></BitmapImage>
@@ -1474,19 +1505,8 @@
     <Style x:Key="CairoWindowStyle" TargetType="{x:Type Border}">
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Margin" Value="12,7,12,17" />
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0"
-                    EndPoint="0,1">
-                    <LinearGradientBrush.GradientStops>
-                        <GradientStop Color="#FFFFFFFF"
-                            Offset="0" />
-                        <GradientStop Color="#FFEFEFEF"
-                            Offset="1" />
-                    </LinearGradientBrush.GradientStops>
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Background" Value="{DynamicResource ResourceKey=DialogWindowBackground}" />
+
         <Setter Property="Effect">
             <Setter.Value>
                 <DropShadowEffect Color="Black" ShadowDepth="6" Direction="270" Opacity="0.5" BlurRadius="15" />
@@ -1516,16 +1536,7 @@
                     <Border x:Name="Border"
                         BorderThickness="1"
                         CornerRadius="5"
-                        BorderBrush="#402e2e2e" Padding="15,0">
-                        <Border.Background>
-                            <LinearGradientBrush StartPoint="0,0"
-                                EndPoint="0,1">
-                                <GradientStop Color="#FFFFFFFF"
-                                    Offset="0" />
-                                <GradientStop Color="#FFDFDFDF"
-                                    Offset="1" />
-                            </LinearGradientBrush>
-                        </Border.Background>
+                        BorderBrush="{DynamicResource ResourceKey=DialogButtonNormalBorder}" Padding="15,0" Background="{DynamicResource ResourceKey=DialogButtonNormalBackground}">
                         <ContentPresenter Margin="0,0,0,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center" />
@@ -1534,53 +1545,23 @@
                         <Trigger Property="IsEnabled"
                             Value="false">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                        EndPoint="0,1">
-                                        <GradientStop Color="Gray"
-                                            Offset="0" />
-                                        <GradientStop Color="DarkGray"
-                                            Offset="1" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                                Property="Background" Value="{DynamicResource ResourceKey=DialogButtonDisabledBackground}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                        EndPoint="0,1">
-                                        <GradientStop Color="#FFDCE1E6"
-                                            Offset="0" />
-                                        <GradientStop Color="#FFC0C5C9"
-                                            Offset="1" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="#4028292a" />
+                                Property="Background" Value="{DynamicResource ResourceKey=DialogButtonHoverBackground}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ResourceKey=DialogButtonHoverBorder}" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                             Value="true">
                             <Setter TargetName="Border"
-                                Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0"
-                                        EndPoint="0,1">
-                                        <GradientStop Color="#FFc6cbcf"
-                                            Offset="0" />
-                                        <GradientStop Color="#FFadb2b5"
-                                            Offset="1" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="#40242525" />
+                                Property="Background" Value="{DynamicResource ResourceKey=DialogButtonPressedBackground}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ResourceKey=DialogButtonPressedBorder}" />
                         </Trigger>
                         <Trigger Property="IsDefault"
                             Value="true">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="#80242525" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ResourceKey=DialogButtonDefaultBorder}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1592,7 +1573,7 @@
     <Style x:Key="WizardText" TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily" Value="Corbel" />
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Foreground" Value="{DynamicResource ResourceKey=DialogWindowForeground}" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="Margin" Value="0,0,0,10" />
     </Style>
@@ -1611,7 +1592,7 @@
         <Setter Property="Margin" Value="64,0,64,2" />
     </Style>
     <Style x:Key="WelcomeSubText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource WelcomeText}">
-        <Setter Property="Foreground" Value="#FF555555" />
+        <Setter Property="Foreground" Value="{DynamicResource ResourceKey=WelcomeForeground}" />
     </Style>
    
     <!-- Stacks -->
