@@ -54,4 +54,14 @@
         <GradientStop Color="#7fff5400" Offset="0.3" />
         <GradientStop Color="#7fff5400" Offset="0.0" />
     </LinearGradientBrush>
+
+    <!-- Dialog resources -->
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="DialogWindowBackground" />
+    <SolidColorBrush Color="#FFEFEFEF" x:Key="DialogButtonNormalBackground" />
+    <SolidColorBrush Color="#602e2e2e" x:Key="DialogButtonNormalBorder" />
+    <SolidColorBrush Color="#FFDCE1E6" x:Key="DialogButtonHoverBackground" />
+    <SolidColorBrush Color="#6028292a" x:Key="DialogButtonHoverBorder" />
+    <SolidColorBrush Color="#FFc6cbcf" x:Key="DialogButtonPressedBackground" />
+    <SolidColorBrush Color="#60242525" x:Key="DialogButtonPressedBorder" />
+    <SolidColorBrush Color="DarkGray" x:Key="DialogButtonDisabledBackground" />
 </ResourceDictionary>
