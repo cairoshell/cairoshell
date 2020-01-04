@@ -25,7 +25,7 @@
         <Border Style="{StaticResource CairoWindowContainer}" Name="bdrWelcome" Padding="0,0,0,32">
             <DockPanel LastChildFill="True">
                 <Button HorizontalAlignment="Center" DockPanel.Dock="Bottom" Name="btnGoPage2" Content="{Binding sWelcome_StartTour}" Style="{StaticResource CairoButtonStyle}"
-                            Click="btnGoPage2_Click" />
+                            Click="btnGoPage2_Click" IsDefault="True" />
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical" Margin="0,54,0,0">
                     <Image Source="Resources\Welcome\cairoIcon.png" Width="107" Height="105" />
                     <TextBlock Style="{StaticResource WelcomeHeading}" HorizontalAlignment="Center" Text="{Binding sWelcome_Welcome}" Margin="0,10,0,60" />
@@ -39,7 +39,7 @@
         <Border Style="{StaticResource CairoWindowContainer}" Name="bdrMenuBar" Visibility="Collapsed" Padding="0,0,0,32">
             <DockPanel LastChildFill="True">
                 <Button HorizontalAlignment="Center" DockPanel.Dock="Bottom" Name="btnGoPage3" Content="{Binding sInterface_Continue}" Style="{StaticResource CairoButtonStyle}"
-                            Click="btnGoPage3_Click" />
+                            Click="btnGoPage3_Click" IsDefault="True" />
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Vertical" Margin="0,54,0,0">
                         <TextBlock Style="{StaticResource WelcomeHeading}" Text="{Binding sWelcome_MenuBar}" />
@@ -64,7 +64,7 @@
         <Border Style="{StaticResource CairoWindowContainer}" Name="bdrDesktop" Visibility="Collapsed" Padding="0,0,0,32">
             <DockPanel LastChildFill="True">
                 <Button HorizontalAlignment="Center" DockPanel.Dock="Bottom" Name="btnGoPage4" Content="{Binding sInterface_Continue}" Style="{StaticResource CairoButtonStyle}"
-                            Click="btnGoPage4_Click" />
+                            Click="btnGoPage4_Click" IsDefault="True" />
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical" Margin="0,54,0,0">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Vertical">
@@ -83,7 +83,7 @@
         <Border Style="{StaticResource CairoWindowContainer}" Name="bdrTaskbar" Visibility="Collapsed" Padding="0,0,0,32">
             <DockPanel LastChildFill="True">
                 <Button HorizontalAlignment="Center" DockPanel.Dock="Bottom" Name="btnAppGrabber" Content="{Binding sWelcome_FinishTour}" Style="{StaticResource CairoButtonStyle}"
-                            Click="btnAppGrabber_Click" />
+                            Click="btnAppGrabber_Click" IsDefault="True" />
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="0,0,0,5">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical" Margin="0,54,0,0">
                         <Image Source="Resources\Welcome\taskbar.png" Width="686" Height="141" Margin="0,0,0,24" RenderOptions.BitmapScalingMode="Fant" />

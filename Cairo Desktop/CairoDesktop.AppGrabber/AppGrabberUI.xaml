@@ -99,7 +99,7 @@
                     Grid.Row="6"
                     Grid.Column="3">
                     <Button Content="{Binding sInterface_Continue}" Style="{StaticResource CairoButtonStyle}"
-                        Click="btnContinue_Click"/>
+                        Click="btnContinue_Click" IsDefault="True"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -175,7 +175,7 @@
                 Grid.Row="4"
                 Grid.Column="3">
                     <Button Content="{Binding sInterface_Finish}" Style="{StaticResource CairoButtonStyle}"
-                    Click="btnSave_Click"/>
+                    Click="btnSave_Click" IsDefault="True"/>
                 </StackPanel>
             </Grid>
         </Border>
