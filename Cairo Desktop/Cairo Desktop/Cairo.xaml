@@ -1578,6 +1578,10 @@
                             </Setter>
                             <Setter TargetName="Border" Property="BorderBrush" Value="#40242525" />
                         </Trigger>
+                        <Trigger Property="IsDefault"
+                            Value="true">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#80242525" />
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
