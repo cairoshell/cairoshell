@@ -32,7 +32,8 @@
 
             checkUpdateConfig();
             checkTrayStatus();
-            checkRunAtLogOn();        }
+            checkRunAtLogOn();
+        }
 
         private void loadRadioGroups()
         {
@@ -396,6 +397,11 @@
 
         private void checkRunAtLogOn()
         {
+            if (Shell.IsCairoUserShell.Equals(true))
+            {
+                chkRunAtLogOn.Visibility = Visibility.Hidden;
+            }
+
             RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
             List<string> rKeyValueNames = rKey.GetValueNames().ToList();
 
