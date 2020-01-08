@@ -31,6 +31,40 @@
 
             CheckUpdateConfig();
             CheckTrayStatus();
+            CheckRunAtLogOn();
+        }
+
+        private void CheckRunAtLogOn()
+        {
+            RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+            List<string> rKeyValueNames = rKey.GetValueNames().ToList();
+
+            if (rKeyValueNames.Contains("Cairo"))
+            {
+                chkRunAtLogOn.IsChecked = true;
+            }
+            else
+            {
+                chkRunAtLogOn.IsChecked = false;
+            }
+        }
+
+        private void ChkRunAtLogOn_Click(object sender, RoutedEventArgs e)
+        {
+            RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+            var chkBox = (System.Windows.Controls.CheckBox)sender;
+
+            if (chkBox.IsChecked.Equals(false))
+            {
+                //Delete SubKey
+                rKey.DeleteValue("Cairo");
+            }
+            else
+            {
+                string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                //Write SubKey
+                rKey.SetValue("Cairo", exePath);
+            }
         }
 
         private void LoadRadioGroups()
@@ -391,25 +425,6 @@
 
             if (LogoffChoice.HasValue && LogoffChoice.Value)
                 NativeMethods.Logoff();
-        }
-
-        private void ChkRunAtLogOn_Click(object sender, RoutedEventArgs e)
-        {
-            RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-            var chkBox = (System.Windows.Controls.CheckBox)sender;
-
-            if (chkBox.IsChecked.Equals(false))
-            {
-                //Delete SubKey
-                key.DeleteValue("Cairo");
-            }
-            else
-            {
-                //Write SubKey
-                //Settings.RunAtLogOn = true;
-                key.SetValue("Cairo", @"C:\Program Files\Cairo Shell\CairoDesktop.exe");
-                key.Close();
-            }
         }
     }
 }

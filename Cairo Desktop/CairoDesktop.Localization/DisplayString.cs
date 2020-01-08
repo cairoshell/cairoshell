@@ -1212,6 +1212,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_General_RunAtLogOn
+        {
+            get
+            {
+                return getString("sSettings_General_RunAtLogOn");
+            }
+        }
+
         public static string sSettings_General_Language
         {
             get

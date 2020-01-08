@@ -863,7 +863,7 @@ namespace CairoDesktop
         private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
         {
             CairoSettingsWindow window = new CairoSettingsWindow();
-            window.ShowDialog();
+            window.Show();
         }
 
         private void InitAppGrabberWindow(object sender, RoutedEventArgs e)

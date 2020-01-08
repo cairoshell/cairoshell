@@ -178,8 +178,8 @@
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_UpdateCheck)}" />
                     </CheckBox>
                     <CheckBox Click="ChkRunAtLogOn_Click"
-                        x:Name="chkRunAtLogOn" IsChecked="{Binding RunAtLogOn}">
-                        <Label Content="{Binding Path=(l10n:DisplayString.sRunAtLogon)}" />
+                        Name="chkRunAtLogOn">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_RunAtLogOn)}" />
                     </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
