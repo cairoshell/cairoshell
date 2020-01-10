@@ -171,7 +171,7 @@ namespace CairoDesktop
                 var separatorStyle = FindResource("CairoMenuSeparatorStyle") as Style;
                 var menuItemStyle = FindResource("CairoMenuItemStyle") as Style;
 
-                CairoMenu.Items.Insert(7,new Separator() { Style = separatorStyle });
+                CairoMenu.Items.Insert(7, new Separator() { Style = separatorStyle });
                 foreach (var cairoMenuItem in Extensibility.ObjectModel._CairoShell.Instance.CairoMenu)
                 {
                     MenuItem menuItem = new MenuItem { Header = cairoMenuItem.Header };
@@ -862,8 +862,29 @@ namespace CairoDesktop
 
         private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
         {
-            CairoSettingsWindow window = new CairoSettingsWindow();
-            window.Show();
+            string windowName = "CairoSettingsWindow";
+
+            if (IsOpenWindow(windowName).Equals(false))
+            {
+                CairoSettingsWindow window = new CairoSettingsWindow();
+                window.Name = windowName;
+                window.Show();
+            }
+        }
+
+        public static bool IsOpenWindow(string name)
+        {
+            bool openWindow = false;
+
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window.Name.Equals(name))
+                {
+                    window.Activate();
+                    openWindow = true;
+                }
+            }
+            return openWindow;
         }
 
         private void InitAppGrabberWindow(object sender, RoutedEventArgs e)

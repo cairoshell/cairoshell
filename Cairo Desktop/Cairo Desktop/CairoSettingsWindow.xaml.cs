@@ -405,7 +405,7 @@
             RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
             List<string> rKeyValueNames = rKey.GetValueNames().ToList();
 
-            if (rKeyValueNames.Contains("Cairo"))
+            if (rKeyValueNames.Contains("CairoShell"))
             {
                 chkRunAtLogOn.IsChecked = true;
             }
@@ -423,13 +423,13 @@
             if (chkBox.IsChecked.Equals(false))
             {
                 //Delete SubKey
-                rKey.DeleteValue("Cairo");
+                rKey.DeleteValue("CairoShell");
             }
             else
             {
                 string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
                 //Write SubKey
-                rKey.SetValue("Cairo", exePath);
+                rKey.SetValue("CairoShell", exePath);
             }
         }
 
