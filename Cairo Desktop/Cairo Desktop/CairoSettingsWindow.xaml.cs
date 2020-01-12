@@ -12,6 +12,7 @@
     using System.Collections.Generic;
     using CairoDesktop.WindowsTray;
     using CairoDesktop.Common;
+    using Microsoft.Win32;
 
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
@@ -31,6 +32,7 @@
 
             checkUpdateConfig();
             checkTrayStatus();
+            checkRunAtLogOn();
         }
 
         private void loadRadioGroups()
@@ -137,7 +139,7 @@
         private void loadThemes()
         {
             cboThemeSelect.Items.Add("Default");
-            
+
             foreach (string subStr in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory).Where(s => Path.GetExtension(s).Contains("xaml")))
             {
                 string theme = Path.GetFileName(subStr);
@@ -171,7 +173,7 @@
         {
             string[] modifiers = { "Win", "Shift", "Alt", "Ctrl" };
             string[] keys = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
-            
+
             cboCairoMenuHotKeyMod2.Items.Add("None");
             cboDesktopOverlayHotKeyMod2.Items.Add("None");
 
@@ -392,5 +394,44 @@
             if (LogoffChoice.HasValue && LogoffChoice.Value)
                 NativeMethods.Logoff();
         }
+
+        private void checkRunAtLogOn()
+        {
+            if (Shell.IsCairoUserShell.Equals(true))
+            {
+                chkRunAtLogOn.Visibility = Visibility.Hidden;
+            }
+
+            RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+            List<string> rKeyValueNames = rKey.GetValueNames().ToList();
+
+            if (rKeyValueNames.Contains("CairoShell"))
+            {
+                chkRunAtLogOn.IsChecked = true;
+            }
+            else
+            {
+                chkRunAtLogOn.IsChecked = false;
+            }
+        }
+
+        private void chkRunAtLogOn_Click(object sender, RoutedEventArgs e)
+        {
+            RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+            var chkBox = (System.Windows.Controls.CheckBox)sender;
+
+            if (chkBox.IsChecked.Equals(false))
+            {
+                //Delete SubKey
+                rKey.DeleteValue("CairoShell");
+            }
+            else
+            {
+                string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                //Write SubKey
+                rKey.SetValue("CairoShell", exePath);
+            }
+        }
+
     }
 }

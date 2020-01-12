@@ -146,6 +146,7 @@ namespace CairoDesktop.Localization
             { "sSettings_RestartCairo", "Restart Cairo to apply" },
             { "sSettings_Restarting", "Restarting..." },
             { "sSettings_General_UpdateCheck", "Automatically check for updates" },
+            { "sSettings_General_RunAtLogOn", "Run at Log-on" },
             { "sSettings_General_Language", "Language:" },
             { "sSettings_General_Theme", "Theme:" },
             { "sSettings_General_ThemeTooltip", "Place themes into your Cairo installation directory." },
@@ -697,7 +698,7 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarSec3Heading", "Aktivitetslista" },
             { "sWelcome_TaskbarSec3Text", "Många öppna fönster? Aktivitetslistan visar dina fönster i en lista som gör det enkelt att se och byta till de du söker. Du kan också öppna Windows 10 aktivitetsvy från denna meny." }
         };
-        
+
         public static Dictionary<string, string> fr_FR = new Dictionary<string, string>
         {
             { "sProgramsMenu", "Applications" },
@@ -1146,8 +1147,8 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarSec3Heading", "任务列表" },
             { "sWelcome_TaskbarSec3Text", "很多敞开的窗户吗?任务列表在菜单中显示你的窗口，这样你就可以轻松切换到你要找的那个。您也可以从这个菜单打开Windows 10任务视图。" }
         };
-		
-		public static Dictionary<string, string> cs_CZ = new Dictionary<string, string>	    
+
+        public static Dictionary<string, string> cs_CZ = new Dictionary<string, string>
         {
             { "sProgramsMenu", "Programy" },
             { "sPlacesMenu", "Místa" },
@@ -1606,7 +1607,7 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarSec3Heading", "Taskliste" },
             { "sWelcome_TaskbarSec3Text", "Viele offene Fenster? Die Taskliste zeigt die offenen Fenster in einem Menü um einfach zu dem Fenster wechseln zu können, welches Sie gerade suchen. Sie können ebenso die Windows 10 Ansicht aus diesem Menü öffnen." }
         };
-	     public static Dictionary<string, string> es_ES = new Dictionary<string, string>
+        public static Dictionary<string, string> es_ES = new Dictionary<string, string>
         {
             { "sProgramsMenu", "Programas" },
             { "sPlacesMenu", "Lugares" },
@@ -1709,7 +1710,7 @@ namespace CairoDesktop.Localization
             { "sStacks_Empty", "Esta carpeta esta vacía" },
             { "sMenuBar_OpenDateTimeSettings", "Abrir las configuraciones de fechas y tiempo" },
             { "sMenuBar_OpenActionCenter", "Abrir el centro de las acciones" },
-            { "sMenuBar_ToggleNotificationArea", "Pasar los iconos de las notificaciones" }, 
+            { "sMenuBar_ToggleNotificationArea", "Pasar los iconos de las notificaciones" },
             { "sMenuBar_Volume", "Volumen" },
             { "sMenuBar_OpenSoundSettings", "Abrir las configuraciones de los sonidos" },
             { "sSearch_Title", "Buscar en el Escritorio" },

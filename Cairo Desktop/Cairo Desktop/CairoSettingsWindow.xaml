@@ -172,6 +172,10 @@
                         Name="chkEnableAutoUpdates">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_UpdateCheck)}" />
                     </CheckBox>
+                    <CheckBox Click="chkRunAtLogOn_Click"
+                        Name="chkRunAtLogOn">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_RunAtLogOn)}" />
+                    </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_Language)}" />
