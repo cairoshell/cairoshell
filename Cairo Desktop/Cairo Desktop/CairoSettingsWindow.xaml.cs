@@ -19,7 +19,11 @@
     /// </summary>
     public partial class CairoSettingsWindow : Window
     {
-        public CairoSettingsWindow()
+        private static CairoSettingsWindow _instance = null;
+
+        static CairoSettingsWindow() { }
+
+        private CairoSettingsWindow()
         {
             InitializeComponent();
 
@@ -253,11 +257,13 @@
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             saveChanges();
+            _instance = null;
         }
 
         private void saveChanges()
         {
             // placeholder in case we need to do extra work in the future
+            Startup.IsOpenCairoSettingWindow = false;
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)
@@ -433,5 +439,17 @@
             }
         }
 
+        public static CairoSettingsWindow Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new CairoSettingsWindow();
+                }
+
+                return _instance;
+            }
+        }
     }
 }

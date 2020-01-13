@@ -84,14 +84,6 @@ namespace CairoDesktop.Localization
             return stringName;
         }
 
-        public static string sRunAtLogon
-        {
-            get
-            {
-                return getString("sRunAtLogon");
-            }
-        }
-
         public static string sProgramsMenu
         {
             get

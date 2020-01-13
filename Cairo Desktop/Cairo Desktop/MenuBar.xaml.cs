@@ -862,14 +862,8 @@ namespace CairoDesktop
 
         private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
         {
-            string windowName = "CairoSettingsWindow";
-
-            if (IsOpenWindow(windowName).Equals(false))
-            {
-                CairoSettingsWindow window = new CairoSettingsWindow();
-                window.Name = windowName;
-                window.Show();
-            }
+            CairoSettingsWindow.Instance.Show();
+            CairoSettingsWindow.Instance.Activate();
         }
 
         public static bool IsOpenWindow(string name)
