@@ -34,7 +34,6 @@
         public static Desktop DesktopWindow { get; set; }
 
         public static bool IsCairoUserShell;
-        public static bool IsOpenCairoSettingWindow;
 
         private static CommandLineParser commandLineParser;
         private static bool isRestart;

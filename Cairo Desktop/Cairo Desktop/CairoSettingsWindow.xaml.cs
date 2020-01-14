@@ -263,7 +263,6 @@
         private void saveChanges()
         {
             // placeholder in case we need to do extra work in the future
-            Startup.IsOpenCairoSettingWindow = false;
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)

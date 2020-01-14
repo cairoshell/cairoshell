@@ -866,21 +866,6 @@ namespace CairoDesktop
             CairoSettingsWindow.Instance.Activate();
         }
 
-        public static bool IsOpenWindow(string name)
-        {
-            bool openWindow = false;
-
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window.Name.Equals(name))
-                {
-                    window.Activate();
-                    openWindow = true;
-                }
-            }
-            return openWindow;
-        }
-
         private void InitAppGrabberWindow(object sender, RoutedEventArgs e)
         {
             appGrabber.ShowDialog();
