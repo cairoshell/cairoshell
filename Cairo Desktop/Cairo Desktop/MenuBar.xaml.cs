@@ -862,29 +862,8 @@ namespace CairoDesktop
 
         private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
         {
-            string windowName = "CairoSettingsWindow";
-
-            if (IsOpenWindow(windowName).Equals(false))
-            {
-                CairoSettingsWindow window = new CairoSettingsWindow();
-                window.Name = windowName;
-                window.Show();
-            }
-        }
-
-        public static bool IsOpenWindow(string name)
-        {
-            bool openWindow = false;
-
-            foreach (Window window in Application.Current.Windows)
-            {
-                if (window.Name.Equals(name))
-                {
-                    window.Activate();
-                    openWindow = true;
-                }
-            }
-            return openWindow;
+            CairoSettingsWindow.Instance.Show();
+            CairoSettingsWindow.Instance.Activate();
         }
 
         private void InitAppGrabberWindow(object sender, RoutedEventArgs e)
@@ -1017,7 +996,6 @@ namespace CairoDesktop
                 CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         #endregion
     }
 }
