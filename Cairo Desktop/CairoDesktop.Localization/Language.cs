@@ -146,7 +146,7 @@ namespace CairoDesktop.Localization
             { "sSettings_RestartCairo", "Restart Cairo to apply" },
             { "sSettings_Restarting", "Restarting..." },
             { "sSettings_General_UpdateCheck", "Automatically check for updates" },
-            { "sSettings_General_RunAtLogOn", "Run at Log-on" },
+            { "sSettings_General_RunAtLogOn", "Start Cairo when logging in" },
             { "sSettings_General_Language", "Language:" },
             { "sSettings_General_Theme", "Theme:" },
             { "sSettings_General_ThemeTooltip", "Place themes into your Cairo installation directory." },
