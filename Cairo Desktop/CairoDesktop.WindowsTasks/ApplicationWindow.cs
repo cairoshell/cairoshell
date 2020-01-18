@@ -221,6 +221,8 @@ namespace CairoDesktop.WindowsTasks
 
             set
             {
+                if (value == WindowState.Active) hasActivated = true;
+
                 _state = value;
                 OnPropertyChanged("State");
             }
@@ -230,6 +232,9 @@ namespace CairoDesktop.WindowsTasks
         {
             get { return GetWindowPlacement(this.Handle); }
         }
+
+        // set to true the first time the window state becomes active
+        private bool hasActivated = false;
 
         // True if this window should be shown in the taskbar
         public bool ShowInTaskbar
@@ -247,16 +252,17 @@ namespace CairoDesktop.WindowsTasks
                     return false;
                 }
 
-                /* When starting, WindowsTasksService calls EnumWindows to get the currently open windows. However, this shows suspended UWP apps. Check if we should hide the app here during startup. */
-                if (WindowsTasksService.IsStarting && Shell.IsWindows8OrBetter)
+                /* EnumWindows and ShellHook return UWP app windows that are 'cloaked', which should not be visible in the taskbar.
+                 * The DWMA_CLOAKED attribute is set sometimes even when a window should be shown, so skip this check if the window has been activated. */
+                if ((WindowsTasksService.IsStarting || !hasActivated) && Shell.IsWindows8OrBetter)
                 {
-                    bool cloaked;
-                    int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(bool));
+                    uint cloaked;
+                    int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(uint));
                     NativeMethods.DwmGetWindowAttribute(this.Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out cloaked, cbSize);
 
-                    if (cloaked)
+                    if (cloaked > 0)
                     {
-                        CairoLogger.Instance.Debug(string.Format("Cloaked window ({0}) hidden from taskbar", this.Title));
+                        CairoLogger.Instance.Debug(string.Format("Cloaked ({0}) window ({1}) hidden from taskbar", cloaked, Title));
                         return false;
                     }
                 }
