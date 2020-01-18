@@ -15,7 +15,22 @@ namespace CairoDesktop.AppGrabber
         private static DependencyProperty programsListProperty = DependencyProperty.Register("ProgramsList", typeof(List<ApplicationInfo>), typeof(AppGrabber), new PropertyMetadata(new List<ApplicationInfo>()));
         public static AppGrabberUI uiInstance;
 
-        private static string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web", "safe mode" };
+        private static readonly string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web", "safe mode" };
+
+        public static readonly string[] ExecutableExtensions = {
+                ".exe",
+                ".bat",
+                ".com",
+                ".lnk",
+                ".msc",
+                ".appref-ms",
+                ".url"
+            };
+
+        private static readonly string[] searchLocations = {
+                Interop.Shell.UsersStartMenuPath,
+                Interop.Shell.AllUsersStartMenuPath
+        };
 
         public static AppGrabber Instance { get; } = new AppGrabber();
 
@@ -58,26 +73,12 @@ namespace CairoDesktop.AppGrabber
 
         public bool hasNewApps = false;
 
-        public String ConfigFile { get; set; }
-
-        public static String[] ExecutableExtensions = {
-                ".exe",
-                ".bat",
-                ".com",
-                ".lnk",
-                ".msc",
-                ".appref-ms",
-                ".url"
-            };
-        private static String[] searchLocations = {
-                Interop.Shell.UsersStartMenuPath,
-                Interop.Shell.AllUsersStartMenuPath
-        };
+        public string ConfigFile { get; set; }
 
         private AppGrabber()
             : this(null) { }
 
-        private AppGrabber(String configFile)
+        private AppGrabber(string configFile)
         {
             this.ConfigFile = configFile ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";
 
