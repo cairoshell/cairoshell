@@ -404,7 +404,7 @@
         {
             if (Shell.IsCairoUserShell.Equals(true))
             {
-                chkRunAtLogOn.Visibility = Visibility.Hidden;
+                chkRunAtLogOn.Visibility = Visibility.Collapsed;
             }
 
             RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
