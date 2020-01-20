@@ -333,8 +333,8 @@ namespace CairoDesktop.WindowsTasks
                     {
                         // non-UWP apps
                         IntPtr hIco = default(IntPtr);
-                        uint WM_GETICON = 0x007f;
-                        IntPtr IDI_APPLICATION = new IntPtr(0x7F00);
+                        uint WM_GETICON = (uint)NativeMethods.WM.GETICON;
+                        uint WM_QUERYDRAGICON = (uint)NativeMethods.WM.QUERYDRAGICON;
                         int GCL_HICON = -14;
                         int GCL_HICONSM = -34;
                         int sizeSetting = Configuration.Settings.TaskbarIconSize;
@@ -368,6 +368,11 @@ namespace CairoDesktop.WindowsTasks
 
                         if (hIco == IntPtr.Zero)
                         {
+                            NativeMethods.SendMessageTimeout(Handle, WM_QUERYDRAGICON, 0, 0, 0, 1000, ref hIco);
+                        }
+
+                        if (hIco == IntPtr.Zero)
+                        {
                             string winFileName = GetFileNameForWindow(Handle);
                             if (Shell.Exists(winFileName))
                             {
@@ -385,7 +390,7 @@ namespace CairoDesktop.WindowsTasks
                             icon.Freeze();
                             Icon = icon;
                         }
-                        else if (iconTries == 0)
+                        else if (Configuration.Settings.EnableTaskbarPolling && iconTries == 0)
                         {
                             DispatcherTimer getIcon = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
                             getIcon.Interval = new TimeSpan(0, 0, 2);
