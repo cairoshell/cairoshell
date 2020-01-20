@@ -49,11 +49,20 @@ namespace CairoDesktop
                 {
                     errorVisible = true;
 
-                    if (MessageBox.Show(dMsg, "Cairo Desktop Error", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                    // Automatically restart for known render thread failure messages.
+                    if (e.Exception.Message.StartsWith("UCEERR_RENDERTHREADFAILURE"))
                     {
-                        // it's like getting a morning coffee.
                         CairoDesktop.Startup.Restart();
-                        Environment.FailFast("User restarted Cairo due to an exception.");
+                        Environment.FailFast("Automatically restarted Cairo due to a render thread failure.");
+                    }
+                    else
+                    {
+                        if (MessageBox.Show(dMsg, "Cairo Desktop Error", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                        {
+                            // it's like getting a morning coffee.
+                            CairoDesktop.Startup.Restart();
+                            Environment.FailFast("User restarted Cairo due to an exception.");
+                        }
                     }
 
                     errorVisible = false;
