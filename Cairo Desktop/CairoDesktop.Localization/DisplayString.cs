@@ -1068,6 +1068,22 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sTaskbar_Maximize
+        {
+            get
+            {
+                return getString("sTaskbar_Maximize");
+            }
+        }
+
+        public static string sTaskbar_NewWindow
+        {
+            get
+            {
+                return getString("sTaskbar_NewWindow");
+            }
+        }
+
         public static string sTaskbar_Close
         {
             get

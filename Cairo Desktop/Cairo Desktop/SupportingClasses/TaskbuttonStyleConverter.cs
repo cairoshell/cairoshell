@@ -3,7 +3,7 @@ using System.Windows.Data;
 using System.Windows;
 using CairoDesktop.WindowsTasks;
 
-namespace CairoDesktop
+namespace CairoDesktop.SupportingClasses
 {
     [ValueConversion(typeof(bool), typeof(Style))]
     public class TaskButtonStyleConverter : IMultiValueConverter

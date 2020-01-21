@@ -1,6 +1,4 @@
-﻿using CairoDesktop.AppGrabber;
-using CairoDesktop.Interop;
-using System;
+﻿using CairoDesktop.Interop;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -8,47 +6,12 @@ namespace CairoDesktop
 {
     public partial class TaskButton
     {
-        private ApplicationInfo _quickLaunchAppInfo;
-        public ApplicationInfo QuickLaunchAppInfo
-        {
-            get
-            {
-                if (_quickLaunchAppInfo == null)
-                {
-                    var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
-                    if (Window != null)
-                    {
-                        foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.QuickLaunch)
-                        {
-                            if (ai.Target == Window.WinFileName || (Window.WinFileName.ToLower().Contains("applicationframehost.exe") && ai.Target == Window.AppUserModelID))
-                            {
-                                _quickLaunchAppInfo = ai;
-                                break;
-                            }
-                            else if (Window.Title.ToLower().Contains(ai.Name.ToLower()))
-                            {
-                                _quickLaunchAppInfo = ai;
-                            }
-                        }
-                    }
-                }
-
-                return _quickLaunchAppInfo;
-            }
-            set
-            {
-                _quickLaunchAppInfo = value;
-            }
-        }
-
-
         public static readonly DependencyProperty TextWidthProperty = DependencyProperty.Register("TextWidth", typeof(double), typeof(TaskButton), new PropertyMetadata(new double()));
         public double TextWidth
         {
             get { return (double)GetValue(TextWidthProperty); }
             set { SetValue(TextWidthProperty, value); }
         }
-
 
         public TaskButton()
         {
@@ -73,7 +36,7 @@ namespace CairoDesktop
 
         private void btnClick(object sender, RoutedEventArgs e)
         {
-            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
+            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 if (Window.State == WindowsTasks.ApplicationWindow.WindowState.Active)
@@ -87,27 +50,41 @@ namespace CairoDesktop
             }
         }
 
-        private void Min_Click(object sender, RoutedEventArgs e)
+        private void miRestore_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
+            var Window = (DataContext as WindowsTasks.ApplicationWindow);
+            if (Window != null)
+            {
+                Window.Restore();
+            }
+        }
+
+        private void miMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Window.Minimize();
             }
         }
 
-        private void Max_Click(object sender, RoutedEventArgs e)
+        private void miMaximize_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
+            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
-                Window.BringToFront();
+                Window.Maximize();
             }
         }
 
-        private void Close_Click(object sender, RoutedEventArgs e)
+        private void miNewWindow_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
+            Shell.StartProcess((DataContext as WindowsTasks.ApplicationWindow).WinFileName);
+        }
+
+        private void miClose_Click(object sender, RoutedEventArgs e)
+        {
+            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Window.Close();
@@ -115,25 +92,30 @@ namespace CairoDesktop
         }
 
         /// <summary>
-        /// Handler that decides weather or not to show the miPin menuitem and seperator if the AppGraber doesnt already have it pinned.
-        /// This needs a little more work as the system works off the Executable path of the process, ssems to give some undesirable results in some situations
+        /// Handler that adjusts the visibility and usability of menu items depending on window state and app's inclusion in Quick Launch.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HandlerForCMO(object sender, ContextMenuEventArgs e)
+        private void ContextMenu_Opening(object sender, ContextMenuEventArgs e)
         {
-
-            if (QuickLaunchAppInfo == null)
+            var Window = (DataContext as WindowsTasks.ApplicationWindow);
+            if (Window != null)
             {
-                miPin.Visibility = Visibility.Visible;
-                miPinSeperator.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                miPin.Visibility = Visibility.Collapsed;
-                miPinSeperator.Visibility = Visibility.Collapsed;
-            }
+                Visibility vis = Visibility.Collapsed;
+                NativeMethods.WindowShowStyle wss = Window.ShowStyle;
 
+                // show pin option if this app is not yet in quick launch
+                if (Window.QuickLaunchAppInfo == null)
+                    vis = Visibility.Visible;
+
+                miPin.Visibility = vis;
+                miPinSeparator.Visibility = vis;
+
+                // disable window operations depending on current window state. originally tried implementing via bindings but found there is no notification we get regarding maximized state
+                miMaximize.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowMaximized);
+                miMinimize.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowMinimized);
+                miRestore.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowNormal);
+            }
         }
 
         private void miPin_Click(object sender, RoutedEventArgs e)
@@ -141,15 +123,7 @@ namespace CairoDesktop
             var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
-                if (Window.WinFileName.ToLower().Contains("applicationframehost.exe"))
-                {
-                    // store app, do special stuff
-                    AppGrabber.AppGrabber.Instance.AddStoreApp(Window.AppUserModelID, AppCategoryType.QuickLaunch);
-                }
-                else
-                {
-                    AppGrabber.AppGrabber.Instance.AddByPath(new string[] { Window.WinFileName }, AppCategoryType.QuickLaunch);
-                }
+                Window.PinToQuickLaunch();
             }
         }
 
@@ -162,7 +136,7 @@ namespace CairoDesktop
         {
             if (e.ChangedButton == System.Windows.Input.MouseButton.Middle)
             {
-                Shell.StartProcess((this.DataContext as WindowsTasks.ApplicationWindow).WinFileName);
+                Shell.StartProcess((DataContext as WindowsTasks.ApplicationWindow).WinFileName);
             }
         }
     }

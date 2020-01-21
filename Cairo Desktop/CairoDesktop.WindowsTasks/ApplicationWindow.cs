@@ -21,8 +21,9 @@ namespace CairoDesktop.WindowsTasks
 
         public ApplicationWindow(IntPtr handle, WindowsTasksService sourceService)
         {
-            this.Handle = handle;
-            this.State = WindowState.Inactive;
+            Handle = handle;
+            State = WindowState.Inactive;
+
             if (sourceService != null)
             {
                 TasksService = sourceService;
@@ -63,34 +64,44 @@ namespace CairoDesktop.WindowsTasks
             {
                 if (string.IsNullOrEmpty(_appUserModelId))
                 {
-                    uint cchLen = 256;
-                    StringBuilder appUserModelID = new StringBuilder((int)cchLen);
-
                     NativeMethods.IPropertyStore propStore;
                     var g = new Guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99");
-                    int result = NativeMethods.SHGetPropertyStoreForWindow(this.Handle, ref g, out propStore);
+                    NativeMethods.SHGetPropertyStoreForWindow(Handle, ref g, out propStore);
 
                     NativeMethods.PropVariant prop;
 
-                    NativeMethods.PROPERTYKEY PKEY_AppUserModel_ID = new NativeMethods.PROPERTYKEY();
-                    PKEY_AppUserModel_ID.fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3");
-                    PKEY_AppUserModel_ID.pid = 5;
-
-                    propStore.GetValue(PKEY_AppUserModel_ID, out prop);
-
-                    try
+                    NativeMethods.PROPERTYKEY PKEY_AppUserModel_ID = new NativeMethods.PROPERTYKEY
                     {
-                        _appUserModelId = prop.Value.ToString();
-                    }
-                    catch
-                    {
-                        _appUserModelId = "";
-                    }
+                        fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"),
+                        pid = 5
+                    };
 
-                    prop.Clear();
+                    if (propStore != null)
+                    {
+                        propStore.GetValue(PKEY_AppUserModel_ID, out prop);
+
+                        try
+                        {
+                            _appUserModelId = prop.Value.ToString();
+                        }
+                        catch
+                        {
+                            _appUserModelId = "";
+                        }
+
+                        prop.Clear();
+                    }
                 }
 
                 return _appUserModelId;
+            }
+        }
+
+        private bool isUWP
+        {
+            get
+            {
+                return WinFileName.ToLower().Contains("applicationframehost.exe");
             }
         }
 
@@ -102,7 +113,7 @@ namespace CairoDesktop.WindowsTasks
             {
                 if(string.IsNullOrEmpty(_winFileName))
                 {
-                    _winFileName = GetFileNameForWindow(this.Handle);
+                    _winFileName = GetFileNameForWindow(Handle);
                 }
 
                 return _winFileName;
@@ -120,12 +131,12 @@ namespace CairoDesktop.WindowsTasks
                     string backupCategory = "";
                     foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
                     {
-                        if (ai.Target == WinFileName || (WinFileName.ToLower().Contains("applicationframehost.exe") && ai.Target == AppUserModelID))
+                        if (ai.Target == WinFileName || (isUWP && ai.Target == AppUserModelID))
                         {
                             _category = ai.Category.DisplayName;
                             break;
                         }
-                        else if (this.Title.ToLower().Contains(ai.Name.ToLower()))
+                        else if (Title.ToLower().Contains(ai.Name.ToLower()))
                         {
                             backupCategory = ai.Category.DisplayName;
                         }
@@ -135,7 +146,7 @@ namespace CairoDesktop.WindowsTasks
                         _category = "Cairo";
                     else if (_category == null && !string.IsNullOrEmpty(backupCategory))
                         _category = backupCategory;
-                    else if (_category == null && WinFileName.ToLower().Contains("\\windows\\") && !WinFileName.ToLower().Contains("applicationframehost.exe"))
+                    else if (_category == null && WinFileName.ToLower().Contains("\\windows\\") && !isUWP)
                         _category = "Windows";
                     else if (_category == null)
                         _category = Localization.DisplayString.sAppGrabber_Uncategorized;
@@ -148,6 +159,27 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
+        public ApplicationInfo QuickLaunchAppInfo
+        {
+            get
+            {
+                // it would be nice to cache this, but need to handle case of user adding/removing app via various means after first access
+                foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.QuickLaunch)
+                {
+                    if (ai.Target == WinFileName || (isUWP && ai.Target == AppUserModelID))
+                    {
+                        return ai;
+                    }
+                    else if (Title.ToLower().Contains(ai.Name.ToLower()))
+                    {
+                        return ai;
+                    }
+                }
+
+                return null;
+            }
+        }
+
         public static string GetFileNameForWindow(IntPtr hWnd)
         {
             // get process id
@@ -155,11 +187,13 @@ namespace CairoDesktop.WindowsTasks
             NativeMethods.GetWindowThreadProcessId(hWnd, out procId);
 
             // open process
-            IntPtr hProc = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryInformation | NativeMethods.ProcessAccessFlags.VirtualMemoryRead, false, (int)procId);
+            // QueryLimitedInformation flag allows us to access elevated applications as well
+            IntPtr hProc = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryLimitedInformation, false, (int)procId);
 
             // get filename
             StringBuilder outFileName = new StringBuilder(1024);
-            NativeMethods.GetModuleFileNameEx(hProc, IntPtr.Zero, outFileName, outFileName.Capacity);
+            int len = outFileName.Capacity;
+            NativeMethods.QueryFullProcessImageName(hProc, 0, outFileName, ref len);
 
             outFileName.Replace("Excluded,", "");
             outFileName.Replace(",SFC protected", "");
@@ -173,13 +207,13 @@ namespace CairoDesktop.WindowsTasks
             {
                 try
                 {
-                    int len = NativeMethods.GetWindowTextLength(this.Handle);
+                    int len = NativeMethods.GetWindowTextLength(Handle);
 
                     if (len < 1)
                         return "";
 
                     StringBuilder sb = new StringBuilder(len);
-                    NativeMethods.GetWindowText(this.Handle, sb, len + 1);
+                    NativeMethods.GetWindowText(Handle, sb, len + 1);
 
                     return sb.ToString();
                 }
@@ -228,9 +262,14 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        public int Placement
+        public bool IsMinimized
         {
-            get { return GetWindowPlacement(this.Handle); }
+            get { return NativeMethods.IsIconic(Handle); }
+        }
+
+        public NativeMethods.WindowShowStyle ShowStyle
+        {
+            get { return GetWindowShowStyle(Handle); }
         }
 
         // set to true the first time the window state becomes active
@@ -242,12 +281,12 @@ namespace CairoDesktop.WindowsTasks
             get
             {
                 // Don't show empty buttons.
-                if (string.IsNullOrEmpty(this.Title))
+                if (string.IsNullOrEmpty(Title))
                 {
                     return false;
                 }
 
-                if ((this.State == WindowState.Hidden) || (NativeMethods.GetParent(this.Handle) != IntPtr.Zero))
+                if ((State == WindowState.Hidden) || (NativeMethods.GetParent(Handle) != IntPtr.Zero))
                 {
                     return false;
                 }
@@ -258,7 +297,7 @@ namespace CairoDesktop.WindowsTasks
                 {
                     uint cloaked;
                     int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(uint));
-                    NativeMethods.DwmGetWindowAttribute(this.Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out cloaked, cbSize);
+                    NativeMethods.DwmGetWindowAttribute(Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out cloaked, cbSize);
 
                     if (cloaked > 0)
                     {
@@ -268,14 +307,14 @@ namespace CairoDesktop.WindowsTasks
                 }
 
                 // Make sure this is a real application window and not a child or tool window
-                int exStyles = NativeMethods.GetWindowLong(this.Handle, NativeMethods.GWL_EXSTYLE);
-                IntPtr ownerWin = NativeMethods.GetWindow(this.Handle, NativeMethods.GW_OWNER);
+                int exStyles = NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE);
+                IntPtr ownerWin = NativeMethods.GetWindow(Handle, NativeMethods.GW_OWNER);
 
                 bool isAppWindow = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
                 bool hasEdge = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0;
                 bool isTopmostOnly = exStyles == (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST;
                 bool isToolWindow = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
-                bool isVisible = NativeMethods.IsWindowVisible(this.Handle);
+                bool isVisible = NativeMethods.IsWindowVisible(Handle);
 
                 if ((isAppWindow || ((hasEdge || isTopmostOnly || exStyles == 0) && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
                 {
@@ -292,7 +331,7 @@ namespace CairoDesktop.WindowsTasks
 
         private void getIcon_Tick(object sender, EventArgs e)
         {
-            if (this._icon != null || iconTries > 5)
+            if (_icon != null || iconTries > 5)
             {
                 (sender as DispatcherTimer).Stop();
             }
@@ -311,7 +350,7 @@ namespace CairoDesktop.WindowsTasks
 
                 var thread = new Thread(() =>
                 {
-                    if (WinFileName.Contains("ApplicationFrameHost.exe") && !string.IsNullOrEmpty(AppUserModelID))
+                    if (isUWP && !string.IsNullOrEmpty(AppUserModelID))
                     {
                         // UWP apps
                         try
@@ -332,7 +371,7 @@ namespace CairoDesktop.WindowsTasks
                     else
                     {
                         // non-UWP apps
-                        IntPtr hIco = default(IntPtr);
+                        IntPtr hIco = default;
                         uint WM_GETICON = (uint)NativeMethods.WM.GETICON;
                         uint WM_QUERYDRAGICON = (uint)NativeMethods.WM.QUERYDRAGICON;
                         int GCL_HICON = -14;
@@ -373,14 +412,13 @@ namespace CairoDesktop.WindowsTasks
 
                         if (hIco == IntPtr.Zero)
                         {
-                            string winFileName = GetFileNameForWindow(Handle);
-                            if (Shell.Exists(winFileName))
+                            if (Shell.Exists(WinFileName))
                             {
                                 int size = 1;
                                 if (sizeSetting != 1)
                                     size = 0;
 
-                                hIco = Shell.GetIconByFilename(winFileName, size);
+                                hIco = Shell.GetIconByFilename(WinFileName, size);
                             }
                         }
 
@@ -409,18 +447,51 @@ namespace CairoDesktop.WindowsTasks
         
         public void BringToFront()
         {
-            // so that maximized windows stay that way
-            if(Placement == 3)
-                NativeMethods.ShowWindowAsync(this.Handle, NativeMethods.WindowShowStyle.Show);
+            // call restore if window is minimized
+            if (IsMinimized)
+            {
+                Restore();
+            }
             else
-                NativeMethods.ShowWindowAsync(this.Handle, NativeMethods.WindowShowStyle.Restore);
-
-            NativeMethods.SetForegroundWindow(this.Handle);
+            {
+                NativeMethods.ShowWindow(Handle, NativeMethods.WindowShowStyle.Show);
+                NativeMethods.SetForegroundWindow(Handle);
+            }
         }
 
         public void Minimize()
         {
-            NativeMethods.ShowWindowAsync(this.Handle, NativeMethods.WindowShowStyle.Minimize);
+            bool minimizeResult = NativeMethods.ShowWindow(Handle, NativeMethods.WindowShowStyle.Minimize);
+            if (!minimizeResult)
+            {
+                // elevated windows require WM_SYSCOMMAND messages
+                IntPtr retval = IntPtr.Zero;
+                NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_MINIMIZE, 0, 2, 200, ref retval);
+            }
+        }
+
+        public void Restore()
+        {
+            bool restoreResult = NativeMethods.ShowWindow(Handle, NativeMethods.WindowShowStyle.Restore);
+            if (!restoreResult)
+            {
+                // elevated windows require WM_SYSCOMMAND messages
+                IntPtr retval = IntPtr.Zero;
+                NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
+            }
+            NativeMethods.SetForegroundWindow(Handle);
+        }
+
+        public void Maximize()
+        {
+            bool maximizeResult = NativeMethods.ShowWindow(Handle, NativeMethods.WindowShowStyle.Maximize);
+            if (!maximizeResult)
+            {
+                // we don't have a fallback for elevated windows here since our only hope, SC_MAXIMIZE, doesn't seem to work for them. fall back to restore.
+                IntPtr retval = IntPtr.Zero;
+                NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
+            }
+            NativeMethods.SetForegroundWindow(Handle);
         }
 
         public void Close()
@@ -430,8 +501,21 @@ namespace CairoDesktop.WindowsTasks
 
             if (retval != IntPtr.Zero)
             {
-                CairoLogger.Instance.Debug(string.Format("Removing window {0} from collection due to no response", this.Title));
+                CairoLogger.Instance.Debug(string.Format("Removing window {0} from collection due to no response", Title));
                 TasksService.Windows.Remove(this);
+            }
+        }
+
+        public void PinToQuickLaunch()
+        {
+            if (isUWP)
+            {
+                // store app, do special stuff
+                AppGrabber.AppGrabber.Instance.AddStoreApp(AppUserModelID, AppCategoryType.QuickLaunch);
+            }
+            else
+            {
+                AppGrabber.AppGrabber.Instance.AddByPath(new string[] { WinFileName }, AppCategoryType.QuickLaunch);
             }
         }
 
@@ -439,7 +523,7 @@ namespace CairoDesktop.WindowsTasks
         /// Returns whether a window is normal (1), minimized (2), or maximized (3).
         /// </summary>
         /// <param name="hWnd">The handle of the window.</param>
-        public int GetWindowPlacement(IntPtr hWnd)
+        public NativeMethods.WindowShowStyle GetWindowShowStyle(IntPtr hWnd)
         {
             NativeMethods.WINDOWPLACEMENT placement = new NativeMethods.WINDOWPLACEMENT();
             NativeMethods.GetWindowPlacement(hWnd, ref placement);
@@ -450,7 +534,7 @@ namespace CairoDesktop.WindowsTasks
 
         public bool Equals(ApplicationWindow other)
         {
-            return this.Handle.Equals(other.Handle);
+            return Handle.Equals(other.Handle);
         }
 
         #endregion

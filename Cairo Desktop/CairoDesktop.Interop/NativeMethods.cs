@@ -615,6 +615,10 @@ namespace CairoDesktop.Interop
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsIconic(IntPtr hWnd);
+
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool SystemParametersInfo(uint uiAction, uint uiParam,
             ref RECT pvParam, uint fWinIni);
@@ -1656,7 +1660,7 @@ namespace CairoDesktop.Interop
         {
             public int length;
             public int flags;
-            public int showCmd;
+            public WindowShowStyle showCmd;
             public Point ptMinPosition;
             public Point ptMaxPosition;
             public Rectangle rcNormalPosition;
@@ -1699,6 +1703,8 @@ namespace CairoDesktop.Interop
         /// If the window was previously visible, the return value is nonzero. 
         /// If the window was previously hidden, the return value is zero.
         /// </returns>
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
         [DllImport("user32.dll")]
         public static extern bool ShowWindowAsync(IntPtr hWnd, WindowShowStyle nCmdShow);
 
@@ -1828,8 +1834,8 @@ namespace CairoDesktop.Interop
             Synchronize = 0x00100000
         }
 
-        [DllImport("psapi.dll")]
-        public static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, [Out, MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpExeName, ref int lpdwSize);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, IntPtr className, string windowTitle);
@@ -2111,6 +2117,9 @@ namespace CairoDesktop.Interop
         
         public const int WM_CLOSE = 0xF060;
         public const int WM_SYSCOMMAND = 0x0112;
+
+        public const int SC_MINIMIZE = 0xF020;
+        public const int SC_RESTORE = 0xF120;
 
         /*/// <summary>
         /// Unregisters a window class, freeing the memory required for the class.
