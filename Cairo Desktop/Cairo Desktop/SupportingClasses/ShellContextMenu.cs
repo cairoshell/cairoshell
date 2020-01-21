@@ -651,11 +651,6 @@ namespace CairoDesktop.SupportingClasses
         /// <returns>true if the message has been handled, false otherwise</returns>
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == (int)NativeMethods.WM.MENUSELECT)
-            {
-                int a = 1;
-            }
-
             if (iContextMenu != null &&
                 m.Msg == (int)NativeMethods.WM.MENUSELECT &&
                 ((int)ShellFolders.HiWord(m.WParam) & (int)ShellFolders.MFT.SEPARATOR) == 0 &&
