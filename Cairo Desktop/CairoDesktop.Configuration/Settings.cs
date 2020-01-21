@@ -76,6 +76,7 @@ namespace CairoDesktop.Configuration
         private static string _CairoMenuHotKey;
         private static bool? _EnableMenuBarBlur;
         private static bool? _EnableMenuBarMultiMon;
+        private static bool? _ShowHibernate;
 
         // Advanced
         private static string _TimeFormat;
@@ -558,6 +559,23 @@ namespace CairoDesktop.Configuration
             {
                 _EnableMenuBarMultiMon = value;
                 Properties.Settings.Default.EnableMenuBarMultiMon = (bool)_EnableMenuBarMultiMon;
+                Save();
+            }
+        }
+
+        public static bool ShowHibernate
+        {
+            get
+            {
+                if (_ShowHibernate == null)
+                    _ShowHibernate = Properties.Settings.Default.ShowHibernate;
+
+                return (bool)_ShowHibernate;
+            }
+            set
+            {
+                _ShowHibernate = value;
+                Properties.Settings.Default.ShowHibernate = (bool)_ShowHibernate;
                 Save();
             }
         }

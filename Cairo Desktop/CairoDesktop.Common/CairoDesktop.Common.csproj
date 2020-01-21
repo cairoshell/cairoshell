@@ -100,6 +100,7 @@
     <Compile Include="StacksManager.cs" />
     <Compile Include="SystemDirectory.cs" />
     <Compile Include="SystemFile.cs" />
+    <Compile Include="SystemPower.cs" />
     <Compile Include="TypeCollection.cs" />
     <Compile Include="TypeCollectionEventArgs.cs" />
     <Compile Include="ThreadSafeObservableCollection.cs" />

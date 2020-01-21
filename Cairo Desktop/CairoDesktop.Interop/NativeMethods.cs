@@ -12,8 +12,8 @@ namespace CairoDesktop.Interop
     /// </summary>
     public class NativeMethods
     {
-        private const uint TOKENADJUSTPRIVILEGES = 0x00000020;
-        private const uint TOKENQUERY = 0x00000008;
+        public const uint TOKENADJUSTPRIVILEGES = 0x00000020;
+        public const uint TOKENQUERY = 0x00000008;
 
         public enum ExitWindows : uint
         {
@@ -39,39 +39,7 @@ namespace CairoDesktop.Interop
             ForceIfHung = 0x10
         }
 
-        /// <summary>
-        /// Calls the shutdown method on the Win32 API.
-        /// </summary>
-        public static void Shutdown()
-        {
-            AdjustTokenPrivilegesForShutdown();
-            ExitWindowsEx((uint)(ExitWindows.Shutdown | ExitWindows.ForceIfHung), 0x0);
-        }
-
-        /// <summary>
-        /// Calls the reboot method on the Win32 API.
-        /// </summary>
-        public static void Reboot()
-        {
-            AdjustTokenPrivilegesForShutdown();
-            ExitWindowsEx((uint)(ExitWindows.Reboot | ExitWindows.ForceIfHung), 0x0);
-        }
-
-        /// <summary>
-        /// Calls the logoff method on the Win32 API.
-        /// </summary>
-        public static void Logoff()
-        {
-            ExitWindowsEx((uint)ExitWindows.Logoff, 0x0);
-        }
-
-        /// <summary>
-        /// Calls the Sleep method on the Win32 Power Profile API.
-        /// </summary>
-        public static void Sleep()
-        {
-            SetSuspendState(false, false, false);
-        }
+        
 
         public static IntPtr FindWindow(string className)
         {
@@ -122,61 +90,108 @@ namespace CairoDesktop.Interop
             public uint Attributes;
         }
 
-        #region Private Methods        
-        /// <summary>
-        /// Adjusts the current process's token privileges to allow it to shut down or reboot the machine.
-        /// Throws an ApplicationException if an error is encountered.
-        /// </summary>
-        private static void AdjustTokenPrivilegesForShutdown()
+        public struct BATTERY_REPORTING_SCALE
         {
-            IntPtr procHandle = System.Diagnostics.Process.GetCurrentProcess().Handle;
-            IntPtr tokenHandle = IntPtr.Zero;
-
-            bool tokenOpenResult = OpenProcessToken(procHandle, TOKENADJUSTPRIVILEGES | TOKENQUERY, out tokenHandle);
-            if (!tokenOpenResult)
-            {
-                throw new ApplicationException("Error attempting to open process token to raise level for shutdown.\nWin32 Error Code: " + Marshal.GetLastWin32Error());
-            }
-
-            long pluid = new long();
-            bool privLookupResult = LookupPrivilegeValue(null, "SeShutdownPrivilege", ref pluid);
-            if (!privLookupResult)
-            {
-                throw new ApplicationException("Error attempting to lookup value for shutdown privilege.\n Win32 Error Code: " + Marshal.GetLastWin32Error());
-            }
-
-            TOKEN_PRIVILEGES newPriv = new TOKEN_PRIVILEGES();
-            newPriv.Luid = pluid;
-            newPriv.PrivilegeCount = 1;
-            newPriv.Attributes = 0x00000002;
-
-            bool tokenPrivResult = AdjustTokenPrivileges(tokenHandle, false, ref newPriv, 0, IntPtr.Zero, IntPtr.Zero);
-            if (!tokenPrivResult)
-            {
-                throw new ApplicationException("Error attempting to adjust the token privileges to allow shutdown.\n Win32 Error Code: " + Marshal.GetLastWin32Error());
-            }
+            public uint Granularity;
+            public uint Capacity;
         }
-        
+
+        public enum SYSTEM_POWER_STATE
+        {
+            PowerSystemUnspecified = 0,
+            PowerSystemWorking = 1,
+            PowerSystemSleeping1 = 2,
+            PowerSystemSleeping2 = 3,
+            PowerSystemSleeping3 = 4,
+            PowerSystemHibernate = 5,
+            PowerSystemShutdown = 6,
+            PowerSystemMaximum = 7
+        }
+
+        public struct SYSTEM_POWER_CAPABILITIES
+        {
+            [MarshalAs(UnmanagedType.U1)]
+            public bool PowerButtonPresent;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool SleepButtonPresent;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool LidPresent;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool SystemS1;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool SystemS2;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool SystemS3;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool SystemS4;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool SystemS5;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool HiberFilePresent;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool FullWake;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool VideoDimPresent;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool ApmPresent;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool UpsPresent;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool ThermalControl;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool ProcessorThrottle;
+            public byte ProcessorMinThrottle;
+            public byte ProcessorMaxThrottle;    // Also known as ProcessorThrottleScale before Windows XP
+            [MarshalAs(UnmanagedType.U1)]
+            public bool FastSystemS4;   // Ignore if earlier than Windows XP
+            [MarshalAs(UnmanagedType.U1)]
+            public bool Hiberboot;  // Ignore if earlier than Windows XP
+            [MarshalAs(UnmanagedType.U1)]
+            public bool WakeAlarmPresent;   // Ignore if earlier than Windows XP
+            [MarshalAs(UnmanagedType.U1)]
+            public bool AoAc;   // Ignore if earlier than Windows XP
+            [MarshalAs(UnmanagedType.U1)]
+            public bool DiskSpinDown;
+            public byte HiberFileType;  // Ignore if earlier than Windows 10 (10.0.10240.0)
+            [MarshalAs(UnmanagedType.U1)]
+            public bool AoAcConnectivitySupported;  // Ignore if earlier than Windows 10 (10.0.10240.0)
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6)]
+            private readonly byte[] spare3;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool SystemBatteriesPresent;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool BatteriesAreShortTerm;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
+            public BATTERY_REPORTING_SCALE[] BatteryScale;
+            public SYSTEM_POWER_STATE AcOnLineWake;
+            public SYSTEM_POWER_STATE SoftLidWake;
+            public SYSTEM_POWER_STATE RtcWake;
+            public SYSTEM_POWER_STATE MinDeviceWakeState;
+            public SYSTEM_POWER_STATE DefaultLowLatencyWake;
+        }
+
         [DllImport("user32.dll")]
-        private static extern bool ExitWindowsEx(uint flags, uint reason);
+        public static extern bool ExitWindowsEx(uint flags, uint reason);
 
         // There is a method for this in System.Windows.Forms, however it calls the same p/invoke and I would prefer not to reference that lib
         [DllImport("powrprof.dll")]
-        private static extern bool SetSuspendState(bool hibernate, bool forceCritical, bool disableWakeEvent);
+        public static extern bool SetSuspendState(bool hibernate, bool forceCritical, bool disableWakeEvent);
+
+        [DllImport("powrprof.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.U1)]
+        public static extern bool GetPwrCapabilities(out SYSTEM_POWER_CAPABILITIES systemPowerCapabilites);
 
         [DllImport("advapi32.dll", SetLastError = true)]
-        private static extern bool OpenProcessToken(IntPtr processHandle, uint desiredAccess, out IntPtr tokenHandle);
+        public static extern bool OpenProcessToken(IntPtr processHandle, uint desiredAccess, out IntPtr tokenHandle);
 
         [DllImport("advapi32.dll", SetLastError = true)]
-        private static extern bool AdjustTokenPrivileges(IntPtr tokenHandle, bool disableAllPrivileges, ref TOKEN_PRIVILEGES newState, uint bufferLength, IntPtr previousState, IntPtr returnLength);
+        public static extern bool AdjustTokenPrivileges(IntPtr tokenHandle, bool disableAllPrivileges, ref TOKEN_PRIVILEGES newState, uint bufferLength, IntPtr previousState, IntPtr returnLength);
 
         [DllImport("advapi32.dll", SetLastError = true)]
-        private static extern bool LookupPrivilegeValue(string host, string name, ref long pluid);
+        public static extern bool LookupPrivilegeValue(string host, string name, ref long pluid);
 
         [DllImport("user32.dll")]
         public static extern bool PostMessage(IntPtr hWnd, uint callback, uint wParam, uint lParam);
-
-        #endregion
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindow(string className, string windowName);

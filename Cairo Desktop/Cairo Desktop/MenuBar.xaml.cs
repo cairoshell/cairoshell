@@ -119,6 +119,17 @@ namespace CairoDesktop
                     previousType = currentType;
                 }
             }
+
+            // Show power options depending on system support
+            if (Settings.ShowHibernate && Shell.CanHibernate())
+            {
+                miHibernate.Visibility = Visibility.Visible;
+            }
+
+            if (!Shell.CanSleep())
+            {
+                miSleep.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void initializeVolumeIcon()
@@ -813,17 +824,17 @@ namespace CairoDesktop
 
         private void OpenLogoffBox(object sender, RoutedEventArgs e)
         {
-            Cairo.ShowLogOffConfirmation();
+            SystemPower.ShowLogOffConfirmation();
         }
 
         private void OpenRebootBox(object sender, RoutedEventArgs e)
         {
-            Cairo.ShowRebootConfirmation();
+            SystemPower.ShowRebootConfirmation();
         }
 
         private void OpenShutDownBox(object sender, RoutedEventArgs e)
         {
-            Cairo.ShowShutdownConfirmation();
+            SystemPower.ShowShutdownConfirmation();
         }
 
         private void OpenRunWindow(object sender, RoutedEventArgs e)
@@ -855,9 +866,14 @@ namespace CairoDesktop
             Shell.StartTaskManager();
         }
 
+        private void SysHibernate(object sender, RoutedEventArgs e)
+        {
+            Shell.Hibernate();
+        }
+
         private void SysSleep(object sender, RoutedEventArgs e)
         {
-            NativeMethods.Sleep();
+            Shell.Sleep();
         }
 
         private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)

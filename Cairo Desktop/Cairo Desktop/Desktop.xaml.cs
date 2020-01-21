@@ -396,7 +396,7 @@ namespace CairoDesktop
             }
             else if (altF4Pressed) // Show the Shutdown Confirmation Window
             {
-                Cairo.ShowShutdownConfirmation();
+                SystemPower.ShowShutdownConfirmation();
                 e.Cancel = true;
             }
             else // Eat it !!!

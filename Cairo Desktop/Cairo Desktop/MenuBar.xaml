@@ -140,18 +140,24 @@
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_ExitCairo)}"
                         Style="{StaticResource CairoMenuItemStyle}"
-                              Name ="miExitCairo"
+                        Name="miExitCairo"
                         Click="OpenCloseCairoBox" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Sleep)}"
                         Style="{StaticResource CairoMenuItemStyle}"
+                        Name="miSleep"
                         Click="SysSleep" />
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Hibernate)}"
+                        Style="{StaticResource CairoMenuItemStyle}"
+                        Name="miHibernate"
+                        Click="SysHibernate" Visibility="Collapsed" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Restart)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenRebootBox" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_ShutDown)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenShutDownBox" />
+                    <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_LogOff)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenLogoffBox" />

@@ -164,6 +164,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sCairoMenu_Hibernate
+        {
+            get
+            {
+                return getString("sCairoMenu_Hibernate");
+            }
+        }
+
         public static string sCairoMenu_Sleep
         {
             get
@@ -1417,6 +1425,14 @@ namespace CairoDesktop.Localization
             get
             {
                 return getString("sSettings_MenuBar_EnableMenuBarMultiMon");
+            }
+        }
+
+        public static string sSettings_MenuBar_ShowHibernate
+        {
+            get
+            {
+                return getString("sSettings_MenuBar_ShowHibernate");
             }
         }
 

@@ -37,6 +37,7 @@
             checkUpdateConfig();
             checkTrayStatus();
             checkRunAtLogOn();
+            checkIfCanHibernate();
         }
 
         private void loadRadioGroups()
@@ -204,6 +205,7 @@
             }
         }
 
+        #region Startup checks
         private void checkUpdateConfig()
         {
             chkEnableAutoUpdates.IsChecked = Convert.ToBoolean(WinSparkle.win_sparkle_get_automatic_check_for_updates());
@@ -221,6 +223,35 @@
                 lblTrayWarning.Visibility = Visibility.Visible;
             }
         }
+
+        private void checkRunAtLogOn()
+        {
+            if (Shell.IsCairoUserShell.Equals(true))
+            {
+                chkRunAtLogOn.Visibility = Visibility.Collapsed;
+            }
+
+            RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+            List<string> rKeyValueNames = rKey.GetValueNames().ToList();
+
+            if (rKeyValueNames.Contains("CairoShell"))
+            {
+                chkRunAtLogOn.IsChecked = true;
+            }
+            else
+            {
+                chkRunAtLogOn.IsChecked = false;
+            }
+        }
+
+        private void checkIfCanHibernate()
+        {
+            if (!Shell.CanHibernate())
+            {
+                chkShowHibernate.Visibility = Visibility.Collapsed;
+            }
+        }
+        #endregion
 
         private void EnableAutoUpdates_Click(object sender, RoutedEventArgs e)
         {
@@ -397,27 +428,7 @@
             bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, Localization.DisplayString.sSettings_Advanced_ShellChanged, "Resources/logoffIcon.png", Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater);
 
             if (LogoffChoice.HasValue && LogoffChoice.Value)
-                NativeMethods.Logoff();
-        }
-
-        private void checkRunAtLogOn()
-        {
-            if (Shell.IsCairoUserShell.Equals(true))
-            {
-                chkRunAtLogOn.Visibility = Visibility.Collapsed;
-            }
-
-            RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-            List<string> rKeyValueNames = rKey.GetValueNames().ToList();
-
-            if (rKeyValueNames.Contains("CairoShell"))
-            {
-                chkRunAtLogOn.IsChecked = true;
-            }
-            else
-            {
-                chkRunAtLogOn.IsChecked = false;
-            }
+                Shell.Logoff();
         }
 
         private void chkRunAtLogOn_Click(object sender, RoutedEventArgs e)

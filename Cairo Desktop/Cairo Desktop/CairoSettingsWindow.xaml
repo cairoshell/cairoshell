@@ -212,6 +212,10 @@
                         <ComboBox Name="cboCairoMenuHotKeyMod2" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[1]}" />
                         <ComboBox Name="cboCairoMenuHotKeyKey" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="40" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[2]}" />
                     </StackPanel>
+                    <CheckBox IsChecked="{Binding Path=ShowHibernate}"
+                        Click="CheckBox_Click" Name="chkShowHibernate">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowHibernate)}" />
+                    </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableMenuBarBlur}"
                         Click="CheckBox_Click" Name="chkEnableMenuBarBlur">
