@@ -79,7 +79,6 @@ namespace CairoDesktop
                 if (Window.State == WindowsTasks.ApplicationWindow.WindowState.Active)
                 {
                     Window.Minimize();
-                    Window.State = WindowsTasks.ApplicationWindow.WindowState.Inactive;
                 }
                 else
                 {
@@ -94,7 +93,6 @@ namespace CairoDesktop
             if (Window != null)
             {
                 Window.Minimize();
-                Window.State = WindowsTasks.ApplicationWindow.WindowState.Inactive;
             }
         }
 
