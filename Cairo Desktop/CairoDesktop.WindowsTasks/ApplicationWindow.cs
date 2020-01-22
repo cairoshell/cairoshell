@@ -272,6 +272,22 @@ namespace CairoDesktop.WindowsTasks
             get { return GetWindowShowStyle(Handle); }
         }
 
+        public int WindowStyles
+        {
+            get
+            {
+                return NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_STYLE);
+            }
+        }
+
+        public int ExtendedWindowStyles
+        {
+            get
+            {
+                return NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE);
+            }
+        }
+
         // set to true the first time the window state becomes active
         private bool hasActivated = false;
 
@@ -307,16 +323,15 @@ namespace CairoDesktop.WindowsTasks
                 }
 
                 // Make sure this is a real application window and not a child or tool window
-                int exStyles = NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE);
                 IntPtr ownerWin = NativeMethods.GetWindow(Handle, NativeMethods.GW_OWNER);
 
-                bool isAppWindow = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
-                bool hasEdge = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0;
-                bool isTopmostOnly = exStyles == (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST;
-                bool isToolWindow = (exStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
+                bool isAppWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
+                bool hasEdge = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0;
+                bool isTopmostOnly = ExtendedWindowStyles == (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST;
+                bool isToolWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
                 bool isVisible = NativeMethods.IsWindowVisible(Handle);
 
-                if ((isAppWindow || ((hasEdge || isTopmostOnly || exStyles == 0) && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
+                if ((isAppWindow || ((hasEdge || isTopmostOnly || ExtendedWindowStyles == 0) && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
                 {
                     return true;
                 }

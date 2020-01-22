@@ -1807,6 +1807,7 @@ namespace CairoDesktop.Interop
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
+        public const int GWL_STYLE = -16;
         public const int GWL_EXSTYLE = -20;
         public const int GW_OWNER = 4;
         public const int WS_EX_NOACTIVATE = 0x08000000;
