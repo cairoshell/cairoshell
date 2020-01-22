@@ -126,6 +126,20 @@
                     break;
             }
 
+            switch (Settings.TaskbarMiddleClick)
+            {
+                case 0:
+                    radTaskbarMiddleClick0.IsChecked = true;
+                    radTaskbarMiddleClick1.IsChecked = false;
+                    break;
+                case 1:
+                    radTaskbarMiddleClick0.IsChecked = false;
+                    radTaskbarMiddleClick1.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+
             switch (Settings.SysTrayAlwaysExpanded)
             {
                 case false:
@@ -365,6 +379,16 @@
         {
             Settings.TaskbarIconSize = 10;
             showRestartButton();
+        }
+
+        private void radTaskbarMiddleClick0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.TaskbarMiddleClick = 0;
+        }
+
+        private void radTaskbarMiddleClick1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.TaskbarMiddleClick = 1;
         }
 
         private void radDesktopLabelPos0_Click(object sender, RoutedEventArgs e)

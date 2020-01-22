@@ -1196,6 +1196,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_Behavior
+        {
+            get
+            {
+                return getString("sSettings_Behavior");
+            }
+        }
+
         public static string sSettings_Default
         {
             get
@@ -1609,6 +1617,30 @@ namespace CairoDesktop.Localization
             get
             {
                 return getString("sSettings_Taskbar_FullWidthTaskBar");
+            }
+        }
+
+        public static string sSettings_Taskbar_MiddleClick
+        {
+            get
+            {
+                return getString("sSettings_Taskbar_MiddleClick");
+            }
+        }
+
+        public static string sSettings_Taskbar_MiddleClickNewWindow
+        {
+            get
+            {
+                return getString("sSettings_Taskbar_MiddleClickNewWindow");
+            }
+        }
+
+        public static string sSettings_Taskbar_MiddleClickCloseWindow
+        {
+            get
+            {
+                return getString("sSettings_Taskbar_MiddleClickCloseWindow");
             }
         }
 

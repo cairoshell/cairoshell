@@ -418,5 +418,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["ShowHibernate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int TaskbarMiddleClick {
+            get {
+                return ((int)(this["TaskbarMiddleClick"]));
+            }
+            set {
+                this["TaskbarMiddleClick"] = value;
+            }
+        }
     }
 }

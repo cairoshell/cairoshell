@@ -359,6 +359,18 @@
                         Name="chkFullWidthTaskBar">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_FullWidthTaskBar)}" />
                     </CheckBox>
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Behavior)}" Style="{StaticResource SettingGroupHeader}" />
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MiddleClick)}" MinWidth="110" VerticalAlignment="Top" Margin="5,3,5,4" />
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton GroupName="rdoTaskbarMiddleClick" Name="radTaskbarMiddleClick0" Click="radTaskbarMiddleClick0_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MiddleClickNewWindow)}" />
+                            </RadioButton>
+                            <RadioButton GroupName="rdoTaskbarMiddleClick" Name="radTaskbarMiddleClick1" Click="radTaskbarMiddleClick1_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MiddleClickCloseWindow)}" />
+                            </RadioButton>
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
             </TabItem>
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Advanced)}">

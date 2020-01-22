@@ -65,6 +65,7 @@ namespace CairoDesktop.Configuration
         private static int? _TaskbarIconSize;
         private static bool? _EnableTaskbarMultiMon;
         private static bool? _FullWidthTaskBar;
+        private static int? _TaskbarMiddleClick;
 
 
         // Menu Bar
@@ -421,6 +422,23 @@ namespace CairoDesktop.Configuration
             {
                 _FullWidthTaskBar = value;
                 Properties.Settings.Default.FullWidthTaskBar = (bool)_FullWidthTaskBar;
+                Save();
+            }
+        }
+
+        public static int TaskbarMiddleClick
+        {
+            get
+            {
+                if (_TaskbarMiddleClick == null)
+                    _TaskbarMiddleClick = Properties.Settings.Default.TaskbarMiddleClick;
+
+                return (int)_TaskbarMiddleClick;
+            }
+            set
+            {
+                _TaskbarMiddleClick = value;
+                Properties.Settings.Default.TaskbarMiddleClick = (int)_TaskbarMiddleClick;
                 Save();
             }
         }

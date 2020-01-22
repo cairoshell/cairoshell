@@ -70,7 +70,11 @@ namespace CairoDesktop
 
         private void miNewWindow_Click(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess((DataContext as WindowsTasks.ApplicationWindow).WinFileName);
+            var Window = (DataContext as WindowsTasks.ApplicationWindow);
+            if (Window != null)
+            {
+                Shell.StartProcess(Window.WinFileName);
+            }
         }
 
         private void miClose_Click(object sender, RoutedEventArgs e)
@@ -111,7 +115,7 @@ namespace CairoDesktop
 
         private void miPin_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (this.DataContext as WindowsTasks.ApplicationWindow);
+            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Window.PinToQuickLaunch();
@@ -127,7 +131,19 @@ namespace CairoDesktop
         {
             if (e.ChangedButton == System.Windows.Input.MouseButton.Middle)
             {
-                Shell.StartProcess((DataContext as WindowsTasks.ApplicationWindow).WinFileName);
+                var Window = (DataContext as WindowsTasks.ApplicationWindow);
+                if (Window != null)
+                {
+                    switch (Configuration.Settings.TaskbarMiddleClick)
+                    {
+                        case 1:
+                            Window.Close();
+                            break;
+                        default:
+                            Shell.StartProcess(Window.WinFileName);
+                            break;
+                    }
+                }
             }
         }
 
