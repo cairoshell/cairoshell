@@ -171,6 +171,7 @@ namespace CairoDesktop
             {
                 // Task list display changes
                 btn.Style = FindResource("CairoTaskListButtonStyle") as Style;
+                ToolTipService.SetPlacement(btn, System.Windows.Controls.Primitives.PlacementMode.Right);
                 WinTitle.TextAlignment = TextAlignment.Left;
                 imgIcon.Margin = new Thickness(3, 0, 6, 0);
             }
