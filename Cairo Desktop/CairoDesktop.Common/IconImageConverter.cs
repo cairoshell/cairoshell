@@ -40,7 +40,7 @@ namespace CairoDesktop.Common
         /// </summary>
         /// <param name="hIcon">The icon's handle (HICON).</param>
         /// <returns>The Icon, or a default icon if not found.</returns>
-        public static ImageSource GetImageFromHIcon(IntPtr hIcon) 
+        public static ImageSource GetImageFromHIcon(IntPtr hIcon, bool returnDefault = true) 
         {
             BitmapSource bs = null;
             if (hIcon != IntPtr.Zero)
@@ -52,12 +52,18 @@ namespace CairoDesktop.Common
                 }
                 catch
                 {
-                    bs = GetDefaultIcon();
+                    if (returnDefault)
+                        bs = GetDefaultIcon();
+                    else
+                        return null;
                 }
             }
             else
             {
-                bs = GetDefaultIcon();
+                if (returnDefault)
+                    bs = GetDefaultIcon();
+                else
+                    return null;
             }
             bs.Freeze();
 

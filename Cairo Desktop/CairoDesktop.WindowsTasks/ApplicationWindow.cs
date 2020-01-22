@@ -380,7 +380,7 @@ namespace CairoDesktop.WindowsTasks
                         }
                         catch
                         {
-                            Icon = IconImageConverter.GetDefaultIcon();
+                            if (_icon == null) Icon = IconImageConverter.GetDefaultIcon();
                         }
                     }
                     else
@@ -425,8 +425,9 @@ namespace CairoDesktop.WindowsTasks
                             NativeMethods.SendMessageTimeout(Handle, WM_QUERYDRAGICON, 0, 0, 0, 1000, ref hIco);
                         }
 
-                        if (hIco == IntPtr.Zero)
+                        if (hIco == IntPtr.Zero && _icon == null)
                         {
+                            // last resort: find icon by executable. if we already have an icon from a previous fetch, then just skip this
                             if (Shell.Exists(WinFileName))
                             {
                                 int size = 1;
@@ -439,9 +440,13 @@ namespace CairoDesktop.WindowsTasks
 
                         if (hIco != IntPtr.Zero)
                         {
-                            ImageSource icon = IconImageConverter.GetImageFromHIcon(hIco);
-                            icon.Freeze();
-                            Icon = icon;
+                            bool returnDefault = (_icon == null); // only return a default icon if we don't already have one. otherwise let's use what we have.
+                            ImageSource icon = IconImageConverter.GetImageFromHIcon(hIco, returnDefault);
+                            if (icon != null)
+                            {
+                                icon.Freeze();
+                                Icon = icon;
+                            }
                         }
                         else if (Configuration.Settings.EnableTaskbarPolling && iconTries == 0)
                         {
