@@ -485,7 +485,10 @@
                             }
                         }
                         else
+                        {
+                            IsSettingScreens = false;
                             return;
+                        }
 
                         foreach (var screen in screenState)
                         {
@@ -508,9 +511,10 @@
                                 removedScreens.Add(name);
                         }
 
-                        if (removedScreens.Count == sysScreens.Count)
+                        if (sysScreens.Count == 0)
                         {
                             // remove everything?! no way!
+                            IsSettingScreens = false;
                             return;
                         }
 
