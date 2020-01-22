@@ -131,7 +131,7 @@ namespace CairoDesktop.WindowsTasks
                     string backupCategory = "";
                     foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
                     {
-                        if (ai.Target == WinFileName || (isUWP && ai.Target == AppUserModelID))
+                        if (ai.Target.ToLower() == WinFileName.ToLower() || (isUWP && ai.Target == AppUserModelID))
                         {
                             _category = ai.Category.DisplayName;
                             break;
@@ -166,7 +166,7 @@ namespace CairoDesktop.WindowsTasks
                 // it would be nice to cache this, but need to handle case of user adding/removing app via various means after first access
                 foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.QuickLaunch)
                 {
-                    if (ai.Target == WinFileName || (isUWP && ai.Target == AppUserModelID))
+                    if (ai.Target.ToLower() == WinFileName.ToLower() || (isUWP && ai.Target == AppUserModelID))
                     {
                         return ai;
                     }
