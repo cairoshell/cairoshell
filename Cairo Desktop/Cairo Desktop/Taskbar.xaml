@@ -128,7 +128,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ListViewItem}">
                                                 <Border BorderThickness="0" Margin="0,0,-1,0" BorderBrush="Transparent" Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}">
-                                                    <self:TaskButton MouseRightButtonUp="TaskButton_MouseRightButtonUp" TextWidth="{Binding Path=ButtonTextWidth, ElementName=TaskbarWindow}" />
+                                                    <self:TaskButton ListMode="False" MouseRightButtonUp="TaskButton_MouseRightButtonUp" TextWidth="{Binding Path=ButtonTextWidth, ElementName=TaskbarWindow}" />
                                                     <Border.Style>
                                                         <Style TargetType="{x:Type Border}">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -206,9 +206,9 @@
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="{x:Type ListViewItem}">
                                                             <Border BorderThickness="0" BorderBrush="Transparent">
-                                                                <self:TaskListButton>
-                                                                    <self:TaskListButton.Style>
-                                                                        <Style TargetType="self:TaskListButton">
+                                                                <self:TaskButton ListMode="True" TextWidth="315">
+                                                                    <self:TaskButton.Style>
+                                                                        <Style TargetType="self:TaskButton">
                                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                                             <Style.Triggers>
                                                                                 <DataTrigger Binding="{Binding Path=ShowInTaskbar}" Value="True">
@@ -216,8 +216,8 @@
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
                                                                         </Style>
-                                                                    </self:TaskListButton.Style>
-                                                                </self:TaskListButton>
+                                                                    </self:TaskButton.Style>
+                                                                </self:TaskButton>
                                                             </Border>
                                                         </ControlTemplate>
                                                     </Setter.Value>

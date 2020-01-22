@@ -7,31 +7,22 @@ namespace CairoDesktop
     public partial class TaskButton
     {
         public static readonly DependencyProperty TextWidthProperty = DependencyProperty.Register("TextWidth", typeof(double), typeof(TaskButton), new PropertyMetadata(new double()));
+        public static readonly DependencyProperty ListModeProperty = DependencyProperty.Register("ListMode", typeof(bool), typeof(TaskButton), new PropertyMetadata(new bool()));
         public double TextWidth
         {
             get { return (double)GetValue(TextWidthProperty); }
             set { SetValue(TextWidthProperty, value); }
         }
 
+        public bool ListMode
+        {
+            get { return (bool)GetValue(ListModeProperty); }
+            set { SetValue(ListModeProperty, value); }
+        }
+
         public TaskButton()
         {
             this.InitializeComponent();
-
-            switch (Configuration.Settings.TaskbarIconSize)
-            {
-                case 0:
-                    imgIcon.Width = 32;
-                    imgIcon.Height = 32;
-                    break;
-                case 10:
-                    imgIcon.Width = 24;
-                    imgIcon.Height = 24;
-                    break;
-                default:
-                    imgIcon.Width = 16;
-                    imgIcon.Height = 16;
-                    break;
-            }
         }
 
         private void btnClick(object sender, RoutedEventArgs e)
@@ -137,6 +128,35 @@ namespace CairoDesktop
             if (e.ChangedButton == System.Windows.Input.MouseButton.Middle)
             {
                 Shell.StartProcess((DataContext as WindowsTasks.ApplicationWindow).WinFileName);
+            }
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!ListMode)
+            {
+                switch (Configuration.Settings.TaskbarIconSize)
+                {
+                    case 0:
+                        imgIcon.Width = 32;
+                        imgIcon.Height = 32;
+                        break;
+                    case 10:
+                        imgIcon.Width = 24;
+                        imgIcon.Height = 24;
+                        break;
+                    default:
+                        imgIcon.Width = 16;
+                        imgIcon.Height = 16;
+                        break;
+                }
+            }
+            else
+            {
+                // Task list display changes
+                btn.Style = FindResource("CairoTaskListButtonStyle") as Style;
+                WinTitle.TextAlignment = TextAlignment.Left;
+                imgIcon.Margin = new Thickness(3, 0, 6, 0);
             }
         }
     }

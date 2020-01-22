@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
     x:Class="CairoDesktop.TaskButton"
     x:Name="UserControl"
-    d:DesignWidth="140"
-    d:DesignHeight="29" xmlns:support="clr-namespace:CairoDesktop.SupportingClasses">
+    xmlns:support="clr-namespace:CairoDesktop.SupportingClasses" Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <support:TaskButtonStyleConverter x:Key="styleConverter" />
