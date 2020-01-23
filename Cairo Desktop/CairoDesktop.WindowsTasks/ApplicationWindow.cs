@@ -481,12 +481,15 @@ namespace CairoDesktop.WindowsTasks
 
         public void Minimize()
         {
-            bool minimizeResult = NativeMethods.ShowWindow(Handle, NativeMethods.WindowShowStyle.Minimize);
-            if (!minimizeResult)
+            if ((WindowStyles & (int)NativeMethods.WindowStyles.WS_MINIMIZEBOX) != 0)
             {
-                // elevated windows require WM_SYSCOMMAND messages
-                IntPtr retval = IntPtr.Zero;
-                NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_MINIMIZE, 0, 2, 200, ref retval);
+                bool minimizeResult = NativeMethods.ShowWindow(Handle, NativeMethods.WindowShowStyle.Minimize);
+                if (!minimizeResult)
+                {
+                    // elevated windows require WM_SYSCOMMAND messages
+                    IntPtr retval = IntPtr.Zero;
+                    NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_MINIMIZE, 0, 2, 200, ref retval);
+                }
             }
         }
 
