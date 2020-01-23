@@ -310,7 +310,6 @@ namespace CairoDesktop
                 if (!IsOverlayOpen && !IsFbdOpen)
                 {
                     Shell.ShowWindowBottomMost(helper.Handle);
-                    handled = true;
                 }
             }
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
