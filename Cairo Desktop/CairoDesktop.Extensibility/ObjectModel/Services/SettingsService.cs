@@ -1,7 +1,7 @@
 ﻿namespace CairoDesktop.Extensibility.ObjectModel.Services
 {
     /// <summary>
-    /// ShellService that will house the logic for Shell Components, Plugins and Extensions to manage Cairo Shell's Extensable Settings system. 
+    /// ShellService that will house the logic for Shell Components, Plugins and Extensions to manage Catalyst Shell's Extensable Settings system. 
     /// </summary>
     public sealed class SettingsService : ShellService
     {

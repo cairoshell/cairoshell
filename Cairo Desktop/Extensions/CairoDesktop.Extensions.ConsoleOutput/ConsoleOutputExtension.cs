@@ -8,7 +8,7 @@ using System.Diagnostics;
 namespace CairoDesktop.Extensions.ConsoleOutput
 {
     /// <summary>
-    /// Future versions of this should add an item under "Cairo" menu to toggle Console output
+    /// Future versions of this should add an item under "Catalyst" menu to toggle Console output
     /// For now this is an optional extention and will not be compiled to the Extensions folder
     /// </summary>
     [Export(typeof(ShellExtension))]

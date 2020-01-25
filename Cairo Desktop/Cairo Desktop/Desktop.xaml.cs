@@ -85,7 +85,7 @@ namespace CairoDesktop
 
         private System.Windows.Media.Brush GetCairoBackgroundBrush()
         {
-            // TODO: impliment Cairo settings for Background
+            // TODO: impliment Catalyst settings for Background
             return GetCairoBackgroundBrush_Windows();
             // return GetCairoBackgroundBrush_Image();
             // return GetCairoBackgroundBrush_Color();

@@ -32,7 +32,7 @@ namespace CairoDesktop
             if (e.Exception.InnerException != null)
                 inner = "\r\n\r\nInner exception:\r\nMessage: " + e.Exception.InnerException.Message + "\r\nTarget Site: " + e.Exception.InnerException.TargetSite + "\r\n\r\n" + e.Exception.InnerException.StackTrace;
 
-            string msg = "Would you like to restart Cairo?\r\n\r\nPlease submit a bug report with a screenshot of this error. Thanks! \r\nMessage: " + e.Exception.Message + "\r\nTarget Site: " + e.Exception.TargetSite + "\r\nVersion: " + version + "\r\n\r\n" + e.Exception.StackTrace + inner;
+            string msg = "Would you like to restart Catalyst?\r\n\r\nPlease submit a bug report with a screenshot of this error. Thanks! \r\nMessage: " + e.Exception.Message + "\r\nTarget Site: " + e.Exception.TargetSite + "\r\nVersion: " + version + "\r\n\r\n" + e.Exception.StackTrace + inner;
 
             CairoLogger.Instance.Error(msg, e.Exception);
 
@@ -53,15 +53,15 @@ namespace CairoDesktop
                     if (e.Exception.Message.StartsWith("UCEERR_RENDERTHREADFAILURE"))
                     {
                         CairoDesktop.Startup.Restart();
-                        Environment.FailFast("Automatically restarted Cairo due to a render thread failure.");
+                        Environment.FailFast("Automatically restarted Catalyst due to a render thread failure.");
                     }
                     else
                     {
-                        if (MessageBox.Show(dMsg, "Cairo Desktop Error", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                        if (MessageBox.Show(dMsg, "Catalyst Desktop Error", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                         {
                             // it's like getting a morning coffee.
                             CairoDesktop.Startup.Restart();
-                            Environment.FailFast("User restarted Cairo due to an exception.");
+                            Environment.FailFast("User restarted Catalyst due to an exception.");
                         }
                     }
 

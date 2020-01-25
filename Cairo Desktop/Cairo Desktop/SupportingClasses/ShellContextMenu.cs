@@ -11,7 +11,7 @@ using CairoDesktop.Interop;
 
 namespace CairoDesktop.SupportingClasses
 {
-    // Provides ability to use the shell context menu functions within Cairo.
+    // Provides ability to use the shell context menu functions within Catalyst.
     // Derived from Steven Roebert's C# File Browser
     // https://www.codeproject.com/Articles/15059/C-File-Browser
 

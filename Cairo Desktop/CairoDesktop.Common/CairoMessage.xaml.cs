@@ -6,7 +6,7 @@
     using System.Windows.Media.Imaging;
 
     /// <summary>
-    /// Provides a custom message dialog for the Cairo Desktop.
+    /// Provides a custom message dialog for the Catalyst Desktop.
     /// </summary>
     public partial class CairoMessage : Window
     {
@@ -77,7 +77,7 @@
 
         #region Static Methods
         /// <summary>
-        /// Displays the Cairo Message Dialog with the default Ok/Cancel button and Icon.
+        /// Displays the Catalyst Message Dialog with the default Ok/Cancel button and Icon.
         /// </summary>
         /// <param name="message">The message to display.</param>
         /// <param name="title">The title of the dialog.</param>
@@ -94,7 +94,7 @@
         }
 
         /// <summary>
-        /// Displays the Cairo Message Dialog with implicit settings.
+        /// Displays the Catalyst Message Dialog with implicit settings.
         /// </summary>
         /// <param name="message">The message to display.</param>
         /// <param name="title">The title of the dialog.</param>
@@ -113,7 +113,7 @@
         }
 
         /// <summary>
-        /// Displays the Cairo Message as an alert with implicit settings.
+        /// Displays the Catalyst Message as an alert with implicit settings.
         /// </summary>
         /// <param name="message">The message to display.</param>
         /// <param name="title">The title of the dialog.</param>
@@ -134,7 +134,7 @@
         }
 
         /// <summary>
-        /// Displays the Cairo Message Dialog with OK/Cancel buttons, implicit settings, custom image and button text.
+        /// Displays the Catalyst Message Dialog with OK/Cancel buttons, implicit settings, custom image and button text.
         /// </summary>
         /// <param name="message">The message to display.</param>
         /// <param name="title">The title of the dialog.</param>

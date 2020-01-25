@@ -639,7 +639,7 @@ namespace CairoDesktop.Interop
 
                     if (value)
                     {
-                        // set Cairo as the user's shell
+                        // set Catalyst as the user's shell
                         regKey.SetValue("Shell", AppDomain.CurrentDomain.BaseDirectory + AppDomain.CurrentDomain.FriendlyName);
                     }
                     else

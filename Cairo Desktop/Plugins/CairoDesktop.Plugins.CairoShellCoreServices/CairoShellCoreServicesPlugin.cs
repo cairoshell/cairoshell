@@ -8,7 +8,7 @@ namespace CairoDesktop.Plugins.CairoShellCoreServices
     [PluginAuthors("Josuave")]
     [PluginDescription("Plugin that contains the core functionality of CairoShell")]
     [PluginId("406C38DC-8C92-4983-A8DD-756B754C2877")]
-    [PluginManufacturer("Cairo Development Team")]
+    [PluginManufacturer("Catalyst Development Team")]
     [PluginVersion("0.0.0.1")]
     public sealed class CairoShellCoreServicesPlugin : Plugin
     {

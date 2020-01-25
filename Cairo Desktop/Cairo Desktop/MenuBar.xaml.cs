@@ -93,7 +93,7 @@ namespace CairoDesktop
                 miOpenActionCenter.Visibility = Visibility.Visible;
             }
 
-            // I didnt like the Exit Cairo option available when Cairo was set as Shell
+            // I didnt like the Exit Catalyst option available when Catalyst was set as Shell
             if (Startup.IsCairoUserShell)
             {
                 miExitCairo.Visibility = Visibility.Collapsed;
@@ -255,7 +255,7 @@ namespace CairoDesktop
             if (Startup.IsCairoUserShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
             {
                 /*
-                 * This was modified to fix issue: Cairo incorrectly handles the [Win] key #193 
+                 * This was modified to fix issue: Catalyst incorrectly handles the [Win] key #193 
                  */
 
                 // HotKeyManager.RegisterHotKey(new List<string> { "Win", "LWin" }, OnShowProgramsMenu);
@@ -507,7 +507,7 @@ namespace CairoDesktop
                     case NativeMethods.AppBarNotifications.FullScreenApp:
                         if ((int)lParam == 1)
                         {
-                            CairoLogger.Instance.Debug("Cairo leaving on-top");
+                            CairoLogger.Instance.Debug("Catalyst leaving on-top");
                             this.Topmost = false;
                             Shell.ShowWindowBottomMost(this.handle);
 
@@ -518,7 +518,7 @@ namespace CairoDesktop
                         }
                         else
                         {
-                            CairoLogger.Instance.Debug("Cairo entering on-top");
+                            CairoLogger.Instance.Debug("Catalyst entering on-top");
                             this.Topmost = true;
                             Shell.ShowWindowTopMost(this.handle);
 
@@ -556,7 +556,7 @@ namespace CairoDesktop
             {
                 if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens)
                 {
-                    Startup.ScreenSetup(); // update Cairo window list based on new screen setup
+                    Startup.ScreenSetup(); // update Catalyst window list based on new screen setup
                 }
                 else if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
                 {
@@ -577,7 +577,7 @@ namespace CairoDesktop
             {
                 if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
                 {
-                    Startup.ScreenSetup(); // update Cairo window list based on new screen setup
+                    Startup.ScreenSetup(); // update Catalyst window list based on new screen setup
                 }
                 else if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
                 {
@@ -592,7 +592,7 @@ namespace CairoDesktop
             {
                 if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
                 {
-                    Startup.ScreenSetup(); // update Cairo window list based on new screen setup
+                    Startup.ScreenSetup(); // update Catalyst window list based on new screen setup
                 }
             }
 
@@ -805,7 +805,7 @@ namespace CairoDesktop
 
         #endregion
 
-        #region Cairo menu items
+        #region Catalyst menu items
         private void AboutCairo(object sender, RoutedEventArgs e)
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
@@ -814,7 +814,7 @@ namespace CairoDesktop
 
             CairoMessage.ShowAlert(
                 Localization.DisplayString.sAbout_Version + " " + version + " - " + Localization.DisplayString.sAbout_PreRelease
-                + "\n\n" + String.Format(Localization.DisplayString.sAbout_Copyright, DateTime.Now.Year.ToString()), "Cairo Desktop Environment", MessageBoxImage.None);
+                + "\n\n" + String.Format(Localization.DisplayString.sAbout_Copyright, DateTime.Now.Year.ToString()), "Catalyst Desktop Environment", MessageBoxImage.None);
         }
 
         private void CheckForUpdates(object sender, RoutedEventArgs e)

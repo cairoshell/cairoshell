@@ -6,12 +6,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Cairo Desktop Environment")]
+[assembly: AssemblyTitle("Proshell Catalyst Environment")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Cairo Development Team")]
-[assembly: AssemblyProduct("Cairo Desktop Environment")]
-[assembly: AssemblyCopyright("Copyright © 2017 Cairo Development Team")]
+[assembly: AssemblyCompany("Proshell Network Team")]
+[assembly: AssemblyProduct("Proshell Catalyst Environment")]
+[assembly: AssemblyCopyright("Copyright © 2017 Proshell Catalyst Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

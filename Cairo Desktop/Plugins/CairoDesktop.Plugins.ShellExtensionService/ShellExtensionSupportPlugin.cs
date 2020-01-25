@@ -9,7 +9,7 @@ namespace CairoDesktop.Plugins.ShellExtensionSupport
     [PluginAuthors("Josuave")]
     [PluginDescription("Plugin that extends the plugin system using Microsoft's Managed Extensability Framework")]
     [PluginId("63C24EEB-8998-4F0A-B6D4-97EEFB23D759")]
-    [PluginManufacturer("Cairo Development Team")]
+    [PluginManufacturer("Catalyst Development Team")]
     [PluginVersion("0.0.0.1")]
     [PluginDependency(typeof(CairoShellCoreServicesPlugin))]
     public sealed class ShellExtensionSupportPlugin : Plugin

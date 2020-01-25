@@ -51,7 +51,7 @@ namespace CairoDesktop.Common
         /// <summary>
         /// Loads and returns the default bitmap image.
         /// </summary>
-        /// <returns>The default cairo icon as a bitmap image.</returns>
+        /// <returns>The default Catalyst icon as a bitmap image.</returns>
         private BitmapImage GetDefaultImage()
         {
             BitmapImage bi = new BitmapImage();

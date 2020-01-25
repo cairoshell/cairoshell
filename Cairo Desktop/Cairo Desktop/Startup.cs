@@ -418,8 +418,8 @@
         }
 
         /// <summary>
-        /// Compares the system screen list to the screens associated with Cairo windows, then creates or destroys windows as necessary.
-        /// Only affects non-primary screens, as Cairo always opens on at least the primary screen.
+        /// Compares the system screen list to the screens associated with Catalyst windows, then creates or destroys windows as necessary.
+        /// Only affects non-primary screens, as Catalyst always opens on at least the primary screen.
         /// Runs at startup and when a WM_DISPLAYCHANGE message is received by the main MenuBar window.
         /// </summary>
         public static void ScreenSetup(bool skipChecks = false)

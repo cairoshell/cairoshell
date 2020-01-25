@@ -150,8 +150,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Cairo.xaml.cs">
-      <DependentUpon>Cairo.xaml</DependentUpon>
+    <Compile Include="Catalyst.xaml.cs">
+      <DependentUpon>Catalyst.xaml</DependentUpon>
     </Compile>
     <Compile Include="CairoSettingsWindow.xaml.cs">
       <DependentUpon>CairoSettingsWindow.xaml</DependentUpon>
@@ -175,7 +175,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Cairo.xaml">
+    <Page Include="Catalyst.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

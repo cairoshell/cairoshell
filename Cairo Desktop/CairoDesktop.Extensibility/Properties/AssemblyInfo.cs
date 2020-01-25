@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CairoDesktop.Extensibility")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Cairo Development Team")]
-[assembly: AssemblyProduct("Cairo Desktop Environment")]
-[assembly: AssemblyCopyright("Copyright © 2018 Cairo Development Team")]
+[assembly: AssemblyCompany("Catalyst Development Team")]
+[assembly: AssemblyProduct("Catalyst Desktop Environment")]
+[assembly: AssemblyCopyright("Copyright © 2018 Catalyst Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

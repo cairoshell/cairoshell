@@ -143,7 +143,7 @@ namespace CairoDesktop.WindowsTasks
                     }
 
                     if (_category == null && WinFileName.ToLower().Contains("cairodesktop.exe"))
-                        _category = "Cairo";
+                        _category = "Catalyst";
                     else if (_category == null && !string.IsNullOrEmpty(backupCategory))
                         _category = backupCategory;
                     else if (_category == null && WinFileName.ToLower().Contains("\\windows\\") && !isUWP)

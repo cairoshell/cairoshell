@@ -6,12 +6,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Cairo Explorer")]
+[assembly: AssemblyTitle("Catalyst Explorer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Cairo Development Team")]
-[assembly: AssemblyProduct("Cairo Desktop Environment")]
-[assembly: AssemblyCopyright("Copyright © 2017 Cairo Development Team")]
+[assembly: AssemblyCompany("Catalyst Development Team")]
+[assembly: AssemblyProduct("Catalyst Desktop Environment")]
+[assembly: AssemblyCopyright("Copyright © 2017 Catalyst Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

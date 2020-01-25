@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CairoDesktop.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Cairo Development Team")]
-[assembly: AssemblyProduct("Cairo Desktop Environment")]
-[assembly: AssemblyCopyright("Copyright © 2017 Cairo Development Team")]
+[assembly: AssemblyCompany("Catalyst Development Team")]
+[assembly: AssemblyProduct("Catalyst Desktop Environment")]
+[assembly: AssemblyCopyright("Copyright © 2017 Catalyst Development Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
