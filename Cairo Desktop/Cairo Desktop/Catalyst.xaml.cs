@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace CairoDesktop
 {
-    partial class Catalyst : ResourceDictionary
+    partial class Cairo : ResourceDictionary
     {
         private void btnFile_Click(object sender, RoutedEventArgs e)
         {

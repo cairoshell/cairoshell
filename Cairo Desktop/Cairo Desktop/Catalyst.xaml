@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.Catalyst"
-    xmlns:Catalyst="clr-namespace:CairoDesktop" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.Cairo"
+    xmlns:Cairo="clr-namespace:CairoDesktop" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization">
     <!-- Menu resources -->
     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" x:Key="MenuBarBackground">
         <GradientStop Color="#CF000000" Offset="0.0" />
@@ -901,7 +901,7 @@
                         BorderBrush="Transparent"
                         BorderThickness="0"
                         Background="{TemplateBinding Background}">
-                        <MenuItem Command="Catalyst:CustomCommands.OpenSearchResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                        <MenuItem Command="Cairo:CustomCommands.OpenSearchResult" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             CommandParameter="{Binding}" Header="{Binding}">
                             <MenuItem.HeaderTemplate>
                                 <ItemContainerTemplate>

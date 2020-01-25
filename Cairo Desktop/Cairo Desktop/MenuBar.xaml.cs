@@ -813,7 +813,7 @@ namespace CairoDesktop
             string version = fvi.FileVersion;
 
             CairoMessage.ShowAlert(
-                Localization.DisplayString.sAbout_Version + " " + version + " - " + Localization.DisplayString.sAbout_PreRelease
+                Localization.DisplayString.sAbout_Version + " " + version + " - " + "Based off the Cairo Projet."
                 + "\n\n" + String.Format(Localization.DisplayString.sAbout_Copyright, DateTime.Now.Year.ToString()), "Catalyst Desktop Environment", MessageBoxImage.None);
         }
 
