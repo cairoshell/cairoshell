@@ -146,8 +146,18 @@
             {
                 RunStartupApps();
             }
-
+            StartupChime();
             app.Run();
+        }
+
+
+        /// <summary>
+        /// Plays the iconic Proshell jingle
+        /// </summary>
+        private static void StartupChime()
+        {
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Media\pscat-in.wav");
+            player.Play();
         }
 
         /// <summary>
