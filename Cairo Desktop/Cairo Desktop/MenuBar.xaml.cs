@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using theCatalyst;
 
 namespace CairoDesktop
 {
@@ -320,22 +321,22 @@ namespace CairoDesktop
                 // this sometimes takes a while
                 Type provider = typeof(SearchHelper);
 
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
                     vistaSearchProvider.ObjectType = provider;
                     CairoSearchMenu.DataContext = vistaSearchProvider;
 
-                    Binding bSearchText = new Binding("SearchText");
+                    System.Windows.Data.Binding bSearchText = new System.Windows.Data.Binding("SearchText");
                     bSearchText.Mode = BindingMode.Default;
                     bSearchText.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
 
-                    Binding bSearchResults = new Binding("Results");
+                    System.Windows.Data.Binding bSearchResults = new System.Windows.Data.Binding("Results");
                     bSearchResults.Mode = BindingMode.Default;
                     bSearchResults.IsAsync = true;
 
-                    searchStr.SetBinding(TextBox.TextProperty, bSearchText);
-                    lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
+                    searchStr.SetBinding(System.Windows.Controls.TextBox.TextProperty, bSearchText);
+                    lstSearchResults.SetBinding(System.Windows.Controls.ListView.ItemsSourceProperty, bSearchResults);
                 }));
             });
             thread.IsBackground = true;
@@ -389,8 +390,8 @@ namespace CairoDesktop
         private void programsMenu_Rename(object sender, RoutedEventArgs e)
         {
             System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
-            DockPanel parent = ((System.Windows.Controls.MenuItem)((ContextMenu)item.Parent).PlacementTarget).Header as DockPanel;
-            TextBox rename = parent.FindName("txtProgramRename") as TextBox;
+            DockPanel parent = ((System.Windows.Controls.MenuItem)((System.Windows.Controls.ContextMenu)item.Parent).PlacementTarget).Header as DockPanel;
+            TextBox rename = parent.FindName("txtProgramRename") as System.Windows.Controls.TextBox;
             TextBlock label = parent.FindName("lblProgramName") as TextBlock;
 
             rename.Visibility = Visibility.Visible;
@@ -1013,5 +1014,21 @@ namespace CairoDesktop
             }
         }
         #endregion
+        #region TheCatalyst
+        private void theCalc(object sender, RoutedEventArgs e)
+        {
+            theCatalyst.Init.openCalc();
+        }
+        private void theEditor(object sender, RoutedEventArgs e)
+        {
+            theCatalyst.Init.openEditor();
+        }
+        private void theTime(object sender, RoutedEventArgs e)
+        {
+            theCatalyst.Init.openTime();
+        }
+        #endregion
+
+
     }
 }

@@ -352,6 +352,10 @@
       <Project>{5FABAD0F-D28C-4EE6-A826-77968087864E}</Project>
       <Name>CairoDesktop.WindowsTasks</Name>
     </ProjectReference>
+    <ProjectReference Include="..\theCatalyst\theCatalyst.csproj">
+      <Project>{dac61860-816e-4430-8b3d-40c4a06b3253}</Project>
+      <Name>theCatalyst</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\actionCenterDefault.png" />

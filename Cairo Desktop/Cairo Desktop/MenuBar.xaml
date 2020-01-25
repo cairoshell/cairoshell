@@ -116,6 +116,23 @@
                         Click="CheckForUpdates"
                         Name="OpenCheckForUpdates" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sTheCatalyst)}"
+                              Style="{StaticResource CairoMenuItemStyle}"
+                              >
+                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sTheCalc)}"
+                            Style="{StaticResource CairoMenuItemStyle}"
+                            Click="theCalc"
+                            Name="OpentheCalc" />
+                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sTheEditor)}"
+                            Style="{StaticResource CairoMenuItemStyle}"
+                            Click="theEditor"
+                            Name="OpentheEditor" />
+                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sTheTime)}"
+                            Style="{StaticResource CairoMenuItemStyle}"
+                            Click="theTime"
+                            Name="OpentheTime" />
+                    </MenuItem>
+                    <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sAppGrabber)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="InitAppGrabberWindow" />

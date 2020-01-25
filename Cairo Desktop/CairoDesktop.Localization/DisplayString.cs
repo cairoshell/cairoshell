@@ -1995,5 +1995,34 @@ namespace CairoDesktop.Localization
                 return getString("sWelcome_TaskbarSec3Text");
             }
         }
+        //theCatalyst Definitions
+        public static string sTheCatalyst
+        {
+            get
+            {
+                return "theCatalyst";
+            }
+        }
+        public static string sTheTime
+        {
+            get
+            {
+                return "theTime";
+            }
+        }
+        public static string sTheEditor
+        {
+            get
+            {
+                return "theEditor";
+            }
+        }
+        public static string sTheCalc
+        {
+            get
+            {
+                return "theCalculator";
+            }
+        }
     }
 }
