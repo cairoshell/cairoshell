@@ -489,7 +489,7 @@ namespace CairoDesktop
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
         {
-            // Shell.StartProcess("timedate.cpl");
+            // 
             theCatalyst.Init.openTime();
         }
         #endregion

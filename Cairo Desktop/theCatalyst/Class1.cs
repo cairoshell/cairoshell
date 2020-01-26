@@ -24,6 +24,11 @@ namespace theCatalyst
             TheTime editor = new TheTime();
             editor.Show();
         }
+        public static void openAbout()
+        {
+            AboutBox1 about = new AboutBox1();
+            about.Show();
+        }
     }
     public class Accounts
     {

@@ -196,5 +196,8 @@
   <ItemGroup>
     <None Include="Resources\left_img.bmp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Boop.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

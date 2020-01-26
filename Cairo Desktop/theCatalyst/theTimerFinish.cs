@@ -20,8 +20,12 @@ namespace theCatalyst
             InitializeComponent();
             if (Alarm == 1)
             {
-                Player = new SoundPlayer(Properties.Resources.Alarm1);
+                Player = new SoundPlayer(Properties.Resources.Alarm3);
             } else if (Alarm == 2)
+            {
+                Player = new SoundPlayer(Properties.Resources.Alarm1);
+            }
+            else if (Alarm == 3)
             {
                 Player = new SoundPlayer(Properties.Resources.Alarm2);
             }

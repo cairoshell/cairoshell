@@ -285,12 +285,12 @@ namespace theCatalyst
             // labelCurrentOperation
             // 
             this.labelCurrentOperation.AutoSize = true;
-            this.labelCurrentOperation.BackColor = System.Drawing.SystemColors.Window;
-            this.labelCurrentOperation.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCurrentOperation.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.labelCurrentOperation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(69)))), ((int)(((byte)(73)))), ((int)(((byte)(74)))));
+            this.labelCurrentOperation.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Italic);
+            this.labelCurrentOperation.ForeColor = System.Drawing.Color.DeepSkyBlue;
             this.labelCurrentOperation.Location = new System.Drawing.Point(18, 13);
             this.labelCurrentOperation.Name = "labelCurrentOperation";
-            this.labelCurrentOperation.Size = new System.Drawing.Size(0, 24);
+            this.labelCurrentOperation.Size = new System.Drawing.Size(0, 17);
             this.labelCurrentOperation.TabIndex = 21;
             // 
             // button10
@@ -339,9 +339,10 @@ namespace theCatalyst
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.buttonOne);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "theCalc";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Calculator";
             this.Load += new System.EventHandler(this.theCalc_Load);

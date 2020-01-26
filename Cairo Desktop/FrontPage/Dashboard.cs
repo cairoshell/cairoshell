@@ -85,5 +85,37 @@ namespace FrontPage
         {
             this.Close();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            CancelSession cs = new CancelSession();
+            cs.Show();
+        }
+
+        private void darkButton2_Click(object sender, EventArgs e)
+        {
+            theCatalyst.Init.openEditor();
+        }
+
+        private void darkButton3_Click(object sender, EventArgs e)
+        {
+            theCatalyst.Init.openTime();
+        }
+
+        private void darkButton1_Click(object sender, EventArgs e)
+        {
+            theCatalyst.Init.openCalc();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            theCatalyst.Init.openAbout();
+        }
+
+        private void darkButton4_Click(object sender, EventArgs e)
+        {
+            Settings settings = new Settings();
+            settings.ShowDialog();
+        }
     }
 }
