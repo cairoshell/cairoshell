@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <ApplicationIcon>Application.ico</ApplicationIcon>
+    <ApplicationIcon>Proshell.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <StartupObject>CairoDesktop.Startup</StartupObject>
     <FileUpgradeFlags>
@@ -352,6 +352,10 @@
       <Project>{5FABAD0F-D28C-4EE6-A826-77968087864E}</Project>
       <Name>CairoDesktop.WindowsTasks</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FrontPage\FrontPage.csproj">
+      <Project>{6ac0d768-8267-43d6-bd33-e59bc96eba8e}</Project>
+      <Name>FrontPage</Name>
+    </ProjectReference>
     <ProjectReference Include="..\theCatalyst\theCatalyst.csproj">
       <Project>{dac61860-816e-4430-8b3d-40c4a06b3253}</Project>
       <Name>theCatalyst</Name>
@@ -398,6 +402,7 @@
     <Content Include="Media\pscat-out.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Proshell.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

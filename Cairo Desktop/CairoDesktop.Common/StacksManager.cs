@@ -123,18 +123,6 @@ namespace CairoDesktop.Common
                         StackLocations.Add(myDocsSysDir);
                     }
                 }
-                // Check for Downloads folder
-                String downloadsPath = Interop.KnownFolders.GetPath(Interop.KnownFolder.Downloads);
-                if (Directory.Exists(downloadsPath))
-                {
-                    SystemDirectory downloadsSysDir = new SystemDirectory(downloadsPath, Dispatcher.CurrentDispatcher);
-                    // Don't duplicate defaults
-                    if (!StackLocations.Contains(downloadsSysDir))
-                    {
-                        StackLocations.Add(downloadsSysDir);
-                    }
-                }
-
                 // save
                 serializeStacks();
             }

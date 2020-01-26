@@ -155,6 +155,10 @@
                         Style="{StaticResource CairoMenuItemStyle}"
                         Click="OpenTaskManager" />
                     <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
+                    <MenuItem Header="FrontPage"
+                        Style="{StaticResource CairoMenuItemStyle}"
+                        Name="mireturnToFrontPAge"
+                        Click="mireturnToFrontPAge_Click" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_ExitCairo)}"
                         Style="{StaticResource CairoMenuItemStyle}"
                         Name="miExitCairo"

@@ -489,7 +489,8 @@ namespace CairoDesktop
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("timedate.cpl");
+            // Shell.StartProcess("timedate.cpl");
+            theCatalyst.Init.openTime();
         }
         #endregion
 
@@ -1027,8 +1028,17 @@ namespace CairoDesktop
         {
             theCatalyst.Init.openTime();
         }
+
         #endregion
 
+        private void miExitCairo_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
+
+        private void mireturnToFrontPAge_Click(object sender, RoutedEventArgs e)
+        {
+            FrontPage.Init.StartDashboard();
+        }
     }
 }

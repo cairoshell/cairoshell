@@ -136,7 +136,7 @@
             {
                 NotificationArea.Instance.Initialize();
             }
-
+            FrontPage.Init.StartDashboard();
 #if ENABLEFIRSTRUN
             FirstRun();
 #endif
@@ -146,8 +146,11 @@
             {
                 RunStartupApps();
             }
+            
+            
             StartupChime();
             app.Run();
+            
         }
 
 
@@ -158,6 +161,15 @@
         {
             System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Media\pscat-in.wav");
             player.Play();
+        }
+
+        /// <summary>
+        /// Plays the shutdown sound.
+        /// </summary>
+        private static void ShutdownChime()
+        {
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Media\pscat-out.wav");
+            player.PlaySync();
         }
 
         /// <summary>
@@ -200,6 +212,7 @@
 
         public static void Shutdown()
         {
+            ShutdownChime();
             if (IsCairoUserShell)
             {
                 Shell.StartProcess("explorer.exe");
