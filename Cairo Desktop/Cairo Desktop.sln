@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo Desktop", "Cairo Desktop\Cairo Desktop.csproj", "{F0383E91-6ADC-4016-9E21-D3DC0FFC55FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst Desktop", "Cairo Desktop\Catalyst Desktop.csproj", "{F0383E91-6ADC-4016-9E21-D3DC0FFC55FF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8E50FC68-8BF3-44F2-9229-708500625757} = {8E50FC68-8BF3-44F2-9229-708500625757}
 		{0F1F5673-02B2-4E89-A61D-90F56D368C3F} = {0F1F5673-02B2-4E89-A61D-90F56D368C3F}
@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.WindowsTray", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.WindowsTasks", "CairoDesktop.WindowsTasks\CairoDesktop.WindowsTasks.csproj", "{5FABAD0F-D28C-4EE6-A826-77968087864E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo Explorer", "Cairo Explorer\Cairo Explorer.csproj", "{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst Explorer", "Cairo Explorer\Catalyst Explorer.csproj", "{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CairoDesktop.WindowsTrayHooks", "..\Dependencies\CairoDesktop.WindowsTrayHooks\CairoDesktop.WindowsTrayHooks.vcxproj", "{0F1F5673-02B2-4E89-A61D-90F56D368C3F}"
 EndProject
@@ -54,6 +54,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontPage", "FrontPage\FrontPage.csproj", "{6AC0D768-8267-43D6-BD33-E59BC96EBA8E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "theCatalyst Test Program", "theCatalyst Test Program\theCatalyst Test Program.csproj", "{AD6D2427-407D-44A3-8BB7-9A53313B7924}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Professional", "Professional", "{CA657992-626E-4917-8A7E-F2AD24741FF9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst Containers", "Catalyst Containers\Catalyst Containers.csproj", "{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -299,6 +303,18 @@ Global
 		{AD6D2427-407D-44A3-8BB7-9A53313B7924}.Release|x64.Build.0 = Release|Any CPU
 		{AD6D2427-407D-44A3-8BB7-9A53313B7924}.Release|x86.ActiveCfg = Release|Any CPU
 		{AD6D2427-407D-44A3-8BB7-9A53313B7924}.Release|x86.Build.0 = Release|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Debug|x64.Build.0 = Debug|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Debug|x86.Build.0 = Debug|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Release|x64.ActiveCfg = Release|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Release|x64.Build.0 = Release|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Release|x86.ActiveCfg = Release|Any CPU
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -308,6 +324,7 @@ Global
 		{2825E205-7588-482F-8C84-7D1A3A33E58A} = {9AE12052-2D12-456D-AFD3-9CE77E4DC6A7}
 		{D515AC48-7613-445E-A192-D79A1CA638FE} = {D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}
 		{D744C35D-F35E-4F84-9C61-5703BD2A48FC} = {9AE12052-2D12-456D-AFD3-9CE77E4DC6A7}
+		{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C} = {CA657992-626E-4917-8A7E-F2AD24741FF9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7566EAA4-435C-4795-BB55-54BA364D0419}
