@@ -8,12 +8,14 @@
     using Microsoft.Win32;
     using SupportingClasses;
     using System;
+    using System.IO;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Markup;
     using System.Windows.Threading;
+    using System.Reflection;
 
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
@@ -152,14 +154,20 @@
             app.Run();
             
         }
+        /// <summary>
+        /// The Path Of Catalyst
+        /// </summary>
+        static string CatPath() {
+               return Path.GetDirectoryName(
+                     Assembly.GetAssembly(typeof(Startup)).CodeBase);
 
-
+        } 
         /// <summary>
         /// Plays the iconic Proshell jingle
         /// </summary>
         private static void StartupChime()
         {
-            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Media\pscat-in.wav");
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(CatPath() + @"\Media\pscat-in.wav");
             player.Play();
         }
 
@@ -168,7 +176,7 @@
         /// </summary>
         private static void ShutdownChime()
         {
-            System.Media.SoundPlayer player = new System.Media.SoundPlayer(@"Media\pscat-out.wav");
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer(CatPath() + @"\Media\pscat-out.wav");
             player.PlaySync();
         }
 

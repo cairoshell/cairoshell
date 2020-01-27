@@ -29,10 +29,11 @@ namespace CairoDesktop.Extensions.ConsoleOutput
             }
             else
             {
+                // The Console Should Not Be Shown At all.
                 // Assume we aren't running from the IDE
-                ConsoleManager.Show(true);
-                CairoLogger.Instance.Attach(new ConsoleLog());
-                Console.WriteLine("Console Output Extension Started");
+                //ConsoleManager.Show(true);
+                //CairoLogger.Instance.Attach(new ConsoleLog());
+                //Console.WriteLine("Console Output Extension Started");
             }
         }
 
