@@ -14,24 +14,26 @@ namespace Catalyst_Containers
     {
         public static string ApplicationFolder()
         {
-            return Application.ExecutablePath;
+            return Path.GetDirectoryName(Application.ExecutablePath);
         }
         public static string CMFolderName()
         {
-            return Application.ExecutablePath + @"\catcontainers\coremodules";
+            return Path.GetDirectoryName(Application.ExecutablePath) + @"\catcontainers\coremodules";
         }
         public static string ContainerPath(string id)
         {
-            return Application.ExecutablePath + @"\catcontainers\containers\" + id;
+            return Path.GetDirectoryName(Application.ExecutablePath) + @"\catcontainers\containers\" + id;
         }
     }
     public class PluginLoader
     {
-        public static List<ICoreModule> Plugins { get; set; }
+        public static Dictionary<string,ICoreModule> Plugins { get; set; }
+        public static Dictionary<string, string> FriendlyNames { get; set; }
 
         public void LoadPlugins()
         {
-            Plugins = new List<ICoreModule>();
+            Plugins = new Dictionary<string, ICoreModule>();
+            FriendlyNames = new Dictionary<string, string>();
 
             //Load the DLLs from the Plugins directory
             if (Directory.Exists(Constants.CMFolderName()))
@@ -54,8 +56,10 @@ namespace Catalyst_Containers
                 .ToArray();
             foreach (Type type in types)
             {
+                var cm = (ICoreModule)Activator.CreateInstance(type);
                 //Create a new instance of all found types
-                Plugins.Add((ICoreModule)Activator.CreateInstance(type));
+                Plugins.Add(cm.UniqueID, cm);
+                FriendlyNames.Add("("+cm.UniqueID+") - "+ cm.DisplayName, cm.UniqueID);
             }
         }
     }

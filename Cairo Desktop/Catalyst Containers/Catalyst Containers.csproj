@@ -120,5 +120,16 @@
   <ItemGroup>
     <None Include="Resources\cont_logo.png" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="..\ProshellNT2\bin\Debug\ProshellNT2.dll">
+      <Link>catcontainers\coremodules\ProshellNT2.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\ProshellNT2\bin\Debug\ProshellNT2.TargetingPack.dll">
+      <Link>catcontainers\coremodules\ProshellNT2.TargetingPack.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

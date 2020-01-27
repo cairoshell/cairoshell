@@ -102,6 +102,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Catalyst Containers\Catalyst Containers.csproj">
+      <Project>{4c16aedc-43a5-4eb3-bdef-d6135deb372c}</Project>
+      <Name>Catalyst Containers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\theCatalyst\theCatalyst.csproj">
       <Project>{dac61860-816e-4430-8b3d-40c4a06b3253}</Project>
       <Name>theCatalyst</Name>

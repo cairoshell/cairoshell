@@ -27,7 +27,9 @@ namespace ProshellNT2
 
         public void Boot(string id, Form player)
         {
-            throw new NotImplementedException();
+            MainForm mainForm = new MainForm();
+            mainForm.MdiParent = player;
+            mainForm.Show();
         }
     }
 }
