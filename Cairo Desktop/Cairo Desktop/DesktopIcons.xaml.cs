@@ -45,13 +45,6 @@ namespace CairoDesktop
                 xOffset = 0;
 
             panel.Margin = new Thickness(xOffset, yOffset, 0, 0);
-
-            if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 0)
-                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewVerticalSmallStyle") as Style;
-            else if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 2)
-                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewVerticalStyle") as Style;
-            else if (Settings.DesktopIconSize == 0)
-                IconsControl.Style = Application.Current.FindResource("DesktopFolderViewHorizontalSmallStyle") as Style;
         }
 
         private void SetDesktopDir(string desktopDir)
