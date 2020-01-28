@@ -212,7 +212,7 @@
                                         </ListView.ItemContainerStyle>
                                     </ListView>
                                     <Border Margin="99,-3,0,-3" Padding="0,3" Width="351" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}" Visibility="Collapsed" Name="bdrTaskView">
-                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_TaskView)}" Style="{StaticResource CairoMenuItemStyle}" Click="TaskView_Click">
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_TaskView)}" Click="TaskView_Click">
                                             <MenuItem.Icon>
                                                 <Image Source="Resources\taskViewIcon.png"
                                         Width="16"

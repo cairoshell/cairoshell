@@ -267,7 +267,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="CairoMenuItemStyle"
+    <Style x:Key="{x:Type MenuItem}"
         TargetType="{x:Type MenuItem}">
         <Setter Property="Foreground" Value="{DynamicResource ResourceKey=MenuItemForeground}" />
         <Setter Property="FontFamily" Value="Segoe UI" />
@@ -558,7 +558,7 @@
         </Setter>
     </Style>
     <Style x:Key="CairoMenuItemCairoMenuStyle"
-        TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
+        TargetType="{x:Type MenuItem}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type MenuItem}">
@@ -699,7 +699,7 @@
         </Setter>
     </Style>
     <Style x:Key="CairoMenuItemCairoSearchMenuStyle"
-        TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
+        TargetType="{x:Type MenuItem}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type MenuItem}">
@@ -792,8 +792,7 @@
         </Setter>
     </Style>
     <!-- CairoContextMenuStyle -->
-    <Style x:Key="CairoContextMenuStyle"
-        TargetType="{x:Type ContextMenu}">
+    <Style TargetType="{x:Type ContextMenu}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContextMenu}">
@@ -820,8 +819,7 @@
         </Setter>
     </Style>
     <!-- Separator -->
-    <Style x:Key="CairoMenuSeparatorStyle"
-        TargetType="{x:Type Separator}">
+    <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}">
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
         <Setter Property="Template">
@@ -837,7 +835,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <!-- Search Results -->
     <Style x:Key="SearchTextBox" TargetType="TextBox">
         <Setter Property="Width" Value="185"/>

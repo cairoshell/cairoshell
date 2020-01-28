@@ -14,15 +14,7 @@
                 Width="16"
                 Height="16" />
             <Button.ContextMenu>
-                <ContextMenu Style="{StaticResource CairoContextMenuStyle}" Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
-                    <ContextMenu.Resources>
-                        <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CairoMenuItemStyle}">
-
-                        </Style>
-                        <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="{x:Type Separator}" BasedOn="{StaticResource CairoMenuSeparatorStyle}">
-                            <Setter Property="Visibility" Value="Visible" />
-                        </Style>
-                    </ContextMenu.Resources>
+                <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Open)}" Click="LaunchProgramMenu" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_OpenAsAdministrator)}" Click="LaunchProgramAdmin" />
                     <Separator />
