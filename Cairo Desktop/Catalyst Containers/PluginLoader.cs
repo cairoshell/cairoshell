@@ -24,6 +24,10 @@ namespace Catalyst_Containers
         {
             return Path.GetDirectoryName(Application.ExecutablePath) + @"\catcontainers\containers\" + id;
         }
+        public static string ContainerPath()
+        {
+            return Path.GetDirectoryName(Application.ExecutablePath) + @"\catcontainers\containers";
+        }
     }
     public class PluginLoader
     {
