@@ -289,91 +289,109 @@ namespace CairoDesktop.AppGrabber
         /* Helper methods */
         public void LaunchProgram(ApplicationInfo app)
         {
-            // so that we only prompt to always run as admin if it's done consecutively
-            if (app.AskAlwaysAdmin)
+            if (app != null)
             {
-                app.AskAlwaysAdmin = false;
-                Save();
-            }
+                // so that we only prompt to always run as admin if it's done consecutively
+                if (app.AskAlwaysAdmin)
+                {
+                    app.AskAlwaysAdmin = false;
+                    Save();
+                }
 
-            if (!app.IsStoreApp && app.AlwaysAdmin)
-            {
-                Shell.StartProcess(app.Path, "", "runas");
-            }
-            else if (!Shell.StartProcess(app.Path))
-            {
-                CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                if (!app.IsStoreApp && app.AlwaysAdmin)
+                {
+                    Shell.StartProcess(app.Path, "", "runas");
+                }
+                else if (!Shell.StartProcess(app.Path))
+                {
+                    CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
         public void LaunchProgramVerb(ApplicationInfo app, string verb)
         {
-            if (!Shell.StartProcess(app.Path, "", verb))
+            if (app != null)
             {
-                CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                if (!Shell.StartProcess(app.Path, "", verb))
+                {
+                    CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
         public void LaunchProgramAdmin(ApplicationInfo app)
         {
-            if (!app.IsStoreApp)
+            if (app != null)
             {
-                if (!app.AlwaysAdmin)
+                if (!app.IsStoreApp)
                 {
-                    if (app.AskAlwaysAdmin)
+                    if (!app.AlwaysAdmin)
                     {
-                        app.AskAlwaysAdmin = false;
+                        if (app.AskAlwaysAdmin)
+                        {
+                            app.AskAlwaysAdmin = false;
 
-                        bool? always = CairoMessage.Show(String.Format(Localization.DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), Localization.DisplayString.sProgramsMenu_AlwaysAdminTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                            bool? always = CairoMessage.Show(String.Format(Localization.DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), Localization.DisplayString.sProgramsMenu_AlwaysAdminTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-                        if (always == true)
-                            app.AlwaysAdmin = true;
+                            if (always == true)
+                                app.AlwaysAdmin = true;
+                        }
+                        else
+                            app.AskAlwaysAdmin = true;
+
+                        Save();
                     }
-                    else
-                        app.AskAlwaysAdmin = true;
 
-                    Save();
+                    Shell.StartProcess(app.Path, "", "runas");
                 }
-
-                Shell.StartProcess(app.Path, "", "runas");
+                else
+                    LaunchProgram(app);
             }
-            else
-                LaunchProgram(app);
         }
 
         public void RemoveAppConfirm(ApplicationInfo app)
         {
-            string menu;
-            if (app.Category.Type == AppCategoryType.QuickLaunch)
-                menu = Localization.DisplayString.sAppGrabber_QuickLaunch;
-            else
-                menu = Localization.DisplayString.sProgramsMenu;
-            bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name, menu), Localization.DisplayString.sProgramsMenu_RemoveTitle, "Resources/cairoIcon.png", Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel);
-            if (deleteChoice.HasValue && deleteChoice.Value)
+            if (app != null)
             {
-                app.Category.Remove(app);
-                Save();
+                string menu;
+                if (app.Category.Type == AppCategoryType.QuickLaunch)
+                    menu = Localization.DisplayString.sAppGrabber_QuickLaunch;
+                else
+                    menu = Localization.DisplayString.sProgramsMenu;
+                bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name, menu), Localization.DisplayString.sProgramsMenu_RemoveTitle, "Resources/cairoIcon.png", Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel);
+                if (deleteChoice.HasValue && deleteChoice.Value)
+                {
+                    app.Category.Remove(app);
+                    Save();
+                }
             }
         }
 
         public void Rename(ApplicationInfo app, string newName)
         {
-            app.Name = newName;
-            Save();
+            if (app != null)
+            {
+                app.Name = newName;
+                Save();
 
-            CollectionViewSource.GetDefaultView(CategoryList.GetSpecialCategory(AppCategoryType.All)).Refresh();
-            CollectionViewSource.GetDefaultView(app.Category).Refresh();
+                CollectionViewSource.GetDefaultView(CategoryList.GetSpecialCategory(AppCategoryType.All)).Refresh();
+                CollectionViewSource.GetDefaultView(app.Category).Refresh();
+            }
         }
 
         public static void ShowAppProperties(ApplicationInfo app)
         {
-            if (app.IsStoreApp)
-                CairoMessage.ShowAlert(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, MessageBoxImage.None);
-            else
-                Shell.ShowFileProperties(app.Path);
+            if (app != null)
+            {
+                if (app.IsStoreApp)
+                    CairoMessage.ShowAlert(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, MessageBoxImage.None);
+                else
+                    Shell.ShowFileProperties(app.Path);
+            }
         }
 
-        public void AddByPath(string[] fileNames, AppCategoryType categoryType)
+        public void InsertByPath(string[] fileNames, int index, AppCategoryType categoryType)
         {
             int count = 0;
             foreach (String fileName in fileNames)
@@ -383,7 +401,16 @@ namespace CairoDesktop.AppGrabber
                     ApplicationInfo customApp = PathToApp(fileName, false);
                     if (!object.ReferenceEquals(customApp, null))
                     {
-                        CategoryList.GetSpecialCategory(categoryType).Add(customApp);
+                        Category category = CategoryList.GetSpecialCategory(categoryType);
+                        if (category.Contains(customApp))
+                        {
+                            // disallow duplicates within the category
+                            CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                            break;
+                        }
+
+                        if (index >= 0) category.Insert(index, customApp);
+                        else category.Add(customApp);
                         count++;
                     }
                 }
@@ -391,6 +418,11 @@ namespace CairoDesktop.AppGrabber
 
             if (count > 0)
                 Save();
+        }
+
+        public void AddByPath(string[] fileNames, AppCategoryType categoryType)
+        {
+            InsertByPath(fileNames, -1, categoryType);
         }
 
         public void AddStoreApp(string appUserModelId, AppCategoryType categoryType)

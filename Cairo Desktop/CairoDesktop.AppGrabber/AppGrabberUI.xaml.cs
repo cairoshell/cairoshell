@@ -1,4 +1,5 @@
-﻿using CairoDesktop.Interop;
+﻿using CairoDesktop.Common.Logging;
+using CairoDesktop.Interop;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -105,7 +106,17 @@ namespace CairoDesktop.AppGrabber
             {
                 ApplicationInfo customApp = AppGrabber.PathToApp(dlg.FileName, true);
                 if (!object.ReferenceEquals(customApp, null))
-                    programsMenuAppsCollection.Add(customApp);
+                {
+                    if (!programsMenuAppsCollection.Contains(customApp) && !(InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Contains(customApp))
+                    {
+                        programsMenuAppsCollection.Add(customApp);
+                    }
+                    else
+                    {
+                        // disallow adding a duplicate
+                        CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                    }
+                }
             }
         }
 

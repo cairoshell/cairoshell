@@ -16,7 +16,8 @@ namespace CairoDesktop.AppGrabber {
             }
             set {
                 showInMenu = value;
-                // Notify Databindings of property change
+
+                // Notify data bindings of property change
                 if (PropertyChanged != null) {
                     PropertyChanged(this, new PropertyChangedEventArgs("ShowInMenu"));
                 }
@@ -48,7 +49,8 @@ namespace CairoDesktop.AppGrabber {
             }
             set {
                 name = value;
-                // Notify Databindings of property change
+
+                // Notify data bindings of property change
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs("Name"));
@@ -74,7 +76,7 @@ namespace CairoDesktop.AppGrabber {
                 if (type == AppCategoryType.QuickLaunch)
                     CollectionViewSource.GetDefaultView(this).SortDescriptions.Clear();
 
-                // Notify Databindings of property change
+                // Notify data bindings of property change
                 if (PropertyChanged != null)
                 {
                     PropertyChanged(this, new PropertyChangedEventArgs("Type"));
@@ -167,6 +169,7 @@ namespace CairoDesktop.AppGrabber {
         /// <param name="item">Application info to remove.</param>
         private void RemoveFromAllCategory(ApplicationInfo item)
         {
+            // remove corresponding item from the all category
             if (this.Type != AppCategoryType.All && this.Type != AppCategoryType.QuickLaunch)
                 this.ParentCategoryList.GetSpecialCategory(AppCategoryType.All).Remove(item);
         }
@@ -179,14 +182,16 @@ namespace CairoDesktop.AppGrabber {
             this.internalList.Add(ai);
             if (this.Type != AppCategoryType.All)
                 ai.Category = this;
+
+            // Notify data bindings of property change
             if (CollectionChanged != null) {
                 CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, ai));
             }
-            // Notify Databindings of property change
             if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
 
+            // add corresponding item to the all category (excluding quick launch apps because they are essentially duplicates)
             if (this.Type != AppCategoryType.All && this.Type != AppCategoryType.QuickLaunch)
                 this.ParentCategoryList.GetSpecialCategory(AppCategoryType.All).Add(ai);
         }
@@ -234,14 +239,16 @@ namespace CairoDesktop.AppGrabber {
             internalList.Insert(index, item);
             if (this.Type != AppCategoryType.All)
                 item.Category = this;
+
+            // Notify data bindings of property change
             if (CollectionChanged != null) {
                 CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, index));
             }
-            // Notify Databindings of property change
             if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
 
+            // add corresponding item to the all category (excluding quick launch apps because they are essentially duplicates)
             if (this.Type != AppCategoryType.All && this.Type != AppCategoryType.QuickLaunch)
                 this.ParentCategoryList.GetSpecialCategory(AppCategoryType.All).Insert(0, item);
         }
@@ -254,10 +261,11 @@ namespace CairoDesktop.AppGrabber {
             ApplicationInfo app = internalList[index];
             internalList[index].Category = null;
             internalList.RemoveAt(index);
+
+            // Notify data bindings of property change
             if (CollectionChanged != null) {
                 CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, app, index));
             }
-            // Notify Databindings of property change
             if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
@@ -271,11 +279,11 @@ namespace CairoDesktop.AppGrabber {
             internalList.RemoveAt(oldIndex);
             internalList.Insert(newIndex, item);
 
+            // Notify data bindings of property change
             if (CollectionChanged != null)
             {
                 CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Move, item, newIndex, oldIndex));
             }
-            // Notify Databindings of property change
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
@@ -295,6 +303,8 @@ namespace CairoDesktop.AppGrabber {
                 ApplicationInfo oldApp = internalList[index];
                 internalList[index] = value;
                 internalList[index].Category = this;
+
+                // Notify data bindings of property change
                 if (CollectionChanged != null) {
                     CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, value, oldApp));
                 }
@@ -315,10 +325,11 @@ namespace CairoDesktop.AppGrabber {
                 RemoveFromAllCategory(ai);
             }
             internalList.Clear();
+
+            // Notify data bindings of property change
             if (CollectionChanged != null) {
                 CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
-            // Notify Databindings of property change
             if (PropertyChanged != null) {
                 PropertyChanged(this, new PropertyChangedEventArgs("Count"));
             }
@@ -363,14 +374,17 @@ namespace CairoDesktop.AppGrabber {
         /// <returns>True is successful. Otherwise, False. </returns>
         public bool Remove(ApplicationInfo item) {
             // Need to work with a numbered instance, or else there could be strange issues with duplicates after setting the Category to null
-            ApplicationInfo info = internalList[internalList.IndexOf(item)];
+            int index = internalList.IndexOf(item);
+            ApplicationInfo info = internalList[index];
             info.Category = null;
-            if (CollectionChanged != null) {
-                CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, info, internalList.IndexOf(item)));
-            }
             try {
-                internalList.RemoveAt(internalList.IndexOf(item));
-                // Notify Databindings of property change
+                internalList.RemoveAt(index);
+
+                // Notify data bindings of property change
+                if (CollectionChanged != null)
+                {
+                    CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, info, index));
+                }
                 if (PropertyChanged != null) {
                     PropertyChanged(this, new PropertyChangedEventArgs("Count"));
                 }
