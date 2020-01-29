@@ -288,7 +288,7 @@ namespace CairoDesktop.SupportingClasses
             uint numPrepended = 0;
             
             // add open in new window option to files that are folders if dynamic desktop is enabled
-            if (allFolders && Settings.EnableDynamicDesktop)
+            if (allFolders && Configuration.Settings.Instance.EnableDynamicDesktop)
             {
                 ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.OpenInNewWindow, Localization.DisplayString.sStacks_OpenInNewWindow);
                 numPrepended++;

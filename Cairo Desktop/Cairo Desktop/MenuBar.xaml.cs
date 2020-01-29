@@ -41,7 +41,8 @@ namespace CairoDesktop
         private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
         private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
 
-        private static LowLevelKeyboardListener keyboardListener;
+        // Currently Unused
+        // private static LowLevelKeyboardListener keyboardListener;
 
         public MenuBar() : this(System.Windows.Forms.Screen.PrimaryScreen)
         {
@@ -99,7 +100,7 @@ namespace CairoDesktop
                 miExitCairo.Visibility = Visibility.Collapsed;
             }
 
-            if (Settings.EnableSysTray)
+            if (Settings.Instance.EnableSysTray)
             {
                 initializeVolumeIcon();
             }
@@ -121,7 +122,7 @@ namespace CairoDesktop
             }
 
             // Show power options depending on system support
-            if (Settings.ShowHibernate && Shell.CanHibernate())
+            if (Settings.Instance.ShowHibernate && Shell.CanHibernate())
             {
                 miHibernate.Visibility = Visibility.Visible;
             }
@@ -170,7 +171,7 @@ namespace CairoDesktop
             categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
 
             // set tab based on user preference
-            int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.DefaultProgramsCategory));
+            int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.Instance.DefaultProgramsCategory));
             categorizedProgramsList.SelectedIndex = i;
         }
 
@@ -245,9 +246,9 @@ namespace CairoDesktop
 
             Shell.HideWindowFromTasks(handle);
 
-            if (Settings.EnableCairoMenuHotKey && Screen.Primary && !isCairoMenuHotkeyRegistered)
+            if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary && !isCairoMenuHotkeyRegistered)
             {
-                HotKeyManager.RegisterHotKey(Settings.CairoMenuHotKey, OnShowCairoMenu);
+                HotKeyManager.RegisterHotKey(Settings.Instance.CairoMenuHotKey, OnShowCairoMenu);
                 isCairoMenuHotkeyRegistered = true;
             }
 
@@ -274,7 +275,7 @@ namespace CairoDesktop
                 keyboardListener.HookKeyboard();
             }*/
 
-            if (Settings.EnableMenuBarBlur)
+            if (Settings.Instance.EnableMenuBarBlur)
             {
                 Shell.EnableWindowBlur(handle);
             }
@@ -482,8 +483,8 @@ namespace CairoDesktop
 
         private void clock_Tick()
         {
-            dateText.Text = DateTime.Now.ToString(Settings.TimeFormat);
-            dateText.ToolTip = DateTime.Now.ToString(Settings.DateFormat);
+            dateText.Text = DateTime.Now.ToString(Settings.Instance.TimeFormat);
+            dateText.ToolTip = DateTime.Now.ToString(Settings.Instance.DateFormat);
         }
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
@@ -511,7 +512,7 @@ namespace CairoDesktop
                             this.Topmost = false;
                             Shell.ShowWindowBottomMost(this.handle);
 
-                            if (Settings.EnableTaskbar)
+                            if (Settings.Instance.EnableTaskbar)
                             {
                                 Startup.TaskbarWindow.SetFullScreenMode(true);
                             }
@@ -522,7 +523,7 @@ namespace CairoDesktop
                             this.Topmost = true;
                             Shell.ShowWindowTopMost(this.handle);
 
-                            if (Settings.EnableTaskbar)
+                            if (Settings.Instance.EnableTaskbar)
                             {
                                 Startup.TaskbarWindow.SetFullScreenMode(false);
                             }
@@ -554,11 +555,11 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
-                if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens)
+                if ((Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon) && !Startup.IsSettingScreens)
                 {
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
                 }
-                else if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
+                else if (!(Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
                     Screen = System.Windows.Forms.Screen.PrimaryScreen;
@@ -575,11 +576,11 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
-                if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
+                if ((Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
                 {
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
                 }
-                else if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
+                else if (!(Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
                     Screen = System.Windows.Forms.Screen.PrimaryScreen;
@@ -590,7 +591,7 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
             {
-                if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
+                if ((Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
                 {
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
                 }
@@ -678,10 +679,11 @@ namespace CairoDesktop
 
                 WinSparkle.win_sparkle_cleanup();
 
-                if (keyboardListener != null)
-                {
-                    keyboardListener.UnHookKeyboard();
-                }
+                // Currently Unused
+                //if (keyboardListener != null)
+                //{
+                //    keyboardListener.UnHookKeyboard();
+                //}
 
                 if (Startup.IsCairoUserShell)
                 {

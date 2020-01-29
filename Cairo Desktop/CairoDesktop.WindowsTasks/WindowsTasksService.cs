@@ -142,7 +142,7 @@ namespace CairoDesktop.WindowsTasks
             {
                 do
                 {
-                    if (Configuration.Settings.EnableTaskbarPolling)
+                    if (Configuration.Settings.Instance.EnableTaskbarPolling)
                         win.VisCheck.Stop();
                     this.Windows.Remove(win);
                 }

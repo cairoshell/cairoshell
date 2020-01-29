@@ -42,7 +42,7 @@
 
         private void loadRadioGroups()
         {
-            switch (Settings.DesktopLabelPosition)
+            switch (Settings.Instance.DesktopLabelPosition)
             {
                 case 0:
                     radDesktopLabelPos0.IsChecked = true;
@@ -56,7 +56,7 @@
                     break;
             }
 
-            switch (Settings.DesktopIconSize)
+            switch (Settings.Instance.DesktopIconSize)
             {
                 case 0:
                     radDesktopIconSize0.IsChecked = true;
@@ -70,7 +70,7 @@
                     break;
             }
 
-            switch (Settings.TaskbarMode)
+            switch (Settings.Instance.TaskbarMode)
             {
                 case 0:
                     radTaskbarMode0.IsChecked = true;
@@ -91,7 +91,7 @@
                     break;
             }
 
-            switch (Settings.TaskbarPosition)
+            switch (Settings.Instance.TaskbarPosition)
             {
                 case 0:
                     radTaskbarPos0.IsChecked = true;
@@ -105,7 +105,7 @@
                     break;
             }
 
-            switch (Settings.TaskbarIconSize)
+            switch (Settings.Instance.TaskbarIconSize)
             {
                 case 0:
                     radTaskbarSize0.IsChecked = true;
@@ -126,7 +126,7 @@
                     break;
             }
 
-            switch (Settings.TaskbarMiddleClick)
+            switch (Settings.Instance.TaskbarMiddleClick)
             {
                 case 0:
                     radTaskbarMiddleClick0.IsChecked = true;
@@ -140,7 +140,7 @@
                     break;
             }
 
-            switch (Settings.SysTrayAlwaysExpanded)
+            switch (Settings.Instance.SysTrayAlwaysExpanded)
             {
                 case false:
                     radTrayMode0.IsChecked = true;
@@ -320,14 +320,14 @@
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.Description = Localization.DisplayString.sDesktop_BrowseTitle;
             fbd.ShowNewFolderButton = false;
-            fbd.SelectedPath = Settings.DesktopDirectory;
+            fbd.SelectedPath = Settings.Instance.DesktopDirectory;
 
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 DirectoryInfo dir = new DirectoryInfo(fbd.SelectedPath);
                 if (dir != null)
                 {
-                    Settings.DesktopDirectory = fbd.SelectedPath;
+                    Settings.Instance.DesktopDirectory = fbd.SelectedPath;
                     txtDesktopHome.Text = fbd.SelectedPath;
                 }
             }
@@ -335,110 +335,110 @@
 
         private void radTaskbarMode0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.TaskbarMode = 0;
+            Settings.Instance.TaskbarMode = 0;
             showRestartButton();
         }
 
         private void radTaskbarMode1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.TaskbarMode = 1;
+            Settings.Instance.TaskbarMode = 1;
             showRestartButton();
         }
 
         private void radTaskbarMode2_Click(object sender, RoutedEventArgs e)
         {
-            Settings.TaskbarMode = 2;
+            Settings.Instance.TaskbarMode = 2;
             showRestartButton();
         }
 
         private void radTaskbarPos0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.TaskbarPosition = 0;
+            Settings.Instance.TaskbarPosition = 0;
             showRestartButton();
         }
 
         private void radTaskbarPos1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.TaskbarPosition = 1;
+            Settings.Instance.TaskbarPosition = 1;
             showRestartButton();
         }
 
         private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.TaskbarIconSize = 0;
+            Settings.Instance.TaskbarIconSize = 0;
             showRestartButton();
         }
 
         private void radTaskbarSize1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.TaskbarIconSize = 1;
+            Settings.Instance.TaskbarIconSize = 1;
             showRestartButton();
         }
 
         private void radTaskbarSize10_Click(object sender, RoutedEventArgs e)
         {
-            Settings.TaskbarIconSize = 10;
+            Settings.Instance.TaskbarIconSize = 10;
             showRestartButton();
         }
 
         private void radTaskbarMiddleClick0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.TaskbarMiddleClick = 0;
+            Settings.Instance.TaskbarMiddleClick = 0;
         }
 
         private void radTaskbarMiddleClick1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.TaskbarMiddleClick = 1;
+            Settings.Instance.TaskbarMiddleClick = 1;
         }
 
         private void radDesktopLabelPos0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.DesktopLabelPosition = 0;
+            Settings.Instance.DesktopLabelPosition = 0;
             showRestartButton();
         }
 
         private void radDesktopLabelPos1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.DesktopLabelPosition = 1;
+            Settings.Instance.DesktopLabelPosition = 1;
             showRestartButton();
         }
 
         private void radDesktopIconSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.DesktopIconSize = 0;
+            Settings.Instance.DesktopIconSize = 0;
             showRestartButton();
         }
 
         private void radDesktopIconSize2_Click(object sender, RoutedEventArgs e)
         {
-            Settings.DesktopIconSize = 2;
+            Settings.Instance.DesktopIconSize = 2;
             showRestartButton();
         }
 
         private void radTrayMode0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.SysTrayAlwaysExpanded = false;
+            Settings.Instance.SysTrayAlwaysExpanded = false;
             showRestartButton();
         }
 
         private void radTrayMode1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.SysTrayAlwaysExpanded = true;
+            Settings.Instance.SysTrayAlwaysExpanded = true;
             showRestartButton();
         }
 
         private void cboCairoMenuHotKey_DropDownClosed(object sender, EventArgs e)
         {
             List<string> hotkey = new List<string> { cboCairoMenuHotKeyMod1.SelectedValue.ToString(), cboCairoMenuHotKeyMod2.SelectedValue.ToString(), cboCairoMenuHotKeyKey.SelectedValue.ToString() };
-            Settings.CairoMenuHotKey = hotkey;
+            Settings.Instance.CairoMenuHotKey = hotkey.ToArray();
 
             showRestartButton();
         }
 
         private void cboDesktopOverlayHotKey_DropDownClosed(object sender, EventArgs e)
         {
-            List<string> hotkey = new List<string> { cboDesktopOverlayHotKeyMod1.SelectedValue.ToString(), cboDesktopOverlayHotKeyMod2.SelectedValue.ToString(), cboDesktopOverlayHotKeyKey.SelectedValue.ToString() };
-            Settings.DesktopOverlayHotKey = hotkey;
+            string[] hotkey = new string[] { cboDesktopOverlayHotKeyMod1.SelectedValue.ToString(), cboDesktopOverlayHotKeyMod2.SelectedValue.ToString(), cboDesktopOverlayHotKeyKey.SelectedValue.ToString() };
+            Settings.Instance.DesktopOverlayHotKey = hotkey;
 
             showRestartButton();
         }

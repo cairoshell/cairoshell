@@ -292,9 +292,9 @@ namespace CairoDesktop
         {
             Shell.HideWindowFromTasks(helper.Handle);
 
-            if (Settings.EnableDesktopOverlayHotKey)
+            if (Settings.Instance.EnableDesktopOverlayHotKey)
             {
-                HotKeyManager.RegisterHotKey(Settings.DesktopOverlayHotKey, OnShowDesktop);
+                HotKeyManager.RegisterHotKey(Settings.Instance.DesktopOverlayHotKey, OnShowDesktop);
             }
         }
 
@@ -419,10 +419,10 @@ namespace CairoDesktop
             helper = new WindowInteropHelper(this);
             HwndSource.FromHwnd(helper.Handle).AddHook(new HwndSourceHook(WndProc));
 
-            if (Settings.EnableDesktop && Icons == null)
+            if (Settings.Instance.EnableDesktop && Icons == null)
             {
                 grid.Children.Add(Icons = new DesktopIcons());
-                if (Settings.EnableDynamicDesktop)
+                if (Settings.Instance.EnableDynamicDesktop)
                 {
                     TryAndEat(() =>
                          {
@@ -545,7 +545,7 @@ namespace CairoDesktop
 
             if (action == "openFolder")
             {
-                if (Settings.EnableDynamicDesktop)
+                if (Settings.Instance.EnableDynamicDesktop)
                 {
                     Navigate(path);
                 }

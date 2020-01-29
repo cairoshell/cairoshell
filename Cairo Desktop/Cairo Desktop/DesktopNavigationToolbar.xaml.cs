@@ -66,7 +66,7 @@ namespace CairoDesktop
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
             {
                 string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                string userDesktopPath = Settings.DesktopDirectory;
+                string userDesktopPath = Settings.Instance.DesktopDirectory;
 
                 if (Owner is Desktop owningDesktop)
                 {

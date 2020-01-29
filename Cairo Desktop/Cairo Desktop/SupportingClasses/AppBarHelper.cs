@@ -75,14 +75,14 @@ namespace CairoDesktop.SupportingClasses
         private static void prepareForInterop()
         {
             // get shell window back so we can do appbar stuff
-            if (Settings.EnableSysTray)
+            if (Settings.Instance.EnableSysTray)
                 NotificationArea.Instance.Suspend();
         }
 
         private static void interopDone()
         {
             // take back over
-            if (Settings.EnableSysTray)
+            if (Settings.Instance.EnableSysTray)
                 NotificationArea.Instance.MakeActive();
         }
 
@@ -159,7 +159,7 @@ namespace CairoDesktop.SupportingClasses
             interopDone();
 
             // apparently the taskbars like to pop up when app bars change
-            if (Settings.EnableTaskbar)
+            if (Settings.Instance.EnableTaskbar)
             {
                 SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.Hide);
             }
@@ -278,7 +278,7 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.MoveWindow(hWnd, x, y, cx, cy, true);
 
             // apparently the taskbars like to pop up when app bars change
-            if (Settings.EnableTaskbar)
+            if (Settings.Instance.EnableTaskbar)
             {
                 SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
             }
@@ -324,9 +324,9 @@ namespace CairoDesktop.SupportingClasses
             rc.right = screen.Bounds.Right;
 
             // only allocate space for taskbar if enabled
-            if (Settings.EnableTaskbar && Settings.TaskbarMode == 0)
+            if (Settings.Instance.EnableTaskbar && Configuration.Settings.Instance.TaskbarMode == 0)
             {
-                if (Settings.TaskbarPosition == 1)
+                if (Settings.Instance.TaskbarPosition == 1)
                 {
                     rc.top = screen.Bounds.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale) + (int)(Startup.TaskbarWindow.ActualHeight * Shell.DpiScale);
                     rc.bottom = screen.Bounds.Bottom;

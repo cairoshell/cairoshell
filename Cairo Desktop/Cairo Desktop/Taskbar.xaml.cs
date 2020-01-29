@@ -97,7 +97,7 @@ namespace CairoDesktop
             bdrTaskbar.MaxWidth = screenWidth - 36;
             Width = screenWidth;
 
-            switch (Settings.TaskbarIconSize)
+            switch (Settings.Instance.TaskbarIconSize)
             {
                 case 0:
                     addToSize = 16;
@@ -113,7 +113,7 @@ namespace CairoDesktop
             Height = 29 + addToSize;
 
             // set taskbar edge based on preference
-            if (Settings.TaskbarPosition == 1)
+            if (Settings.Instance.TaskbarPosition == 1)
             {
                 Top = Startup.MenuBarWindow.Height;
                 appBarEdge = AppBarHelper.ABEdge.ABE_TOP;
@@ -138,7 +138,7 @@ namespace CairoDesktop
             else
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);
 
-            if (Settings.FullWidthTaskBar)
+            if (Settings.Instance.FullWidthTaskBar)
             {
                 bdrTaskbarLeft.CornerRadius = new CornerRadius(0);
                 bdrTaskbarEnd.CornerRadius = new CornerRadius(0);
@@ -190,7 +190,7 @@ namespace CairoDesktop
             setPosition();
             setTaskButtonSize();
 
-            if (Settings.TaskbarMode == 0)
+            if (Settings.Instance.TaskbarMode == 0)
                 appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, appBarEdge);
 
             Shell.HideWindowFromTasks(handle);
@@ -217,7 +217,7 @@ namespace CairoDesktop
 
             Left = Screen.Bounds.Left / dpiScale;
 
-            if (Settings.FullWidthTaskBar)
+            if (Settings.Instance.FullWidthTaskBar)
                 bdrTaskbar.Width = screenWidth - btnDesktopOverlay.Width - btnTaskList.Width + 1; // account for border
 
             // set maxwidth always
@@ -239,7 +239,7 @@ namespace CairoDesktop
 
             double screenWidth = Screen.Bounds.Width / dpiScale;
 
-            if (Settings.FullWidthTaskBar)
+            if (Settings.Instance.FullWidthTaskBar)
                 bdrTaskbar.Width = screenWidth - btnDesktopOverlay.Width - btnTaskList.Width + 1; // push the border off the edge
 
             // set maxwidth always
@@ -250,7 +250,7 @@ namespace CairoDesktop
 
         private void setTopPosition(double top)
         {
-            if (Settings.TaskbarPosition == 1)
+            if (Settings.Instance.TaskbarPosition == 1)
             {
                 // set to bottom of menu bar
                 Top = (Screen.Bounds.Y / dpiScale) + Startup.MenuBarWindow.Height;
@@ -287,7 +287,7 @@ namespace CairoDesktop
             {
                 displayChanged = false;
 
-                if (Settings.TaskbarMode > 0)
+                if (Settings.Instance.TaskbarMode > 0)
                 {
                     // set position after 2 seconds anyway in case we missed something
                     var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
@@ -325,7 +325,7 @@ namespace CairoDesktop
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
 
-            if (msg == appbarMessageId && appbarMessageId != -1 && Settings.TaskbarMode == 0)
+            if (msg == appbarMessageId && appbarMessageId != -1 && Configuration.Settings.Instance.TaskbarMode == 0)
             {
                 switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
                 {
@@ -349,17 +349,17 @@ namespace CairoDesktop
                 }
                 handled = true;
             }
-            else if (msg == NativeMethods.WM_ACTIVATE && Settings.TaskbarMode == 0)
+            else if (msg == NativeMethods.WM_ACTIVATE && Configuration.Settings.Instance.TaskbarMode == 0)
             {
                 AppBarHelper.AppBarActivate(hwnd);
             }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.TaskbarMode == 0)
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Configuration.Settings.Instance.TaskbarMode == 0)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
             }
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
-                if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
+                if (!(Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
                     Screen = System.Windows.Forms.Screen.PrimaryScreen;
@@ -373,7 +373,7 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
-                if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
+                if (!(Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
                     Screen = System.Windows.Forms.Screen.PrimaryScreen;

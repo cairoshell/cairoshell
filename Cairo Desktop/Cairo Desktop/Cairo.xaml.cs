@@ -26,7 +26,7 @@ namespace CairoDesktop
                     {
                         // if directory, perform special handling
                         if (file.IsDirectory
-                            && Settings.EnableDynamicDesktop
+                            && Configuration.Settings.Instance.EnableDynamicDesktop
                             && Window.GetWindow(senderButton)?.Name == "CairoDesktopWindow"
                             && Startup.DesktopWindow != null)
                         {

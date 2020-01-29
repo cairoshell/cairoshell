@@ -19,7 +19,7 @@ namespace CairoDesktop
 
         private void TrayItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (Configuration.Settings.SysTrayAlwaysExpanded)
+            if (Configuration.Settings.Instance.SysTrayAlwaysExpanded)
             {
                 LayoutRoot.Visibility = Visibility.Visible;
                 btnToggle.Visibility = Visibility.Collapsed;

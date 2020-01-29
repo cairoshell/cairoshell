@@ -135,7 +135,7 @@ namespace CairoDesktop
                 var Window = (DataContext as WindowsTasks.ApplicationWindow);
                 if (Window != null)
                 {
-                    switch (Configuration.Settings.TaskbarMiddleClick)
+                    switch (Configuration.Settings.Instance.TaskbarMiddleClick)
                     {
                         case 1:
                             Window.Close();
@@ -152,7 +152,7 @@ namespace CairoDesktop
         {
             if (!ListMode)
             {
-                switch (Configuration.Settings.TaskbarIconSize)
+                switch (Configuration.Settings.Instance.TaskbarIconSize)
                 {
                     case 0:
                         imgIcon.Width = 32;

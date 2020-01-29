@@ -339,7 +339,7 @@ namespace CairoDesktop.AppGrabber
         public ImageSource GetAssociatedIcon()
         {
             int size = 1;
-            if (this.Category != null && this.Category.Type == AppCategoryType.QuickLaunch && Configuration.Settings.TaskbarIconSize != 1)
+            if (this.Category != null && this.Category.Type == AppCategoryType.QuickLaunch && Configuration.Settings.Instance.TaskbarIconSize != 1)
                 size = 0;
 
             if (this.IsStoreApp)

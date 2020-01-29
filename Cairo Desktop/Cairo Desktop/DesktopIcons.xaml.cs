@@ -25,12 +25,12 @@ namespace CairoDesktop
         public DesktopIcons()
         {
             string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string userDesktopPath = Settings.DesktopDirectory;
+            string userDesktopPath = Settings.Instance.DesktopDirectory;
 
             // first run won't have desktop directory set
             if (string.IsNullOrWhiteSpace(userDesktopPath))
             {
-                Settings.DesktopDirectory = defaultDesktopPath;
+                Settings.Instance.DesktopDirectory = defaultDesktopPath;
                 userDesktopPath = defaultDesktopPath;
             }
 
@@ -41,16 +41,16 @@ namespace CairoDesktop
 
             InitializeComponent();
 
-            if (Settings.DesktopLabelPosition == 1)
+            if (Settings.Instance.DesktopLabelPosition == 1)
                 xOffset = 0;
 
             panel.Margin = new Thickness(xOffset, yOffset, 0, 0);
 
-            if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 0)
+            if (Settings.Instance.DesktopLabelPosition == 1 && Configuration.Settings.Instance.DesktopIconSize == 0)
                 IconsControl.Style = Application.Current.FindResource("DesktopFolderViewVerticalSmallStyle") as Style;
-            else if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 2)
+            else if (Settings.Instance.DesktopLabelPosition == 1 && Configuration.Settings.Instance.DesktopIconSize == 2)
                 IconsControl.Style = Application.Current.FindResource("DesktopFolderViewVerticalStyle") as Style;
-            else if (Settings.DesktopIconSize == 0)
+            else if (Settings.Instance.DesktopIconSize == 0)
                 IconsControl.Style = Application.Current.FindResource("DesktopFolderViewHorizontalSmallStyle") as Style;
         }
 
