@@ -26,11 +26,11 @@
                 <DataTemplate>
                     <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}" DataContext="{Binding}" Drop="StackMenu_Drop"  PreviewMouseLeftButtonDown="StackMenu_PreviewMouseLeftButtonDown" PreviewMouseMove="StackMenu_PreviewMouseMove" Name="StackMenu" PreviewMouseLeftButtonUp="StackMenu_PreviewMouseLeftButtonUp">
                         <Menu.ContextMenu>
-                            <ContextMenu Style="{StaticResource CairoContextMenuStyle}" Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
-                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_OpenInNewWindow)}" Click="Open_Click" CommandParameter="{Binding Path=FullName}" Style="{StaticResource CairoMenuItemStyle}" />
-                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_OpenOnDesktop)}" Name="miOpenOnDesktop" Click="OpenDesktop_Click"  CommandParameter="{Binding Path=FullName}" Style="{StaticResource CairoMenuItemStyle}" />
-                                <Separator Style="{StaticResource CairoMenuSeparatorStyle}" />
-                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_Remove)}" Click="Remove_Click" CommandParameter="{Binding}" Style="{StaticResource CairoMenuItemStyle}" />
+                            <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
+                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_OpenInNewWindow)}" Click="Open_Click" CommandParameter="{Binding Path=FullName}" />
+                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_OpenOnDesktop)}" Name="miOpenOnDesktop" Click="OpenDesktop_Click"  CommandParameter="{Binding Path=FullName}" />
+                                <Separator />
+                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_Remove)}" Click="Remove_Click" CommandParameter="{Binding}" />
                             </ContextMenu>
                         </Menu.ContextMenu>
                         <MenuItem Header="{Binding Path=NameLabel, Mode=OneTime}" CommandParameter="{Binding}" Style="{StaticResource CairoStacksStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Margin="0" PreviewMouseUp="NameLabel_PreviewMouseUp">

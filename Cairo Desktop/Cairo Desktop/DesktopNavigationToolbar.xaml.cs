@@ -30,10 +30,7 @@ namespace CairoDesktop
             InitializeComponent();
             SetPosition();
 
-            browseContextMenu = new System.Windows.Controls.ContextMenu
-            {
-                Style = FindResource("CairoContextMenuStyle") as Style
-            };
+            browseContextMenu = new System.Windows.Controls.ContextMenu();
         }
 
         private void SetPosition()
@@ -103,17 +100,14 @@ namespace CairoDesktop
                             locationMenuItem.Tag = location;
                             locationMenuItem.Click += LocationMenuItem_Click;
 
-                            locationMenuItem.Style = FindResource("CairoMenuItemStyle") as Style;
-
                             browseContextMenu.Items.Add(locationMenuItem);
                         }
 
-                        browseContextMenu.Items.Add(new System.Windows.Controls.Separator { Style = FindResource("CairoMenuSeparatorStyle") as Style});
+                        browseContextMenu.Items.Add(new System.Windows.Controls.Separator());
 
                         System.Windows.Controls.MenuItem clearHistoryMenuItem = new System.Windows.Controls.MenuItem { Header = "Clear History" };
                         clearHistoryMenuItem.Click += ClearHistoryMenuItem_Click;
 
-                        clearHistoryMenuItem.Style = FindResource("CairoMenuItemStyle") as Style;
                         browseContextMenu.Items.Add(clearHistoryMenuItem);
 
                         browseContextMenu.IsOpen = true;

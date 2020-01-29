@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="CairoDesktop.Icon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Loaded="UserControl_Loaded">
+    <Button x:Name="btnFile" Click="btnFile_Click" CommandParameter="{Binding Path=FullName}" Style="{StaticResource CairoFileButtonStyle}">
+        <DockPanel>
+            <Image DockPanel.Dock="Top" Stretch="Uniform" Width="32" Height="32" RenderOptions.BitmapScalingMode="LowQuality" x:Name="imgIcon" />
+            <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name, Mode=OneWay}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
+            <Border DockPanel.Dock="Bottom" Name="bdrFilename">
+                <Border.Effect>
+                    <DropShadowEffect Color="Black" ShadowDepth="2" Direction="270" BlurRadius="4" Opacity="1" />
+                </Border.Effect>
+                <TextBlock
+                        Text="{Binding Path=FriendlyName}"
+                        TextAlignment="Center"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap"
+                        Height="35"
+                        Width="80"
+                        Background="Transparent"
+                        Margin="5,0,5,3"
+                        x:Name="txtFilename"
+                        Foreground="{DynamicResource ResourceKey=StacksIconText}">
+                    <TextBlock.ToolTip>
+                        <ToolTip Content="{Binding Path=Name, Mode=OneWay}" />
+                    </TextBlock.ToolTip>
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="Black" ShadowDepth="1" Direction="90" Opacity="0.8" BlurRadius="2" />
+                    </TextBlock.Effect>
+                </TextBlock>
+            </Border>
+        </DockPanel>
+        <Button.ContextMenu>
+            <ContextMenu Loaded="ctxFile_Loaded" Tag="{Binding Path=FullName}">
+                <ContextMenu.Resources>
+                    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                        <EventSetter Event="Click" Handler="miVerb_Click" />
+                    </Style>
+                </ContextMenu.Resources>
+            </ContextMenu>
+        </Button.ContextMenu>
+        <Button.ToolTip>
+            <ToolTip Content="{Binding Path=Name, Mode=OneWay}" />
+        </Button.ToolTip>
+    </Button>
+</UserControl>
