@@ -9,12 +9,12 @@
             CommandParameter="{Binding Path=Path}"
             Click="LaunchProgram"
             Style="{StaticResource CairoQuickLaunchButtonStyle}"
-            ToolTip="{Binding Path=Name}" ToolTipService.Placement="Top" ToolTipService.VerticalOffset="-1" DragEnter="btn_DragEnter" Drop="btn_Drop" PreviewMouseLeftButtonDown="btn_PreviewMouseLeftButtonDown" PreviewMouseMove="btn_PreviewMouseMove" PreviewMouseLeftButtonUp="btn_PreviewMouseLeftButtonUp">
+            ToolTip="{Binding Path=Name}" ToolTipService.Placement="Top" ToolTipService.VerticalOffset="-1" DragEnter="btn_DragEnter" Drop="btn_Drop" PreviewMouseLeftButtonDown="btn_PreviewMouseLeftButtonDown" PreviewMouseMove="btn_PreviewMouseMove">
             <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Name="imgIcon"
                 Width="16"
                 Height="16" />
             <Button.ContextMenu>
-                <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
+                <ContextMenu>
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Open)}" Click="LaunchProgramMenu" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_OpenAsAdministrator)}" Click="LaunchProgramAdmin" />
                     <Separator />

@@ -1,7 +1,6 @@
 ﻿using CairoDesktop.Common.Logging;
 using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using static CairoDesktop.Interop.NativeMethods;
@@ -107,9 +106,9 @@ namespace CairoDesktop.WindowsTray
             if (icon != null || iconData.guidItem == new Guid(VOLUME_GUID))
             {
                 if (iconData.dwMessage == 1)
-                    return Interop.Shell.MakeLParam(GetSystemMetrics(0) - 23, 0);
+                    return Interop.Shell.MakeLParam(icon.Placement.left, icon.Placement.top);
                 else if (iconData.dwMessage == 2)
-                    return Interop.Shell.MakeLParam(23, 23);
+                    return Interop.Shell.MakeLParam(icon.Placement.right, icon.Placement.bottom);
             }
 
             return IntPtr.Zero;
@@ -146,10 +145,10 @@ namespace CairoDesktop.WindowsTray
                                 }
                             }
 
-                            if (((uint)NIF.NIF_TIP & nicData.uFlags) != 0)
+                            if ((NIF.TIP & nicData.uFlags) != 0 && !string.IsNullOrEmpty(nicData.szTip))
                                 trayIcon.Title = nicData.szTip;
 
-                            if (((uint)NIF.NIF_ICON & nicData.uFlags) != 0)
+                            if ((NIF.ICON & nicData.uFlags) != 0)
                             {
                                 if ((IntPtr)nicData.hIcon != IntPtr.Zero)
                                 {
@@ -175,19 +174,34 @@ namespace CairoDesktop.WindowsTray
                             trayIcon.UID = nicData.uID;
                             trayIcon.GUID = nicData.guidItem;
 
+                            // guess version in case we are receiving icons that aren't sending NIM_SETVERSION to new explorers
+                            if ((NIF.VISTA_MASK & nicData.uFlags) != 0)
+                                trayIcon.Version = 4;
+                            else if ((NIF.XP_MASK & nicData.uFlags) != 0)
+                                trayIcon.Version = 3;
+
                             if (nicData.uVersion > 0 && nicData.uVersion <= 4)
                                 trayIcon.Version = nicData.uVersion;
 
-                            if (((uint)NIF.NIF_MESSAGE & nicData.uFlags) != 0)
+                            if ((NIF.MESSAGE & nicData.uFlags) != 0)
                                 trayIcon.CallbackMessage = nicData.uCallbackMessage;
 
                             if (!exists)
                             {
+                                // default placement to a menu bar like rect
+                                trayIcon.Placement = new RECT { top = 0, left = GetSystemMetrics(0) - 200, bottom = 23, right = 23 };
+
                                 if (trayIcon.Icon == null)
                                     trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
 
                                 TrayIcons.Add(trayIcon);
                                 CairoLogger.Instance.Debug("Added tray icon: " + trayIcon.Title);
+
+                                if ((NIM)message == NIM.NIM_MODIFY)
+                                {
+                                    // return an error to the notifyicon as we received a modify for an icon we did not yet have
+                                    return false;
+                                }
                             }
                             else
                                 CairoLogger.Instance.Debug("Modified tray icon: " + trayIcon.Title);
@@ -208,7 +222,6 @@ namespace CairoDesktop.WindowsTray
                             return false;
                         }
 
-                        // Woo! Using Linq to avoid iterating!
                         TrayIcons.Remove(trayIcon);
 
                         CairoLogger.Instance.Debug("Removed tray icon: " + nicData.szTip);
@@ -225,6 +238,7 @@ namespace CairoDesktop.WindowsTray
                         if ((nicData.guidItem != Guid.Empty && nicData.guidItem == ti.GUID) || (ti.HWnd == (IntPtr)nicData.hWnd && ti.UID == nicData.uID))
                         {
                             ti.Version = nicData.uVersion;
+                            CairoLogger.Instance.Debug("Modified version to " + ti.Version + " on tray icon: " + ti.Title);
                             break;
                         }
                     }
@@ -253,10 +267,10 @@ namespace CairoDesktop.WindowsTray
                 if (icon.Version > 3)
                     wparam = mouse;
 
-                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, WM_MOUSEHOVER);
+                PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_MOUSEHOVER);
 
                 if (icon.Version > 3)
-                    PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, NIN_POPUPOPEN);
+                    PostMessage(icon.HWnd, icon.CallbackMessage, wparam, NIN_POPUPOPEN);
             }
         }
 
@@ -274,10 +288,28 @@ namespace CairoDesktop.WindowsTray
                 if (icon.Version > 3)
                     wparam = mouse;
 
-                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, WM_MOUSELEAVE);
+                PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_MOUSELEAVE);
 
                 if (icon.Version > 3)
-                    PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, NIN_POPUPCLOSE);
+                    PostMessage(icon.HWnd, icon.CallbackMessage, wparam, NIN_POPUPCLOSE);
+            }
+        }
+
+        public void IconMouseMove(NotifyIcon icon, uint mouse)
+        {
+            if (!IsWindow(icon.HWnd))
+            {
+                TrayIcons.Remove(icon);
+                return;
+            }
+            else
+            {
+                uint wparam = icon.UID;
+
+                if (icon.Version > 3)
+                    wparam = mouse;
+
+                PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_MOUSEMOVE);
             }
         }
 
@@ -294,15 +326,15 @@ namespace CairoDesktop.WindowsTray
             {
                 if (DateTime.Now.Subtract(_lastLClick).TotalMilliseconds <= doubleClickTime && _lastClickHwnd == icon.HWnd)
                 {
-                    PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, WM_LBUTTONDBLCLK);
+                    PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_LBUTTONDBLCLK);
                 }
                 else
                 {
-                    PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, WM_LBUTTONDOWN);
+                    PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_LBUTTONDOWN);
                 }
 
-                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, WM_LBUTTONUP);
-                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, mouse, (NIN_SELECT | (icon.UID << 16)));
+                PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_LBUTTONUP);
+                if (icon.Version >= 4) PostMessage(icon.HWnd, icon.CallbackMessage, mouse, (NIN_SELECT | (icon.UID << 16)));
 
                 _lastLClick = DateTime.Now;
             }
@@ -310,15 +342,15 @@ namespace CairoDesktop.WindowsTray
             {
                 if (DateTime.Now.Subtract(_lastRClick).TotalMilliseconds <= doubleClickTime && _lastClickHwnd == icon.HWnd)
                 {
-                    PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, WM_RBUTTONDBLCLK);
+                    PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_RBUTTONDBLCLK);
                 }
                 else
                 {
-                    PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, WM_RBUTTONDOWN);
+                    PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_RBUTTONDOWN);
                 }
 
-                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, wparam, WM_RBUTTONUP);
-                PostMessage(icon.HWnd, (uint)icon.CallbackMessage, mouse, (WM_CONTEXTMENU | (icon.UID << 16)));
+                PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_RBUTTONUP);
+                if (icon.Version >= 4) PostMessage(icon.HWnd, icon.CallbackMessage, mouse, (WM_CONTEXTMENU | (icon.UID << 16)));
 
                 _lastRClick = DateTime.Now;
             }

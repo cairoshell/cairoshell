@@ -59,10 +59,16 @@ namespace CairoDesktop
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
         {
-            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
-            
+            Decorator sendingDecorator = sender as Decorator;
+            var trayIcon = sendingDecorator.DataContext as NotifyIcon;
+
             if (trayIcon != null)
             {
+                // update icon position for Shell_NotifyIconGetRect
+                Point location = sendingDecorator.PointToScreen(new Point(0, 0));
+                double dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
+
+                trayIcon.Placement = new Interop.NativeMethods.RECT { top = (int)location.Y, left = (int)location.X, bottom = (int)(sendingDecorator.ActualHeight * dpiScale), right = (int)(sendingDecorator.ActualWidth * dpiScale) };
                 NotificationArea.Instance.IconMouseEnter(trayIcon, getMousePos());
             }
         }
@@ -74,6 +80,16 @@ namespace CairoDesktop
             if (trayIcon != null)
             {
                 NotificationArea.Instance.IconMouseLeave(trayIcon, getMousePos());
+            }
+        }
+
+        private void Image_MouseMove(object sender, MouseEventArgs e)
+        {
+            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
+
+            if (trayIcon != null)
+            {
+                NotificationArea.Instance.IconMouseMove(trayIcon, getMousePos());
             }
         }
     }
