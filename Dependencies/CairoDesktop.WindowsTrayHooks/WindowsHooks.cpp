@@ -134,7 +134,7 @@ BOOL CallSystrayDelegate(int message, NOTIFYICONDATA nicData)
 	if(pSystrayFunction != NULL)
 	{
 		ODS("Calling Systray Delegate\n");
-		return (pSystrayFunction)(message, nicData);	
+		return (pSystrayFunction)(message, nicData);
 	}
 	else
 	{
@@ -224,10 +224,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				break;
 				case 1:
 				{
-					NOTIFYICONDATA * nicData = (NOTIFYICONDATA *)(((BYTE *)copyData->lpData) + 8);
-					int TrayCmd = *(INT *)(((BYTE *)copyData->lpData) + 4);
+					PSHELLTRAYDATA pstData = (PSHELLTRAYDATA)(copyData->lpData);
+					NOTIFYICONDATA nicData = pstData->nid;
+					int TrayCmd = pstData->dwMessage;
 					
-					BOOL result = CallSystrayDelegate(TrayCmd, *nicData);
+					BOOL result = CallSystrayDelegate(TrayCmd, nicData);
 					if (!result) ODS("Ignored notify icon message\n");
 					return result;
 				}

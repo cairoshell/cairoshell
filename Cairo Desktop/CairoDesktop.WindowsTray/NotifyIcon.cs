@@ -82,7 +82,7 @@ namespace CairoDesktop.WindowsTray
         /// <summary>
         /// Gets or sets the callback message id.
         /// </summary>
-        public int CallbackMessage
+        public uint CallbackMessage
         {
             get;
             set;

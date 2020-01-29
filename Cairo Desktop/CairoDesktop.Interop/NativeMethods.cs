@@ -1992,11 +1992,30 @@ namespace CairoDesktop.Interop
             NIM_SETVERSION = 4
         }
 
+        /// <summary>
+        /// Shell_NotifyIcon flags.  NIF_*
+        /// </summary>
+        [Flags]
         public enum NIF : uint
         {
-            NIF_MESSAGE = 1,
-            NIF_ICON = 2,
-            NIF_TIP = 4
+            MESSAGE = 0x0001,
+            ICON = 0x0002,
+            TIP = 0x0004,
+            STATE = 0x0008,
+            INFO = 0x0010,
+            GUID = 0x0020,
+
+            /// <summary>
+            /// Vista only.
+            /// </summary>
+            REALTIME = 0x0040,
+            /// <summary>
+            /// Vista only.
+            /// </summary>
+            SHOWTIP = 0x0080,
+
+            XP_MASK = STATE | INFO | GUID,
+            VISTA_MASK = REALTIME | SHOWTIP,
         }
 
         /// <summary>
@@ -2006,11 +2025,11 @@ namespace CairoDesktop.Interop
         public struct NOTIFYICONDATA
         {
             public int cbSize;
-            public int hWnd;
+            public uint hWnd;
             public uint uID;
-            public uint uFlags;
-            public int uCallbackMessage;
-            public int hIcon;
+            public NIF uFlags;
+            public uint uCallbackMessage;
+            public uint hIcon;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
             public string szTip;
             public int dwState;
@@ -2020,9 +2039,9 @@ namespace CairoDesktop.Interop
             public uint uVersion;  // used with NIM_SETVERSION, values 0, 3 and 4
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
             public string szInfoTitle;
-            public int dwInfoFlags;
+            public uint dwInfoFlags;
             public Guid guidItem;
-            public IntPtr hBalloonIcon;
+            public uint hBalloonIcon;
         }
 
         /// <summary>
