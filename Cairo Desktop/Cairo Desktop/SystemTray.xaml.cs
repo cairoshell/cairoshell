@@ -68,7 +68,7 @@ namespace CairoDesktop
                 Point location = sendingDecorator.PointToScreen(new Point(0, 0));
                 double dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
 
-                trayIcon.Placement = new Interop.NativeMethods.RECT { top = (int)location.Y, left = (int)location.X, bottom = (int)(location.Y + (sendingDecorator.ActualHeight * dpiScale)), right = (int)(location.X + (sendingDecorator.ActualWidth * dpiScale)) };
+                trayIcon.Placement = new Interop.NativeMethods.RECT { top = (int)location.Y, left = (int)location.X, bottom = (int)(sendingDecorator.ActualHeight * dpiScale), right = (int)(sendingDecorator.ActualWidth * dpiScale) };
                 NotificationArea.Instance.IconMouseEnter(trayIcon, getMousePos());
             }
         }

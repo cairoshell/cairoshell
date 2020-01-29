@@ -145,7 +145,7 @@ namespace CairoDesktop.WindowsTray
                                 }
                             }
 
-                            if ((NIF.TIP & nicData.uFlags) != 0)
+                            if ((NIF.TIP & nicData.uFlags) != 0 && !string.IsNullOrEmpty(nicData.szTip))
                                 trayIcon.Title = nicData.szTip;
 
                             if ((NIF.ICON & nicData.uFlags) != 0)
@@ -189,13 +189,19 @@ namespace CairoDesktop.WindowsTray
                             if (!exists)
                             {
                                 // default placement to a menu bar like rect
-                                trayIcon.Placement = new RECT { top = 0, left = 0, bottom = 23, right = GetSystemMetrics(0) };
+                                trayIcon.Placement = new RECT { top = 0, left = GetSystemMetrics(0) - 200, bottom = 23, right = 23 };
 
                                 if (trayIcon.Icon == null)
                                     trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
 
                                 TrayIcons.Add(trayIcon);
                                 CairoLogger.Instance.Debug("Added tray icon: " + trayIcon.Title);
+
+                                if ((NIM)message == NIM.NIM_MODIFY)
+                                {
+                                    // return an error to the notifyicon as we received a modify for an icon we did not yet have
+                                    return false;
+                                }
                             }
                             else
                                 CairoLogger.Instance.Debug("Modified tray icon: " + trayIcon.Title);
@@ -232,6 +238,7 @@ namespace CairoDesktop.WindowsTray
                         if ((nicData.guidItem != Guid.Empty && nicData.guidItem == ti.GUID) || (ti.HWnd == (IntPtr)nicData.hWnd && ti.UID == nicData.uID))
                         {
                             ti.Version = nicData.uVersion;
+                            CairoLogger.Instance.Debug("Modified version to " + ti.Version + " on tray icon: " + ti.Title);
                             break;
                         }
                     }
@@ -339,10 +346,10 @@ namespace CairoDesktop.WindowsTray
                 }
                 else
                 {
-                    if (icon.Version < 4) PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_RBUTTONDOWN);
+                    PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_RBUTTONDOWN);
                 }
 
-                if (icon.Version < 4) PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_RBUTTONUP);
+                PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_RBUTTONUP);
                 if (icon.Version >= 4) PostMessage(icon.HWnd, icon.CallbackMessage, mouse, (WM_CONTEXTMENU | (icon.UID << 16)));
 
                 _lastRClick = DateTime.Now;
