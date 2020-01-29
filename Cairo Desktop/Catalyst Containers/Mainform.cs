@@ -25,7 +25,7 @@ namespace Catalyst_Containers
             listBox1.Items.Clear();
             if (containers.Length > 0) {
                 listBox1.Enabled = true;
-                for (int i = 0; i < containers.Length - 1; i++)
+                for (int i = 0; i < containers.Length; i++)
                 {
                     listBox1.Items.Add(containers[i].DisplayName);
                 }
@@ -54,12 +54,20 @@ namespace Catalyst_Containers
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-
+            ContainerInstancing.Container cont = containers[listBox1.SelectedIndex];
+            Player p = new Player();
+            p.Text = cont.DisplayName;
+            PluginLoader.Plugins[cont.CoreModID].Boot(cont.ID, p);
+            p.Show();
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-
+            CreateContainer cc = new CreateContainer();
+            if (cc.ShowDialog() == DialogResult.OK)
+            {
+                SetUpContainers();
+            }
         }
 
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -70,6 +78,9 @@ namespace Catalyst_Containers
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             label1.Text = containers[listBox1.SelectedIndex].DisplayName;
+            toolStripButton2.Enabled = true;
+            toolStripButton3.Enabled = true;
+            toolStripButton4.Enabled = true;
         }
     }
 }

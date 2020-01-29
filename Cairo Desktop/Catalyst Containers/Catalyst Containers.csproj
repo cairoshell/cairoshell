@@ -59,6 +59,12 @@
     <Compile Include="ContainerSettings.Designer.cs">
       <DependentUpon>ContainerSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="CreateContainer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateContainer.Designer.cs">
+      <DependentUpon>CreateContainer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Mainform.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,6 +88,9 @@
     </Compile>
     <EmbeddedResource Include="ContainerSettings.resx">
       <DependentUpon>ContainerSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateContainer.resx">
+      <DependentUpon>CreateContainer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Mainform.resx">
       <DependentUpon>Mainform.cs</DependentUpon>
