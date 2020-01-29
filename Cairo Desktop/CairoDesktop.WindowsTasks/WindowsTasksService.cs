@@ -7,6 +7,9 @@ using System.Windows;
 using System.Collections.ObjectModel;
 using static CairoDesktop.Interop.NativeMethods;
 using CairoDesktop.Common.Logging;
+using System.ComponentModel;
+using System.Windows.Data;
+using System.Collections.Specialized;
 
 namespace CairoDesktop.WindowsTasks
 {
@@ -53,6 +56,15 @@ namespace CairoDesktop.WindowsTasks
                 // adjust minimize animation
                 SetMinimizedMetrics();
 
+                // prepare collections
+                groupedWindows = CollectionViewSource.GetDefaultView(Windows);
+                groupedWindows.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+                groupedWindows.CollectionChanged += groupedWindows_Changed;
+                groupedWindows.Filter = groupedWindows_Filter;
+                var taskbarItemsView = groupedWindows as ICollectionViewLiveShaping;
+                taskbarItemsView.IsLiveFiltering = true;
+                taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
+
                 // enumerate windows already opened
                 EnumWindows(new CallBackPtr((hwnd, lParam) =>
                 {
@@ -68,6 +80,21 @@ namespace CairoDesktop.WindowsTasks
             }
             
             IsStarting = false;
+        }
+
+        private void groupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // yup, do nothing. helps prevent a NRE
+        }
+
+        private bool groupedWindows_Filter(object item)
+        {
+            ApplicationWindow window = item as ApplicationWindow;
+
+            if (window.ShowInTaskbar)
+                return true;
+            else
+                return false;
         }
 
         public void Dispose()
@@ -289,5 +316,14 @@ namespace CairoDesktop.WindowsTasks
         }
 
         private DependencyProperty windowsProperty = DependencyProperty.Register("Windows", typeof(ObservableCollection<ApplicationWindow>), typeof(WindowsTasksService), new PropertyMetadata(new ObservableCollection<ApplicationWindow>()));
+
+        private ICollectionView groupedWindows;
+        public ICollectionView GroupedWindows
+        {
+            get
+            {
+                return groupedWindows;
+            }
+        }
     }
 }

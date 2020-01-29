@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
 using System.Windows.Threading;
+using System.ComponentModel;
 
 namespace CairoDesktop
 {
@@ -16,10 +17,14 @@ namespace CairoDesktop
     /// </summary>
     public partial class Taskbar : Window
     {
+        #region Properties
         public System.Windows.Forms.Screen Screen;
         private double dpiScale = 1.0;
 
         public bool IsClosing = false;
+
+        // Item sources
+        private AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
         // AppBar properties
         private WindowInteropHelper helper;
@@ -28,8 +33,6 @@ namespace CairoDesktop
         private bool displayChanged = false;
         private AppBarHelper.ABEdge appBarEdge = AppBarHelper.ABEdge.ABE_BOTTOM;
         private int addToSize = 0;
-
-        public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
         public static DependencyProperty ButtonWidthProperty = DependencyProperty.Register("ButtonWidth", typeof(double), typeof(Taskbar), new PropertyMetadata(new double()));
         public double ButtonWidth
@@ -44,7 +47,7 @@ namespace CairoDesktop
             get { return (double)GetValue(ButtonTextWidthProperty); }
             set { SetValue(ButtonTextWidthProperty, value); }
         }
-
+        #endregion
         public Taskbar() : this(System.Windows.Forms.Screen.PrimaryScreen)
         {
 
@@ -57,19 +60,38 @@ namespace CairoDesktop
             InitializeComponent();
 
             setupTaskbar();
+            setupTaskbarAppearance();
         }
 
+        #region Startup and shutdown
         private void setupTaskbar()
+        {
+            // setup taskbar item source
+            TasksList.ItemsSource = WindowsTasks.WindowsTasksService.Instance.GroupedWindows;
+            TasksList2.ItemsSource = WindowsTasks.WindowsTasksService.Instance.GroupedWindows;
+            WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged += GroupedWindows_Changed;
+
+            // setup data contexts
+            bdrMain.DataContext = Settings.Instance;
+            quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
+
+            if (Startup.DesktopWindow != null)
+            {
+                btnDesktopOverlay.DataContext = Startup.DesktopWindow;
+                bdrBackground.DataContext = Startup.DesktopWindow;
+            }
+            else
+            {
+                btnDesktopOverlay.Visibility = Visibility.Collapsed;
+                btnDesktopOverlay.DataContext = null;
+                bdrBackground.DataContext = null;
+            }
+        }
+
+        private void setupTaskbarAppearance()
         {
             double screenWidth = screenWidth = Screen.Bounds.Width / dpiScale;
             Left = Screen.Bounds.Left / dpiScale;
-
-            DataContext = WindowsTasks.WindowsTasksService.Instance;
-            bdrMain.DataContext = Settings.Instance;
-            grdTaskbar.DataContext = WindowsTasks.WindowsTasksService.Instance;
-            AppGrabber.Category quickLaunch = appGrabber.QuickLaunch;
-
-            quickLaunchList.ItemsSource = quickLaunch;
             bdrTaskbar.MaxWidth = screenWidth - 36;
             Width = screenWidth;
 
@@ -87,20 +109,6 @@ namespace CairoDesktop
             }
 
             Height = 29 + addToSize;
-
-            ((INotifyCollectionChanged)TasksList.Items).CollectionChanged += TasksList_Changed;
-
-            if (Startup.DesktopWindow != null)
-            {
-                btnDesktopOverlay.DataContext = Startup.DesktopWindow;
-                bdrBackground.DataContext = Startup.DesktopWindow;
-            }
-            else
-            {
-                btnDesktopOverlay.Visibility = Visibility.Collapsed;
-                btnDesktopOverlay.DataContext = null;
-                bdrBackground.DataContext = null;
-            }
 
             // set taskbar edge based on preference
             if (Settings.TaskbarPosition == 1)
@@ -135,13 +143,13 @@ namespace CairoDesktop
             }
         }
 
-        private void Taskbar_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Taskbar_Closing(object sender, CancelEventArgs e)
         {
             IsClosing = true;
             if (Startup.IsShuttingDown && Screen.Primary)
             {
                 // Manually call dispose on window close...
-                (DataContext as WindowsTasks.WindowsTasksService).Dispose();
+                WindowsTasks.WindowsTasksService.Instance.Dispose();
 
                 // dispose system tray if it's still running to prevent conflicts when doing AppBar stuff
                 NotificationArea.Instance.Dispose();
@@ -155,6 +163,7 @@ namespace CairoDesktop
             }
             else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
             {
+                WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
                 if (AppBarHelper.appBars.Contains(handle))
                     AppBarHelper.RegisterBar(this, Screen, ActualWidth, ActualHeight);
             }
@@ -164,7 +173,28 @@ namespace CairoDesktop
                 e.Cancel = true;
             }
         }
+        private void TaskbarWindow_SourceInitialized(object sender, EventArgs e)
+        {
+            helper = new WindowInteropHelper(this);
 
+            HwndSource source = HwndSource.FromHwnd(helper.Handle);
+            source.AddHook(new HwndSourceHook(WndProc));
+
+            handle = helper.Handle;
+
+            this.dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
+
+            setPosition();
+            setTaskButtonSize();
+
+            if (Settings.TaskbarMode == 0)
+                appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, appBarEdge);
+
+            Shell.HideWindowFromTasks(handle);
+        }
+        #endregion
+
+        #region Position and appearance
         private void setTaskButtonSize()
         {
             double size = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - bdrTaskbarEnd.ActualWidth - (TasksList.Items.Groups.Count * (5 * dpiScale)) - 14) / TasksList.Items.Count);
@@ -244,7 +274,45 @@ namespace CairoDesktop
                 Shell.ShowWindowTopMost(handle);
             }
         }
+        private void TaskbarWindow_LocationChanged(object sender, EventArgs e)
+        {
+            // this variable is set when the display size is changed, since that event handles this function. if we run here too, wrong position is set
+            if (!displayChanged)
+                setPosition();
+            else
+            {
+                displayChanged = false;
 
+                if (Settings.TaskbarMode > 0)
+                {
+                    // set position after 2 seconds anyway in case we missed something
+                    var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+                    timer.Start();
+                    timer.Tick += (sender1, args) =>
+                    {
+                        setPosition();
+                        timer.Stop();
+                    };
+                }
+            }
+        }
+
+        private void takeFocus()
+        {
+            // because we are setting WS_EX_NOACTIVATE, popups won't go away when clicked outside, since they are not losing focus (they never got it). calling this fixes that.
+            NativeMethods.SetForegroundWindow(helper.Handle);
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+            //Set the window style to noactivate.
+            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
+                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
+        }
+        #endregion
+
+        #region Window procedure
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (msg == NativeMethods.WM_MOUSEACTIVATE)
@@ -313,94 +381,40 @@ namespace CairoDesktop
 
             return IntPtr.Zero;
         }
+        #endregion
 
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-            //Set the window style to noactivate.
-            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
-                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
-        }
-
-        private void TaskbarWindow_SourceInitialized(object sender, EventArgs e)
-        {
-            helper = new WindowInteropHelper(this);
-
-            HwndSource source = HwndSource.FromHwnd(helper.Handle);
-            source.AddHook(new HwndSourceHook(WndProc));
-
-            handle = helper.Handle;
-
-            this.dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
-
-            setPosition();
-            setTaskButtonSize();
-
-            if (Settings.TaskbarMode == 0)
-                appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, appBarEdge);
-
-            Shell.HideWindowFromTasks(handle);
-        }
-
-        private void TasksList_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        #region Data
+        private void GroupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
             setTaskButtonSize();
         }
+        #endregion
 
-        private void CollectionViewSource_Filter(object sender, System.Windows.Data.FilterEventArgs e)
-        {
-            WindowsTasks.ApplicationWindow window = e.Item as WindowsTasks.ApplicationWindow;
-
-            if (window.ShowInTaskbar)
-                e.Accepted = true;
-            else
-                e.Accepted = false;
-        }
-
-        private void TaskbarWindow_LocationChanged(object sender, EventArgs e)
-        {
-            // this variable is set when the display size is changed, since that event handles this function. if we run here too, wrong position is set
-            if (!displayChanged)
-                setPosition();
-            else
-            {
-                displayChanged = false;
-
-                if (Settings.TaskbarMode > 0)
-                {
-                    // set position after 2 seconds anyway in case we missed something
-                    var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
-                    timer.Start();
-                    timer.Tick += (sender1, args) =>
-                    {
-                        setPosition();
-                        timer.Stop();
-                    };
-                }
-            }
-        }
+        #region Button clicks
 
         private void TaskView_Click(object sender, RoutedEventArgs e)
         {
             Shell.ShowWindowSwitcher();
         }
 
-        private void takeFocus()
+        private void btnDesktopOverlay_Click(object sender, RoutedEventArgs e)
         {
-            // because we are setting WS_EX_NOACTIVATE, popups won't go away when clicked outside, since they are not losing focus (they never got it). calling this fixes that.
-            NativeMethods.SetForegroundWindow(helper.Handle);
+            if (Startup.DesktopWindow != null)
+                Startup.DesktopWindow.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
         }
 
         private void btnTaskList_Click(object sender, RoutedEventArgs e)
         {
             takeFocus();
         }
-
+        
         private void TaskButton_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             takeFocus();
         }
+        #endregion
 
+        #region Quick Launch
         private void quickLaunchList_Drop(object sender, DragEventArgs e)
         {
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
@@ -423,10 +437,6 @@ namespace CairoDesktop
             e.Handled = true;
         }
 
-        private void btnDesktopOverlay_Click(object sender, RoutedEventArgs e)
-        {
-            if (Startup.DesktopWindow != null)
-                Startup.DesktopWindow.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
-        }
+        #endregion
     }
 }

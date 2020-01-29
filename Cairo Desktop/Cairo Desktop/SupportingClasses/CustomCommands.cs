@@ -43,7 +43,6 @@ namespace CairoDesktop
             if (Startup.DesktopWindow != null)
                 Startup.DesktopWindow.IsOverlayOpen = false;
 
-            Interop.Shell.StartProcess(fileName, "", verb);
         }
 
         public static void PerformAction(string verb, string fileName)
@@ -99,6 +98,10 @@ namespace CairoDesktop
             {
                 StacksManager.StackLocations.Remove(new SystemDirectory(fileName, _dispatcher));
                 return;
+            }
+            else
+            {
+                Interop.Shell.StartProcess(fileName, "", verb);
             }
         }
 

@@ -180,15 +180,11 @@ namespace CairoDesktop
             // Add _Application CairoMenu MenuItems
             if (Extensibility.ObjectModel._CairoShell.Instance.CairoMenu.Count > 0)
             {
-                var separatorStyle = FindResource("CairoMenuSeparatorStyle") as Style;
-                var menuItemStyle = FindResource("CairoMenuItemStyle") as Style;
-
-                CairoMenu.Items.Insert(7, new Separator() { Style = separatorStyle });
+                CairoMenu.Items.Insert(7, new Separator());
                 foreach (var cairoMenuItem in Extensibility.ObjectModel._CairoShell.Instance.CairoMenu)
                 {
                     MenuItem menuItem = new MenuItem { Header = cairoMenuItem.Header };
                     menuItem.Click += cairoMenuItem.MenuItem_Click;
-                    menuItem.Style = menuItemStyle;
                     CairoMenu.Items.Insert(8, menuItem);
                 }
             }
@@ -210,15 +206,11 @@ namespace CairoDesktop
             // Add _Application PlacesMenu MenuItems
             if (Extensibility.ObjectModel._CairoShell.Instance.PlacesMenu.Count > 0)
             {
-                var separatorStyle = FindResource("CairoMenuSeparatorStyle") as Style;
-                var menuItemStyle = FindResource("CairoMenuItemStyle") as Style;
-
-                PlacesMenu.Items.Add(new Separator() { Style = separatorStyle });
+                PlacesMenu.Items.Add(new Separator());
                 foreach (var placesMenuItem in Extensibility.ObjectModel._CairoShell.Instance.PlacesMenu)
                 {
                     MenuItem menuItem = new MenuItem { Header = placesMenuItem.Header };
                     menuItem.Click += placesMenuItem.MenuItem_Click;
-                    menuItem.Style = menuItemStyle;
                     PlacesMenu.Items.Add(menuItem);
                 }
             }

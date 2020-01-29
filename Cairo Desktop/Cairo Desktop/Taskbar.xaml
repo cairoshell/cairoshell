@@ -15,18 +15,6 @@
     Background="Transparent"
     Closing="Taskbar_Closing" SourceInitialized="TaskbarWindow_SourceInitialized" LocationChanged="TaskbarWindow_LocationChanged" UseLayoutRounding="True" HorizontalAlignment="Center"
     Topmost="True">
-    <Window.Resources>
-        <ResourceDictionary>
-            <CollectionViewSource Source="{Binding Path=Windows}" x:Key="groupedWindows" IsLiveFilteringRequested="True" Filter="CollectionViewSource_Filter">
-                <CollectionViewSource.GroupDescriptions>
-                    <PropertyGroupDescription PropertyName="Category" />
-                </CollectionViewSource.GroupDescriptions>
-                <CollectionViewSource.LiveFilteringProperties>
-                    <clr:String>ShowInTaskbar</clr:String>
-                </CollectionViewSource.LiveFilteringProperties>
-            </CollectionViewSource>
-        </ResourceDictionary>
-    </Window.Resources>
     <Border Name="bdrBackground">
         <Border.Style>
             <Style TargetType="{x:Type Border}">
