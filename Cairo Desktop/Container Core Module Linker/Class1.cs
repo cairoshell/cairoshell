@@ -13,7 +13,7 @@ namespace CatalystContainer.CoreModContracts
         string DisplayName { get; }
         
         string UniqueID { get; }
-        void Boot(string id, Form player);
+        void Boot(string id, Form player, Exposure exp);
     }
 
     public class Exposure

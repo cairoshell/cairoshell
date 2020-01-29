@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CatalystContainer.CoreModContracts;
 
 namespace ProshellNT2
 {
@@ -15,6 +16,11 @@ namespace ProshellNT2
         public MainForm()
         {
             InitializeComponent();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

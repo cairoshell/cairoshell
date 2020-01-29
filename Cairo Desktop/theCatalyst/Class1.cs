@@ -29,6 +29,30 @@ namespace theCatalyst
             AboutBox1 about = new AboutBox1();
             about.Show();
         }
+        public static void openEditor(Form mf)
+        {
+            theEditor editor = new theEditor();
+            editor.MdiParent = mf;
+            editor.Show();
+        }
+        public static void openCalc(Form mf)
+        {
+            theCalc editor = new theCalc();
+            editor.MdiParent = mf;
+            editor.Show();
+        }
+        public static void openTime(Form mf)
+        {
+            TheTime editor = new TheTime();
+            editor.MdiParent = mf;
+            editor.Show();
+        }
+        public static void openAbout(Form mf)
+        {
+            AboutBox1 about = new AboutBox1();
+            about.MdiParent = mf;
+            about.Show();
+        }
     }
     public class Accounts
     {

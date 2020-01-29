@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CatalystContainer.CoreModContracts;
 
 namespace ProshellNT2
 {
-    public class NT_CM : CatalystContainer.CoreModContracts.ICoreModule
+    public class NT_CM : ICoreModule
     {
         public string DisplayName
         {
@@ -25,7 +26,7 @@ namespace ProshellNT2
             }
         }
 
-        public void Boot(string id, Form player)
+        public void Boot(string id, Form player, Exposure exp)
         {
             MainForm mainForm = new MainForm();
             mainForm.MdiParent = player;

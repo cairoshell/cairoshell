@@ -45,9 +45,9 @@ namespace Catalyst_Containers
                 Directory.CreateDirectory(Constants.ContainerPath());
                 loader.LoadPlugins();
                 SetUpContainers();
-            } catch
+            } catch (Exception ex)
             {
-                MessageBox.Show("Please Restart.");
+                MessageBox.Show(ex.ToString());
                 this.Close();
             }
         }
@@ -56,8 +56,16 @@ namespace Catalyst_Containers
         {
             ContainerInstancing.Container cont = containers[listBox1.SelectedIndex];
             Player p = new Player();
+            CatalystContainer.CoreModContracts.Exposure exp = new CatalystContainer.CoreModContracts.Exposure();
+            if (cont.theCatExp)
+            {
+                theCatalystLauncher theCat = new theCatalystLauncher();
+                theCat.MdiParent = p;
+                theCat.mainform = p;
+                theCat.Show();
+            }
             p.Text = cont.DisplayName;
-            PluginLoader.Plugins[cont.CoreModID].Boot(cont.ID, p);
+            PluginLoader.Plugins[cont.CoreModID].Boot(cont.ID, p, exp);
             p.Show();
         }
 
@@ -77,10 +85,30 @@ namespace Catalyst_Containers
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            label1.Text = containers[listBox1.SelectedIndex].DisplayName;
-            toolStripButton2.Enabled = true;
-            toolStripButton3.Enabled = true;
-            toolStripButton4.Enabled = true;
+            try
+            {
+                label1.Text = containers[listBox1.SelectedIndex].DisplayName;
+                toolStripButton2.Enabled = true;
+                toolStripButton3.Enabled = true;
+                toolStripButton4.Enabled = true;
+            } catch
+            {
+                listBox1.SelectedIndex = 0;
+            }
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            ContainerInstancing.Container cont = containers[listBox1.SelectedIndex];
+            ContainerSettings cs = new ContainerSettings(cont);
+            cs.ShowDialog();
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            ContainerInstancing.Container cont = containers[listBox1.SelectedIndex];
+            ContainerInstancing.deleteCont(cont);
+            SetUpContainers();
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Catalyst_Containers
 {
-    class ContainerInstancing
+    public class ContainerInstancing
     {
         public class Container
         {
@@ -41,6 +41,10 @@ namespace Catalyst_Containers
             return container;
         }
 
+        public static void deleteCont(Container cont)
+        {
+            Directory.Delete(Constants.ContainerPath(cont.ID), true);
+        }
         public static Container[] getListOfContainers()
         {
             List<Container> conts = new List<Container>();

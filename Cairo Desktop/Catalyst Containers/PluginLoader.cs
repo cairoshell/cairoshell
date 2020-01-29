@@ -60,10 +60,12 @@ namespace Catalyst_Containers
                 .ToArray();
             foreach (Type type in types)
             {
-                var cm = (ICoreModule)Activator.CreateInstance(type);
-                //Create a new instance of all found types
-                Plugins.Add(cm.UniqueID, cm);
-                FriendlyNames.Add("("+cm.UniqueID+") - "+ cm.DisplayName, cm.UniqueID);
+
+                    var cm = (ICoreModule)Activator.CreateInstance(type);
+                    //Create a new instance of all found types
+                    Plugins.Add(cm.UniqueID, cm);
+                    FriendlyNames.Add("(" + cm.UniqueID + ") - " + cm.DisplayName, cm.UniqueID);
+
             }
         }
     }
