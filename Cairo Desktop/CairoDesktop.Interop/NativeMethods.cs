@@ -1658,7 +1658,7 @@ namespace CairoDesktop.Interop
         public const uint WM_RBUTTONUP = 0x205;
         public const uint WM_RBUTTONDBLCLK = 0x206;
         public const uint WM_CONTEXTMENU = 0x7B;
-        public const uint WM_MOUSEFIRST = 0x200;
+        public const uint WM_MOUSEMOVE = 0x200;
         public const uint WM_MOUSEHOVER = 0x2A1;
         public const uint WM_MOUSELAST = 0x20D;
         public const uint WM_MOUSELEAVE = 0x2A3;

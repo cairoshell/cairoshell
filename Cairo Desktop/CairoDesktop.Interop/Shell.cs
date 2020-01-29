@@ -656,6 +656,7 @@ namespace CairoDesktop.Interop
             }
         }
 
+        // lo = x; hi = y
         public static IntPtr MakeLParam(int loWord, int hiWord)
         {
             int i = (hiWord << 16) | (loWord & 0xffff);

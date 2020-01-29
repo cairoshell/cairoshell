@@ -106,9 +106,9 @@ namespace CairoDesktop.WindowsTray
             if (icon != null || iconData.guidItem == new Guid(VOLUME_GUID))
             {
                 if (iconData.dwMessage == 1)
-                    return Interop.Shell.MakeLParam(GetSystemMetrics(0) - 23, 0);
+                    return Interop.Shell.MakeLParam(icon.Placement.left, icon.Placement.top);
                 else if (iconData.dwMessage == 2)
-                    return Interop.Shell.MakeLParam(23, 23);
+                    return Interop.Shell.MakeLParam(icon.Placement.right, icon.Placement.bottom);
             }
 
             return IntPtr.Zero;
@@ -188,6 +188,9 @@ namespace CairoDesktop.WindowsTray
 
                             if (!exists)
                             {
+                                // default placement to a menu bar like rect
+                                trayIcon.Placement = new RECT { top = 0, left = 0, bottom = 23, right = GetSystemMetrics(0) };
+
                                 if (trayIcon.Icon == null)
                                     trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
 
@@ -282,6 +285,24 @@ namespace CairoDesktop.WindowsTray
 
                 if (icon.Version > 3)
                     PostMessage(icon.HWnd, icon.CallbackMessage, wparam, NIN_POPUPCLOSE);
+            }
+        }
+
+        public void IconMouseMove(NotifyIcon icon, uint mouse)
+        {
+            if (!IsWindow(icon.HWnd))
+            {
+                TrayIcons.Remove(icon);
+                return;
+            }
+            else
+            {
+                uint wparam = icon.UID;
+
+                if (icon.Version > 3)
+                    wparam = mouse;
+
+                PostMessage(icon.HWnd, icon.CallbackMessage, wparam, WM_MOUSEMOVE);
             }
         }
 

@@ -112,6 +112,12 @@ namespace CairoDesktop.WindowsTray
             set;
         }
 
+        public Interop.NativeMethods.RECT Placement
+        {
+            get;
+            set;
+        }
+
         #region IEquatable<NotifyIcon> Members
 
         /// <summary>
