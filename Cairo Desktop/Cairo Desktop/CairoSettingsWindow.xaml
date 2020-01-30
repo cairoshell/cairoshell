@@ -364,6 +364,7 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
+
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}">
                 <StackPanel Orientation="Vertical">
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDesktop, UpdateSourceTrigger=PropertyChanged}"
@@ -456,8 +457,119 @@
                               Name="chkEnableDynamicDesktop">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDynamicDesktop)}" />
                     </CheckBox>
+
+                    <StackPanel Name="cairoBackgroundSettingsStackPanel"
+                                Orientation="Vertical">
+                        <TextBlock Text="Desktop Background Settings"
+                                   VerticalAlignment="Top"
+                                   Margin="5,3,5,4" />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Background Type" />
+                            <ComboBox Name="cboDesktopBackgroundType"
+                                      IsEditable="False"
+                                      SelectionChanged="cboDesktopBackgroundType_SelectionChanged">
+                                <ListBoxItem Name="windowsDefaultBackground"
+                                             Content="Windows Default Background"
+                                             Tag="{Binding ElementName=windowsImageBackgroundStackPanel}" />
+                                <ListBoxItem Name="cairoImageWallpaper"
+                                             Content="Cairo Image Wallpaper"
+                                             Tag="{Binding ElementName=cairoImageBackgroundStackPanel}" />
+                                <ListBoxItem Name="cairoVideoWallpaper"
+                                             Content="Cairo Video Wallpaper"
+                                             Tag="{Binding ElementName=cairoVideoBackgroundStackPanel}" />
+                                <ListBoxItem Name="bingWallpaper"
+                                             Content="Bing Image of the Day"
+                                             Tag="{Binding ElementName=bingImageBackgroundStackPanel}" />
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Name="windowsImageBackgroundStackPanel"
+                                    Orientation="Vertical"
+                                    Visibility="Collapsed">
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="Image Path" />
+                                <TextBox Text="Windows Background Path"
+                                         Name="txtWindowsBackgroundPath" />
+                                <Button Name="btnWindowsBackgroundFileBrowse"
+                                        Height="24"
+                                        Padding="10,0"
+                                        Click="btnWindowsBackgroundFileBrowse_Click">...</Button>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="Background Style" />
+                                <ComboBox Name="cboWindowsBackgroundStyle"
+                                          IsEditable="False">
+                                    <ListBoxItem Content="Tile" />
+                                    <ListBoxItem Content="Center" />
+                                    <ListBoxItem Content="Fit" />
+                                    <ListBoxItem Content="Fill" />
+                                    <ListBoxItem Content="Stretch" />
+                                    <ListBoxItem Content="Span" />
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Name="cairoImageBackgroundStackPanel"
+                                    Orientation="Vertical"
+                                    Visibility="Collapsed">
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="Image Path" />
+                                <TextBox Text="Cairo Image Path"
+                                         Name="txtCairoBackgroundPath" />
+                                <Button Name="btnCairoBackgroundFileBrowse"
+                                        Height="24"
+                                        Padding="10,0"
+                                        Click="btnCairoBackgroundFileBrowse_Click">...</Button>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="Background Style" />
+                                <ComboBox Name="cboCairoBackgroundStyle"
+                                          IsEditable="False">
+                                    <ListBoxItem Content="Tile" />
+                                    <ListBoxItem Content="Center" />
+                                    <ListBoxItem Content="Fit" />
+                                    <ListBoxItem Content="Fill" />
+                                    <ListBoxItem Content="Stretch" />
+                                    <ListBoxItem Content="Span" />
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Name="cairoVideoBackgroundStackPanel"
+                                    Orientation="Vertical"
+                                    Visibility="Collapsed">
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="Video File Path" />
+                                <TextBox Name="txtCairoVideoBackgroundPath" />
+                                <Button Name="btnCairoVideoBackgroundFileBrowse"
+                                        Height="24"
+                                        Padding="10,0"
+                                        Click="btnCairoVideoFileBrowse_Click">...</Button>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Name="bingImageBackgroundStackPanel"
+                                    Orientation="Vertical"
+                                    Visibility="Collapsed">
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="Background Style" />
+                                <ComboBox Name="cboBingBackgroundStyle"
+                                          IsEditable="False">
+                                    <ListBoxItem Content="Tile" />
+                                    <ListBoxItem Content="Center" />
+                                    <ListBoxItem Content="Fit" />
+                                    <ListBoxItem Content="Fill" />
+                                    <ListBoxItem Content="Stretch" />
+                                    <ListBoxItem Content="Span" />
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+
+                    </StackPanel>
+
                 </StackPanel>
             </TabItem>
+
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Taskbar)}">
                 <StackPanel Orientation="Vertical">
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbar, UpdateSourceTrigger=PropertyChanged}"

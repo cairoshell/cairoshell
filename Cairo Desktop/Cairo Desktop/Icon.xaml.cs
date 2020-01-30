@@ -41,7 +41,7 @@ namespace CairoDesktop
                 btnFile.MouseDoubleClick += btnFile_Click;
                 txtFilename.Foreground = Application.Current.FindResource("DesktopIconText") as SolidColorBrush;
 
-                if (Settings.DesktopLabelPosition == 0)
+                if (Settings.Instance.DesktopLabelPosition == 0)
                 {
                     // horizontal icons
                     btnFile.Margin = new Thickness(9, 0, 8, 5);
@@ -57,7 +57,7 @@ namespace CairoDesktop
                     bdrFilename.SetValue(DockPanel.DockProperty, Dock.Right);
                 }
 
-                if (Settings.DesktopIconSize == 2)
+                if (Settings.Instance.DesktopIconSize == 2)
                 {
                     // large icons
                     imgIcon.Width = 48;
@@ -78,13 +78,13 @@ namespace CairoDesktop
                     imgIcon.SetBinding(Image.SourceProperty, iconBinding);
                 }
 
-                if (Settings.DesktopLabelPosition == 0 && Settings.DesktopIconSize == 0)
+                if (Settings.Instance.DesktopLabelPosition == 0 && Settings.Instance.DesktopIconSize == 0)
                 {
                     // horizontal small
                     btnFile.Height = 48;
                 }
 
-                if (Settings.DesktopLabelPosition == 0 && Settings.DesktopIconSize == 2)
+                if (Settings.Instance.DesktopLabelPosition == 0 && Settings.Instance.DesktopIconSize == 2)
                 {
                     // horizontal large
                     btnFile.Height = 64;
@@ -92,7 +92,7 @@ namespace CairoDesktop
 
                 // (vertical small is in xaml)
 
-                if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 2)
+                if (Settings.Instance.DesktopLabelPosition == 1 && Settings.Instance.DesktopIconSize == 2)
                 {
                     // vertical large
                     btnFile.Height = 97;
@@ -129,7 +129,7 @@ namespace CairoDesktop
                         // if directory, perform special handling
                         if (file.IsDirectory
                             && Location == "Desktop"
-                            && Settings.EnableDynamicDesktop
+                            && Settings.Instance.EnableDynamicDesktop
                             && Startup.DesktopWindow != null)
                         {
                             Startup.DesktopWindow.Navigate(file.FullName);

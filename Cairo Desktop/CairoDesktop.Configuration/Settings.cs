@@ -268,6 +268,81 @@ namespace CairoDesktop.Configuration
                 }
             }
         }
+
+        public string DesktopBackgroundType
+        {
+            get
+            {
+                return cairoSettings.DesktopBackgroundType;
+            }
+            set
+            {
+                if (cairoSettings.DesktopBackgroundType != value)
+                {
+                    cairoSettings.DesktopBackgroundType = value;
+                }
+            }
+        }
+
+        public string BingWallpaperStyle
+        {
+            get
+            {
+                return cairoSettings.BingWallpaperStyle;
+            }
+            set
+            {
+                if (cairoSettings.BingWallpaperStyle != value)
+                {
+                    cairoSettings.BingWallpaperStyle = value;
+                }
+            }
+        }
+
+        public string CairoBackgroundImagePath
+        {
+            get
+            {
+                return cairoSettings.CairoBackgroundImagePath;
+            }
+            set
+            {
+                if (cairoSettings.CairoBackgroundImagePath != value)
+                {
+                    cairoSettings.CairoBackgroundImagePath = value;
+                }
+            }
+        }
+
+        public string CairoBackgroundImageStyle
+        {
+            get
+            {
+                return cairoSettings.CairoBackgroundImageStyle;
+            }
+            set
+            {
+                if (cairoSettings.CairoBackgroundImageStyle != value)
+                {
+                    cairoSettings.CairoBackgroundImageStyle = value;
+                }
+            }
+        }
+
+        public string CairoBackgroundVideoPath
+        {
+            get
+            {
+                return cairoSettings.CairoBackgroundVideoPath;
+            }
+            set
+            {
+                if (cairoSettings.CairoBackgroundVideoPath != value)
+                {
+                    cairoSettings.CairoBackgroundVideoPath = value;
+                }
+            }
+        }
         #endregion
 
         #region Taskbar
@@ -663,7 +738,6 @@ namespace CairoDesktop.Configuration
             return concatenated;
         }
         #endregion
-
 
         public void Save()
         {

@@ -12,7 +12,7 @@ namespace CairoDesktop.Configuration.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.3.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -428,6 +428,66 @@ namespace CairoDesktop.Configuration.Properties {
             }
             set {
                 this["TaskbarMiddleClick"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("windowsDefaultBackground")]
+        public string DesktopBackgroundType {
+            get {
+                return ((string)(this["DesktopBackgroundType"]));
+            }
+            set {
+                this["DesktopBackgroundType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Stretch")]
+        public string BingWallpaperStyle {
+            get {
+                return ((string)(this["BingWallpaperStyle"]));
+            }
+            set {
+                this["BingWallpaperStyle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CairoBackgroundImagePath {
+            get {
+                return ((string)(this["CairoBackgroundImagePath"]));
+            }
+            set {
+                this["CairoBackgroundImagePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CairoBackgroundImageStyle {
+            get {
+                return ((string)(this["CairoBackgroundImageStyle"]));
+            }
+            set {
+                this["CairoBackgroundImageStyle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CairoBackgroundVideoPath {
+            get {
+                return ((string)(this["CairoBackgroundVideoPath"]));
+            }
+            set {
+                this["CairoBackgroundVideoPath"] = value;
             }
         }
     }

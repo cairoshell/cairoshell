@@ -14,6 +14,8 @@ namespace CairoDesktop
     /// </summary>
     public partial class DesktopNavigationToolbar : Window
     {
+        private static DesktopNavigationToolbar _instance = null;
+
         private WindowInteropHelper helper;
         private System.Windows.Controls.ContextMenu browseContextMenu;
 
@@ -48,16 +50,6 @@ namespace CairoDesktop
             Left = (sWidth / 2) - (Width / 2);
         }
 
-        private void Back_Click(object sender, RoutedEventArgs e)
-        {
-            if (Owner is Desktop owningDesktop)
-            {
-                DirectoryInfo parent = owningDesktop.Icons.Location.DirectoryInfo.Parent;
-                if (parent != null)
-                    owningDesktop.Navigate(parent.FullName);
-            }
-        }
-
         private void HomeButton_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
@@ -79,6 +71,7 @@ namespace CairoDesktop
             {
             }
         }
+
         private void BrowseButton_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
@@ -129,7 +122,7 @@ namespace CairoDesktop
         private void ClearHistoryMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (Owner is Desktop owningDesktop)
-                owningDesktop.PathHistory.Clear();
+                owningDesktop.ClearNavigation();
         }
 
         private void LocationMenuItem_Click(object sender, RoutedEventArgs e)
@@ -140,11 +133,26 @@ namespace CairoDesktop
                         owningDesktop.Navigate(location);
         }
 
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            NavigateBackward();
+        }
+
+        internal void NavigateBackward()
+        {
+            if (Owner is Desktop owningDesktop)
+                owningDesktop.NavigateBackward();
+        }
+
         private void Fwd_Click(object sender, RoutedEventArgs e)
         {
-            // Should this be handled by a new method? owningDesktop.MoveForward() ???
-            if (Owner is Desktop owningDesktop && owningDesktop.PathHistory.Count > 0)
-                owningDesktop.CurrentLocation = owningDesktop.PathHistory.Pop();
+            NavigateForward();
+        }
+
+        internal void NavigateForward()
+        {
+            if (Owner is Desktop owningDesktop)
+                owningDesktop.NavigateForward();
         }
 
         private void Browse_Click(object sender, RoutedEventArgs e)
@@ -221,5 +229,40 @@ namespace CairoDesktop
             if (!Startup.IsShuttingDown)
                 e.Cancel = true;
         }
+
+        public static DesktopNavigationToolbar Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new DesktopNavigationToolbar();
+                }
+
+                return _instance;
+            }
+        }
+
+        private void DesktopToolbar_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            switch (e.ChangedButton)
+            {
+                case System.Windows.Input.MouseButton.Left:
+                    break;
+                case System.Windows.Input.MouseButton.Middle:
+                    // Maybe Navigate Home?
+                    break;
+                case System.Windows.Input.MouseButton.Right:
+                    break;
+
+                case System.Windows.Input.MouseButton.XButton1:
+                    NavigateBackward();
+                    break;
+                case System.Windows.Input.MouseButton.XButton2:
+                    NavigateForward();
+                    break;
+            }
+        }
+
     }
 }

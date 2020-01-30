@@ -104,5 +104,20 @@
     <Setting Name="TaskbarMiddleClick" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="DesktopBackgroundType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">windowsDefaultBackground</Value>
+    </Setting>
+    <Setting Name="BingWallpaperStyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Stretch</Value>
+    </Setting>
+    <Setting Name="CairoBackgroundImagePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CairoBackgroundImageStyle" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CairoBackgroundVideoPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

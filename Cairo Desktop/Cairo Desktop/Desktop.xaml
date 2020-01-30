@@ -19,7 +19,9 @@
         Closing="Window_Closing" 
         SourceInitialized="Window_SourceInitialized"
         LocationChanged="CairoDesktopWindow_LocationChanged"
-        KeyDown="Window_KeyDown" MouseRightButtonUp="CairoDesktopWindow_MouseRightButtonUp">
+        KeyDown="Window_KeyDown" 
+        MouseRightButtonUp="CairoDesktopWindow_MouseRightButtonUp"
+        MouseUp="CairoDesktopWindow_MouseUp">
     <Grid Name="grid" MouseRightButtonDown="grid_MouseRightButtonDown" PreviewMouseLeftButtonDown="grid_PreviewMouseLeftButtonDown" HorizontalAlignment="Left" VerticalAlignment="Top">
     </Grid>
 </Window>

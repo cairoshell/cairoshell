@@ -13,6 +13,9 @@
     using CairoDesktop.WindowsTray;
     using CairoDesktop.Common;
     using Microsoft.Win32;
+    using System.Windows.Controls;
+    using System.Text;
+    using System.Drawing.Imaging;
 
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
@@ -308,6 +311,7 @@
         private void saveChanges()
         {
             // placeholder in case we need to do extra work in the future
+            saveDesktopBackgroundSettings();
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)
@@ -485,5 +489,204 @@
                 return _instance;
             }
         }
+
+        #region Desktop Background
+        private void loadDesktopBackgroundSettings()
+        {
+            #region windowsDefaultBackground
+
+            // draw wallpaper
+            string regWallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", "") as string;
+            string regWallpaperStyle = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", "") as string;
+            string regTileWallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", "") as string;
+
+            Desktop.CairoWallpaperStyle style = Desktop.CairoWallpaperStyle.Stretch;
+            // https://docs.microsoft.com/en-us/windows/desktop/Controls/themesfileformat-overview
+            switch ($"{regWallpaperStyle}{regTileWallpaper}")
+            {
+                case "01": // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
+                    style = Desktop.CairoWallpaperStyle.Tile;
+                    break;
+                case "00": // Centered { WallpaperStyle = 1; TileWallpaper = 0 }
+                    style = Desktop.CairoWallpaperStyle.Center;
+                    break;
+                case "60": // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
+                    style = Desktop.CairoWallpaperStyle.Fit;
+                    break;
+                case "100": // Fill { WallpaperStyle = 10; TileWallpaper = 0 }
+                    style = Desktop.CairoWallpaperStyle.Fill;
+                    break;
+                case "220": // Span { WallpaperStyle = 10; TileWallpaper = 0 }
+                    style = Desktop.CairoWallpaperStyle.Span;
+                    break;
+                case "20": // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
+                default:
+                    style = Desktop.CairoWallpaperStyle.Stretch;
+                    break;
+            }
+
+            txtWindowsBackgroundPath.Text = regWallpaper;
+            cboWindowsBackgroundStyle.Text = style.ToString();
+
+            #endregion
+            #region  cairoImageWallpaper
+            txtCairoBackgroundPath.Text = Settings.Instance.CairoBackgroundImagePath;
+            cboCairoBackgroundStyle.Text = Settings.Instance.CairoBackgroundImageStyle;
+            #endregion
+            #region  cairoVideoWallpaper
+            txtCairoVideoBackgroundPath.Text = Settings.Instance.CairoBackgroundVideoPath;
+            #endregion
+            #region  bingWallpaper
+            cboBingBackgroundStyle.Text = Settings.Instance.BingWallpaperStyle;
+            #endregion
+
+            var listBoxItems = cboDesktopBackgroundType.Items.Cast<ListBoxItem>().ToList();
+            var item = listBoxItems.FirstOrDefault(l => l.Name == Settings.Instance.DesktopBackgroundType);
+
+            cboDesktopBackgroundType.SelectedItem = item;
+        }
+
+        private void btnWindowsBackgroundFileBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            string wallpaperPath;
+            if (ShowOpenFileDialog(GetImageFilter(), out wallpaperPath))
+            {
+                txtWindowsBackgroundPath.Text = wallpaperPath;
+            }
+        }
+
+        private void btnCairoBackgroundFileBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            string wllpaperPath;
+            if (ShowOpenFileDialog(GetImageFilter(), out wllpaperPath))
+            {
+                txtCairoBackgroundPath.Text = wllpaperPath;
+            }
+        }
+
+        private void btnCairoVideoFileBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            string wllpaperPath;
+            if (ShowOpenFileDialog(GetVideoFilter(), out wllpaperPath))
+            {
+                txtCairoVideoBackgroundPath.Text = wllpaperPath;
+            }
+        }
+
+        private bool ShowOpenFileDialog(string filter, out string filename)
+        {
+            bool result;
+
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+            openFileDialog.Filter = filter;
+            if (openFileDialog.ShowDialog() == true)
+            {
+                result = true;
+                filename = openFileDialog.FileName;
+            }
+            else
+            {
+                result = false;
+                filename = string.Empty;
+            }
+
+            return result;
+        }
+
+        private string GetImageFilter()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append("Image Files|");
+            foreach (var codec in ImageCodecInfo.GetImageEncoders())
+            {
+                stringBuilder.Append($"{codec.FilenameExtension};");
+            }
+
+            return stringBuilder.ToString();
+        }
+
+        private string GetVideoFilter()
+        {
+            return "All Videos Files |*.dat; *.wmv; *.3g2; *.3gp; *.3gp2; *.3gpp;" +
+                " *.amv; *.asf;  *.avi; *.bin; *.cue; *.divx; *.dv; *.flv; *.gxf;" +
+                " *.iso; *.m1v; *.m2v; *.m2t; *.m2ts; *.m4v; *.mkv; *.mov; *.mp2;" +
+                " *.mp2v; *.mp4; *.mp4v; *.mpa; *.mpe; *.mpeg; *.mpeg1; *.mpeg2; *.mpeg4;" +
+                " *.mpg; *.mpv2; *.mts; *.nsv; *.nuv; *.ogg; *.ogm; *.ogv; *.ogx; *.ps;" +
+                " *.rec; *.rm; *.rmvb; *.tod; *.ts; *.tts; *.vob; *.vro; *.webm";
+        }
+
+        private void cboDesktopBackgroundType_SelectionChanged(object sender, EventArgs e)
+        {
+            ListBoxItem listBoxItem = cboDesktopBackgroundType.SelectedItem as ListBoxItem;
+            windowsImageBackgroundStackPanel.Visibility = (listBoxItem.Tag == windowsImageBackgroundStackPanel) ? Visibility.Visible : Visibility.Collapsed;
+            cairoImageBackgroundStackPanel.Visibility = (listBoxItem.Tag == cairoImageBackgroundStackPanel) ? Visibility.Visible : Visibility.Collapsed;
+            cairoVideoBackgroundStackPanel.Visibility = (listBoxItem.Tag == cairoVideoBackgroundStackPanel) ? Visibility.Visible : Visibility.Collapsed;
+            bingImageBackgroundStackPanel.Visibility = (listBoxItem.Tag == bingImageBackgroundStackPanel) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void saveDesktopBackgroundSettings()
+        {
+            Settings.Instance.DesktopBackgroundType = ((ListBoxItem)cboDesktopBackgroundType.SelectedItem).Name;
+
+            #region Windows Image
+            if (!string.IsNullOrWhiteSpace(txtWindowsBackgroundPath.Text) && File.Exists(txtWindowsBackgroundPath.Text))
+            {
+                // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
+                string wallpaperStyle = "2";
+                string tileWallpaper = "0";
+                switch (cboBingBackgroundStyle.Text)
+                {
+                    case "Tile": // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
+                        wallpaperStyle = "0";
+                        tileWallpaper = "1";
+                        break;
+                    case "Center": // Centered { WallpaperStyle = 1; TileWallpaper = 0 }
+                        wallpaperStyle = "1";
+                        tileWallpaper = "0";
+                        break;
+                    case "fit": // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
+                        wallpaperStyle = "6";
+                        tileWallpaper = "0";
+                        break;
+                    case "Fill": // Fill { WallpaperStyle = 10; TileWallpaper = 0 }
+                        wallpaperStyle = "10";
+                        tileWallpaper = "0";
+                        break;
+                    case "Span": // Span { WallpaperStyle = 10; TileWallpaper = 0 }
+                        wallpaperStyle = "20";
+                        tileWallpaper = "0";
+                        break;
+                }
+
+                Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", txtWindowsBackgroundPath.Text);
+                Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", wallpaperStyle);
+                Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", tileWallpaper);
+            }
+            #endregion
+
+            #region Cairo Image
+            if (!string.IsNullOrWhiteSpace(txtCairoBackgroundPath.Text) && File.Exists(txtCairoBackgroundPath.Text))
+            {
+                Settings.Instance.CairoBackgroundImagePath = txtCairoBackgroundPath.Text;
+                Settings.Instance.CairoBackgroundImageStyle = cboCairoBackgroundStyle.Text;
+            }
+            #endregion
+
+            #region Cairo Video
+
+            if (!string.IsNullOrWhiteSpace(txtCairoVideoBackgroundPath.Text) && File.Exists(txtCairoVideoBackgroundPath.Text))
+            {
+                Settings.Instance.CairoBackgroundVideoPath = txtCairoVideoBackgroundPath.Text;
+            }
+            #endregion
+
+            #region Bing
+            Settings.Instance.BingWallpaperStyle = cboBingBackgroundStyle.Text;
+            #endregion
+
+            // Tell Desktop to reload the Background
+            Startup.DesktopWindow.ReloadBackground();
+        }
+        #endregion
     }
 }
