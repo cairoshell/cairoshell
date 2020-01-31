@@ -14,6 +14,7 @@
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Markup;
+    using System.Windows.Media.Imaging;
     using System.Windows.Threading;
 
     /// <summary>
@@ -119,6 +120,10 @@
                               app.Resources.MergedDictionaries.Add(newRes);
                           }
                       }
+
+                      // Update pesky Image resources
+                      MenuBarWindow.MenuIcon.Source = Application.Current.FindResource("MenuIcon") as BitmapImage;
+                      MenuBarWindow.CairoSearchMenuIcon.Source = Application.Current.FindResource("CairoSearchMenuIcon") as BitmapImage;
                   }
               };
 

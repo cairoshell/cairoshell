@@ -125,7 +125,7 @@
                     Width="Auto"
                     x:Name="CairoMenuBar">
             <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
-                <MenuItem Style="{StaticResource CairoMenuItemCairoMenuStyle}"
+                <MenuItem Style="{StaticResource CairoMenuItemCairoMenuStyle }"
                           Name="CairoMenu">
                     <MenuItem.Header>
                         <Image Name="MenuIcon"
