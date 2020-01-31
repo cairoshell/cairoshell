@@ -148,153 +148,155 @@
                               }
                           }
                       }
-                  };
-
-                  // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-                  if (Settings.Instance.EnableTaskbar)
-                  {
-                      AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
-                      AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
                   }
+              };
 
-                  // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-                  MenuBarWindow = new MenuBar(System.Windows.Forms.Screen.PrimaryScreen);
-                  app.MainWindow = MenuBarWindow;
-                  MenuBarWindow.Show();
-                  MenuBarWindows.Add(MenuBarWindow);
 
-                  // Future: This should be moved to whatever plugin is responsible for Desktop stuff
-                  if (Settings.Instance.EnableDesktop)
-                  {
-                      DesktopWindow = new Desktop();
-                      DesktopWindow.Show();
-                  }
+            // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
+            if (Settings.Instance.EnableTaskbar)
+            {
+                AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
+                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
+            }
 
-                  // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-                  if (Settings.Instance.EnableMenuBarShadow)
-                  {
-                      MenuBarShadowWindow = new MenuBarShadow(MenuBarWindow, System.Windows.Forms.Screen.PrimaryScreen);
-                      MenuBarShadowWindow.Show();
-                      MenuBarShadowWindows.Add(MenuBarShadowWindow);
-                  }
+            // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
+            MenuBarWindow = new MenuBar(System.Windows.Forms.Screen.PrimaryScreen);
+            app.MainWindow = MenuBarWindow;
+            MenuBarWindow.Show();
+            MenuBarWindows.Add(MenuBarWindow);
 
-                  // Future: This should be moved to whatever plugin is responsible for Taskbar stuff
-                  if (Settings.Instance.EnableTaskbar)
-                  {
-                      TaskbarWindow = new Taskbar(System.Windows.Forms.Screen.PrimaryScreen);
-                      TaskbarWindow.Show();
-                      TaskbarWindows.Add(TaskbarWindow);
-                  }
+            // Future: This should be moved to whatever plugin is responsible for Desktop stuff
+            if (Settings.Instance.EnableDesktop)
+            {
+                DesktopWindow = new Desktop();
+                DesktopWindow.Show();
+            }
 
-                  // Future: This should be moved to whatever plugin is responsible for Taskbar/MennuBart stuff
-                  if (Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon)
-                      ScreenSetup(true);
-                  else if (IsCairoUserShell) // Set desktop work area for when Explorer isn't running
-                      AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
+            // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
+            if (Settings.Instance.EnableMenuBarShadow)
+            {
+                MenuBarShadowWindow = new MenuBarShadow(MenuBarWindow, System.Windows.Forms.Screen.PrimaryScreen);
+                MenuBarShadowWindow.Show();
+                MenuBarShadowWindows.Add(MenuBarShadowWindow);
+            }
 
-                  // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
-                  if (Settings.Instance.EnableSysTray == true)
-                  {
-                      NotificationArea.Instance.Initialize();
-                  }
+            // Future: This should be moved to whatever plugin is responsible for Taskbar stuff
+            if (Settings.Instance.EnableTaskbar)
+            {
+                TaskbarWindow = new Taskbar(System.Windows.Forms.Screen.PrimaryScreen);
+                TaskbarWindow.Show();
+                TaskbarWindows.Add(TaskbarWindow);
+            }
+
+            // Future: This should be moved to whatever plugin is responsible for Taskbar/MennuBart stuff
+            if (Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon)
+                ScreenSetup(true);
+            else if (IsCairoUserShell) // Set desktop work area for when Explorer isn't running
+                AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
+
+            // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
+            if (Settings.Instance.EnableSysTray == true)
+            {
+                NotificationArea.Instance.Initialize();
+            }
 
 #if ENABLEFIRSTRUN
-                  FirstRun();
+            FirstRun();
 #endif
 
-                  // login items only necessary if Explorer didn't start them
-                  if (IsCairoUserShell && !isRestart)
-                  {
-                      RunStartupApps();
-                  }
+            // login items only necessary if Explorer didn't start them
+            if (IsCairoUserShell && !isRestart)
+            {
+                RunStartupApps();
+            }
 
-                  app.Run();
-              }
+            app.Run();
+        }
 
         /// <summary>
         /// Executes the first run sequence.
         /// </summary>
-            private static void FirstRun()
+        private static void FirstRun()
+        {
+            try
             {
+                if (Settings.Instance.IsFirstRun == true || isTour)
+                {
+                    Welcome welcome = new Welcome();
+                    welcome.Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                CairoMessage.ShowAlert(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex),
+                    "Unexpected error!",
+                    MessageBoxImage.Error);
+            }
+        }
+
+        public static void Restart()
+        {
+            try
+            {
+                // run the program again
+                Process current = new Process();
+                current.StartInfo.FileName = AppDomain.CurrentDomain.BaseDirectory + "CairoDesktop.exe";
+                current.StartInfo.Arguments = "/restart";
+                current.Start();
+
+                // close this instance
+                Shutdown();
+            }
+            catch
+            { }
+        }
+
+        public static void Shutdown()
+        {
+            if (IsCairoUserShell)
+            {
+                Shell.StartProcess("explorer.exe");
+            }
+
+            IsShuttingDown = true;
+
+            Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
+        }
+
+        #region Shell: Autorun Apps
+
+        private static async void RunStartupApps()
+        {
+            await Task.Run(() => LoopStartupApps());
+        }
+
+        private static void LoopStartupApps()
+        {
+            foreach (string app in FetchStartupApps())
+            {
+                string[] procInfo = expandArgs(app);
+
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.UseShellExecute = true;
+                startInfo.FileName = procInfo[0];
+                startInfo.Arguments = procInfo[1];
+
+                CairoLogger.Instance.Debug("Starting program: " + startInfo.FileName);
+
                 try
                 {
-                    if (Settings.Instance.IsFirstRun == true || isTour)
-                    {
-                        Welcome welcome = new Welcome();
-                        welcome.Show();
-                    }
+                    Process.Start(startInfo);
                 }
-                catch (Exception ex)
-                {
-                    CairoMessage.ShowAlert(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex),
-                        "Unexpected error!",
-                        MessageBoxImage.Error);
-                }
+                catch { }
             }
+        }
 
-            public static void Restart()
-            {
-                try
-                {
-                    // run the program again
-                    Process current = new Process();
-                    current.StartInfo.FileName = AppDomain.CurrentDomain.BaseDirectory + "CairoDesktop.exe";
-                    current.StartInfo.Arguments = "/restart";
-                    current.Start();
+        private static List<string> FetchStartupApps()
+        {
+            List<string> startupApps = new List<string>();
 
-                    // close this instance
-                    Shutdown();
-                }
-                catch
-                { }
-            }
-
-            public static void Shutdown()
-            {
-                if (IsCairoUserShell)
-                {
-                    Shell.StartProcess("explorer.exe");
-                }
-
-                IsShuttingDown = true;
-
-                Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
-            }
-
-            #region Shell: Autorun Apps
-
-            private static async void RunStartupApps()
-            {
-                await Task.Run(() => LoopStartupApps());
-            }
-
-            private static void LoopStartupApps()
-            {
-                foreach (string app in FetchStartupApps())
-                {
-                    string[] procInfo = expandArgs(app);
-
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.UseShellExecute = true;
-                    startInfo.FileName = procInfo[0];
-                    startInfo.Arguments = procInfo[1];
-
-                    CairoLogger.Instance.Debug("Starting program: " + startInfo.FileName);
-
-                    try
-                    {
-                        Process.Start(startInfo);
-                    }
-                    catch { }
-                }
-            }
-
-            private static List<string> FetchStartupApps()
-            {
-                List<string> startupApps = new List<string>();
-
-                // Registry startup keys
-                Dictionary<string, string> startupKeys = new Dictionary<string, string>()
+            // Registry startup keys
+            Dictionary<string, string> startupKeys = new Dictionary<string, string>()
             {
                 {
                     "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
@@ -310,90 +312,90 @@
                 }
             };
 
-                // TODO: foreach(RegistryKey root in new[] { Registry.LocalMachine ,Registry.CurrentUser}) ... Would this be a more readable solution ???
-                // loop twice, once for HKLM once for HKCU
-                for (int i = 0; i <= 1; i++)
+            // TODO: foreach(RegistryKey root in new[] { Registry.LocalMachine ,Registry.CurrentUser}) ... Would this be a more readable solution ???
+            // loop twice, once for HKLM once for HKCU
+            for (int i = 0; i <= 1; i++)
+            {
+                foreach (KeyValuePair<string, string> regKey in startupKeys)
                 {
-                    foreach (KeyValuePair<string, string> regKey in startupKeys)
+                    bool isRunOnce = regKey.Key.Contains("RunOnce");
+
+                    RegistryKey root = null; // HKLM or HKCU
+                    RegistryKey key = null; // AppPath
+                    RegistryKey approvedKey = null; // the startupapproved key tells us if the item is disabled
+
+                    try
                     {
-                        bool isRunOnce = regKey.Key.Contains("RunOnce");
+                        if (i == 0)
+                            root = Registry.LocalMachine;
+                        else
+                            root = Registry.CurrentUser;
 
-                        RegistryKey root = null; // HKLM or HKCU
-                        RegistryKey key = null; // AppPath
-                        RegistryKey approvedKey = null; // the startupapproved key tells us if the item is disabled
-
-                        try
+                        if (isRunOnce && i != 0)
+                            key = root.OpenSubKey(regKey.Key, true);
+                        else if (isRunOnce)
+                            continue; // skip processing HKLM RunOnce because we can't remove things from there
+                        else
                         {
-                            if (i == 0)
-                                root = Registry.LocalMachine;
-                            else
-                                root = Registry.CurrentUser;
-
-                            if (isRunOnce && i != 0)
-                                key = root.OpenSubKey(regKey.Key, true);
-                            else if (isRunOnce)
-                                continue; // skip processing HKLM RunOnce because we can't remove things from there
-                            else
-                            {
-                                key = root.OpenSubKey(regKey.Key, false);
-                                approvedKey = root.OpenSubKey(regKey.Value, false);
-                            }
+                            key = root.OpenSubKey(regKey.Key, false);
+                            approvedKey = root.OpenSubKey(regKey.Value, false);
                         }
-                        catch
-                        {
-                            continue; // in case of unable to load registry key
-                        }
+                    }
+                    catch
+                    {
+                        continue; // in case of unable to load registry key
+                    }
 
-                        if (key != null && key.ValueCount > 0)
+                    if (key != null && key.ValueCount > 0)
+                    {
+                        foreach (string valueName in key.GetValueNames())
                         {
-                            foreach (string valueName in key.GetValueNames())
+                            bool canRun = true;
+
+                            if (approvedKey != null)
                             {
-                                bool canRun = true;
-
-                                if (approvedKey != null)
-                                {
-                                    foreach (string approvedName in approvedKey.GetValueNames())
-                                    {
-                                        try
-                                        {
-                                            string s = ((byte[])approvedKey.GetValue(approvedName))[0].ToString();
-                                            if (approvedName == valueName && ((byte[])approvedKey.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
-                                            {
-                                                canRun = false;
-                                                break;
-                                            }
-                                            else if (approvedName == valueName)
-                                                break;
-                                        }
-                                        catch { } // in case of invalid registry key values
-                                    }
-                                }
-
-                                if (canRun)
-                                    startupApps.Add(((string)key.GetValue(valueName)).Replace("\"", ""));
-
-                                // if this is a runonce key, remove the value after we grab it
-                                if (isRunOnce)
+                                foreach (string approvedName in approvedKey.GetValueNames())
                                 {
                                     try
                                     {
-                                        key.DeleteValue(valueName);
+                                        string s = ((byte[])approvedKey.GetValue(approvedName))[0].ToString();
+                                        if (approvedName == valueName && ((byte[])approvedKey.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
+                                        {
+                                            canRun = false;
+                                            break;
+                                        }
+                                        else if (approvedName == valueName)
+                                            break;
                                     }
-                                    catch { }
+                                    catch { } // in case of invalid registry key values
                                 }
                             }
+
+                            if (canRun)
+                                startupApps.Add(((string)key.GetValue(valueName)).Replace("\"", ""));
+
+                            // if this is a runonce key, remove the value after we grab it
+                            if (isRunOnce)
+                            {
+                                try
+                                {
+                                    key.DeleteValue(valueName);
+                                }
+                                catch { }
+                            }
                         }
-
-                        if (key != null)
-                            key.Close();
-
-                        if (approvedKey != null)
-                            approvedKey.Close();
                     }
-                }
 
-                // startup folders
-                Dictionary<SystemDirectory, RegistryKey> startupFolderKeys = new Dictionary<SystemDirectory, RegistryKey>()
+                    if (key != null)
+                        key.Close();
+
+                    if (approvedKey != null)
+                        approvedKey.Close();
+                }
+            }
+
+            // startup folders
+            Dictionary<SystemDirectory, RegistryKey> startupFolderKeys = new Dictionary<SystemDirectory, RegistryKey>()
             {
                 {
                     new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), Dispatcher.CurrentDispatcher),
@@ -404,335 +406,335 @@
                     Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false) }
               };
 
-                foreach (KeyValuePair<SystemDirectory, RegistryKey> startupFolder in startupFolderKeys)
+            foreach (KeyValuePair<SystemDirectory, RegistryKey> startupFolder in startupFolderKeys)
+            {
+                foreach (SystemFile startupFile in startupFolder.Key.Files)
                 {
-                    foreach (SystemFile startupFile in startupFolder.Key.Files)
+                    bool canRun = true;
+
+                    if (startupFolder.Value != null)
                     {
-                        bool canRun = true;
-
-                        if (startupFolder.Value != null)
+                        foreach (string approvedName in startupFolder.Value.GetValueNames())
                         {
-                            foreach (string approvedName in startupFolder.Value.GetValueNames())
+                            try
                             {
-                                try
+                                string s = ((byte[])startupFolder.Value.GetValue(approvedName))[0].ToString();
+                                if (approvedName == startupFile.Name && ((byte[])startupFolder.Value.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
                                 {
-                                    string s = ((byte[])startupFolder.Value.GetValue(approvedName))[0].ToString();
-                                    if (approvedName == startupFile.Name && ((byte[])startupFolder.Value.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
-                                    {
-                                        canRun = false;
-                                        break;
-                                    }
-                                    else if (approvedName == startupFile.Name)
-                                        break;
+                                    canRun = false;
+                                    break;
                                 }
-                                catch { } // in case of invalid registry key values
+                                else if (approvedName == startupFile.Name)
+                                    break;
                             }
+                            catch { } // in case of invalid registry key values
                         }
-
-                        if (canRun)
-                            startupApps.Add(startupFile.FullName);
                     }
-                }
 
-                return startupApps;
+                    if (canRun)
+                        startupApps.Add(startupFile.FullName);
+                }
             }
 
-            private static string[] expandArgs(string startupPath)
+            return startupApps;
+        }
+
+        private static string[] expandArgs(string startupPath)
+        {
+            string[] procInfo = new string[2];
+
+            int exeIndex = startupPath.IndexOf(".exe");
+
+            if (exeIndex > 0)
             {
-                string[] procInfo = new string[2];
-
-                int exeIndex = startupPath.IndexOf(".exe");
-
-                if (exeIndex > 0)
+                // we may have args for an executable
+                if (exeIndex + 4 != startupPath.Length)
                 {
-                    // we may have args for an executable
-                    if (exeIndex + 4 != startupPath.Length)
-                    {
-                        // argh, args!
-                        procInfo[0] = startupPath.Substring(0, exeIndex + 4);
-                        procInfo[1] = startupPath.Substring(exeIndex + 5, startupPath.Length - exeIndex - 5);
-                    }
-                    else
-                    {
-                        procInfo[0] = startupPath;
-                    }
+                    // argh, args!
+                    procInfo[0] = startupPath.Substring(0, exeIndex + 4);
+                    procInfo[1] = startupPath.Substring(exeIndex + 5, startupPath.Length - exeIndex - 5);
                 }
                 else
                 {
-                    // no args to parse out
                     procInfo[0] = startupPath;
                 }
-
-                return procInfo;
+            }
+            else
+            {
+                // no args to parse out
+                procInfo[0] = startupPath;
             }
 
+            return procInfo;
+        }
 
 
-            #endregion
+
+        #endregion
 
 
 
-            public static void ResetScreenCache()
+        public static void ResetScreenCache()
+        {
+            // use reflection to empty screens cache
+            typeof(System.Windows.Forms.Screen).GetField("screens", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
+        }
+
+        /// <summary>
+        /// Compares the system screen list to the screens associated with Cairo windows, then creates or destroys windows as necessary.
+        /// Only affects non-primary screens, as Cairo always opens on at least the primary screen.
+        /// Runs at startup and when a WM_DISPLAYCHANGE message is received by the main MenuBar window.
+        /// </summary>
+        public static void ScreenSetup(bool skipChecks = false)
+        {
+            lock (screenSetupLock)
             {
-                // use reflection to empty screens cache
-                typeof(System.Windows.Forms.Screen).GetField("screens", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
-            }
+                CairoLogger.Instance.Debug("Beginning screen setup");
+                IsSettingScreens = true;
 
-            /// <summary>
-            /// Compares the system screen list to the screens associated with Cairo windows, then creates or destroys windows as necessary.
-            /// Only affects non-primary screens, as Cairo always opens on at least the primary screen.
-            /// Runs at startup and when a WM_DISPLAYCHANGE message is received by the main MenuBar window.
-            /// </summary>
-            public static void ScreenSetup(bool skipChecks = false)
-            {
-                lock (screenSetupLock)
+                bool shouldSetScreens = true;
+
+                List<string> sysScreens = new List<string>();
+                List<string> openScreens = new List<string>();
+                List<string> addedScreens = new List<string>();
+                List<string> removedScreens = new List<string>();
+
+                ResetScreenCache();
+
+                if (screenState.Length == System.Windows.Forms.Screen.AllScreens.Length)
                 {
-                    CairoLogger.Instance.Debug("Beginning screen setup");
-                    IsSettingScreens = true;
-
-                    bool shouldSetScreens = true;
-
-                    List<string> sysScreens = new List<string>();
-                    List<string> openScreens = new List<string>();
-                    List<string> addedScreens = new List<string>();
-                    List<string> removedScreens = new List<string>();
-
-                    ResetScreenCache();
-
-                    if (screenState.Length == System.Windows.Forms.Screen.AllScreens.Length)
+                    bool same = true;
+                    for (int i = 0; i < screenState.Length; i++)
                     {
-                        bool same = true;
-                        for (int i = 0; i < screenState.Length; i++)
+                        System.Windows.Forms.Screen current = System.Windows.Forms.Screen.AllScreens[i];
+                        if (!(screenState[i].Bounds == current.Bounds && screenState[i].DeviceName == current.DeviceName && screenState[i].Primary == current.Primary && screenState[i].WorkingArea == current.WorkingArea))
                         {
-                            System.Windows.Forms.Screen current = System.Windows.Forms.Screen.AllScreens[i];
-                            if (!(screenState[i].Bounds == current.Bounds && screenState[i].DeviceName == current.DeviceName && screenState[i].Primary == current.Primary && screenState[i].WorkingArea == current.WorkingArea))
-                            {
-                                same = false;
-                                break;
-                            }
+                            same = false;
+                            break;
                         }
+                    }
 
-                        if (same)
-                        {
-                            CairoLogger.Instance.Debug("Skipping screen setup due to no differences");
-                            shouldSetScreens = false;
-                        }
-                        else
-                            screenState = System.Windows.Forms.Screen.AllScreens;
+                    if (same)
+                    {
+                        CairoLogger.Instance.Debug("Skipping screen setup due to no differences");
+                        shouldSetScreens = false;
                     }
                     else
                         screenState = System.Windows.Forms.Screen.AllScreens;
+                }
+                else
+                    screenState = System.Windows.Forms.Screen.AllScreens;
 
-                    if (shouldSetScreens)
+                if (shouldSetScreens)
+                {
+                    if (!skipChecks)
                     {
-                        if (!skipChecks)
+                        // enumerate screens
+
+                        if (Settings.Instance.EnableMenuBarMultiMon || !Configuration.Settings.Instance.EnableTaskbar)
                         {
-                            // enumerate screens
-
-                            if (Settings.Instance.EnableMenuBarMultiMon || !Configuration.Settings.Instance.EnableTaskbar)
-                            {
-                                foreach (MenuBar bar in MenuBarWindows)
-                                {
-                                    if (bar.Screen != null)
-                                        openScreens.Add(bar.Screen.DeviceName);
-                                }
-                            }
-                            else if (Settings.Instance.EnableTaskbarMultiMon)
-                            {
-                                foreach (Taskbar bar in TaskbarWindows)
-                                {
-                                    if (bar.Screen != null)
-                                        openScreens.Add(bar.Screen.DeviceName);
-                                }
-                            }
-                            else
-                            {
-                                IsSettingScreens = false;
-                                return;
-                            }
-
-                            foreach (var screen in screenState)
-                            {
-                                CairoLogger.Instance.Debug(string.Format("{0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
-
-                                sysScreens.Add(screen.DeviceName);
-                            }
-
-                            // figure out which screens have been added vs removed
-
-                            foreach (string name in sysScreens)
-                            {
-                                if (!openScreens.Contains(name))
-                                    addedScreens.Add(name);
-                            }
-
-                            foreach (string name in openScreens)
-                            {
-                                if (!sysScreens.Contains(name))
-                                    removedScreens.Add(name);
-                            }
-
-                            if (sysScreens.Count == 0)
-                            {
-                                // remove everything?! no way!
-                                IsSettingScreens = false;
-                                return;
-                            }
-
-                            // close windows associated with removed screens
-                            foreach (string name in removedScreens)
-                            {
-                                CairoLogger.Instance.Debug("Removing windows associated with screen " + name);
-
-                                // close taskbars
-                                Taskbar taskbarToClose = null;
-                                foreach (Taskbar bar in TaskbarWindows)
-                                {
-                                    if (bar.Screen != null && bar.Screen.DeviceName == name)
-                                    {
-                                        taskbarToClose = bar;
-                                        break;
-                                    }
-                                }
-
-                                if (taskbarToClose != null)
-                                {
-                                    taskbarToClose.Close();
-                                    TaskbarWindows.Remove(taskbarToClose);
-                                }
-
-                                // close menu bars
-                                MenuBar barToClose = null;
-                                foreach (MenuBar bar in MenuBarWindows)
-                                {
-                                    if (bar.Screen != null && bar.Screen.DeviceName == name)
-                                    {
-                                        CairoLogger.Instance.DebugIf(bar.Screen.Primary, "Closing menu bar on primary display");
-
-                                        barToClose = bar;
-                                        break;
-                                    }
-                                }
-
-                                if (barToClose != null)
-                                {
-                                    if (!barToClose.IsClosing)
-                                        barToClose.Close();
-                                    MenuBarWindows.Remove(barToClose);
-                                }
-
-                                // close menu bar shadows
-                                MenuBarShadow barShadowToClose = null;
-                                foreach (MenuBarShadow bar in MenuBarShadowWindows)
-                                {
-                                    if (bar.Screen != null && bar.Screen.DeviceName == name)
-                                    {
-                                        barShadowToClose = bar;
-                                        break;
-                                    }
-                                }
-
-                                if (barShadowToClose != null)
-                                {
-                                    if (!barShadowToClose.IsClosing)
-                                        barShadowToClose.Close();
-                                    MenuBarShadowWindows.Remove(barShadowToClose);
-                                }
-                            }
-
-                            CairoLogger.Instance.Debug("Refreshing screen information for stale windows");
-
-                            // update screens of stale windows
                             foreach (MenuBar bar in MenuBarWindows)
                             {
                                 if (bar.Screen != null)
-                                {
-                                    foreach (System.Windows.Forms.Screen screen in screenState)
-                                    {
-                                        if (screen.DeviceName == bar.Screen.DeviceName)
-                                        {
-                                            bar.Screen = screen;
-                                            break;
-                                        }
-                                    }
-                                }
+                                    openScreens.Add(bar.Screen.DeviceName);
                             }
-
-                            foreach (MenuBarShadow bar in MenuBarShadowWindows)
-                            {
-                                if (bar.Screen != null)
-                                {
-                                    foreach (System.Windows.Forms.Screen screen in screenState)
-                                    {
-                                        if (screen.DeviceName == bar.Screen.DeviceName)
-                                        {
-                                            bar.Screen = screen;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-
+                        }
+                        else if (Settings.Instance.EnableTaskbarMultiMon)
+                        {
                             foreach (Taskbar bar in TaskbarWindows)
                             {
                                 if (bar.Screen != null)
+                                    openScreens.Add(bar.Screen.DeviceName);
+                            }
+                        }
+                        else
+                        {
+                            IsSettingScreens = false;
+                            return;
+                        }
+
+                        foreach (var screen in screenState)
+                        {
+                            CairoLogger.Instance.Debug(string.Format("{0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
+
+                            sysScreens.Add(screen.DeviceName);
+                        }
+
+                        // figure out which screens have been added vs removed
+
+                        foreach (string name in sysScreens)
+                        {
+                            if (!openScreens.Contains(name))
+                                addedScreens.Add(name);
+                        }
+
+                        foreach (string name in openScreens)
+                        {
+                            if (!sysScreens.Contains(name))
+                                removedScreens.Add(name);
+                        }
+
+                        if (sysScreens.Count == 0)
+                        {
+                            // remove everything?! no way!
+                            IsSettingScreens = false;
+                            return;
+                        }
+
+                        // close windows associated with removed screens
+                        foreach (string name in removedScreens)
+                        {
+                            CairoLogger.Instance.Debug("Removing windows associated with screen " + name);
+
+                            // close taskbars
+                            Taskbar taskbarToClose = null;
+                            foreach (Taskbar bar in TaskbarWindows)
+                            {
+                                if (bar.Screen != null && bar.Screen.DeviceName == name)
                                 {
-                                    foreach (System.Windows.Forms.Screen screen in screenState)
+                                    taskbarToClose = bar;
+                                    break;
+                                }
+                            }
+
+                            if (taskbarToClose != null)
+                            {
+                                taskbarToClose.Close();
+                                TaskbarWindows.Remove(taskbarToClose);
+                            }
+
+                            // close menu bars
+                            MenuBar barToClose = null;
+                            foreach (MenuBar bar in MenuBarWindows)
+                            {
+                                if (bar.Screen != null && bar.Screen.DeviceName == name)
+                                {
+                                    CairoLogger.Instance.DebugIf(bar.Screen.Primary, "Closing menu bar on primary display");
+
+                                    barToClose = bar;
+                                    break;
+                                }
+                            }
+
+                            if (barToClose != null)
+                            {
+                                if (!barToClose.IsClosing)
+                                    barToClose.Close();
+                                MenuBarWindows.Remove(barToClose);
+                            }
+
+                            // close menu bar shadows
+                            MenuBarShadow barShadowToClose = null;
+                            foreach (MenuBarShadow bar in MenuBarShadowWindows)
+                            {
+                                if (bar.Screen != null && bar.Screen.DeviceName == name)
+                                {
+                                    barShadowToClose = bar;
+                                    break;
+                                }
+                            }
+
+                            if (barShadowToClose != null)
+                            {
+                                if (!barShadowToClose.IsClosing)
+                                    barShadowToClose.Close();
+                                MenuBarShadowWindows.Remove(barShadowToClose);
+                            }
+                        }
+
+                        CairoLogger.Instance.Debug("Refreshing screen information for stale windows");
+
+                        // update screens of stale windows
+                        foreach (MenuBar bar in MenuBarWindows)
+                        {
+                            if (bar.Screen != null)
+                            {
+                                foreach (System.Windows.Forms.Screen screen in screenState)
+                                {
+                                    if (screen.DeviceName == bar.Screen.DeviceName)
                                     {
-                                        if (screen.DeviceName == bar.Screen.DeviceName)
-                                        {
-                                            bar.Screen = screen;
-                                            bar.setPosition();
-                                            break;
-                                        }
+                                        bar.Screen = screen;
+                                        break;
                                     }
                                 }
                             }
                         }
 
-                        // open windows on newly added screens
-                        foreach (var screen in screenState)
+                        foreach (MenuBarShadow bar in MenuBarShadowWindows)
                         {
-                            if ((skipChecks && !screen.Primary) || addedScreens.Contains(screen.DeviceName))
+                            if (bar.Screen != null)
                             {
-                                CairoLogger.Instance.Debug("Opening windows on screen " + screen.DeviceName);
-
-                                if (Settings.Instance.EnableMenuBarMultiMon)
+                                foreach (System.Windows.Forms.Screen screen in screenState)
                                 {
-                                    CairoLogger.Instance.DebugIf(screen.Primary, "Opening MenuBar on new primary display");
-
-                                    // menu bars
-                                    MenuBar newMenuBar = new MenuBar(screen);
-                                    newMenuBar.Show();
-                                    MenuBarWindows.Add(newMenuBar);
-
-                                    if (Settings.Instance.EnableMenuBarShadow)
+                                    if (screen.DeviceName == bar.Screen.DeviceName)
                                     {
-                                        // menu bar shadows
-                                        MenuBarShadow newMenuBarShadow = new MenuBarShadow(newMenuBar, screen);
-                                        newMenuBarShadow.Show();
-                                        MenuBarShadowWindows.Add(newMenuBarShadow);
+                                        bar.Screen = screen;
+                                        break;
                                     }
                                 }
+                            }
+                        }
 
-                                if (Settings.Instance.EnableTaskbarMultiMon && Configuration.Settings.Instance.EnableTaskbar)
+                        foreach (Taskbar bar in TaskbarWindows)
+                        {
+                            if (bar.Screen != null)
+                            {
+                                foreach (System.Windows.Forms.Screen screen in screenState)
                                 {
-                                    // taskbars
-                                    Taskbar newTaskbar = new Taskbar(screen);
-                                    newTaskbar.Show();
-                                    TaskbarWindows.Add(newTaskbar);
+                                    if (screen.DeviceName == bar.Screen.DeviceName)
+                                    {
+                                        bar.Screen = screen;
+                                        bar.setPosition();
+                                        break;
+                                    }
                                 }
                             }
-
-                            // Set desktop work area for when Explorer isn't running
-                            if (IsCairoUserShell)
-                                AppBarHelper.SetWorkArea(screen);
                         }
                     }
 
-                    IsSettingScreens = false;
-                    CairoLogger.Instance.Debug("Completed screen setup");
+                    // open windows on newly added screens
+                    foreach (var screen in screenState)
+                    {
+                        if ((skipChecks && !screen.Primary) || addedScreens.Contains(screen.DeviceName))
+                        {
+                            CairoLogger.Instance.Debug("Opening windows on screen " + screen.DeviceName);
+
+                            if (Settings.Instance.EnableMenuBarMultiMon)
+                            {
+                                CairoLogger.Instance.DebugIf(screen.Primary, "Opening MenuBar on new primary display");
+
+                                // menu bars
+                                MenuBar newMenuBar = new MenuBar(screen);
+                                newMenuBar.Show();
+                                MenuBarWindows.Add(newMenuBar);
+
+                                if (Settings.Instance.EnableMenuBarShadow)
+                                {
+                                    // menu bar shadows
+                                    MenuBarShadow newMenuBarShadow = new MenuBarShadow(newMenuBar, screen);
+                                    newMenuBarShadow.Show();
+                                    MenuBarShadowWindows.Add(newMenuBarShadow);
+                                }
+                            }
+
+                            if (Settings.Instance.EnableTaskbarMultiMon && Configuration.Settings.Instance.EnableTaskbar)
+                            {
+                                // taskbars
+                                Taskbar newTaskbar = new Taskbar(screen);
+                                newTaskbar.Show();
+                                TaskbarWindows.Add(newTaskbar);
+                            }
+                        }
+
+                        // Set desktop work area for when Explorer isn't running
+                        if (IsCairoUserShell)
+                            AppBarHelper.SetWorkArea(screen);
+                    }
                 }
+
+                IsSettingScreens = false;
+                CairoLogger.Instance.Debug("Completed screen setup");
             }
         }
     }
+}
