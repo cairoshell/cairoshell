@@ -141,7 +141,8 @@
                         Click="OpenLogoffBox" />
                 </MenuItem>
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu)}" Name="ProgramsMenu"
-                    Drop="Programs_Drop"
+                    Drop="ProgramsMenu_Drop"
+                    DragOver="ProgramsMenu_DragOver"
                     ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" TextBlock.FontWeight="SemiBold" StaysOpenOnClick="True">
                     <MenuItem StaysOpenOnClick="True">
                         <MenuItem.Header>

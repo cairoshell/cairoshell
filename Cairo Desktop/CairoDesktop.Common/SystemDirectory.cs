@@ -47,7 +47,7 @@ namespace CairoDesktop.Common {
             get
             {
                 if (name == null)
-                    name = Interop.Shell.GetDisplayName(FullName);
+                    name = Shell.GetDisplayName(FullName);
                 return name;
             }
         }
@@ -74,7 +74,7 @@ namespace CairoDesktop.Common {
             {
                 this.dispatcher = dispatcher;
                 files = new InvokingObservableCollection<SystemFile>(this.dispatcher);
-                this.DirectoryInfo = new DirectoryInfo(pathToDirectory);
+                DirectoryInfo = new DirectoryInfo(pathToDirectory);
                 fileWatcher.IncludeSubdirectories = false;
                 fileWatcher.Filter = "";
                 fileWatcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName;
@@ -97,7 +97,7 @@ namespace CairoDesktop.Common {
         void fileWatcher_Renamed(object sender, RenamedEventArgs e) {
             try
             {
-                this.changeFile(e.OldFullPath, e.FullPath);
+                changeFile(e.OldFullPath, e.FullPath);
             }
             catch (Exception ex)
             {
@@ -108,7 +108,7 @@ namespace CairoDesktop.Common {
         void fileWatcher_Deleted(object sender, FileSystemEventArgs e) {
             try
             {
-                this.removeFile(e.FullPath);
+                removeFile(e.FullPath);
             }
             catch (Exception ex)
             {
@@ -117,11 +117,11 @@ namespace CairoDesktop.Common {
         }
 
         void fileWatcher_Created(object sender, FileSystemEventArgs e) {
-            this.addFile(e.FullPath);
+            addFile(e.FullPath);
         }
 
-        private void addFile(String filePath) {
-            if (Interop.Shell.Exists(filePath) && isFileVisible(filePath))
+        private void addFile(string filePath) {
+            if (Shell.Exists(filePath) && isFileVisible(filePath))
             {
                 SystemFile newFile = new SystemFile(filePath);
                 if (newFile.Name != null)
@@ -132,7 +132,7 @@ namespace CairoDesktop.Common {
             }
         }
 
-        private void removeFile(String filePath) {
+        private void removeFile(string filePath) {
             int removalIndex = -1;
             foreach (SystemFile file in files) {
                 if (file.FullName == filePath) {
@@ -177,7 +177,7 @@ namespace CairoDesktop.Common {
 
         private bool isFileVisible(string fileName)
         {
-            if (Interop.Shell.Exists(fileName))
+            if (Shell.Exists(fileName))
             {
                 try
                 {
@@ -199,7 +199,7 @@ namespace CairoDesktop.Common {
             
             if (Settings.EnableSubDirs)
             {
-                IEnumerable<string> dirs = Directory.EnumerateDirectories(this.DirectoryInfo.FullName);
+                IEnumerable<string> dirs = Directory.EnumerateDirectories(DirectoryInfo.FullName);
                 foreach (string subDir in dirs)
                 {
                     if (isFileVisible(subDir))
@@ -209,7 +209,7 @@ namespace CairoDesktop.Common {
                 }
             }
 
-            IEnumerable<string> dirFiles = Directory.EnumerateFiles(this.DirectoryInfo.FullName, "*");
+            IEnumerable<string> dirFiles = Directory.EnumerateFiles(DirectoryInfo.FullName, "*");
             foreach (String file in dirFiles)
             {
                 if (isFileVisible(file))
@@ -231,15 +231,15 @@ namespace CairoDesktop.Common {
         public override bool Equals(object other) {
             if (other is string)
             {
-                return this.FullName.Equals(other as string, StringComparison.OrdinalIgnoreCase);
+                return FullName.Equals(other as string, StringComparison.OrdinalIgnoreCase);
             }
             if (!(other is SystemDirectory)) return false;
-            return this.FullName.Equals((other as SystemDirectory).FullName, StringComparison.OrdinalIgnoreCase);
+            return FullName.Equals((other as SystemDirectory).FullName, StringComparison.OrdinalIgnoreCase);
         }
 
         public override int GetHashCode()
         {
-            return this.FullName.GetHashCode();
+            return FullName.GetHashCode();
         }
 
 
@@ -251,25 +251,67 @@ namespace CairoDesktop.Common {
             {
                 if (clipFiles.GetData(DataFormats.FileDrop) is string[] files)
                 {
-                    foreach (string file in files)
+                    CopyInto(files);
+                }
+            }
+        }
+
+        public void CopyInto(string[] files)
+        {
+            CopyInto(files, FullName);
+        }
+
+        public void MoveInto(string[] files)
+        {
+            MoveInto(files, FullName);
+        }
+
+        public static void CopyInto(string[] files, string directory)
+        {
+            foreach (string file in files)
+            {
+                if (Shell.Exists(file))
+                {
+                    try
                     {
-                        if (Shell.Exists(file))
+                        FileAttributes attr = File.GetAttributes(file);
+                        if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                         {
-                            try
-                            {
-                                FileAttributes attr = File.GetAttributes(file);
-                                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-                                {
-                                    FileSystem.CopyDirectory(file, this.FullName + "\\" + new DirectoryInfo(file).Name, UIOption.AllDialogs);
-                                }
-                                else
-                                {
-                                    FileSystem.CopyFile(file, this.FullName + "\\" + Path.GetFileName(file), UIOption.AllDialogs);
-                                }
-                            }
-                            catch { }
+                            string futureName = directory + "\\" + new DirectoryInfo(file).Name;
+                            if (!(futureName == file)) FileSystem.CopyDirectory(file, futureName, UIOption.AllDialogs);
+                        }
+                        else
+                        {
+                            string futureName = directory + "\\" + Path.GetFileName(file);
+                            if (!(futureName == file)) FileSystem.CopyFile(file, futureName, UIOption.AllDialogs);
                         }
                     }
+                    catch { }
+                }
+            }
+        }
+
+        public static void MoveInto(string[] files, string directory)
+        {
+            foreach (string file in files)
+            {
+                if (Shell.Exists(file))
+                {
+                    try
+                    {
+                        FileAttributes attr = File.GetAttributes(file);
+                        if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+                        {
+                            string futureName = directory + "\\" + new DirectoryInfo(file).Name;
+                            if (!(futureName == file)) FileSystem.MoveDirectory(file, futureName, UIOption.AllDialogs);
+                        }
+                        else
+                        {
+                            string futureName = directory + "\\" + Path.GetFileName(file);
+                            if (!(futureName == file)) FileSystem.MoveFile(file, futureName, UIOption.AllDialogs);
+                        }
+                    }
+                    catch { }
                 }
             }
         }
@@ -277,7 +319,7 @@ namespace CairoDesktop.Common {
         #region IEquatable<T> Members
 
         bool IEquatable<SystemDirectory>.Equals(SystemDirectory other) {
-            return this.FullName.Equals((other as SystemDirectory).FullName, StringComparison.OrdinalIgnoreCase);
+            return FullName.Equals((other as SystemDirectory).FullName, StringComparison.OrdinalIgnoreCase);
         }
 
         #endregion

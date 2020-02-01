@@ -405,7 +405,7 @@ namespace CairoDesktop
         }
 
 
-        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (Keyboard.Modifiers == ModifierKeys.Alt && e.SystemKey == Key.F4)
             {
@@ -435,7 +435,7 @@ namespace CairoDesktop
             SetupPostInit();
         }
 
-        private void grid_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void grid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (!Topmost)
             {
@@ -491,13 +491,13 @@ namespace CairoDesktop
         {
             Topmost = false;
             Shell.ShowWindowBottomMost(helper.Handle);
-            grid.Background = Brushes.Transparent;
+            grid.Background = new SolidColorBrush(Color.FromArgb(0x01, 0, 0, 0));
             setBackground();
         }
 
-        private void grid_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.ScrollViewer))
+            if (e.OriginalSource.GetType() == typeof(ScrollViewer))
             {
                 IsOverlayOpen = false;
             }
@@ -584,5 +584,50 @@ namespace CairoDesktop
                     Startup.DesktopWindow.IsOverlayOpen = false;
             }
         }
+
+        #region Drop
+        private bool isDropMove = false;
+        private void CairoDesktopWindow_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(SystemFile)))
+            {
+                if ((e.KeyStates & DragDropKeyStates.RightMouseButton) != 0)
+                {
+                    e.Effects = DragDropEffects.Copy;
+                    isDropMove = false;
+                }
+                else if ((e.KeyStates & DragDropKeyStates.LeftMouseButton) != 0)
+                {
+                    e.Effects = DragDropEffects.Move;
+                    isDropMove = true;
+                }
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+                isDropMove = false;
+            }
+
+            e.Handled = true;
+        }
+
+        private void CairoDesktopWindow_Drop(object sender, DragEventArgs e)
+        {
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (e.Data.GetDataPresent(typeof(SystemFile)))
+            {
+                SystemFile dropData = e.Data.GetData(typeof(SystemFile)) as SystemFile;
+                fileNames = new string[] { dropData.FullName };
+            }
+
+            if (fileNames != null)
+            {
+                if (!isDropMove) Icons.Location.CopyInto(fileNames);
+                else if (isDropMove) Icons.Location.MoveInto(fileNames);
+
+                e.Handled = true;
+            }
+        }
+        #endregion
     }
 }

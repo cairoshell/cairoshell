@@ -28,8 +28,8 @@ namespace CairoDesktop.AppGrabber
             };
 
         private static readonly string[] searchLocations = {
-                Interop.Shell.UsersStartMenuPath,
-                Interop.Shell.AllUsersStartMenuPath
+                Shell.UsersStartMenuPath,
+                Shell.AllUsersStartMenuPath
         };
 
         public static AppGrabber Instance { get; } = new AppGrabber();
@@ -88,7 +88,7 @@ namespace CairoDesktop.AppGrabber
 
         public void Load()
         {
-            if (Interop.Shell.Exists(ConfigFile))
+            if (Shell.Exists(ConfigFile))
             {
                 this.CategoryList = CategoryList.Deserialize(ConfigFile);
             }
@@ -174,7 +174,7 @@ namespace CairoDesktop.AppGrabber
                 foreach (string file in files)
                 {
                     ApplicationInfo app = PathToApp(file, false);
-                    if (!object.ReferenceEquals(app, null))
+                    if (!ReferenceEquals(app, null))
                         rval.Add(app);
                 }
             }
@@ -211,7 +211,7 @@ namespace CairoDesktop.AppGrabber
                     // remove items that we can't execute.
                     if (!allowNonApps)
                     {
-                        if (!String.IsNullOrEmpty(target) && !ExecutableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
+                        if (!string.IsNullOrEmpty(target) && !ExecutableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
                         {
                             CairoLogger.Instance.Debug("Not an app: " + file + ": " + target);
                             return null;
@@ -394,19 +394,35 @@ namespace CairoDesktop.AppGrabber
         public void InsertByPath(string[] fileNames, int index, AppCategoryType categoryType)
         {
             int count = 0;
-            foreach (String fileName in fileNames)
+            foreach (string fileName in fileNames)
             {
                 if (Shell.Exists(fileName))
                 {
                     ApplicationInfo customApp = PathToApp(fileName, false);
-                    if (!object.ReferenceEquals(customApp, null))
+                    if (!ReferenceEquals(customApp, null))
                     {
-                        Category category = CategoryList.GetSpecialCategory(categoryType);
-                        if (category.Contains(customApp))
+                        Category category;
+
+                        if (categoryType == AppCategoryType.Uncategorized || categoryType == AppCategoryType.Standard)
                         {
-                            // disallow duplicates within the category
-                            CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
-                            break;
+                            // if type is standard, drop in uncategorized
+                            category = CategoryList.GetSpecialCategory(AppCategoryType.Uncategorized);
+                            if (CategoryList.FlatList.Contains(customApp))
+                            {
+                                // disallow duplicates within all programs menu categories
+                                CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            category = CategoryList.GetSpecialCategory(categoryType);
+                            if (category.Contains(customApp))
+                            {
+                                // disallow duplicates within the category
+                                CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                                continue;
+                            }
                         }
 
                         if (index >= 0) category.Insert(index, customApp);
@@ -418,6 +434,11 @@ namespace CairoDesktop.AppGrabber
 
             if (count > 0)
                 Save();
+        }
+
+        public void AddByPath(string fileName, AppCategoryType categoryType)
+        {
+            InsertByPath(new string[] { fileName }, -1, categoryType);
         }
 
         public void AddByPath(string[] fileNames, AppCategoryType categoryType)
@@ -442,7 +463,7 @@ namespace CairoDesktop.AppGrabber
                     ai.IconColor = app[3];
 
                     // add it
-                    if (!object.ReferenceEquals(ai, null))
+                    if (!ReferenceEquals(ai, null))
                     {
                         CategoryList.GetSpecialCategory(categoryType).Add(ai);
                         success = true;

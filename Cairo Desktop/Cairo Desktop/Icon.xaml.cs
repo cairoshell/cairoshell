@@ -3,6 +3,7 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.Localization;
 using CairoDesktop.SupportingClasses;
+using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +26,8 @@ namespace CairoDesktop
             set { SetValue(LocationProperty, value); }
         }
 
+        private SystemFile file;
+
         public Icon()
         {
             InitializeComponent();
@@ -32,6 +35,9 @@ namespace CairoDesktop
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            // set SystemFile from binding
+            file = (SystemFile)DataContext;
+
             // adjust appearance based on settings and usage
             if (Location == "Desktop")
             {
@@ -117,10 +123,8 @@ namespace CairoDesktop
 
         private void btnFile_Click(object sender, RoutedEventArgs e)
         {
-            Button senderButton = sender as Button;
-            if (senderButton != null && senderButton.DataContext != null)
+            if (file != null)
             {
-                SystemFile file = senderButton.DataContext as SystemFile;
                 if (!string.IsNullOrWhiteSpace(file.FullName))
                 {
                     // Determine if [SHIFT] key is held. Bypass Directory Processing, which will use the Shell to open the item.
@@ -185,6 +189,105 @@ namespace CairoDesktop
         {
             if (e.Key == Key.Enter)
                 (sender as TextBox).MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+        }
+        #endregion
+
+        #region Drop
+        private bool isDropMove = false;
+        private void btnFile_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(SystemFile)))
+            {
+                if ((e.KeyStates & DragDropKeyStates.RightMouseButton) != 0)
+                {
+                    e.Effects = DragDropEffects.Copy;
+                    isDropMove = false;
+                }
+                else if ((e.KeyStates & DragDropKeyStates.LeftMouseButton) != 0)
+                {
+                    e.Effects = DragDropEffects.Move;
+                    isDropMove = true;
+                }
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+                isDropMove = false;
+            }
+
+            e.Handled = true;
+        }
+
+        private void btnFile_Drop(object sender, DragEventArgs e)
+        {
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (e.Data.GetDataPresent(typeof(SystemFile)))
+            {
+                SystemFile dropData = e.Data.GetData(typeof(SystemFile)) as SystemFile;
+                fileNames = new string[] { dropData.FullName };
+            }
+
+            if (fileNames != null)
+            {
+                if (file.IsDirectory)
+                {
+                    if (!isDropMove) SystemDirectory.CopyInto(fileNames, file.FullName);
+                    else if (isDropMove) SystemDirectory.MoveInto(fileNames, file.FullName);
+                }
+                else
+                {
+                    if (!isDropMove) file.ParentDirectory.CopyInto(fileNames);
+                    else if (isDropMove) file.ParentDirectory.MoveInto(fileNames);
+                }
+
+                e.Handled = true;
+            }
+        }
+        #endregion
+
+        #region Drag
+        private Point? startPoint = null;
+        private bool inDrag = false;
+        private void btnFile_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Store the mouse position
+            startPoint = e.GetPosition(this);
+        }
+
+        private void btnFile_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (!inDrag && startPoint != null)
+            {
+                inDrag = true;
+
+                Point mousePos = e.GetPosition(this);
+                Vector diff = (Point)startPoint - mousePos;
+
+                if (mousePos.Y <= this.ActualHeight && ((Point)startPoint).Y <= this.ActualHeight && (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed) && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
+                {
+                    Button button = sender as Button;
+                    DataObject dragObject = new DataObject();
+                    dragObject.SetFileDropList(new System.Collections.Specialized.StringCollection() { file.FullName });
+
+                    try
+                    {
+                        DragDrop.DoDragDrop(button, dragObject, (e.RightButton == MouseButtonState.Pressed ? DragDropEffects.All : DragDropEffects.Move));
+                    }
+                    catch { }
+
+                    // reset the stored mouse position
+                    startPoint = null;
+                }
+                else if (e.LeftButton != MouseButtonState.Pressed && e.RightButton != MouseButtonState.Pressed)
+                {
+                    // reset the stored mouse position
+                    startPoint = null;
+                }
+
+                inDrag = false;
+            }
+
+            e.Handled = true;
         }
         #endregion
     }
