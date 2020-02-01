@@ -34,6 +34,7 @@
             loadLanguages();
             loadRadioGroups();
             loadCategories();
+            loadDesktopBackgroundSettings();
             loadHotKeys();
             loadLoggingLevels();
 
@@ -190,7 +191,7 @@
                 }
             }
         }
-
+       
         private void loadHotKeys()
         {
             string[] modifiers = { "Win", "Shift", "Alt", "Ctrl" };
@@ -626,41 +627,44 @@
 
         private void saveDesktopBackgroundSettings()
         {
-            Settings.Instance.DesktopBackgroundType = ((ListBoxItem)cboDesktopBackgroundType.SelectedItem).Name;
-
-            #region Windows Image
-            if (!string.IsNullOrWhiteSpace(txtWindowsBackgroundPath.Text) && File.Exists(txtWindowsBackgroundPath.Text))
+            if (cboDesktopBackgroundType.SelectedItem != null)
             {
-                // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
-                string wallpaperStyle = "2";
-                string tileWallpaper = "0";
-                switch (cboBingBackgroundStyle.Text)
-                {
-                    case "Tile": // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
-                        wallpaperStyle = "0";
-                        tileWallpaper = "1";
-                        break;
-                    case "Center": // Centered { WallpaperStyle = 1; TileWallpaper = 0 }
-                        wallpaperStyle = "1";
-                        tileWallpaper = "0";
-                        break;
-                    case "fit": // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
-                        wallpaperStyle = "6";
-                        tileWallpaper = "0";
-                        break;
-                    case "Fill": // Fill { WallpaperStyle = 10; TileWallpaper = 0 }
-                        wallpaperStyle = "10";
-                        tileWallpaper = "0";
-                        break;
-                    case "Span": // Span { WallpaperStyle = 10; TileWallpaper = 0 }
-                        wallpaperStyle = "20";
-                        tileWallpaper = "0";
-                        break;
-                }
+                Settings.Instance.DesktopBackgroundType = ((ListBoxItem)cboDesktopBackgroundType.SelectedItem).Name;
 
-                Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", txtWindowsBackgroundPath.Text);
-                Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", wallpaperStyle);
-                Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", tileWallpaper);
+                #region Windows Image
+                if (!string.IsNullOrWhiteSpace(txtWindowsBackgroundPath.Text) && File.Exists(txtWindowsBackgroundPath.Text))
+                {
+                    // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
+                    string wallpaperStyle = "2";
+                    string tileWallpaper = "0";
+                    switch (cboBingBackgroundStyle.Text)
+                    {
+                        case "Tile": // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
+                            wallpaperStyle = "0";
+                            tileWallpaper = "1";
+                            break;
+                        case "Center": // Centered { WallpaperStyle = 1; TileWallpaper = 0 }
+                            wallpaperStyle = "1";
+                            tileWallpaper = "0";
+                            break;
+                        case "fit": // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
+                            wallpaperStyle = "6";
+                            tileWallpaper = "0";
+                            break;
+                        case "Fill": // Fill { WallpaperStyle = 10; TileWallpaper = 0 }
+                            wallpaperStyle = "10";
+                            tileWallpaper = "0";
+                            break;
+                        case "Span": // Span { WallpaperStyle = 10; TileWallpaper = 0 }
+                            wallpaperStyle = "20";
+                            tileWallpaper = "0";
+                            break;
+                    }
+
+                    Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", txtWindowsBackgroundPath.Text);
+                    Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", wallpaperStyle);
+                    Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", tileWallpaper);
+                }
             }
             #endregion
 

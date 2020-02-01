@@ -114,7 +114,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="CairoBackgroundImageStyle" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Stretch</Value>
     </Setting>
     <Setting Name="CairoBackgroundVideoPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

@@ -469,7 +469,7 @@ namespace CairoDesktop.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Stretch")]
         public string CairoBackgroundImageStyle {
             get {
                 return ((string)(this["CairoBackgroundImageStyle"]));

@@ -126,26 +126,12 @@
                       {
                           if (MenuBarWindow.MenuIcon != null)
                           {
-                              try
-                              {
-                                  MenuBarWindow.MenuIcon.Source = Application.Current.FindResource("MenuIcon") as BitmapImage;
-                              }
-                              catch (ResourceReferenceKeyNotFoundException)
-                              {
-
-                              }
+                              MenuBarWindow.MenuIcon.Source = Application.Current.TryFindResource("MenuIcon") as BitmapImage;
                           }
 
                           if (MenuBarWindow.CairoSearchMenuIcon != null)
                           {
-                              try
-                              {
-                                  MenuBarWindow.CairoSearchMenuIcon.Source = Application.Current.FindResource("CairoSearchMenuIcon") as BitmapImage;
-                              }
-                              catch (ResourceReferenceKeyNotFoundException)
-                              {
-
-                              }
+                              MenuBarWindow.CairoSearchMenuIcon.Source = Application.Current.TryFindResource("CairoSearchMenuIcon") as BitmapImage;
                           }
                       }
                   }
