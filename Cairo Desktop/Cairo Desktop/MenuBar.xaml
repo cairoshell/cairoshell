@@ -125,7 +125,8 @@
                     Height="24"
                     Width="Auto"
                     x:Name="CairoMenuBar">
-            <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
+            <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}"
+                  DragOver="Menu_DragOver">
                 <MenuItem Style="{StaticResource CairoMenuItemCairoMenuStyle}"
                           Name="CairoMenu">
                     <MenuItem.Header>

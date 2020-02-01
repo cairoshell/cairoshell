@@ -460,25 +460,25 @@
 
                     <StackPanel Name="cairoBackgroundSettingsStackPanel"
                                 Orientation="Vertical">
-                        <TextBlock Text="Desktop Background Settings"
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DesktopBackgroundSettings)}"
                                    VerticalAlignment="Top"
                                    Margin="5,3,5,4" />
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Background Type" />
+                            <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType)}" />
                             <ComboBox Name="cboDesktopBackgroundType"
                                       IsEditable="False"
                                       SelectionChanged="cboDesktopBackgroundType_SelectionChanged">
                                 <ListBoxItem Name="windowsDefaultBackground"
-                                             Content="Windows Default Background"
+                                             Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType_windowsDefaultBackground)}"
                                              Tag="{Binding ElementName=windowsImageBackgroundStackPanel}" />
                                 <ListBoxItem Name="cairoImageWallpaper"
-                                             Content="Cairo Image Wallpaper"
+                                             Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType_cairoImageWallpaper)}"
                                              Tag="{Binding ElementName=cairoImageBackgroundStackPanel}" />
                                 <ListBoxItem Name="cairoVideoWallpaper"
-                                             Content="Cairo Video Wallpaper"
+                                             Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType_cairoVideoWallpaper)}"
                                              Tag="{Binding ElementName=cairoVideoBackgroundStackPanel}" />
                                 <ListBoxItem Name="bingWallpaper"
-                                             Content="Bing Image of the Day"
+                                             Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType_bingWallpaper)}"
                                              Tag="{Binding ElementName=bingImageBackgroundStackPanel}" />
                             </ComboBox>
                         </StackPanel>
@@ -487,16 +487,15 @@
                                     Orientation="Vertical"
                                     Visibility="Collapsed">
                             <StackPanel  Orientation="Horizontal">
-                                <TextBlock Text="Image Path" />
-                                <TextBox Text="Windows Background Path"
-                                         Name="txtWindowsBackgroundPath" />
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
+                                <TextBox Name="txtWindowsBackgroundPath" />
                                 <Button Name="btnWindowsBackgroundFileBrowse"
                                         Height="24"
                                         Padding="10,0"
                                         Click="btnWindowsBackgroundFileBrowse_Click">...</Button>
                             </StackPanel>
                             <StackPanel  Orientation="Horizontal">
-                                <TextBlock Text="Background Style" />
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Style)}" />                                
                                 <ComboBox Name="cboWindowsBackgroundStyle"
                                           IsEditable="False">
                                     <ListBoxItem Content="Tile" />
@@ -513,16 +512,15 @@
                                     Orientation="Vertical"
                                     Visibility="Collapsed">
                             <StackPanel  Orientation="Horizontal">
-                                <TextBlock Text="Image Path" />
-                                <TextBox Text="Cairo Image Path"
-                                         Name="txtCairoBackgroundPath" />
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
+                                <TextBox Name="txtCairoBackgroundPath" />
                                 <Button Name="btnCairoBackgroundFileBrowse"
                                         Height="24"
                                         Padding="10,0"
                                         Click="btnCairoBackgroundFileBrowse_Click">...</Button>
                             </StackPanel>
                             <StackPanel  Orientation="Horizontal">
-                                <TextBlock Text="Background Style" />
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Style)}" />
                                 <ComboBox Name="cboCairoBackgroundStyle"
                                           IsEditable="False">
                                     <ListBoxItem Content="Tile" />
@@ -539,7 +537,7 @@
                                     Orientation="Vertical"
                                     Visibility="Collapsed">
                             <StackPanel  Orientation="Horizontal">
-                                <TextBlock Text="Video File Path" />
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
                                 <TextBox Name="txtCairoVideoBackgroundPath" />
                                 <Button Name="btnCairoVideoBackgroundFileBrowse"
                                         Height="24"
@@ -552,7 +550,7 @@
                                     Orientation="Vertical"
                                     Visibility="Collapsed">
                             <StackPanel  Orientation="Horizontal">
-                                <TextBlock Text="Background Style" />
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Style)}" />
                                 <ComboBox Name="cboBingBackgroundStyle"
                                           IsEditable="False">
                                     <ListBoxItem Content="Tile" />

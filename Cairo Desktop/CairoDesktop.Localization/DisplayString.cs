@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace CairoDesktop.Localization
 {
@@ -22,10 +23,8 @@ namespace CairoDesktop.Localization
 
         }
 
-        private static string getString(string stringName)
+        private static string getString([CallerMemberName]string stringName = null)
         {
-            // return stringName; // debug
-
             Dictionary<string, string> lang;
             bool isDefault = false;
             string useLang = Configuration.Settings.Instance.Language.ToLower();
@@ -1507,6 +1506,68 @@ namespace CairoDesktop.Localization
                 return getString("sSettings_Desktop_EnableDesktopOverlayHotKey");
             }
         }
+
+
+        public static string sSettings_Desktop_DesktopBackgroundSettings
+        {
+            get
+            {
+                return getString();
+            }
+        }
+        public static string sSettings_Desktop_BackgroundType
+        {
+            get
+            {
+                return getString();
+            }
+        }
+        public static string sSettings_Desktop_BackgroundType_windowsDefaultBackground
+        {
+            get
+            {
+                return getString();
+            }
+        }
+        public static string sSettings_Desktop_BackgroundType_cairoImageWallpaper
+        {
+            get
+            {
+                return getString();
+            }
+        }
+        public static string sSettings_Desktop_BackgroundType_cairoVideoWallpaper
+        {
+            get
+            {
+                return getString();
+            }
+        }
+        public static string sSettings_Desktop_BackgroundType_bingWallpaper
+        {
+            get
+            {
+                return getString();
+            }
+        }
+        public static string sSettings_Desktop_Background_Path
+        {
+            get
+            {
+                return getString();
+            }
+        }
+        public static string sSettings_Desktop_Background_Style
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+
+
+
 
         public static string sSettings_IconSize
         {

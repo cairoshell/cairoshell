@@ -691,8 +691,16 @@ namespace CairoDesktop
                 }
                 else if ((e.KeyStates & DragDropKeyStates.LeftMouseButton) != 0)
                 {
-                    e.Effects = DragDropEffects.Move;
-                    isDropMove = true;
+                    if ((e.KeyStates & DragDropKeyStates.ControlKey) != 0)
+                    {
+                        e.Effects = DragDropEffects.Copy;
+                        isDropMove = false;
+                    }
+                    else
+                    {
+                        e.Effects = DragDropEffects.Move;
+                        isDropMove = true;
+                    }
                 }
             }
             else
