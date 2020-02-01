@@ -176,12 +176,6 @@
     <None Include="Resources\Return.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DarkUI\NeoGeniX.csproj">
-      <Project>{f19472f5-8c44-4c51-a8a0-b9de5f555255}</Project>
-      <Name>NeoGeniX</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\My Song 24.wav" />
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +192,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Boop.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DarkUI\NeoGeniX.csproj">
+      <Project>{f19472f5-8c44-4c51-a8a0-b9de5f555255}</Project>
+      <Name>NeoGeniX</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
