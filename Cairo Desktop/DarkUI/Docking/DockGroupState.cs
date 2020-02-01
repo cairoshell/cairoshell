@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DarkUI.Docking
+namespace NeoGeniX.Docking
 {
     public class DockGroupState
     {

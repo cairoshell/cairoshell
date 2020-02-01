@@ -1,6 +1,6 @@
-﻿using DarkUI.Controls;
+﻿using NeoGeniX.Controls;
 
-namespace DarkUI.Forms
+namespace NeoGeniX.Forms
 {
     partial class DarkDialog
     {

@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace DarkUI.Forms
+namespace NeoGeniX.Forms
 {
     internal class DarkTranslucentForm : Form
     {

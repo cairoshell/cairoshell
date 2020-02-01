@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace DarkUI.Extensions
+namespace NeoGeniX.Extensions
 {
     internal static class IEnumerableExtensions
     {

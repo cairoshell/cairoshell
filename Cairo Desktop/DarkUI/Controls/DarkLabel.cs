@@ -1,10 +1,10 @@
-﻿using DarkUI.Config;
+﻿using NeoGeniX.Config;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DarkUI.Controls
+namespace NeoGeniX.Controls
 {
     public class DarkLabel : Label
     {

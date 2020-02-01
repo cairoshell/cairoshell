@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DarkUI.Docking
+namespace NeoGeniX.Docking
 {
     public class DockContentEventArgs : EventArgs
     {

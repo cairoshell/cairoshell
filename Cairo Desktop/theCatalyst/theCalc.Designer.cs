@@ -1,4 +1,4 @@
-﻿using DarkUI.Controls;
+﻿using NeoGeniX.Controls;
 namespace theCatalyst
 {
     partial class theCalc
@@ -29,28 +29,28 @@ namespace theCatalyst
         /// </summary>
         private void InitializeComponent()
         {
-            this.buttonOne = new DarkUI.Controls.DarkButton();
-            this.button1 = new DarkUI.Controls.DarkButton();
-            this.button2 = new DarkUI.Controls.DarkButton();
-            this.button3 = new DarkUI.Controls.DarkButton();
-            this.button4 = new DarkUI.Controls.DarkButton();
-            this.button5 = new DarkUI.Controls.DarkButton();
-            this.button6 = new DarkUI.Controls.DarkButton();
-            this.button7 = new DarkUI.Controls.DarkButton();
-            this.button8 = new DarkUI.Controls.DarkButton();
-            this.button9 = new DarkUI.Controls.DarkButton();
-            this.button11 = new DarkUI.Controls.DarkButton();
-            this.button12 = new DarkUI.Controls.DarkButton();
-            this.button13 = new DarkUI.Controls.DarkButton();
-            this.button14 = new DarkUI.Controls.DarkButton();
-            this.button15 = new DarkUI.Controls.DarkButton();
-            this.button16 = new DarkUI.Controls.DarkButton();
-            this.button17 = new DarkUI.Controls.DarkButton();
-            this.button19 = new DarkUI.Controls.DarkButton();
-            this.textBox_Result = new DarkUI.Controls.DarkTextBox();
-            this.labelCurrentOperation = new DarkUI.Controls.DarkLabel();
-            this.button10 = new DarkUI.Controls.DarkButton();
-            this.button18 = new DarkUI.Controls.DarkButton();
+            this.buttonOne = new NeoGeniX.Controls.DarkButton();
+            this.button1 = new NeoGeniX.Controls.DarkButton();
+            this.button2 = new NeoGeniX.Controls.DarkButton();
+            this.button3 = new NeoGeniX.Controls.DarkButton();
+            this.button4 = new NeoGeniX.Controls.DarkButton();
+            this.button5 = new NeoGeniX.Controls.DarkButton();
+            this.button6 = new NeoGeniX.Controls.DarkButton();
+            this.button7 = new NeoGeniX.Controls.DarkButton();
+            this.button8 = new NeoGeniX.Controls.DarkButton();
+            this.button9 = new NeoGeniX.Controls.DarkButton();
+            this.button11 = new NeoGeniX.Controls.DarkButton();
+            this.button12 = new NeoGeniX.Controls.DarkButton();
+            this.button13 = new NeoGeniX.Controls.DarkButton();
+            this.button14 = new NeoGeniX.Controls.DarkButton();
+            this.button15 = new NeoGeniX.Controls.DarkButton();
+            this.button16 = new NeoGeniX.Controls.DarkButton();
+            this.button17 = new NeoGeniX.Controls.DarkButton();
+            this.button19 = new NeoGeniX.Controls.DarkButton();
+            this.textBox_Result = new NeoGeniX.Controls.DarkTextBox();
+            this.labelCurrentOperation = new NeoGeniX.Controls.DarkLabel();
+            this.button10 = new NeoGeniX.Controls.DarkButton();
+            this.button18 = new NeoGeniX.Controls.DarkButton();
             this.SuspendLayout();
             // 
             // buttonOne

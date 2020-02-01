@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace DarkUI.Docking
+namespace NeoGeniX.Docking
 {
     internal class DarkDockTab
     {

@@ -7,11 +7,12 @@
     <ProjectGuid>{F19472F5-8C44-4C51-A8A0-B9DE5F555255}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DarkUI</RootNamespace>
-    <AssemblyName>DarkUI</AssemblyName>
+    <RootNamespace>NeoGeniX</RootNamespace>
+    <AssemblyName>NeoGeniX</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -37,6 +38,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -181,6 +184,35 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TreeViewIcons.resx</DependentUpon>
     </Compile>
+    <Compile Include="Skinning\CaptionButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Skinning\DefaultSkins\Office2007Luna.Designer.cs">
+      <DependentUpon>Office2007Luna.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Skinning\DefaultSkins\Office2007Obsidian.Designer.cs">
+      <DependentUpon>Office2007Obsidian.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Skinning\DefaultSkins\Office2007Silver.Designer.cs">
+      <DependentUpon>Office2007Silver.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Skinning\DefaultSkins\Office2007Skin.cs" />
+    <Compile Include="Skinning\FormExtenders.cs" />
+    <Compile Include="Skinning\Painting\ControlPaintHelper.cs" />
+    <Compile Include="Skinning\Painting\ImageStrip.cs" />
+    <Compile Include="Skinning\Painting\PaintData.cs" />
+    <Compile Include="Skinning\SkinBase.cs" />
+    <Compile Include="Skinning\SkinningForm.cs" />
+    <Compile Include="Skinning\SkinningManager.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Skinning\WinAPi.cs" />
     <Compile Include="Win32\ControlScrollFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderers\DarkMenuRenderer.cs" />
@@ -221,6 +253,18 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>TreeViewIcons.Designer.cs</LastGenOutput>
       <CustomToolNamespace>DarkUI</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Skinning\DefaultSkins\Office2007Luna.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Office2007Luna.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Skinning\DefaultSkins\Office2007Obsidian.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Office2007Obsidian.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Skinning\DefaultSkins\Office2007Silver.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Office2007Silver.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +336,7 @@
   <ItemGroup>
     <None Include="Resources\tw_active_close_selected.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

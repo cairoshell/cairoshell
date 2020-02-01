@@ -1,9 +1,9 @@
-﻿using DarkUI.Docking;
+﻿using NeoGeniX.Docking;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DarkUI.Win32
+namespace NeoGeniX.Win32
 {
     public class DockResizeFilter : IMessageFilter
     {

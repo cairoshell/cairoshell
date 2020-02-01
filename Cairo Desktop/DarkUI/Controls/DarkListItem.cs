@@ -1,8 +1,8 @@
-﻿using DarkUI.Config;
+﻿using NeoGeniX.Config;
 using System;
 using System.Drawing;
 
-namespace DarkUI.Controls
+namespace NeoGeniX.Controls
 {
     public class DarkListItem
     {

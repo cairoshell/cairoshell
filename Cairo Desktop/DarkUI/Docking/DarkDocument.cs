@@ -1,7 +1,7 @@
-﻿using DarkUI.Config;
+﻿using NeoGeniX.Config;
 using System.ComponentModel;
 
-namespace DarkUI.Docking
+namespace NeoGeniX.Docking
 {
     [ToolboxItem(false)]
     public class DarkDocument : DarkDockContent

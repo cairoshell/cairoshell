@@ -1,4 +1,4 @@
-﻿using DarkUI.Controls;
+﻿using NeoGeniX.Controls;
 
 namespace theCatalyst
 {

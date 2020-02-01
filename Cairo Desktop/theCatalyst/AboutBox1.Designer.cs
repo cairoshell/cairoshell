@@ -1,4 +1,4 @@
-﻿using DarkUI.Controls;
+﻿using NeoGeniX.Controls;
 namespace theCatalyst
 {
     partial class AboutBox1
@@ -29,12 +29,12 @@ namespace theCatalyst
         private void InitializeComponent()
         {
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.labelProductName = new DarkUI.Controls.DarkLabel();
-            this.labelVersion = new DarkUI.Controls.DarkLabel();
-            this.labelCopyright = new DarkUI.Controls.DarkLabel();
-            this.labelCompanyName = new DarkUI.Controls.DarkLabel();
-            this.textBoxDescription = new DarkUI.Controls.DarkTextBox();
-            this.okButton = new DarkUI.Controls.DarkButton();
+            this.labelProductName = new NeoGeniX.Controls.DarkLabel();
+            this.labelVersion = new NeoGeniX.Controls.DarkLabel();
+            this.labelCopyright = new NeoGeniX.Controls.DarkLabel();
+            this.labelCompanyName = new NeoGeniX.Controls.DarkLabel();
+            this.textBoxDescription = new NeoGeniX.Controls.DarkTextBox();
+            this.okButton = new NeoGeniX.Controls.DarkButton();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();

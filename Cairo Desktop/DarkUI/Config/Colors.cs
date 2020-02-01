@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace DarkUI.Config
+namespace NeoGeniX.Config
 {
     public sealed class Colors
     {

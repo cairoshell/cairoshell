@@ -1,11 +1,11 @@
-﻿using DarkUI.Config;
-using DarkUI.Docking;
-using DarkUI.Forms;
+﻿using NeoGeniX.Config;
+using NeoGeniX.Docking;
+using NeoGeniX.Forms;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DarkUI.Win32
+namespace NeoGeniX.Win32
 {
     public class DockContentDragFilter : IMessageFilter
     {

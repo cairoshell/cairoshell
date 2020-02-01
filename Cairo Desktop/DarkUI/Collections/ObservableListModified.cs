@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DarkUI.Collections
+namespace NeoGeniX.Collections
 {
     public class ObservableListModified<T> : EventArgs
     {

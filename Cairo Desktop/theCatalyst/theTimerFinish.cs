@@ -7,8 +7,8 @@ using System.Linq;
 using System.Media;
 using System.Text;
 using System.Windows.Forms;
-using DarkUI.Forms;
-using DarkUI.Controls;
+using NeoGeniX.Forms;
+using NeoGeniX.Controls;
 
 namespace theCatalyst
 {

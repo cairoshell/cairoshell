@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace DarkUI.Win32
+namespace NeoGeniX.Win32
 {
     internal sealed class Native
     {

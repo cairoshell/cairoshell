@@ -1,4 +1,4 @@
-﻿using DarkUI.Config;
+﻿using NeoGeniX.Config;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace DarkUI.Controls
+namespace NeoGeniX.Controls
 {
     public class DarkListView : DarkScrollView
     {

@@ -1,7 +1,7 @@
-﻿using DarkUI.Renderers;
+﻿using NeoGeniX.Renderers;
 using System.Windows.Forms;
 
-namespace DarkUI.Controls
+namespace NeoGeniX.Controls
 {
     public class DarkMenuStrip : MenuStrip
     {

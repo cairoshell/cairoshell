@@ -1,4 +1,4 @@
-﻿namespace DarkUI.Docking
+﻿namespace NeoGeniX.Docking
 {
     internal class DockDropCollection
     {

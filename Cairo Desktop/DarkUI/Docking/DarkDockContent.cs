@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DarkUI.Docking
+namespace NeoGeniX.Docking
 {
     [ToolboxItem(false)]
     public class DarkDockContent : UserControl

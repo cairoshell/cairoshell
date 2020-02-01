@@ -1,10 +1,10 @@
-﻿using DarkUI.Config;
+﻿using NeoGeniX.Config;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System;
 
-namespace DarkUI.Docking
+namespace NeoGeniX.Docking
 {
     [ToolboxItem(false)]
     public class DarkToolWindow : DarkDockContent

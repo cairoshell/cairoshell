@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace DarkUI.Win32
+namespace NeoGeniX.Win32
 {
     public class ControlScrollFilter : IMessageFilter
     {

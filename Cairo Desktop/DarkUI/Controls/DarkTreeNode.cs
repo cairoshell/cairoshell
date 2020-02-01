@@ -1,8 +1,8 @@
-﻿using DarkUI.Collections;
+﻿using NeoGeniX.Collections;
 using System;
 using System.Drawing;
 
-namespace DarkUI.Controls
+namespace NeoGeniX.Controls
 {
     public class DarkTreeNode
     {

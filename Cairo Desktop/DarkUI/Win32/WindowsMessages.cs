@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DarkUI.Win32
+namespace NeoGeniX.Win32
 {
     /// <summary>
     /// Windows Messages

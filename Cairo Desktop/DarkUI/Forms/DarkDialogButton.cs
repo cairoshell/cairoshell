@@ -1,4 +1,4 @@
-﻿namespace DarkUI.Forms
+﻿namespace NeoGeniX.Forms
 {
     public enum DarkDialogButton
     {

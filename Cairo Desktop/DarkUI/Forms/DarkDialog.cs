@@ -1,9 +1,9 @@
-﻿using DarkUI.Controls;
+﻿using NeoGeniX.Controls;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace DarkUI.Forms
+namespace NeoGeniX.Forms
 {
     public partial class DarkDialog : DarkForm
     {

@@ -1,8 +1,8 @@
-﻿using DarkUI.Renderers;
+﻿using NeoGeniX.Renderers;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DarkUI.Controls
+namespace NeoGeniX.Controls
 {
     public class DarkToolStrip : ToolStrip
     {

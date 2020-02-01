@@ -1,9 +1,9 @@
-﻿using DarkUI.Config;
+﻿using NeoGeniX.Config;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DarkUI.Forms
+namespace NeoGeniX.Forms
 {
     public class DarkForm : Form
     {

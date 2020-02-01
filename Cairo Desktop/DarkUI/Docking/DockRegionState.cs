@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace DarkUI.Docking
+namespace NeoGeniX.Docking
 {
     public class DockRegionState
     {

@@ -1,10 +1,9 @@
-﻿using DarkUI.Config;
-using DarkUI.Icons;
+﻿using NeoGeniX.Config;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DarkUI.Renderers
+namespace NeoGeniX.Renderers
 {
     public class DarkMenuRenderer : ToolStripRenderer
     {

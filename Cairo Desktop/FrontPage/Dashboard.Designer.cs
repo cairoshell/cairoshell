@@ -37,11 +37,11 @@
             this.button2 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.darkLabel1 = new DarkUI.Controls.DarkLabel();
-            this.darkButton1 = new DarkUI.Controls.DarkButton();
-            this.darkButton2 = new DarkUI.Controls.DarkButton();
-            this.darkButton3 = new DarkUI.Controls.DarkButton();
-            this.darkButton4 = new DarkUI.Controls.DarkButton();
+            this.darkLabel1 = new NeoGeniX.Controls.DarkLabel();
+            this.darkButton1 = new NeoGeniX.Controls.DarkButton();
+            this.darkButton2 = new NeoGeniX.Controls.DarkButton();
+            this.darkButton3 = new NeoGeniX.Controls.DarkButton();
+            this.darkButton4 = new NeoGeniX.Controls.DarkButton();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -242,12 +242,12 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Panel panel2;
-        private DarkUI.Controls.DarkButton darkButton2;
-        private DarkUI.Controls.DarkButton darkButton1;
-        private DarkUI.Controls.DarkLabel darkLabel1;
+        private NeoGeniX.Controls.DarkButton darkButton2;
+        private NeoGeniX.Controls.DarkButton darkButton1;
+        private NeoGeniX.Controls.DarkLabel darkLabel1;
         private System.Windows.Forms.Panel panel3;
-        private DarkUI.Controls.DarkButton darkButton3;
-        private DarkUI.Controls.DarkButton darkButton4;
+        private NeoGeniX.Controls.DarkButton darkButton3;
+        private NeoGeniX.Controls.DarkButton darkButton4;
         private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

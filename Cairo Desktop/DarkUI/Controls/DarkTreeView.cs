@@ -1,8 +1,7 @@
-﻿using DarkUI.Collections;
-using DarkUI.Config;
-using DarkUI.Extensions;
-using DarkUI.Forms;
-using DarkUI.Icons;
+﻿using NeoGeniX.Collections;
+using NeoGeniX.Config;
+using NeoGeniX.Extensions;
+using NeoGeniX.Forms;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace DarkUI.Controls
+namespace NeoGeniX.Controls
 {
     public class DarkTreeView : DarkScrollView
     {

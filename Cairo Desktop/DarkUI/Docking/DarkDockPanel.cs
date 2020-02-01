@@ -1,12 +1,12 @@
-﻿using DarkUI.Config;
-using DarkUI.Win32;
+﻿using NeoGeniX.Config;
+using NeoGeniX.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace DarkUI.Docking
+namespace NeoGeniX.Docking
 {
     public class DarkDockPanel : UserControl
     {

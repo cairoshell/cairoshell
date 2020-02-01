@@ -1,4 +1,4 @@
-﻿namespace DarkUI.Config
+﻿namespace NeoGeniX.Config
 {
     public sealed class Consts
     {

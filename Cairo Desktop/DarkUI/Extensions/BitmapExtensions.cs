@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace DarkUI.Extensions
+namespace NeoGeniX.Extensions
 {
     internal static class BitmapExtensions
     {

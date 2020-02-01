@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DarkUI.Controls
+namespace NeoGeniX.Controls
 {
     public class ScrollValueEventArgs : EventArgs
     {

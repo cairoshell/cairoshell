@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DarkUI.Collections
+namespace NeoGeniX.Collections
 {
     public class ObservableList<T> : List<T>, IDisposable
     {

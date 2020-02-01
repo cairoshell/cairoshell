@@ -1,9 +1,9 @@
-﻿using DarkUI.Controls;
+﻿using NeoGeniX.Controls;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DarkUI.Docking
+namespace NeoGeniX.Docking
 {
     internal class DarkDockTabArea
     {

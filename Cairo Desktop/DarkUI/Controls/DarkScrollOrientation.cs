@@ -1,4 +1,4 @@
-﻿namespace DarkUI.Controls
+﻿namespace NeoGeniX.Controls
 {
     public enum DarkScrollOrientation
     {
