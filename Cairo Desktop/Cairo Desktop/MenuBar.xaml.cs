@@ -695,12 +695,32 @@ namespace CairoDesktop
             }
         }
 
-        private void Programs_Drop(object sender, DragEventArgs e)
+        private void ProgramsMenu_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.Link;
+            }
+            else if (!e.Data.GetDataPresent(typeof(ApplicationInfo)))
+            {
+                e.Effects = DragDropEffects.None;
+            }
+
+            e.Handled = true;
+        }
+
+        private void ProgramsMenu_Drop(object sender, DragEventArgs e)
         {
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
                 appGrabber.AddByPath(fileNames, AppCategoryType.Uncategorized);
+            }
+            else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
+            {
+                ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
+
+                appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
             }
         }
 

@@ -6,7 +6,6 @@ using System.Windows.Threading;
 using System.Windows.Input;
 using System.Globalization;
 using System.Collections.Specialized;
-using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
 
@@ -97,6 +96,10 @@ namespace CairoDesktop
             {
                 StacksManager.StackLocations.Remove(new SystemDirectory(fileName, _dispatcher));
                 return;
+            }
+            else if (verb == "openWithShell")
+            {
+                FolderHelper.OpenWithShell(fileName);
             }
             else
             {

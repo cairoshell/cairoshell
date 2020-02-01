@@ -6,6 +6,7 @@ using System.Windows.Media.Imaging;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace CairoDesktop.Common
 {
@@ -17,17 +18,21 @@ namespace CairoDesktop.Common
         private string _friendlyName;
         private string _fullName;
         private string _name;
+        private SystemDirectory _parentDirectory;
         private List<string> _verbs;
         private bool _iconLoading = false;
         private bool _iconLargeLoading = false;
 
+        /// <summary>
+        /// Gets whether or not the file is a directory.
+        /// </summary>
         public bool IsDirectory
         {
             get
             {
                 try
                 {
-                    return Interop.Shell.Exists(FullName) && (File.GetAttributes(this.FullName) & FileAttributes.Directory) == FileAttributes.Directory;
+                    return Interop.Shell.Exists(FullName) && (File.GetAttributes(FullName) & FileAttributes.Directory) == FileAttributes.Directory;
                 }
                 catch
                 {
@@ -37,47 +42,24 @@ namespace CairoDesktop.Common
         }
 
         /// <summary>
-        /// Initializes a new instance of the SystemFile class.
+        /// Gets the parent SystemDirectory for the file.
         /// </summary>
-        /// <param name="filePath">The file path of the file in question.</param>
-        public SystemFile(string filePath)
+        public SystemDirectory ParentDirectory
         {
-
-            SetFilePath(filePath);
-        }
-
-        public bool SetFilePath(string filePath)
-        {
-            if (Interop.Shell.Exists(filePath))
+            get
             {
-                this.FullName = filePath;
-
-                //getVerbs();
-
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Initializes the details of the file.
-        /// </summary>
-        private void getVerbs()
-        {
-            _verbs = new List<string>();
-
-            if (!IsDirectory && !string.IsNullOrEmpty(FullName))
-            {
-                Process refProc = new Process();
-                refProc.StartInfo.FileName = this.FullName;
-
                 try
                 {
-                    this.Verbs.AddRange(refProc.StartInfo.Verbs);
+                    if (_parentDirectory == null)
+                    {
+                        _parentDirectory = new SystemDirectory(Path.GetDirectoryName(FullName.TrimEnd(new char[] { '\\' })), Dispatcher.CurrentDispatcher);
+                    }
+                    return _parentDirectory;
                 }
-                catch { }
-
-                refProc.Dispose();
+                catch
+                {
+                    return _parentDirectory;
+                }
             }
         }
 
@@ -148,6 +130,9 @@ namespace CairoDesktop.Common
                 _friendlyName = null;
                 OnPropertyChanged("FriendlyName");
 
+                _parentDirectory = null;
+                OnPropertyChanged("ParentDirectory");
+
                 _icon = null;
                 OnPropertyChanged("Icon");
 
@@ -167,7 +152,7 @@ namespace CairoDesktop.Common
                 if (_icon == null && !_iconLoading)
                 {
                     _iconLoading = true;
-                    
+
                     var thread = new Thread(() =>
                     {
                         Icon = GetDisplayIcon(0);
@@ -199,7 +184,7 @@ namespace CairoDesktop.Common
                 if (_largeIcon == null && !_iconLargeLoading)
                 {
                     _iconLargeLoading = true;
-                    
+
                     var thread = new Thread(() =>
                     {
                         LargeIcon = GetDisplayIcon(2);
@@ -238,6 +223,48 @@ namespace CairoDesktop.Common
 
                 _verbs = value;
                 OnPropertyChanged("Verbs");
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the SystemFile class.
+        /// </summary>
+        /// <param name="filePath">The file path of the file in question.</param>
+        public SystemFile(string filePath)
+        {
+            SetFilePath(filePath);
+        }
+
+        public bool SetFilePath(string filePath)
+        {
+            if (Interop.Shell.Exists(filePath))
+            {
+                this.FullName = filePath;
+
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Initializes the details of the file.
+        /// </summary>
+        private void getVerbs()
+        {
+            _verbs = new List<string>();
+
+            if (!IsDirectory && !string.IsNullOrEmpty(FullName))
+            {
+                Process refProc = new Process();
+                refProc.StartInfo.FileName = this.FullName;
+
+                try
+                {
+                    this.Verbs.AddRange(refProc.StartInfo.Verbs);
+                }
+                catch { }
+
+                refProc.Dispose();
             }
         }
 

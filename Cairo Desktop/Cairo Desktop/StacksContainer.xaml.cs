@@ -102,7 +102,7 @@ namespace CairoDesktop {
             if (!ctxOpen)
             {
                 // Store the mouse position
-                startPoint = e.GetPosition(null);
+                startPoint = e.GetPosition(this);
             }
         }
 
@@ -112,7 +112,7 @@ namespace CairoDesktop {
             {
                 inMove = true;
 
-                Point mousePos = e.GetPosition(null);
+                Point mousePos = e.GetPosition(this);
                 Vector diff = (Point)startPoint - mousePos;
 
                 if (mousePos.Y <= this.ActualHeight && ((Point)startPoint).Y <= this.ActualHeight && e.LeftButton == MouseButtonState.Pressed && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
@@ -128,12 +128,12 @@ namespace CairoDesktop {
 
                     // reset the stored mouse position
                     startPoint = null;
+
+                    e.Handled = true;
                 }
 
                 inMove = false;
             }
-
-            e.Handled = true;
         }
 
         private void StackMenu_Drop(object sender, DragEventArgs e)
