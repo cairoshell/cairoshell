@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <UserControl x:Class="CairoDesktop.DesktopIcons"
- xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
- xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    x:Name="CairoDesktopIcons" UseLayoutRounding="True">
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Name="CairoDesktopIcons" 
+             UseLayoutRounding="True">
     <DockPanel Name="panel" Margin="0">
         <ItemsControl Name="IconsControl" DataContext="{Binding ElementName=CairoDesktopIcons, Path=Location}" FocusVisualStyle="{x:Null}" Style="{StaticResource DesktopFolderViewStyle}" ItemsSource="{Binding Path=Files, IsAsync=True}" />
     </DockPanel>
