@@ -554,11 +554,7 @@ namespace CairoDesktop
                     FolderHelper.OpenLocation(path);
                 }
             }
-            else if (action == "openWithShell")
-            {
-                FolderHelper.OpenWithShell(path);
-            }
-            else if (action == "rename" || action == "addStack" || action == "removeStack")
+            else if (action == "rename" || action == "addStack" || action == "removeStack" || action == "openWithShell")
             {
                 CustomCommands.PerformAction(action, path, sender);
             }
@@ -575,14 +571,10 @@ namespace CairoDesktop
             {
                 Icons.Location.PasteFromClipboard();
             }
-            else if (action == "openWithShell")
-            {
-                FolderHelper.OpenWithShell(path);
-            }
             else if (action == "addStack" || action == "removeStack")
             {
+                // no need to dismiss overlay for these actions
                 CustomCommands.PerformAction(action, path);
-                // no need to dismiss overlay for this action
             }
             else if (action != "")
             {

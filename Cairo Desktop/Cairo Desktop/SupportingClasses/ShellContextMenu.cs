@@ -518,7 +518,7 @@ namespace CairoDesktop.SupportingClasses
                         ShellFolders.CMD_LAST,
                         ShellFolders.CMF.NORMAL);
 
-                    newSubmenuPtr = ShellFolders.GetSubMenu(contextMenu, 2);
+                    newSubmenuPtr = ShellFolders.GetSubMenu(contextMenu, 5);
 
                     Marshal.QueryInterface(newContextMenuPtr, ref ShellFolders.IID_IContextMenu2, out newContextMenuPtr2);
                     Marshal.QueryInterface(newContextMenuPtr, ref ShellFolders.IID_IContextMenu3, out newContextMenuPtr3);
