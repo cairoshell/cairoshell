@@ -2129,46 +2129,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="ProgramsTabControl" TargetType="{x:Type TabControl}">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Padding" Value="0,3" />
-        <Setter Property="Margin" Value="0,-3" />
-        <Setter Property="OverridesDefaultStyle" Value="True" />
-        <Setter Property="UseLayoutRounding" Value="True" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type TabControl}">
-                    <Grid KeyboardNavigation.TabNavigation="Local">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <DockPanel Grid.Column="1">
-                            <TabPanel x:Name="HeaderPanel"
-                            DockPanel.Dock="Top"
-                            Panel.ZIndex="1"
-                            Margin="0,3"
-                            IsItemsHost="True"
-                            Background="Transparent" />
-                            <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom" Margin="0,12,0,3" VerticalAlignment="Bottom">
-                                <Button Style="{StaticResource ProgramsMenuButton}" Name="btnAppGrabber" Click="btnAppGrabber_Click" Content="{Binding Path=(l10n:DisplayString.sAppGrabber)}" />
-                                <Button Style="{StaticResource ProgramsMenuButton}" Name="btnUninstallApps" Click="btnUninstallApps_Click" Content="{Binding Path=(l10n:DisplayString.sProgramsMenu_UninstallAProgram)}" />
-                            </StackPanel>
-                        </DockPanel>
-                        <Border x:Name="Border"
-                      Grid.Column="0"
-                      BorderThickness="0,0,1,0"
-                                BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}"
-                                Background="Transparent">
-                            <ContentPresenter
-                                  Margin="0,3"
-                                  ContentSource="SelectedContent" />
-                        </Border>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
     <Style x:Key="ProgramsTabItem" TargetType="{x:Type TabItem}">
         <Setter Property="Foreground" Value="{DynamicResource ResourceKey=MenuItemForeground}" />
         <Setter Property="Background" Value="Transparent" />
@@ -2229,6 +2189,18 @@
                 <Setter Property="Foreground" Value="{DynamicResource ResourceKey=ProgramsMenuCategoryForeground}" />
             </Trigger>
         </Style.Triggers>
+    </Style>
+    <Style x:Key="ProgramsTabControl" TargetType="{x:Type TabControl}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0,3" />
+        <Setter Property="Margin" Value="0,-3" />
+        <Setter Property="TabStripPlacement" Value="Right" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Style.Resources>
+            <Style TargetType="TabItem" BasedOn="{StaticResource ProgramsTabItem}">
+            </Style>
+        </Style.Resources>
     </Style>
 
     <!-- Calendar -->

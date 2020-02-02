@@ -1444,6 +1444,30 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_MenuBar_ProgramsMenuLayout
+        {
+            get
+            {
+                return getString("sSettings_MenuBar_ProgramsMenuLayout");
+            }
+        }
+
+        public static string sSettings_MenuBar_ProgramsMenuLayoutRight
+        {
+            get
+            {
+                return getString("sSettings_MenuBar_ProgramsMenuLayoutRight");
+            }
+        }
+
+        public static string sSettings_MenuBar_ProgramsMenuLayoutLeft
+        {
+            get
+            {
+                return getString("sSettings_MenuBar_ProgramsMenuLayoutLeft");
+            }
+        }
+
         public static string sSettings_Desktop_EnableDesktop
         {
             get
