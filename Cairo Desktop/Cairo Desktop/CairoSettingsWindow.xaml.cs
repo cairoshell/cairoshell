@@ -74,7 +74,7 @@
                     break;
             }
 
-            switch (Settings.ProgramsMenuLayout)
+            switch (Settings.Instance.ProgramsMenuLayout)
             {
                 case 0:
                     radProgramsMenuLayout0.IsChecked = true;
@@ -88,7 +88,7 @@
                     break;
             }
 
-            switch (Settings.TaskbarMode)
+            switch (Settings.Instance.TaskbarMode)
             {
                 case 0:
                     radTaskbarMode0.IsChecked = true;
@@ -356,13 +356,13 @@
 
         private void radProgramsMenuLayout0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.ProgramsMenuLayout = 0;
+            Settings.Instance.ProgramsMenuLayout = 0;
             showRestartButton();
         }
 
         private void radProgramsMenuLayout1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.ProgramsMenuLayout = 1;
+            Settings.Instance.ProgramsMenuLayout = 1;
             showRestartButton();
         }
 
@@ -660,7 +660,7 @@
 
         private void cboWindowsBackgroundStyle_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-                // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
+            // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
             string wallpaperStyle = "2";
             string tileWallpaper = "0";
             switch (cboBingBackgroundStyle.SelectedItem)

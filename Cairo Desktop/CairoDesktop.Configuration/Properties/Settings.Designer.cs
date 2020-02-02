@@ -490,5 +490,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["CairoBackgroundVideoPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ProgramsMenuLayout {
+            get {
+                return ((int)(this["ProgramsMenuLayout"]));
+            }
+            set {
+                this["ProgramsMenuLayout"] = value;
+            }
+        }
     }
 }

@@ -182,7 +182,7 @@
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
             // Don't allow showing both the Windows taskbar and the Cairo tray
-            if (Settings.EnableSysTray == true && Settings.EnableTaskbar == true)
+            if (Settings.Instance.EnableSysTray == true && Settings.Instance.EnableTaskbar == true)
             {
                 NotificationArea.Instance.Initialize();
             }

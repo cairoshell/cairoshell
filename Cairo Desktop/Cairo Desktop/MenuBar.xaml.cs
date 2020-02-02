@@ -161,16 +161,6 @@ namespace CairoDesktop
             }
         }
 
-        private void setupPrograms()
-        {
-            // Set Programs Menu to use appGrabber's ProgramList as its source
-            categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
-
-            // set tab based on user preference
-            int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.Instance.DefaultProgramsCategory));
-            categorizedProgramsList.SelectedIndex = i;
-        }
-
         private void setupCairoMenu()
         {
             // Add _Application CairoMenu MenuItems
@@ -558,7 +548,7 @@ namespace CairoDesktop
                 Topmost = true;
                 Shell.ShowWindowTopMost(handle);
 
-                if (Settings.EnableDesktop && Startup.DesktopWindow != null)
+                if (Settings.Instance.EnableDesktop && Startup.DesktopWindow != null)
                 {
                     // send the desktop to the bottom in case we are below it
                     Startup.DesktopWindow.SendToBottom();

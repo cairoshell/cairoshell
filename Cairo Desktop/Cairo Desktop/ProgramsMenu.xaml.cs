@@ -27,7 +27,7 @@ namespace CairoDesktop
             categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
 
             // set tab based on user preference
-            int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.DefaultProgramsCategory));
+            int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.Instance.DefaultProgramsCategory));
             categorizedProgramsList.SelectedIndex = i;
         }
 

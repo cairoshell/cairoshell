@@ -36,7 +36,7 @@ namespace CairoDesktop
 
             if (!ListMode)
             {
-                switch (Configuration.Settings.TaskbarIconSize)
+                switch (Configuration.Settings.Instance.TaskbarIconSize)
                 {
                     case 0:
                         imgIcon.Width = 32;
@@ -211,36 +211,5 @@ namespace CairoDesktop
             }
         }
         #endregion
-
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!ListMode)
-            {
-                switch (Configuration.Settings.Instance.TaskbarIconSize)
-                {
-                    case 0:
-                        imgIcon.Width = 32;
-                        imgIcon.Height = 32;
-                        break;
-                    case 10:
-                        imgIcon.Width = 24;
-                        imgIcon.Height = 24;
-                        break;
-                    default:
-                        imgIcon.Width = 16;
-                        imgIcon.Height = 16;
-                        break;
-                }
-            }
-            else
-            {
-                // Task list display changes
-                btn.Style = FindResource("CairoTaskListButtonStyle") as Style;
-                ToolTipService.SetPlacement(btn, System.Windows.Controls.Primitives.PlacementMode.Right);
-                WinTitle.TextAlignment = TextAlignment.Left;
-                imgIcon.Margin = new Thickness(3, 0, 6, 0);
-            }
-        }
     }
 }

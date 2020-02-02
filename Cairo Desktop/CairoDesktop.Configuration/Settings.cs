@@ -604,16 +604,18 @@ namespace CairoDesktop.Configuration
             }
         }
 
-        public static int ProgramsMenuLayout
+        public int ProgramsMenuLayout
         {
             get
             {
-                return Properties.Settings.Default.ProgramsMenuLayout;
+                return cairoSettings.ProgramsMenuLayout;
             }
             set
             {
-                Properties.Settings.Default.ProgramsMenuLayout = value;
-                Save();
+                if (cairoSettings.ProgramsMenuLayout != value)
+                {
+                    cairoSettings.ProgramsMenuLayout = value;
+                }
             }
         }
         #endregion
