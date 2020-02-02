@@ -1,4 +1,5 @@
-﻿using CairoDesktop.Configuration;
+﻿using CairoDesktop.Common.Logging;
+using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
 using CairoDesktop.WindowsTray;
@@ -150,10 +151,13 @@ namespace CairoDesktop
             if (Startup.IsShuttingDown && Screen.Primary)
             {
                 // Manually call dispose on window close...
+                WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
                 WindowsTasks.WindowsTasksService.Instance.Dispose();
 
                 // dispose system tray if it's still running to prevent conflicts when doing AppBar stuff
                 NotificationArea.Instance.Dispose();
+
+                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
 
                 if (AppBarHelper.appBars.Contains(handle))
                     AppBarHelper.RegisterBar(this, Screen, ActualWidth * dpiScale, this.ActualHeight * dpiScale);
@@ -165,8 +169,10 @@ namespace CairoDesktop
             else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
             {
                 WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
+                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
+
                 if (AppBarHelper.appBars.Contains(handle))
-                    AppBarHelper.RegisterBar(this, Screen, ActualWidth, ActualHeight);
+                    AppBarHelper.RegisterBar(this, Screen, ActualWidth * dpiScale, this.ActualHeight * dpiScale);
             }
             else
             {
@@ -193,6 +199,8 @@ namespace CairoDesktop
                 appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, appBarEdge);
 
             Shell.HideWindowFromTasks(handle);
+
+            FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
         }
         #endregion
 
@@ -261,16 +269,42 @@ namespace CairoDesktop
             }
         }
 
-        public void SetFullScreenMode(bool entering)
+        private void FullScreenApps_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            bool found = false;
+
+            foreach (FullScreenHelper.FullScreenApp app in FullScreenHelper.Instance.FullScreenApps)
+            {
+                if (app.screen.DeviceName == Screen.DeviceName)
+                {
+                    // we need to not be on top now
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found && Topmost)
+            {
+                setFullScreenMode(true);
+            }
+            else if (!found && !Topmost)
+            {
+                setFullScreenMode(false);
+            }
+        }
+
+        private void setFullScreenMode(bool entering)
         {
             if (entering)
             {
+                CairoLogger.Instance.Debug(string.Format("Taskbar on {0} conceeding to full-screen app", Screen.DeviceName));
+
                 Topmost = false;
                 Shell.ShowWindowBottomMost(handle);
             }
             else
             {
-                takeFocus(); // unable to set topmost unless we do this
+                CairoLogger.Instance.Debug(string.Format("Taskbar on {0} returning to normal state", Screen.DeviceName));
 
                 Topmost = true;
                 Shell.ShowWindowTopMost(handle);
@@ -334,7 +368,7 @@ namespace CairoDesktop
                         break;
 
                     case NativeMethods.AppBarNotifications.FullScreenApp:
-                        SetFullScreenMode((int)lParam == 1);
+                        //SetFullScreenMode((int)lParam == 1);
 
                         break;
 

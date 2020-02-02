@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
 using CairoDesktop.Interop;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CairoDesktop.Configuration;
@@ -192,6 +191,8 @@ namespace CairoDesktop.SupportingClasses
                 int right = SystemInformation.WorkingArea.Right;
                 int bottom = PrimaryMonitorDeviceSize.Height;
 
+                double dpiScale = PresentationSource.FromVisual(abWindow).CompositionTarget.TransformToDevice.M11;
+
                 if (screen != null)
                 {
                     top = screen.Bounds.Y;
@@ -261,21 +262,22 @@ namespace CairoDesktop.SupportingClasses
                 interopDone();
 
                 // tracing
+                bool isSameCoords = abd.rc.top == (abWindow.Top * dpiScale) && abd.rc.left == (abWindow.Left * dpiScale) && abd.rc.bottom == (abWindow.Top * dpiScale) + sHeight && abd.rc.right == (abWindow.Left * dpiScale) + sWidth;
                 int h = abd.rc.bottom - abd.rc.top;
-                CairoLogger.Instance.Debug(abWindow.Name + " AppBar height is " + h.ToString());
+                if (!isSameCoords) CairoLogger.Instance.Debug(abWindow.Name + " AppBar height is " + h.ToString());
 
                 abWindow.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
-                    new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top);
+                    new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top, isSameCoords);
 
                 if (h < sHeight)
                     ABSetPos(abWindow, screen, width, height, edge);
             }
         }
 
-        private delegate void ResizeDelegate(IntPtr hWnd, int x, int y, int cx, int cy);
-        private static void DoResize(IntPtr hWnd, int x, int y, int cx, int cy)
+        private delegate void ResizeDelegate(IntPtr hWnd, int x, int y, int cx, int cy, bool isSameCoords);
+        private static void DoResize(IntPtr hWnd, int x, int y, int cx, int cy, bool isSameCoords)
         {
-            NativeMethods.MoveWindow(hWnd, x, y, cx, cy, true);
+            if (!isSameCoords) NativeMethods.MoveWindow(hWnd, x, y, cx, cy, true);
 
             // apparently the taskbars like to pop up when app bars change
             if (Settings.EnableTaskbar)
@@ -283,14 +285,17 @@ namespace CairoDesktop.SupportingClasses
                 SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
             }
 
-            foreach (MenuBarShadow barShadow in Startup.MenuBarShadowWindows)
+            if (!isSameCoords)
             {
-                if (barShadow.MenuBar != null && barShadow.MenuBar.handle == hWnd)
-                    barShadow.SetPosition();
-            }
+                foreach (MenuBarShadow barShadow in Startup.MenuBarShadowWindows)
+                {
+                    if (barShadow.MenuBar != null && barShadow.MenuBar.handle == hWnd)
+                        barShadow.SetPosition();
+                }
 
-            if (Startup.DesktopWindow != null)
-                Startup.DesktopWindow.ResetPosition();
+                if (Startup.DesktopWindow != null)
+                    Startup.DesktopWindow.ResetPosition();
+            }
         }
 
         public static System.Drawing.Size PrimaryMonitorSize

@@ -258,6 +258,8 @@ namespace CairoDesktop
             {
                 Shell.EnableWindowBlur(handle);
             }
+
+            FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
         }
 
         private void setupSearch()
@@ -423,7 +425,8 @@ namespace CairoDesktop
                         break;
 
                     case NativeMethods.AppBarNotifications.FullScreenApp:
-                        if ((int)lParam == 1)
+                        // we have our own implementation now
+                        /*if ((int)lParam == 1)
                         {
                             CairoLogger.Instance.Debug("Cairo leaving on-top");
                             this.Topmost = false;
@@ -445,7 +448,7 @@ namespace CairoDesktop
                                 Startup.TaskbarWindow.SetFullScreenMode(false);
                             }
                         }
-
+                        */
                         break;
 
                     case NativeMethods.AppBarNotifications.WindowArrange:
@@ -520,6 +523,54 @@ namespace CairoDesktop
         private void TimeChanged(object sender, EventArgs e)
         {
             TimeZoneInfo.ClearCachedData();
+        }
+
+        private void FullScreenApps_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            bool found = false;
+
+            foreach (FullScreenHelper.FullScreenApp app in FullScreenHelper.Instance.FullScreenApps)
+            {
+                if (app.screen.DeviceName == Screen.DeviceName)
+                {
+                    // we need to not be on top now
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found && Topmost)
+            {
+                setFullScreenMode(true);
+            }
+            else if (!found && !Topmost)
+            {
+                setFullScreenMode(false);
+            }
+        }
+
+        private void setFullScreenMode(bool entering)
+        {
+            if (entering)
+            {
+                CairoLogger.Instance.Debug(string.Format("Menu Bar on {0} conceeding to full-screen app", Screen.DeviceName));
+
+                Topmost = false;
+                Shell.ShowWindowBottomMost(handle);
+            }
+            else
+            {
+                CairoLogger.Instance.Debug(string.Format("Menu Bar on {0} returning to normal state", Screen.DeviceName));
+
+                Topmost = true;
+                Shell.ShowWindowTopMost(handle);
+
+                if (Settings.EnableDesktop && Startup.DesktopWindow != null)
+                {
+                    // send the desktop to the bottom in case we are below it
+                    Startup.DesktopWindow.SendToBottom();
+                }
+            }
         }
 
         private void setPosition()
@@ -606,11 +657,16 @@ namespace CairoDesktop
                     AppBarHelper.ResetWorkArea();
                 }
 
+                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
+                FullScreenHelper.Instance.Dispose();
+
                 Microsoft.Win32.SystemEvents.TimeChanged -= new EventHandler(TimeChanged);
             }
             else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
             {
-                AppBarHelper.RegisterBar(this, Screen, this.ActualWidth, this.ActualHeight);
+                AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale);
+
+                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
             }
             else
             {
