@@ -50,7 +50,7 @@ namespace CairoDesktop.SupportingClasses
                     appBars.Add(handle);
                     CairoLogger.Instance.Debug("Created AppBar for handle " + handle.ToString());
 
-                    ABSetPos(abWindow, screen, width, height, edge);
+                    ABSetPos(abWindow, screen, width, height, edge, true);
                 }
                 else
                 {
@@ -174,7 +174,7 @@ namespace CairoDesktop.SupportingClasses
             interopDone();
         }
 
-        public static void ABSetPos(Window abWindow, Screen screen, double width, double height, ABEdge edge)
+        public static void ABSetPos(Window abWindow, Screen screen, double width, double height, ABEdge edge, bool isCreate = false)
         {
             lock (appBarLock)
             {
@@ -262,7 +262,8 @@ namespace CairoDesktop.SupportingClasses
                 interopDone();
 
                 // tracing
-                bool isSameCoords = abd.rc.top == (abWindow.Top * dpiScale) && abd.rc.left == (abWindow.Left * dpiScale) && abd.rc.bottom == (abWindow.Top * dpiScale) + sHeight && abd.rc.right == (abWindow.Left * dpiScale) + sWidth;
+                bool isSameCoords = false;
+                if (!isCreate) isSameCoords = abd.rc.top == (abWindow.Top * dpiScale) && abd.rc.left == (abWindow.Left * dpiScale) && abd.rc.bottom == (abWindow.Top * dpiScale) + sHeight && abd.rc.right == (abWindow.Left * dpiScale) + sWidth;
                 int h = abd.rc.bottom - abd.rc.top;
                 if (!isSameCoords) CairoLogger.Instance.Debug(abWindow.Name + " AppBar height is " + h.ToString());
 
