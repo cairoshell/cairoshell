@@ -35,6 +35,9 @@
 
         public static Desktop DesktopWindow { get; set; }
 
+        /// <summary>
+        /// Checks the currently running shell. If another shell is running or we are not configured to be shell, returns false.
+        /// </summary>
         public static bool IsCairoUserShell;
 
         private static CommandLineParser commandLineParser;
@@ -74,7 +77,9 @@
 
             // check if we are the current user's shell
             // set here as well so that we don't behave differently once user changes setting
-            IsCairoUserShell = Shell.IsCairoUserShell;       // Move to CairoDesktop.Plugins.CairoShellCoreServices.... Make this more robust, to account for system-shell or per-user-shell;
+            // First check if there is an existing Shell_TrayWnd. If so, then Explorer is actually running as shell so assume we are not.
+            IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
+            IsCairoUserShell = Shell.IsCairoUserShell && taskbarHwnd == IntPtr.Zero;       // Move to CairoDesktop.Plugins.CairoShellCoreServices.... Make this more robust, to account for system-shell or per-user-shell;
 
             if (Settings.Instance.EnableDesktop) // Future: This should be moved to whatever plugin is responsible for desktop stuff
             {
