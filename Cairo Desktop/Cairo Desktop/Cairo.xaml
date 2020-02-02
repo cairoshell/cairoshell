@@ -2846,6 +2846,18 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+    <Style x:Key="ProgramsTabControl" TargetType="{x:Type TabControl}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="0,3" />
+        <Setter Property="Margin" Value="0,-3" />
+        <Setter Property="TabStripPlacement" Value="Right" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Style.Resources>
+            <Style TargetType="TabItem" BasedOn="{StaticResource ProgramsTabItem}">
+            </Style>
+        </Style.Resources>
+    </Style>
 
     <!-- Calendar -->
     <Style x:Key="CairoCalendarItemStyle"

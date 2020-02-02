@@ -65,8 +65,6 @@ namespace CairoDesktop
 
             initializeClock();
 
-            setupPrograms();
-
             initSparkle();
         }
 
@@ -260,6 +258,8 @@ namespace CairoDesktop
             {
                 Shell.EnableWindowBlur(handle);
             }
+
+            FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
         }
 
         private void setupSearch()
@@ -332,65 +332,9 @@ namespace CairoDesktop
         }
 
         #region Programs menu
-        private void LaunchProgram(object sender, RoutedEventArgs e)
+        private void OnShowProgramsMenu(HotKey hotKey)
         {
-            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
-            ApplicationInfo app = item.DataContext as ApplicationInfo;
-
-            appGrabber.LaunchProgram(app);
-        }
-
-        private void LaunchProgramAdmin(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
-            ApplicationInfo app = item.DataContext as ApplicationInfo;
-
-            appGrabber.LaunchProgramAdmin(app);
-        }
-
-        private void LaunchProgramRunAs(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
-            ApplicationInfo app = item.DataContext as ApplicationInfo;
-
-            appGrabber.LaunchProgramVerb(app, "runasuser");
-        }
-
-        private void programsMenu_AddToQuickLaunch(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
-            ApplicationInfo app = item.DataContext as ApplicationInfo;
-
-            appGrabber.AddToQuickLaunch(app);
-        }
-
-        private void programsMenu_Rename(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
-            DockPanel parent = ((System.Windows.Controls.MenuItem)((ContextMenu)item.Parent).PlacementTarget).Header as DockPanel;
-            TextBox rename = parent.FindName("txtProgramRename") as TextBox;
-            TextBlock label = parent.FindName("lblProgramName") as TextBlock;
-
-            rename.Visibility = Visibility.Visible;
-            label.Visibility = Visibility.Collapsed;
-            rename.Focus();
-            rename.SelectAll();
-        }
-
-        private void programsMenu_Remove(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
-            ApplicationInfo app = item.DataContext as ApplicationInfo;
-
-            appGrabber.RemoveAppConfirm(app);
-        }
-
-        private void programsMenu_Properties(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Controls.MenuItem item = (System.Windows.Controls.MenuItem)sender;
-            ApplicationInfo app = item.DataContext as ApplicationInfo;
-
-            AppGrabber.AppGrabber.ShowAppProperties(app);
+            ToggleProgramsMenu();
         }
 
         private void ToggleProgramsMenu()
@@ -406,39 +350,33 @@ namespace CairoDesktop
             }
         }
 
-        private void miProgramsChangeCategory_SubmenuOpened(object sender, RoutedEventArgs e)
+        private void ProgramsMenu_DragOver(object sender, DragEventArgs e)
         {
-            MenuItem mi = sender as MenuItem;
-            ApplicationInfo ai = mi.DataContext as ApplicationInfo;
-            mi.Items.Clear();
-
-            foreach (Category cat in appGrabber.CategoryList)
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                if (cat.Type == 0 && cat != ai.Category)
-                {
-                    MenuItem newItem = new MenuItem();
-                    newItem.Header = cat.DisplayName;
-
-                    object[] appNewCat = new object[] { ai, cat };
-                    newItem.DataContext = appNewCat;
-
-                    newItem.Click += new RoutedEventHandler(miProgramsChangeCategory_Click);
-                    mi.Items.Add(newItem);
-                }
+                e.Effects = DragDropEffects.Link;
             }
+            else if (!e.Data.GetDataPresent(typeof(ApplicationInfo)))
+            {
+                e.Effects = DragDropEffects.None;
+            }
+
+            e.Handled = true;
         }
 
-        private void miProgramsChangeCategory_Click(object sender, RoutedEventArgs e)
+        private void ProgramsMenu_Drop(object sender, DragEventArgs e)
         {
-            MenuItem mi = sender as MenuItem;
-            object[] appNewCat = mi.DataContext as object[];
-            ApplicationInfo ai = appNewCat[0] as ApplicationInfo;
-            Category newCat = appNewCat[1] as Category;
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (fileNames != null)
+            {
+                appGrabber.AddByPath(fileNames, AppCategoryType.Uncategorized);
+            }
+            else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
+            {
+                ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
 
-            ai.Category.Remove(ai);
-            newCat.Add(ai);
-
-            appGrabber.Save();
+                appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
+            }
         }
         #endregion
 
@@ -480,7 +418,8 @@ namespace CairoDesktop
                         break;
 
                     case NativeMethods.AppBarNotifications.FullScreenApp:
-                        if ((int)lParam == 1)
+                        // we have our own implementation now
+                        /*if ((int)lParam == 1)
                         {
                             CairoLogger.Instance.Debug("Cairo leaving on-top");
                             this.Topmost = false;
@@ -502,7 +441,7 @@ namespace CairoDesktop
                                 Startup.TaskbarWindow.SetFullScreenMode(false);
                             }
                         }
-
+                        */
                         break;
 
                     case NativeMethods.AppBarNotifications.WindowArrange:
@@ -577,6 +516,54 @@ namespace CairoDesktop
         private void TimeChanged(object sender, EventArgs e)
         {
             TimeZoneInfo.ClearCachedData();
+        }
+
+        private void FullScreenApps_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            bool found = false;
+
+            foreach (FullScreenHelper.FullScreenApp app in FullScreenHelper.Instance.FullScreenApps)
+            {
+                if (app.screen.DeviceName == Screen.DeviceName)
+                {
+                    // we need to not be on top now
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found && Topmost)
+            {
+                setFullScreenMode(true);
+            }
+            else if (!found && !Topmost)
+            {
+                setFullScreenMode(false);
+            }
+        }
+
+        private void setFullScreenMode(bool entering)
+        {
+            if (entering)
+            {
+                CairoLogger.Instance.Debug(string.Format("Menu Bar on {0} conceeding to full-screen app", Screen.DeviceName));
+
+                Topmost = false;
+                Shell.ShowWindowBottomMost(handle);
+            }
+            else
+            {
+                CairoLogger.Instance.Debug(string.Format("Menu Bar on {0} returning to normal state", Screen.DeviceName));
+
+                Topmost = true;
+                Shell.ShowWindowTopMost(handle);
+
+                if (Settings.EnableDesktop && Startup.DesktopWindow != null)
+                {
+                    // send the desktop to the bottom in case we are below it
+                    Startup.DesktopWindow.SendToBottom();
+                }
+            }
         }
 
         private void setPosition()
@@ -664,110 +651,21 @@ namespace CairoDesktop
                     AppBarHelper.ResetWorkArea();
                 }
 
+                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
+                FullScreenHelper.Instance.Dispose();
+
                 Microsoft.Win32.SystemEvents.TimeChanged -= new EventHandler(TimeChanged);
             }
             else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
             {
-                AppBarHelper.RegisterBar(this, Screen, this.ActualWidth, this.ActualHeight);
+                AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale);
+
+                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
             }
             else
             {
                 IsClosing = false;
                 e.Cancel = true;
-            }
-        }
-
-        private void ProgramsMenu_DragOver(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effects = DragDropEffects.Link;
-            }
-            else if (!e.Data.GetDataPresent(typeof(ApplicationInfo)))
-            {
-                e.Effects = DragDropEffects.None;
-            }
-
-            e.Handled = true;
-        }
-
-        private void ProgramsMenu_Drop(object sender, DragEventArgs e)
-        {
-            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNames != null)
-            {
-                appGrabber.AddByPath(fileNames, AppCategoryType.Uncategorized);
-            }
-            else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
-            {
-                ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
-
-                appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
-            }
-        }
-
-        private void ctxProgramsItem_Opened(object sender, RoutedEventArgs e)
-        {
-            if (KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
-            {
-                ContextMenu menu = (sender as ContextMenu);
-                foreach (Control item in menu.Items)
-                {
-                    if (item.Name == "miProgramsItemRunAs")
-                    {
-                        item.Visibility = Visibility.Visible;
-                        return;
-                    }
-                }
-            }
-            else
-            {
-                ContextMenu menu = (sender as ContextMenu);
-                foreach (Control item in menu.Items)
-                {
-                    if (item.Name == "miProgramsItemRunAs")
-                    {
-                        item.Visibility = Visibility.Collapsed;
-                        return;
-                    }
-                }
-            }
-        }
-
-        private void txtProgramRename_LostFocus(object sender, RoutedEventArgs e)
-        {
-            TextBox box = e.OriginalSource as TextBox;
-            ApplicationInfo app = ((box.Parent as DockPanel).Parent as System.Windows.Controls.MenuItem).DataContext as ApplicationInfo;
-
-            if (!object.ReferenceEquals(app, null))
-            {
-                appGrabber.Rename(app, box.Text);
-            }
-
-            foreach (UIElement peer in (box.Parent as DockPanel).Children)
-            {
-                if (peer is TextBlock)
-                {
-                    peer.Visibility = Visibility.Visible;
-                }
-            }
-            box.Visibility = Visibility.Collapsed;
-        }
-
-        private void txtProgramRename_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                Keyboard.ClearFocus();
-                e.Handled = true;
-            }
-        }
-
-        private void txtProgramRename_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
-        {
-            if (ProgramsMenu.IsKeyboardFocusWithin && !(e.NewFocus is TextBox))
-            {
-                e.Handled = true;
             }
         }
 
@@ -782,11 +680,6 @@ namespace CairoDesktop
             {
                 CairoMenu.IsSubmenuOpen = false;
             }
-        }
-
-        private void OnShowProgramsMenu(HotKey hotKey)
-        {
-            ToggleProgramsMenu();
         }
 
         private void keyboardListener_OnKeyPressed(object sender, KeyPressedArgs e)

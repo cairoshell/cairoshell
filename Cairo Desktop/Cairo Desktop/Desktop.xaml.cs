@@ -348,7 +348,7 @@ namespace CairoDesktop
             {
                 if (!IsOverlayOpen && !IsFbdOpen)
                 {
-                    Shell.ShowWindowBottomMost(helper.Handle);
+                    SendToBottom();
                 }
             }
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
@@ -390,6 +390,11 @@ namespace CairoDesktop
             return IntPtr.Zero;
         }
 
+        public void SendToBottom()
+        {
+            Shell.ShowWindowBottomMost(helper.Handle);
+        }
+
         private void SetPosition(uint x, uint y)
         {
             Top = 0;
@@ -422,7 +427,7 @@ namespace CairoDesktop
             if (!Topmost)
             {
                 int result = NativeMethods.SetShellWindow(helper.Handle);
-                Shell.ShowWindowBottomMost(helper.Handle);
+                SendToBottom();
             }
         }
 
@@ -555,7 +560,7 @@ namespace CairoDesktop
         private void CloseOverlay()
         {
             Topmost = false;
-            Shell.ShowWindowBottomMost(helper.Handle);
+            SendToBottom();
             grid.Background = new SolidColorBrush(Color.FromArgb(0x01, 0, 0, 0));
             setBackground();
         }

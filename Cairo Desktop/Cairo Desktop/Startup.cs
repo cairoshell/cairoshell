@@ -45,7 +45,7 @@
 
         public static bool IsSettingScreens { get; set; }
 
-        private static System.Windows.Forms.Screen[] screenState = { };
+        public static System.Windows.Forms.Screen[] screenState = { };
         private static Object screenSetupLock = new Object();
 
         /// <summary>
@@ -181,7 +181,8 @@
                 AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
-            if (Settings.Instance.EnableSysTray == true)
+            // Don't allow showing both the Windows taskbar and the Cairo tray
+            if (Settings.EnableSysTray == true && Settings.EnableTaskbar == true)
             {
                 NotificationArea.Instance.Initialize();
             }

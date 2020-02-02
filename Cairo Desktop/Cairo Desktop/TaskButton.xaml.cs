@@ -1,6 +1,8 @@
 ﻿using CairoDesktop.Interop;
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -20,14 +22,52 @@ namespace CairoDesktop
             set { SetValue(ListModeProperty, value); }
         }
 
+        private WindowsTasks.ApplicationWindow Window;
+        private DispatcherTimer dragTimer;
+
         public TaskButton()
         {
             this.InitializeComponent();
         }
 
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            Window = DataContext as WindowsTasks.ApplicationWindow;
+
+            if (!ListMode)
+            {
+                switch (Configuration.Settings.TaskbarIconSize)
+                {
+                    case 0:
+                        imgIcon.Width = 32;
+                        imgIcon.Height = 32;
+                        break;
+                    case 10:
+                        imgIcon.Width = 24;
+                        imgIcon.Height = 24;
+                        break;
+                    default:
+                        imgIcon.Width = 16;
+                        imgIcon.Height = 16;
+                        break;
+                }
+            }
+            else
+            {
+                // Task list display changes
+                btn.Style = FindResource("CairoTaskListButtonStyle") as Style;
+                ToolTipService.SetPlacement(btn, System.Windows.Controls.Primitives.PlacementMode.Right);
+                WinTitle.TextAlignment = TextAlignment.Left;
+                imgIcon.Margin = new Thickness(3, 0, 6, 0);
+            }
+
+            // drag support - delayed activation using system setting
+            dragTimer = new DispatcherTimer { Interval = SystemParameters.MouseHoverTime };
+            dragTimer.Tick += dragTimer_Tick;
+        }
+
         private void btnClick(object sender, RoutedEventArgs e)
         {
-            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 if (Window.State == WindowsTasks.ApplicationWindow.WindowState.Active)
@@ -43,7 +83,6 @@ namespace CairoDesktop
 
         private void miRestore_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Window.Restore();
@@ -52,7 +91,6 @@ namespace CairoDesktop
 
         private void miMinimize_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Window.Minimize();
@@ -61,7 +99,6 @@ namespace CairoDesktop
 
         private void miMaximize_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Window.Maximize();
@@ -70,7 +107,6 @@ namespace CairoDesktop
 
         private void miNewWindow_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Shell.StartProcess(Window.WinFileName);
@@ -79,7 +115,6 @@ namespace CairoDesktop
 
         private void miClose_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Window.Close();
@@ -93,7 +128,6 @@ namespace CairoDesktop
         /// <param name="e"></param>
         private void ContextMenu_Opening(object sender, ContextMenuEventArgs e)
         {
-            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Visibility vis = Visibility.Collapsed;
@@ -116,7 +150,6 @@ namespace CairoDesktop
 
         private void miPin_Click(object sender, RoutedEventArgs e)
         {
-            var Window = (DataContext as WindowsTasks.ApplicationWindow);
             if (Window != null)
             {
                 Window.PinToQuickLaunch();
@@ -132,7 +165,6 @@ namespace CairoDesktop
         {
             if (e.ChangedButton == System.Windows.Input.MouseButton.Middle)
             {
-                var Window = (DataContext as WindowsTasks.ApplicationWindow);
                 if (Window != null)
                 {
                     switch (Configuration.Settings.Instance.TaskbarMiddleClick)
@@ -147,6 +179,39 @@ namespace CairoDesktop
                 }
             }
         }
+
+        #region Drag support
+        private bool inDrag = false;
+
+        private void dragTimer_Tick(object sender, EventArgs e)
+        {
+            if (inDrag && Window != null)
+            {
+                Window.BringToFront();
+            }
+
+            dragTimer.Stop();
+        }
+
+        private void btn_DragEnter(object sender, DragEventArgs e)
+        {
+            if (!inDrag)
+            {
+                inDrag = true;
+                dragTimer.Start();
+            }
+        }
+
+        private void btn_DragLeave(object sender, DragEventArgs e)
+        {
+            if (inDrag)
+            {
+                dragTimer.Stop();
+                inDrag = false;
+            }
+        }
+        #endregion
+
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {

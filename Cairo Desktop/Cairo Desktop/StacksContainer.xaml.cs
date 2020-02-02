@@ -17,12 +17,16 @@ namespace CairoDesktop {
             InitializeComponent();
         }
 
-        private void locationDisplay_DragEnter(object sender, DragEventArgs e)
+        private void locationDisplay_DragOver(object sender, DragEventArgs e)
         {
             String[] formats = e.Data.GetFormats(true);
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                e.Effects = DragDropEffects.Copy;
+                e.Effects = DragDropEffects.Link;
+            }
+            else if (!e.Data.GetDataPresent(typeof(SystemDirectory)))
+            {
+                e.Effects = DragDropEffects.None;
             }
 
             e.Handled = true;

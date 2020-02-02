@@ -1,0 +1,133 @@
+﻿<UserControl x:Class="CairoDesktop.ProgramsMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+             xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration"
+             Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="InnerProgramsListStyle"
+                TargetType="ItemsControl">
+                <Setter Property="ItemTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <MenuItem Click="programsMenu_Open">
+                                <MenuItem.Icon>
+                                    <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
+                                        Height="16"
+                                        Width="16" />
+                                </MenuItem.Icon>
+                                <MenuItem.ContextMenu>
+                                    <ContextMenu Name="ctxProgramsItem" Opened="ctxProgramsItem_Opened">
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Open)}" Click="programsMenu_Open" />
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_OpenAsAdministrator)}" Click="programsMenu_OpenAsAdmin" />
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_RunAsUser)}" Click="programsMenu_OpenRunAs" Visibility="Collapsed" Name="miProgramsItemRunAs" />
+                                        <Separator />
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu_AddToQuickLaunch)}" Click="programsMenu_AddToQuickLaunch" />
+                                        <Separator />
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu_ChangeCategory)}" Name="miProgramsChangeCategory" SubmenuOpened="miProgramsChangeCategory_SubmenuOpened">
+                                            <MenuItem Header="" />
+                                        </MenuItem>
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Rename)}" Click="programsMenu_Rename" />
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu_RemoveFromMenu)}" Click="programsMenu_Remove" />
+                                        <Separator />
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Properties)}" Click="programsMenu_Properties" />
+                                    </ContextMenu>
+                                </MenuItem.ContextMenu>
+                                <MenuItem.Header>
+                                    <DockPanel>
+                                        <TextBlock Text="{Binding Path=Name}" Name="lblProgramName" />
+                                        <TextBox Visibility="Collapsed" Text="{Binding Path=Name}" Name="txtProgramRename" LostFocus="txtProgramRename_LostFocus" PreviewKeyDown="txtProgramRename_PreviewKeyDown" TextWrapping="WrapWithOverflow" PreviewLostKeyboardFocus="txtProgramRename_PreviewLostKeyboardFocus" />
+                                    </DockPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ItemsControl">
+                            <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" MaxHeight="576" Width="240" VerticalScrollBarVisibility="Auto">
+                                <VirtualizingStackPanel IsItemsHost="True" />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="HasItems" Value="False">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ItemsControl}">
+                                    <TextBlock Style="{StaticResource NoItemsTextBlock}" TextAlignment="Center" Padding="20,17,20,20" Width="240" Text="{Binding Path=(l10n:DisplayString.sProgramsMenu_Empty)}" />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="{x:Type TabControl}" BasedOn="{StaticResource ProgramsTabControl}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TabControl}">
+                            <Grid KeyboardNavigation.TabNavigation="Local">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <DockPanel Grid.Column="1" x:Name="TabPanel">
+                                    <TabPanel x:Name="CategoriesPanel"
+                            DockPanel.Dock="Top"
+                            Panel.ZIndex="1"
+                            Margin="0,3"
+                            IsItemsHost="True"
+                            Background="Transparent" />
+                                    <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom" Margin="0,12,0,3" VerticalAlignment="Bottom">
+                                        <Button Style="{StaticResource ProgramsMenuButton}" Name="btnAppGrabber" Click="btnAppGrabber_Click" Content="{Binding Path=(l10n:DisplayString.sAppGrabber)}" />
+                                        <Button Style="{StaticResource ProgramsMenuButton}" Name="btnUninstallApps" Click="btnUninstallApps_Click" Content="{Binding Path=(l10n:DisplayString.sProgramsMenu_UninstallAProgram)}" />
+                                    </StackPanel>
+                                </DockPanel>
+                                <Border x:Name="Border"
+                      Grid.Column="0"
+                      BorderThickness="0,0,1,0"
+                                BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}"
+                                Background="Transparent">
+                                    <ContentPresenter
+                                  Margin="0,3"
+                                  ContentSource="SelectedContent" />
+                                </Border>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <DataTrigger Binding="{Binding Source={x:Static Settings:Settings.Instance}, Path=ProgramsMenuLayout, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                                    <Setter Property="Grid.Column" TargetName="TabPanel" Value="1" />
+                                    <Setter Property="Grid.Column" TargetName="Border" Value="0" />
+                                    <Setter Property="BorderThickness" TargetName="Border" Value="0,0,1,0" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Source={x:Static Settings:Settings.Instance}, Path=ProgramsMenuLayout, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                                    <Setter Property="Grid.Column" TargetName="TabPanel" Value="0" />
+                                    <Setter Property="Grid.Column" TargetName="Border" Value="1" />
+                                    <Setter Property="BorderThickness" TargetName="Border" Value="1,0,0,0" />
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Source={x:Static Settings:Settings.Instance}, Path=ProgramsMenuLayout, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                        <Setter Property="TabStripPlacement" Value="Right" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Source={x:Static Settings:Settings.Instance}, Path=ProgramsMenuLayout, UpdateSourceTrigger=PropertyChanged}" Value="1">
+                        <Setter Property="TabStripPlacement" Value="Left" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <TabControl Name="categorizedProgramsList">
+        <TabControl.ContentTemplate>
+            <DataTemplate>
+                <ItemsControl ItemsSource="{Binding}"
+                              Style="{StaticResource InnerProgramsListStyle}" />
+            </DataTemplate>
+        </TabControl.ContentTemplate>
+    </TabControl>
+</UserControl>

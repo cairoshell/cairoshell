@@ -330,11 +330,20 @@
                               Name="chkEnableMenuBarMultiMon">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarMultiMon)}" />
                     </CheckBox>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}"
-                               Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableSysTray, UpdateSourceTrigger=PropertyChanged}"
-                              Click="CheckBox_Click"
-                              Name="chkEnableSysTray">
+                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ProgramsMenuLayout)}" MinWidth="165" VerticalAlignment="Top" Margin="5,3,5,4" />
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton GroupName="rdoProgramsMenuLayout" Name="radProgramsMenuLayout0" Click="radProgramsMenuLayout0_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ProgramsMenuLayoutRight)}" />
+                            </RadioButton>
+                            <RadioButton GroupName="rdoProgramsMenuLayout" Name="radProgramsMenuLayout1" Click="radProgramsMenuLayout1_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ProgramsMenuLayoutLeft)}" />
+                            </RadioButton>
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}" Style="{StaticResource SettingGroupHeader}" />
+                    <CheckBox IsChecked="{Binding Path=EnableSysTray}"
+                        Click="CheckBox_Click" Name="chkEnableSysTray">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableNotificationArea)}" />
                     </CheckBox>
                     <TextBlock Name="lblTrayWarning"

@@ -74,7 +74,21 @@
                     break;
             }
 
-            switch (Settings.Instance.TaskbarMode)
+            switch (Settings.ProgramsMenuLayout)
+            {
+                case 0:
+                    radProgramsMenuLayout0.IsChecked = true;
+                    radProgramsMenuLayout1.IsChecked = false;
+                    break;
+                case 1:
+                    radProgramsMenuLayout0.IsChecked = false;
+                    radProgramsMenuLayout1.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (Settings.TaskbarMode)
             {
                 case 0:
                     radTaskbarMode0.IsChecked = true;
@@ -338,6 +352,18 @@
                     txtDesktopHome.Text = fbd.SelectedPath;
                 }
             }
+        }
+
+        private void radProgramsMenuLayout0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.ProgramsMenuLayout = 0;
+            showRestartButton();
+        }
+
+        private void radProgramsMenuLayout1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.ProgramsMenuLayout = 1;
+            showRestartButton();
         }
 
         private void radTaskbarMode0_Click(object sender, RoutedEventArgs e)

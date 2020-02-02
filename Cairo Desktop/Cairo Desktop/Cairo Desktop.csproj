@@ -88,15 +88,23 @@
     <Compile Include="Icon.xaml.cs">
       <DependentUpon>Icon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ProgramsMenu.xaml.cs">
+      <DependentUpon>ProgramsMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Startup.InitializationRoutines.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
+    <Compile Include="SupportingClasses\FullScreenHelper.cs" />
     <Compile Include="SupportingClasses\ShellContextMenu.cs" />
     <Compile Include="SystemHotKeys.cs" />
     <Compile Include="Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
     </Compile>
     <Page Include="Icon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ProgramsMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -603,6 +603,19 @@ namespace CairoDesktop.Configuration
                 }
             }
         }
+
+        public static int ProgramsMenuLayout
+        {
+            get
+            {
+                return Properties.Settings.Default.ProgramsMenuLayout;
+            }
+            set
+            {
+                Properties.Settings.Default.ProgramsMenuLayout = value;
+                Save();
+            }
+        }
         #endregion
 
         #region Advanced

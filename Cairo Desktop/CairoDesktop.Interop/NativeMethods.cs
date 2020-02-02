@@ -1798,6 +1798,22 @@ namespace CairoDesktop.Interop
         [DllImport("user32.dll")]
         public static extern bool DeregisterShellHookWindow(IntPtr hWnd);
 
+        public static int WINEVENT_OUTOFCONTEXT = 0;
+        public static int WINEVENT_SKIPOWNPROCESS = 2;
+        public static int EVENT_OBJECT_LOCATIONCHANGE = 32779;
+
+        public delegate void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr SetWinEventHook(int eventMin, int eventMax, IntPtr hmodWinEventProc, WinEventProc lpfnWinEventProc, int idProcess, int idThread, int dwflags);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int UnhookWinEvent(IntPtr hWinEventHook);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
         [DllImport("user32.dll")]
         public static extern IntPtr GetDesktopWindow();
 

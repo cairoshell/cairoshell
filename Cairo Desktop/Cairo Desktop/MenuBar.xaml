@@ -185,21 +185,7 @@
                           StaysOpenOnClick="True">
                     <MenuItem StaysOpenOnClick="True">
                         <MenuItem.Header>
-                            <TabControl Name="categorizedProgramsList"
-                                        TabStripPlacement="Right"
-                                        Style="{StaticResource ProgramsTabControl}">
-                                <TabControl.Resources>
-                                    <Style TargetType="TabItem"
-                                           BasedOn="{StaticResource ProgramsTabItem}">
-                                    </Style>
-                                </TabControl.Resources>
-                                <TabControl.ContentTemplate>
-                                    <DataTemplate>
-                                        <ItemsControl ItemsSource="{Binding}"
-                                                      Style="{StaticResource InnerProgramsListStyle}" />
-                                    </DataTemplate>
-                                </TabControl.ContentTemplate>
-                            </TabControl>
+                            <control:ProgramsMenu />
                         </MenuItem.Header>
                     </MenuItem>
                 </MenuItem>
