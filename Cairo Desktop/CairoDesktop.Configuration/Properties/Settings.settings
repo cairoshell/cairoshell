@@ -107,14 +107,14 @@
     <Setting Name="DesktopBackgroundType" Type="System.String" Scope="User">
       <Value Profile="(Default)">windowsDefaultBackground</Value>
     </Setting>
-    <Setting Name="BingWallpaperStyle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Stretch</Value>
+    <Setting Name="BingWallpaperStyle" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
     </Setting>
     <Setting Name="CairoBackgroundImagePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="CairoBackgroundImageStyle" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Stretch</Value>
+    <Setting Name="CairoBackgroundImageStyle" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
     </Setting>
     <Setting Name="CairoBackgroundVideoPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

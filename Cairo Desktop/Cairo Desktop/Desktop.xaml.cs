@@ -73,20 +73,19 @@ namespace CairoDesktop
         {
             if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
             {
-                switch(e.PropertyName)
+                switch (e.PropertyName)
                 {
                     case "DesktopBackgroundType":
                     case "BingWallpaperStyle":
                     case "CairoBackgroundImagePath":
                     case "CairoBackgroundImageStyle":
                     case "CairoBackgroundVideoPath":
-                        BackgroundBrush = null;
-                        setBackground();
+                        ReloadBackground();
                         break;
                 }
             }
         }
-
+        
         private System.Windows.Media.Brush BackgroundBrush { get; set; }
         private void setBackground()
         {
@@ -170,9 +169,10 @@ namespace CairoDesktop
         private System.Windows.Media.Brush GetCairoBackgroundBrush_Image()
         {
             string wallpaper = Settings.Instance.CairoBackgroundImagePath;
-            CairoWallpaperStyle wallpaperStyle;
-            if (!Enum.TryParse(Settings.Instance.CairoBackgroundImageStyle, out wallpaperStyle))
-                wallpaperStyle = CairoWallpaperStyle.Stretch;
+
+            CairoWallpaperStyle wallpaperStyle = CairoWallpaperStyle.Stretch;
+            if (Enum.IsDefined(typeof(CairoWallpaperStyle), Settings.Instance.CairoBackgroundImageStyle))
+                wallpaperStyle = (CairoWallpaperStyle)Settings.Instance.CairoBackgroundImageStyle;
 
             return GetCairoBackgroundBrush_Image(wallpaper, wallpaperStyle) ?? GetCairoBackgroundBrush_Windows();
         }
@@ -189,7 +189,7 @@ namespace CairoDesktop
             {
                 // https://docs.microsoft.com/en-us/dotnet/framework/wpf/graphics-multimedia/how-to-paint-an-area-with-a-video
                 System.Windows.Controls.MediaElement myMediaElement = new System.Windows.Controls.MediaElement();
-                myMediaElement.Source = new Uri(@"C:\Users\josua\Videos\Wallpaper.mp4", UriKind.Relative);
+                myMediaElement.Source = new Uri(wallpaper, UriKind.Relative);
                 myMediaElement.LoadedBehavior = System.Windows.Controls.MediaState.Play;
                 myMediaElement.IsMuted = true;
                 myMediaElement.MediaEnded += (o, a) => myMediaElement.Position = new TimeSpan(0, 0, 1);
@@ -278,11 +278,9 @@ namespace CairoDesktop
                 backgroundBitmapImage.Freeze();
                 backgroundImageBrush = new ImageBrush(backgroundBitmapImage);
 
-                CairoWallpaperStyle wallpaperStyle;
-                if (!Enum.TryParse(Settings.Instance.BingWallpaperStyle, out wallpaperStyle))
-                {
-                    wallpaperStyle = CairoWallpaperStyle.Stretch;
-                }
+                CairoWallpaperStyle wallpaperStyle = CairoWallpaperStyle.Stretch;
+                if (Enum.IsDefined(typeof(CairoWallpaperStyle), Settings.Instance.BingWallpaperStyle))
+                    wallpaperStyle = (CairoWallpaperStyle)Settings.Instance.BingWallpaperStyle;
 
                 switch (wallpaperStyle)
                 {

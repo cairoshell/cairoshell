@@ -1564,11 +1564,7 @@ namespace CairoDesktop.Localization
                 return getString();
             }
         }
-
-
-
-
-
+        
         public static string sSettings_IconSize
         {
             get

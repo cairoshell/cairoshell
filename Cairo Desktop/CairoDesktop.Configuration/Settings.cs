@@ -284,7 +284,7 @@ namespace CairoDesktop.Configuration
             }
         }
 
-        public string BingWallpaperStyle
+        public int BingWallpaperStyle
         {
             get
             {
@@ -314,7 +314,7 @@ namespace CairoDesktop.Configuration
             }
         }
 
-        public string CairoBackgroundImageStyle
+        public int CairoBackgroundImageStyle
         {
             get
             {

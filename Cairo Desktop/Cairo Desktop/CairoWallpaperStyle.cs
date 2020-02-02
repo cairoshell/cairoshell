@@ -2,6 +2,14 @@
 {
     public partial class Desktop
     {
-        internal enum CairoWallpaperStyle { Tile, Center, Fit, Fill, Stretch, Span }
+        internal enum CairoWallpaperStyle : int
+        {
+            Tile = 0,
+            Center,
+            Fit,
+            Fill,
+            Stretch,
+            Span
+        }
     }
 }

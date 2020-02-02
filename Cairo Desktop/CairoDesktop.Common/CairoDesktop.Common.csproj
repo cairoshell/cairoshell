@@ -75,6 +75,7 @@
     <Compile Include="DesignPatterns\Provider.cs" />
     <Compile Include="DesignPatterns\ProviderCollection.cs" />
     <Compile Include="DesignPatterns\SingletonObject.cs" />
+    <Compile Include="Dialogs.cs" />
     <Compile Include="DisposableCollection.cs" />
     <Compile Include="DisposableObject.cs" />
     <Compile Include="LowLevelKeyboardListener.cs" />

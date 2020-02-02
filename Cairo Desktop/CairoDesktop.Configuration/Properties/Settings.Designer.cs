@@ -445,10 +445,10 @@ namespace CairoDesktop.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Stretch")]
-        public string BingWallpaperStyle {
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int BingWallpaperStyle {
             get {
-                return ((string)(this["BingWallpaperStyle"]));
+                return ((int)(this["BingWallpaperStyle"]));
             }
             set {
                 this["BingWallpaperStyle"] = value;
@@ -469,10 +469,10 @@ namespace CairoDesktop.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Stretch")]
-        public string CairoBackgroundImageStyle {
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int CairoBackgroundImageStyle {
             get {
-                return ((string)(this["CairoBackgroundImageStyle"]));
+                return ((int)(this["CairoBackgroundImageStyle"]));
             }
             set {
                 this["CairoBackgroundImageStyle"] = value;
