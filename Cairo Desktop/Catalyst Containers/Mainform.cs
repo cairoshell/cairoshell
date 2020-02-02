@@ -8,10 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using NeoGeniX.Forms;
+using NeoGeniX.Controls;
 
 namespace Catalyst_Containers
 {
-    public partial class MainForm : Form
+    public partial class MainForm : DarkForm
     {
         ContainerInstancing.Container[] containers;
         PluginLoader loader = new PluginLoader();
@@ -64,6 +66,7 @@ namespace Catalyst_Containers
                 theCat.mainform = p;
                 theCat.Show();
             }
+            exp.containerfs = Constants.ContainerPath(cont.ID);
             p.Text = cont.DisplayName;
             PluginLoader.Plugins[cont.CoreModID].Boot(cont.ID, p, exp);
             p.Show();

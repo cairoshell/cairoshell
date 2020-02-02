@@ -18,7 +18,7 @@ namespace CatalystContainer.CoreModContracts
 
     public class Exposure
     {
-
+        public string containerfs;
     }
 
     public class Container

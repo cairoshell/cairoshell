@@ -117,19 +117,71 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>278, 17</value>
-  </metadata>
-  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="timer2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>104, 17</value>
-  </metadata>
-  <metadata name="timer3.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>191, 17</value>
-  </metadata>
-  <metadata name="skinningManager1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>375, 17</value>
-  </metadata>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="CloseIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\CloseIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CloseIconSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\CloseIconSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FormBorder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\FormBorder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FormCaption" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\FormCaption.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FormCaptionButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\FormCaptionButton.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MaximizeIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\MaximizeIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MaximizeIconSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\MaximizeIconSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MinimizeIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\MinimizeIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MinimizeIconSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\MinimizeIconSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RestoreIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\RestoreIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RestoreIconSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\Resources\RestoreIconSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SkinDefinition" xml:space="preserve">
+    <value>&lt;Skin&gt;
+    &lt;Meta&gt;
+        &lt;Name&gt;Proshell NeoGeniX&lt;/Name&gt;
+        &lt;Autor&gt;Proshell&lt;/Autor&gt;
+    &lt;/Meta&gt;
+    &lt;Form&gt;
+        &lt;ActiveCaption&gt;0,153,255&lt;/ActiveCaption&gt;
+        &lt;InactiveCaption&gt;138,138,138&lt;/InactiveCaption&gt;
+        &lt;CenterCaption&gt;true&lt;/CenterCaption&gt;
+        &lt;Caption&gt;
+            &lt;Background&gt;
+                &lt;ImageSize&gt;15,30&lt;/ImageSize&gt;
+                &lt;ImagePadding&gt;2,2,2,2&lt;/ImagePadding&gt;
+            &lt;/Background&gt;
+            &lt;NormalButton&gt;
+                &lt;IconSize&gt;11,9&lt;/IconSize&gt;
+                &lt;ImageSize&gt;20,20&lt;/ImageSize&gt;
+                &lt;ImagePadding&gt;2,2,2,2&lt;/ImagePadding&gt;
+            &lt;/NormalButton&gt;
+            &lt;SmallButton&gt;
+                &lt;IconSize&gt;7,7&lt;/IconSize&gt;
+                &lt;ImageSize&gt;20,20&lt;/ImageSize&gt;
+                &lt;ImagePadding&gt;2,2,2,2&lt;/ImagePadding&gt;
+            &lt;/SmallButton&gt;
+        &lt;/Caption&gt;
+        &lt;Border&gt;
+            &lt;ImageSize&gt;20,11&lt;/ImageSize&gt;
+            &lt;ImagePadding&gt;8,0,8,8&lt;/ImagePadding&gt;
+        &lt;/Border&gt;
+    &lt;/Form&gt;
+&lt;/Skin&gt;</value>
+  </data>
 </root>

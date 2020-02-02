@@ -29,13 +29,14 @@ namespace theCatalyst
         private void InitializeComponent()
         {
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.labelProductName = new NeoGeniX.Controls.DarkLabel();
             this.labelVersion = new NeoGeniX.Controls.DarkLabel();
             this.labelCopyright = new NeoGeniX.Controls.DarkLabel();
             this.labelCompanyName = new NeoGeniX.Controls.DarkLabel();
             this.textBoxDescription = new NeoGeniX.Controls.DarkTextBox();
             this.okButton = new NeoGeniX.Controls.DarkButton();
-            this.logoPictureBox = new System.Windows.Forms.PictureBox();
+            this.skinningManager1 = new NeoGeniX.Skinning.SkinningManager();
             this.tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
@@ -64,6 +65,18 @@ namespace theCatalyst
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
             this.tableLayoutPanel.Size = new System.Drawing.Size(417, 265);
             this.tableLayoutPanel.TabIndex = 0;
+            // 
+            // logoPictureBox
+            // 
+            this.logoPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logoPictureBox.Image = global::theCatalyst.Properties.Resources.left_img;
+            this.logoPictureBox.Location = new System.Drawing.Point(3, 3);
+            this.logoPictureBox.Name = "logoPictureBox";
+            this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 6);
+            this.logoPictureBox.Size = new System.Drawing.Size(131, 259);
+            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.logoPictureBox.TabIndex = 12;
+            this.logoPictureBox.TabStop = false;
             // 
             // labelProductName
             // 
@@ -133,7 +146,8 @@ namespace theCatalyst
             this.textBoxDescription.TabIndex = 23;
             this.textBoxDescription.TabStop = false;
             this.textBoxDescription.Text = "Gadget Module of the Original Inhouse Catalyst. Ported to run on the Cairo-Based " +
-    "Catalyst 2\r\nEnhanced with the NeoGeniX Form Library based on DarkForms.\r\n";
+    "Catalyst 2\r\nEnhanced with the NeoGeniX Form Library based on DarkForms and SkinF" +
+    "ramework.\r\n";
             // 
             // okButton
             // 
@@ -147,17 +161,12 @@ namespace theCatalyst
             this.okButton.Text = "OK";
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
-            // logoPictureBox
+            // skinningManager1
             // 
-            this.logoPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.logoPictureBox.Image = global::theCatalyst.Properties.Resources.left_img;
-            this.logoPictureBox.Location = new System.Drawing.Point(3, 3);
-            this.logoPictureBox.Name = "logoPictureBox";
-            this.tableLayoutPanel.SetRowSpan(this.logoPictureBox, 6);
-            this.logoPictureBox.Size = new System.Drawing.Size(131, 259);
-            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.logoPictureBox.TabIndex = 12;
-            this.logoPictureBox.TabStop = false;
+            this.skinningManager1.DefaultSkin = NeoGeniX.Skinning.DefaultSkin.NeoGeniX;
+            this.skinningManager1.MaxBtn = false;
+            this.skinningManager1.MinBtn = false;
+            this.skinningManager1.ParentForm = this;
             // 
             // AboutBox1
             // 
@@ -193,5 +202,6 @@ namespace theCatalyst
         private DarkLabel labelCopyright;
         private DarkLabel labelCompanyName;
         private DarkTextBox textBoxDescription;
+        public NeoGeniX.Skinning.SkinningManager skinningManager1;
     }
 }

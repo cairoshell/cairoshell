@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Catalyst_Containers

@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\theCatalyst Test Program\bin\x64\Debug\catcontainers\coremodules\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\theCatalyst Test Program\bin\x64\Debug\catcontainers\coremodules\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -67,6 +67,7 @@
     <ProjectReference Include="..\Container Core Module Linker\CatalystContainer.CoreModContracts.csproj">
       <Project>{fd7f948e-fc2e-4ead-942a-37b714833cf2}</Project>
       <Name>CatalystContainer.CoreModContracts</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\ProshellNT2.TargetingPack\ProshellNT2.TargetingPack.csproj">
       <Project>{0107d42b-6092-45c4-bdd1-aae86074327b}</Project>

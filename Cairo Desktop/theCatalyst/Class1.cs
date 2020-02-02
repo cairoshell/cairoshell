@@ -32,24 +32,28 @@ namespace theCatalyst
         public static void openEditor(Form mf)
         {
             theEditor editor = new theEditor();
+            editor.skinningManager1.ParentForm = null;
             editor.MdiParent = mf;
             editor.Show();
         }
         public static void openCalc(Form mf)
         {
             theCalc editor = new theCalc();
+            editor.skinningManager1.ParentForm = null;
             editor.MdiParent = mf;
             editor.Show();
         }
         public static void openTime(Form mf)
         {
             TheTime editor = new TheTime();
+            editor.skinningManager1.ParentForm = null;
             editor.MdiParent = mf;
             editor.Show();
         }
         public static void openAbout(Form mf)
         {
             AboutBox1 about = new AboutBox1();
+            about.skinningManager1.ParentForm = null;
             about.MdiParent = mf;
             about.Show();
         }

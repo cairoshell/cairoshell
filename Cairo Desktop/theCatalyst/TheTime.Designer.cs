@@ -47,18 +47,19 @@ namespace theCatalyst
             this.label2 = new System.Windows.Forms.Label();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button6 = new System.Windows.Forms.Button();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.button5 = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.timer3 = new System.Windows.Forms.Timer(this.components);
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.button6 = new System.Windows.Forms.Button();
+            this.skinningManager1 = new NeoGeniX.Skinning.SkinningManager();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -285,6 +286,25 @@ namespace theCatalyst
             this.tabPage3.Text = "Alarm";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(301, 32);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 1;
+            this.button6.Text = "Add";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.CustomFormat = "hh:mm tt";
+            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateTimePicker1.Location = new System.Drawing.Point(278, 6);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.ShowUpDown = true;
+            this.dateTimePicker1.Size = new System.Drawing.Size(101, 20);
+            this.dateTimePicker1.TabIndex = 0;
+            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.button4);
@@ -297,6 +317,16 @@ namespace theCatalyst
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Stopwatch";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(196, 172);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(178, 23);
+            this.button4.TabIndex = 2;
+            this.button4.Text = "Stop";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
             // button3
             // 
@@ -330,6 +360,17 @@ namespace theCatalyst
             this.tabPage5.Text = "Settings";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(9, 7);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(365, 23);
+            this.button5.TabIndex = 0;
+            this.button5.Text = "Open Date and Time Control";
+            this.toolTip1.SetToolTip(this.button5, "This modifies the date and time on Windows");
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
@@ -343,51 +384,18 @@ namespace theCatalyst
             // 
             this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(196, 172);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(178, 23);
-            this.button4.TabIndex = 2;
-            this.button4.Text = "Stop";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(9, 7);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(365, 23);
-            this.button5.TabIndex = 0;
-            this.button5.Text = "Open Date and Time Control";
-            this.toolTip1.SetToolTip(this.button5, "This modifies the date and time on Windows");
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
             // toolTip1
             // 
             this.toolTip1.AutoPopDelay = 10000;
             this.toolTip1.InitialDelay = 500;
             this.toolTip1.ReshowDelay = 100;
             // 
-            // dateTimePicker1
+            // skinningManager1
             // 
-            this.dateTimePicker1.CustomFormat = "hh:mm tt";
-            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dateTimePicker1.Location = new System.Drawing.Point(278, 6);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.ShowUpDown = true;
-            this.dateTimePicker1.Size = new System.Drawing.Size(101, 20);
-            this.dateTimePicker1.TabIndex = 0;
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(301, 32);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 1;
-            this.button6.Text = "Add";
-            this.button6.UseVisualStyleBackColor = true;
+            this.skinningManager1.DefaultSkin = NeoGeniX.Skinning.DefaultSkin.NeoGeniX;
+            this.skinningManager1.MaxBtn = false;
+            this.skinningManager1.MinBtn = false;
+            this.skinningManager1.ParentForm = this;
             // 
             // TheTime
             // 
@@ -448,5 +456,6 @@ namespace theCatalyst
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        public NeoGeniX.Skinning.SkinningManager skinningManager1;
     }
 }

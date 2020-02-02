@@ -14,6 +14,7 @@ namespace ProshellNT2
 {
     public partial class MainForm : Form
     {
+        public Exposure exp;
         Dictionary<ListViewItem, I_NT2Addon> _Plugins;
         public MainForm()
         {
@@ -24,15 +25,20 @@ namespace ProshellNT2
         {
             _Plugins = new Dictionary<ListViewItem, I_NT2Addon>();
             //ICollection<IPlugin> plugins = PluginLoader.LoadPlugins("Plugins"); 
-            ICollection<I_NT2Addon> plugins = PluginLoader.LoadPlugins("Plugins");
+            ICollection<I_NT2Addon> plugins = PluginLoader.LoadPlugins(exp.containerfs + @"\software");
             if (plugins != null)
             {
                 foreach (var item in plugins)
                 {
                     imageList1.Images.Add(item.Icon);
                     ListViewItem listViewItem = new ListViewItem(item.Name, imageList1.Images.Count - 1);
-                    _Plugins.Add(listViewItem, item);
+                    _Plugins.Add(listView1.Items.Add(listViewItem), item);
+                    
+                    
                 }
+            } else
+            {
+                MessageBox.Show("No Plugins Installed");
             }
         }
 

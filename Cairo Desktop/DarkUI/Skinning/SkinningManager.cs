@@ -36,6 +36,10 @@ namespace NeoGeniX.Skinning
         private SkinningForm _form;
         private SkinBase _currentSkin;
 
+        // CaptionBTNS
+        private bool _MaxBtn;
+        private bool _MinBtn;
+
         /// <summary>
         /// Gets or sets the default skin to load on startup.
         /// </summary>
@@ -55,6 +59,33 @@ namespace NeoGeniX.Skinning
             }
         }
 
+        [Category("Appearance")]
+        [Description("Sets The Maximize Caption Button")]
+        public bool MaxBtn
+        {
+            get { return _MaxBtn; }
+            set
+            {
+                if (_MaxBtn == value) return;
+                _MaxBtn = value;
+                if (_form != null)
+                    _form.Invalidate();
+            }
+        }
+
+        [Category("Appearance")]
+        [Description("Sets The Minimize Caption Button")]
+        public bool MinBtn
+        {
+            get { return _MinBtn; }
+            set
+            {
+                if (_MinBtn == value) return;
+                _MinBtn = value;
+                if (_form != null)
+                    _form.Invalidate();
+            }
+        }
         /// <summary>
         /// Gets the current skin.
         /// </summary>
@@ -110,6 +141,9 @@ namespace NeoGeniX.Skinning
                 case DefaultSkin.Office2007Silver:
                     _currentSkin = new Office2007Skin(Office2007Style.Silver);
                     break;
+                case DefaultSkin.NeoGeniX:
+                    _currentSkin = new Office2007Skin(Office2007Style.NeoGeniX);
+                    break;
             }
 
             // load skin
@@ -139,8 +173,13 @@ namespace NeoGeniX.Skinning
                 // Start skinning 
                 if (_parentForm != null && !DesignMode)
                 {
-                    _form = new SkinningForm(_parentForm, this);
-                    _parentForm.Disposed += OnParentFormDisposed;
+                    //if (_parentForm.MdiParent == null)
+                    //{
+                        _parentForm.MaximizeBox = _MaxBtn;
+                        _parentForm.MinimizeBox = _MinBtn;
+                        _form = new SkinningForm(_parentForm, this);
+                        _parentForm.Disposed += OnParentFormDisposed;
+                   // }
                 }
             }
         }

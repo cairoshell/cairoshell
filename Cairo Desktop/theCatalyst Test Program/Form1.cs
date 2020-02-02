@@ -35,8 +35,7 @@ namespace theCatalyst_Test_Program
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Catalyst_Containers.MainForm mf = new Catalyst_Containers.MainForm();
-            mf.Show();
+            Catalyst_Containers.Init.Start();
         }
     }
 }

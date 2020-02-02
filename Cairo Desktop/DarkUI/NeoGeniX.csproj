@@ -187,6 +187,11 @@
     <Compile Include="Skinning\CaptionButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Skinning\DefaultSkins\NeoGeniX.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>NeoGeniX.resx</DependentUpon>
+    </Compile>
     <Compile Include="Skinning\DefaultSkins\Office2007Luna.Designer.cs">
       <DependentUpon>Office2007Luna.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -253,6 +258,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>TreeViewIcons.Designer.cs</LastGenOutput>
       <CustomToolNamespace>DarkUI</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Skinning\DefaultSkins\NeoGeniX.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NeoGeniX.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Skinning\DefaultSkins\Office2007Luna.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -336,7 +345,39 @@
   <ItemGroup>
     <None Include="Resources\tw_active_close_selected.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\FormBorder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FormCaption.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FormCaptionButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CloseIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CloseIconSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MaximizeIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MaximizeIconSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MinimizeIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MinimizeIconSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RestoreIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RestoreIconSmall.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -139,6 +139,10 @@
       <Project>{fd7f948e-fc2e-4ead-942a-37b714833cf2}</Project>
       <Name>CatalystContainer.CoreModContracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DarkUI\NeoGeniX.csproj">
+      <Project>{f19472f5-8c44-4c51-a8a0-b9de5f555255}</Project>
+      <Name>NeoGeniX</Name>
+    </ProjectReference>
     <ProjectReference Include="..\theCatalyst\theCatalyst.csproj">
       <Project>{dac61860-816e-4430-8b3d-40c4a06b3253}</Project>
       <Name>theCatalyst</Name>
@@ -147,15 +151,13 @@
   <ItemGroup>
     <None Include="Resources\cont_logo.png" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="..\ProshellNT2\bin\Debug\ProshellNT2.dll">
-      <Link>catcontainers\coremodules\ProshellNT2.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Folder Include="catcontainers\coremodules\" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="..\ProshellNT2\bin\Debug\ProshellNT2.TargetingPack.dll">
-      <Link>catcontainers\coremodules\ProshellNT2.TargetingPack.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>ProshellNT2.TargetingPack.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

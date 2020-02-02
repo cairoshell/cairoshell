@@ -32,6 +32,7 @@ namespace ProshellNT2
         public void Boot(string id, Form player, Exposure exp)
         {
             MainForm mainForm = new MainForm();
+            mainForm.exp = exp;
             mainForm.MdiParent = player;
             mainForm.Show();
         }
@@ -87,6 +88,17 @@ namespace ProshellNT2
                 }
 
                 return plugins;
+            } else
+            {
+                try
+                {
+                    Directory.CreateDirectory(path);
+                    MessageBox.Show("You can drop in NT Programs (.pcx) in " + path, "Proshell NT");
+                } catch
+                {
+                    MessageBox.Show("Container Failed to Initalize");
+                    
+                }
             }
             return null;
         }

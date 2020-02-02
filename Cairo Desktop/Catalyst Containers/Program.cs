@@ -6,9 +6,9 @@ using System.Windows.Forms;
 
 namespace Catalyst_Containers
 {
-    static class Init
+    public static class Init
     {
-        static void Start()
+        public static void Start()
         {
             MainForm mf = new MainForm();
             mf.Show();

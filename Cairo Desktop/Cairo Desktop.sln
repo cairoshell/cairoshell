@@ -54,10 +54,18 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontPage", "FrontPage\FrontPage.csproj", "{6AC0D768-8267-43D6-BD33-E59BC96EBA8E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "theCatalyst Test Program", "theCatalyst Test Program\theCatalyst Test Program.csproj", "{AD6D2427-407D-44A3-8BB7-9A53313B7924}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0107D42B-6092-45C4-BDD1-AAE86074327B} = {0107D42B-6092-45C4-BDD1-AAE86074327B}
+		{CE3328A9-0371-4D47-BF8A-01C151CC465C} = {CE3328A9-0371-4D47-BF8A-01C151CC465C}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Containers", "Containers", "{CA657992-626E-4917-8A7E-F2AD24741FF9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst Containers", "Catalyst Containers\Catalyst Containers.csproj", "{4C16AEDC-43A5-4EB3-BDEF-D6135DEB372C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0107D42B-6092-45C4-BDD1-AAE86074327B} = {0107D42B-6092-45C4-BDD1-AAE86074327B}
+		{CE3328A9-0371-4D47-BF8A-01C151CC465C} = {CE3328A9-0371-4D47-BF8A-01C151CC465C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatalystContainer.CoreModContracts", "Container Core Module Linker\CatalystContainer.CoreModContracts.csproj", "{FD7F948E-FC2E-4EAD-942A-37B714833CF2}"
 EndProject
@@ -66,6 +74,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProshellNT2", "ProshellNT2\ProshellNT2.csproj", "{CE3328A9-0371-4D47-BF8A-01C151CC465C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProshellNT2.TargetingPack", "ProshellNT2.TargetingPack\ProshellNT2.TargetingPack.csproj", "{0107D42B-6092-45C4-BDD1-AAE86074327B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CombineContainer", "CombineContainer\CombineContainer.csproj", "{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -359,6 +369,18 @@ Global
 		{0107D42B-6092-45C4-BDD1-AAE86074327B}.Release|x64.Build.0 = Release|Any CPU
 		{0107D42B-6092-45C4-BDD1-AAE86074327B}.Release|x86.ActiveCfg = Release|Any CPU
 		{0107D42B-6092-45C4-BDD1-AAE86074327B}.Release|x86.Build.0 = Release|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Debug|x64.Build.0 = Debug|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Debug|x86.Build.0 = Debug|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Release|x64.ActiveCfg = Release|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Release|x64.Build.0 = Release|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Release|x86.ActiveCfg = Release|Any CPU
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -373,6 +395,7 @@ Global
 		{D9770942-EA55-4891-806A-3BBD68510EB5} = {CA657992-626E-4917-8A7E-F2AD24741FF9}
 		{CE3328A9-0371-4D47-BF8A-01C151CC465C} = {D9770942-EA55-4891-806A-3BBD68510EB5}
 		{0107D42B-6092-45C4-BDD1-AAE86074327B} = {D9770942-EA55-4891-806A-3BBD68510EB5}
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C} = {D9770942-EA55-4891-806A-3BBD68510EB5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7566EAA4-435C-4795-BB55-54BA364D0419}

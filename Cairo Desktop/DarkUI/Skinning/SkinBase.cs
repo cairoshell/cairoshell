@@ -28,6 +28,7 @@ namespace NeoGeniX.Skinning
         Office2007Luna,
         Office2007Obsidian,
         Office2007Silver,
+        NeoGeniX,
     }
 
     /// <summary>

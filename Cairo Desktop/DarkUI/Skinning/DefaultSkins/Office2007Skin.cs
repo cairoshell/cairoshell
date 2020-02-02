@@ -168,6 +168,9 @@ namespace NeoGeniX.Skinning
                 case Office2007Style.ObsidianBlack:
                     _currentManager = NeoGeniX.Skinning.DefaultSkins.Office2007Obsidian.ResourceManager;
                     break;
+                case Office2007Style.NeoGeniX:
+                    _currentManager = NeoGeniX.Skinning.DefaultSkins.NeoGeniX.ResourceManager;
+                    break;
             }
         }
 
@@ -320,7 +323,11 @@ namespace NeoGeniX.Skinning
         /// <summary>
         /// The silver color scheme
         /// </summary>
-        Silver
+        Silver,
+        /// <summary>
+        /// Proshell Default
+        /// </summary>
+        NeoGeniX
     }
 
 }

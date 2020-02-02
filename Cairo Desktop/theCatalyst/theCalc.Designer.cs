@@ -51,6 +51,7 @@ namespace theCatalyst
             this.labelCurrentOperation = new NeoGeniX.Controls.DarkLabel();
             this.button10 = new NeoGeniX.Controls.DarkButton();
             this.button18 = new NeoGeniX.Controls.DarkButton();
+            this.skinningManager1 = new NeoGeniX.Skinning.SkinningManager();
             this.SuspendLayout();
             // 
             // buttonOne
@@ -312,6 +313,13 @@ namespace theCatalyst
             this.button18.TabIndex = 23;
             this.button18.Text = "History";
             // 
+            // skinningManager1
+            // 
+            this.skinningManager1.DefaultSkin = NeoGeniX.Skinning.DefaultSkin.NeoGeniX;
+            this.skinningManager1.MaxBtn = false;
+            this.skinningManager1.MinBtn = false;
+            this.skinningManager1.ParentForm = this;
+            // 
             // theCalc
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -375,5 +383,6 @@ namespace theCatalyst
         private DarkLabel labelCurrentOperation;
         private DarkButton button10;
         private DarkButton button18;
+        public NeoGeniX.Skinning.SkinningManager skinningManager1;
     }
 }

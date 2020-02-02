@@ -35,7 +35,7 @@ namespace NeoGeniX.Skinning
         public static bool IsDrawMaximizeBox(Form form)
         {
             return form.MaximizeBox && form.FormBorderStyle != FormBorderStyle.SizableToolWindow &&
-                   form.FormBorderStyle != FormBorderStyle.FixedToolWindow;
+                  form.FormBorderStyle != FormBorderStyle.FixedToolWindow;
         }
         /// <summary>
         /// Gets a value indicating if the minimize box needs to be drawn on the specified form.
@@ -64,27 +64,26 @@ namespace NeoGeniX.Skinning
 
             OperatingSystem system = Environment.OSVersion;
             bool isVista = system.Version.Major >= 6 && VisualStyleInformation.IsEnabledByUser;
-
-            switch (form.FormBorderStyle)
-            {
-                case FormBorderStyle.FixedToolWindow:
-                case FormBorderStyle.FixedSingle:
-                case FormBorderStyle.FixedDialog:
-                    border = SystemInformation.FixedFrameBorderSize;
-                    break;
-                case FormBorderStyle.SizableToolWindow:
-                case FormBorderStyle.Sizable:
-                    if (isVista)
-                        border = SystemInformation.FrameBorderSize;
-                    else
-                        border = SystemInformation.FixedFrameBorderSize +
-                            (caption ? SystemInformation.BorderSize + new Size(factor, factor)
-                                : new Size(factor, factor));
-                    break;
-                case FormBorderStyle.Fixed3D:
-                    border = SystemInformation.FixedFrameBorderSize + SystemInformation.Border3DSize;
-                    break;
-            }
+                switch (form.FormBorderStyle)
+                {
+                    case FormBorderStyle.FixedToolWindow:
+                    case FormBorderStyle.FixedSingle:
+                    case FormBorderStyle.FixedDialog:
+                        border = SystemInformation.FixedFrameBorderSize;
+                        break;
+                    case FormBorderStyle.SizableToolWindow:
+                    case FormBorderStyle.Sizable:
+                        if (isVista && form.MdiParent == null)
+                            border = SystemInformation.FrameBorderSize;
+                        else
+                            border = SystemInformation.FixedFrameBorderSize +
+                                (caption ? SystemInformation.BorderSize + new Size(factor, factor)
+                                    : new Size(factor, factor));
+                        break;
+                    case FormBorderStyle.Fixed3D:
+                        border = SystemInformation.FixedFrameBorderSize + SystemInformation.Border3DSize;
+                        break;
+                }
 
             return border;
         }
