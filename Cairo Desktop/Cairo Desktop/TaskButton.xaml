@@ -11,7 +11,7 @@
     <Button x:Name="btn"
         BorderThickness="0"
         VerticalAlignment="Stretch"
-        Click="btnClick" ToolTip="{Binding Path=Title}" ToolTipService.Placement="Top" MouseUp="btn_MouseUp" ContextMenuOpening="ContextMenu_Opening">
+        Click="btnClick" ToolTip="{Binding Path=Title}" ToolTipService.Placement="Top" MouseUp="btn_MouseUp" ContextMenuOpening="ContextMenu_Opening" DragEnter="btn_DragEnter" DragLeave="btn_DragLeave">
         <Button.Style>
             <MultiBinding Converter="{StaticResource styleConverter}" NotifyOnSourceUpdated="True">
                 <Binding RelativeSource="{RelativeSource Self}" />
