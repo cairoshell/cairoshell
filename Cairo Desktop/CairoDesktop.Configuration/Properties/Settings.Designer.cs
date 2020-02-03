@@ -502,5 +502,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["ProgramsMenuLayout"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0,0")]
+        public global::System.Windows.Point DesktopNavigationToolbarLocation {
+            get {
+                return ((global::System.Windows.Point)(this["DesktopNavigationToolbarLocation"]));
+            }
+            set {
+                this["DesktopNavigationToolbarLocation"] = value;
+            }
+        }
     }
 }

@@ -193,6 +193,21 @@ namespace CairoDesktop.Configuration
             }
         }
 
+        public System.Windows.Point DesktopNavigationToolbarLocation
+        {
+            get
+            {
+                return cairoSettings.DesktopNavigationToolbarLocation;
+            }
+            set
+            {
+                if (cairoSettings.DesktopNavigationToolbarLocation != value)
+                {
+                    cairoSettings.DesktopNavigationToolbarLocation = value;
+                }
+            }
+        }
+
         public string DesktopDirectory
         {
             get

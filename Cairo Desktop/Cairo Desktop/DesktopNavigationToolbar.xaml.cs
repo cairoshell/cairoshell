@@ -33,6 +33,7 @@ namespace CairoDesktop
         public DesktopNavigationToolbar()
         {
             InitializeComponent();
+
             SetPosition();
 
             browseContextMenu = new System.Windows.Controls.ContextMenu();
@@ -72,8 +73,16 @@ namespace CairoDesktop
 
         private void SetPosition()
         {
-            Top = AppBarHelper.PrimaryMonitorSize.Height - Height - 150;
-            Left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (Width / 2);
+            if (Settings.Instance.DesktopNavigationToolbarLocation != default(System.Windows.Point))
+            {
+                Top = Settings.Instance.DesktopNavigationToolbarLocation.Y;
+                Left = Settings.Instance.DesktopNavigationToolbarLocation.X;
+            }
+            else
+            {
+                Top = AppBarHelper.PrimaryMonitorSize.Height - Height - 150;
+                Left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (Width / 2);
+            }
         }
 
         private void SetPosition(uint x, uint y)
@@ -179,7 +188,7 @@ namespace CairoDesktop
                 NavigateBackward();
             }
         }
-        
+
         private void btnBack_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             NavigateToParent();
@@ -334,5 +343,9 @@ namespace CairoDesktop
             }
         }
 
+        private void DesktopToolbar_LocationChanged(object sender, EventArgs e)
+        {
+            Settings.Instance.DesktopNavigationToolbarLocation = new Point(Left, Top);
+        }
     }
 }
