@@ -564,12 +564,6 @@ namespace CairoDesktop
 
                 Topmost = true;
                 Shell.ShowWindowTopMost(handle);
-
-                if (Settings.EnableDesktop && Startup.DesktopWindow != null)
-                {
-                    // send the desktop to the bottom in case we are below it
-                    Startup.DesktopWindow.SendToBottom();
-                }
             }
         }
 
