@@ -329,9 +329,10 @@ namespace CairoDesktop.WindowsTasks
                 bool hasEdge = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0;
                 bool isTopmostOnly = ExtendedWindowStyles == (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST;
                 bool isToolWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
+                bool isAcceptFiles = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_ACCEPTFILES) != 0;
                 bool isVisible = NativeMethods.IsWindowVisible(Handle);
 
-                if ((isAppWindow || ((hasEdge || isTopmostOnly || ExtendedWindowStyles == 0) && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
+                if ((isAppWindow || ((hasEdge || isTopmostOnly || ExtendedWindowStyles == 0) && ownerWin == IntPtr.Zero) || (isAcceptFiles && ShowStyle == NativeMethods.WindowShowStyle.ShowMaximized && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
                 {
                     return true;
                 }
