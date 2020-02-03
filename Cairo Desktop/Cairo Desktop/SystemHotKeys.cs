@@ -1,7 +1,5 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Interop;
-using System;
-using System.Runtime.InteropServices;
 using System.Windows.Input;
 
 namespace CairoDesktop
@@ -12,7 +10,6 @@ namespace CairoDesktop
         {
             new HotKey(Key.R, KeyModifier.Win | KeyModifier.NoRepeat, OnWinRCommand);
             new HotKey(Key.D, KeyModifier.Win | KeyModifier.NoRepeat, OnWinDCommand);
-
         }
 
         private static void OnWinDCommand(HotKey obj)

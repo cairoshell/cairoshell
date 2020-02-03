@@ -83,7 +83,7 @@ namespace CairoDesktop.Common
                         keysPressed.Add(vkCode);
 
                     var kpa = new KeyEventArgs(KeyInterop.KeyFromVirtualKey(vkCode));
-                    OnKeyDown(this, kpa);
+                    OnKeyDown?.Invoke(this, kpa);
                     if (kpa.Handled)
                         return new IntPtr(1);
                 }
@@ -95,7 +95,7 @@ namespace CairoDesktop.Common
                     if (keysPressed.Count == 1 && OnKeyPressed != null)
                     {
                         var kpaPressed = new KeyEventArgs(KeyInterop.KeyFromVirtualKey(vkCode));
-                        OnKeyPressed(this, kpaPressed);
+                        OnKeyPressed?.Invoke(this, kpaPressed);
                         if (kpaPressed.Handled)
                             return new IntPtr(1);
                     }
@@ -104,7 +104,7 @@ namespace CairoDesktop.Common
                     keysPressed.Clear();
                     
                     var kpaUp = new KeyEventArgs(KeyInterop.KeyFromVirtualKey(vkCode));
-                    OnKeyUp(this, kpaUp);
+                    OnKeyUp?.Invoke(this, kpaUp);
                     if (kpaUp.Handled)
                         return new IntPtr(1);
                 }

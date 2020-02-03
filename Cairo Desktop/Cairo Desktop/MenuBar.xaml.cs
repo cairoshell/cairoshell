@@ -233,17 +233,17 @@ namespace CairoDesktop
             // Register L+R Windows key to open Programs menu
             if (Startup.IsCairoUserShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
             {
-                new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
-                new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+                if (keyboardListener == null)
+                    keyboardListener = new LowLevelKeyboardListener();
+
+                keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
+                keyboardListener.HookKeyboard();
+
+                // new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+                // new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
 
                 isProgramsMenuHotkeyRegistered = true;
             }
-            /*if (Screen.Primary && keyboardListener == null)
-            {
-                keyboardListener = new LowLevelKeyboardListener();
-                keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
-                keyboardListener.HookKeyboard();
-            }*/
             if (Settings.Instance.EnableMenuBarBlur)
             {
                 Shell.EnableWindowBlur(handle);
@@ -674,11 +674,11 @@ namespace CairoDesktop
 
         private void keyboardListener_OnKeyPressed(object sender, Common.KeyEventArgs e)
         {
-            if (e.Key == Key.LWin)
+            if (e.Key == Key.LWin || e.Key == Key.RWin)
             {
                 CairoLogger.Instance.Debug(e.Key.ToString() + " Key Pressed");
-                e.Handled = true;
                 ToggleProgramsMenu();
+                e.Handled = true;
             }
         }
 

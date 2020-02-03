@@ -274,7 +274,7 @@ namespace CairoDesktop
             if (Shell.IsCairoUserShell)
             {
                 // Commenting out as per comments on PR #274
-                //SystemHotKeys.RegisterSystemHotkeys();
+                SystemHotKeys.RegisterSystemHotkeys();
             }
         }
     }
