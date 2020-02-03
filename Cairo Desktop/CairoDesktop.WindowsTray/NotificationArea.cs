@@ -10,6 +10,7 @@ namespace CairoDesktop.WindowsTray
     public class NotificationArea : DependencyObject, IDisposable
     {
         const string VOLUME_GUID = "7820ae73-23e3-4229-82c1-e41cb67d5b9c";
+        RECT defaultPlacement = new RECT { top = 0, left = GetSystemMetrics(0) - 200, bottom = 23, right = 23 };
         IWindowsHooksWrapper hooksWrapper = new WindowsHooksWrapper();
         private SystrayDelegate trayDelegate;
         private IconDataDelegate iconDataDelegate;
@@ -103,12 +104,19 @@ namespace CairoDesktop.WindowsTray
                 }
             }
 
-            if (icon != null || iconData.guidItem == new Guid(VOLUME_GUID))
+            if (icon != null)
             {
                 if (iconData.dwMessage == 1)
                     return Interop.Shell.MakeLParam(icon.Placement.left, icon.Placement.top);
                 else if (iconData.dwMessage == 2)
                     return Interop.Shell.MakeLParam(icon.Placement.right, icon.Placement.bottom);
+            }
+            else if (iconData.guidItem == new Guid(VOLUME_GUID))
+            {
+                if (iconData.dwMessage == 1)
+                    return Interop.Shell.MakeLParam(defaultPlacement.left, defaultPlacement.top);
+                else if (iconData.dwMessage == 2)
+                    return Interop.Shell.MakeLParam(defaultPlacement.right, defaultPlacement.bottom);
             }
 
             return IntPtr.Zero;
@@ -189,7 +197,7 @@ namespace CairoDesktop.WindowsTray
                             if (!exists)
                             {
                                 // default placement to a menu bar like rect
-                                trayIcon.Placement = new RECT { top = 0, left = GetSystemMetrics(0) - 200, bottom = 23, right = 23 };
+                                trayIcon.Placement = defaultPlacement;
 
                                 if (trayIcon.Icon == null)
                                     trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
