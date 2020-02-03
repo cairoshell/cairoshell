@@ -193,7 +193,7 @@ namespace CairoDesktop
             box.Visibility = Visibility.Collapsed;
         }
 
-        private void txtRename_KeyUp(object sender, KeyEventArgs e)
+        private void txtRename_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
                 (sender as TextBox).MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));

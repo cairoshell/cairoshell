@@ -37,7 +37,9 @@ namespace CairoDesktop.Common
 
         public delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-        public event EventHandler<KeyPressedArgs> OnKeyPressed;
+        public event EventHandler<KeyEventArgs> OnKeyPressed;
+        public event EventHandler<KeyEventArgs> OnKeyDown;
+        public event EventHandler<KeyEventArgs> OnKeyUp;
 
         private LowLevelKeyboardProc _proc;
         private IntPtr _hookID = IntPtr.Zero;
@@ -79,6 +81,11 @@ namespace CairoDesktop.Common
                 {
                     if (!keysPressed.Contains(vkCode))
                         keysPressed.Add(vkCode);
+
+                    var kpa = new KeyEventArgs(KeyInterop.KeyFromVirtualKey(vkCode));
+                    OnKeyDown(this, kpa);
+                    if (kpa.Handled)
+                        return new IntPtr(1);
                 }
 
                 // act only when key is raised
@@ -87,14 +94,19 @@ namespace CairoDesktop.Common
                     // if more than one key was pressed before a key was raised, user attempted hotkey
                     if (keysPressed.Count == 1 && OnKeyPressed != null)
                     {
-                        var kpa = new KeyPressedArgs(KeyInterop.KeyFromVirtualKey(vkCode));
-                        OnKeyPressed(this, kpa);
-                        if (kpa.Handled)
+                        var kpaPressed = new KeyEventArgs(KeyInterop.KeyFromVirtualKey(vkCode));
+                        OnKeyPressed(this, kpaPressed);
+                        if (kpaPressed.Handled)
                             return new IntPtr(1);
                     }
 
                     // reset pressed keys
                     keysPressed.Clear();
+                    
+                    var kpaUp = new KeyEventArgs(KeyInterop.KeyFromVirtualKey(vkCode));
+                    OnKeyUp(this, kpaUp);
+                    if (kpaUp.Handled)
+                        return new IntPtr(1);
                 }
             }
 
@@ -102,14 +114,14 @@ namespace CairoDesktop.Common
         }
     }
 
-    public class KeyPressedArgs : EventArgs
+    public class KeyEventArgs : EventArgs
     {
-        public Key KeyPressed { get; private set; }
+        public Key Key { get; private set; }
         public bool Handled { get; set; }
 
-        public KeyPressedArgs(Key key)
+        public KeyEventArgs(Key key)
         {
-            KeyPressed = key;
+            Key = key;
             Handled = false;
         }
     }

@@ -672,11 +672,11 @@ namespace CairoDesktop
             }
         }
 
-        private void keyboardListener_OnKeyPressed(object sender, KeyPressedArgs e)
+        private void keyboardListener_OnKeyPressed(object sender, Common.KeyEventArgs e)
         {
-            if (e.KeyPressed == Key.LWin)
+            if (e.Key == Key.LWin)
             {
-                CairoLogger.Instance.Debug(e.KeyPressed.ToString() + " Key Pressed");
+                CairoLogger.Instance.Debug(e.Key.ToString() + " Key Pressed");
                 e.Handled = true;
                 ToggleProgramsMenu();
             }
@@ -856,7 +856,7 @@ namespace CairoDesktop
             Shell.StartProcess("search:query=" + searchStr.Text);
         }
 
-        private void searchStr_KeyDown(object sender, KeyEventArgs e)
+        private void searchStr_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {

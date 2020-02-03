@@ -117,11 +117,11 @@ namespace CairoDesktop.WindowsTasks
             try
             {
                 Marshal.StructureToPtr(mm, mmPtr, true);
-                SystemParametersInfo(SPI.SPI_GETMINIMIZEDMETRICS, mm.cbSize, mmPtr, SPIF.None);
+                SystemParametersInfo(SPI.GETMINIMIZEDMETRICS, mm.cbSize, mmPtr, SPIF.None);
                 mm.iWidth = 140;
                 mm.iArrange |= MinimizedMetricsArrangement.Hide;
                 Marshal.StructureToPtr(mm, mmPtr, true);
-                SystemParametersInfo(SPI.SPI_SETMINIMIZEDMETRICS, mm.cbSize, mmPtr, SPIF.None);
+                SystemParametersInfo(SPI.SETMINIMIZEDMETRICS, mm.cbSize, mmPtr, SPIF.None);
             }
             finally
             {

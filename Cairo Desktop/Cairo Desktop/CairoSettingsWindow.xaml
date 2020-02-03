@@ -225,6 +225,7 @@
                        BasedOn="{StaticResource SettingsTabItem}">
                 </Style>
             </TabControl.Resources>
+           
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_General)}">
                 <StackPanel Orientation="Vertical">
                     <CheckBox Click="EnableAutoUpdates_Click"
@@ -266,6 +267,7 @@
                     </CheckBox>
                 </StackPanel>
             </TabItem>
+            
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_MenuBar)}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
@@ -342,7 +344,7 @@
                         </StackPanel>
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}" Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Path=EnableSysTray}"
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableSysTray, UpdateSourceTrigger=PropertyChanged}"
                         Click="CheckBox_Click" Name="chkEnableSysTray">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableNotificationArea)}" />
                     </CheckBox>
@@ -475,19 +477,7 @@
                             <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType)}" />
                             <ComboBox Name="cboDesktopBackgroundType"
                                       IsEditable="False"
-                                      SelectionChanged="cboDesktopBackgroundType_SelectionChanged">
-                                <ComboBoxItem Name="windowsDefaultBackground"
-                                             Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType_windowsDefaultBackground)}"
-                                             Tag="{Binding ElementName=windowsImageBackgroundStackPanel}" />
-                                <ComboBoxItem Name="cairoImageWallpaper"
-                                             Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType_cairoImageWallpaper)}"
-                                             Tag="{Binding ElementName=cairoImageBackgroundStackPanel}" />
-                                <ComboBoxItem Name="cairoVideoWallpaper"
-                                             Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType_cairoVideoWallpaper)}"
-                                             Tag="{Binding ElementName=cairoVideoBackgroundStackPanel}" />
-                                <ComboBoxItem Name="bingWallpaper"
-                                             Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType_bingWallpaper)}"
-                                             Tag="{Binding ElementName=bingImageBackgroundStackPanel}" />
+                                      SelectionChanged="cboDesktopBackgroundType_SelectionChanged">                               
                             </ComboBox>
                         </StackPanel>
 
@@ -667,6 +657,7 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
+            
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Advanced)}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
@@ -751,6 +742,7 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
+            
             <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}"
                      Name="btnRestart"
                      MouseLeftButtonUp="restartCairo"

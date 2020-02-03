@@ -192,7 +192,7 @@ namespace CairoDesktop
             box.Visibility = Visibility.Collapsed;
         }
 
-        private void txtProgramRename_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void txtProgramRename_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {

@@ -348,7 +348,7 @@ namespace CairoDesktop.SupportingClasses
                 rc.bottom = screen.Bounds.Bottom;
             }
 
-            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref rc, (1 | 2));
+            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref rc, (1 | 2));
 
             if (Startup.DesktopWindow != null)
                 Startup.DesktopWindow.ResetPosition();
@@ -363,7 +363,7 @@ namespace CairoDesktop.SupportingClasses
             oldWorkArea.right = SystemInformation.VirtualScreen.Right;
             oldWorkArea.bottom = SystemInformation.VirtualScreen.Bottom;
 
-            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
+            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
         }
     }
 }

@@ -156,11 +156,14 @@
                 </Style.Triggers>
             </Style>
         </StackPanel.Style>
-        <Button Style="{StaticResource CairoDesktopNavItemStyle}"
+        <Button x:Name="btnBack"
+                Style="{StaticResource CairoDesktopNavItemStyle}"
                 Margin="29,-4,0,0"
                 Click="Back_Click"
+                MouseRightButtonDown="btnBack_MouseRightButtonDown"
                 ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Back)}">
-            <Image Source="Resources\controlsBack.png"
+            <Image x:Name="backButtonImg"
+                   Source="Resources\controlsBack.png"
                    Width="16"
                    Height="18" />
         </Button>

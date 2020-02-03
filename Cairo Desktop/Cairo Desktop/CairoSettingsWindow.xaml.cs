@@ -522,6 +522,41 @@
         #region Desktop Background
         private void loadDesktopBackgroundSettings()
         {
+            // Load only relevent Background Types
+            ComboBoxItem windowsDefaultBackgroundItem = new ComboBoxItem()
+            {
+                Name = "windowsDefaultBackground",
+                Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_windowsDefaultBackground,
+                Tag = windowsImageBackgroundStackPanel
+            };
+            ComboBoxItem cairoImageWallpaperItem = new ComboBoxItem()
+            {
+                Name = "cairoImageWallpaper",
+                Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_cairoImageWallpaper,
+                Tag = cairoImageBackgroundStackPanel
+            };
+            ComboBoxItem cairoVideoWallpaperItem = new ComboBoxItem()
+            {
+                Name = "cairoVideoWallpaper",
+                Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_cairoVideoWallpaper,
+                Tag = cairoVideoBackgroundStackPanel
+            };
+            ComboBoxItem bingWallpaperItem = new ComboBoxItem()
+            {
+                Name = "bingWallpaper",
+                Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_bingWallpaper,
+                Tag = bingImageBackgroundStackPanel
+            };
+
+            cboDesktopBackgroundType.Items.Add(windowsDefaultBackgroundItem);
+
+            if (Shell.IsCairoUserShell)
+            {
+                cboDesktopBackgroundType.Items.Add(cairoImageWallpaperItem);
+                cboDesktopBackgroundType.Items.Add(cairoVideoWallpaperItem);
+                cboDesktopBackgroundType.Items.Add(bingWallpaperItem);
+            }
+
             #region windowsDefaultBackground
 
             // draw wallpaper
@@ -556,14 +591,22 @@
 
             txtWindowsBackgroundPath.Text = regWallpaper;
 
-            cboWindowsBackgroundStyle.ItemsSource = Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>();
+            foreach (var item in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
+            {
+                cboWindowsBackgroundStyle.Items.Add(item);
+            }
+
             cboWindowsBackgroundStyle.SelectedItem = style;
 
             #endregion
             #region  cairoImageWallpaper
             txtCairoBackgroundPath.Text = Settings.Instance.CairoBackgroundImagePath;
 
-            cboCairoBackgroundStyle.ItemsSource = Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>();
+            foreach (var item in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
+            {
+                cboCairoBackgroundStyle.Items.Add(item);
+            }
+
             if (Enum.IsDefined(typeof(Desktop.CairoWallpaperStyle), Settings.Instance.CairoBackgroundImageStyle))
                 cboCairoBackgroundStyle.SelectedItem = (Desktop.CairoWallpaperStyle)Settings.Instance.CairoBackgroundImageStyle;
             #endregion
@@ -571,15 +614,26 @@
             txtCairoVideoBackgroundPath.Text = Settings.Instance.CairoBackgroundVideoPath;
             #endregion
             #region  bingWallpaper
-            cboBingBackgroundStyle.ItemsSource = Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>();
+            foreach (var item in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
+            {
+                cboBingBackgroundStyle.Items.Add(item);
+            }
+
             if (Enum.IsDefined(typeof(Desktop.CairoWallpaperStyle), Settings.Instance.BingWallpaperStyle))
                 cboBingBackgroundStyle.SelectedItem = (Desktop.CairoWallpaperStyle)Settings.Instance.BingWallpaperStyle;
             #endregion
 
-            var listBoxItems = cboDesktopBackgroundType.Items.Cast<ComboBoxItem>().ToList();
-            var item = listBoxItems.FirstOrDefault(l => l.Name == Settings.Instance.DesktopBackgroundType);
+            if (Shell.IsCairoUserShell)
+            {
+                var listBoxItems = cboDesktopBackgroundType.Items.Cast<ComboBoxItem>().ToList();
+                var item = listBoxItems.FirstOrDefault(l => l.Name == Settings.Instance.DesktopBackgroundType);
 
-            cboDesktopBackgroundType.SelectedItem = item;
+                cboDesktopBackgroundType.SelectedItem = item;
+            }
+            else
+            {
+                cboDesktopBackgroundType.SelectedItem = windowsDefaultBackgroundItem;
+            }
         }
 
         private void btnWindowsBackgroundFileBrowse_Click(object sender, RoutedEventArgs e)
@@ -590,8 +644,15 @@
                 txtWindowsBackgroundPath.Text = wallpaperPath;
                 Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", txtWindowsBackgroundPath.Text);
 
-                // Tell DesktopWindow to ReloadBackground because we no settings are changing
-                Startup.DesktopWindow.ReloadBackground();
+                if (Shell.IsCairoUserShell)
+                {
+                    // Tell DesktopWindow to ReloadBackground because we no settings are changing
+                    Startup.DesktopWindow.ReloadBackground();
+                }
+                else
+                {
+                    NativeMethods.SystemParametersInfo(NativeMethods.SPI.SETDESKWALLPAPER, 0, wallpaperPath, (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
+                }
             }
         }
 
@@ -690,7 +751,16 @@
             Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", wallpaperStyle);
             Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", tileWallpaper);
 
-            Startup.DesktopWindow.ReloadBackground();
+
+            if (Shell.IsCairoUserShell)
+            {
+                // Tell DesktopWindow to ReloadBackground because we no settings are changing
+                Startup.DesktopWindow.ReloadBackground();
+            }
+            else
+            {
+                NativeMethods.SystemParametersInfo(NativeMethods.SPI.SETDESKWALLPAPER, 0, txtWindowsBackgroundPath.Text, (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
+            }
         }
 
         private void cboCairoBackgroundStyle_SelectionChanged(object sender, SelectionChangedEventArgs e)

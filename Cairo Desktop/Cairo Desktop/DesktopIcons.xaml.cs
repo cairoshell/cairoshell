@@ -24,21 +24,6 @@ namespace CairoDesktop
 
         public DesktopIcons()
         {
-            string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string userDesktopPath = Settings.Instance.DesktopDirectory;
-
-            // first run won't have desktop directory set
-            if (string.IsNullOrWhiteSpace(userDesktopPath))
-            {
-                Settings.Instance.DesktopDirectory = defaultDesktopPath;
-                userDesktopPath = defaultDesktopPath;
-            }
-
-            if (Directory.Exists(userDesktopPath))
-                SetDesktopDir(userDesktopPath);
-            else if (Directory.Exists(defaultDesktopPath))
-                SetDesktopDir(defaultDesktopPath);
-
             InitializeComponent();
 
             if (Settings.Instance.DesktopLabelPosition == 1)
@@ -46,13 +31,7 @@ namespace CairoDesktop
 
             panel.Margin = new Thickness(xOffset, yOffset, 0, 0);
         }
-
-        private void SetDesktopDir(string desktopDir)
-        {
-            SystemDirectory desktop = new SystemDirectory(desktopDir, Dispatcher.CurrentDispatcher);
-            Location = desktop;
-        }
-
+        
         public SystemDirectory Location
         {
             get

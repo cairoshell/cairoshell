@@ -42,8 +42,8 @@ namespace CairoDesktop
         public bool CanGoBack()
         {
             return list != null &&
-                   list.Count > 0 &&
-                   currentIndex > 0;
+                   list.Count > 1 &&
+                   currentIndex > 1;
         }
 
         public bool CanGoForward()
@@ -55,9 +55,10 @@ namespace CairoDesktop
 
         private void NavigateToCurrentLocation()
         {
-            Navigating?.Invoke(list[currentIndex - 1]);
+            int ind = (currentIndex == 0) ? 0 : currentIndex - 1;
+            Navigating?.Invoke(list[ind]);
         }
-
+        
         public void NavigateTo(string path)
         {
             if (currentIndex < list.Count)

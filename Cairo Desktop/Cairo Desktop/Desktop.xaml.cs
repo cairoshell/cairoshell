@@ -85,7 +85,7 @@ namespace CairoDesktop
                 }
             }
         }
-        
+
         private System.Windows.Media.Brush BackgroundBrush { get; set; }
         private void setBackground()
         {
@@ -380,7 +380,7 @@ namespace CairoDesktop
                 handled = true;
             }
             else if (msg == (int)NativeMethods.WM.SETTINGCHANGE &&
-                    wParam.ToInt32() == (int)NativeMethods.SPI.SPI_SETDESKWALLPAPER)
+                    wParam.ToInt32() == (int)NativeMethods.SPI.SETDESKWALLPAPER)
             {
                 BackgroundBrush = null;
                 setBackground();
@@ -449,7 +449,7 @@ namespace CairoDesktop
         }
 
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (Keyboard.Modifiers == ModifierKeys.Alt && e.SystemKey == Key.F4)
             {
@@ -465,7 +465,23 @@ namespace CairoDesktop
 
             if (Settings.Instance.EnableDesktop && Icons == null)
             {
-                grid.Children.Add(Icons = new DesktopIcons());
+                grid.Children.Add(Icons = new DesktopIcons() );
+
+                string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string userDesktopPath = Settings.Instance.DesktopDirectory;
+
+                // first run won't have desktop directory set
+                if (string.IsNullOrWhiteSpace(userDesktopPath))
+                {
+                    Settings.Instance.DesktopDirectory = defaultDesktopPath;
+                    userDesktopPath = defaultDesktopPath;
+                }
+
+                if (Directory.Exists(userDesktopPath))
+                    Navigate(userDesktopPath);
+                else if (Directory.Exists(defaultDesktopPath))
+                    Navigate(defaultDesktopPath);
+
                 if (Settings.Instance.EnableDynamicDesktop)
                 {
                     TryAndEat(() =>
@@ -528,9 +544,16 @@ namespace CairoDesktop
             }
             set
             {
-                Icons.Location.Dispose();
-                Icons.Location = new SystemDirectory(value, Dispatcher.CurrentDispatcher);
-                OnPropertyChanged("CurrentDirectoryFriendly");
+                if (Icons != null)
+                {
+                    if (Icons.Location != null)
+                    {
+                        Icons.Location.Dispose();
+                    }
+
+                    Icons.Location = new SystemDirectory(value, Dispatcher.CurrentDispatcher);
+                    OnPropertyChanged("CurrentDirectoryFriendly");
+                }
             }
         }
 
