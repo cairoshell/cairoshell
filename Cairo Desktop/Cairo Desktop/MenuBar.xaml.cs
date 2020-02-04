@@ -28,6 +28,7 @@ namespace CairoDesktop
         private WindowInteropHelper helper;
         public IntPtr handle;
         private int appbarMessageId = -1;
+        private bool isRaising;
 
         public bool IsClosing = false;
 
@@ -469,6 +470,20 @@ namespace CairoDesktop
             {
                 AppBarHelper.AppBarActivate(hwnd);
             }
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
+            {
+                // Extract the WINDOWPOS structure corresponding to this message
+                NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
+
+                // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
+                // If we are intentionally trying to become topmost, make it so
+                if (isRaising && (wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
+                {
+                    // Sometimes Windows thinks we shouldn't go topmost, so poke here to make it happen.
+                    wndPos.hwndInsertAfter = (IntPtr)NativeMethods.HWND_TOPMOST;
+                    wndPos.UpdateMessage(lParam);
+                }
+            }
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGED)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
@@ -562,8 +577,10 @@ namespace CairoDesktop
             {
                 CairoLogger.Instance.Debug(string.Format("Menu Bar on {0} returning to normal state", Screen.DeviceName));
 
+                isRaising = true;
                 Topmost = true;
                 Shell.ShowWindowTopMost(handle);
+                isRaising = false;
             }
         }
 

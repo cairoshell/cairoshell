@@ -276,14 +276,6 @@ namespace CairoDesktop.Interop
         {
             SetWindowPos(
                 handle,
-                (IntPtr)0,
-                0,
-                0,
-                0,
-                0,
-                (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_SHOWWINDOW/* | (int)SetWindowPosFlags.SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
-            SetWindowPos(
-                handle,
                 (IntPtr)HWND_TOPMOST,
                 0,
                 0,

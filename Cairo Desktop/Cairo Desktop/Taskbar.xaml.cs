@@ -21,6 +21,7 @@ namespace CairoDesktop
         #region Properties
         public System.Windows.Forms.Screen Screen;
         private double dpiScale = 1.0;
+        private bool isRaising;
 
         public bool IsClosing = false;
 
@@ -306,8 +307,10 @@ namespace CairoDesktop
             {
                 CairoLogger.Instance.Debug(string.Format("Taskbar on {0} returning to normal state", Screen.DeviceName));
 
+                isRaising = true;
                 Topmost = true;
                 Shell.ShowWindowTopMost(handle);
+                isRaising = false;
             }
         }
 
@@ -385,6 +388,20 @@ namespace CairoDesktop
             else if (msg == NativeMethods.WM_ACTIVATE && Settings.TaskbarMode == 0)
             {
                 AppBarHelper.AppBarActivate(hwnd);
+            }
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
+            {
+                // Extract the WINDOWPOS structure corresponding to this message
+                NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
+
+                // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
+                // If we are intentionally trying to become topmost, make it so
+                if (isRaising && (wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
+                {
+                    // Sometimes Windows thinks we shouldn't go topmost, so poke here to make it happen.
+                    wndPos.hwndInsertAfter = (IntPtr)NativeMethods.HWND_TOPMOST;
+                    wndPos.UpdateMessage(lParam);
+                }
             }
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.TaskbarMode == 0)
             {
