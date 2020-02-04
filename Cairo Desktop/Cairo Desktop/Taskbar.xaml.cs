@@ -203,6 +203,13 @@ namespace CairoDesktop
 
             FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
         }
+
+        private void TaskbarWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            //Set the window style to noactivate.
+            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
+                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
+        }
         #endregion
 
         #region Position and appearance
@@ -341,14 +348,6 @@ namespace CairoDesktop
         {
             // because we are setting WS_EX_NOACTIVATE, popups won't go away when clicked outside, since they are not losing focus (they never got it). calling this fixes that.
             NativeMethods.SetForegroundWindow(helper.Handle);
-        }
-
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-            //Set the window style to noactivate.
-            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
-                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
         }
         #endregion
 
