@@ -11,7 +11,7 @@
     ShowActivated="False"
     AllowDrop="True"
     Visibility="Visible"
-    Focusable="False"
+    Loaded="TaskbarWindow_Loaded"
     Background="Transparent"
     Closing="Taskbar_Closing" SourceInitialized="TaskbarWindow_SourceInitialized" LocationChanged="TaskbarWindow_LocationChanged" UseLayoutRounding="True" HorizontalAlignment="Center"
     Topmost="True">

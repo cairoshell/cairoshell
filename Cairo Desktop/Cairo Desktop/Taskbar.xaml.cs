@@ -21,6 +21,7 @@ namespace CairoDesktop
         #region Properties
         public System.Windows.Forms.Screen Screen;
         private double dpiScale = 1.0;
+        private bool isRaising;
 
         public bool IsClosing = false;
 
@@ -202,6 +203,13 @@ namespace CairoDesktop
 
             FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
         }
+
+        private void TaskbarWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            //Set the window style to noactivate.
+            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
+                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
+        }
         #endregion
 
         #region Position and appearance
@@ -306,8 +314,10 @@ namespace CairoDesktop
             {
                 CairoLogger.Instance.Debug(string.Format("Taskbar on {0} returning to normal state", Screen.DeviceName));
 
+                isRaising = true;
                 Topmost = true;
                 Shell.ShowWindowTopMost(handle);
+                isRaising = false;
             }
         }
 
@@ -338,14 +348,6 @@ namespace CairoDesktop
         {
             // because we are setting WS_EX_NOACTIVATE, popups won't go away when clicked outside, since they are not losing focus (they never got it). calling this fixes that.
             NativeMethods.SetForegroundWindow(helper.Handle);
-        }
-
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-            //Set the window style to noactivate.
-            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
-                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
         }
         #endregion
 
@@ -386,7 +388,21 @@ namespace CairoDesktop
             {
                 AppBarHelper.AppBarActivate(hwnd);
             }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Configuration.Settings.Instance.TaskbarMode == 0)
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
+            {
+                // Extract the WINDOWPOS structure corresponding to this message
+                NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
+
+                // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
+                // If we are intentionally trying to become topmost, make it so
+                if (isRaising && (wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
+                {
+                    // Sometimes Windows thinks we shouldn't go topmost, so poke here to make it happen.
+                    wndPos.hwndInsertAfter = (IntPtr)NativeMethods.HWND_TOPMOST;
+                    wndPos.UpdateMessage(lParam);
+                }
+            }
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.TaskbarMode == 0)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
             }

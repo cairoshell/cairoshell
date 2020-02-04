@@ -242,7 +242,6 @@ namespace CairoDesktop
                             if (Directory.Exists(fbd.SelectedPath))
                                 owningDesktop.Navigate(fbd.SelectedPath);
                     ToolbarOwner.IsFbdOpen = false;
-                    ToolbarOwner.Activate(); // activate desktop, which should actually put it back to the bottom
                 }
             }
         }
@@ -256,8 +255,23 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
             {
-                handled = true;
-                return new IntPtr(NativeMethods.MA_NOACTIVATE);
+                // WM_WINDOWPOSCHANGING arrives here before the desktop window.
+                if (!ToolbarOwner.IsOverlayOpen)
+                {
+                    // if the overlay isn't open, we always want to be on the bottom. modify the WINDOWPOS structure so that nothing can change our z-order.
+
+                    // Extract the WINDOWPOS structure corresponding to this message
+                    NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
+
+                    // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
+                    // If we are intentionally setting our z-order, allow it. The desktop sets this flag whenever it decides to go to the bottom.
+                    if (!ToolbarOwner.IsLowering && (wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
+                    {
+                        // add the SWP_NOZORDER flag
+                        wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOZORDER;
+                        wndPos.UpdateMessage(lParam);
+                    }
+                }
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
