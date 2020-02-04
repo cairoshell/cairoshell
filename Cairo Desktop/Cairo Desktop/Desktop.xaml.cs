@@ -297,13 +297,6 @@ namespace CairoDesktop
             {
                 HotKeyManager.RegisterHotKey(Settings.DesktopOverlayHotKey, OnShowDesktop);
             }
-
-            FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
-        }
-
-        private void FullScreenApps_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            SendToBottom();
         }
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -390,7 +383,6 @@ namespace CairoDesktop
         {
             if (Startup.IsShuttingDown) // show the windows desktop
             {
-                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
                 Shell.ToggleDesktopIcons(true);
             }
             else if (altF4Pressed) // Show the Shutdown Confirmation Window
