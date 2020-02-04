@@ -26,11 +26,11 @@ namespace CairoDesktop
         private bool altF4Pressed;
 
         public bool IsFbdOpen = false;
+        public bool IsLowering;
 
         public Stack<string> PathHistory = new Stack<string>();
         public DesktopIcons Icons;
         public DependencyProperty IsOverlayOpenProperty = DependencyProperty.Register("IsOverlayOpen", typeof(bool), typeof(Desktop), new PropertyMetadata(new bool()));
-
 
         public bool IsOverlayOpen
         {
@@ -57,9 +57,7 @@ namespace CairoDesktop
         {
             InitializeComponent();
 
-            Width = AppBarHelper.PrimaryMonitorSize.Width;
-            Height = AppBarHelper.PrimaryMonitorSize.Height - 1;
-
+            setSize();
             setGridPosition();
             setBackground();
         }
@@ -292,6 +290,9 @@ namespace CairoDesktop
         {
             Shell.HideWindowFromTasks(helper.Handle);
 
+            int result = NativeMethods.SetShellWindow(helper.Handle);
+            SendToBottom();
+
             if (Settings.EnableDesktopOverlayHotKey)
             {
                 HotKeyManager.RegisterHotKey(Settings.DesktopOverlayHotKey, OnShowDesktop);
@@ -307,38 +308,24 @@ namespace CairoDesktop
 
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == NativeMethods.WM_MOUSEACTIVATE)
+            if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
             {
-                handled = true;
-                return new IntPtr(NativeMethods.MA_NOACTIVATE);
-            }
-            else if (msg == NativeMethods.WM_SETFOCUS || msg == NativeMethods.WM_WINDOWPOSCHANGED)
-            {
-                if (!IsOverlayOpen && !IsFbdOpen)
+                if (!IsOverlayOpen)
                 {
-                    SendToBottom();
-                }
-            }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
-            {
-                if (IsFbdOpen)
-                {
-                    // workaround so that folder browser window comes to front, but not the desktop
+                    // if the overlay isn't open, we always want to be on the bottom. modify the WINDOWPOS structure so that nothing can change our z-order.
 
                     // Extract the WINDOWPOS structure corresponding to this message
                     NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
 
                     // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
-                    if (!((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == NativeMethods.SetWindowPosFlags.SWP_NOZORDER))
+                    // If we are intentionally setting our z-order, allow it
+                    if (!IsLowering && (wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
                     {
                         // add the SWP_NOZORDER flag
                         wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOZORDER;
                         wndPos.UpdateMessage(lParam);
                     }
                 }
-
-                handled = true;
-                return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE && (Startup.IsCairoUserShell))
             {
@@ -360,7 +347,9 @@ namespace CairoDesktop
 
         private void SendToBottom()
         {
+            IsLowering = true;
             Shell.ShowWindowBottomMost(helper.Handle);
+            IsLowering = false;
         }
 
         private void SetPosition(uint x, uint y)
@@ -369,7 +358,8 @@ namespace CairoDesktop
             Left = 0;
 
             Width = x;
-            Height = y - 1;
+            if (Startup.IsCairoUserShell) Height = y;
+            else Height = y - 1;
             setGridPosition();
         }
 
@@ -378,9 +368,15 @@ namespace CairoDesktop
             Top = 0;
             Left = 0;
 
-            Width = AppBarHelper.PrimaryMonitorSize.Width;
-            Height = AppBarHelper.PrimaryMonitorSize.Height - 1;
+            setSize();
             setGridPosition();
+        }
+
+        private void setSize()
+        {
+            Width = AppBarHelper.PrimaryMonitorSize.Width;
+            if (Startup.IsCairoUserShell) Height = AppBarHelper.PrimaryMonitorSize.Height;
+            else Height = AppBarHelper.PrimaryMonitorSize.Height - 1; // TODO making size of screen causes explorer to send ABN_FULLSCREENAPP (but is that a bad thing?)
         }
 
         private void setGridPosition()
@@ -388,15 +384,6 @@ namespace CairoDesktop
             grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width / Shell.DpiScale;
             grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height / Shell.DpiScale;
             grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.DpiScale, System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.DpiScale, 0, 0);
-        }
-
-        private void Window_Activated(object sender, EventArgs e)
-        {
-            if (!Topmost)
-            {
-                int result = NativeMethods.SetShellWindow(helper.Handle);
-                SendToBottom();
-            }
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -497,14 +484,14 @@ namespace CairoDesktop
             Topmost = true;
             NativeMethods.SetForegroundWindow(helper.Handle);
             grid.Background = new SolidColorBrush(Color.FromArgb(0x88, 0, 0, 0));
-            Background = null;
+            if (Startup.IsCairoUserShell) Background = null;
         }
 
         private void CloseOverlay()
         {
             Topmost = false;
             SendToBottom();
-            grid.Background = new SolidColorBrush(Color.FromArgb(0x01, 0, 0, 0));
+            grid.Background = new SolidColorBrush(Color.FromArgb(0x00, 0, 0, 0));
             setBackground();
         }
 
