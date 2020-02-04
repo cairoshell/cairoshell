@@ -333,7 +333,7 @@ namespace CairoDesktop
             int result = NativeMethods.SetShellWindow(helper.Handle);
             SendToBottom();
 
-            if (Settings.EnableDesktopOverlayHotKey)
+            if (Settings.Instance.EnableDesktopOverlayHotKey)
             {
                 HotKeyManager.RegisterHotKey(Settings.Instance.DesktopOverlayHotKey, OnShowDesktop);
             }

@@ -402,7 +402,7 @@ namespace CairoDesktop
                     wndPos.UpdateMessage(lParam);
                 }
             }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.TaskbarMode == 0)
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.Instance.TaskbarMode == 0)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
             }
