@@ -477,6 +477,8 @@ namespace CairoDesktop.WindowsTasks
             {
                 NativeMethods.ShowWindow(Handle, NativeMethods.WindowShowStyle.Show);
                 NativeMethods.SetForegroundWindow(Handle);
+
+                if (State == WindowState.Flashing) State = WindowState.Active; // some stubborn windows (Outlook) start flashing while already active, this lets us stop
             }
         }
 
