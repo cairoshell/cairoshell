@@ -10,6 +10,7 @@
     using System.Collections.Generic;
     using System.Drawing.Imaging;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Text;
     using System.Windows;
@@ -671,6 +672,30 @@
             string wallpaperPath;
             if (ShowOpenFileDialog(GetVideoFilter(), out wallpaperPath) == System.Windows.Forms.DialogResult.OK)
             {
+                if (Path.GetExtension(wallpaperPath) == ".zip")
+                {
+                    string[] exts = new[] { ".wmv", ".3g2", ".3gp", ".3gp2", ".3gpp", ".amv", ".asf", ".avi", ".bin", ".cue", ".divx", ".dv", ".flv", ".gxf", ".iso", ".m1v", ".m2v", ".m2t", ".m2ts", ".m4v", ".mkv", ".mov", ".mp2", ".mp2v", ".mp4", ".mp4v", ".mpa", ".mpe", ".mpeg", ".mpeg1", ".mpeg2", ".mpeg4", ".mpg", ".mpv2", ".mts", ".nsv", ".nuv", ".ogg", ".ogm", ".ogv", ".ogx", ".ps", ".rec", ".rm", ".rmvb", ".tod", ".ts", ".tts", ".vob", ".vro", ".webm", ".wmv" };
+
+                    FileInfo fileInfo = new FileInfo(wallpaperPath);
+                    string extractPath = fileInfo.FullName.Remove((fileInfo.FullName.Length - fileInfo.Extension.Length), fileInfo.Extension.Length);
+
+                    if (Directory.Exists(extractPath) && System.Windows.MessageBox.Show("Path alreadt exists, overwrite?", "DreamScene", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                    {
+                        Directory.Delete(extractPath, true);
+                    }
+
+                    if (!Directory.Exists(extractPath))
+                    {
+                        ZipFile.ExtractToDirectory(wallpaperPath, extractPath);
+                    }
+
+                    string file = Directory.GetFiles(extractPath).FirstOrDefault(f => exts.Contains(Path.GetExtension(f)));
+                    if (!string.IsNullOrWhiteSpace(file))
+                    {
+                        wallpaperPath = file;
+                    }
+                }
+
                 txtCairoVideoBackgroundPath.Text = wallpaperPath;
                 Settings.Instance.CairoBackgroundVideoPath = wallpaperPath;
             }
@@ -700,7 +725,7 @@
                 " *.iso; *.m1v; *.m2v; *.m2t; *.m2ts; *.m4v; *.mkv; *.mov; *.mp2;" +
                 " *.mp2v; *.mp4; *.mp4v; *.mpa; *.mpe; *.mpeg; *.mpeg1; *.mpeg2; *.mpeg4;" +
                 " *.mpg; *.mpv2; *.mts; *.nsv; *.nuv; *.ogg; *.ogm; *.ogv; *.ogx; *.ps;" +
-                " *.rec; *.rm; *.rmvb; *.tod; *.ts; *.tts; *.vob; *.vro; *.webm";
+                " *.rec; *.rm; *.rmvb; *.tod; *.ts; *.tts; *.vob; *.vro; *.webm | DreamScene | *.zip";
         }
 
         private void cboDesktopBackgroundType_SelectionChanged(object sender, SelectionChangedEventArgs e)
