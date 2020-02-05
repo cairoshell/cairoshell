@@ -523,42 +523,16 @@
         #region Desktop Background
         private void loadDesktopBackgroundSettings()
         {
-            // Load only relevent Background Types
+            #region windowsDefaultBackground
+
             ComboBoxItem windowsDefaultBackgroundItem = new ComboBoxItem()
             {
                 Name = "windowsDefaultBackground",
                 Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_windowsDefaultBackground,
                 Tag = windowsImageBackgroundStackPanel
             };
-            ComboBoxItem cairoImageWallpaperItem = new ComboBoxItem()
-            {
-                Name = "cairoImageWallpaper",
-                Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_cairoImageWallpaper,
-                Tag = cairoImageBackgroundStackPanel
-            };
-            ComboBoxItem cairoVideoWallpaperItem = new ComboBoxItem()
-            {
-                Name = "cairoVideoWallpaper",
-                Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_cairoVideoWallpaper,
-                Tag = cairoVideoBackgroundStackPanel
-            };
-            ComboBoxItem bingWallpaperItem = new ComboBoxItem()
-            {
-                Name = "bingWallpaper",
-                Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_bingWallpaper,
-                Tag = bingImageBackgroundStackPanel
-            };
 
             cboDesktopBackgroundType.Items.Add(windowsDefaultBackgroundItem);
-
-            if (Shell.IsCairoUserShell)
-            {
-                cboDesktopBackgroundType.Items.Add(cairoImageWallpaperItem);
-                cboDesktopBackgroundType.Items.Add(cairoVideoWallpaperItem);
-                cboDesktopBackgroundType.Items.Add(bingWallpaperItem);
-            }
-
-            #region windowsDefaultBackground
 
             // draw wallpaper
             string regWallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", "") as string;
@@ -592,48 +566,73 @@
 
             txtWindowsBackgroundPath.Text = regWallpaper;
 
-            foreach (var item in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
+            foreach (var windowsBackgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
             {
-                cboWindowsBackgroundStyle.Items.Add(item);
+                cboWindowsBackgroundStyle.Items.Add(windowsBackgroundStyleItem);
             }
 
             cboWindowsBackgroundStyle.SelectedItem = style;
 
             #endregion
-            #region  cairoImageWallpaper
-            txtCairoBackgroundPath.Text = Settings.Instance.CairoBackgroundImagePath;
-
-            foreach (var item in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
-            {
-                cboCairoBackgroundStyle.Items.Add(item);
-            }
-
-            if (Enum.IsDefined(typeof(Desktop.CairoWallpaperStyle), Settings.Instance.CairoBackgroundImageStyle))
-                cboCairoBackgroundStyle.SelectedItem = (Desktop.CairoWallpaperStyle)Settings.Instance.CairoBackgroundImageStyle;
-            #endregion
-            #region  cairoVideoWallpaper
-            txtCairoVideoBackgroundPath.Text = Settings.Instance.CairoBackgroundVideoPath;
-            #endregion
-            #region  bingWallpaper
-            foreach (var item in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
-            {
-                cboBingBackgroundStyle.Items.Add(item);
-            }
-
-            if (Enum.IsDefined(typeof(Desktop.CairoWallpaperStyle), Settings.Instance.BingWallpaperStyle))
-                cboBingBackgroundStyle.SelectedItem = (Desktop.CairoWallpaperStyle)Settings.Instance.BingWallpaperStyle;
-            #endregion
 
             if (Shell.IsCairoUserShell)
             {
-                var listBoxItems = cboDesktopBackgroundType.Items.Cast<ComboBoxItem>().ToList();
-                var item = listBoxItems.FirstOrDefault(l => l.Name == Settings.Instance.DesktopBackgroundType);
+                #region  cairoImageWallpaper
+                ComboBoxItem cairoImageWallpaperItem = new ComboBoxItem()
+                {
+                    Name = "cairoImageWallpaper",
+                    Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_cairoImageWallpaper,
+                    Tag = cairoImageBackgroundStackPanel
+                };
+                cboDesktopBackgroundType.Items.Add(cairoImageWallpaperItem);
+                txtCairoBackgroundPath.Text = Settings.Instance.CairoBackgroundImagePath;
 
-                cboDesktopBackgroundType.SelectedItem = item;
+                foreach (var cairoBackgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
+                {
+                    cboCairoBackgroundStyle.Items.Add(cairoBackgroundStyleItem);
+                }
+
+                if (Enum.IsDefined(typeof(Desktop.CairoWallpaperStyle), Settings.Instance.CairoBackgroundImageStyle))
+                    cboCairoBackgroundStyle.SelectedItem = (Desktop.CairoWallpaperStyle)Settings.Instance.CairoBackgroundImageStyle;
+                #endregion
+
+                #region  cairoVideoWallpaper
+                ComboBoxItem cairoVideoWallpaperItem = new ComboBoxItem()
+                {
+                    Name = "cairoVideoWallpaper",
+                    Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_cairoVideoWallpaper,
+                    Tag = cairoVideoBackgroundStackPanel
+                };
+                cboDesktopBackgroundType.Items.Add(cairoVideoWallpaperItem);
+                txtCairoVideoBackgroundPath.Text = Settings.Instance.CairoBackgroundVideoPath;
+                #endregion
+
+                #region  bingWallpaper
+                ComboBoxItem bingWallpaperItem = new ComboBoxItem()
+                {
+                    Name = "bingWallpaper",
+                    Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_bingWallpaper,
+                    Tag = bingImageBackgroundStackPanel
+                };
+                cboDesktopBackgroundType.Items.Add(bingWallpaperItem);
+                foreach (var bingBackgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
+                {
+                    cboBingBackgroundStyle.Items.Add(bingBackgroundStyleItem);
+                }
+
+                if (Enum.IsDefined(typeof(Desktop.CairoWallpaperStyle), Settings.Instance.BingWallpaperStyle))
+                    cboBingBackgroundStyle.SelectedItem = (Desktop.CairoWallpaperStyle)Settings.Instance.BingWallpaperStyle;
+                #endregion
+
+                var listBoxItems = cboDesktopBackgroundType.Items.Cast<ComboBoxItem>().ToList();
+                var listBoxItem = listBoxItems.FirstOrDefault(l => l.Name == Settings.Instance.DesktopBackgroundType);
+
+                cboDesktopBackgroundType.SelectedItem = listBoxItem;
             }
             else
             {
                 cboDesktopBackgroundType.SelectedItem = windowsDefaultBackgroundItem;
+                desktopBackgroundTypeStackPanel.Visibility = Visibility.Collapsed;
             }
         }
 

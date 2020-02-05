@@ -225,7 +225,7 @@
                        BasedOn="{StaticResource SettingsTabItem}">
                 </Style>
             </TabControl.Resources>
-           
+
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_General)}">
                 <StackPanel Orientation="Vertical">
                     <CheckBox Click="EnableAutoUpdates_Click"
@@ -267,7 +267,7 @@
                     </CheckBox>
                 </StackPanel>
             </TabItem>
-            
+
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_MenuBar)}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
@@ -332,20 +332,30 @@
                               Name="chkEnableMenuBarMultiMon">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarMultiMon)}" />
                     </CheckBox>
-                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ProgramsMenuLayout)}" MinWidth="165" VerticalAlignment="Top" Margin="5,3,5,4" />
+                    <StackPanel Orientation="Horizontal"
+                                Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ProgramsMenuLayout)}"
+                                   MinWidth="165"
+                                   VerticalAlignment="Top"
+                                   Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoProgramsMenuLayout" Name="radProgramsMenuLayout0" Click="radProgramsMenuLayout0_Click">
+                            <RadioButton GroupName="rdoProgramsMenuLayout"
+                                         Name="radProgramsMenuLayout0"
+                                         Click="radProgramsMenuLayout0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ProgramsMenuLayoutRight)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoProgramsMenuLayout" Name="radProgramsMenuLayout1" Click="radProgramsMenuLayout1_Click">
+                            <RadioButton GroupName="rdoProgramsMenuLayout"
+                                         Name="radProgramsMenuLayout1"
+                                         Click="radProgramsMenuLayout1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ProgramsMenuLayoutLeft)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}" Style="{StaticResource SettingGroupHeader}" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}"
+                               Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableSysTray, UpdateSourceTrigger=PropertyChanged}"
-                        Click="CheckBox_Click" Name="chkEnableSysTray">
+                              Click="CheckBox_Click"
+                              Name="chkEnableSysTray">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableNotificationArea)}" />
                     </CheckBox>
                     <TextBlock Name="lblTrayWarning"
@@ -473,11 +483,12 @@
                                 Orientation="Vertical">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DesktopBackgroundSettings)}"
                                    Style="{StaticResource SettingGroupHeader}" />
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel Name="desktopBackgroundTypeStackPanel"
+                                    Orientation="Horizontal">
                             <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType)}" />
                             <ComboBox Name="cboDesktopBackgroundType"
                                       IsEditable="False"
-                                      SelectionChanged="cboDesktopBackgroundType_SelectionChanged">                               
+                                      SelectionChanged="cboDesktopBackgroundType_SelectionChanged">
                             </ComboBox>
                         </StackPanel>
 
@@ -495,8 +506,8 @@
                             <StackPanel  Orientation="Horizontal">
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Style)}" />
                                 <ComboBox Name="cboWindowsBackgroundStyle"
-                                          IsEditable="False" 
-                                          SelectionChanged="cboWindowsBackgroundStyle_SelectionChanged"/>
+                                          IsEditable="False"
+                                          SelectionChanged="cboWindowsBackgroundStyle_SelectionChanged" />
                             </StackPanel>
                         </StackPanel>
 
@@ -515,7 +526,7 @@
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Style)}" />
                                 <ComboBox Name="cboCairoBackgroundStyle"
                                           IsEditable="False"
-                                          SelectionChanged="cboCairoBackgroundStyle_SelectionChanged"/>
+                                          SelectionChanged="cboCairoBackgroundStyle_SelectionChanged" />
                             </StackPanel>
                         </StackPanel>
 
@@ -538,8 +549,8 @@
                             <StackPanel  Orientation="Horizontal">
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Style)}" />
                                 <ComboBox Name="cboBingBackgroundStyle"
-                                          IsEditable="False" 
-                                          SelectionChanged="cboBingBackgroundStyle_SelectionChanged"/>
+                                          IsEditable="False"
+                                          SelectionChanged="cboBingBackgroundStyle_SelectionChanged" />
                             </StackPanel>
                         </StackPanel>
 
@@ -657,7 +668,7 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            
+
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Advanced)}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
@@ -742,7 +753,7 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            
+
             <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}"
                      Name="btnRestart"
                      MouseLeftButtonUp="restartCairo"
