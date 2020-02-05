@@ -642,10 +642,10 @@ namespace CairoDesktop
                 WinSparkle.win_sparkle_cleanup();
 
                 // Currently Unused
-                //if (keyboardListener != null)
-                //{
-                //    keyboardListener.UnHookKeyboard();
-                //}
+                if (keyboardListener != null)
+                {
+                    keyboardListener.UnHookKeyboard();
+                }
 
                 if (Startup.IsCairoRunningAsShell)
                 {
@@ -872,6 +872,14 @@ namespace CairoDesktop
             if (e.Key == Key.Return)
             {
                 Shell.StartProcess("search:query=" + searchStr.Text);
+            }
+        }
+
+        private void searchStr_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (CairoSearchMenu.IsKeyboardFocusWithin)
+            {
+                e.Handled = true;
             }
         }
 
