@@ -102,6 +102,10 @@ namespace CairoDesktop
                     CairoLogger.Instance.Error("Failed setting desktop background.");
                 }
             }
+            else
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x01, 0, 0, 0));
+            }
         }
 
         private System.Windows.Media.Brush GetCairoBackgroundBrush()
@@ -564,7 +568,7 @@ namespace CairoDesktop
             Topmost = true;
             NativeMethods.SetForegroundWindow(helper.Handle);
             grid.Background = new SolidColorBrush(Color.FromArgb(0x88, 0, 0, 0));
-            if (Startup.IsCairoRunningAsShell) Background = null;
+            Background = null;
         }
 
         private void CloseOverlay()

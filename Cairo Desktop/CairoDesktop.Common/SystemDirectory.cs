@@ -302,8 +302,11 @@ namespace CairoDesktop.Common {
                         FileAttributes attr = File.GetAttributes(file);
                         if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                         {
-                            string futureName = directory + "\\" + new DirectoryInfo(file).Name;
-                            if (!(futureName == file)) FileSystem.MoveDirectory(file, futureName, UIOption.AllDialogs);
+                            if (file != directory)
+                            {
+                                string futureName = directory + "\\" + new DirectoryInfo(file).Name;
+                                if (!(futureName == file)) FileSystem.MoveDirectory(file, futureName, UIOption.AllDialogs);
+                            }
                         }
                         else
                         {
