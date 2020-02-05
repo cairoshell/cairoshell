@@ -84,7 +84,7 @@ namespace CairoDesktop
 
         private void setupMenu()
         {
-            if (Shell.IsWindows10OrBetter && !Startup.IsCairoUserShell)
+            if (Shell.IsWindows10OrBetter && !Startup.IsCairoRunningAsShell)
             {
                 // show Windows 10 features
                 miOpenUWPSettings.Visibility = Visibility.Visible;
@@ -92,7 +92,7 @@ namespace CairoDesktop
             }
 
             // I didnt like the Exit Cairo option available when Cairo was set as Shell
-            if (Startup.IsCairoUserShell)
+            if (Startup.IsCairoRunningAsShell)
             {
                 miExitCairo.Visibility = Visibility.Collapsed;
             }
@@ -232,7 +232,7 @@ namespace CairoDesktop
             }
 
             // Register L+R Windows key to open Programs menu
-            if (Startup.IsCairoUserShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
+            if (Startup.IsCairoRunningAsShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
             {
                 if (keyboardListener == null)
                     keyboardListener = new LowLevelKeyboardListener();
@@ -647,7 +647,7 @@ namespace CairoDesktop
                 //    keyboardListener.UnHookKeyboard();
                 //}
 
-                if (Startup.IsCairoUserShell)
+                if (Startup.IsCairoRunningAsShell)
                 {
                     AppBarHelper.ResetWorkArea();
                 }

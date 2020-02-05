@@ -88,7 +88,7 @@ namespace CairoDesktop
         private System.Windows.Media.Brush BackgroundBrush { get; set; }
         private void setBackground()
         {
-            if (Startup.IsCairoUserShell)
+            if (Startup.IsCairoRunningAsShell)
             {
                 try
                 {
@@ -360,7 +360,7 @@ namespace CairoDesktop
                     }
                 }
             }
-            else if (msg == NativeMethods.WM_DISPLAYCHANGE && (Startup.IsCairoUserShell))
+            else if (msg == NativeMethods.WM_DISPLAYCHANGE && (Startup.IsCairoRunningAsShell))
             {
                 SetPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 ReloadBackground();
@@ -390,7 +390,7 @@ namespace CairoDesktop
             Left = 0;
 
             Width = x;
-            if (Startup.IsCairoUserShell) Height = y;
+            if (Startup.IsCairoRunningAsShell) Height = y;
             else Height = y - 1;
             setGridPosition();
         }
@@ -407,7 +407,7 @@ namespace CairoDesktop
         private void setSize()
         {
             Width = AppBarHelper.PrimaryMonitorSize.Width;
-            if (Startup.IsCairoUserShell) Height = AppBarHelper.PrimaryMonitorSize.Height;
+            if (Startup.IsCairoRunningAsShell) Height = AppBarHelper.PrimaryMonitorSize.Height;
             else Height = AppBarHelper.PrimaryMonitorSize.Height - 1; // TODO making size of screen causes explorer to send ABN_FULLSCREENAPP (but is that a bad thing?)
         }
 
@@ -564,7 +564,7 @@ namespace CairoDesktop
             Topmost = true;
             NativeMethods.SetForegroundWindow(helper.Handle);
             grid.Background = new SolidColorBrush(Color.FromArgb(0x88, 0, 0, 0));
-            if (Startup.IsCairoUserShell) Background = null;
+            if (Startup.IsCairoRunningAsShell) Background = null;
         }
 
         private void CloseOverlay()

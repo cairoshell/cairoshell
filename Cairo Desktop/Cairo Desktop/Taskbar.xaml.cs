@@ -134,7 +134,7 @@ namespace CairoDesktop
             }
 
             // show task view on windows >= 10, adjust margin if not shown
-            if (Shell.IsWindows10OrBetter && !Startup.IsCairoUserShell)
+            if (Shell.IsWindows10OrBetter && !Startup.IsCairoRunningAsShell)
                 bdrTaskView.Visibility = Visibility.Visible;
             else
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);

@@ -259,7 +259,7 @@
 
         private void checkRunAtLogOn()
         {
-            if (Shell.IsCairoUserShell.Equals(true))
+            if (Shell.IsCairoConfiguredAsShell.Equals(true))
             {
                 chkRunAtLogOn.Visibility = Visibility.Collapsed;
             }
@@ -481,7 +481,7 @@
         {
             btnChangeShell.IsEnabled = false;
 
-            Shell.IsCairoUserShell = !Shell.IsCairoUserShell;
+            Shell.IsCairoConfiguredAsShell = !Shell.IsCairoConfiguredAsShell;
 
             bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, Localization.DisplayString.sSettings_Advanced_ShellChanged, "Resources/logoffIcon.png", Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater);
 
@@ -575,7 +575,7 @@
 
             #endregion
 
-            if (Shell.IsCairoUserShell)
+            if (Startup.IsCairoRunningAsShell)
             {
                 #region  cairoImageWallpaper
                 ComboBoxItem cairoImageWallpaperItem = new ComboBoxItem()

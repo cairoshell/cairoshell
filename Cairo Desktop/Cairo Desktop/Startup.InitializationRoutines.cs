@@ -271,7 +271,7 @@ namespace CairoDesktop
 
         internal static void SetSystemKeyboardShortcuts()
         {
-            if (Shell.IsCairoUserShell)
+            if (Shell.IsCairoConfiguredAsShell)
             {
                 // Commenting out as per comments on PR #274
                 SystemHotKeys.RegisterSystemHotkeys();

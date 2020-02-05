@@ -38,7 +38,16 @@
         /// <summary>
         /// Checks the currently running shell. If another shell is running or we are not configured to be shell, returns false.
         /// </summary>
-        public static bool IsCairoUserShell;
+        public static bool IsCairoRunningAsShell
+        {
+            get
+            {
+                // check if we are the current user's shell
+                // set here as well so that we don't behave differently once user changes setting
+                // First check if there is an existing Shell_TrayWnd. If so, then Explorer is actually running as shell so assume we are not.
+                return Shell.IsCairoConfiguredAsShell && NativeMethods.FindWindow("Shell_TrayWnd", "") == IntPtr.Zero;       // Move to CairoDesktop.Plugins.CairoShellCoreServices.... Make this more robust, to account for system-shell or per-user-shell;
+            }
+        }
 
         private static CommandLineParser commandLineParser;
         private static bool isRestart;
@@ -75,11 +84,6 @@
 
             #endregion
 
-            // check if we are the current user's shell
-            // set here as well so that we don't behave differently once user changes setting
-            // First check if there is an existing Shell_TrayWnd. If so, then Explorer is actually running as shell so assume we are not.
-            IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
-            IsCairoUserShell = Shell.IsCairoUserShell && taskbarHwnd == IntPtr.Zero;       // Move to CairoDesktop.Plugins.CairoShellCoreServices.... Make this more robust, to account for system-shell or per-user-shell;
 
             if (Settings.Instance.EnableDesktop) // Future: This should be moved to whatever plugin is responsible for desktop stuff
             {
@@ -168,7 +172,7 @@
             // Future: This should be moved to whatever plugin is responsible for Taskbar/MennuBart stuff
             if (Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon)
                 ScreenSetup(true);
-            else if (IsCairoUserShell) // Set desktop work area for when Explorer isn't running
+            else if (IsCairoRunningAsShell) // Set desktop work area for when Explorer isn't running
                 AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
@@ -183,7 +187,7 @@
 #endif
 
             // login items only necessary if Explorer didn't start them
-            if (IsCairoUserShell && !isRestart)
+            if (IsCairoRunningAsShell && !isRestart)
             {
                 RunStartupApps();
             }
@@ -231,7 +235,7 @@
 
         public static void Shutdown()
         {
-            if (IsCairoUserShell)
+            if (IsCairoRunningAsShell)
             {
                 Shell.StartProcess("explorer.exe");
             }
@@ -705,7 +709,7 @@
                         }
 
                         // Set desktop work area for when Explorer isn't running
-                        if (IsCairoUserShell)
+                        if (IsCairoRunningAsShell)
                             AppBarHelper.SetWorkArea(screen);
                     }
                 }

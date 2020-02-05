@@ -610,7 +610,7 @@ namespace CairoDesktop.Interop
         /// <summary>
         /// Checks the currently configured shell, NOT the currently running shell! Use Startup.IsCairoUserShell for that.
         /// </summary>
-        public static bool IsCairoUserShell
+        public static bool IsCairoConfiguredAsShell
         {
             get
             {
@@ -636,7 +636,7 @@ namespace CairoDesktop.Interop
             }
             set
             {
-                if (value != IsCairoUserShell)
+                if (value != IsCairoConfiguredAsShell)
                 {
                     RegistryKey regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", true);
 
