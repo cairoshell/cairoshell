@@ -51,14 +51,13 @@ namespace CairoDesktop
                     btnFile.Style = Application.Current.FindResource("CairoDesktopButtonStyle") as Style;
                     btnFile.ContextMenu = null;
                     btnFile.Click -= btnFile_Click;
-                    btnFile.MouseDoubleClick += btnFile_Click;
+                    btnFile.MouseDoubleClick += btnFile_MouseDoubleClick;
                     txtFilename.Foreground = Application.Current.FindResource("DesktopIconText") as SolidColorBrush;
 
                     if (Settings.Instance.DesktopLabelPosition == 0)
                     {
                         // horizontal icons
                         btnFile.Margin = new Thickness(9, 0, 8, 5);
-                        bdrFilename.Height = 36;
                         txtRename.Width = 130;
                         txtRename.TextAlignment = TextAlignment.Left;
                         txtFilename.Width = 130;
@@ -93,22 +92,22 @@ namespace CairoDesktop
 
                     if (Settings.Instance.DesktopLabelPosition == 0 && Settings.Instance.DesktopIconSize == 0)
                     {
-                        // horizontal small
-                        btnFile.Height = 48;
+                        // horizontal small- 48
+                        btnFile.Height -= 37;
                     }
 
                     if (Settings.Instance.DesktopLabelPosition == 0 && Settings.Instance.DesktopIconSize == 2)
                     {
-                        // horizontal large
-                        btnFile.Height = 64;
+                        // horizontal large- 64
+                        btnFile.Height -= 21;
                     }
 
-                    // (vertical small is in xaml)
+                    // (vertical small is in xaml- 85)
 
                     if (Settings.Instance.DesktopLabelPosition == 1 && Settings.Instance.DesktopIconSize == 2)
                     {
-                        // vertical large
-                        btnFile.Height = 97;
+                        // vertical large- 97
+                        btnFile.Height += 12;
                     }
                 }
                 else
@@ -130,6 +129,17 @@ namespace CairoDesktop
         }
 
         private void btnFile_Click(object sender, RoutedEventArgs e)
+        {
+            execute();
+        }
+
+        private void btnFile_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // only execute on left button double-click
+            if (e.LeftButton == MouseButtonState.Pressed) execute();
+        }
+
+        private void execute()
         {
             if (file != null)
             {
