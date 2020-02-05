@@ -55,8 +55,8 @@ namespace CairoDesktop
 
         private static void SetupSettings()
         {
-            if (Settings.IsFirstRun == true)
-                Settings.Upgrade();
+            if (Settings.Instance.IsFirstRun == true)
+                Settings.Instance.Upgrade();
         }
 
         private static void SetupLoggingSystem()
@@ -87,9 +87,9 @@ namespace CairoDesktop
 
         private static LogSeverity GetLogSeveritySetting(LogSeverity defaultValue)
         {
-            if (!Enum.TryParse(Settings.LogSeverity, out LogSeverity result))
+            if (!Enum.TryParse(Settings.Instance.LogSeverity, out LogSeverity result))
             {
-                Settings.LogSeverity = defaultValue.ToString();
+                Settings.Instance.LogSeverity = defaultValue.ToString();
                 result = defaultValue;
             }
 
@@ -271,10 +271,10 @@ namespace CairoDesktop
 
         internal static void SetSystemKeyboardShortcuts()
         {
-            if (Shell.IsCairoUserShell)
+            if (Shell.IsCairoConfiguredAsShell)
             {
                 // Commenting out as per comments on PR #274
-                //SystemHotKeys.RegisterSystemHotkeys();
+                SystemHotKeys.RegisterSystemHotkeys();
             }
         }
     }

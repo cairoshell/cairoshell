@@ -2,13 +2,42 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Loaded="UserControl_Loaded">
-    <Button x:Name="btnFile" Click="btnFile_Click" CommandParameter="{Binding Path=FullName}" Style="{StaticResource CairoFileButtonStyle}" PreviewMouseLeftButtonDown="btnFile_PreviewMouseButtonDown" PreviewMouseRightButtonDown="btnFile_PreviewMouseButtonDown" PreviewMouseMove="btnFile_PreviewMouseMove" DragOver="btnFile_DragOver" Drop="btnFile_Drop" AllowDrop="True">
+    <Button x:Name="btnFile" 
+            Click="btnFile_Click" 
+            CommandParameter="{Binding Path=FullName}" 
+            Style="{StaticResource CairoFileButtonStyle}" 
+            PreviewMouseLeftButtonDown="btnFile_PreviewMouseButtonDown" 
+            PreviewMouseRightButtonDown="btnFile_PreviewMouseButtonDown" 
+            PreviewMouseMove="btnFile_PreviewMouseMove" 
+            DragOver="btnFile_DragOver" 
+            Drop="btnFile_Drop" 
+            AllowDrop="True">
         <DockPanel>
-            <Image DockPanel.Dock="Top" Stretch="Uniform" Width="32" Height="32" RenderOptions.BitmapScalingMode="LowQuality" x:Name="imgIcon" />
-            <TextBox DockPanel.Dock="Bottom" Visibility="Collapsed" Text="{Binding Path=Name, Mode=OneWay}" Name="txtRename" Height="35" Width="80" Margin="5,0,5,3" LostFocus="txtRename_LostFocus" KeyUp="txtRename_KeyUp" TextWrapping="WrapWithOverflow" TextAlignment="Center" />
-            <Border DockPanel.Dock="Bottom" Name="bdrFilename">
+            <Image x:Name="imgIcon"
+                   DockPanel.Dock="Top" 
+                   Stretch="Uniform" 
+                   Width="32" 
+                   Height="32" 
+                   RenderOptions.BitmapScalingMode="LowQuality" />
+            <TextBox Name="txtRename" 
+                     DockPanel.Dock="Bottom" 
+                     Visibility="Collapsed" 
+                     Text="{Binding Path=Name, Mode=OneWay}" 
+                     Height="35" 
+                     Width="80" 
+                     Margin="5,0,5,3" 
+                     LostFocus="txtRename_LostFocus" 
+                     KeyUp="txtRename_KeyUp" 
+                     TextWrapping="WrapWithOverflow" 
+                     TextAlignment="Center" />
+            <Border Name="bdrFilename"
+                    DockPanel.Dock="Bottom" >
                 <Border.Effect>
-                    <DropShadowEffect Color="Black" ShadowDepth="2" Direction="270" BlurRadius="4" Opacity="1" />
+                    <DropShadowEffect Color="Black" 
+                                      ShadowDepth="2" 
+                                      Direction="270"
+                                      BlurRadius="4" 
+                                      Opacity="1" />
                 </Border.Effect>
                 <TextBlock
                         Text="{Binding Path=FriendlyName}"
@@ -25,7 +54,11 @@
                         <ToolTip Content="{Binding Path=Name, Mode=OneWay}" />
                     </TextBlock.ToolTip>
                     <TextBlock.Effect>
-                        <DropShadowEffect Color="Black" ShadowDepth="1" Direction="90" Opacity="0.8" BlurRadius="2" />
+                        <DropShadowEffect Color="Black" 
+                                          ShadowDepth="1"
+                                          Direction="90" 
+                                          Opacity="0.8" 
+                                          BlurRadius="2" />
                     </TextBlock.Effect>
                 </TextBlock>
             </Border>

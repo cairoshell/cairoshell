@@ -79,33 +79,20 @@ namespace CairoDesktop.AppGrabber
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Programs and shortcuts|";
-
+            string filter = "Programs and shortcuts|";
             foreach (string ext in AppGrabber.ExecutableExtensions)
             {
-                dlg.Filter += "*" + ext + ";";
+                filter += "*" + ext + ";";
             }
 
-            dlg.Filter = dlg.Filter.Substring(0, dlg.Filter.Length - 2);
+            filter = filter.Substring(0, filter.Length - 2);
 
-            System.Windows.Forms.DialogResult result;
-
-            try
+            string filename;
+            DialogResult result = SupportingClasses.Dialogs.OpenFileDialog(filter, out filename);
+            if (result == System.Windows.Forms.DialogResult.OK && Interop.Shell.Exists(filename))
             {
-                result = dlg.ShowDialog();
-            }
-            catch
-            {
-                // show retro dialog if the better one fails to load
-                dlg.AutoUpgradeEnabled = false;
-                result = dlg.ShowDialog();
-            }
-
-            if (result == System.Windows.Forms.DialogResult.OK && Interop.Shell.Exists(dlg.FileName))
-            {
-                ApplicationInfo customApp = AppGrabber.PathToApp(dlg.FileName, true);
-                if (!object.ReferenceEquals(customApp, null))
+                ApplicationInfo customApp = AppGrabber.PathToApp(filename, true);
+                if (!ReferenceEquals(customApp, null))
                 {
                     if (!programsMenuAppsCollection.Contains(customApp) && !(InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Contains(customApp))
                     {

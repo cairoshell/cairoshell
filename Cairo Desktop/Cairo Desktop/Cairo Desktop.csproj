@@ -84,6 +84,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CairoWallpaperStyle.cs" />
+    <Compile Include="DynamicDesktopNavigationManager.cs" />
     <Compile Include="Icon.xaml.cs">
       <DependentUpon>Icon.xaml</DependentUpon>
     </Compile>
@@ -130,6 +131,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -400,6 +402,9 @@
     <Resource Include="Resources\volumeMuteIconDefault.png" />
     <Resource Include="Resources\volumeOffIconBlack.png" />
     <Resource Include="Resources\volumeOffIconDefault.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\controlsParentFolder.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

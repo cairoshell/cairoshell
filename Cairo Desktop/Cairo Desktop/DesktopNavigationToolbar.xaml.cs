@@ -6,6 +6,9 @@ using System.Windows.Interop;
 using CairoDesktop.Interop;
 using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
+using System.Windows.Media.Imaging;
+using CairoDesktop.Common;
+using System.Linq;
 
 namespace CairoDesktop
 {
@@ -14,8 +17,11 @@ namespace CairoDesktop
     /// </summary>
     public partial class DesktopNavigationToolbar : Window
     {
+        private static DesktopNavigationToolbar _instance = null;
+
         private WindowInteropHelper helper;
         private System.Windows.Controls.ContextMenu browseContextMenu;
+        private LowLevelKeyboardListener lowLevelKeyboardListener;
 
         public Desktop ToolbarOwner
         {
@@ -28,15 +34,68 @@ namespace CairoDesktop
         public DesktopNavigationToolbar()
         {
             InitializeComponent();
+
             SetPosition();
 
             browseContextMenu = new System.Windows.Controls.ContextMenu();
+
+            lowLevelKeyboardListener = new Common.LowLevelKeyboardListener();
+            lowLevelKeyboardListener.HookKeyboard();
+            lowLevelKeyboardListener.OnKeyDown += LowLevelKeyboardListener_OnKeyDown;
+            lowLevelKeyboardListener.OnKeyUp += LowLevelKeyboardListener_OnKeyUp;
+        }
+
+        bool backButtonTypeToggled = false;
+        private void LowLevelKeyboardListener_OnKeyDown(object sender, Common.KeyEventArgs e)
+        {
+            if (IsMouseOver)
+            {
+                if (e.Key == System.Windows.Input.Key.LeftShift || e.Key == System.Windows.Input.Key.RightShift)
+                {
+                    backButtonImg.Source = new BitmapImage(new Uri("/Resources/controlsParentFolder.png", UriKind.RelativeOrAbsolute));
+                    backButtonTypeToggled = true;
+                    btnBack.ToolTip = "Parent";
+                }
+            }
+        }
+
+        private void LowLevelKeyboardListener_OnKeyUp(object sender, Common.KeyEventArgs e)
+        {
+            if (backButtonTypeToggled)
+            {
+                if (e.Key == System.Windows.Input.Key.LeftShift || e.Key == System.Windows.Input.Key.RightShift)
+                {
+                    backButtonTypeToggled = false;
+                    backButtonImg.Source = new BitmapImage(new Uri("/Resources/controlsBack.png", UriKind.RelativeOrAbsolute));
+                    btnBack.ToolTip = "Back";
+                }
+            }
         }
 
         private void SetPosition()
         {
-            Top = AppBarHelper.PrimaryMonitorSize.Height - Height - 150;
-            Left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (Width / 2);
+            if (Settings.Instance.DesktopNavigationToolbarLocation != default(System.Windows.Point) &&
+                PointExistsOnScreen(Settings.Instance.DesktopNavigationToolbarLocation))
+            {
+                Top = Settings.Instance.DesktopNavigationToolbarLocation.Y;
+                Left = Settings.Instance.DesktopNavigationToolbarLocation.X;
+            }
+            else
+            {
+                Top = AppBarHelper.PrimaryMonitorSize.Height - Height - 150;
+                Left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (Width / 2);
+            }
+        }
+
+        private bool PointExistsOnScreen(Point desktopNavigationToolbarLocation)
+        {
+            bool result = false;
+            if (Screen.AllScreens.Any(s => s.Bounds.Contains((int)desktopNavigationToolbarLocation.X, (int)desktopNavigationToolbarLocation.Y)))
+            {
+                result = true;
+            }
+
+            return result;
         }
 
         private void SetPosition(uint x, uint y)
@@ -48,29 +107,20 @@ namespace CairoDesktop
             Left = (sWidth / 2) - (Width / 2);
         }
 
-        private void Back_Click(object sender, RoutedEventArgs e)
-        {
-            if (Owner is Desktop owningDesktop)
-            {
-                DirectoryInfo parent = owningDesktop.Icons.Location.DirectoryInfo.Parent;
-                if (parent != null)
-                    owningDesktop.Navigate(parent.FullName);
-            }
-        }
-
         private void HomeButton_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-                string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                string userDesktopPath = Settings.DesktopDirectory;
 
                 if (Owner is Desktop owningDesktop)
                 {
-                    if (Directory.Exists(userDesktopPath))
-                        owningDesktop.Navigate(userDesktopPath);
-                    else if (Directory.Exists(defaultDesktopPath))
-                        owningDesktop.Navigate(defaultDesktopPath);
+                    string desktopPath = Settings.Instance.DesktopDirectory;
+
+                    if (!Directory.Exists(desktopPath))
+                        desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+                    if (owningDesktop.CurrentLocation != desktopPath)
+                        owningDesktop.Navigate(desktopPath);
                 }
 
                 e.Handled = true;
@@ -79,6 +129,7 @@ namespace CairoDesktop
             {
             }
         }
+
         private void BrowseButton_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
@@ -129,7 +180,7 @@ namespace CairoDesktop
         private void ClearHistoryMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (Owner is Desktop owningDesktop)
-                owningDesktop.PathHistory.Clear();
+                owningDesktop.ClearNavigation();
         }
 
         private void LocationMenuItem_Click(object sender, RoutedEventArgs e)
@@ -140,11 +191,51 @@ namespace CairoDesktop
                         owningDesktop.Navigate(location);
         }
 
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            if (backButtonTypeToggled)
+            {
+                NavigateToParent();
+            }
+            else
+            {
+                NavigateBackward();
+            }
+        }
+
+        private void btnBack_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            NavigateToParent();
+        }
+
+        internal void NavigateToParent()
+        {
+            if (Owner is Desktop owningDesktop)
+            {
+                DirectoryInfo parentDirectoryInfo = Directory.GetParent(owningDesktop.CurrentLocation);
+                if (parentDirectoryInfo != null && parentDirectoryInfo.Exists)
+                {
+                    string parentPath = parentDirectoryInfo.FullName;
+                    owningDesktop.Navigate(parentPath);
+                }
+            }
+        }
+
+        internal void NavigateBackward()
+        {
+            if (Owner is Desktop owningDesktop)
+                owningDesktop.NavigateBackward();
+        }
+
         private void Fwd_Click(object sender, RoutedEventArgs e)
         {
-            // Should this be handled by a new method? owningDesktop.MoveForward() ???
-            if (Owner is Desktop owningDesktop && owningDesktop.PathHistory.Count > 0)
-                owningDesktop.CurrentLocation = owningDesktop.PathHistory.Pop();
+            NavigateForward();
+        }
+
+        internal void NavigateForward()
+        {
+            if (Owner is Desktop owningDesktop)
+                owningDesktop.NavigateForward();
         }
 
         private void Browse_Click(object sender, RoutedEventArgs e)
@@ -232,8 +323,57 @@ namespace CairoDesktop
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+
             if (!Startup.IsShuttingDown)
+            {
                 e.Cancel = true;
+            }
+            else
+            {
+                lowLevelKeyboardListener.OnKeyDown -= LowLevelKeyboardListener_OnKeyDown;
+                lowLevelKeyboardListener.OnKeyUp -= LowLevelKeyboardListener_OnKeyUp;
+                lowLevelKeyboardListener.UnHookKeyboard();
+                lowLevelKeyboardListener = null;
+            }
+        }
+
+        public static DesktopNavigationToolbar Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new DesktopNavigationToolbar();
+                }
+
+                return _instance;
+            }
+        }
+
+        private void DesktopToolbar_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            switch (e.ChangedButton)
+            {
+                case System.Windows.Input.MouseButton.Left:
+                    break;
+                case System.Windows.Input.MouseButton.Middle:
+                    // Maybe Navigate Home?
+                    break;
+                case System.Windows.Input.MouseButton.Right:
+                    break;
+
+                case System.Windows.Input.MouseButton.XButton1:
+                    NavigateBackward();
+                    break;
+                case System.Windows.Input.MouseButton.XButton2:
+                    NavigateForward();
+                    break;
+            }
+        }
+
+        private void DesktopToolbar_LocationChanged(object sender, EventArgs e)
+        {
+            Settings.Instance.DesktopNavigationToolbarLocation = new Point(Left, Top);
         }
     }
 }

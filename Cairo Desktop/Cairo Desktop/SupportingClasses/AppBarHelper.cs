@@ -74,14 +74,14 @@ namespace CairoDesktop.SupportingClasses
         private static void prepareForInterop()
         {
             // get shell window back so we can do appbar stuff
-            if (Settings.EnableSysTray)
+            if (Settings.Instance.EnableSysTray)
                 NotificationArea.Instance.Suspend();
         }
 
         private static void interopDone()
         {
             // take back over
-            if (Settings.EnableSysTray)
+            if (Settings.Instance.EnableSysTray)
                 NotificationArea.Instance.MakeActive();
         }
 
@@ -158,7 +158,7 @@ namespace CairoDesktop.SupportingClasses
             interopDone();
 
             // apparently the taskbars like to pop up when app bars change
-            if (Settings.EnableTaskbar)
+            if (Settings.Instance.EnableTaskbar)
             {
                 SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.Hide);
             }
@@ -281,7 +281,7 @@ namespace CairoDesktop.SupportingClasses
             if (!isSameCoords) NativeMethods.MoveWindow(hWnd, x, y, cx, cy, true);
 
             // apparently the taskbars like to pop up when app bars change
-            if (Settings.EnableTaskbar)
+            if (Settings.Instance.EnableTaskbar)
             {
                 SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
             }
@@ -330,9 +330,9 @@ namespace CairoDesktop.SupportingClasses
             rc.right = screen.Bounds.Right;
 
             // only allocate space for taskbar if enabled
-            if (Settings.EnableTaskbar && Settings.TaskbarMode == 0)
+            if (Settings.Instance.EnableTaskbar && Configuration.Settings.Instance.TaskbarMode == 0)
             {
-                if (Settings.TaskbarPosition == 1)
+                if (Settings.Instance.TaskbarPosition == 1)
                 {
                     rc.top = screen.Bounds.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale) + (int)(Startup.TaskbarWindow.ActualHeight * Shell.DpiScale);
                     rc.bottom = screen.Bounds.Bottom;
@@ -349,7 +349,7 @@ namespace CairoDesktop.SupportingClasses
                 rc.bottom = screen.Bounds.Bottom;
             }
 
-            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref rc, (1 | 2));
+            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref rc, (1 | 2));
 
             if (Startup.DesktopWindow != null)
                 Startup.DesktopWindow.ResetPosition();
@@ -364,7 +364,7 @@ namespace CairoDesktop.SupportingClasses
             oldWorkArea.right = SystemInformation.VirtualScreen.Right;
             oldWorkArea.bottom = SystemInformation.VirtualScreen.Bottom;
 
-            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SPI_SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
+            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
         }
     }
 }

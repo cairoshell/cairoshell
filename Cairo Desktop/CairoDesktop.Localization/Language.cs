@@ -187,6 +187,18 @@ namespace CairoDesktop.Localization
             { "sSettings_Desktop_DynamicDesktop", "Dynamic Desktop" },
             { "sSettings_Desktop_EnableDynamicDesktop", "Show dynamic desktop navigation toolbar" },
             { "sSettings_Desktop_EnableDesktopOverlayHotKey", "Enable dynamic desktop overlay hotkey:" },
+
+             { "sSettings_Desktop_DesktopBackgroundSettings", "Desktop Background Settings" },
+             { "sSettings_Desktop_BackgroundType", "Background Type" },
+
+{ "sSettings_Desktop_BackgroundType_windowsDefaultBackground", "Windows Default Background" },
+{ "sSettings_Desktop_BackgroundType_cairoImageWallpaper", "Cairo Image Wallpaper" },
+{ "sSettings_Desktop_BackgroundType_cairoVideoWallpaper", "Cairo Video Wallpaper" },
+{ "sSettings_Desktop_BackgroundType_bingWallpaper", "Bing Image of the Day" },
+
+{ "sSettings_Desktop_Background_Path", "Path" },
+{ "sSettings_Desktop_Background_Style", "Style" },
+
             { "sSettings_IconSize", "Icon size:" },
             { "sSettings_IconSizeLarge", "Large" },
             { "sSettings_IconSizeMedium", "Medium" },
@@ -1618,6 +1630,7 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarSec3Heading", "Taskliste" },
             { "sWelcome_TaskbarSec3Text", "Viele offene Fenster? Die Taskliste zeigt die offenen Fenster in einem Menü um einfach zu dem Fenster wechseln zu können, welches Sie gerade suchen. Sie können ebenso die Windows 10 Ansicht aus diesem Menü öffnen." }
         };
+
         public static Dictionary<string, string> es_ES = new Dictionary<string, string>
         {
             { "sProgramsMenu", "Programas" },
@@ -1847,6 +1860,7 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarSec3Heading", "Lista de las tareas" },
             { "sWelcome_TaskbarSec3Text", "¿Muchas ventanas abiertas? La lista de las tareas muestra sus ventanas en un menú para que usted pueda cambiar al que quiera. También puede activar la vista de las tareas de Windows 10 de este menú." }
         };
+
         public static Dictionary<string, string> nl_NL = new Dictionary<string, string>
         {
             { "sProgramsMenu", "Programma's" },

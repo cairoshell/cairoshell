@@ -14,7 +14,7 @@ namespace CairoDesktop
 		{
 			this.InitializeComponent();
 
-            switch (Configuration.Settings.TaskbarIconSize)
+            switch (Configuration.Settings.Instance.TaskbarIconSize)
             {
                 case 0:
                     imgIcon.Width = 32;

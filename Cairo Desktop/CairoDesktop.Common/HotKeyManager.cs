@@ -10,7 +10,7 @@ namespace CairoDesktop.Common
 {
     public class HotKeyManager
     {
-        public static void RegisterHotKey(List<string> keys, Action<HotKey> action)
+        public static void RegisterHotKey(IList<string> keys, Action<HotKey> action)
         {
             KeyModifier mod1 = KeyModifier.None;
             KeyModifier mod2 = KeyModifier.None;

@@ -43,7 +43,6 @@ namespace CairoDesktop
         private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
 
         private static LowLevelKeyboardListener keyboardListener;
-
         public MenuBar() : this(System.Windows.Forms.Screen.PrimaryScreen)
         {
 
@@ -76,7 +75,7 @@ namespace CairoDesktop
             {
                 WinSparkle.win_sparkle_set_appcast_url("https://cairoshell.github.io/appdescriptor.rss");
                 canShutdownDelegate = canShutdown;
-                shutdownDelegate = shutdown;
+                shutdownDelegate = Startup.Shutdown;
                 WinSparkle.win_sparkle_set_can_shutdown_callback(canShutdownDelegate);
                 WinSparkle.win_sparkle_set_shutdown_request_callback(shutdownDelegate);
                 WinSparkle.win_sparkle_init();
@@ -85,7 +84,7 @@ namespace CairoDesktop
 
         private void setupMenu()
         {
-            if (Shell.IsWindows10OrBetter && !Startup.IsCairoUserShell)
+            if (Shell.IsWindows10OrBetter && !Startup.IsCairoRunningAsShell)
             {
                 // show Windows 10 features
                 miOpenUWPSettings.Visibility = Visibility.Visible;
@@ -93,12 +92,12 @@ namespace CairoDesktop
             }
 
             // I didnt like the Exit Cairo option available when Cairo was set as Shell
-            if (Startup.IsCairoUserShell)
+            if (Startup.IsCairoRunningAsShell)
             {
                 miExitCairo.Visibility = Visibility.Collapsed;
             }
 
-            if (Settings.EnableSysTray)
+            if (Settings.Instance.EnableSysTray)
             {
                 initializeVolumeIcon();
             }
@@ -120,7 +119,7 @@ namespace CairoDesktop
             }
 
             // Show power options depending on system support
-            if (Settings.ShowHibernate && Shell.CanHibernate())
+            if (Settings.Instance.ShowHibernate && Shell.CanHibernate())
             {
                 miHibernate.Visibility = Visibility.Visible;
             }
@@ -226,36 +225,27 @@ namespace CairoDesktop
 
             Shell.HideWindowFromTasks(handle);
 
-            if (Settings.EnableCairoMenuHotKey && Screen.Primary && !isCairoMenuHotkeyRegistered)
+            if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary && !isCairoMenuHotkeyRegistered)
             {
-                HotKeyManager.RegisterHotKey(Settings.CairoMenuHotKey, OnShowCairoMenu);
+                HotKeyManager.RegisterHotKey(Settings.Instance.CairoMenuHotKey, OnShowCairoMenu);
                 isCairoMenuHotkeyRegistered = true;
             }
 
-            // Register Windows key to open Programs menu
-            if (Startup.IsCairoUserShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
+            // Register L+R Windows key to open Programs menu
+            if (Startup.IsCairoRunningAsShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
             {
-                /*
-                 * This was modified to fix issue: Cairo incorrectly handles the [Win] key #193 
-                 */
+                if (keyboardListener == null)
+                    keyboardListener = new LowLevelKeyboardListener();
 
-                // HotKeyManager.RegisterHotKey(new List<string> { "Win", "LWin" }, OnShowProgramsMenu);
-                new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+                keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
+                keyboardListener.HookKeyboard();
 
-                // HotKeyManager.RegisterHotKey(new List<string> { "Win", "RWin" }, OnShowProgramsMenu);
-                new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+                // new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+                // new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
 
                 isProgramsMenuHotkeyRegistered = true;
             }
-
-            /*if (Screen.Primary && keyboardListener == null)
-            {
-                keyboardListener = new LowLevelKeyboardListener();
-                keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
-                keyboardListener.HookKeyboard();
-            }*/
-
-            if (Settings.EnableMenuBarBlur)
+            if (Settings.Instance.EnableMenuBarBlur)
             {
                 Shell.EnableWindowBlur(handle);
             }
@@ -265,7 +255,7 @@ namespace CairoDesktop
 
         private void setupSearch()
         {
-            this.CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
+            CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
 
             // Show the search button only if the service is running
             if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
@@ -275,7 +265,7 @@ namespace CairoDesktop
             else
             {
                 CairoSearchMenu.Visibility = Visibility.Collapsed;
-                DispatcherTimer searchcheck = new DispatcherTimer(DispatcherPriority.Background, this.Dispatcher);
+                DispatcherTimer searchcheck = new DispatcherTimer(DispatcherPriority.Background, Dispatcher);
                 searchcheck.Interval = new TimeSpan(0, 0, 5);
                 searchcheck.Tick += searchcheck_Tick;
                 searchcheck.Start();
@@ -321,14 +311,10 @@ namespace CairoDesktop
                     lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
                 }));
             });
+
             thread.IsBackground = true;
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-        }
-
-        private void shutdown()
-        {
-            Startup.Shutdown();
         }
 
         private int canShutdown()
@@ -392,19 +378,16 @@ namespace CairoDesktop
         private void initializeClock()
         {
             // initial display
-            clock_Tick();
+            clock_Tick(null, null);
 
             // Create our timer for clock
-            DispatcherTimer clock = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 500), DispatcherPriority.Background, delegate
-            {
-                clock_Tick();
-            }, this.Dispatcher);
+            DispatcherTimer clock = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 500), DispatcherPriority.Background, clock_Tick, Dispatcher);
         }
 
-        private void clock_Tick()
+        private void clock_Tick(object sender, EventArgs args)
         {
-            dateText.Text = DateTime.Now.ToString(Settings.TimeFormat);
-            dateText.ToolTip = DateTime.Now.ToString(Settings.DateFormat);
+            dateText.Text = DateTime.Now.ToString(Settings.Instance.TimeFormat);
+            dateText.ToolTip = DateTime.Now.ToString(Settings.Instance.DateFormat);
         }
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
@@ -433,7 +416,7 @@ namespace CairoDesktop
                             this.Topmost = false;
                             Shell.ShowWindowBottomMost(this.handle);
 
-                            if (Settings.EnableTaskbar)
+                            if (Settings.Instance.EnableTaskbar)
                             {
                                 Startup.TaskbarWindow.SetFullScreenMode(true);
                             }
@@ -444,7 +427,7 @@ namespace CairoDesktop
                             this.Topmost = true;
                             Shell.ShowWindowTopMost(this.handle);
 
-                            if (Settings.EnableTaskbar)
+                            if (Settings.Instance.EnableTaskbar)
                             {
                                 Startup.TaskbarWindow.SetFullScreenMode(false);
                             }
@@ -490,11 +473,11 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
-                if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens)
+                if ((Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon) && !Startup.IsSettingScreens)
                 {
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
                 }
-                else if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
+                else if (!(Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
                     Screen = System.Windows.Forms.Screen.PrimaryScreen;
@@ -511,11 +494,11 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
-                if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
+                if ((Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
                 {
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
                 }
-                else if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
+                else if (!(Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon))
                 {
                     Startup.ResetScreenCache();
                     Screen = System.Windows.Forms.Screen.PrimaryScreen;
@@ -526,7 +509,7 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
             {
-                if ((Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
+                if ((Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
                 {
                     Startup.ScreenSetup(); // update Cairo window list based on new screen setup
                 }
@@ -658,12 +641,13 @@ namespace CairoDesktop
 
                 WinSparkle.win_sparkle_cleanup();
 
-                if (keyboardListener != null)
-                {
-                    keyboardListener.UnHookKeyboard();
-                }
+                // Currently Unused
+                //if (keyboardListener != null)
+                //{
+                //    keyboardListener.UnHookKeyboard();
+                //}
 
-                if (Startup.IsCairoUserShell)
+                if (Startup.IsCairoRunningAsShell)
                 {
                     AppBarHelper.ResetWorkArea();
                 }
@@ -699,13 +683,13 @@ namespace CairoDesktop
             }
         }
 
-        private void keyboardListener_OnKeyPressed(object sender, KeyPressedArgs e)
+        private void keyboardListener_OnKeyPressed(object sender, Common.KeyEventArgs e)
         {
-            if (e.KeyPressed == Key.LWin)
+            if (e.Key == Key.LWin || e.Key == Key.RWin)
             {
-                CairoLogger.Instance.Debug(e.KeyPressed.ToString() + " Key Pressed");
-                e.Handled = true;
+                CairoLogger.Instance.Debug(e.Key.ToString() + " Key Pressed");
                 ToggleProgramsMenu();
+                e.Handled = true;
             }
         }
 
@@ -753,7 +737,7 @@ namespace CairoDesktop
             bool? CloseCairoChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title, "Resources/exitIcon.png", Localization.DisplayString.sExitCairo_ExitCairo, Localization.DisplayString.sInterface_Cancel);
             if (CloseCairoChoice.HasValue && CloseCairoChoice.Value)
             {
-                shutdown();
+                Startup.Shutdown();
             }
         }
 
@@ -883,7 +867,7 @@ namespace CairoDesktop
             Shell.StartProcess("search:query=" + searchStr.Text);
         }
 
-        private void searchStr_KeyDown(object sender, KeyEventArgs e)
+        private void searchStr_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {

@@ -5,6 +5,7 @@ using CairoDesktop.Localization;
 using CairoDesktop.SupportingClasses;
 using System;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,7 +20,12 @@ namespace CairoDesktop
     /// </summary>
     public partial class Icon : UserControl
     {
-        public static readonly DependencyProperty LocationProperty = DependencyProperty.Register("Location", typeof(string), typeof(Icon), new PropertyMetadata(null));
+        public static readonly DependencyProperty LocationProperty =
+            DependencyProperty.Register("Location",
+                typeof(string),
+                typeof(Icon),
+                new PropertyMetadata(null));
+
         public string Location
         {
             get { return (string)GetValue(LocationProperty); }
@@ -36,88 +42,90 @@ namespace CairoDesktop
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             // set SystemFile from binding
-            file = (SystemFile)DataContext;
-
-            // adjust appearance based on settings and usage
-            if (Location == "Desktop")
+            file = DataContext as SystemFile;
+            if (file != null)
             {
-                btnFile.Style = Application.Current.FindResource("CairoDesktopButtonStyle") as Style;
-                btnFile.ContextMenu = null;
-                btnFile.Click -= btnFile_Click;
-                btnFile.MouseDoubleClick += btnFile_Click;
-                txtFilename.Foreground = Application.Current.FindResource("DesktopIconText") as SolidColorBrush;
-
-                if (Settings.DesktopLabelPosition == 0)
+                // adjust appearance based on settings and usage
+                if (Location == "Desktop")
                 {
-                    // horizontal icons
-                    btnFile.Margin = new Thickness(9, 0, 8, 5);
-                    bdrFilename.Height = 36;
-                    txtRename.Width = 130;
-                    txtRename.TextAlignment = TextAlignment.Left;
-                    txtFilename.Width = 130;
-                    txtFilename.Height = double.NaN;
-                    txtFilename.TextAlignment = TextAlignment.Left;
-                    txtFilename.VerticalAlignment = VerticalAlignment.Center;
-                    imgIcon.SetValue(DockPanel.DockProperty, Dock.Left);
-                    txtRename.SetValue(DockPanel.DockProperty, Dock.Right);
-                    bdrFilename.SetValue(DockPanel.DockProperty, Dock.Right);
-                }
+                    btnFile.Style = Application.Current.FindResource("CairoDesktopButtonStyle") as Style;
+                    btnFile.ContextMenu = null;
+                    btnFile.Click -= btnFile_Click;
+                    btnFile.MouseDoubleClick += btnFile_Click;
+                    txtFilename.Foreground = Application.Current.FindResource("DesktopIconText") as SolidColorBrush;
 
-                if (Settings.DesktopIconSize == 2)
-                {
-                    // large icons
-                    imgIcon.Width = 48;
-                    imgIcon.Height = 48;
-                    Binding iconBinding = new Binding("LargeIcon");
-                    iconBinding.Mode = BindingMode.OneWay;
-                    iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                    iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                    imgIcon.SetBinding(Image.SourceProperty, iconBinding);
+                    if (Settings.Instance.DesktopLabelPosition == 0)
+                    {
+                        // horizontal icons
+                        btnFile.Margin = new Thickness(9, 0, 8, 5);
+                        bdrFilename.Height = 36;
+                        txtRename.Width = 130;
+                        txtRename.TextAlignment = TextAlignment.Left;
+                        txtFilename.Width = 130;
+                        txtFilename.Height = double.NaN;
+                        txtFilename.TextAlignment = TextAlignment.Left;
+                        txtFilename.VerticalAlignment = VerticalAlignment.Center;
+                        imgIcon.SetValue(DockPanel.DockProperty, Dock.Left);
+                        txtRename.SetValue(DockPanel.DockProperty, Dock.Right);
+                        bdrFilename.SetValue(DockPanel.DockProperty, Dock.Right);
+                    }
+
+                    if (Settings.Instance.DesktopIconSize == 2)
+                    {
+                        // large icons
+                        imgIcon.Width = 48;
+                        imgIcon.Height = 48;
+                        Binding iconBinding = new Binding("LargeIcon");
+                        iconBinding.Mode = BindingMode.OneWay;
+                        iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
+                        iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
+                        imgIcon.SetBinding(Image.SourceProperty, iconBinding);
+                    }
+                    else
+                    {
+                        // small icons
+                        Binding iconBinding = new Binding("Icon");
+                        iconBinding.Mode = BindingMode.OneWay;
+                        iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
+                        iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
+                        imgIcon.SetBinding(Image.SourceProperty, iconBinding);
+                    }
+
+                    if (Settings.Instance.DesktopLabelPosition == 0 && Settings.Instance.DesktopIconSize == 0)
+                    {
+                        // horizontal small
+                        btnFile.Height = 48;
+                    }
+
+                    if (Settings.Instance.DesktopLabelPosition == 0 && Settings.Instance.DesktopIconSize == 2)
+                    {
+                        // horizontal large
+                        btnFile.Height = 64;
+                    }
+
+                    // (vertical small is in xaml)
+
+                    if (Settings.Instance.DesktopLabelPosition == 1 && Settings.Instance.DesktopIconSize == 2)
+                    {
+                        // vertical large
+                        btnFile.Height = 97;
+                    }
                 }
                 else
                 {
-                    // small icons
+                    // stacks view
+
+                    // remove desktop effects
+                    bdrFilename.Effect = null;
+                    txtFilename.Effect = null;
+
+                    // bind icon
                     Binding iconBinding = new Binding("Icon");
                     iconBinding.Mode = BindingMode.OneWay;
                     iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
                     iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
                     imgIcon.SetBinding(Image.SourceProperty, iconBinding);
                 }
-
-                if (Settings.DesktopLabelPosition == 0 && Settings.DesktopIconSize == 0)
-                {
-                    // horizontal small
-                    btnFile.Height = 48;
-                }
-
-                if (Settings.DesktopLabelPosition == 0 && Settings.DesktopIconSize == 2)
-                {
-                    // horizontal large
-                    btnFile.Height = 64;
-                }
-
-                // (vertical small is in xaml)
-
-                if (Settings.DesktopLabelPosition == 1 && Settings.DesktopIconSize == 2)
-                {
-                    // vertical large
-                    btnFile.Height = 97;
-                }
-            }
-            else
-            {
-                // stacks view
-
-                // remove desktop effects
-                bdrFilename.Effect = null;
-                txtFilename.Effect = null;
-
-                // bind icon
-                Binding iconBinding = new Binding("Icon");
-                iconBinding.Mode = BindingMode.OneWay;
-                iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                imgIcon.SetBinding(Image.SourceProperty, iconBinding);
             }
         }
 
@@ -133,7 +141,7 @@ namespace CairoDesktop
                         // if directory, perform special handling
                         if (file.IsDirectory
                             && Location == "Desktop"
-                            && Settings.EnableDynamicDesktop
+                            && Settings.Instance.EnableDynamicDesktop
                             && Startup.DesktopWindow != null)
                         {
                             Startup.DesktopWindow.Navigate(file.FullName);
@@ -185,7 +193,7 @@ namespace CairoDesktop
             box.Visibility = Visibility.Collapsed;
         }
 
-        private void txtRename_KeyUp(object sender, KeyEventArgs e)
+        private void txtRename_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
                 (sender as TextBox).MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));

@@ -197,7 +197,7 @@ namespace CairoDesktop.Common {
         {
             files.Clear();
             
-            if (Settings.EnableSubDirs)
+            if (Settings.Instance.EnableSubDirs)
             {
                 IEnumerable<string> dirs = Directory.EnumerateDirectories(DirectoryInfo.FullName);
                 foreach (string subDir in dirs)

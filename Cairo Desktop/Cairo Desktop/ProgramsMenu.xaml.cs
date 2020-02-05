@@ -27,7 +27,7 @@ namespace CairoDesktop
             categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
 
             // set tab based on user preference
-            int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.DefaultProgramsCategory));
+            int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.Instance.DefaultProgramsCategory));
             categorizedProgramsList.SelectedIndex = i;
         }
 
@@ -192,7 +192,7 @@ namespace CairoDesktop
             box.Visibility = Visibility.Collapsed;
         }
 
-        private void txtProgramRename_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void txtProgramRename_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
