@@ -363,15 +363,14 @@ namespace CairoDesktop
             else if (msg == NativeMethods.WM_DISPLAYCHANGE && (Startup.IsCairoUserShell))
             {
                 SetPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
-                BackgroundBrush = null;
-                setBackground();
+                ReloadBackground();
                 handled = true;
             }
             else if (msg == (int)NativeMethods.WM.SETTINGCHANGE &&
                     wParam.ToInt32() == (int)NativeMethods.SPI.SETDESKWALLPAPER)
             {
-                BackgroundBrush = null;
-                setBackground();
+                ReloadBackground();
+
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
 
@@ -453,7 +452,7 @@ namespace CairoDesktop
 
             if (Settings.Instance.EnableDesktop && Icons == null)
             {
-                grid.Children.Add(Icons = new DesktopIcons() );
+                grid.Children.Add(Icons = new DesktopIcons());
 
                 string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 string userDesktopPath = Settings.Instance.DesktopDirectory;

@@ -419,6 +419,8 @@
                  UriSource="Resources\menubarShadow.png"></BitmapImage>
     <BitmapImage x:Key="NullIcon"
                  UriSource="Resources\nullIcon.png"></BitmapImage>
+    <BitmapImage x:Key="DateTimeIcon"
+                 UriSource="Resources\dateTimeIcon.png"></BitmapImage>
 
     <Style TargetType="{x:Type Control}">
         <Setter Property="Template">

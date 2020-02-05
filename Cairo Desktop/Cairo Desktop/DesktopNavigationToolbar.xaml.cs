@@ -8,6 +8,7 @@ using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Common;
+using System.Linq;
 
 namespace CairoDesktop
 {
@@ -73,7 +74,8 @@ namespace CairoDesktop
 
         private void SetPosition()
         {
-            if (Settings.Instance.DesktopNavigationToolbarLocation != default(System.Windows.Point))
+            if (Settings.Instance.DesktopNavigationToolbarLocation != default(System.Windows.Point) &&
+                PointExistsOnScreen(Settings.Instance.DesktopNavigationToolbarLocation))
             {
                 Top = Settings.Instance.DesktopNavigationToolbarLocation.Y;
                 Left = Settings.Instance.DesktopNavigationToolbarLocation.X;
@@ -83,6 +85,17 @@ namespace CairoDesktop
                 Top = AppBarHelper.PrimaryMonitorSize.Height - Height - 150;
                 Left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (Width / 2);
             }
+        }
+
+        private bool PointExistsOnScreen(Point desktopNavigationToolbarLocation)
+        {
+            bool result = false;
+            if (Screen.AllScreens.Any(s => s.Bounds.Contains((int)desktopNavigationToolbarLocation.X, (int)desktopNavigationToolbarLocation.Y)))
+            {
+                result = true;
+            }
+
+            return result;
         }
 
         private void SetPosition(uint x, uint y)
@@ -98,15 +111,16 @@ namespace CairoDesktop
         {
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-                string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                string userDesktopPath = Settings.Instance.DesktopDirectory;
 
                 if (Owner is Desktop owningDesktop)
                 {
-                    if (Directory.Exists(userDesktopPath))
-                        owningDesktop.Navigate(userDesktopPath);
-                    else if (Directory.Exists(defaultDesktopPath))
-                        owningDesktop.Navigate(defaultDesktopPath);
+                    string desktopPath = Settings.Instance.DesktopDirectory;
+
+                    if (!Directory.Exists(desktopPath))
+                        desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+                    if (owningDesktop.CurrentLocation != desktopPath)
+                        owningDesktop.Navigate(desktopPath);
                 }
 
                 e.Handled = true;

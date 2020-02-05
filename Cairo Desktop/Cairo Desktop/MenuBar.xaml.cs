@@ -903,24 +903,5 @@ namespace CairoDesktop
             }
         }
         #endregion
-
-
-        private void Menu_DragOver(object sender, DragEventArgs e)
-        {
-            // Is this not getting called???
-            if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(SystemFile)))
-            {
-                if ((e.KeyStates & DragDropKeyStates.LeftMouseButton) != 0)
-                {
-                    e.Effects = DragDropEffects.Move;
-                }
-            }
-            else
-            {
-                e.Effects = DragDropEffects.None;
-            }
-
-            e.Handled = true;
-        }
     }
 }

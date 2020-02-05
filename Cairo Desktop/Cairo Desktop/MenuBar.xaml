@@ -37,7 +37,7 @@
                           Name="CairoMenu">
                     <MenuItem.Header>
                         <Image Name="MenuIcon"
-                               Source="{StaticResource MenuIcon}"
+                               Source="{DynamicResource MenuIcon}"
                                Width="38"
                                Height="22" />
                     </MenuItem.Header>
@@ -147,7 +147,7 @@
                           ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_Volume)}"
                           ToolTipService.Placement="Bottom">
                     <MenuItem.Header>
-                        <Image Source="{StaticResource VolumeIcon}"
+                        <Image Source="{DynamicResource VolumeIcon}"
                                Width="38"
                                Height="22"
                                Name="imgOpenVolume" />
@@ -171,7 +171,7 @@
                           ToolTipService.Placement="Bottom">
                     <MenuItem.Header>
                         <Image Name="ActionCenterIcon"
-                               Source="{StaticResource ActionCenterIcon}"
+                               Source="{DynamicResource ActionCenterIcon}"
                                Width="38"
                                Height="22" />
                     </MenuItem.Header>
@@ -204,7 +204,7 @@
                               Header="{Binding Path=(l10n:DisplayString.sMenuBar_OpenDateTimeSettings)}"
                               Style="{StaticResource {x:Type MenuItem}}">
                         <MenuItem.Icon>
-                            <Image Source="Resources\dateTimeIcon.png"
+                            <Image Source="{DynamicResource DateTimeIcon}"
                                    Width="16"
                                    Height="16" />
                         </MenuItem.Icon>
@@ -218,7 +218,7 @@
                           MenuItem.SubmenuOpened="FocusSearchBox">
                     <MenuItem.Header>
                         <Image Name="CairoSearchMenuIcon"
-                               Source="{StaticResource SearchIcon}"
+                               Source="{DynamicResource SearchIcon}"
                                Width="38"
                                Height="22" />
                     </MenuItem.Header>

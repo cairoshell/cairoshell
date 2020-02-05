@@ -125,20 +125,6 @@
                               app.Resources.MergedDictionaries.Add(newRes);
                           }
                       }
-
-                      // Update pesky Image resources
-                      if (MenuBarWindow != null)
-                      {
-                          if (MenuBarWindow.MenuIcon != null)
-                          {
-                              MenuBarWindow.MenuIcon.Source = Application.Current.TryFindResource("MenuIcon") as BitmapImage;
-                          }
-
-                          if (MenuBarWindow.CairoSearchMenuIcon != null)
-                          {
-                              MenuBarWindow.CairoSearchMenuIcon.Source = Application.Current.TryFindResource("CairoSearchMenuIcon") as BitmapImage;
-                          }
-                      }
                   }
               };
 

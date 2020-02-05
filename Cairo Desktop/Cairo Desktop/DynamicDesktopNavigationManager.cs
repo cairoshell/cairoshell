@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CairoDesktop
 {
@@ -19,8 +20,8 @@ namespace CairoDesktop
 
         public void Clear()
         {
-            list.Clear();
-            currentIndex = 0;
+            list.RemoveRange(1, list.Count - 1);
+            currentIndex = 1;
         }
 
         public string CurrentItem
@@ -58,7 +59,7 @@ namespace CairoDesktop
             int ind = (currentIndex == 0) ? 0 : currentIndex - 1;
             Navigating?.Invoke(list[ind]);
         }
-        
+
         public void NavigateTo(string path)
         {
             if (currentIndex < list.Count)
