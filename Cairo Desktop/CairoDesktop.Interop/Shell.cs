@@ -608,7 +608,7 @@ namespace CairoDesktop.Interop
         }
 
         /// <summary>
-        /// Checks the currently configured shell, NOT the currently running shell! Use Startup.IsCairoUserShell for that.
+        /// Checks the currently configured shell, NOT the currently running shell! Use Startup.IsCairoRunningAsShell for that.
         /// </summary>
         public static bool IsCairoConfiguredAsShell
         {

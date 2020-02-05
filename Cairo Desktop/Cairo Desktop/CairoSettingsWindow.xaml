@@ -507,7 +507,8 @@
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Style)}" />
                                 <ComboBox Name="cboWindowsBackgroundStyle"
                                           IsEditable="False"
-                                          SelectionChanged="cboWindowsBackgroundStyle_SelectionChanged" />
+                                          SelectionChanged="cboWindowsBackgroundStyle_SelectionChanged">
+                                </ComboBox>
                             </StackPanel>
                         </StackPanel>
 
@@ -721,7 +722,7 @@
                                     <Setter Property="Text"
                                             Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_ExplorerIsShell)}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsCairoUserShell}"
+                                        <DataTrigger Binding="{Binding IsCairoConfiguredAsShell}"
                                                      Value="True">
                                             <Setter Property="Text"
                                                     Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_CairoIsShell)}" />
@@ -741,7 +742,7 @@
                                     <Setter Property="Content"
                                             Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetCairoAsShell)}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsCairoUserShell}"
+                                        <DataTrigger Binding="{Binding IsCairoConfiguredAsShell}"
                                                      Value="True">
                                             <Setter Property="Content"
                                                     Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetExplorerAsShell)}" />
