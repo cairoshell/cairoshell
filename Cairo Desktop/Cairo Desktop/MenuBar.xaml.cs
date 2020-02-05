@@ -234,14 +234,14 @@ namespace CairoDesktop
             // Register L+R Windows key to open Programs menu
             if (Startup.IsCairoRunningAsShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
             {
-                if (keyboardListener == null)
+                /*if (keyboardListener == null)
                     keyboardListener = new LowLevelKeyboardListener();
 
                 keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
-                keyboardListener.HookKeyboard();
+                keyboardListener.HookKeyboard();*/
 
-                // new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
-                // new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+                new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+                new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
 
                 isProgramsMenuHotkeyRegistered = true;
             }
