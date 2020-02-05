@@ -639,28 +639,18 @@
 
         private void btnWindowsBackgroundFileBrowse_Click(object sender, RoutedEventArgs e)
         {
-            string wallpaperPath;
-            if (ShowOpenFileDialog(GetImageFilter(), out wallpaperPath) == System.Windows.Forms.DialogResult.OK)
+            if (ShowOpenFileDialog(GetImageFilter(), out string wallpaperPath) == System.Windows.Forms.DialogResult.OK)
             {
                 txtWindowsBackgroundPath.Text = wallpaperPath;
                 Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", txtWindowsBackgroundPath.Text);
 
-                if (Shell.IsCairoUserShell)
-                {
-                    // Tell DesktopWindow to ReloadBackground because we no settings are changing
-                    Startup.DesktopWindow.ReloadBackground();
-                }
-                else
-                {
-                    NativeMethods.SystemParametersInfo(NativeMethods.SPI.SETDESKWALLPAPER, 0, wallpaperPath, (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
-                }
+                NativeMethods.SystemParametersInfo(NativeMethods.SPI.SETDESKWALLPAPER, 0, wallpaperPath, (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
             }
         }
 
         private void btnCairoBackgroundFileBrowse_Click(object sender, RoutedEventArgs e)
         {
-            string wallpaperPath;
-            if (ShowOpenFileDialog(GetImageFilter(), out wallpaperPath) == System.Windows.Forms.DialogResult.OK)
+            if (ShowOpenFileDialog(GetImageFilter(), out string wallpaperPath) == System.Windows.Forms.DialogResult.OK)
             {
                 txtCairoBackgroundPath.Text = wallpaperPath;
                 Settings.Instance.CairoBackgroundImagePath = wallpaperPath;
@@ -749,7 +739,7 @@
             // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
             string wallpaperStyle = "2";
             string tileWallpaper = "0";
-            switch (cboBingBackgroundStyle.SelectedItem)
+            switch (cboWindowsBackgroundStyle.SelectedItem)
             {
                 case Desktop.CairoWallpaperStyle.Tile: // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
                     wallpaperStyle = "0";
@@ -773,19 +763,10 @@
                     break;
             }
 
-            Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", wallpaperStyle);
-            Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", tileWallpaper);
+            Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", wallpaperStyle);
+            Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", tileWallpaper);
 
-
-            if (Shell.IsCairoUserShell)
-            {
-                // Tell DesktopWindow to ReloadBackground because we no settings are changing
-                Startup.DesktopWindow.ReloadBackground();
-            }
-            else
-            {
-                NativeMethods.SystemParametersInfo(NativeMethods.SPI.SETDESKWALLPAPER, 0, txtWindowsBackgroundPath.Text, (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
-            }
+            NativeMethods.SystemParametersInfo(NativeMethods.SPI.SETDESKWALLPAPER, 0, txtWindowsBackgroundPath.Text, (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
         }
 
         private void cboCairoBackgroundStyle_SelectionChanged(object sender, SelectionChangedEventArgs e)
