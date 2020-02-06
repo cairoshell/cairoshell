@@ -428,25 +428,21 @@
         private void radDesktopLabelPos0_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.DesktopLabelPosition = 0;
-            showRestartButton();
         }
 
         private void radDesktopLabelPos1_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.DesktopLabelPosition = 1;
-            showRestartButton();
         }
 
         private void radDesktopIconSize0_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.DesktopIconSize = 0;
-            showRestartButton();
         }
 
         private void radDesktopIconSize2_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.DesktopIconSize = 2;
-            showRestartButton();
         }
 
         private void radTrayMode0_Click(object sender, RoutedEventArgs e)
