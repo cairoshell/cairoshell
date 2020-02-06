@@ -497,7 +497,8 @@
                                     Visibility="Collapsed">
                             <StackPanel  Orientation="Horizontal">
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
-                                <TextBox Name="txtWindowsBackgroundPath" />
+                                <TextBox Name="txtWindowsBackgroundPath"
+                                         IsReadOnly="True" />
                                 <Button Name="btnWindowsBackgroundFileBrowse"
                                         Height="24"
                                         Padding="10,0"
@@ -517,7 +518,8 @@
                                     Visibility="Collapsed">
                             <StackPanel  Orientation="Horizontal">
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
-                                <TextBox Name="txtCairoBackgroundPath" />
+                                <TextBox Name="txtCairoBackgroundPath"
+                                         IsReadOnly="True" />
                                 <Button Name="btnCairoBackgroundFileBrowse"
                                         Height="24"
                                         Padding="10,0"
@@ -536,7 +538,8 @@
                                     Visibility="Collapsed">
                             <StackPanel  Orientation="Horizontal">
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
-                                <TextBox Name="txtCairoVideoBackgroundPath" />
+                                <TextBox Name="txtCairoVideoBackgroundPath"
+                                         IsReadOnly="True" />
                                 <Button Name="btnCairoVideoBackgroundFileBrowse"
                                         Height="24"
                                         Padding="10,0"

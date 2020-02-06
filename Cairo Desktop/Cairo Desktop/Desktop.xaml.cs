@@ -29,6 +29,8 @@ namespace CairoDesktop
         public bool IsFbdOpen = false;
         public bool IsLowering;
 
+        private Brush BackgroundBrush { get; set; }
+
         public DesktopIcons Icons;
         public DependencyProperty IsOverlayOpenProperty = DependencyProperty.Register("IsOverlayOpen", typeof(bool), typeof(Desktop), new PropertyMetadata(new bool()));
         private DynamicDesktopNavigationManager navigationManager;
@@ -66,6 +68,8 @@ namespace CairoDesktop
             navigationManager.Navigating += NavigationManager_Navigating;
 
             Settings.Instance.PropertyChanged += Instance_PropertyChanged;
+
+            FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
         }
 
         private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -85,7 +89,35 @@ namespace CairoDesktop
             }
         }
 
-        private System.Windows.Media.Brush BackgroundBrush { get; set; }
+        private void FullScreenApps_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (Settings.Instance.DesktopBackgroundType == "cairoVideoWallpaper")
+            {
+                // pause video if we see a full screen app to preserve system performance.
+
+                if (BackgroundBrush is VisualBrush brush)
+                {
+                    if (brush.Visual is MediaElement videoElement)
+                    {
+                        if (videoElement.LoadedBehavior == MediaState.Manual)
+                        {
+                            if (FullScreenHelper.Instance.FullScreenApps.Count > 0)
+                            {
+                                if (videoElement.CanPause)
+                                {
+                                    videoElement.Pause();
+                                }
+                            }
+                            else
+                            {
+                                videoElement.Play();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         private void setBackground()
         {
             if (Startup.IsCairoRunningAsShell)
@@ -108,7 +140,7 @@ namespace CairoDesktop
             }
         }
 
-        private System.Windows.Media.Brush GetCairoBackgroundBrush()
+        private Brush GetCairoBackgroundBrush()
         {
             switch (Settings.Instance.DesktopBackgroundType)
             {
@@ -126,7 +158,7 @@ namespace CairoDesktop
             }
         }
 
-        private System.Windows.Media.Brush GetCairoBackgroundBrush_Windows()
+        private Brush GetCairoBackgroundBrush_Windows()
         {
             string wallpaper = string.Empty;
             CairoWallpaperStyle style = CairoWallpaperStyle.Stretch;
@@ -169,7 +201,7 @@ namespace CairoDesktop
             return GetCairoBackgroundBrush_Image(wallpaper, style) ?? GetCairoBackgroundBrush_Color();
         }
 
-        private System.Windows.Media.Brush GetCairoBackgroundBrush_Image()
+        private Brush GetCairoBackgroundBrush_Image()
         {
             string wallpaper = Settings.Instance.CairoBackgroundImagePath;
 
@@ -185,26 +217,28 @@ namespace CairoDesktop
             return new SolidColorBrush(Colors.CornflowerBlue);
         }
 
-        private System.Windows.Media.Brush GetCairoBackgroundBrush_Video()
+        private Brush GetCairoBackgroundBrush_Video()
         {
             string wallpaper = Settings.Instance.CairoBackgroundVideoPath;
             if (File.Exists(wallpaper))
             {
                 // https://docs.microsoft.com/en-us/dotnet/framework/wpf/graphics-multimedia/how-to-paint-an-area-with-a-video
-                System.Windows.Controls.MediaElement myMediaElement = new System.Windows.Controls.MediaElement();
-                myMediaElement.Source = new Uri(wallpaper, UriKind.Relative);
-                myMediaElement.LoadedBehavior = System.Windows.Controls.MediaState.Play;
-                myMediaElement.IsMuted = true;
-                myMediaElement.MediaEnded += (o, a) => myMediaElement.Position = new TimeSpan(0, 0, 1);
+                MediaElement videoElement = new MediaElement();
+                videoElement.Source = new Uri(wallpaper, UriKind.Relative);
+                videoElement.LoadedBehavior = MediaState.Manual;
+                videoElement.IsMuted = true;
+                videoElement.MediaEnded += (o, a) => videoElement.Position = new TimeSpan(0, 0, 1);
 
-                VisualBrush myVisualBrush = new VisualBrush();
-                myVisualBrush.Visual = myMediaElement;
-                myVisualBrush.AlignmentX = AlignmentX.Center;
-                myVisualBrush.AlignmentY = AlignmentY.Center;
-                myVisualBrush.TileMode = TileMode.None;
-                myVisualBrush.Stretch = Stretch.UniformToFill;
+                VisualBrush videoBrush = new VisualBrush();
+                videoBrush.Visual = videoElement;
+                videoBrush.AlignmentX = AlignmentX.Center;
+                videoBrush.AlignmentY = AlignmentY.Center;
+                videoBrush.TileMode = TileMode.None;
+                videoBrush.Stretch = Stretch.UniformToFill;
 
-                return myVisualBrush;
+                videoElement.Play();
+
+                return videoBrush;
             }
             else
             {
@@ -212,7 +246,7 @@ namespace CairoDesktop
             }
         }
 
-        private System.Windows.Media.Brush GetCairoBackgroundBrush_Image(string wallpaper, CairoWallpaperStyle wallpaperStyle)
+        private Brush GetCairoBackgroundBrush_Image(string wallpaper, CairoWallpaperStyle wallpaperStyle)
         {
             ImageBrush backgroundImageBrush = null;
             if (!string.IsNullOrWhiteSpace(wallpaper) && Shell.Exists(wallpaper))
@@ -268,7 +302,7 @@ namespace CairoDesktop
             return backgroundImageBrush;
         }
 
-        private System.Windows.Media.Brush GetCairoBackgroundBrush_BingImageOfTheDay()
+        private Brush GetCairoBackgroundBrush_BingImageOfTheDay()
         {
             ImageBrush backgroundImageBrush = null;
             TryAndEat(() =>
