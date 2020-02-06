@@ -118,6 +118,7 @@ namespace CairoDesktop.Localization
             { "sSearch_ViewAllResults", "View All Results" },
             { "sSearch_LastModified", "Last Modified: {0}" },
             { "sSearch_Error", "We were unable to open the search result." },
+            { "sDesktop_DisplaySettings", "Display settings" },
             { "sDesktop_Personalize", "Personalize" },
             { "sDesktop_DeleteTitle", "Are you sure you want to delete this?" },
             { "sDesktop_DeleteInfo", "\"{0}\" will be sent to the Recycle Bin." },

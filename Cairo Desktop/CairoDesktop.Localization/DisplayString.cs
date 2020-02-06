@@ -979,6 +979,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sDesktop_DisplaySettings
+        {
+            get
+            {
+                return getString("sDesktop_DisplaySettings");
+            }
+        }
+
         public static string sDesktop_Personalize
         {
             get

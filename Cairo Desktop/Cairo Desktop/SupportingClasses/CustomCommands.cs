@@ -101,6 +101,23 @@ namespace CairoDesktop
             {
                 FolderHelper.OpenWithShell(fileName);
             }
+            else if (verb == "personalize")
+            {
+                if (Startup.IsCairoRunningAsShell)
+                {
+                    CairoSettingsWindow.Instance.Show();
+                    CairoSettingsWindow.Instance.Activate();
+                    CairoSettingsWindow.Instance.TabDesktop.IsSelected = true;
+                }
+                else
+                {
+                    Interop.Shell.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,2");
+                }
+            }
+            else if (verb == "displaySettings")
+            {
+                Interop.Shell.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,3");
+            }
             else
             {
                 Interop.Shell.StartProcess(fileName, "", verb);

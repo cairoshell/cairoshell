@@ -386,7 +386,7 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}">
+            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}" Name="TabDesktop">
                 <StackPanel Orientation="Vertical">
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDesktop, UpdateSourceTrigger=PropertyChanged}"
                               Click="CheckBox_Click"
