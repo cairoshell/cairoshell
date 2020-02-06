@@ -52,7 +52,9 @@ namespace CairoDesktop
             {
                 if (e.Key == System.Windows.Input.Key.LeftShift || e.Key == System.Windows.Input.Key.RightShift)
                 {
-                    backButtonImg.Source = new BitmapImage(new Uri("/Resources/controlsParentFolder.png", UriKind.RelativeOrAbsolute));
+                    backButtonImg.Source = new BitmapImage(new Uri("/Resources/controlsUp.png", UriKind.RelativeOrAbsolute));
+                    backButtonImg.Width = 18;
+                    backButtonImg.Height = 16;
                     backButtonTypeToggled = true;
                     btnBack.ToolTip = "Parent";
                 }
@@ -67,6 +69,8 @@ namespace CairoDesktop
                 {
                     backButtonTypeToggled = false;
                     backButtonImg.Source = new BitmapImage(new Uri("/Resources/controlsBack.png", UriKind.RelativeOrAbsolute));
+                    backButtonImg.Width = 16;
+                    backButtonImg.Height = 18;
                     btnBack.ToolTip = "Back";
                 }
             }

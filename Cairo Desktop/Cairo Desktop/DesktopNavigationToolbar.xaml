@@ -24,7 +24,7 @@
             <Setter Property="Height"
                     Value="18" />
             <Setter Property="Width"
-                    Value="16" />
+                    Value="18" />
             <Setter Property="HorizontalAlignment"
                     Value="Center" />
             <Setter Property="VerticalAlignment"
@@ -156,7 +156,7 @@
         </StackPanel.Style>
         <Button x:Name="btnBack"
                 Style="{StaticResource CairoDesktopNavItemStyle}"
-                Margin="29,-4,0,0"
+                Margin="28,-4,0,0"
                 Click="Back_Click"
                 MouseRightButtonDown="btnBack_MouseRightButtonDown"
                 ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Back)}">
@@ -167,7 +167,7 @@
         </Button>
         <Button Name="HomeButton"
                 Style="{StaticResource CairoDesktopNavItem2Style}"
-                Margin="23,-5,0,0"
+                Margin="22,-5,0,0"
                 PreviewMouseDown="HomeButton_PreviewMouseDown"
                 ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Home)}">
 
@@ -186,7 +186,7 @@
                    Height="17" />
         </Button>
         <Button Style="{StaticResource CairoDesktopNavItemStyle}"
-                Margin="23,-4,0,0"
+                Margin="22,-4,0,0"
                 Click="Fwd_Click"
                 ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Forward)}">
             <Image Source="Resources\controlsForward.png"
