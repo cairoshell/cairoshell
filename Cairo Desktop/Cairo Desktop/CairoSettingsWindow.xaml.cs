@@ -757,8 +757,8 @@
                     wallpaperStyle = "0";
                     tileWallpaper = "1";
                     break;
-                case Desktop.CairoWallpaperStyle.Center: // Centered { WallpaperStyle = 1; TileWallpaper = 0 }
-                    wallpaperStyle = "1";
+                case Desktop.CairoWallpaperStyle.Center: // Centered { WallpaperStyle = 0; TileWallpaper = 0 }
+                    wallpaperStyle = "0";
                     tileWallpaper = "0";
                     break;
                 case Desktop.CairoWallpaperStyle.Fit: // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
@@ -769,8 +769,8 @@
                     wallpaperStyle = "10";
                     tileWallpaper = "0";
                     break;
-                case Desktop.CairoWallpaperStyle.Span: // Span { WallpaperStyle = 10; TileWallpaper = 0 }
-                    wallpaperStyle = "20";
+                case Desktop.CairoWallpaperStyle.Span: // Span { WallpaperStyle = 22; TileWallpaper = 0 }
+                    wallpaperStyle = "22";
                     tileWallpaper = "0";
                     break;
             }

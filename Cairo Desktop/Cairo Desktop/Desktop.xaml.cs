@@ -143,7 +143,7 @@ namespace CairoDesktop
                     case "01": // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
                         style = CairoWallpaperStyle.Tile;
                         break;
-                    case "00": // Centered { WallpaperStyle = 1; TileWallpaper = 0 }
+                    case "00": // Centered { WallpaperStyle = 0; TileWallpaper = 0 }
                         style = CairoWallpaperStyle.Center;
                         break;
                     case "60": // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
@@ -152,7 +152,7 @@ namespace CairoDesktop
                     case "100": // Fill { WallpaperStyle = 10; TileWallpaper = 0 }
                         style = CairoWallpaperStyle.Fill;
                         break;
-                    case "220": // Span { WallpaperStyle = 10; TileWallpaper = 0 }
+                    case "220": // Span { WallpaperStyle = 22; TileWallpaper = 0 }
                         style = CairoWallpaperStyle.Span;
                         break;
                     case "20": // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
