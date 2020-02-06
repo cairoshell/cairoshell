@@ -656,10 +656,13 @@ namespace CairoDesktop
 
         private void CloseOverlay()
         {
-            Topmost = false;
-            SendToBottom();
-            grid.Background = new SolidColorBrush(Color.FromArgb(0x00, 0, 0, 0));
-            setBackground();
+            if (Topmost)
+            {
+                Topmost = false;
+                SendToBottom();
+                grid.Background = new SolidColorBrush(Color.FromArgb(0x00, 0, 0, 0));
+                setBackground();
+            }
         }
         #endregion
 
