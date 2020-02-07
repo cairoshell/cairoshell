@@ -28,7 +28,7 @@ namespace CairoDesktop
         private bool altF4Pressed;
 
         public bool IsFbdOpen = false;
-        public bool IsLowering;
+        public IntPtr Handle;
 
         private Brush BackgroundBrush { get; set; }
 
@@ -143,17 +143,30 @@ namespace CairoDesktop
             {
                 if (!IsOverlayOpen)
                 {
-                    // if the overlay isn't open, we always want to be on the bottom. modify the WINDOWPOS structure so that nothing can change our z-order.
+                    // if the overlay isn't open, we always want to be on the bottom. modify the WINDOWPOS structure so that we go to the bottom.
 
                     // Extract the WINDOWPOS structure corresponding to this message
                     NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
 
                     // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
-                    // If we are intentionally setting our z-order, allow it
-                    if (!IsLowering && (wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
+                    if ((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
                     {
-                        // add the SWP_NOZORDER flag
-                        wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOZORDER;
+                        if (!Startup.IsCairoRunningAsShell)
+                        {
+                            IntPtr lowestHwnd = Shell.GetLowestDesktopHwnd();
+                            if (lowestHwnd != IntPtr.Zero)
+                            {
+                                wndPos.hwndInsertAfter = NativeMethods.GetWindow(lowestHwnd, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);
+                            }
+                            else
+                            {
+                                wndPos.hwndInsertAfter = (IntPtr)NativeMethods.HWND_BOTTOMMOST;
+                            }
+                        }
+                        else
+                        {
+                            wndPos.hwndInsertAfter = (IntPtr)NativeMethods.HWND_BOTTOMMOST;
+                        }
                         wndPos.UpdateMessage(lParam);
                     }
                 }
@@ -204,6 +217,7 @@ namespace CairoDesktop
         {
             Top = 0;
             helper = new WindowInteropHelper(this);
+            Handle = helper.Handle;
             HwndSource.FromHwnd(helper.Handle).AddHook(new HwndSourceHook(WndProc));
 
             if (Settings.Instance.EnableDesktop && Icons == null)
@@ -344,11 +358,16 @@ namespace CairoDesktop
         #endregion
 
         #region Size and positioning
-        private void SendToBottom()
+        public void SendToBottom()
         {
-            IsLowering = true;
-            Shell.ShowWindowBottomMost(helper.Handle);
-            IsLowering = false;
+            if (!Startup.IsCairoRunningAsShell)
+            {
+                Shell.ShowWindowDesktop(helper.Handle);
+            }
+            else
+            {
+                Shell.ShowWindowBottomMost(helper.Handle);
+            }
         }
 
         private void SetPosition(uint x, uint y)
@@ -656,13 +675,10 @@ namespace CairoDesktop
 
         private void CloseOverlay()
         {
-            if (Topmost)
-            {
-                Topmost = false;
-                SendToBottom();
-                grid.Background = new SolidColorBrush(Color.FromArgb(0x00, 0, 0, 0));
-                setBackground();
-            }
+            Topmost = false;
+            SendToBottom();
+            grid.Background = new SolidColorBrush(Color.FromArgb(0x00, 0, 0, 0));
+            setBackground();
         }
         #endregion
 

@@ -276,17 +276,18 @@ namespace CairoDesktop
                 // WM_WINDOWPOSCHANGING arrives here before the desktop window.
                 if (!ToolbarOwner.IsOverlayOpen)
                 {
-                    // if the overlay isn't open, we always want to be on the bottom. modify the WINDOWPOS structure so that nothing can change our z-order.
+                    // if the overlay isn't open, we always want to be on the bottom. modify the WINDOWPOS structure so that we always go to right above the desktop.
+                    // the desktop will do the work of bringing us to the bottom.
 
                     // Extract the WINDOWPOS structure corresponding to this message
                     NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
 
                     // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
-                    // If we are intentionally setting our z-order, allow it. The desktop sets this flag whenever it decides to go to the bottom.
-                    if (!ToolbarOwner.IsLowering && (wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
+                    if ((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
                     {
-                        // add the SWP_NOZORDER flag
-                        wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOZORDER;
+                        // be right above the desktop.
+                        wndPos.hwndInsertAfter = NativeMethods.GetWindow(ToolbarOwner.Handle, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);
+                        wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOOWNERZORDER;
                         wndPos.UpdateMessage(lParam);
                     }
                 }
