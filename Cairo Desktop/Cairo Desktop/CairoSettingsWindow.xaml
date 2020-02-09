@@ -5,6 +5,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
         xmlns:interop="clr-namespace:CairoDesktop.Interop;assembly=CairoDesktop.Interop"
+        xmlns:validator="clr-namespace:CairoDesktop.SupportingClasses"
         Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
@@ -14,6 +15,26 @@
         SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
         <interop:Shell x:Key="shellHelper" />
+
+        <ControlTemplate x:Key="ValidationTemplate">
+            <DockPanel>
+                <TextBlock Foreground="Red"
+                           FontSize="20">!</TextBlock>
+                <AdornedElementPlaceholder />
+            </DockPanel>
+        </ControlTemplate>
+        <Style x:Key="TextBoxInError"
+               TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError"
+                         Value="true">
+                    <Setter Property="ToolTip"
+                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                              Path=(Validation.Errors)[0].ErrorContent}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="CairoSettingsBarRestartStyle"
                TargetType="{x:Type TabItem}">
             <Setter Property="Foreground"
@@ -683,15 +704,36 @@
                                Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormat)}" />
-                        <TextBox Text="{Binding Source={x:Static Settings:Settings.Instance}, Path=TimeFormat, UpdateSourceTrigger=PropertyChanged}"
-                                 Name="timeSetting"
-                                 ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormatTooltip)}" />
+                        <TextBox Name="timeSetting"
+                                 Validation.ErrorTemplate="{StaticResource ResourceKey=ValidationTemplate}"
+                                 ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormatTooltip)}">
+                            <TextBox.Text>
+                                <Binding Path="TimeFormat"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:DateTimeFormatValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormat)}" />
-                        <TextBox Text="{Binding Source={x:Static Settings:Settings.Instance}, Path=DateFormat, UpdateSourceTrigger=PropertyChanged}"
-                                 Name="dateSetting"
-                                 ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormatTooltip)}" />
+                        <TextBox Name="dateSetting"
+                                 Validation.ErrorTemplate="{StaticResource ResourceKey=ValidationTemplate}"
+                                 ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormatTooltip)}">
+                            <TextBox.Text>
+                                <Binding Path="DateFormat"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:DateTimeFormatValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+
                     </StackPanel>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ForceSoftwareRendering, UpdateSourceTrigger=PropertyChanged}"
                               Click="CheckBox_Click"
