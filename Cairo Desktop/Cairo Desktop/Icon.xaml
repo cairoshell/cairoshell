@@ -23,13 +23,19 @@
                      DockPanel.Dock="Bottom" 
                      Visibility="Collapsed" 
                      Text="{Binding Path=Name, Mode=OneWay}" 
-                     Height="35" 
+                     MaxHeight="34" 
                      Width="80" 
-                     Margin="5,0,5,3" 
+                     Margin="5,0,5,0" 
                      LostFocus="txtRename_LostFocus" 
                      KeyUp="txtRename_KeyUp" 
-                     TextWrapping="WrapWithOverflow" 
-                     TextAlignment="Center" />
+                     TextWrapping="Wrap" 
+                     TextAlignment="Left">
+                <TextBox.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="2" />
+                    </Style>
+                </TextBox.Resources>
+            </TextBox>
             <Border Name="bdrFilename"
                     DockPanel.Dock="Bottom" >
                 <Border.Effect>
@@ -44,10 +50,10 @@
                         TextAlignment="Center"
                         TextTrimming="CharacterEllipsis"
                         TextWrapping="Wrap"
-                        Height="35"
+                        MaxHeight="35"
                         Width="80"
                         Background="Transparent"
-                        Margin="5,0,5,3"
+                        Margin="5,0,5,2"
                         x:Name="txtFilename"
                         Foreground="{DynamicResource ResourceKey=StacksIconText}">
                     <TextBlock.ToolTip>

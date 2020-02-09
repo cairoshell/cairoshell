@@ -407,7 +407,7 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}">
+            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}" Name="TabDesktop">
                 <StackPanel Orientation="Vertical">
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDesktop, UpdateSourceTrigger=PropertyChanged}"
                               Click="CheckBox_Click"
@@ -518,7 +518,8 @@
                                     Visibility="Collapsed">
                             <StackPanel  Orientation="Horizontal">
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
-                                <TextBox Name="txtWindowsBackgroundPath" />
+                                <TextBox Name="txtWindowsBackgroundPath"
+                                         IsReadOnly="True" />
                                 <Button Name="btnWindowsBackgroundFileBrowse"
                                         Height="24"
                                         Padding="10,0"
@@ -528,7 +529,8 @@
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Style)}" />
                                 <ComboBox Name="cboWindowsBackgroundStyle"
                                           IsEditable="False"
-                                          SelectionChanged="cboWindowsBackgroundStyle_SelectionChanged" />
+                                          SelectionChanged="cboWindowsBackgroundStyle_SelectionChanged">
+                                </ComboBox>
                             </StackPanel>
                         </StackPanel>
 
@@ -537,7 +539,8 @@
                                     Visibility="Collapsed">
                             <StackPanel  Orientation="Horizontal">
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
-                                <TextBox Name="txtCairoBackgroundPath" />
+                                <TextBox Name="txtCairoBackgroundPath"
+                                         IsReadOnly="True" />
                                 <Button Name="btnCairoBackgroundFileBrowse"
                                         Height="24"
                                         Padding="10,0"
@@ -556,7 +559,8 @@
                                     Visibility="Collapsed">
                             <StackPanel  Orientation="Horizontal">
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
-                                <TextBox Name="txtCairoVideoBackgroundPath" />
+                                <TextBox Name="txtCairoVideoBackgroundPath"
+                                         IsReadOnly="True" />
                                 <Button Name="btnCairoVideoBackgroundFileBrowse"
                                         Height="24"
                                         Padding="10,0"
@@ -763,7 +767,7 @@
                                     <Setter Property="Text"
                                             Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_ExplorerIsShell)}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsCairoUserShell}"
+                                        <DataTrigger Binding="{Binding IsCairoConfiguredAsShell}"
                                                      Value="True">
                                             <Setter Property="Text"
                                                     Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_CairoIsShell)}" />
@@ -783,7 +787,7 @@
                                     <Setter Property="Content"
                                             Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetCairoAsShell)}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsCairoUserShell}"
+                                        <DataTrigger Binding="{Binding IsCairoConfiguredAsShell}"
                                                      Value="True">
                                             <Setter Property="Content"
                                                     Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetExplorerAsShell)}" />

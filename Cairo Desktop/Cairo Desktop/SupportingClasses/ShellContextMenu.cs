@@ -3,10 +3,8 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Windows.Threading;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
-using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 
 namespace CairoDesktop.SupportingClasses
@@ -24,7 +22,9 @@ namespace CairoDesktop.SupportingClasses
             Properties,
             AddToStacks,
             RemoveFromStacks,
-            OpenInNewWindow
+            OpenInNewWindow,
+            Personalize,
+            DisplaySettings
         }
         
         // Properties
@@ -536,6 +536,14 @@ namespace CairoDesktop.SupportingClasses
                 
                 ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.SEPARATOR, 0, string.Empty);
                 ShellFolders.AppendMenu(contextMenu, 0, (int)CairoContextMenuItem.Properties, Localization.DisplayString.sInterface_Properties);
+                ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.SEPARATOR, 0, string.Empty);
+
+                if (!Startup.IsCairoRunningAsShell)
+                {
+                    ShellFolders.AppendMenu(contextMenu, 0, (int)CairoContextMenuItem.DisplaySettings, Localization.DisplayString.sDesktop_DisplaySettings);
+                }
+
+                ShellFolders.AppendMenu(contextMenu, 0, (int)CairoContextMenuItem.Personalize, Localization.DisplayString.sDesktop_Personalize);
 
                 CairoContextMenuItem selected = (CairoContextMenuItem)ShellFolders.TrackPopupMenuEx(
                                     contextMenu,
@@ -560,6 +568,14 @@ namespace CairoDesktop.SupportingClasses
 
                         case CairoContextMenuItem.RemoveFromStacks:
                             command = "removeStack";
+                            break;
+
+                        case CairoContextMenuItem.Personalize:
+                            command = "personalize";
+                            break;
+
+                        case CairoContextMenuItem.DisplaySettings:
+                            command = "displaySettings";
                             break;
 
                         case CairoContextMenuItem.Properties:

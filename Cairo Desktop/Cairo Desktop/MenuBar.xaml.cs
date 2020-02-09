@@ -234,14 +234,14 @@ namespace CairoDesktop
             // Register L+R Windows key to open Programs menu
             if (Startup.IsCairoRunningAsShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
             {
-                if (keyboardListener == null)
+                /*if (keyboardListener == null)
                     keyboardListener = new LowLevelKeyboardListener();
 
                 keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
-                keyboardListener.HookKeyboard();
+                keyboardListener.HookKeyboard();*/
 
-                // new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
-                // new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+                new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
+                new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
 
                 isProgramsMenuHotkeyRegistered = true;
             }
@@ -642,10 +642,10 @@ namespace CairoDesktop
                 WinSparkle.win_sparkle_cleanup();
 
                 // Currently Unused
-                //if (keyboardListener != null)
-                //{
-                //    keyboardListener.UnHookKeyboard();
-                //}
+                if (keyboardListener != null)
+                {
+                    keyboardListener.UnHookKeyboard();
+                }
 
                 if (Startup.IsCairoRunningAsShell)
                 {
@@ -872,6 +872,14 @@ namespace CairoDesktop
             if (e.Key == Key.Return)
             {
                 Shell.StartProcess("search:query=" + searchStr.Text);
+            }
+        }
+
+        private void searchStr_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (CairoSearchMenu.IsKeyboardFocusWithin)
+            {
+                e.Handled = true;
             }
         }
 

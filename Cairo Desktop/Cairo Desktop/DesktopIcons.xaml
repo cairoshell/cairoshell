@@ -7,7 +7,6 @@
     <DockPanel Name="panel" Margin="0">
         <ItemsControl Name="IconsControl" 
                       DataContext="{Binding ElementName=CairoDesktopIcons, Path=Location}" 
-                      FocusVisualStyle="{x:Null}" 
                       Style="{StaticResource DesktopFolderViewStyle}" 
                       ItemsSource="{Binding Path=Files, IsAsync=True}" />
     </DockPanel>

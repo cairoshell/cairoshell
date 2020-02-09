@@ -241,7 +241,8 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBox Style="{StaticResource SearchTextBox}"
                                                  Name="searchStr"
-                                                 PreviewKeyDown="searchStr_KeyDown" />
+                                                 PreviewKeyDown="searchStr_KeyDown"
+                                                 PreviewLostKeyboardFocus="searchStr_PreviewLostKeyboardFocus" />
                                         <Button Style="{StaticResource SearchTextBoxClearButton}"
                                                 Content="r"
                                                 Name="btnClearSearch"

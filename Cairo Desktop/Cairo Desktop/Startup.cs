@@ -231,11 +231,6 @@
 
         public static void Shutdown()
         {
-            if (IsCairoRunningAsShell)
-            {
-                Shell.StartProcess("explorer.exe");
-            }
-
             IsShuttingDown = true;
 
             Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);

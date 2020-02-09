@@ -428,25 +428,21 @@
         private void radDesktopLabelPos0_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.DesktopLabelPosition = 0;
-            showRestartButton();
         }
 
         private void radDesktopLabelPos1_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.DesktopLabelPosition = 1;
-            showRestartButton();
         }
 
         private void radDesktopIconSize0_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.DesktopIconSize = 0;
-            showRestartButton();
         }
 
         private void radDesktopIconSize2_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.DesktopIconSize = 2;
-            showRestartButton();
         }
 
         private void radTrayMode0_Click(object sender, RoutedEventArgs e)
@@ -566,12 +562,17 @@
 
             txtWindowsBackgroundPath.Text = regWallpaper;
 
-            foreach (var windowsBackgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
+            foreach (var backgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
             {
-                cboWindowsBackgroundStyle.Items.Add(windowsBackgroundStyleItem);
-            }
+                ComboBoxItem cboItem = new ComboBoxItem()
+                {
+                    Tag = backgroundStyleItem,
+                    Content = backgroundStyleItem.ToString()
+                };
+                cboWindowsBackgroundStyle.Items.Add(cboItem);
 
-            cboWindowsBackgroundStyle.SelectedItem = style;
+                if (backgroundStyleItem == style) cboItem.IsSelected = true;
+            }
 
             #endregion
 
@@ -587,13 +588,17 @@
                 cboDesktopBackgroundType.Items.Add(cairoImageWallpaperItem);
                 txtCairoBackgroundPath.Text = Settings.Instance.CairoBackgroundImagePath;
 
-                foreach (var cairoBackgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
+                foreach (var backgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
                 {
-                    cboCairoBackgroundStyle.Items.Add(cairoBackgroundStyleItem);
-                }
+                    ComboBoxItem cboItem = new ComboBoxItem()
+                    {
+                        Tag = backgroundStyleItem,
+                        Content = backgroundStyleItem.ToString()
+                    };
+                    cboCairoBackgroundStyle.Items.Add(cboItem);
 
-                if (Enum.IsDefined(typeof(Desktop.CairoWallpaperStyle), Settings.Instance.CairoBackgroundImageStyle))
-                    cboCairoBackgroundStyle.SelectedItem = (Desktop.CairoWallpaperStyle)Settings.Instance.CairoBackgroundImageStyle;
+                    if (backgroundStyleItem == (Desktop.CairoWallpaperStyle)Settings.Instance.CairoBackgroundImageStyle) cboItem.IsSelected = true;
+                }
                 #endregion
 
                 #region  cairoVideoWallpaper
@@ -615,13 +620,18 @@
                     Tag = bingImageBackgroundStackPanel
                 };
                 cboDesktopBackgroundType.Items.Add(bingWallpaperItem);
-                foreach (var bingBackgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
+                
+                foreach (var backgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
                 {
-                    cboBingBackgroundStyle.Items.Add(bingBackgroundStyleItem);
-                }
+                    ComboBoxItem cboItem = new ComboBoxItem()
+                    {
+                        Tag = backgroundStyleItem,
+                        Content = backgroundStyleItem.ToString()
+                    };
+                    cboBingBackgroundStyle.Items.Add(cboItem);
 
-                if (Enum.IsDefined(typeof(Desktop.CairoWallpaperStyle), Settings.Instance.BingWallpaperStyle))
-                    cboBingBackgroundStyle.SelectedItem = (Desktop.CairoWallpaperStyle)Settings.Instance.BingWallpaperStyle;
+                    if (backgroundStyleItem == (Desktop.CairoWallpaperStyle)Settings.Instance.BingWallpaperStyle) cboItem.IsSelected = true;
+                }
                 #endregion
 
                 var listBoxItems = cboDesktopBackgroundType.Items.Cast<ComboBoxItem>().ToList();
@@ -738,14 +748,17 @@
             // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
             string wallpaperStyle = "2";
             string tileWallpaper = "0";
-            switch (cboWindowsBackgroundStyle.SelectedItem)
+            string origWallpaperStyle = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", wallpaperStyle).ToString();
+            string origTileWallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", tileWallpaper).ToString();
+
+            switch ((cboWindowsBackgroundStyle.SelectedItem as ComboBoxItem).Tag)
             {
                 case Desktop.CairoWallpaperStyle.Tile: // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
                     wallpaperStyle = "0";
                     tileWallpaper = "1";
                     break;
-                case Desktop.CairoWallpaperStyle.Center: // Centered { WallpaperStyle = 1; TileWallpaper = 0 }
-                    wallpaperStyle = "1";
+                case Desktop.CairoWallpaperStyle.Center: // Centered { WallpaperStyle = 0; TileWallpaper = 0 }
+                    wallpaperStyle = "0";
                     tileWallpaper = "0";
                     break;
                 case Desktop.CairoWallpaperStyle.Fit: // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
@@ -756,26 +769,32 @@
                     wallpaperStyle = "10";
                     tileWallpaper = "0";
                     break;
-                case Desktop.CairoWallpaperStyle.Span: // Span { WallpaperStyle = 10; TileWallpaper = 0 }
-                    wallpaperStyle = "20";
+                case Desktop.CairoWallpaperStyle.Span: // Span { WallpaperStyle = 22; TileWallpaper = 0 }
+                    wallpaperStyle = "22";
                     tileWallpaper = "0";
                     break;
             }
 
-            Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", wallpaperStyle);
-            Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", tileWallpaper);
+            // since we run here when settings opens, don't set background if nothing changed
+            if (origWallpaperStyle != wallpaperStyle || origTileWallpaper != tileWallpaper)
+            {
+                Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", wallpaperStyle);
+                Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", tileWallpaper);
 
-            NativeMethods.SystemParametersInfo(NativeMethods.SPI.SETDESKWALLPAPER, 0, txtWindowsBackgroundPath.Text, (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
+                NativeMethods.SystemParametersInfo(NativeMethods.SPI.SETDESKWALLPAPER, 0, txtWindowsBackgroundPath.Text, (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
+            }
         }
 
         private void cboCairoBackgroundStyle_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Settings.Instance.CairoBackgroundImageStyle = (int)cboCairoBackgroundStyle.SelectedItem;
+            int selected = (int)(cboCairoBackgroundStyle.SelectedItem as ComboBoxItem).Tag;
+            if (Settings.Instance.CairoBackgroundImageStyle != selected) Settings.Instance.CairoBackgroundImageStyle = selected;
         }
 
         private void cboBingBackgroundStyle_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Settings.Instance.BingWallpaperStyle = (int)cboBingBackgroundStyle.SelectedItem;
+            int selected = (int)(cboBingBackgroundStyle.SelectedItem as ComboBoxItem).Tag;
+            if (Settings.Instance.BingWallpaperStyle != selected) Settings.Instance.BingWallpaperStyle = selected;
         }
     }
 }

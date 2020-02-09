@@ -284,10 +284,57 @@ namespace CairoDesktop.Interop
                 (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_SHOWWINDOW/* | (int)SetWindowPosFlags.SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
         }
 
+        public static void ShowWindowDesktop(IntPtr hwnd)
+        {
+            IntPtr desktopHwnd = GetLowestDesktopHwnd();
+
+            if (desktopHwnd != IntPtr.Zero)
+            {
+                IntPtr nextHwnd = GetWindow(desktopHwnd, GetWindow_Cmd.GW_HWNDPREV);
+                SetWindowPos(
+                    hwnd,
+                    nextHwnd,
+                    0,
+                    0,
+                    0,
+                    0,
+                    (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+            }
+            else
+            {
+                ShowWindowBottomMost(hwnd);
+            }
+        }
+
+        public static IntPtr GetLowestDesktopHwnd()
+        {
+            IntPtr progmanHwnd = FindWindow("Progman", "Program Manager");
+            IntPtr desktopHwnd = FindWindowEx(progmanHwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+
+            if (desktopHwnd == IntPtr.Zero)
+            {
+                IntPtr workerHwnd = IntPtr.Zero;
+                IntPtr shellIconsHwnd;
+                do
+                {
+                    workerHwnd = FindWindowEx(IntPtr.Zero, workerHwnd, "WorkerW", null);
+                    shellIconsHwnd = FindWindowEx(workerHwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+                } while (shellIconsHwnd == IntPtr.Zero && workerHwnd != IntPtr.Zero);
+
+                desktopHwnd = workerHwnd;
+            }
+            else
+            {
+                desktopHwnd = progmanHwnd;
+            }
+
+            return desktopHwnd;
+        }
+
         public static bool ShowFileProperties(string Filename)
         {
             SHELLEXECUTEINFO info = new SHELLEXECUTEINFO();
-            info.cbSize = System.Runtime.InteropServices.Marshal.SizeOf(info);
+            info.cbSize = Marshal.SizeOf(info);
             info.lpVerb = "properties";
             info.lpFile = Filename;
             info.nShow = SW_SHOW;
@@ -444,7 +491,6 @@ namespace CairoDesktop.Interop
         public static void ToggleDesktopIcons(bool enable)
         {
             var toggleDesktopCommand = new IntPtr(0x7402);
-            //IntPtr hWnd = GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD);
             IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", "");
 
             if (hWnd == IntPtr.Zero)
@@ -474,7 +520,6 @@ namespace CairoDesktop.Interop
 
         private static bool IsDesktopVisible()
         {
-            //IntPtr hWnd = GetWindow(GetWindow(FindWindow("Progman", "Program Manager"), GetWindow_Cmd.GW_CHILD), GetWindow_Cmd.GW_CHILD);
             IntPtr hWnd = GetWindow(FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", ""), GetWindow_Cmd.GW_CHILD);
 
 
@@ -608,7 +653,7 @@ namespace CairoDesktop.Interop
         }
 
         /// <summary>
-        /// Checks the currently configured shell, NOT the currently running shell! Use Startup.IsCairoUserShell for that.
+        /// Checks the currently configured shell, NOT the currently running shell! Use Startup.IsCairoRunningAsShell for that.
         /// </summary>
         public static bool IsCairoConfiguredAsShell
         {

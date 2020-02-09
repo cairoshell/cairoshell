@@ -2466,11 +2466,14 @@
     <!-- Folder Views -->
     <Style x:Key="DesktopFolderViewStyle"
            TargetType="ItemsControl">
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ItemsControl">
                     <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                                  VerticalScrollBarVisibility="Disabled">
+                                  VerticalScrollBarVisibility="Disabled"
+                                  FocusVisualStyle="{x:Null}">
                         <WrapPanel Orientation="Vertical"
                                    IsItemsHost="True" />
                     </ScrollViewer>

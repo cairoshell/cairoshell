@@ -17,6 +17,7 @@
         SourceInitialized="Window_SourceInitialized"
         LocationChanged="CairoDesktopWindow_LocationChanged"
         KeyDown="Window_KeyDown"
+        MouseUp="CairoDesktopWindow_MouseUp"
         MouseRightButtonUp="CairoDesktopWindow_MouseRightButtonUp"
         DragOver="CairoDesktopWindow_DragOver"
         Drop="CairoDesktopWindow_Drop"
