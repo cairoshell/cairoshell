@@ -94,7 +94,9 @@
     <Compile Include="Startup.InitializationRoutines.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
     <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
+    <Compile Include="SupportingClasses\FilePathValidationRule.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
+    <Compile Include="SupportingClasses\DirectoryPathValidationRule.cs" />
     <Compile Include="SupportingClasses\FullScreenHelper.cs" />
     <Compile Include="SupportingClasses\ShellContextMenu.cs" />
     <Compile Include="SystemHotKeys.cs" />

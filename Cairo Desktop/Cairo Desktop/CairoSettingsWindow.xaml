@@ -407,7 +407,8 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}" Name="TabDesktop">
+            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}"
+                     Name="TabDesktop">
                 <StackPanel Orientation="Vertical">
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDesktop, UpdateSourceTrigger=PropertyChanged}"
                               Click="CheckBox_Click"
@@ -416,8 +417,17 @@
                     </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DesktopHome)}" />
-                        <TextBox Text="{Binding Source={x:Static Settings:Settings.Instance}, Path=DesktopDirectory, UpdateSourceTrigger=PropertyChanged}"
-                                 Name="txtDesktopHome" />
+                        <TextBox Name="txtDesktopHome">
+                            <TextBox.Text>
+                                <Binding Path="DesktopDirectory"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:DirectoryPathValidationRule RequireDirectoryExists="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                         <Button Name="btnDesktopHomeSelect"
                                 Click="btnDesktopHomeSelect_Click"
                                 Height="24"
