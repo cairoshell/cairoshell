@@ -15,26 +15,6 @@
         SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
         <interop:Shell x:Key="shellHelper" />
-
-        <ControlTemplate x:Key="ValidationTemplate">
-            <DockPanel>
-                <TextBlock Foreground="Red"
-                           FontSize="20">!</TextBlock>
-                <AdornedElementPlaceholder />
-            </DockPanel>
-        </ControlTemplate>
-        <Style x:Key="TextBoxInError"
-               TargetType="{x:Type TextBox}">
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError"
-                         Value="true">
-                    <Setter Property="ToolTip"
-                            Value="{Binding RelativeSource={x:Static RelativeSource.Self},
-                              Path=(Validation.Errors)[0].ErrorContent}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
         <Style x:Key="CairoSettingsBarRestartStyle"
                TargetType="{x:Type TabItem}">
             <Setter Property="Foreground"
@@ -423,7 +403,7 @@
                                          Source="{x:Static Settings:Settings.Instance}"
                                          UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
-                                        <validator:DirectoryPathValidationRule RequireDirectoryExists="True"/>
+                                        <validator:DirectoryPathValidationRule RequireDirectoryExists="True" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
@@ -719,7 +699,6 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormat)}" />
                         <TextBox Name="timeSetting"
-                                 Validation.ErrorTemplate="{StaticResource ResourceKey=ValidationTemplate}"
                                  ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormatTooltip)}">
                             <TextBox.Text>
                                 <Binding Path="TimeFormat"
@@ -735,7 +714,6 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormat)}" />
                         <TextBox Name="dateSetting"
-                                 Validation.ErrorTemplate="{StaticResource ResourceKey=ValidationTemplate}"
                                  ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormatTooltip)}">
                             <TextBox.Text>
                                 <Binding Path="DateFormat"
@@ -758,8 +736,17 @@
                                Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FileManager)}" />
-                        <TextBox Text="{Binding Source={x:Static Settings:Settings.Instance}, Path=FileManager, UpdateSourceTrigger=PropertyChanged}"
-                                 Name="fileManager" />
+                        <TextBox Name="fileManager">
+                            <TextBox.Text>
+                                <Binding Path="FileManager"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:FilePathValidationRule RequireFileExists="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Advanced_Shell)}"
                                Style="{StaticResource SettingGroupHeader}" />
