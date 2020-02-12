@@ -5,6 +5,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
         xmlns:interop="clr-namespace:CairoDesktop.Interop;assembly=CairoDesktop.Interop"
+        xmlns:validator="clr-namespace:CairoDesktop.SupportingClasses"
         Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
@@ -386,7 +387,8 @@
                 </StackPanel>
             </TabItem>
 
-            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}" Name="TabDesktop">
+            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}"
+                     Name="TabDesktop">
                 <StackPanel Orientation="Vertical">
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDesktop, UpdateSourceTrigger=PropertyChanged}"
                               Click="CheckBox_Click"
@@ -395,8 +397,17 @@
                     </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DesktopHome)}" />
-                        <TextBox Text="{Binding Source={x:Static Settings:Settings.Instance}, Path=DesktopDirectory, UpdateSourceTrigger=PropertyChanged}"
-                                 Name="txtDesktopHome" />
+                        <TextBox Name="txtDesktopHome">
+                            <TextBox.Text>
+                                <Binding Path="DesktopDirectory"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:DirectoryPathValidationRule RequireDirectoryExists="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                         <Button Name="btnDesktopHomeSelect"
                                 Click="btnDesktopHomeSelect_Click"
                                 Height="24"
@@ -687,15 +698,34 @@
                                Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormat)}" />
-                        <TextBox Text="{Binding Source={x:Static Settings:Settings.Instance}, Path=TimeFormat, UpdateSourceTrigger=PropertyChanged}"
-                                 Name="timeSetting"
-                                 ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormatTooltip)}" />
+                        <TextBox Name="timeSetting"
+                                 ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormatTooltip)}">
+                            <TextBox.Text>
+                                <Binding Path="TimeFormat"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:DateTimeFormatValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormat)}" />
-                        <TextBox Text="{Binding Source={x:Static Settings:Settings.Instance}, Path=DateFormat, UpdateSourceTrigger=PropertyChanged}"
-                                 Name="dateSetting"
-                                 ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormatTooltip)}" />
+                        <TextBox Name="dateSetting"
+                                 ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormatTooltip)}">
+                            <TextBox.Text>
+                                <Binding Path="DateFormat"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:DateTimeFormatValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+
                     </StackPanel>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ForceSoftwareRendering, UpdateSourceTrigger=PropertyChanged}"
                               Click="CheckBox_Click"
@@ -706,8 +736,17 @@
                                Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FileManager)}" />
-                        <TextBox Text="{Binding Source={x:Static Settings:Settings.Instance}, Path=FileManager, UpdateSourceTrigger=PropertyChanged}"
-                                 Name="fileManager" />
+                        <TextBox Name="fileManager">
+                            <TextBox.Text>
+                                <Binding Path="FileManager"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:FilePathValidationRule RequireFileExists="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Advanced_Shell)}"
                                Style="{StaticResource SettingGroupHeader}" />
