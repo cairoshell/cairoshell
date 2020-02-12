@@ -303,7 +303,7 @@ namespace CairoDesktop.SupportingClasses
         {
             get
             {
-                return new System.Drawing.Size(Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenWidth / Shell.DpiScaleAdjustment), Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenHeight / Shell.DpiScaleAdjustment));
+                return new System.Drawing.Size(Convert.ToInt32(SystemParameters.PrimaryScreenWidth / Shell.DpiScaleAdjustment), Convert.ToInt32(SystemParameters.PrimaryScreenHeight / Shell.DpiScaleAdjustment));
             }
         }
 
@@ -330,7 +330,7 @@ namespace CairoDesktop.SupportingClasses
             rc.right = screen.Bounds.Right;
 
             // only allocate space for taskbar if enabled
-            if (Settings.Instance.EnableTaskbar && Configuration.Settings.Instance.TaskbarMode == 0)
+            if (Settings.Instance.EnableTaskbar && Settings.Instance.TaskbarMode == 0)
             {
                 if (Settings.Instance.TaskbarPosition == 1)
                 {

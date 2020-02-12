@@ -84,7 +84,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CairoWallpaperStyle.cs" />
-    <Compile Include="DynamicDesktopNavigationManager.cs" />
+    <Compile Include="SupportingClasses\DynamicDesktopNavigationManager.cs" />
     <Compile Include="Icon.xaml.cs">
       <DependentUpon>Icon.xaml</DependentUpon>
     </Compile>
@@ -99,7 +99,7 @@
     <Compile Include="SupportingClasses\DirectoryPathValidationRule.cs" />
     <Compile Include="SupportingClasses\FullScreenHelper.cs" />
     <Compile Include="SupportingClasses\ShellContextMenu.cs" />
-    <Compile Include="SystemHotKeys.cs" />
+    <Compile Include="SupportingClasses\SystemHotKeys.cs" />
     <Compile Include="Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
     </Compile>

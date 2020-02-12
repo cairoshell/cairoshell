@@ -1,10 +1,9 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using System.IO;
 using CairoDesktop.Configuration;
 using CairoDesktop.Common;
+using System.ComponentModel;
 
 namespace CairoDesktop
 {
@@ -19,17 +18,13 @@ namespace CairoDesktop
                 typeof(DesktopIcons),
                 new PropertyMetadata(null));
 
-        int xOffset = 7;
-        int yOffset = 13;
-
         public DesktopIcons()
         {
             InitializeComponent();
 
-            if (Settings.Instance.DesktopLabelPosition == 1)
-                xOffset = 0;
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
 
-            panel.Margin = new Thickness(xOffset, yOffset, 0, 0);
+            setPosition();
         }
         
         public SystemDirectory Location
@@ -48,6 +43,30 @@ namespace CairoDesktop
 
                 SetValue(locationProperty, value);
             }
+        }
+
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+            {
+                switch (e.PropertyName)
+                {
+                    case "DesktopLabelPosition":
+                        setPosition();
+                        break;
+                }
+            }
+        }
+
+        private void setPosition()
+        {
+            int xOffset = 7;
+            int yOffset = 13;
+
+            if (Settings.Instance.DesktopLabelPosition == 1)
+                xOffset = 0;
+
+            panel.Margin = new Thickness(xOffset, yOffset, 0, 0);
         }
     }
 }

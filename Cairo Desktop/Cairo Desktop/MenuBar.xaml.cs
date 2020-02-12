@@ -42,7 +42,7 @@ namespace CairoDesktop
         private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
         private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
 
-        private static LowLevelKeyboardListener keyboardListener;
+        //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         public MenuBar() : this(System.Windows.Forms.Screen.PrimaryScreen)
         {
 
@@ -642,10 +642,10 @@ namespace CairoDesktop
                 WinSparkle.win_sparkle_cleanup();
 
                 // Currently Unused
-                if (keyboardListener != null)
+                /*if (keyboardListener != null)
                 {
                     keyboardListener.UnHookKeyboard();
-                }
+                }*/
 
                 if (Startup.IsCairoRunningAsShell)
                 {

@@ -6,7 +6,6 @@ using CairoDesktop.SupportingClasses;
 using System;
 using System.ComponentModel;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -189,7 +188,7 @@ namespace CairoDesktop
                             && Settings.Instance.EnableDynamicDesktop
                             && Startup.DesktopWindow != null)
                         {
-                            Startup.DesktopWindow.Navigate(file.FullName);
+                            Startup.DesktopWindow.NavigationManager.NavigateTo(file.FullName);
                             return;
                         }
                         else if (file.IsDirectory)

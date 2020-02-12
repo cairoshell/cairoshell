@@ -1059,6 +1059,22 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sDesktop_Up
+        {
+            get
+            {
+                return getString("sDesktop_Up");
+            }
+        }
+
+        public static string sDesktop_ClearHistory
+        {
+            get
+            {
+                return getString("sDesktop_ClearHistory");
+            }
+        }
+
         public static string sTaskbar_Empty
         {
             get

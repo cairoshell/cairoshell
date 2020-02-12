@@ -128,6 +128,8 @@ namespace CairoDesktop.Localization
             { "sDesktop_Forward", "Forward" },
             { "sDesktop_Browse", "Choose folder" },
             { "sDesktop_Home", "Home" },
+            { "sDesktop_Up", "Up" },
+            { "sDesktop_ClearHistory", "Clear history" },
             { "sTaskbar_Empty", "Open windows to see them listed here." },
             { "sTaskbar_Minimize", "Minimize" },
             { "sTaskbar_Restore", "Restore" },
