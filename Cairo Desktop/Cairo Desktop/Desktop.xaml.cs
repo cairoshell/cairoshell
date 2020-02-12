@@ -27,7 +27,7 @@ namespace CairoDesktop
         private WindowInteropHelper helper;
         private bool altF4Pressed;
 
-        public bool IsFbdOpen = false;
+        public bool IsHistoryMenuOpen;
         public IntPtr Handle;
 
         private Brush BackgroundBrush { get; set; }
@@ -213,7 +213,7 @@ namespace CairoDesktop
 
         private void grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.OriginalSource.GetType() == typeof(ScrollViewer))
+            if (e.OriginalSource.GetType() == typeof(ScrollViewer) && !IsHistoryMenuOpen)
             {
                 IsOverlayOpen = false;
             }

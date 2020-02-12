@@ -74,6 +74,7 @@ namespace CairoDesktop
             SetPosition();
 
             browseContextMenu = new System.Windows.Controls.ContextMenu();
+            browseContextMenu.Closed += browseContextMenu_Closed;
 
             lowLevelKeyboardListener = new LowLevelKeyboardListener();
             lowLevelKeyboardListener.HookKeyboard();
@@ -165,7 +166,6 @@ namespace CairoDesktop
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
-            ToolbarOwner.IsFbdOpen = true;
             using (FolderBrowserDialog fbd = new FolderBrowserDialog
             {
                 Description = Localization.DisplayString.sDesktop_BrowseTitle,
@@ -177,7 +177,6 @@ namespace CairoDesktop
                 if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     if (Directory.Exists(fbd.SelectedPath))
                         NavigationManager.NavigateTo(fbd.SelectedPath);
-                ToolbarOwner.IsFbdOpen = false;
             }
         }
 
@@ -205,6 +204,9 @@ namespace CairoDesktop
                 browseContextMenu.Items.Add(clearHistoryMenuItem);
 
                 browseContextMenu.IsOpen = true;
+
+                // this value is set so that if we click away from the context menu, the desktop overlay does not get toggled
+                ToolbarOwner.IsHistoryMenuOpen = true;
 
                 e.Handled = true;
             }
@@ -235,6 +237,11 @@ namespace CairoDesktop
             if (sender is System.Windows.Controls.MenuItem menuItem)
                 if (menuItem.Tag is int index)
                     NavigationManager.NavigateToIndex(index);
+        }
+
+        private void browseContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            ToolbarOwner.IsHistoryMenuOpen = false;
         }
         #endregion
 
