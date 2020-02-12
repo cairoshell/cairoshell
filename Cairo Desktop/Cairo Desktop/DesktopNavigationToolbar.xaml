@@ -165,7 +165,7 @@
         </Button>
         <Button x:Name="btnUp"
                 Style="{StaticResource CairoDesktopUpNavItemStyle}"
-                Margin="28,-4,0,0"
+                Margin="29,-4,-1,0"
                 Click="btnUp_Click"
                 ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Up)}">
             <Image Source="Resources\controlsUp.png"
