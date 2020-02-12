@@ -15,7 +15,6 @@
         MouseLeftButtonDown="DesktopToolbar_MouseLeftButtonDown"
         PreviewMouseUp="DesktopToolbar_PreviewMouseUp"
         LocationChanged="DesktopToolbar_LocationChanged"
-        Loaded="DesktopToolbar_Loaded"
         Closing="DesktopToolbar_Closing">
     <Window.Resources>
         <Style x:Key="CairoDesktopNavItemStyle"

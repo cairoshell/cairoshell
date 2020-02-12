@@ -283,16 +283,6 @@ namespace CairoDesktop
             Shell.HideWindowFromTasks(helper.Handle);
         }
 
-        private void DesktopToolbar_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!(Owner is Desktop))
-            {
-                // if owner is not a desktop, we can't do anything meaningful.
-                CairoLogger.Instance.Info("Desktop navigation toolbar closing due to invalid owner.");
-                Close();
-            }
-        }
-
         private void DesktopToolbar_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             switch (e.ChangedButton)
