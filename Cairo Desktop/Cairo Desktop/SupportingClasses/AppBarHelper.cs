@@ -191,7 +191,16 @@ namespace CairoDesktop.SupportingClasses
                 int right = SystemInformation.WorkingArea.Right;
                 int bottom = PrimaryMonitorDeviceSize.Height;
 
-                double dpiScale = PresentationSource.FromVisual(abWindow).CompositionTarget.TransformToDevice.M11;
+                PresentationSource ps = PresentationSource.FromVisual(abWindow);
+
+                if (ps == null)
+                {
+                    // if we are racing with screen setting changes, this will be null
+                    CairoLogger.Instance.Debug("Aborting ABSetPos due to window destruction");
+                    return;
+                }
+
+                double dpiScale = ps.CompositionTarget.TransformToDevice.M11;
 
                 if (screen != null)
                 {
