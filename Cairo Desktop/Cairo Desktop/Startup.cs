@@ -10,11 +10,8 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Markup;
-    using System.Windows.Media.Imaging;
     using System.Windows.Threading;
 
     /// <summary>
@@ -60,7 +57,7 @@
             #region Initialization Routines
 
             ProcessCommandLineArgs(args);
-            SingleInstanceCheck();
+            if(!SingleInstanceCheck()) return;
             SetShellReadyEvent();
 
             SetupSettings(); // run this before logging setup so that preferences are always used
