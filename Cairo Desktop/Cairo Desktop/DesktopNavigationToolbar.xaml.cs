@@ -89,7 +89,6 @@ namespace CairoDesktop
                 }
             }
         }
-        #endregion
 
         #region Positioning
         private void SetPosition()

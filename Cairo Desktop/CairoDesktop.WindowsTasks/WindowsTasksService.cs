@@ -96,20 +96,6 @@ namespace CairoDesktop.WindowsTasks
                 return false;
         }
 
-        private void groupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            // yup, do nothing. helps prevent a NRE
-        }
-
-        private bool groupedWindows_Filter(object item)
-        {
-            ApplicationWindow window = item as ApplicationWindow;
-
-            if (window.ShowInTaskbar)
-                return true;
-            else
-                return false;
-        }
 
         public void Dispose()
         {
