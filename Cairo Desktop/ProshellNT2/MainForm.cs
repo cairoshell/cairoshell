@@ -14,6 +14,7 @@ namespace ProshellNT2
 {
     public partial class MainForm : Form
     {
+        public Dictionary<string, IFileOpen> FileExt = new Dictionary<string, IFileOpen>();
         public Exposure exp;
         Dictionary<ListViewItem, I_NT2Addon> _Plugins;
         public MainForm()
@@ -32,6 +33,9 @@ namespace ProshellNT2
                 {
                     imageList1.Images.Add(item.Icon);
                     ListViewItem listViewItem = new ListViewItem(item.Name, imageList1.Images.Count - 1);
+                    listViewItem.SubItems.Add(item.Description);
+                    listViewItem.SubItems.Add(item.Version.ToString());
+                    listViewItem.SubItems.Add(item.Author);
                     _Plugins.Add(listView1.Items.Add(listViewItem), item);
                     
                     
@@ -61,7 +65,34 @@ namespace ProshellNT2
 
         private void listView1_DoubleClick(object sender, EventArgs e)
         {
-            _Plugins[listView1.SelectedItems[0]].OnRun(MdiParent);
+            NT_Interface NT = new NT_Interface();
+            NT.FileExt = FileExt;
+            _Plugins[listView1.SelectedItems[0]].OnRun(MdiParent, NT);
+        }
+
+        private void largeIconToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listView1.View = View.LargeIcon;
+        }
+
+        private void smallIconsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listView1.View = View.SmallIcon;
+        }
+
+        private void detailsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listView1.View = View.Details;
+        }
+
+        private void listToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listView1.View = View.List;
+        }
+
+        private void tileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listView1.View = View.Tile;
         }
     }
 }

@@ -117,47 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="add_to_queue_button" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\add-to-queue-button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Back" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\back.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="baselogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\baselogo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bookmark_outline" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\bookmark-outline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CatAbout" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\catabout.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="clipboard_paste_button" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\clipboard-paste-button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="copy_content" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\copy-content.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="create_new_pencil_button" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\create-new-pencil-button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cut_content_button" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\cut-content-button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="folder_symbol" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\folder-symbol.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Return" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\return.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="rubbish_bin_delete_button" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\rubbish-bin-delete-button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="sd_card" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\sd-card.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="view_list_button" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\view-list-button.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
 </root>

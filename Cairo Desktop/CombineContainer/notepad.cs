@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CombineContainer
+namespace ProshellNT2.Accessories
 {
-    public partial class mainform : Form
+    public partial class notepad : Form
     {
-        public mainform()
+        public notepad()
         {
             InitializeComponent();
         }

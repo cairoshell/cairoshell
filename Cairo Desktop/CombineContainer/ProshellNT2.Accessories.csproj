@@ -7,8 +7,8 @@
     <ProjectGuid>{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CombineContainer</RootNamespace>
-    <AssemblyName>CombineContainer</AssemblyName>
+    <RootNamespace>ProshellNT2.Accessories</RootNamespace>
+    <AssemblyName>ProshellNT2.Accessories</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -43,18 +43,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="mainform.cs">
+    <Compile Include="AboutBox1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mainform.Designer.cs">
-      <DependentUpon>mainform.cs</DependentUpon>
+    <Compile Include="AboutBox1.Designer.cs">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class1.cs" />
+    <Compile Include="FileManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FileManager.Designer.cs">
+      <DependentUpon>FileManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="notepad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="notepad.Designer.cs">
+      <DependentUpon>notepad.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Calculator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Calculator.Designer.cs">
+      <DependentUpon>Calculator.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -64,16 +82,64 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="mainform.resx">
-      <DependentUpon>mainform.cs</DependentUpon>
+    <EmbeddedResource Include="AboutBox1.resx">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FileManager.resx">
+      <DependentUpon>FileManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="notepad.resx">
+      <DependentUpon>notepad.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Calculator.resx">
+      <DependentUpon>Calculator.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\baselogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add-to-queue-button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Back.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bookmark-outline.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\CatAbout.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clipboard-paste-button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy-content.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\create-new-pencil-button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cut-content-button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder-symbol.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Return.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rubbish-bin-delete-button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sd-card.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\view-list-button.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

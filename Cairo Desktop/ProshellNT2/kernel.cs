@@ -39,13 +39,14 @@ namespace ProshellNT2
     }
     public static class PluginLoader
     {
+
         public static ICollection<I_NT2Addon> LoadPlugins(string path)
         {
             string[] dllFileNames = null;
 
             if (Directory.Exists(path))
             {
-                dllFileNames = Directory.GetFiles(path, "*.pcx");
+                dllFileNames = Directory.GetFiles(path, "*.dll");
 
                 ICollection<Assembly> assemblies = new List<Assembly>(dllFileNames.Length);
                 foreach (string dllFile in dllFileNames)

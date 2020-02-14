@@ -72,12 +72,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NT 2", "NT 2", "{D9770942-EA55-4891-806A-3BBD68510EB5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProshellNT2", "ProshellNT2\ProshellNT2.csproj", "{CE3328A9-0371-4D47-BF8A-01C151CC465C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C} = {8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProshellNT2.TargetingPack", "ProshellNT2.TargetingPack\ProshellNT2.TargetingPack.csproj", "{0107D42B-6092-45C4-BDD1-AAE86074327B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CombineContainer", "CombineContainer\CombineContainer.csproj", "{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProshellNT2.Accessories", "CombineContainer\ProshellNT2.Accessories.csproj", "{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CatalystInstaller", "CatalystInstaller\CatalystInstaller.csproj", "{4F68A8CB-571B-4715-B4F1-19F16458C7B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Files", "D:\source\repos\ProshellCatalyst\Files\Files.csproj", "{97198423-DE3F-4A57-8F64-32567E3DD933}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -395,6 +400,18 @@ Global
 		{4F68A8CB-571B-4715-B4F1-19F16458C7B4}.Release|x64.Build.0 = Release|Any CPU
 		{4F68A8CB-571B-4715-B4F1-19F16458C7B4}.Release|x86.ActiveCfg = Release|Any CPU
 		{4F68A8CB-571B-4715-B4F1-19F16458C7B4}.Release|x86.Build.0 = Release|Any CPU
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Debug|x64.ActiveCfg = Debug|x64
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Debug|x64.Build.0 = Debug|x64
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Debug|x86.ActiveCfg = Debug|x86
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Debug|x86.Build.0 = Debug|x86
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Release|x64.ActiveCfg = Release|x64
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Release|x64.Build.0 = Release|x64
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Release|x86.ActiveCfg = Release|x86
+		{97198423-DE3F-4A57-8F64-32567E3DD933}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -410,6 +427,7 @@ Global
 		{CE3328A9-0371-4D47-BF8A-01C151CC465C} = {D9770942-EA55-4891-806A-3BBD68510EB5}
 		{0107D42B-6092-45C4-BDD1-AAE86074327B} = {D9770942-EA55-4891-806A-3BBD68510EB5}
 		{8E19A4DC-6A36-48C7-82DF-4579C0D58A2C} = {D9770942-EA55-4891-806A-3BBD68510EB5}
+		{97198423-DE3F-4A57-8F64-32567E3DD933} = {D9770942-EA55-4891-806A-3BBD68510EB5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7566EAA4-435C-4795-BB55-54BA364D0419}
