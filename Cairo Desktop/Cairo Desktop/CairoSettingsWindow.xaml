@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="CairoDesktop.CairoSettingsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization" xmlns:interop="clr-namespace:CairoDesktop.Interop;assembly=CairoDesktop.Interop"
-    Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
-    SizeToContent="WidthAndHeight"
-    WindowStartupLocation="CenterScreen"
-    Closing="Window_Closing" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" SourceInitialized="Window_SourceInitialized">
+<Window x:Class="CairoDesktop.CairoSettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+        xmlns:interop="clr-namespace:CairoDesktop.Interop;assembly=CairoDesktop.Interop"
+        xmlns:validator="clr-namespace:CairoDesktop.SupportingClasses"
+        Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+        Closing="Window_Closing"
+        ResizeMode="NoResize"
+        WindowStyle="SingleBorderWindow"
+        SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
-        <Settings:Settings x:Key="settings" />
         <interop:Shell x:Key="shellHelper" />
         <Style x:Key="CairoSettingsBarRestartStyle"
-            TargetType="{x:Type TabItem}">
+               TargetType="{x:Type TabItem}">
             <Setter Property="Foreground"
-                Value="#ffffff" />
+                    Value="#ffffff" />
             <Setter Property="FontFamily"
-                Value="Segoe UI" />
+                    Value="Segoe UI" />
             <Setter Property="FontSize"
-                Value="10" />
+                    Value="10" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TabItem}">
@@ -23,36 +31,40 @@
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Border Name="Border" Grid.Row="1"
-                                Background="#ff8000"
-                                BorderBrush="{x:Null}"
-                                BorderThickness="0,0,0,0"
+                            <Border Name="Border"
+                                    Grid.Row="1"
+                                    Background="#ff8000"
+                                    BorderBrush="{x:Null}"
+                                    BorderThickness="0,0,0,0"
                                     Margin="0,5,5,5"
-                                CornerRadius="8">
+                                    CornerRadius="8">
                                 <ContentPresenter x:Name="ContentSite"
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Center"
-                                    ContentSource="Header"
-                                    Width="112"
-                                    Margin="5,6,5,6" />
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Center"
+                                                  ContentSource="Header"
+                                                  Width="112"
+                                                  Margin="5,6,5,6" />
                             </Border>
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger SourceName="ContentSite"
-                                Property="IsMouseOver"
-                                Value="True">
+                                     Property="IsMouseOver"
+                                     Value="True">
                                 <Setter TargetName="Border"
-                                    Property="Background"
-                                    Value="#ff973b" />
+                                        Property="Background"
+                                        Value="#ff973b" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style x:Key="SettingsTabControl" TargetType="{x:Type TabControl}">
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="UseLayoutRounding" Value="True" />
+        <Style x:Key="SettingsTabControl"
+               TargetType="{x:Type TabControl}">
+            <Setter Property="OverridesDefaultStyle"
+                    Value="True" />
+            <Setter Property="UseLayoutRounding"
+                    Value="True" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TabControl}">
@@ -62,369 +74,720 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <TabPanel x:Name="HeaderPanel"
-                        Grid.Column="0"
-                        Panel.ZIndex="1"
-                        IsItemsHost="True"
-                        Margin="5,5,0,5"
-                        Background="#ff2e3034" />
+                                      Grid.Column="0"
+                                      Panel.ZIndex="1"
+                                      IsItemsHost="True"
+                                      Margin="5,5,0,5"
+                                      Background="#ff2e3034" />
                             <Border x:Name="Border"
-                      Grid.Column="1"
-                      BorderThickness="0"
-                                Background="#ff191a1e">
-                                <ContentPresenter
-                                  ContentSource="SelectedContent" Margin="16,8" />
+                                    Grid.Column="1"
+                                    BorderThickness="0"
+                                    Background="#ff191a1e">
+                                <ContentPresenter ContentSource="SelectedContent"
+                                                  Margin="16,8" />
                             </Border>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style x:Key="SettingsTabItem" TargetType="{x:Type TabItem}">
-            <Setter Property="HorizontalAlignment" Value="Left" />
-            <Setter Property="FontFamily" Value="Segoe UI" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Height" Value="40" />
-            <Setter Property="Width" Value="130" />
+        <Style x:Key="SettingsTabItem"
+               TargetType="{x:Type TabItem}">
+            <Setter Property="HorizontalAlignment"
+                    Value="Left" />
+            <Setter Property="FontFamily"
+                    Value="Segoe UI" />
+            <Setter Property="FontSize"
+                    Value="12" />
+            <Setter Property="Height"
+                    Value="40" />
+            <Setter Property="Width"
+                    Value="130" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <Border Name="Tab" Background="Transparent" CornerRadius="5,0,0,5">
+                        <Border Name="Tab"
+                                Background="Transparent"
+                                CornerRadius="5,0,0,5">
                             <ContentPresenter x:Name="ContentSite"
-                                        VerticalAlignment="Center"
-                                        HorizontalAlignment="Left"
-                                        ContentSource="Header"
-                                        Margin="10,0"/>
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"
+                                              ContentSource="Header"
+                                              Margin="10,0" />
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger SourceName="Tab" Property="IsMouseOver" Value="True">
-                                <Setter Property="Foreground" Value="#ffe9ecf4" />
-                                <Setter TargetName="Tab" Property="Background" Value="#11ffffff" />
+                            <Trigger SourceName="Tab"
+                                     Property="IsMouseOver"
+                                     Value="True">
+                                <Setter Property="Foreground"
+                                        Value="#ffe9ecf4" />
+                                <Setter TargetName="Tab"
+                                        Property="Background"
+                                        Value="#11ffffff" />
                             </Trigger>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Foreground" Value="#ffe9ecf4" />
-                                <Setter TargetName="Tab" Property="Background" Value="#ff191a1e" />
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+                                <Setter Property="Foreground"
+                                        Value="#ffe9ecf4" />
+                                <Setter TargetName="Tab"
+                                        Property="Background"
+                                        Value="#ff191a1e" />
                             </Trigger>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="IsSelected"
-                                    Value="False" />
-                                    <Condition SourceName="Tab" Property="IsMouseOver"
-                                    Value="False" />
+                                               Value="False" />
+                                    <Condition SourceName="Tab"
+                                               Property="IsMouseOver"
+                                               Value="False" />
                                 </MultiTrigger.Conditions>
-                                <Setter Property="Foreground" Value="#55FFFFFF" />
+                                <Setter Property="Foreground"
+                                        Value="#55FFFFFF" />
                             </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style x:Key="RadioGroup" TargetType="{x:Type StackPanel}">
-            <Setter Property="Margin" Value="0,4" />
+        <Style x:Key="RadioGroup"
+               TargetType="{x:Type StackPanel}">
+            <Setter Property="Margin"
+                    Value="0,4" />
         </Style>
-        <Style x:Key="SettingGroupHeader" TargetType="{x:Type TextBlock}">
-            <Setter Property="Foreground" Value="#55ffffff" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Margin" Value="5,16,0,4" />
-            <Setter Property="VerticalAlignment" Value="Center" />
+        <Style x:Key="SettingGroupHeader"
+               TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground"
+                    Value="#55ffffff" />
+            <Setter Property="FontWeight"
+                    Value="Bold" />
+            <Setter Property="Margin"
+                    Value="5,16,0,4" />
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
         </Style>
         <Style TargetType="{x:Type CheckBox}">
-            <Setter Property="Margin" Value="5,8" />
-            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin"
+                    Value="5,8" />
+            <Setter Property="Padding"
+                    Value="0" />
         </Style>
         <Style TargetType="{x:Type RadioButton}">
-            <Setter Property="Margin" Value="0,4" />
-            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin"
+                    Value="0,4" />
+            <Setter Property="Padding"
+                    Value="0" />
         </Style>
         <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="Foreground" Value="#ffe9ecf4" />
-            <Setter Property="Margin" Value="5,4" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="Foreground"
+                    Value="#ffe9ecf4" />
+            <Setter Property="Margin"
+                    Value="5,4" />
+            <Setter Property="VerticalAlignment"
+                    Value="Center" />
+            <Setter Property="MinWidth"
+                    Value="100" />
         </Style>
         <Style TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="#ffe9ecf4" />
-            <Setter Property="Padding" Value="0" />
+            <Setter Property="Foreground"
+                    Value="#ffe9ecf4" />
+            <Setter Property="Padding"
+                    Value="0" />
         </Style>
         <Style TargetType="{x:Type TextBox}">
-            <Setter Property="Foreground" Value="#ffe9ecf4" />
-            <Setter Property="Background" Value="#ff111111" />
-            <Setter Property="Margin" Value="0,8" />
-            <Setter Property="Padding" Value="3" />
-            <Setter Property="Width" Value="200" />
-            <Setter Property="Height" Value="24" />
+            <Setter Property="Foreground"
+                    Value="#ffe9ecf4" />
+            <Setter Property="Background"
+                    Value="#ff111111" />
+            <Setter Property="Margin"
+                    Value="0,8" />
+            <Setter Property="Padding"
+                    Value="3" />
+            <Setter Property="Width"
+                    Value="200" />
+            <Setter Property="Height"
+                    Value="24" />
         </Style>
         <Style TargetType="{x:Type ComboBox}">
-            <Setter Property="Margin" Value="0,8" />
-            <Setter Property="Padding" Value="3" />
-            <Setter Property="Width" Value="200" />
-            <Setter Property="Height" Value="23" />
+            <Setter Property="Margin"
+                    Value="0,8" />
+            <Setter Property="Padding"
+                    Value="3" />
+            <Setter Property="Width"
+                    Value="200" />
+            <Setter Property="Height"
+                    Value="23" />
         </Style>
     </Window.Resources>
-    <Grid Background="#ff2e3034" DataContext="{StaticResource settings}">
-        <TabControl TabStripPlacement="Left" Style="{StaticResource SettingsTabControl}">
+    <Grid Background="#ff2e3034">
+        <TabControl TabStripPlacement="Left"
+                    Style="{StaticResource SettingsTabControl}">
             <TabControl.Resources>
-                <Style TargetType="TabItem" BasedOn="{StaticResource SettingsTabItem}">
+                <Style TargetType="TabItem"
+                       BasedOn="{StaticResource SettingsTabItem}">
                 </Style>
             </TabControl.Resources>
+
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_General)}">
                 <StackPanel Orientation="Vertical">
                     <CheckBox Click="EnableAutoUpdates_Click"
-                        Name="chkEnableAutoUpdates">
+                              Name="chkEnableAutoUpdates">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_UpdateCheck)}" />
                     </CheckBox>
                     <CheckBox Click="chkRunAtLogOn_Click"
-                        Name="chkRunAtLogOn">
+                              Name="chkRunAtLogOn">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_RunAtLogOn)}" />
                     </CheckBox>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
+                               Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_Language)}" />
-                        <ComboBox Name="cboLangSelect" DropDownClosed="DropDown_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=Language}" />
+                        <ComboBox Name="cboLangSelect"
+                                  DropDownClosed="DropDown_Changed"
+                                  IsDropDownOpen="False"
+                                  IsEditable="False"
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=Language, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_Theme)}" ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_ThemeTooltip)}" />
-                        <ComboBox Name="cboThemeSelect" DropDownClosed="DropDown_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=CairoTheme}" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_Theme)}"
+                                   ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_ThemeTooltip)}" />
+                        <ComboBox Name="cboThemeSelect"
+                                  IsDropDownOpen="False"
+                                  IsEditable="False"
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoTheme, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FilesAndFolders)}" Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Path=EnableSubDirs}"
-                        Click="CheckBox_Click"
-                        Name="chkEnableSubDirs">
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FilesAndFolders)}"
+                               Style="{StaticResource SettingGroupHeader}" />
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableSubDirs, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkEnableSubDirs">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_ShowSubDirectories)}" />
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Path=FoldersOpenDesktopOverlay}"
-                        Name="chkFoldersOpenDesktopOverlay">
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=FoldersOpenDesktopOverlay, UpdateSourceTrigger=PropertyChanged}"
+                              Name="chkFoldersOpenDesktopOverlay">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_FoldersOpenDesktopOverlay)}" />
                     </CheckBox>
                 </StackPanel>
             </TabItem>
+
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_MenuBar)}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_DefaultProgramsCategory)}" MinWidth="160" />
-                        <ComboBox Name="cboDefaultProgramsCategory" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=DefaultProgramsCategory}" Width="170" />
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_DefaultProgramsCategory)}"
+                                   MinWidth="160" />
+                        <ComboBox Name="cboDefaultProgramsCategory"
+                                  IsDropDownOpen="False"
+                                  IsEditable="False"
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=DefaultProgramsCategory, UpdateSourceTrigger=PropertyChanged}"
+                                  Width="170" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding Path=EnableCairoMenuHotKey}"
-                            Click="CheckBox_Click" Name="chkEnableCairoMenuHotKey">
+                        <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableCairoMenuHotKey, UpdateSourceTrigger=PropertyChanged}"
+                                  Click="CheckBox_Click"
+                                  Name="chkEnableCairoMenuHotKey">
                             <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableCairoMenuHotKey)}" />
                         </CheckBox>
-                        <ComboBox Name="cboCairoMenuHotKeyMod1" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[0]}" />
-                        <ComboBox Name="cboCairoMenuHotKeyMod2" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[1]}" />
-                        <ComboBox Name="cboCairoMenuHotKeyKey" IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}" IsDropDownOpen="False" IsEditable="False" Width="40" Margin="5,-1,0,0" DropDownClosed="cboCairoMenuHotKey_DropDownClosed" SelectedValue="{Binding Path=CairoMenuHotKey[2]}" />
+                        <ComboBox Name="cboCairoMenuHotKeyMod1"
+                                  IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}"
+                                  IsDropDownOpen="False"
+                                  IsEditable="False"
+                                  Width="55"
+                                  Margin="5,-1,0,0"
+                                  DropDownClosed="cboCairoMenuHotKey_DropDownClosed"
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
+                        <ComboBox Name="cboCairoMenuHotKeyMod2"
+                                  IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}"
+                                  IsDropDownOpen="False"
+                                  IsEditable="False"
+                                  Width="55"
+                                  Margin="5,-1,0,0"
+                                  DropDownClosed="cboCairoMenuHotKey_DropDownClosed"
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
+                        <ComboBox Name="cboCairoMenuHotKeyKey"
+                                  IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}"
+                                  IsDropDownOpen="False"
+                                  IsEditable="False"
+                                  Width="40"
+                                  Margin="5,-1,0,0"
+                                  DropDownClosed="cboCairoMenuHotKey_DropDownClosed"
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
-                    <CheckBox IsChecked="{Binding Path=ShowHibernate}"
-                        Click="CheckBox_Click" Name="chkShowHibernate">
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ShowHibernate, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkShowHibernate">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowHibernate)}" />
                     </CheckBox>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Path=EnableMenuBarBlur}"
-                        Click="CheckBox_Click" Name="chkEnableMenuBarBlur">
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
+                               Style="{StaticResource SettingGroupHeader}" />
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarBlur, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkEnableMenuBarBlur">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarBlur)}" />
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Path=EnableMenuBarShadow}"
-                        Click="CheckBox_Click" Name="chkEnableMenuBarShadow">
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarShadow, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkEnableMenuBarShadow">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarShadow)}" />
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Path=EnableMenuBarMultiMon}"
-                        Click="CheckBox_Click"
-                        Name="chkEnableMenuBarMultiMon">
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarMultiMon, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkEnableMenuBarMultiMon">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarMultiMon)}" />
                     </CheckBox>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}" Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Path=EnableSysTray}"
-                        Click="CheckBox_Click" Name="chkEnableSysTray">
+                    <StackPanel Orientation="Horizontal"
+                                Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ProgramsMenuLayout)}"
+                                   MinWidth="165"
+                                   VerticalAlignment="Top"
+                                   Margin="5,3,5,4" />
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton GroupName="rdoProgramsMenuLayout"
+                                         Name="radProgramsMenuLayout0"
+                                         Click="radProgramsMenuLayout0_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ProgramsMenuLayoutRight)}" />
+                            </RadioButton>
+                            <RadioButton GroupName="rdoProgramsMenuLayout"
+                                         Name="radProgramsMenuLayout1"
+                                         Click="radProgramsMenuLayout1_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ProgramsMenuLayoutLeft)}" />
+                            </RadioButton>
+                        </StackPanel>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}"
+                               Style="{StaticResource SettingGroupHeader}" />
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableSysTray, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkEnableSysTray">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableNotificationArea)}" />
                     </CheckBox>
-                    <TextBlock Name="lblTrayWarning" Visibility="Collapsed" Width="300" TextWrapping="Wrap" Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationAreaError)}"/>
-                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}" Name="pnlTraySettings">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIcons)}" MinWidth="165" VerticalAlignment="Top" Margin="5,3,5,4" />
+                    <TextBlock Name="lblTrayWarning"
+                               Visibility="Collapsed"
+                               Width="300"
+                               TextWrapping="Wrap"
+                               Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationAreaError)}" />
+                    <StackPanel Orientation="Horizontal"
+                                Style="{StaticResource RadioGroup}"
+                                Name="pnlTraySettings">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIcons)}"
+                                   MinWidth="165"
+                                   VerticalAlignment="Top"
+                                   Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTrayMode" Name="radTrayMode0" Click="radTrayMode0_Click">
+                            <RadioButton GroupName="rdoTrayMode"
+                                         Name="radTrayMode0"
+                                         Click="radTrayMode0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIconsCollapsed)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTrayMode" Name="radTrayMode1" Click="radTrayMode1_Click">
+                            <RadioButton GroupName="rdoTrayMode"
+                                         Name="radTrayMode1"
+                                         Click="radTrayMode1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIconsAlways)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}">
+
+            <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}"
+                     Name="TabDesktop">
                 <StackPanel Orientation="Vertical">
-                    <CheckBox IsChecked="{Binding Path=EnableDesktop}"
-                        Click="CheckBox_Click" Name="chkEnableDesktop">
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDesktop, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkEnableDesktop">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDesktop)}" />
                     </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DesktopHome)}" />
-                        <TextBox Text="{Binding Path=DesktopDirectory}"
-                            Name="txtDesktopHome" />
-                        <Button Name="btnDesktopHomeSelect" Click="btnDesktopHomeSelect_Click" Height="24" Padding="10,0">...</Button>
+                        <TextBox Name="txtDesktopHome">
+                            <TextBox.Text>
+                                <Binding Path="DesktopDirectory"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:DirectoryPathValidationRule RequireDirectoryExists="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <Button Name="btnDesktopHomeSelect"
+                                Click="btnDesktopHomeSelect_Click"
+                                Height="24"
+                                Padding="10,0">...</Button>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding Path=EnableDesktopOverlayHotKey}"
-                        Click="CheckBox_Click" Name="chkEnableDesktopOverlayHotKey">
+                        <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDesktopOverlayHotKey, UpdateSourceTrigger=PropertyChanged}"
+                                  Click="CheckBox_Click"
+                                  Name="chkEnableDesktopOverlayHotKey">
                             <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDesktopOverlayHotKey)}" />
                         </CheckBox>
-                        <ComboBox Name="cboDesktopOverlayHotKeyMod1" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[0]}" />
-                        <ComboBox Name="cboDesktopOverlayHotKeyMod2" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="55" Margin="5,-1,0,0" DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[1]}" />
-                        <ComboBox Name="cboDesktopOverlayHotKeyKey" IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}" IsDropDownOpen="False" IsEditable="False" Width="40" Margin="5,-1,0,0" DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed" SelectedValue="{Binding Path=DesktopOverlayHotKey[2]}" />
+                        <ComboBox Name="cboDesktopOverlayHotKeyMod1"
+                                  IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}"
+                                  IsDropDownOpen="False"
+                                  IsEditable="False"
+                                  Width="55"
+                                  Margin="5,-1,0,0"
+                                  DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed"
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
+                        <ComboBox Name="cboDesktopOverlayHotKeyMod2"
+                                  IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}"
+                                  IsDropDownOpen="False"
+                                  IsEditable="False"
+                                  Width="55"
+                                  Margin="5,-1,0,0"
+                                  DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed"
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
+                        <ComboBox Name="cboDesktopOverlayHotKeyKey"
+                                  IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}"
+                                  IsDropDownOpen="False"
+                                  IsEditable="False"
+                                  Width="40"
+                                  Margin="5,-1,0,0"
+                                  DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed"
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
-                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_IconSize)}" VerticalAlignment="Top" Margin="5,3,5,4" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
+                               Style="{StaticResource SettingGroupHeader}" />
+                    <StackPanel Orientation="Horizontal"
+                                Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_IconSize)}"
+                                   VerticalAlignment="Top"
+                                   Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize2" Click="radDesktopIconSize2_Click">
+                            <RadioButton GroupName="rdoDesktopIconSize"
+                                         Name="radDesktopIconSize2"
+                                         Click="radDesktopIconSize2_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeLarge)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoDesktopIconSize" Name="radDesktopIconSize0" Click="radDesktopIconSize0_Click">
+                            <RadioButton GroupName="rdoDesktopIconSize"
+                                         Name="radDesktopIconSize0"
+                                         Click="radDesktopIconSize0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeSmall)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPosition)}" VerticalAlignment="Top" Margin="5,3,5,4" />
+                    <StackPanel Orientation="Horizontal"
+                                Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPosition)}"
+                                   VerticalAlignment="Top"
+                                   Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoDesktopLabelPos" Name="radDesktopLabelPos0" Click="radDesktopLabelPos0_Click">
+                            <RadioButton GroupName="rdoDesktopLabelPos"
+                                         Name="radDesktopLabelPos0"
+                                         Click="radDesktopLabelPos0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPositionRight)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoDesktopLabelPos" Name="radDesktopLabelPos1" Click="radDesktopLabelPos1_Click">
+                            <RadioButton GroupName="rdoDesktopLabelPos"
+                                         Name="radDesktopLabelPos1"
+                                         Click="radDesktopLabelPos1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_LabelPositionBottom)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DynamicDesktop)}" Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Path=EnableDynamicDesktop}"
-                        Click="CheckBox_Click" Name="chkEnableDynamicDesktop">
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DynamicDesktop)}"
+                               Style="{StaticResource SettingGroupHeader}" />
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDynamicDesktop, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkEnableDynamicDesktop">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDynamicDesktop)}" />
                     </CheckBox>
+
+                    <StackPanel Name="cairoBackgroundSettingsStackPanel"
+                                Orientation="Vertical">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DesktopBackgroundSettings)}"
+                                   Style="{StaticResource SettingGroupHeader}" />
+                        <StackPanel Name="desktopBackgroundTypeStackPanel"
+                                    Orientation="Horizontal">
+                            <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_BackgroundType)}" />
+                            <ComboBox Name="cboDesktopBackgroundType"
+                                      IsEditable="False"
+                                      SelectionChanged="cboDesktopBackgroundType_SelectionChanged">
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Name="windowsImageBackgroundStackPanel"
+                                    Orientation="Vertical"
+                                    Visibility="Collapsed">
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
+                                <TextBox Name="txtWindowsBackgroundPath"
+                                         IsReadOnly="True" />
+                                <Button Name="btnWindowsBackgroundFileBrowse"
+                                        Height="24"
+                                        Padding="10,0"
+                                        Click="btnWindowsBackgroundFileBrowse_Click">...</Button>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Style)}" />
+                                <ComboBox Name="cboWindowsBackgroundStyle"
+                                          IsEditable="False"
+                                          SelectionChanged="cboWindowsBackgroundStyle_SelectionChanged">
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Name="cairoImageBackgroundStackPanel"
+                                    Orientation="Vertical"
+                                    Visibility="Collapsed">
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
+                                <TextBox Name="txtCairoBackgroundPath"
+                                         IsReadOnly="True" />
+                                <Button Name="btnCairoBackgroundFileBrowse"
+                                        Height="24"
+                                        Padding="10,0"
+                                        Click="btnCairoBackgroundFileBrowse_Click">...</Button>
+                            </StackPanel>
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Style)}" />
+                                <ComboBox Name="cboCairoBackgroundStyle"
+                                          IsEditable="False"
+                                          SelectionChanged="cboCairoBackgroundStyle_SelectionChanged" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Name="cairoVideoBackgroundStackPanel"
+                                    Orientation="Vertical"
+                                    Visibility="Collapsed">
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Path)}" />
+                                <TextBox Name="txtCairoVideoBackgroundPath"
+                                         IsReadOnly="True" />
+                                <Button Name="btnCairoVideoBackgroundFileBrowse"
+                                        Height="24"
+                                        Padding="10,0"
+                                        Click="btnCairoVideoFileBrowse_Click">...</Button>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <StackPanel Name="bingImageBackgroundStackPanel"
+                                    Orientation="Vertical"
+                                    Visibility="Collapsed">
+                            <StackPanel  Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_Background_Style)}" />
+                                <ComboBox Name="cboBingBackgroundStyle"
+                                          IsEditable="False"
+                                          SelectionChanged="cboBingBackgroundStyle_SelectionChanged" />
+                            </StackPanel>
+                        </StackPanel>
+
+                    </StackPanel>
+
                 </StackPanel>
             </TabItem>
+
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Taskbar)}">
                 <StackPanel Orientation="Vertical">
-                    <CheckBox IsChecked="{Binding Path=EnableTaskbar}"
-                        Click="CheckBox_Click" Name="chkEnableTaskbar">
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbar, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkEnableTaskbar">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableTaskbar)}" />
                     </CheckBox>
                     <!--<CheckBox IsChecked="{Binding Path=EnableTaskbarPolling}" Click="chkEnableTaskbarPolling_Click"  Name="chkEnableTaskbarPolling">
                         <Label>Poll taskbar buttons for updates</Label>
                     </CheckBox>-->
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
-                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_IconSize)}" VerticalAlignment="Top" Margin="5,3,5,4" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
+                               Style="{StaticResource SettingGroupHeader}" />
+                    <StackPanel Orientation="Horizontal"
+                                Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_IconSize)}"
+                                   VerticalAlignment="Top"
+                                   Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize1" Click="radTaskbarSize1_Click">
+                            <RadioButton GroupName="rdoTaskbarSize"
+                                         Name="radTaskbarSize1"
+                                         Click="radTaskbarSize1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeSmall)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize10" Click="radTaskbarSize10_Click">
+                            <RadioButton GroupName="rdoTaskbarSize"
+                                         Name="radTaskbarSize10"
+                                         Click="radTaskbarSize10_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeMedium)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarSize" Name="radTaskbarSize0" Click="radTaskbarSize0_Click">
+                            <RadioButton GroupName="rdoTaskbarSize"
+                                         Name="radTaskbarSize0"
+                                         Click="radTaskbarSize0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_IconSizeLarge)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_TaskbarPosition)}" VerticalAlignment="Top" Margin="5,3,5,4" />
+                    <StackPanel Orientation="Horizontal"
+                                Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_TaskbarPosition)}"
+                                   VerticalAlignment="Top"
+                                   Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos0" Click="radTaskbarPos0_Click">
+                            <RadioButton GroupName="rdoTaskbarPos"
+                                         Name="radTaskbarPos0"
+                                         Click="radTaskbarPos0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_PositionBottom)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarPos" Name="radTaskbarPos1" Click="radTaskbarPos1_Click">
+                            <RadioButton GroupName="rdoTaskbarPos"
+                                         Name="radTaskbarPos1"
+                                         Click="radTaskbarPos1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_PositionTop)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayMode)}" VerticalAlignment="Top" Margin="5,3,5,4" />
+                    <StackPanel Orientation="Horizontal"
+                                Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayMode)}"
+                                   VerticalAlignment="Top"
+                                   Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode0" Click="radTaskbarMode0_Click">
+                            <RadioButton GroupName="rdoTaskbarMode"
+                                         Name="radTaskbarMode0"
+                                         Click="radTaskbarMode0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayModeAppBar)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode1" Click="radTaskbarMode1_Click">
+                            <RadioButton GroupName="rdoTaskbarMode"
+                                         Name="radTaskbarMode1"
+                                         Click="radTaskbarMode1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayModeOverlap)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarMode" Name="radTaskbarMode2" Click="radTaskbarMode2_Click">
+                            <RadioButton GroupName="rdoTaskbarMode"
+                                         Name="radTaskbarMode2"
+                                         Click="radTaskbarMode2_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_DisplayModeAutoHide)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
-                    <CheckBox IsChecked="{Binding Path=EnableTaskbarMultiMon}"
-                        Click="CheckBox_Click"
-                        Name="chkEnableTaskbarMultiMon">
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkEnableTaskbarMultiMon">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableTaskbarMultiMon)}" />
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Path=FullWidthTaskBar}"
-                        Click="CheckBox_Click"
-                        Name="chkFullWidthTaskBar">
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=FullWidthTaskBar, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkFullWidthTaskBar">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_FullWidthTaskBar)}" />
                     </CheckBox>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Behavior)}" Style="{StaticResource SettingGroupHeader}" />
-                    <StackPanel Orientation="Horizontal" Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MiddleClick)}" MinWidth="110" VerticalAlignment="Top" Margin="5,3,5,4" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Behavior)}"
+                               Style="{StaticResource SettingGroupHeader}" />
+                    <StackPanel Orientation="Horizontal"
+                                Style="{StaticResource RadioGroup}">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MiddleClick)}"
+                                   MinWidth="110"
+                                   VerticalAlignment="Top"
+                                   Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTaskbarMiddleClick" Name="radTaskbarMiddleClick0" Click="radTaskbarMiddleClick0_Click">
+                            <RadioButton GroupName="rdoTaskbarMiddleClick"
+                                         Name="radTaskbarMiddleClick0"
+                                         Click="radTaskbarMiddleClick0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MiddleClickNewWindow)}" />
                             </RadioButton>
-                            <RadioButton GroupName="rdoTaskbarMiddleClick" Name="radTaskbarMiddleClick1" Click="radTaskbarMiddleClick1_Click">
+                            <RadioButton GroupName="rdoTaskbarMiddleClick"
+                                         Name="radTaskbarMiddleClick1"
+                                         Click="radTaskbarMiddleClick1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MiddleClickCloseWindow)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </TabItem>
+
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Advanced)}">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Advanced_LoggingLevel)}" />
-                        <ComboBox Name="cboLogSeverity" DropDownClosed="DropDown_Changed" IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=LogSeverity}" />
+                        <ComboBox Name="cboLogSeverity"
+                                  DropDownClosed="DropDown_Changed"
+                                  IsDropDownOpen="False"
+                                  IsEditable="False"
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=LogSeverity, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}" Style="{StaticResource SettingGroupHeader}" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
+                               Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormat)}" />
-                        <TextBox Text="{Binding Path=TimeFormat}"
-                            Name="timeSetting" ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormatTooltip)}" />
+                        <TextBox Name="timeSetting"
+                                 ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormatTooltip)}">
+                            <TextBox.Text>
+                                <Binding Path="TimeFormat"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:DateTimeFormatValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormat)}" />
-                        <TextBox Text="{Binding Path=DateFormat}"
-                            Name="dateSetting" ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormatTooltip)}" />
+                        <TextBox Name="dateSetting"
+                                 ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormatTooltip)}">
+                            <TextBox.Text>
+                                <Binding Path="DateFormat"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:DateTimeFormatValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+
                     </StackPanel>
-                    <CheckBox IsChecked="{Binding Path=ForceSoftwareRendering}"
-                        Click="CheckBox_Click"
-                        Name="chkForceSoftwareRendering">
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ForceSoftwareRendering, UpdateSourceTrigger=PropertyChanged}"
+                              Click="CheckBox_Click"
+                              Name="chkForceSoftwareRendering">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_ForceSoftwareRendering)}" />
                     </CheckBox>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FilesAndFolders)}" Style="{StaticResource SettingGroupHeader}" />
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FilesAndFolders)}"
+                               Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FileManager)}" />
-                        <TextBox Text="{Binding Path=FileManager}"
-                            Name="fileManager" />
+                        <TextBox Name="fileManager">
+                            <TextBox.Text>
+                                <Binding Path="FileManager"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <validator:FilePathValidationRule RequireFileExists="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                     </StackPanel>
-                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Advanced_Shell)}" Style="{StaticResource SettingGroupHeader}" />
-                    <StackPanel Orientation="Vertical" DataContext="{StaticResource shellHelper}">
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Advanced_Shell)}"
+                               Style="{StaticResource SettingGroupHeader}" />
+                    <StackPanel Orientation="Vertical"
+                                DataContext="{StaticResource shellHelper}">
                         <TextBlock>
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#ffe9ecf4" />
-                                    <Setter Property="Margin" Value="5,4" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="Text" Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_ExplorerIsShell)}" />
+                                    <Setter Property="Foreground"
+                                            Value="#ffe9ecf4" />
+                                    <Setter Property="Margin"
+                                            Value="5,4" />
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Center" />
+                                    <Setter Property="Text"
+                                            Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_ExplorerIsShell)}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsCairoUserShell}" Value="True">
-                                            <Setter Property="Text" Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_CairoIsShell)}" />
+                                        <DataTrigger Binding="{Binding IsCairoConfiguredAsShell}"
+                                                     Value="True">
+                                            <Setter Property="Text"
+                                                    Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_CairoIsShell)}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                        <Button Height="24" Padding="10,0" Margin="5,4" HorizontalAlignment="Left" Name="btnChangeShell" Click="btnChangeShell_Click">
+                        <Button Height="24"
+                                Padding="10,0"
+                                Margin="5,4"
+                                HorizontalAlignment="Left"
+                                Name="btnChangeShell"
+                                Click="btnChangeShell_Click">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="Content" Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetCairoAsShell)}" />
+                                    <Setter Property="Content"
+                                            Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetCairoAsShell)}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsCairoUserShell}" Value="True">
-                                            <Setter Property="Content" Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetExplorerAsShell)}" />
+                                        <DataTrigger Binding="{Binding IsCairoConfiguredAsShell}"
+                                                     Value="True">
+                                            <Setter Property="Content"
+                                                    Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetExplorerAsShell)}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -433,13 +796,23 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}" Name="btnRestart" MouseLeftButtonUp="restartCairo" Visibility="Hidden">
+
+            <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}"
+                     Name="btnRestart"
+                     MouseLeftButtonUp="restartCairo"
+                     Visibility="Hidden">
                 <TabItem.Header>
                     <StackPanel>
-                        <TextBlock TextAlignment="Center" TextWrapping="Wrap" Text="{Binding Path=(l10n:DisplayString.sSettings_RestartCairo)}" />
+                        <TextBlock TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   Text="{Binding Path=(l10n:DisplayString.sSettings_RestartCairo)}" />
                     </StackPanel>
                 </TabItem.Header>
-                <TextBlock Foreground="#55FFFFFF" FontSize="14" Text="{Binding Path=(l10n:DisplayString.sSettings_Restarting)}" MinWidth="300" TextAlignment="Center" />
+                <TextBlock Foreground="#55FFFFFF"
+                           FontSize="14"
+                           Text="{Binding Path=(l10n:DisplayString.sSettings_Restarting)}"
+                           MinWidth="300"
+                           TextAlignment="Center" />
             </TabItem>
         </TabControl>
     </Grid>

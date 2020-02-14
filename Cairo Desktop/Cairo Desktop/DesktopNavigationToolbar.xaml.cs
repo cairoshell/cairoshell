@@ -6,37 +6,116 @@ using System.Windows.Interop;
 using CairoDesktop.Interop;
 using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
+using CairoDesktop.Common;
+using System.Linq;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using CairoDesktop.Common.Logging;
 
 namespace CairoDesktop
 {
     /// <summary>
     /// Interaction logic for DesktopNavigationToolbar.xaml
     /// </summary>
-    public partial class DesktopNavigationToolbar : Window
+    public partial class DesktopNavigationToolbar : Window, INotifyPropertyChanged
     {
         private WindowInteropHelper helper;
         private System.Windows.Controls.ContextMenu browseContextMenu;
+        private LowLevelKeyboardListener lowLevelKeyboardListener;
+
+        private DependencyProperty navigationManagerProperty = DependencyProperty.Register("NavigationManager", typeof(DynamicDesktopNavigationManager), typeof(DesktopNavigationToolbar), new PropertyMetadata(new DynamicDesktopNavigationManager()));
+        private DependencyProperty isShiftKeyHeldProperty = DependencyProperty.Register("isShiftKeyHeld", typeof(bool), typeof(DesktopNavigationToolbar), new PropertyMetadata(new bool()));
 
         public Desktop ToolbarOwner
         {
             get
             {
-                return (Owner as Desktop);
+                return Owner as Desktop;
+            }
+        }
+
+        internal DynamicDesktopNavigationManager NavigationManager
+        {
+            get
+            {
+                return (DynamicDesktopNavigationManager)GetValue(navigationManagerProperty);
+            }
+            set
+            {
+                SetValue(navigationManagerProperty, value);
+            }
+        }
+
+        private bool isShiftKeyHeld
+        {
+            get
+            {
+                return (bool)GetValue(isShiftKeyHeldProperty);
+            }
+            set
+            {
+                SetValue(isShiftKeyHeldProperty, value);
+                OnPropertyChanged();
+            }
+        }
+
+        public string CurrentDirectoryFriendly
+        {
+            get
+            {
+                return Localization.DisplayString.sDesktop_CurrentFolder + " " + NavigationManager.CurrentPath;
             }
         }
 
         public DesktopNavigationToolbar()
         {
             InitializeComponent();
+
             SetPosition();
 
-            browseContextMenu = new System.Windows.Controls.ContextMenu();
+            browseContextMenu = new System.Windows.Controls.ContextMenu
+            {
+                Style = FindResource("CairoContextMenuStyle") as Style
+            };
         }
 
+        private void LowLevelKeyboardListener_OnKeyUp(object sender, Common.KeyEventArgs e)
+        {
+            if (isShiftKeyHeld)
+            {
+                if (e.Key == System.Windows.Input.Key.LeftShift || e.Key == System.Windows.Input.Key.RightShift)
+                {
+                    isShiftKeyHeld = false;
+                }
+            }
+        }
+        #endregion
+
+        #region Positioning
         private void SetPosition()
         {
-            Top = AppBarHelper.PrimaryMonitorSize.Height - Height - 150;
-            Left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (Width / 2);
+            if (Settings.Instance.DesktopNavigationToolbarLocation != default(System.Windows.Point) &&
+                PointExistsOnScreen(Settings.Instance.DesktopNavigationToolbarLocation))
+            {
+                Top = Settings.Instance.DesktopNavigationToolbarLocation.Y;
+                Left = Settings.Instance.DesktopNavigationToolbarLocation.X;
+            }
+            else
+            {
+                Top = AppBarHelper.PrimaryMonitorSize.Height - Height - 150;
+                Left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (Width / 2);
+            }
+        }
+
+        private bool PointExistsOnScreen(Point desktopNavigationToolbarLocation)
+        {
+            bool result = false;
+            if (Screen.AllScreens.Any(s => s.Bounds.Contains((int)desktopNavigationToolbarLocation.X, (int)desktopNavigationToolbarLocation.Y)))
+            {
+                result = true;
+            }
+
+            return result;
         }
 
         private void SetPosition(uint x, uint y)
@@ -47,77 +126,87 @@ namespace CairoDesktop
             Top = sHeight - Height - 150;
             Left = (sWidth / 2) - (Width / 2);
         }
+        #endregion
 
-        private void Back_Click(object sender, RoutedEventArgs e)
+        #region Button clicks
+        private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-            if (Owner is Desktop owningDesktop)
+            NavigationManager.NavigateBackward();
+        }
+
+        private void btnBack_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            NavigationManager.NavigateToParent();
+        }
+
+        private void btnUp_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationManager.NavigateToParent();
+        }
+
+        private void btnHome_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationManager.NavigateHome();
+        }
+
+        private void btnBrowse_Click(object sender, RoutedEventArgs e)
+        {
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog
             {
-                DirectoryInfo parent = owningDesktop.Icons.Location.DirectoryInfo.Parent;
-                if (parent != null)
-                    owningDesktop.Navigate(parent.FullName);
+                Description = Localization.DisplayString.sDesktop_BrowseTitle,
+                ShowNewFolderButton = false,
+                SelectedPath = NavigationManager.CurrentPath
+            })
+            {
+                NativeMethods.SetForegroundWindow(helper.Handle); // bring browse window to front
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    if (Directory.Exists(fbd.SelectedPath))
+                        NavigationManager.NavigateTo(fbd.SelectedPath);
             }
         }
 
-        private void HomeButton_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void btnBrowse_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+            if (NavigationManager.PathHistory.Count > 0)
             {
-                string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                string userDesktopPath = Settings.DesktopDirectory;
+                browseContextMenu.Items.Clear();
 
-                if (Owner is Desktop owningDesktop)
+                for (int i = 0; i < NavigationManager.PathHistory.Count; i++)
                 {
-                    if (Directory.Exists(userDesktopPath))
-                        owningDesktop.Navigate(userDesktopPath);
-                    else if (Directory.Exists(defaultDesktopPath))
-                        owningDesktop.Navigate(defaultDesktopPath);
-                }
+                    System.Windows.Controls.MenuItem locationMenuItem = new System.Windows.Controls.MenuItem();
+                    locationMenuItem.Header = GetCleanFolderName(NavigationManager.PathHistory[i]);
+                    locationMenuItem.Tag = i;
+                    locationMenuItem.Click += LocationMenuItem_Click;
 
-                e.Handled = true;
-            }
-            else if (e.RightButton == System.Windows.Input.MouseButtonState.Pressed)
-            {
-            }
-        }
-        private void BrowseButton_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
-            {
-
-            }
-            else if (e.RightButton == System.Windows.Input.MouseButtonState.Pressed)
-            {
-                if (Owner is Desktop owningDesktop)
-                {
-                    if (owningDesktop.PathHistory.Count > 0)
-                    {
-                        browseContextMenu.Items.Clear();
-
-                        foreach (string location in owningDesktop.PathHistory)
-                        {
-                            System.Windows.Controls.MenuItem locationMenuItem = new System.Windows.Controls.MenuItem();
-                            locationMenuItem.Header = GetCleanFolderName(location);
-                            locationMenuItem.Tag = location;
-                            locationMenuItem.Click += LocationMenuItem_Click;
+                            locationMenuItem.Style = FindResource("CairoMenuItemStyle") as Style;
 
                             browseContextMenu.Items.Add(locationMenuItem);
                         }
 
-                        browseContextMenu.Items.Add(new System.Windows.Controls.Separator());
+                        browseContextMenu.Items.Add(new System.Windows.Controls.Separator { Style = FindResource("CairoMenuSeparatorStyle") as Style});
 
-                        System.Windows.Controls.MenuItem clearHistoryMenuItem = new System.Windows.Controls.MenuItem { Header = "Clear History" };
-                        clearHistoryMenuItem.Click += ClearHistoryMenuItem_Click;
+                System.Windows.Controls.MenuItem clearHistoryMenuItem = new System.Windows.Controls.MenuItem { Header = Localization.DisplayString.sDesktop_ClearHistory };
+                clearHistoryMenuItem.Click += ClearHistoryMenuItem_Click;
 
+                        clearHistoryMenuItem.Style = FindResource("CairoMenuItemStyle") as Style;
                         browseContextMenu.Items.Add(clearHistoryMenuItem);
 
-                        browseContextMenu.IsOpen = true;
+                browseContextMenu.IsOpen = true;
 
-                        e.Handled = true;
-                    }
-                }
+                // this value is set so that if we click away from the context menu, the desktop overlay does not get toggled
+                ToolbarOwner.IsHistoryMenuOpen = true;
+
+                e.Handled = true;
             }
         }
 
+        private void btnFwd_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationManager.NavigateForward();
+        }
+        #endregion
+
+        #region Path history menu
         private string GetCleanFolderName(string path)
         {
             if (Directory.GetDirectoryRoot(path) == path)
@@ -128,48 +217,23 @@ namespace CairoDesktop
 
         private void ClearHistoryMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (Owner is Desktop owningDesktop)
-                owningDesktop.PathHistory.Clear();
+            NavigationManager.Clear();
         }
 
         private void LocationMenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (sender is System.Windows.Controls.MenuItem menuItem)
-                if (menuItem.Tag is string location)
-                    if (Owner is Desktop owningDesktop)
-                        owningDesktop.Navigate(location);
+                if (menuItem.Tag is int index)
+                    NavigationManager.NavigateToIndex(index);
         }
 
-        private void Fwd_Click(object sender, RoutedEventArgs e)
+        private void browseContextMenu_Closed(object sender, RoutedEventArgs e)
         {
-            // Should this be handled by a new method? owningDesktop.MoveForward() ???
-            if (Owner is Desktop owningDesktop && owningDesktop.PathHistory.Count > 0)
-                owningDesktop.CurrentLocation = owningDesktop.PathHistory.Pop();
+            ToolbarOwner.IsHistoryMenuOpen = false;
         }
+        #endregion
 
-        private void Browse_Click(object sender, RoutedEventArgs e)
-        {
-            if (Owner is Desktop owningDesktop)
-            {
-                ToolbarOwner.IsFbdOpen = true;
-                using (FolderBrowserDialog fbd = new FolderBrowserDialog
-                {
-                    Description = Localization.DisplayString.sDesktop_BrowseTitle,
-                    ShowNewFolderButton = false,
-                    SelectedPath = owningDesktop.CurrentLocation
-                })
-                {
-                    NativeMethods.SetForegroundWindow(helper.Handle); // bring browse window to front
-                    if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                        if (owningDesktop.CurrentLocation != fbd.SelectedPath) // added to prevent duplicate entries into the PathHistory... Should we reimpliment the DynamicDesktop to handle this on its own???
-                            if (Directory.Exists(fbd.SelectedPath))
-                                owningDesktop.Navigate(fbd.SelectedPath);
-                    ToolbarOwner.IsFbdOpen = false;
-                    ToolbarOwner.Activate(); // activate desktop, which should actually put it back to the bottom
-                }
-            }
-        }
-
+        #region Window events
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (msg == NativeMethods.WM_MOUSEACTIVATE)
@@ -179,8 +243,24 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
             {
-                handled = true;
-                return new IntPtr(NativeMethods.MA_NOACTIVATE);
+                // WM_WINDOWPOSCHANGING arrives here before the desktop window.
+                if (!ToolbarOwner.IsOverlayOpen)
+                {
+                    // if the overlay isn't open, we always want to be on the bottom. modify the WINDOWPOS structure so that we always go to right above the desktop.
+                    // the desktop will do the work of bringing us to the bottom.
+
+                    // Extract the WINDOWPOS structure corresponding to this message
+                    NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
+
+                    // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
+                    if ((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
+                    {
+                        // be right above the desktop.
+                        wndPos.hwndInsertAfter = NativeMethods.GetWindow(ToolbarOwner.Handle, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);
+                        wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOOWNERZORDER;
+                        wndPos.UpdateMessage(lParam);
+                    }
+                }
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
@@ -191,35 +271,69 @@ namespace CairoDesktop
             return IntPtr.Zero;
         }
 
-        private void Window_SourceInitialized(object sender, EventArgs e)
+        private void DesktopToolbar_SourceInitialized(object sender, EventArgs e)
         {
             helper = new WindowInteropHelper(this);
             HwndSource.FromHwnd(helper.Handle).AddHook(new HwndSourceHook(WndProc));
             Shell.HideWindowFromTasks(helper.Handle);
         }
 
-        protected override void OnActivated(EventArgs e)
+        private void DesktopToolbar_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            base.OnActivated(e);
+            switch (e.ChangedButton)
+            {
+                case System.Windows.Input.MouseButton.Left:
+                    break;
+                case System.Windows.Input.MouseButton.Middle:
+                    // Maybe Navigate Home?
+                    break;
+                case System.Windows.Input.MouseButton.Right:
+                    break;
 
-            //Set the window style to noactivate.
-            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE, GetWindowStyle() | NativeMethods.WS_EX_NOACTIVATE);
+                case System.Windows.Input.MouseButton.XButton1:
+                    NavigationManager.NavigateBackward();
+                    break;
+                case System.Windows.Input.MouseButton.XButton2:
+                    NavigationManager.NavigateForward();
+                    break;
+            }
         }
 
-        private int GetWindowStyle()
+        private void DesktopToolbar_Closing(object sender, CancelEventArgs e)
         {
-            return NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE);
-        }
 
-        private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+            if (!Startup.IsShuttingDown)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                lowLevelKeyboardListener.OnKeyDown -= LowLevelKeyboardListener_OnKeyDown;
+                lowLevelKeyboardListener.OnKeyUp -= LowLevelKeyboardListener_OnKeyUp;
+                lowLevelKeyboardListener.UnHookKeyboard();
+                lowLevelKeyboardListener = null;
+            }
+        }
+        #endregion
+
+        #region Drag
+        private void DesktopToolbar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             DragMove();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void DesktopToolbar_LocationChanged(object sender, EventArgs e)
         {
-            if (!Startup.IsShuttingDown)
-                e.Cancel = true;
+            Settings.Instance.DesktopNavigationToolbarLocation = new Point(Left, Top);
         }
+        #endregion
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
     }
 }

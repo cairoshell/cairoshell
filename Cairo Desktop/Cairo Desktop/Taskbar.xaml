@@ -11,7 +11,7 @@
     ShowActivated="False"
     AllowDrop="True"
     Visibility="Visible"
-    Focusable="False"
+    Loaded="TaskbarWindow_Loaded"
     Background="Transparent"
     Closing="Taskbar_Closing" SourceInitialized="TaskbarWindow_SourceInitialized" LocationChanged="TaskbarWindow_LocationChanged" UseLayoutRounding="True" HorizontalAlignment="Center"
     Topmost="True">
@@ -91,7 +91,6 @@
                             </ListView.ItemContainerStyle>
                         </ListView>
                         <ListView HorizontalAlignment="Stretch"
-                    ItemsSource="{Binding Source={StaticResource groupedWindows}}"
                     Style="{StaticResource TaskbarListView}"
                     x:Name="TasksList" Margin="-3,-1,0,0">
                             <ListView.ItemsPanel>
@@ -157,7 +156,6 @@
                             <Border Name="bdrTaskListPopup" Style="{StaticResource CairoTaskListPopupStyle}">
                                 <StackPanel Orientation="Vertical">
                                     <ListView HorizontalAlignment="Stretch"
-                            ItemsSource="{Binding Source={StaticResource groupedWindows}}"
                             Style="{StaticResource TaskListStyle}"
                             Margin="0,-3,0,3"
                             x:Name="TasksList2">
@@ -214,7 +212,7 @@
                                         </ListView.ItemContainerStyle>
                                     </ListView>
                                     <Border Margin="99,-3,0,-3" Padding="0,3" Width="351" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}" Visibility="Collapsed" Name="bdrTaskView">
-                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_TaskView)}" Style="{StaticResource CairoMenuItemStyle}" Click="TaskView_Click">
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_TaskView)}" Click="TaskView_Click">
                                             <MenuItem.Icon>
                                                 <Image Source="Resources\taskViewIcon.png"
                                         Width="16"

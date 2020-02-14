@@ -4,7 +4,7 @@
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
     Width="Auto"
     AllowDrop="True"
-    DragEnter="locationDisplay_DragEnter"
+    DragOver="locationDisplay_DragOver"
     Drop="locationDisplay_Drop"
     Background="Transparent"
     ToolTip="{Binding Path=(l10n:DisplayString.sStacks_Tooltip)}" ToolTipService.ShowDuration="1000"

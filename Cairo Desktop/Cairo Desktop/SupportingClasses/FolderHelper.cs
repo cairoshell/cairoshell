@@ -8,11 +8,11 @@ namespace CairoDesktop.SupportingClasses
     {
         public static bool OpenLocation(string path)
         {
-            if (Settings.EnableDynamicDesktop && Settings.FoldersOpenDesktopOverlay && Startup.DesktopWindow != null && !path.StartsWith("::{"))
+            if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay && Startup.DesktopWindow != null && !path.StartsWith("::{"))
             {
                 try
                 {
-                    Startup.DesktopWindow.Navigate(path);
+                    Startup.DesktopWindow.NavigationManager.NavigateTo(path);
                     Startup.DesktopWindow.IsOverlayOpen = true;
                     return true;
                 }
@@ -32,7 +32,7 @@ namespace CairoDesktop.SupportingClasses
             if (Startup.DesktopWindow != null)
                 Startup.DesktopWindow.IsOverlayOpen = false;
 
-            return Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.FileManager), path);
+            return Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.Instance.FileManager), path);
         }
     }
 }

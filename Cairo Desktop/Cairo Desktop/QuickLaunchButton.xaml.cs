@@ -14,7 +14,7 @@ namespace CairoDesktop
 		{
 			this.InitializeComponent();
 
-            switch (Configuration.Settings.TaskbarIconSize)
+            switch (Configuration.Settings.Instance.TaskbarIconSize)
             {
                 case 0:
                     imgIcon.Width = 32;
@@ -74,26 +74,33 @@ namespace CairoDesktop
         #region Drag and drop reordering
 
         private Point? startPoint = null;
-        private bool ctxOpen = false;
-        private bool inMove = false;
+        private bool inDrag = false;
+
+        // receive drop functions
+        private void btn_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.Link;
+            }
+            else if (!e.Data.GetDataPresent(typeof(ApplicationInfo)))
+            {
+                e.Effects = DragDropEffects.None;
+            }
+
+            e.Handled = true;
+        }
 
         private void btn_Drop(object sender, DragEventArgs e)
         {
             Button dropContainer = sender as Button;
             ApplicationInfo replacedApp = dropContainer.DataContext as ApplicationInfo;
 
-            String[] fileNames = e.Data.GetData(DataFormats.FileDrop) as String[];
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
-                foreach (String fileName in fileNames)
-                {
-                    appGrabber.AddByPath(fileNames, AppCategoryType.QuickLaunch);
-                    int dropIndex = appGrabber.QuickLaunch.IndexOf(replacedApp);
-
-                    ApplicationInfo addedApp = appGrabber.QuickLaunch[appGrabber.QuickLaunch.Count - 1];
-                    appGrabber.QuickLaunch.Move(appGrabber.QuickLaunch.Count - 1, dropIndex);
-                    appGrabber.Save();
-                }
+                int dropIndex = appGrabber.QuickLaunch.IndexOf(replacedApp);
+                appGrabber.InsertByPath(fileNames, dropIndex, AppCategoryType.QuickLaunch);
             }
             else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
             {
@@ -108,22 +115,20 @@ namespace CairoDesktop
             e.Handled = true;
         }
 
+        // send drag functions
         private void btn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (!ctxOpen)
-            {
-                // Store the mouse position
-                startPoint = e.GetPosition(null);
-            }
+            // Store the mouse position
+            startPoint = e.GetPosition(this);
         }
 
         private void btn_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (!inMove && startPoint != null && !ctxOpen)
+            if (!inDrag && startPoint != null)
             {
-                inMove = true;
+                inDrag = true;
 
-                Point mousePos = e.GetPosition(null);
+                Point mousePos = e.GetPosition(this);
                 Vector diff = (Point)startPoint - mousePos;
 
                 if (mousePos.Y <= this.ActualHeight && ((Point)startPoint).Y <= this.ActualHeight && e.LeftButton == MouseButtonState.Pressed && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
@@ -140,36 +145,13 @@ namespace CairoDesktop
                     // reset the stored mouse position
                     startPoint = null;
                 }
+                else if (e.LeftButton != MouseButtonState.Pressed)
+                {
+                    // reset the stored mouse position
+                    startPoint = null;
+                }
 
-                inMove = false;
-            }
-
-            e.Handled = true;
-        }
-
-        private void btn_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            // reset the stored mouse position
-            startPoint = null;
-        }
-
-        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
-        {
-            startPoint = null;
-            ctxOpen = true;
-        }
-
-        private void ContextMenu_Closed(object sender, RoutedEventArgs e)
-        {
-            ctxOpen = false;
-        }
-
-        private void btn_DragEnter(object sender, DragEventArgs e)
-        {
-            String[] formats = e.Data.GetFormats(true);
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effects = DragDropEffects.Copy;
+                inDrag = false;
             }
 
             e.Handled = true;

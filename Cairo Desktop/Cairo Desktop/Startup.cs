@@ -13,7 +13,6 @@
     using System.Diagnostics;
     using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Markup;
     using System.Windows.Threading;
     using System.Reflection;
 
@@ -35,7 +34,10 @@
 
         public static Desktop DesktopWindow { get; set; }
 
-        public static bool IsCairoUserShell;
+        /// <summary>
+        /// Checks the currently running shell. If another shell is running or we are not configured to be shell, returns false.
+        /// </summary>
+        public static bool IsCairoRunningAsShell;
 
         private static CommandLineParser commandLineParser;
         private static bool isRestart;
@@ -45,7 +47,7 @@
 
         public static bool IsSettingScreens { get; set; }
 
-        private static System.Windows.Forms.Screen[] screenState = { };
+        public static System.Windows.Forms.Screen[] screenState = { };
         private static Object screenSetupLock = new Object();
 
         /// <summary>
@@ -57,7 +59,7 @@
             #region Initialization Routines
 
             ProcessCommandLineArgs(args);
-            SingleInstanceCheck();
+            if(!SingleInstanceCheck()) return;
             SetShellReadyEvent();
 
             SetupSettings(); // run this before logging setup so that preferences are always used
@@ -74,9 +76,11 @@
 
             // check if we are the current user's shell
             // set here as well so that we don't behave differently once user changes setting
-            IsCairoUserShell = Shell.IsCairoUserShell;       // Move to CairoDesktop.Plugins.CairoShellCoreServices.... Make this more robust, to account for system-shell or per-user-shell;
+            // First check if there is an existing Shell_TrayWnd. If so, then Explorer is actually running as shell so assume we are not.
+            IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
+            IsCairoRunningAsShell = Shell.IsCairoConfiguredAsShell && taskbarHwnd == IntPtr.Zero;       // Move to CairoDesktop.Plugins.CairoShellCoreServices.... Make this more robust, to account for system-shell or per-user-shell;
 
-            if (Settings.EnableDesktop) // Future: This should be moved to whatever plugin is responsible for desktop stuff
+            if (Settings.Instance.EnableDesktop) // Future: This should be moved to whatever plugin is responsible for desktop stuff
             {
                 // hide the windows desktop
                 Shell.ToggleDesktopIcons(false);
@@ -86,13 +90,46 @@
             app.InitializeComponent();  // This sets up the Unhandled Exception stuff... 
 
             // Themes are very UI centric. We should devise a way of having Plugins/Extensions contribute to this.
-            string theme = Settings.CairoTheme;
+            string theme = Settings.Instance.CairoTheme;
             if (theme != "Default")
-                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + theme))
-                    app.Resources.MergedDictionaries.Add((ResourceDictionary)XamlReader.Load(System.Xml.XmlReader.Create(AppDomain.CurrentDomain.BaseDirectory + theme)));
+            {
+                string themeFilePath = AppDomain.CurrentDomain.BaseDirectory + theme;
+                if (System.IO.File.Exists(themeFilePath))
+                {
+                    ResourceDictionary newRes = new ResourceDictionary();
+                    newRes.Source = new Uri(themeFilePath, UriKind.RelativeOrAbsolute);
+                    app.Resources.MergedDictionaries.Add(newRes);
+                }
+            }
+
+            Settings.Instance.PropertyChanged += (s, e) =>
+              {
+                  if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName) && e.PropertyName == "CairoTheme")
+                  {
+                      App.Current.Resources.MergedDictionaries.Clear();
+                      ResourceDictionary cairoResource = new ResourceDictionary();
+
+                      // Put our base theme back
+                      cairoResource.Source = new Uri("Cairo.xaml", UriKind.RelativeOrAbsolute);
+                      App.Current.Resources.MergedDictionaries.Add(cairoResource);
+
+                      string newTheme = Settings.Instance.CairoTheme;
+                      if (newTheme != "Default")
+                      {
+                          string newThemeFilePath = AppDomain.CurrentDomain.BaseDirectory + newTheme;
+                          if (System.IO.File.Exists(newThemeFilePath))
+                          {
+                              ResourceDictionary newRes = new ResourceDictionary();
+                              newRes.Source = new Uri(newThemeFilePath, UriKind.RelativeOrAbsolute);
+                              app.Resources.MergedDictionaries.Add(newRes);
+                          }
+                      }
+                  }
+              };
+
 
             // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-            if (Settings.EnableTaskbar)
+            if (Settings.Instance.EnableTaskbar)
             {
                 AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
                 AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
@@ -105,14 +142,14 @@
             MenuBarWindows.Add(MenuBarWindow);
 
             // Future: This should be moved to whatever plugin is responsible for Desktop stuff
-            if (Settings.EnableDesktop)
+            if (Settings.Instance.EnableDesktop)
             {
                 DesktopWindow = new Desktop();
                 DesktopWindow.Show();
             }
 
             // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-            if (Settings.EnableMenuBarShadow)
+            if (Settings.Instance.EnableMenuBarShadow)
             {
                 MenuBarShadowWindow = new MenuBarShadow(MenuBarWindow, System.Windows.Forms.Screen.PrimaryScreen);
                 MenuBarShadowWindow.Show();
@@ -120,7 +157,7 @@
             }
 
             // Future: This should be moved to whatever plugin is responsible for Taskbar stuff
-            if (Settings.EnableTaskbar)
+            if (Settings.Instance.EnableTaskbar)
             {
                 TaskbarWindow = new Taskbar(System.Windows.Forms.Screen.PrimaryScreen);
                 TaskbarWindow.Show();
@@ -128,13 +165,14 @@
             }
 
             // Future: This should be moved to whatever plugin is responsible for Taskbar/MennuBart stuff
-            if (Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon)
+            if (Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon)
                 ScreenSetup(true);
-            else if (IsCairoUserShell) // Set desktop work area for when Explorer isn't running
+            else if (IsCairoRunningAsShell) // Set desktop work area for when Explorer isn't running
                 AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
-            if (Settings.EnableSysTray == true)
+            // Don't allow showing both the Windows taskbar and the Cairo tray
+            if (Settings.Instance.EnableSysTray == true && Settings.Instance.EnableTaskbar == true)
             {
                 NotificationArea.Instance.Initialize();
             }
@@ -144,7 +182,7 @@
 #endif
 
             // login items only necessary if Explorer didn't start them
-            if (IsCairoUserShell && !isRestart)
+            if (IsCairoRunningAsShell && !isRestart)
             {
                 RunStartupApps();
             }
@@ -187,7 +225,7 @@
         {
             try
             {
-                if (Settings.IsFirstRun == true || isTour)
+                if (Settings.Instance.IsFirstRun == true || isTour)
                 {
                     Welcome welcome = new Welcome();
                     welcome.Show();
@@ -499,7 +537,7 @@
                     {
                         // enumerate screens
 
-                        if (Settings.EnableMenuBarMultiMon || !Settings.EnableTaskbar)
+                        if (Settings.Instance.EnableMenuBarMultiMon || !Configuration.Settings.Instance.EnableTaskbar)
                         {
                             foreach (MenuBar bar in MenuBarWindows)
                             {
@@ -507,7 +545,7 @@
                                     openScreens.Add(bar.Screen.DeviceName);
                             }
                         }
-                        else if (Settings.EnableTaskbarMultiMon)
+                        else if (Settings.Instance.EnableTaskbarMultiMon)
                         {
                             foreach (Taskbar bar in TaskbarWindows)
                             {
@@ -667,7 +705,7 @@
                         {
                             CairoLogger.Instance.Debug("Opening windows on screen " + screen.DeviceName);
 
-                            if (Settings.EnableMenuBarMultiMon)
+                            if (Settings.Instance.EnableMenuBarMultiMon)
                             {
                                 CairoLogger.Instance.DebugIf(screen.Primary, "Opening MenuBar on new primary display");
 
@@ -676,7 +714,7 @@
                                 newMenuBar.Show();
                                 MenuBarWindows.Add(newMenuBar);
 
-                                if (Settings.EnableMenuBarShadow)
+                                if (Settings.Instance.EnableMenuBarShadow)
                                 {
                                     // menu bar shadows
                                     MenuBarShadow newMenuBarShadow = new MenuBarShadow(newMenuBar, screen);
@@ -685,7 +723,7 @@
                                 }
                             }
 
-                            if (Settings.EnableTaskbarMultiMon && Settings.EnableTaskbar)
+                            if (Settings.Instance.EnableTaskbarMultiMon && Configuration.Settings.Instance.EnableTaskbar)
                             {
                                 // taskbars
                                 Taskbar newTaskbar = new Taskbar(screen);
@@ -695,7 +733,7 @@
                         }
 
                         // Set desktop work area for when Explorer isn't running
-                        if (IsCairoUserShell)
+                        if (IsCairoRunningAsShell)
                             AppBarHelper.SetWorkArea(screen);
                     }
                 }

@@ -1,15 +1,55 @@
 ﻿using CairoDesktop.Common;
+using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
 using CairoDesktop.Localization;
+using CairoDesktop.SupportingClasses;
+using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.IO;
-using System;
 
 namespace CairoDesktop
 {
     partial class Cairo : ResourceDictionary
     {
+        private void btnFile_Click(object sender, RoutedEventArgs e)
+        {
+            Button senderButton = sender as Button;
+            if (senderButton != null && senderButton.DataContext != null)
+            {
+                SystemFile file = senderButton.DataContext as SystemFile;
+                if (!string.IsNullOrWhiteSpace(file.FullName))
+                {
+                    // Determine if [SHIFT] key is held. Bypass Directory Processing, which will use the Shell to open the item.
+                    if (!KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
+                    {
+                        // if directory, perform special handling
+                        if (file.IsDirectory
+                            && Settings.EnableDynamicDesktop
+                            && Window.GetWindow(senderButton)?.Name == "CairoDesktopWindow"
+                            && Startup.DesktopWindow != null)
+                        {
+                            Startup.DesktopWindow.Navigate(file.FullName);
+                            return;
+                        }
+                        else if (file.IsDirectory)
+                        {
+                            FolderHelper.OpenLocation(file.FullName);
+                            return;
+                        }
+                    }
+
+                    if (Startup.DesktopWindow != null)
+                        Startup.DesktopWindow.IsOverlayOpen = false;
+
+                    Shell.ExecuteProcess(file.FullName);
+                    return;
+                }
+            }
+
+            CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
 
         private void miVerb_Click(object sender, RoutedEventArgs e)
         {

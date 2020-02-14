@@ -1,9 +1,11 @@
-﻿using CairoDesktop.Configuration;
+﻿using CairoDesktop.Common.Logging;
+using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
 using CairoDesktop.WindowsTray;
 using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
@@ -20,6 +22,7 @@ namespace CairoDesktop
         #region Properties
         public System.Windows.Forms.Screen Screen;
         private double dpiScale = 1.0;
+        private bool isRaising;
 
         public bool IsClosing = false;
 
@@ -47,7 +50,7 @@ namespace CairoDesktop
             get { return (double)GetValue(ButtonTextWidthProperty); }
             set { SetValue(ButtonTextWidthProperty, value); }
         }
-        #endregion
+
         public Taskbar() : this(System.Windows.Forms.Screen.PrimaryScreen)
         {
 
@@ -73,29 +76,14 @@ namespace CairoDesktop
 
             // setup data contexts
             bdrMain.DataContext = Settings.Instance;
-            quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
+            grdTaskbar.DataContext = WindowsTasks.WindowsTasksService.Instance;
+            AppGrabber.Category quickLaunch = appGrabber.QuickLaunch;
 
-            if (Startup.DesktopWindow != null)
-            {
-                btnDesktopOverlay.DataContext = Startup.DesktopWindow;
-                bdrBackground.DataContext = Startup.DesktopWindow;
-            }
-            else
-            {
-                btnDesktopOverlay.Visibility = Visibility.Collapsed;
-                btnDesktopOverlay.DataContext = null;
-                bdrBackground.DataContext = null;
-            }
-        }
-
-        private void setupTaskbarAppearance()
-        {
-            double screenWidth = screenWidth = Screen.Bounds.Width / dpiScale;
-            Left = Screen.Bounds.Left / dpiScale;
+            quickLaunchList.ItemsSource = quickLaunch;
             bdrTaskbar.MaxWidth = screenWidth - 36;
             Width = screenWidth;
 
-            switch (Settings.TaskbarIconSize)
+            switch (Settings.Instance.TaskbarIconSize)
             {
                 case 0:
                     addToSize = 16;
@@ -111,7 +99,7 @@ namespace CairoDesktop
             Height = 29 + addToSize;
 
             // set taskbar edge based on preference
-            if (Settings.TaskbarPosition == 1)
+            if (Settings.Instance.TaskbarPosition == 1)
             {
                 Top = Startup.MenuBarWindow.Height;
                 appBarEdge = AppBarHelper.ABEdge.ABE_TOP;
@@ -131,12 +119,12 @@ namespace CairoDesktop
             }
 
             // show task view on windows >= 10, adjust margin if not shown
-            if (Shell.IsWindows10OrBetter && !Startup.IsCairoUserShell)
+            if (Shell.IsWindows10OrBetter && !Startup.IsCairoRunningAsShell)
                 bdrTaskView.Visibility = Visibility.Visible;
             else
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);
 
-            if(Settings.FullWidthTaskBar)
+            if (Settings.Instance.FullWidthTaskBar)
             {
                 bdrTaskbarLeft.CornerRadius = new CornerRadius(0);
                 bdrTaskbarEnd.CornerRadius = new CornerRadius(0);
@@ -149,10 +137,12 @@ namespace CairoDesktop
             if (Startup.IsShuttingDown && Screen.Primary)
             {
                 // Manually call dispose on window close...
-                WindowsTasks.WindowsTasksService.Instance.Dispose();
+                (DataContext as WindowsTasks.WindowsTasksService).Dispose();
 
                 // dispose system tray if it's still running to prevent conflicts when doing AppBar stuff
                 NotificationArea.Instance.Dispose();
+
+                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
 
                 if (AppBarHelper.appBars.Contains(handle))
                     AppBarHelper.RegisterBar(this, Screen, ActualWidth * dpiScale, this.ActualHeight * dpiScale);
@@ -163,9 +153,8 @@ namespace CairoDesktop
             }
             else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
             {
-                WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
                 if (AppBarHelper.appBars.Contains(handle))
-                    AppBarHelper.RegisterBar(this, Screen, ActualWidth, ActualHeight);
+                    AppBarHelper.RegisterBar(this, Screen, ActualWidth * dpiScale, this.ActualHeight * dpiScale);
             }
             else
             {
@@ -190,11 +179,6 @@ namespace CairoDesktop
             if (Settings.TaskbarMode == 0)
                 appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, appBarEdge);
 
-            Shell.HideWindowFromTasks(handle);
-        }
-        #endregion
-
-        #region Position and appearance
         private void setTaskButtonSize()
         {
             double size = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - bdrTaskbarEnd.ActualWidth - (TasksList.Items.Groups.Count * (5 * dpiScale)) - 14) / TasksList.Items.Count);
@@ -214,7 +198,7 @@ namespace CairoDesktop
 
             Left = Screen.Bounds.Left / dpiScale;
 
-            if (Settings.FullWidthTaskBar)
+            if (Settings.Instance.FullWidthTaskBar)
                 bdrTaskbar.Width = screenWidth - btnDesktopOverlay.Width - btnTaskList.Width + 1; // account for border
 
             // set maxwidth always
@@ -236,7 +220,7 @@ namespace CairoDesktop
 
             double screenWidth = Screen.Bounds.Width / dpiScale;
 
-            if (Settings.FullWidthTaskBar)
+            if (Settings.Instance.FullWidthTaskBar)
                 bdrTaskbar.Width = screenWidth - btnDesktopOverlay.Width - btnTaskList.Width + 1; // push the border off the edge
 
             // set maxwidth always
@@ -247,7 +231,7 @@ namespace CairoDesktop
 
         private void setTopPosition(double top)
         {
-            if (Settings.TaskbarPosition == 1)
+            if (Settings.Instance.TaskbarPosition == 1)
             {
                 // set to bottom of menu bar
                 Top = (Screen.Bounds.Y / dpiScale) + Startup.MenuBarWindow.Height;
@@ -259,21 +243,205 @@ namespace CairoDesktop
             }
         }
 
-        public void SetFullScreenMode(bool entering)
+        private void FullScreenApps_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            bool found = false;
+
+            foreach (FullScreenHelper.FullScreenApp app in FullScreenHelper.Instance.FullScreenApps)
+            {
+                if (app.screen.DeviceName == Screen.DeviceName)
+                {
+                    // we need to not be on top now
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found && Topmost)
+            {
+                setFullScreenMode(true);
+            }
+            else if (!found && !Topmost)
+            {
+                setFullScreenMode(false);
+            }
+        }
+
+        private void setFullScreenMode(bool entering)
         {
             if (entering)
             {
+                CairoLogger.Instance.Debug(string.Format("Taskbar on {0} conceeding to full-screen app", Screen.DeviceName));
+
                 Topmost = false;
                 Shell.ShowWindowBottomMost(handle);
             }
             else
             {
-                takeFocus(); // unable to set topmost unless we do this
+                CairoLogger.Instance.Debug(string.Format("Taskbar on {0} returning to normal state", Screen.DeviceName));
 
+                isRaising = true;
                 Topmost = true;
                 Shell.ShowWindowTopMost(handle);
+                isRaising = false;
             }
         }
+
+        private void TaskbarWindow_LocationChanged(object sender, EventArgs e)
+        {
+            // this variable is set when the display size is changed, since that event handles this function. if we run here too, wrong position is set
+            if (!displayChanged)
+                setPosition();
+            else
+            {
+                displayChanged = false;
+
+                if (Settings.Instance.TaskbarMode > 0)
+                {
+                    // set position after 2 seconds anyway in case we missed something
+                    var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+                    timer.Start();
+                    timer.Tick += (sender1, args) =>
+                    {
+                        setPosition();
+                        timer.Stop();
+                    };
+                }
+            }
+        }
+
+        private void takeFocus()
+        {
+            // because we are setting WS_EX_NOACTIVATE, popups won't go away when clicked outside, since they are not losing focus (they never got it). calling this fixes that.
+            NativeMethods.SetForegroundWindow(helper.Handle);
+        }
+
+        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == NativeMethods.WM_MOUSEACTIVATE)
+            {
+                handled = true;
+                return new IntPtr(NativeMethods.MA_NOACTIVATE);
+            }
+
+            if (msg == appbarMessageId && appbarMessageId != -1 && Configuration.Settings.Instance.TaskbarMode == 0)
+            {
+                switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
+                {
+                    case NativeMethods.AppBarNotifications.PosChanged:
+                        // Reposition to the top of the screen.
+                        AppBarHelper.ABSetPos(this, Screen, ActualWidth * dpiScale, ActualHeight * dpiScale, appBarEdge);
+                        break;
+
+                    case NativeMethods.AppBarNotifications.FullScreenApp:
+                        //SetFullScreenMode((int)lParam == 1);
+
+                        break;
+
+                    case NativeMethods.AppBarNotifications.WindowArrange:
+                        if ((int)lParam != 0)    // before
+                            Visibility = Visibility.Collapsed;
+                        else                         // after
+                            Visibility = Visibility.Visible;
+
+                        break;
+                }
+                handled = true;
+            }
+            else if (msg == NativeMethods.WM_ACTIVATE && Configuration.Settings.Instance.TaskbarMode == 0)
+            {
+                AppBarHelper.AppBarActivate(hwnd);
+            }
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
+            {
+                // Extract the WINDOWPOS structure corresponding to this message
+                NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
+
+                // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
+                // If we are intentionally trying to become topmost, make it so
+                if (isRaising && (wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
+                {
+                    // Sometimes Windows thinks we shouldn't go topmost, so poke here to make it happen.
+                    wndPos.hwndInsertAfter = (IntPtr)NativeMethods.HWND_TOPMOST;
+                    wndPos.UpdateMessage(lParam);
+                }
+            }
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.Instance.TaskbarMode == 0)
+            {
+                AppBarHelper.AppBarWindowPosChanged(hwnd);
+            }
+            else if (msg == NativeMethods.WM_DPICHANGED)
+            {
+                if (!(Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon))
+                {
+                    Startup.ResetScreenCache();
+                    Screen = System.Windows.Forms.Screen.PrimaryScreen;
+                }
+
+                if (Screen.Primary)
+                    Shell.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
+
+                dpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
+                AppBarHelper.ABSetPos(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, appBarEdge);
+            }
+            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            {
+                if (!(Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon))
+                {
+                    Startup.ResetScreenCache();
+                    Screen = System.Windows.Forms.Screen.PrimaryScreen;
+                }
+
+                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                handled = true;
+            }
+
+            return IntPtr.Zero;
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+            //Set the window style to noactivate.
+            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
+                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
+        }
+
+        private void TaskbarWindow_SourceInitialized(object sender, EventArgs e)
+        {
+            helper = new WindowInteropHelper(this);
+
+            HwndSource source = HwndSource.FromHwnd(helper.Handle);
+            source.AddHook(new HwndSourceHook(WndProc));
+
+            handle = helper.Handle;
+
+            this.dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
+
+            setPosition();
+            setTaskButtonSize();
+
+            if (Settings.TaskbarMode == 0)
+                appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, appBarEdge);
+
+            Shell.HideWindowFromTasks(handle);
+        }
+
+        private void TasksList_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            setTaskButtonSize();
+        }
+
+        private void CollectionViewSource_Filter(object sender, System.Windows.Data.FilterEventArgs e)
+        {
+            WindowsTasks.ApplicationWindow window = e.Item as WindowsTasks.ApplicationWindow;
+
+            if (window.ShowInTaskbar)
+                e.Accepted = true;
+            else
+                e.Accepted = false;
+        }
+
         private void TaskbarWindow_LocationChanged(object sender, EventArgs e)
         {
             // this variable is set when the display size is changed, since that event handles this function. if we run here too, wrong position is set
@@ -297,101 +465,7 @@ namespace CairoDesktop
             }
         }
 
-        private void takeFocus()
-        {
-            // because we are setting WS_EX_NOACTIVATE, popups won't go away when clicked outside, since they are not losing focus (they never got it). calling this fixes that.
-            NativeMethods.SetForegroundWindow(helper.Handle);
-        }
-
-        protected override void OnActivated(EventArgs e)
-        {
-            base.OnActivated(e);
-            //Set the window style to noactivate.
-            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
-                NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
-        }
-        #endregion
-
-        #region Window procedure
-        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            if (msg == NativeMethods.WM_MOUSEACTIVATE)
-            {
-                handled = true;
-                return new IntPtr(NativeMethods.MA_NOACTIVATE);
-            }
-
-            if (msg == appbarMessageId && appbarMessageId != -1 && Settings.TaskbarMode == 0)
-            {
-                switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
-                {
-                    case NativeMethods.AppBarNotifications.PosChanged:
-                        // Reposition to the top of the screen.
-                        AppBarHelper.ABSetPos(this, Screen, ActualWidth * dpiScale, ActualHeight * dpiScale, appBarEdge);
-                        break;
-
-                    case NativeMethods.AppBarNotifications.FullScreenApp:
-                        SetFullScreenMode((int)lParam == 1);
-
-                        break;
-
-                    case NativeMethods.AppBarNotifications.WindowArrange:
-                        if ((int)lParam != 0)    // before
-                            Visibility = Visibility.Collapsed;
-                        else                         // after
-                            Visibility = Visibility.Visible;
-
-                        break;
-                }
-                handled = true;
-            }
-            else if (msg == NativeMethods.WM_ACTIVATE && Settings.TaskbarMode == 0)
-            {
-                AppBarHelper.AppBarActivate(hwnd);
-            }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && Settings.TaskbarMode == 0)
-            {
-                AppBarHelper.AppBarWindowPosChanged(hwnd);
-            }
-            else if (msg == NativeMethods.WM_DPICHANGED)
-            {
-                if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
-                {
-                    Startup.ResetScreenCache();
-                    Screen = System.Windows.Forms.Screen.PrimaryScreen;
-                }
-
-                if (Screen.Primary)
-                    Shell.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
-
-                dpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
-                AppBarHelper.ABSetPos(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, appBarEdge);
-            }
-            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
-            {
-                if (!(Settings.EnableMenuBarMultiMon || Settings.EnableTaskbarMultiMon))
-                {
-                    Startup.ResetScreenCache();
-                    Screen = System.Windows.Forms.Screen.PrimaryScreen;
-                }
-
-                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
-                handled = true;
-            }
-
-            return IntPtr.Zero;
-        }
-        #endregion
-
-        #region Data
-        private void GroupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            setTaskButtonSize();
-        }
-        #endregion
-
         #region Button clicks
-
         private void TaskView_Click(object sender, RoutedEventArgs e)
         {
             Shell.ShowWindowSwitcher();
@@ -437,6 +511,10 @@ namespace CairoDesktop
             e.Handled = true;
         }
 
-        #endregion
+        private void btnDesktopOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            if (Startup.DesktopWindow != null)
+                Startup.DesktopWindow.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
+        }
     }
 }

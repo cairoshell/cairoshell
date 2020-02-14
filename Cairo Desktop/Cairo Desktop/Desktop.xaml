@@ -2,7 +2,6 @@
 <Window x:Class="CairoDesktop.Desktop" 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
         Title=""
         WindowStyle="None"
         ResizeMode="NoResize"
@@ -10,16 +9,22 @@
         Top="0"
         Left="0"
         AllowsTransparency="True"
-        Focusable="False" 
+        ShowActivated="False"
         UseLayoutRounding="True" 
         Name="CairoDesktopWindow"
-        Background="Transparent" 
-        Topmost="False" 
-        Activated="Window_Activated" 
+        Background="#01000000"
         Closing="Window_Closing" 
         SourceInitialized="Window_SourceInitialized"
         LocationChanged="CairoDesktopWindow_LocationChanged"
-        KeyDown="Window_KeyDown" MouseRightButtonUp="CairoDesktopWindow_MouseRightButtonUp">
-    <Grid Name="grid" MouseRightButtonDown="grid_MouseRightButtonDown" PreviewMouseLeftButtonDown="grid_PreviewMouseLeftButtonDown" HorizontalAlignment="Left" VerticalAlignment="Top">
+        KeyDown="Window_KeyDown"
+        MouseUp="CairoDesktopWindow_MouseUp"
+        MouseRightButtonUp="CairoDesktopWindow_MouseRightButtonUp"
+        DragOver="CairoDesktopWindow_DragOver"
+        Drop="CairoDesktopWindow_Drop"
+        AllowDrop="True">
+    <Grid Name="grid" 
+          PreviewMouseLeftButtonDown="grid_PreviewMouseLeftButtonDown" 
+          HorizontalAlignment="Left" 
+          VerticalAlignment="Top">
     </Grid>
 </Window>

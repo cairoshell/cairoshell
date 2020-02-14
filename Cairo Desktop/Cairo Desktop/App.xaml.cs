@@ -16,7 +16,7 @@ namespace CairoDesktop
         {
             base.OnStartup(e);
 
-            if (Configuration.Settings.ForceSoftwareRendering)
+            if (Configuration.Settings.Instance.ForceSoftwareRendering)
                 RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
         }
 

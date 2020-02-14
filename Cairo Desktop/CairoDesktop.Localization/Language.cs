@@ -118,6 +118,7 @@ namespace CairoDesktop.Localization
             { "sSearch_ViewAllResults", "View All Results" },
             { "sSearch_LastModified", "Last Modified: {0}" },
             { "sSearch_Error", "We were unable to open the search result." },
+            { "sDesktop_DisplaySettings", "Display settings" },
             { "sDesktop_Personalize", "Personalize" },
             { "sDesktop_DeleteTitle", "Are you sure you want to delete this?" },
             { "sDesktop_DeleteInfo", "\"{0}\" will be sent to the Recycle Bin." },
@@ -127,6 +128,8 @@ namespace CairoDesktop.Localization
             { "sDesktop_Forward", "Forward" },
             { "sDesktop_Browse", "Choose folder" },
             { "sDesktop_Home", "Home" },
+            { "sDesktop_Up", "Up" },
+            { "sDesktop_ClearHistory", "Clear history" },
             { "sTaskbar_Empty", "Open windows to see them listed here." },
             { "sTaskbar_Minimize", "Minimize" },
             { "sTaskbar_Restore", "Restore" },
@@ -175,15 +178,23 @@ namespace CairoDesktop.Localization
             { "sSettings_MenuBar_EnableCairoMenuHotKey", "Enable Catalyst menu hotkey:" },
             { "sSettings_MenuBar_EnableMenuBarBlur", "Blur behind the Menu Bar (Windows 10 only)" },
             { "sSettings_MenuBar_EnableMenuBarMultiMon", "Show Menu Bar on multiple monitors" },
-            { "sSettings_MenuBar_ShowHibernate", "Show Hibernate option in Catalyst menu" },
+            { "sSettings_MenuBar_ShowHibernate", "Show Hibernate option in Cairo menu" },
             { "sSettings_Desktop_EnableDesktop", "Enable Desktop" },
             { "sSettings_Desktop_DesktopHome", "Desktop home:" },
             { "sSettings_Desktop_LabelPosition", "Label position:" },
             { "sSettings_Desktop_LabelPositionRight", "Right" },
             { "sSettings_Desktop_LabelPositionBottom", "Bottom" },
-            { "sSettings_Desktop_DynamicDesktop", "Dynamic Desktop" },
+            { "sSettings_Desktop_DynamicDesktop", "Dynamic desktop" },
             { "sSettings_Desktop_EnableDynamicDesktop", "Show dynamic desktop navigation toolbar" },
             { "sSettings_Desktop_EnableDesktopOverlayHotKey", "Enable dynamic desktop overlay hotkey:" },
+            { "sSettings_Desktop_DesktopBackgroundSettings", "Desktop background" },
+            { "sSettings_Desktop_BackgroundType", "Background type:" },
+            { "sSettings_Desktop_BackgroundType_windowsDefaultBackground", "Windows" },
+            { "sSettings_Desktop_BackgroundType_cairoImageWallpaper", "Image" },
+            { "sSettings_Desktop_BackgroundType_cairoVideoWallpaper", "Video" },
+            { "sSettings_Desktop_BackgroundType_bingWallpaper", "Bing Image of the Day" },
+            { "sSettings_Desktop_Background_Path", "Path:" },
+            { "sSettings_Desktop_Background_Style", "Style:" },
             { "sSettings_IconSize", "Icon size:" },
             { "sSettings_IconSizeLarge", "Large" },
             { "sSettings_IconSizeMedium", "Medium" },
@@ -1615,6 +1626,7 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarSec3Heading", "Taskliste" },
             { "sWelcome_TaskbarSec3Text", "Viele offene Fenster? Die Taskliste zeigt die offenen Fenster in einem Menü um einfach zu dem Fenster wechseln zu können, welches Sie gerade suchen. Sie können ebenso die Windows 10 Ansicht aus diesem Menü öffnen." }
         };
+
         public static Dictionary<string, string> es_ES = new Dictionary<string, string>
         {
             { "sProgramsMenu", "Programas" },
@@ -1844,6 +1856,7 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarSec3Heading", "Lista de las tareas" },
             { "sWelcome_TaskbarSec3Text", "¿Muchas ventanas abiertas? La lista de las tareas muestra sus ventanas en un menú para que usted pueda cambiar al que quiera. También puede activar la vista de las tareas de Windows 10 de este menú." }
         };
+
         public static Dictionary<string, string> nl_NL = new Dictionary<string, string>
         {
             { "sProgramsMenu", "Programma's" },

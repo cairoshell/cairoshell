@@ -41,6 +41,13 @@ typedef struct _APPBARDATAV2
 	int lParam;
 } APPBARDATAV2, *PAPPBARDATAV2;
 
+typedef struct _SHELLTRAYDATA
+{
+	DWORD dwUnknown;
+	DWORD dwMessage;
+	NOTIFYICONDATA nid;
+} SHELLTRAYDATA, *PSHELLTRAYDATA;
+
 // Data sent with AppBar Message
 typedef struct _SHELLAPPBARDATA {
 	APPBARDATAV2 abd;

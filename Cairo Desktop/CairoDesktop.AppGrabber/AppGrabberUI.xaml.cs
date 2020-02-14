@@ -1,4 +1,5 @@
-﻿using CairoDesktop.Interop;
+﻿using CairoDesktop.Common.Logging;
+using CairoDesktop.Interop;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -78,34 +79,31 @@ namespace CairoDesktop.AppGrabber
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Programs and shortcuts|";
-
+            string filter = "Programs and shortcuts|";
             foreach (string ext in AppGrabber.ExecutableExtensions)
             {
-                dlg.Filter += "*" + ext + ";";
+                filter += "*" + ext + ";";
             }
 
-            dlg.Filter = dlg.Filter.Substring(0, dlg.Filter.Length - 2);
+            filter = filter.Substring(0, filter.Length - 2);
 
-            System.Windows.Forms.DialogResult result;
-
-            try
+            string filename;
+            DialogResult result = SupportingClasses.Dialogs.OpenFileDialog(filter, out filename);
+            if (result == System.Windows.Forms.DialogResult.OK && Interop.Shell.Exists(filename))
             {
-                result = dlg.ShowDialog();
-            }
-            catch
-            {
-                // show retro dialog if the better one fails to load
-                dlg.AutoUpgradeEnabled = false;
-                result = dlg.ShowDialog();
-            }
-
-            if (result == System.Windows.Forms.DialogResult.OK && Interop.Shell.Exists(dlg.FileName))
-            {
-                ApplicationInfo customApp = AppGrabber.PathToApp(dlg.FileName, true);
-                if (!object.ReferenceEquals(customApp, null))
-                    programsMenuAppsCollection.Add(customApp);
+                ApplicationInfo customApp = AppGrabber.PathToApp(filename, true);
+                if (!ReferenceEquals(customApp, null))
+                {
+                    if (!programsMenuAppsCollection.Contains(customApp) && !(InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Contains(customApp))
+                    {
+                        programsMenuAppsCollection.Add(customApp);
+                    }
+                    else
+                    {
+                        // disallow adding a duplicate
+                        CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                    }
+                }
             }
         }
 
@@ -259,7 +257,16 @@ namespace CairoDesktop.AppGrabber
             "Skype for Business 20|contains|" + productivity,
             "Word 20|contains|" + productivity,
             "Visio 20|contains|" + productivity,
+            "Access|full|" + productivity,
+            "Excel|full|" + productivity,
+            "PowerPoint|full|" + productivity,
+            "Publisher|full|" + productivity,
+            "OneNote|full|" + productivity,
+            "Outlook|full|" + productivity,
+            "Word|full|" + productivity,
+            "Visio|full|" + productivity,
             "SumatraPDF|full|" + productivity,
+            "Microsoft Teams|full|" + productivity,
             // development
             "Android Studio|contains|" + development,
             "Eclipse|contains|" + development,

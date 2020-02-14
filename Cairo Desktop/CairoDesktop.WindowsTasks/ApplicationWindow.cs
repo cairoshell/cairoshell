@@ -29,7 +29,7 @@ namespace CairoDesktop.WindowsTasks
                 TasksService = sourceService;
             }
 
-            if (Configuration.Settings.EnableTaskbarPolling)
+            if (Configuration.Settings.Instance.EnableTaskbarPolling)
             {
                 VisCheck = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Background, delegate
                 {
@@ -329,9 +329,10 @@ namespace CairoDesktop.WindowsTasks
                 bool hasEdge = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0;
                 bool isTopmostOnly = ExtendedWindowStyles == (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST;
                 bool isToolWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
+                bool isAcceptFiles = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_ACCEPTFILES) != 0;
                 bool isVisible = NativeMethods.IsWindowVisible(Handle);
 
-                if ((isAppWindow || ((hasEdge || isTopmostOnly || ExtendedWindowStyles == 0) && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
+                if ((isAppWindow || ((hasEdge || isTopmostOnly || ExtendedWindowStyles == 0) && ownerWin == IntPtr.Zero) || (isAcceptFiles && ShowStyle == NativeMethods.WindowShowStyle.ShowMaximized && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
                 {
                     return true;
                 }
@@ -372,7 +373,7 @@ namespace CairoDesktop.WindowsTasks
                         {
                             BitmapImage img = new BitmapImage();
                             img.BeginInit();
-                            img.UriSource = new Uri(UWPInterop.StoreAppHelper.GetAppIcon(AppUserModelID, Configuration.Settings.TaskbarIconSize)[0], UriKind.Absolute);
+                            img.UriSource = new Uri(UWPInterop.StoreAppHelper.GetAppIcon(AppUserModelID, Configuration.Settings.Instance.TaskbarIconSize)[0], UriKind.Absolute);
                             img.CacheOption = BitmapCacheOption.OnLoad;
                             img.EndInit();
                             img.Freeze();
@@ -391,7 +392,7 @@ namespace CairoDesktop.WindowsTasks
                         uint WM_QUERYDRAGICON = (uint)NativeMethods.WM.QUERYDRAGICON;
                         int GCL_HICON = -14;
                         int GCL_HICONSM = -34;
-                        int sizeSetting = Configuration.Settings.TaskbarIconSize;
+                        int sizeSetting = Configuration.Settings.Instance.TaskbarIconSize;
 
                         if (sizeSetting == 1)
                         {
@@ -448,7 +449,7 @@ namespace CairoDesktop.WindowsTasks
                                 Icon = icon;
                             }
                         }
-                        else if (Configuration.Settings.EnableTaskbarPolling && iconTries == 0)
+                        else if (Configuration.Settings.Instance.EnableTaskbarPolling && iconTries == 0)
                         {
                             DispatcherTimer getIcon = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
                             getIcon.Interval = new TimeSpan(0, 0, 2);
@@ -476,6 +477,8 @@ namespace CairoDesktop.WindowsTasks
             {
                 NativeMethods.ShowWindow(Handle, NativeMethods.WindowShowStyle.Show);
                 NativeMethods.SetForegroundWindow(Handle);
+
+                if (State == WindowState.Flashing) State = WindowState.Active; // some stubborn windows (Outlook) start flashing while already active, this lets us stop
             }
         }
 
