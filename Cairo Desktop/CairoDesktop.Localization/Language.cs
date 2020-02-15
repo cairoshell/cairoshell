@@ -129,6 +129,7 @@ namespace CairoDesktop.Localization
             { "sDesktop_Browse", "Choose folder" },
             { "sDesktop_Home", "Home" },
             { "sDesktop_Up", "Up" },
+            { "sDesktop_SetHome", "Set current directory as home" },
             { "sDesktop_ClearHistory", "Clear history" },
             { "sTaskbar_Empty", "Open windows to see them listed here." },
             { "sTaskbar_Minimize", "Minimize" },

@@ -21,6 +21,7 @@ namespace CairoDesktop
     {
         private WindowInteropHelper helper;
         private System.Windows.Controls.ContextMenu browseContextMenu;
+        private System.Windows.Controls.ContextMenu homeContextMenu;
         private LowLevelKeyboardListener lowLevelKeyboardListener;
 
         private DependencyProperty navigationManagerProperty = DependencyProperty.Register("NavigationManager", typeof(DynamicDesktopNavigationManager), typeof(DesktopNavigationToolbar), new PropertyMetadata(new DynamicDesktopNavigationManager()));
@@ -73,9 +74,19 @@ namespace CairoDesktop
 
             SetPosition();
 
+            // set up browse context menu (is dynamically constructed)
             browseContextMenu = new System.Windows.Controls.ContextMenu();
-            browseContextMenu.Closed += browseContextMenu_Closed;
+            browseContextMenu.Closed += contextMenu_Closed;
 
+            // set up home context menu
+            homeContextMenu = new System.Windows.Controls.ContextMenu();
+            homeContextMenu.Closed += contextMenu_Closed;
+            System.Windows.Controls.MenuItem setHomeMenuItem = new System.Windows.Controls.MenuItem();
+            setHomeMenuItem.Header = Localization.DisplayString.sDesktop_SetHome;
+            setHomeMenuItem.Click += SetHomeMenuItem_Click; ;
+            homeContextMenu.Items.Add(setHomeMenuItem);
+
+            // set up keyboard listener for shift key
             lowLevelKeyboardListener = new LowLevelKeyboardListener();
             lowLevelKeyboardListener.HookKeyboard();
             lowLevelKeyboardListener.OnKeyDown += LowLevelKeyboardListener_OnKeyDown;
@@ -179,6 +190,15 @@ namespace CairoDesktop
                         NavigationManager.NavigateTo(fbd.SelectedPath);
             }
         }
+        private void btnHome_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            homeContextMenu.IsOpen = true;
+
+            // this value is set so that if we click away from the context menu, the desktop overlay does not get toggled
+            ToolbarOwner.IsToolbarContextMenuOpen = true;
+
+            e.Handled = true;
+        }
 
         private void btnBrowse_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -206,7 +226,7 @@ namespace CairoDesktop
                 browseContextMenu.IsOpen = true;
 
                 // this value is set so that if we click away from the context menu, the desktop overlay does not get toggled
-                ToolbarOwner.IsHistoryMenuOpen = true;
+                ToolbarOwner.IsToolbarContextMenuOpen = true;
 
                 e.Handled = true;
             }
@@ -215,6 +235,13 @@ namespace CairoDesktop
         private void btnFwd_Click(object sender, RoutedEventArgs e)
         {
             NavigationManager.NavigateForward();
+        }
+        #endregion
+
+        #region Home menu
+        private void SetHomeMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.DesktopDirectory = NavigationManager.CurrentPath;
         }
         #endregion
 
@@ -237,11 +264,6 @@ namespace CairoDesktop
             if (sender is System.Windows.Controls.MenuItem menuItem)
                 if (menuItem.Tag is int index)
                     NavigationManager.NavigateToIndex(index);
-        }
-
-        private void browseContextMenu_Closed(object sender, RoutedEventArgs e)
-        {
-            ToolbarOwner.IsHistoryMenuOpen = false;
         }
         #endregion
 
@@ -325,6 +347,11 @@ namespace CairoDesktop
                 lowLevelKeyboardListener.UnHookKeyboard();
                 lowLevelKeyboardListener = null;
             }
+        }
+
+        private void contextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            if (!browseContextMenu.IsOpen && !homeContextMenu.IsOpen) ToolbarOwner.IsToolbarContextMenuOpen = false;
         }
         #endregion
 

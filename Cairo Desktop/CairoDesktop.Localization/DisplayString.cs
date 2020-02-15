@@ -1067,6 +1067,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sDesktop_SetHome
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
         public static string sDesktop_ClearHistory
         {
             get
