@@ -1,23 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <UserControl x:Class="CairoDesktop.StacksContainer"
- xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
- xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
-    Width="Auto"
-    AllowDrop="True"
-    DragEnter="locationDisplay_DragEnter"
-    DragOver="locationDisplay_DragOver"
-    Drop="locationDisplay_Drop"
-    Background="Transparent"
-    ToolTip="{Binding Path=(l10n:DisplayString.sStacks_Tooltip)}" ToolTipService.ShowDuration="1000"
-    ToolTipService.InitialShowDelay="1000" MinWidth="600" xmlns:common="clr-namespace:CairoDesktop.Common;assembly=CairoDesktop.Common"
-    x:Name="CairoStacksContainer">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <common:StacksManager x:Key="StacksManager" x:Name="StacksManager" />
-        </ResourceDictionary>
-    </UserControl.Resources>
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+             Width="Auto"
+             AllowDrop="True"
+             DragEnter="locationDisplay_DragEnter"
+             DragOver="locationDisplay_DragOver"
+             Drop="locationDisplay_Drop"
+             Background="Transparent"
+             ToolTip="{Binding Path=(l10n:DisplayString.sStacks_Tooltip)}"
+             ToolTipService.ShowDuration="1000"
+             ToolTipService.InitialShowDelay="1000"
+             x:Name="CairoStacksContainer">
     <DockPanel Margin="0">
-        <ItemsControl ItemsSource="{Binding Source={StaticResource StacksManager}, Path=StackLocations}">
+        <ItemsControl ItemsSource="{Binding Path=StackLocations}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel Orientation="Horizontal" />

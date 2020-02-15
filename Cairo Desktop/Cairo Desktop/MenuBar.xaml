@@ -137,7 +137,6 @@
                     Margin="0,0,0,0">
         </StackPanel>
         <!-- Last item added to DockPanel fills the remaining space! -->
-        <control:StacksContainer x:Name="stacksContainer"
-                                 Background="Transparent" />
+        <control:StacksContainer x:Name="stacksContainer" />
     </DockPanel>
 </Window>

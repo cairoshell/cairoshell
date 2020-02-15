@@ -89,12 +89,12 @@ namespace CairoDesktop
             }
             else if (verb == "addStack")
             {
-                StacksManager.AddLocation(fileName);
+                StacksManager.Instance.AddLocation(fileName);
                 return;
             }
             else if (verb == "removeStack")
             {
-                StacksManager.StackLocations.Remove(new SystemDirectory(fileName, _dispatcher));
+                StacksManager.Instance.StackLocations.Remove(new SystemDirectory(fileName, _dispatcher));
                 return;
             }
             else if (verb == "openWithShell")

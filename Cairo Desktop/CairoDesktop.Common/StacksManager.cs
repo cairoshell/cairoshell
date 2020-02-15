@@ -1,5 +1,4 @@
-﻿using CairoDesktop.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -11,19 +10,15 @@ namespace CairoDesktop.Common
 {
     public class StacksManager
     {
-        private static bool isInitialized = false;
-        private static string stackConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoStacksConfig.xml";
-        private static System.Xml.Serialization.XmlSerializer serializer;
+        private string stackConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoStacksConfig.xml";
+        private System.Xml.Serialization.XmlSerializer serializer;
 
-        private static InvokingObservableCollection<SystemDirectory> _stackLocations = new InvokingObservableCollection<SystemDirectory>(Application.Current.Dispatcher);
+        private InvokingObservableCollection<SystemDirectory> _stackLocations = new InvokingObservableCollection<SystemDirectory>(Application.Current.Dispatcher);
 
-        public static InvokingObservableCollection<SystemDirectory> StackLocations
+        public InvokingObservableCollection<SystemDirectory> StackLocations
         {
             get
             {
-                if (!isInitialized)
-                    initialize();
-
                 return _stackLocations;
             }
             set
@@ -38,15 +33,19 @@ namespace CairoDesktop.Common
             }
         }
 
-        public StacksManager()
+        private static StacksManager _instance = new StacksManager();
+        public static StacksManager Instance
         {
-            
+            get { return _instance; }
         }
 
-        private static void initialize()
+        public StacksManager()
         {
-            isInitialized = true;
+            initialize();
+        }
 
+        private void initialize()
+        {
             // this causes an exception, thanks MS!
             //serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<String>));
 
@@ -61,12 +60,12 @@ namespace CairoDesktop.Common
             StackLocations.CollectionChanged += new NotifyCollectionChangedEventHandler(stackLocations_CollectionChanged);
         }
 
-        static void stackLocations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void stackLocations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             serializeStacks();
         }
 
-        public static bool AddLocation(string path)
+        public bool AddLocation(string path)
         {
             if (CanAdd(path))
             {
@@ -79,12 +78,12 @@ namespace CairoDesktop.Common
             return false;
         }
 
-        public static bool CanAdd(string path)
+        public bool CanAdd(string path)
         {
             return Directory.Exists(path) && !StackLocations.Any(i => i.Equals(path));
         }
 
-        private static void serializeStacks()
+        private void serializeStacks()
         {
             List<string> locationPaths = new List<string>();
             foreach (SystemDirectory dir in StackLocations)
@@ -99,7 +98,7 @@ namespace CairoDesktop.Common
             writer.Close();
         }
 
-        private static void deserializeStacks()
+        private void deserializeStacks()
         {
             if (Interop.Shell.Exists(stackConfigFile))
             {

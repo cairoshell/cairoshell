@@ -15,6 +15,8 @@ namespace CairoDesktop {
         public StacksContainer() 
         {
             InitializeComponent();
+
+            DataContext = StacksManager.Instance;
         }
 
         private void locationDisplay_DragEnter(object sender, DragEventArgs e)
@@ -51,7 +53,7 @@ namespace CairoDesktop {
                 {
                     foreach (string fileName in fileNames)
                     {
-                        if (StacksManager.CanAdd(fileName))
+                        if (StacksManager.Instance.CanAdd(fileName))
                         {
                             canAdd = true;
                             break;
@@ -74,15 +76,15 @@ namespace CairoDesktop {
             {
                 foreach (string fileName in fileNames)
                 {
-                    StacksManager.AddLocation(fileName);
+                    StacksManager.Instance.AddLocation(fileName);
                 }
             }
             else if (e.Data.GetDataPresent(typeof(SystemDirectory)))
             {
                 SystemDirectory dropData = e.Data.GetData(typeof(SystemDirectory)) as SystemDirectory;
 
-                int initialIndex = StacksManager.StackLocations.IndexOf(dropData);
-                StacksManager.StackLocations.Move(initialIndex, StacksManager.StackLocations.Count - 1);
+                int initialIndex = StacksManager.Instance.StackLocations.IndexOf(dropData);
+                StacksManager.Instance.StackLocations.Move(initialIndex, StacksManager.Instance.StackLocations.Count - 1);
             }
 
             e.Handled = true;
@@ -90,7 +92,7 @@ namespace CairoDesktop {
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-            StacksManager.StackLocations.Remove((sender as MenuItem).CommandParameter as SystemDirectory);
+            StacksManager.Instance.StackLocations.Remove((sender as MenuItem).CommandParameter as SystemDirectory);
         }
         
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -185,10 +187,10 @@ namespace CairoDesktop {
             {
                 foreach (string fileName in fileNames)
                 {
-                    if (StacksManager.AddLocation(fileName))
+                    if (StacksManager.Instance.AddLocation(fileName))
                     {
-                        int dropIndex = StacksManager.StackLocations.IndexOf(replacedDir);
-                        StacksManager.StackLocations.Move(StacksManager.StackLocations.Count - 1, dropIndex);
+                        int dropIndex = StacksManager.Instance.StackLocations.IndexOf(replacedDir);
+                        StacksManager.Instance.StackLocations.Move(StacksManager.Instance.StackLocations.Count - 1, dropIndex);
                     }
                 }
             }
@@ -196,9 +198,9 @@ namespace CairoDesktop {
             {
                 SystemDirectory dropData = e.Data.GetData(typeof(SystemDirectory)) as SystemDirectory;
 
-                int initialIndex = StacksManager.StackLocations.IndexOf(dropData);
-                int dropIndex = StacksManager.StackLocations.IndexOf(replacedDir);
-                StacksManager.StackLocations.Move(initialIndex, dropIndex);
+                int initialIndex = StacksManager.Instance.StackLocations.IndexOf(dropData);
+                int dropIndex = StacksManager.Instance.StackLocations.IndexOf(replacedDir);
+                StacksManager.Instance.StackLocations.Move(initialIndex, dropIndex);
             }
 
             e.Handled = true;
