@@ -18,7 +18,25 @@
                    Stretch="Uniform" 
                    Width="32" 
                    Height="32" 
-                   RenderOptions.BitmapScalingMode="LowQuality" />
+                   RenderOptions.BitmapScalingMode="LowQuality">
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsImage}" Value="True">
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="Black"
+                                                          Direction="270"
+                                                          ShadowDepth="2"
+                                                          BlurRadius="5"
+                                                          Opacity="0.6" />
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
             <TextBox Name="txtRename" 
                      DockPanel.Dock="Bottom" 
                      Visibility="Collapsed" 

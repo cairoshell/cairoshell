@@ -12,7 +12,7 @@ namespace CairoDesktop.Common
 {
     public class SystemFile : INotifyPropertyChanged
     {
-        private static readonly string[] ImageFileTypes = new string[] { ".jpg", ".jpeg", ".gif", ".bmp", ".png" };
+        private static readonly string[] ImageFileTypes = new string[] { ".jpg", ".jpeg", ".jfif", ".gif", ".bmp", ".png" };
         private ImageSource _icon;
         private ImageSource _largeIcon;
         private string _friendlyName;
@@ -279,29 +279,31 @@ namespace CairoDesktop.Common
         /// <summary>
         /// Checks the path's file extension against the list of known types to determine if the file is an image.
         /// </summary>
-        /// <param name="path">The file path.</param>
         /// <returns>Indication of if the file is an image or not.</returns>
-        public static bool GetFileIsImage(string path)
+        public bool IsImage
         {
-            try
+            get
             {
-                if (!File.Exists(path))
+                try
                 {
-                    return false;
-                }
-
-                string ext = Path.GetExtension(path);
-                foreach (string fileType in ImageFileTypes)
-                {
-                    if (ext.Equals(fileType, StringComparison.OrdinalIgnoreCase) && GetFileSize(path) >= 1)
+                    if (!File.Exists(FullName))
                     {
-                        return true;
+                        return false;
+                    }
+
+                    string ext = Path.GetExtension(FullName);
+                    foreach (string fileType in ImageFileTypes)
+                    {
+                        if (ext.Equals(fileType, StringComparison.OrdinalIgnoreCase) && GetFileSize(FullName) >= 1)
+                        {
+                            return true;
+                        }
                     }
                 }
-            }
-            catch { }
+                catch { }
 
-            return false;
+                return false;
+            }
         }
 
         public static bool RenameFile(string oldFilePathName, string newFilename)
@@ -337,7 +339,7 @@ namespace CairoDesktop.Common
         {
             if (Interop.Shell.Exists(this.FullName))
             {
-                if (GetFileIsImage(this.FullName))
+                if (IsImage)
                 {
                     try
                     {
