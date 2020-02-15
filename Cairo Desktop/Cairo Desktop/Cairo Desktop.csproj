@@ -93,7 +93,6 @@
     <Compile Include="MenuExtraSearch.xaml.cs">
       <DependentUpon>MenuExtraSearch.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SupportingClasses\DynamicDesktopNavigationManager.cs" />
     <Compile Include="Icon.xaml.cs">
       <DependentUpon>Icon.xaml</DependentUpon>
     </Compile>

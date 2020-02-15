@@ -78,6 +78,7 @@
     <Compile Include="Dialogs.cs" />
     <Compile Include="DisposableCollection.cs" />
     <Compile Include="DisposableObject.cs" />
+    <Compile Include="NavigationManager.cs" />
     <Compile Include="LowLevelKeyboardListener.cs" />
     <Compile Include="Helpers\EventHandlerHelper.cs" />
     <Compile Include="Helpers\TypeHelper.cs" />

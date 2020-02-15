@@ -34,7 +34,7 @@ namespace CairoDesktop
 
         public DesktopIcons Icons;
         public DependencyProperty IsOverlayOpenProperty = DependencyProperty.Register("IsOverlayOpen", typeof(bool), typeof(Desktop), new PropertyMetadata(new bool()));
-        internal DynamicDesktopNavigationManager NavigationManager;
+        public NavigationManager NavigationManager;
 
         public bool IsOverlayOpen
         {
@@ -66,7 +66,7 @@ namespace CairoDesktop
             setGridPosition();
             setBackground();
 
-            NavigationManager = new DynamicDesktopNavigationManager();
+            NavigationManager = new NavigationManager();
             NavigationManager.PropertyChanged += NavigationManager_PropertyChanged;
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;

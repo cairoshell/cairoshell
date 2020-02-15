@@ -5,9 +5,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Common
 {
-    internal class DynamicDesktopNavigationManager : INotifyPropertyChanged
+    public class NavigationManager : INotifyPropertyChanged
     {
         private List<string> list;
         private int _currentIndex;
@@ -29,7 +29,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public DynamicDesktopNavigationManager()
+        public NavigationManager()
         {
             list = new List<string>();
             currentIndex = 0;
@@ -101,7 +101,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        internal void NavigateForward()
+        public void NavigateForward()
         {
             if (CanGoForward)
             {
@@ -109,7 +109,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        internal void NavigateBackward()
+        public void NavigateBackward()
         {
             if (CanGoBack)
             {
@@ -117,7 +117,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        internal void NavigateToIndex(int index)
+        public void NavigateToIndex(int index)
         {
             if (index < list.Count)
             {
@@ -125,7 +125,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        internal void NavigateToParent()
+        public void NavigateToParent()
         {
             DirectoryInfo parentDirectoryInfo = Directory.GetParent(CurrentPath);
             if (parentDirectoryInfo != null && parentDirectoryInfo.Exists)
@@ -135,7 +135,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        internal void NavigateHome()
+        public void NavigateHome()
         {
             string desktopPath = Settings.Instance.DesktopDirectory;
 
