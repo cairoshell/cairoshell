@@ -230,6 +230,9 @@
         {
             IsShuttingDown = true;
 
+            // dispose notification area in case we started it earlier
+            NotificationArea.Instance.Dispose();
+
             Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
         }
 

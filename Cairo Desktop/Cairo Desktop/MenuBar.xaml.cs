@@ -4,7 +4,6 @@ using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
-using CairoDesktop.WindowsTray;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -518,8 +517,6 @@ namespace CairoDesktop
 
             if (Startup.IsShuttingDown && Screen.Primary)
             {
-                NotificationArea.Instance.Dispose();
-
                 AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale);
 
                 WinSparkle.win_sparkle_cleanup();
