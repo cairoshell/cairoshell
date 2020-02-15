@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -49,7 +50,7 @@ namespace CairoDesktop.Common
             // this causes an exception, thanks MS!
             //serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<String>));
 
-            serializer = System.Xml.Serialization.XmlSerializer.FromTypes(new[] { typeof(List<String>) })[0];
+            serializer = System.Xml.Serialization.XmlSerializer.FromTypes(new[] { typeof(List<string>) })[0];
 
             try
             {
@@ -67,23 +68,25 @@ namespace CairoDesktop.Common
 
         public static bool AddLocation(string path)
         {
-            if (Directory.Exists(path))
+            if (CanAdd(path))
             {
                 SystemDirectory dir = new SystemDirectory(path, Dispatcher.CurrentDispatcher);
+                StackLocations.Add(dir);
 
-                if (!StackLocations.Contains(dir))
-                {
-                    StackLocations.Add(dir);
-                    return true;
-                }
+                return true;
             }
 
             return false;
         }
 
+        public static bool CanAdd(string path)
+        {
+            return Directory.Exists(path) && !StackLocations.Any(i => i.Equals(path));
+        }
+
         private static void serializeStacks()
         {
-            List<String> locationPaths = new List<String>();
+            List<string> locationPaths = new List<string>();
             foreach (SystemDirectory dir in StackLocations)
             {
                 locationPaths.Add(dir.FullName);
@@ -101,10 +104,10 @@ namespace CairoDesktop.Common
             if (Interop.Shell.Exists(stackConfigFile))
             {
                 System.Xml.XmlReader reader = System.Xml.XmlReader.Create(stackConfigFile);
-                List<String> locationPaths = serializer.Deserialize(reader) as List<String>;
-                foreach (String path in locationPaths)
+                List<string> locationPaths = serializer.Deserialize(reader) as List<string>;
+                foreach (string path in locationPaths)
                 {
-                    StacksManager.AddLocation(path);
+                    AddLocation(path);
                 }
                 reader.Close();
             }
@@ -113,7 +116,7 @@ namespace CairoDesktop.Common
                 // Add some default folders on FirstRun
 
                 // Check for Documents Folder
-                String myDocsPath = Interop.KnownFolders.GetPath(Interop.KnownFolder.Documents);
+                string myDocsPath = Interop.KnownFolders.GetPath(Interop.KnownFolder.Documents);
                 if (Directory.Exists(myDocsPath))
                 {
                     SystemDirectory myDocsSysDir = new SystemDirectory(myDocsPath, Dispatcher.CurrentDispatcher);
@@ -124,7 +127,7 @@ namespace CairoDesktop.Common
                     }
                 }
                 // Check for Downloads folder
-                String downloadsPath = Interop.KnownFolders.GetPath(Interop.KnownFolder.Downloads);
+                string downloadsPath = Interop.KnownFolders.GetPath(Interop.KnownFolder.Downloads);
                 if (Directory.Exists(downloadsPath))
                 {
                     SystemDirectory downloadsSysDir = new SystemDirectory(downloadsPath, Dispatcher.CurrentDispatcher);

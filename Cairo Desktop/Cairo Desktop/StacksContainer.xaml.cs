@@ -17,14 +17,17 @@ namespace CairoDesktop {
             InitializeComponent();
         }
 
-        private void locationDisplay_DragOver(object sender, DragEventArgs e)
+        private void locationDisplay_DragEnter(object sender, DragEventArgs e)
         {
-            String[] formats = e.Data.GetFormats(true);
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effects = DragDropEffects.Link;
             }
-            else if (!e.Data.GetDataPresent(typeof(SystemDirectory)))
+            else if (e.Data.GetDataPresent(typeof(SystemDirectory)))
+            {
+                e.Effects = DragDropEffects.Move;
+            }
+            else
             {
                 e.Effects = DragDropEffects.None;
             }
@@ -32,12 +35,44 @@ namespace CairoDesktop {
             e.Handled = true;
         }
 
+        private void locationDisplay_DragOver(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop) && !e.Data.GetDataPresent(typeof(SystemDirectory)))
+            {
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+            }
+            else if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // check to see if there at least one path we can add
+                string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+                bool canAdd = false;
+                if (fileNames != null)
+                {
+                    foreach (string fileName in fileNames)
+                    {
+                        if (StacksManager.CanAdd(fileName))
+                        {
+                            canAdd = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!canAdd)
+                {
+                    e.Effects = DragDropEffects.None;
+                    e.Handled = true;
+                }
+            }
+        }
+
         private void locationDisplay_Drop(object sender, DragEventArgs e)
         {
-            String[] fileNames = e.Data.GetData(DataFormats.FileDrop) as String[];
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null) 
             {
-                foreach (String fileName in fileNames)
+                foreach (string fileName in fileNames)
                 {
                     StacksManager.AddLocation(fileName);
                 }
@@ -145,10 +180,10 @@ namespace CairoDesktop {
             Menu dropContainer = sender as Menu;
             SystemDirectory replacedDir = dropContainer.DataContext as SystemDirectory;
 
-            String[] fileNames = e.Data.GetData(DataFormats.FileDrop) as String[];
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
-                foreach (String fileName in fileNames)
+                foreach (string fileName in fileNames)
                 {
                     if (StacksManager.AddLocation(fileName))
                     {
@@ -180,7 +215,7 @@ namespace CairoDesktop {
             startPoint = null;
             ctxOpen = true;
 
-            if (!Configuration.Settings.Instance.EnableDynamicDesktop || !Configuration.Settings.Instance.EnableDesktop)
+            if (!Settings.Instance.EnableDynamicDesktop || !Settings.Instance.EnableDesktop)
             {
                 ContextMenu menu = (sender as ContextMenu);
                 foreach (Control item in menu.Items)
