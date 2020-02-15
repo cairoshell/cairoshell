@@ -255,6 +255,11 @@
 
                 lblTrayWarning.Visibility = Visibility.Visible;
             }
+            else if (!Settings.Instance.EnableTaskbar && !Startup.IsCairoRunningAsShell)
+            {
+                // if taskbar is disabled and we aren't running as shell, then Explorer tray is visible. Show warning.
+                lblTrayTaskbarWarning.Visibility = Visibility.Visible;
+            }
         }
 
         private void checkRunAtLogOn()

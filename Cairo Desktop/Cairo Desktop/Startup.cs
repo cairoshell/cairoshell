@@ -163,14 +163,14 @@
             }
 
             // Future: This should be moved to whatever plugin is responsible for Taskbar/MennuBart stuff
-            if (Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon)
+            if (Settings.Instance.EnableMenuBarMultiMon || Settings.Instance.EnableTaskbarMultiMon)
                 ScreenSetup(true);
             else if (IsCairoRunningAsShell) // Set desktop work area for when Explorer isn't running
                 AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
             // Don't allow showing both the Windows taskbar and the Cairo tray
-            if (Settings.Instance.EnableSysTray == true && Settings.Instance.EnableTaskbar == true)
+            if (Settings.Instance.EnableSysTray == true && (Settings.Instance.EnableTaskbar == true || IsCairoRunningAsShell))
             {
                 NotificationArea.Instance.Initialize();
             }

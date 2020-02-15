@@ -172,6 +172,7 @@ namespace CairoDesktop.Localization
             { "sSettings_MenuBar_NotificationArea", "Notification area" },
             { "sSettings_MenuBar_EnableNotificationArea", "Enable notification area" },
             { "sSettings_MenuBar_NotificationAreaError", "The notification area component could not be loaded. Please install the Microsoft Visual C++ 2015 Redistributable." },
+            { "sSettings_MenuBar_NotificationAreaTaskbarWarning", "The Cairo notification area will not be displayed due to the Windows taskbar being visible. To use the Cairo notification area, enable the Cairo taskbar and restart Cairo." },
             { "sSettings_MenuBar_ShowNotifyIcons", "Show notification area icons:" },
             { "sSettings_MenuBar_ShowNotifyIconsCollapsed", "Collapsed" },
             { "sSettings_MenuBar_ShowNotifyIconsAlways", "Always" },

@@ -1411,6 +1411,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_MenuBar_NotificationAreaTaskbarWarning
+        {
+            get
+            {
+                return getString("sSettings_MenuBar_NotificationAreaTaskbarWarning");
+            }
+        }
+
         public static string sSettings_MenuBar_ShowNotifyIcons
         {
             get
