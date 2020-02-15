@@ -8,14 +8,10 @@ using CairoDesktop.WindowsTray;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -62,10 +58,6 @@ namespace CairoDesktop
 
             setupPlacesMenu();
 
-            setupSearch();
-
-            initializeClock();
-
             initSparkle();
         }
 
@@ -88,18 +80,12 @@ namespace CairoDesktop
             {
                 // show Windows 10 features
                 miOpenUWPSettings.Visibility = Visibility.Visible;
-                miOpenActionCenter.Visibility = Visibility.Visible;
             }
 
             // I didnt like the Exit Cairo option available when Cairo was set as Shell
             if (Startup.IsCairoRunningAsShell)
             {
                 miExitCairo.Visibility = Visibility.Collapsed;
-            }
-
-            if (Settings.Instance.EnableSysTray)
-            {
-                initializeVolumeIcon();
             }
 
             // Fix for concurrent seperators
@@ -130,36 +116,31 @@ namespace CairoDesktop
             }
         }
 
-        private void initializeVolumeIcon()
+        private void setupMenuExtras()
         {
-            miOpenVolume.Visibility = Visibility.Visible;
-            volumeIcon_Tick();
+            // set up menu extras
+            if (Settings.Instance.EnableSysTray)
+            {
+                // add systray
+                SystemTray systemTray = new SystemTray();
+                systemTray.Margin = new Thickness(0, 0, 8, 0);
+                MenuExtrasHost.Children.Add(systemTray);
 
-            // update volume icon periodically
-            DispatcherTimer volumeIconTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 2), DispatcherPriority.Background, delegate
-            {
-                volumeIcon_Tick();
-            }, this.Dispatcher);
-        }
+                // add volume
+                MenuExtrasHost.Children.Add(new MenuExtraVolume());
+            }
 
-        private void volumeIcon_Tick()
-        {
-            if (VolumeUtilities.IsVolumeMuted())
+            if (Shell.IsWindows10OrBetter && !Startup.IsCairoRunningAsShell)
             {
-                imgOpenVolume.Source = this.FindResource("VolumeMuteIcon") as ImageSource;
+                // add action center
+                MenuExtrasHost.Children.Add(new MenuExtraActionCenter(helper.Handle));
             }
-            else if (VolumeUtilities.GetMasterVolume() <= 0)
-            {
-                imgOpenVolume.Source = this.FindResource("VolumeOffIcon") as ImageSource;
-            }
-            else if (VolumeUtilities.GetMasterVolume() < 0.5)
-            {
-                imgOpenVolume.Source = this.FindResource("VolumeLowIcon") as ImageSource;
-            }
-            else
-            {
-                imgOpenVolume.Source = this.FindResource("VolumeIcon") as ImageSource;
-            }
+
+            // add date/time
+            MenuExtrasHost.Children.Add(new MenuExtraClock(Screen.Primary));
+
+            // add search
+            MenuExtrasHost.Children.Add(new MenuExtraSearch());
         }
 
         private void setupCairoMenu()
@@ -205,6 +186,8 @@ namespace CairoDesktop
 
         private void setupPostInit()
         {
+            setupMenuExtras();
+
             // set initial DPI. We do it here so that we get the correct value when DPI has changed since initial user logon to the system.
             if (Screen.Primary)
             {
@@ -216,12 +199,6 @@ namespace CairoDesktop
             setPosition();
 
             appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, AppBarHelper.ABEdge.ABE_TOP);
-
-            // register time changed handler to receive time zone updates for the clock to update correctly
-            if (Screen.Primary)
-            {
-                Microsoft.Win32.SystemEvents.TimeChanged += new EventHandler(TimeChanged);
-            }
 
             Shell.HideWindowFromTasks(handle);
 
@@ -251,70 +228,6 @@ namespace CairoDesktop
             }
 
             FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
-        }
-
-        private void setupSearch()
-        {
-            CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
-
-            // Show the search button only if the service is running
-            if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
-            {
-                setSearchProvider();
-            }
-            else
-            {
-                CairoSearchMenu.Visibility = Visibility.Collapsed;
-                DispatcherTimer searchcheck = new DispatcherTimer(DispatcherPriority.Background, Dispatcher);
-                searchcheck.Interval = new TimeSpan(0, 0, 5);
-                searchcheck.Tick += searchcheck_Tick;
-                searchcheck.Start();
-            }
-        }
-
-        private void searchcheck_Tick(object sender, EventArgs e)
-        {
-            if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
-            {
-                setSearchProvider();
-                CairoSearchMenu.Visibility = Visibility.Visible;
-                (sender as DispatcherTimer).Stop();
-            }
-            else
-            {
-                CairoSearchMenu.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void setSearchProvider()
-        {
-            var thread = new Thread(() =>
-            {
-                // this sometimes takes a while
-                Type provider = typeof(SearchHelper);
-
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
-                    vistaSearchProvider.ObjectType = provider;
-                    CairoSearchMenu.DataContext = vistaSearchProvider;
-
-                    Binding bSearchText = new Binding("SearchText");
-                    bSearchText.Mode = BindingMode.Default;
-                    bSearchText.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-
-                    Binding bSearchResults = new Binding("Results");
-                    bSearchResults.Mode = BindingMode.Default;
-                    bSearchResults.IsAsync = true;
-
-                    searchStr.SetBinding(TextBox.TextProperty, bSearchText);
-                    lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
-                }));
-            });
-
-            thread.IsBackground = true;
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
         }
 
         private int canShutdown()
@@ -368,31 +281,6 @@ namespace CairoDesktop
 
                 appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
             }
-        }
-        #endregion
-
-        #region Date/time
-        /// <summary>
-        /// Initializes the dispatcher timers to updates the time and date bindings
-        /// </summary>
-        private void initializeClock()
-        {
-            // initial display
-            clock_Tick(null, null);
-
-            // Create our timer for clock
-            DispatcherTimer clock = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 500), DispatcherPriority.Background, clock_Tick, Dispatcher);
-        }
-
-        private void clock_Tick(object sender, EventArgs args)
-        {
-            dateText.Text = DateTime.Now.ToString(Settings.Instance.TimeFormat);
-            dateText.ToolTip = DateTime.Now.ToString(Settings.Instance.DateFormat);
-        }
-
-        private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
-        {
-            Shell.StartProcess("timedate.cpl");
         }
         #endregion
 
@@ -516,11 +404,6 @@ namespace CairoDesktop
             }
 
             return IntPtr.Zero;
-        }
-
-        private void TimeChanged(object sender, EventArgs e)
-        {
-            TimeZoneInfo.ClearCachedData();
         }
 
         private void FullScreenApps_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -654,8 +537,6 @@ namespace CairoDesktop
 
                 FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
                 FullScreenHelper.Instance.Dispose();
-
-                Microsoft.Win32.SystemEvents.TimeChanged -= new EventHandler(TimeChanged);
             }
             else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
             {
@@ -822,93 +703,6 @@ namespace CairoDesktop
         private void OpenRecycleBin(object sender, RoutedEventArgs e)
         {
             FolderHelper.OpenLocation("::{645FF040-5081-101B-9F08-00AA002F954E}");
-        }
-        #endregion
-
-        #region Menu extras
-
-        private void miOpenVolume_Click(object sender, RoutedEventArgs e)
-        {
-            Shell.StartProcess("sndvol.exe", "-f " + (int)(((ushort)(System.Windows.Forms.Cursor.Position.X / Shell.DpiScaleAdjustment)) | (uint)((int)ActualHeight << 16)));
-        }
-
-        private void miOpenSoundSettings_Click(object sender, RoutedEventArgs e)
-        {
-            Shell.StartProcess("mmsys.cpl");
-        }
-
-        private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)
-        {
-            Shell.ShowActionCenter();
-        }
-
-        private void miOpenActionCenter_MouseEnter(object sender, MouseEventArgs e)
-        {
-            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
-                        NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
-        }
-
-        private void miOpenActionCenter_MouseLeave(object sender, MouseEventArgs e)
-        {
-            NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE,
-                        NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) & ~NativeMethods.WS_EX_NOACTIVATE);
-        }
-
-        private void miClock_SubmenuOpened(object sender, RoutedEventArgs e)
-        {
-            monthCalendar.DisplayDate = DateTime.Now;
-        }
-
-        #endregion
-
-        #region Search menu
-        private void btnViewResults_Click(object sender, RoutedEventArgs e)
-        {
-            Shell.StartProcess("search:query=" + searchStr.Text);
-        }
-
-        private void searchStr_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
-            {
-                Shell.StartProcess("search:query=" + searchStr.Text);
-            }
-        }
-
-        private void searchStr_PreviewLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
-        {
-            if (CairoSearchMenu.IsKeyboardFocusWithin)
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void btnClearSearch_Click(object sender, RoutedEventArgs e)
-        {
-            searchStr.Text = "";
-            FocusSearchBox(sender, e);
-        }
-
-        public void FocusSearchBox(object sender, RoutedEventArgs e)
-        {
-            searchStr.Dispatcher.BeginInvoke(
-            new Action(delegate
-            {
-                searchStr.Focusable = true;
-                searchStr.Focus();
-                Keyboard.Focus(searchStr);
-            }),
-            DispatcherPriority.Render);
-        }
-
-        public void ExecuteOpenSearchResult(object sender, ExecutedRoutedEventArgs e)
-        {
-            var searchObj = (SearchResult)e.Parameter;
-
-            if (!Shell.StartProcess(searchObj.Path))
-            {
-                CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
         }
         #endregion
     }

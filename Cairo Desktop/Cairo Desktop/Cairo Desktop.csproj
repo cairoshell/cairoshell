@@ -84,6 +84,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CairoWallpaperStyle.cs" />
+    <Compile Include="MenuExtraActionCenter.xaml.cs">
+      <DependentUpon>MenuExtraActionCenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MenuExtraClock.xaml.cs">
+      <DependentUpon>MenuExtraClock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MenuExtraSearch.xaml.cs">
+      <DependentUpon>MenuExtraSearch.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SupportingClasses\DynamicDesktopNavigationManager.cs" />
     <Compile Include="Icon.xaml.cs">
       <DependentUpon>Icon.xaml</DependentUpon>
@@ -100,6 +109,9 @@
     <Compile Include="SupportingClasses\FullScreenHelper.cs" />
     <Compile Include="SupportingClasses\ShellContextMenu.cs" />
     <Compile Include="SupportingClasses\SystemHotKeys.cs" />
+    <Compile Include="MenuExtraVolume.xaml.cs">
+      <DependentUpon>MenuExtraVolume.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
     </Compile>
@@ -107,7 +119,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="MenuExtraActionCenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MenuExtraClock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MenuExtraSearch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ProgramsMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MenuExtraVolume.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
