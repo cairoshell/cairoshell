@@ -23,7 +23,6 @@
         Drop="CairoDesktopWindow_Drop"
         AllowDrop="True">
     <Grid Name="grid" 
-          MouseRightButtonDown="grid_MouseRightButtonDown" 
           PreviewMouseLeftButtonDown="grid_PreviewMouseLeftButtonDown" 
           HorizontalAlignment="Left" 
           VerticalAlignment="Top">

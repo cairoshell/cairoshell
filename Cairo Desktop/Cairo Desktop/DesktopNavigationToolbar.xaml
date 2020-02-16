@@ -11,11 +11,11 @@
         Width="200"
         x:Name="DesktopToolbar"
         Height="54"
-        SourceInitialized="Window_SourceInitialized"
-        MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        SourceInitialized="DesktopToolbar_SourceInitialized"
+        MouseLeftButtonDown="DesktopToolbar_MouseLeftButtonDown"
         PreviewMouseUp="DesktopToolbar_PreviewMouseUp"
         LocationChanged="DesktopToolbar_LocationChanged"
-        Closing="Window_Closing">
+        Closing="DesktopToolbar_Closing">
     <Window.Resources>
         <Style x:Key="CairoDesktopNavItemStyle"
                TargetType="{x:Type Button}">
@@ -24,7 +24,7 @@
             <Setter Property="Height"
                     Value="18" />
             <Setter Property="Width"
-                    Value="18" />
+                    Value="16" />
             <Setter Property="HorizontalAlignment"
                     Value="Center" />
             <Setter Property="VerticalAlignment"
@@ -36,84 +36,82 @@
                                           Margin="0"
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver"
-                                     Value="true">
-                                <Setter TargetName="ContentPresenter"
-                                        Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect Color="White"
-                                                          ShadowDepth="0"
-                                                          Opacity="1"
-                                                          BlurRadius="7" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsPressed"
-                                     Value="true">
-                                <Setter TargetName="ContentPresenter"
-                                        Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect Color="White"
-                                                          ShadowDepth="0"
-                                                          Opacity="1"
-                                                          BlurRadius="5" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver"
+                         Value="true">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="White"
+                                              ShadowDepth="0"
+                                              Opacity="1"
+                                              BlurRadius="7" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsPressed"
+                         Value="true">
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="White"
+                                              ShadowDepth="0"
+                                              Opacity="1"
+                                              BlurRadius="5" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsEnabled"
+                         Value="false">
+                    <Setter Property="Opacity"
+                            Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
-        <Style x:Key="CairoDesktopNavItem2Style"
-               TargetType="{x:Type Button}">
-            <Setter Property="OverridesDefaultStyle"
-                    Value="true" />
+        <Style x:Key="CairoDesktopBackNavItemStyle"
+               TargetType="{x:Type Button}"
+               BasedOn="{StaticResource CairoDesktopNavItemStyle}">
+            <!-- For the back button we don't set IsEnabled to false, this allows the right-click to always work -->
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=NavigationManager.CanGoBack}"
+                             Value="False">
+                    <Setter Property="Opacity"
+                            Value="0.5" />
+                    <Setter Property="Effect"
+                            Value="{x:Null}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=isShiftKeyHeld}"
+                             Value="True">
+                    <Setter Property="Visibility"
+                            Value="Collapsed" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="CairoDesktopUpNavItemStyle"
+               TargetType="{x:Type Button}"
+               BasedOn="{StaticResource CairoDesktopNavItemStyle}">
+            <Setter Property="Visibility"
+                    Value="Collapsed" />
+            <Setter Property="Height"
+                    Value="16" />
+            <Setter Property="Width"
+                    Value="18" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=isShiftKeyHeld}"
+                             Value="True">
+                    <Setter Property="Visibility"
+                            Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="CairoDesktopNavItemWideStyle"
+               TargetType="{x:Type Button}"
+               BasedOn="{StaticResource CairoDesktopNavItemStyle}">
             <Setter Property="Height"
                     Value="19" />
             <Setter Property="Width"
                     Value="21" />
-            <Setter Property="HorizontalAlignment"
-                    Value="Center" />
-            <Setter Property="VerticalAlignment"
-                    Value="Center" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Margin="0"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center" />
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver"
-                                     Value="true">
-                                <Setter TargetName="ContentPresenter"
-                                        Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect Color="White"
-                                                          ShadowDepth="0"
-                                                          Opacity="1"
-                                                          BlurRadius="7" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsPressed"
-                                     Value="true">
-                                <Setter TargetName="ContentPresenter"
-                                        Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect Color="White"
-                                                          ShadowDepth="0"
-                                                          Opacity="1"
-                                                          BlurRadius="5" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
         </Style>
     </Window.Resources>
     <StackPanel Orientation="Horizontal"
@@ -125,7 +123,7 @@
             <ImageBrush ImageSource="Resources\desktopControlsBg.png" />
         </StackPanel.Background>
         <StackPanel.ToolTip>
-            <ToolTip Content="{Binding Path=ToolbarOwner.CurrentDirectoryFriendly}" />
+            <ToolTip Content="{Binding Path=CurrentDirectoryFriendly}" />
         </StackPanel.ToolTip>
         <StackPanel.Style>
             <Style TargetType="{x:Type StackPanel}">
@@ -155,40 +153,47 @@
             </Style>
         </StackPanel.Style>
         <Button x:Name="btnBack"
-                Style="{StaticResource CairoDesktopNavItemStyle}"
-                Margin="28,-4,0,0"
-                Click="Back_Click"
+                Style="{StaticResource CairoDesktopBackNavItemStyle}"
+                Margin="29,-4,1,0"
+                Click="btnBack_Click"
                 MouseRightButtonDown="btnBack_MouseRightButtonDown"
                 ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Back)}">
-            <Image x:Name="backButtonImg"
-                   Source="Resources\controlsBack.png"
+            <Image Source="Resources\controlsBack.png"
                    Width="16"
                    Height="18" />
         </Button>
-        <Button Name="HomeButton"
-                Style="{StaticResource CairoDesktopNavItem2Style}"
+        <Button x:Name="btnUp"
+                Style="{StaticResource CairoDesktopUpNavItemStyle}"
+                Margin="29,-4,-1,0"
+                Click="btnUp_Click"
+                ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Up)}">
+            <Image Source="Resources\controlsUp.png"
+                   Width="18"
+                   Height="16" />
+        </Button>
+        <Button Style="{StaticResource CairoDesktopNavItemWideStyle}"
                 Margin="22,-5,0,0"
-                PreviewMouseDown="HomeButton_PreviewMouseDown"
+                Click="btnHome_Click"
+                MouseRightButtonDown="btnHome_MouseRightButtonDown"
                 ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Home)}">
-
             <Image Source="Resources\controlsHome.png"
                    Width="19"
                    Height="19" />
         </Button>
-        <Button Name="BrowseButton"
-                Style="{StaticResource CairoDesktopNavItem2Style}"
+        <Button Style="{StaticResource CairoDesktopNavItemWideStyle}"
                 Margin="22,-5,0,0"
-                Click="Browse_Click"
-                PreviewMouseDown="BrowseButton_PreviewMouseDown"
+                Click="btnBrowse_Click"
+                MouseRightButtonDown="btnBrowse_MouseRightButtonDown"
                 ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Browse)}">
             <Image Source="Resources\controlsBrowse.png"
                    Width="21"
                    Height="17" />
         </Button>
         <Button Style="{StaticResource CairoDesktopNavItemStyle}"
-                Margin="22,-4,0,0"
-                Click="Fwd_Click"
-                ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Forward)}">
+                Margin="23,-4,0,0"
+                Click="btnFwd_Click"
+                ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Forward)}"
+                IsEnabled="{Binding Path=NavigationManager.CanGoForward}">
             <Image Source="Resources\controlsForward.png"
                    Width="16"
                    Height="18" />

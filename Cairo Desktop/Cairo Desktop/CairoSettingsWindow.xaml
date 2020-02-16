@@ -359,6 +359,11 @@
                               Name="chkEnableSysTray">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableNotificationArea)}" />
                     </CheckBox>
+                    <TextBlock Name="lblTrayTaskbarWarning"
+                               Visibility="Collapsed"
+                               Width="300"
+                               TextWrapping="Wrap"
+                               Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationAreaTaskbarWarning)}" />
                     <TextBlock Name="lblTrayWarning"
                                Visibility="Collapsed"
                                Width="300"

@@ -255,6 +255,11 @@
 
                 lblTrayWarning.Visibility = Visibility.Visible;
             }
+            else if (!Settings.Instance.EnableTaskbar && !Startup.IsCairoRunningAsShell)
+            {
+                // if taskbar is disabled and we aren't running as shell, then Explorer tray is visible. Show warning.
+                lblTrayTaskbarWarning.Visibility = Visibility.Visible;
+            }
         }
 
         private void checkRunAtLogOn()
@@ -564,10 +569,37 @@
 
             foreach (var backgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
             {
+                string display;
+
+                switch (backgroundStyleItem)
+                {
+                    case Desktop.CairoWallpaperStyle.Center:
+                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Center;
+                        break;
+                    case Desktop.CairoWallpaperStyle.Fill:
+                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Fill;
+                        break;
+                    case Desktop.CairoWallpaperStyle.Fit:
+                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Fit;
+                        break;
+                    case Desktop.CairoWallpaperStyle.Span:
+                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Span;
+                        break;
+                    case Desktop.CairoWallpaperStyle.Stretch:
+                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Stretch;
+                        break;
+                    case Desktop.CairoWallpaperStyle.Tile:
+                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Tile;
+                        break;
+                    default:
+                        display = backgroundStyleItem.ToString();
+                        break;
+                }
+
                 ComboBoxItem cboItem = new ComboBoxItem()
                 {
                     Tag = backgroundStyleItem,
-                    Content = backgroundStyleItem.ToString()
+                    Content = display
                 };
                 cboWindowsBackgroundStyle.Items.Add(cboItem);
 

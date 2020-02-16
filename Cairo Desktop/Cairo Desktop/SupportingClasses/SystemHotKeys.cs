@@ -1,9 +1,8 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Interop;
-using CairoDesktop.SupportingClasses;
 using System.Windows.Input;
 
-namespace CairoDesktop
+namespace CairoDesktop.SupportingClasses
 {
     internal class SystemHotKeys
     {

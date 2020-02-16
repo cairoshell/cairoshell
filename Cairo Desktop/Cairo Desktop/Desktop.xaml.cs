@@ -5,9 +5,9 @@ using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -27,51 +27,14 @@ namespace CairoDesktop
         private WindowInteropHelper helper;
         private bool altF4Pressed;
 
-        public bool IsFbdOpen = false;
+        public bool IsToolbarContextMenuOpen;
         public IntPtr Handle;
 
         private Brush BackgroundBrush { get; set; }
 
         public DesktopIcons Icons;
         public DependencyProperty IsOverlayOpenProperty = DependencyProperty.Register("IsOverlayOpen", typeof(bool), typeof(Desktop), new PropertyMetadata(new bool()));
-        private DynamicDesktopNavigationManager navigationManager;
-
-        public IReadOnlyList<string> PathHistory
-        {
-            get
-            {
-                return navigationManager.ReadOnlyHistory;
-            }
-        }
-
-        public string CurrentLocation
-        {
-            get
-            {
-                return Icons.Location.FullName;
-            }
-            set
-            {
-                if (Icons != null)
-                {
-                    if (Icons.Location != null)
-                    {
-                        Icons.Location.Dispose();
-                    }
-
-                    Icons.Location = new SystemDirectory(value, Dispatcher.CurrentDispatcher);
-                    OnPropertyChanged("CurrentDirectoryFriendly");
-                }
-            }
-        }
-
-        public string CurrentDirectoryFriendly
-        {
-            get
-            {
-                return Localization.DisplayString.sDesktop_CurrentFolder + " " + Icons.Location.FullName;
-            }
-        }
+        public NavigationManager NavigationManager;
 
         public bool IsOverlayOpen
         {
@@ -103,10 +66,10 @@ namespace CairoDesktop
             setGridPosition();
             setBackground();
 
-            navigationManager = new DynamicDesktopNavigationManager();
-            navigationManager.Navigating += NavigationManager_Navigating;
+            NavigationManager = new NavigationManager();
+            NavigationManager.PropertyChanged += NavigationManager_PropertyChanged;
 
-            Settings.Instance.PropertyChanged += Instance_PropertyChanged;
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
 
             FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
         }
@@ -122,11 +85,6 @@ namespace CairoDesktop
             {
                 HotKeyManager.RegisterHotKey(Settings.Instance.DesktopOverlayHotKey, OnShowDesktop);
             }
-        }
-
-        private void OnShowDesktop(HotKey hotKey)
-        {
-            ToggleOverlay();
         }
 
         private void TryAndEat(Action action)
@@ -197,6 +155,7 @@ namespace CairoDesktop
             else if (altF4Pressed) // Show the Shutdown Confirmation Window
             {
                 SystemPower.ShowShutdownConfirmation();
+                altF4Pressed = false;
                 e.Cancel = true;
             }
             else // Eat it !!!
@@ -235,15 +194,15 @@ namespace CairoDesktop
                 }
 
                 if (Directory.Exists(userDesktopPath))
-                    Navigate(userDesktopPath);
+                    NavigationManager.NavigateTo(userDesktopPath);
                 else if (Directory.Exists(defaultDesktopPath))
-                    Navigate(defaultDesktopPath);
+                    NavigationManager.NavigateTo(defaultDesktopPath);
 
                 if (Settings.Instance.EnableDynamicDesktop)
                 {
                     TryAndEat(() =>
                     {
-                        DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this };
+                        DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this, NavigationManager = NavigationManager };
                         nav.Show();
                     });
                 }
@@ -252,17 +211,9 @@ namespace CairoDesktop
             SetupPostInit();
         }
 
-        private void grid_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (!Topmost)
-            {
-                NativeMethods.SetForegroundWindow(helper.Handle);
-            }
-        }
-
         private void grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.OriginalSource.GetType() == typeof(ScrollViewer))
+            if (e.OriginalSource.GetType() == typeof(ScrollViewer) && !IsToolbarContextMenuOpen)
             {
                 IsOverlayOpen = false;
             }
@@ -276,7 +227,7 @@ namespace CairoDesktop
         private void CairoDesktopWindow_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             // handle icon and desktop context menus
-            if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.ScrollViewer))
+            if (e.OriginalSource.GetType() == typeof(ScrollViewer) || e.Source.GetType() == typeof(Desktop))
             {
                 ShellContextMenu cm = new ShellContextMenu(Icons.Location, executeFolderAction);
 
@@ -300,17 +251,17 @@ namespace CairoDesktop
                 case MouseButton.Middle:
                     break;
                 case MouseButton.XButton1:
-                    NavigateBackward();
+                    NavigationManager.NavigateBackward();
                     break;
                 case MouseButton.XButton2:
-                    NavigateForward();
+                    NavigationManager.NavigateForward();
                     break;
             }
         }
         #endregion
 
         #region Change notifications
-        private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
             {
@@ -352,6 +303,17 @@ namespace CairoDesktop
                             }
                         }
                     }
+                }
+            }
+        }
+
+        private void NavigationManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "CurrentPath")
+            {
+                if (Icons.Location == null || Icons.Location.FullName != NavigationManager.CurrentPath)
+                {
+                    Icons.Location = new SystemDirectory(NavigationManager.CurrentPath, Dispatcher.CurrentDispatcher);
                 }
             }
         }
@@ -680,6 +642,11 @@ namespace CairoDesktop
             grid.Background = new SolidColorBrush(Color.FromArgb(0x00, 0, 0, 0));
             setBackground();
         }
+
+        private void OnShowDesktop(HotKey hotKey)
+        {
+            ToggleOverlay();
+        }
         #endregion
 
         #region Files and folders
@@ -691,7 +658,7 @@ namespace CairoDesktop
             {
                 if (Settings.Instance.EnableDynamicDesktop)
                 {
-                    Navigate(path);
+                    NavigationManager.NavigateTo(path);
                 }
                 else
                 {
@@ -727,33 +694,6 @@ namespace CairoDesktop
                 if (Startup.DesktopWindow != null)
                     Startup.DesktopWindow.IsOverlayOpen = false;
             }
-        }
-        #endregion
-
-        #region Navigation
-        public void Navigate(string newLocation)
-        {
-            navigationManager.NavigateTo(newLocation);
-        }
-
-        private void NavigationManager_Navigating(string navigationPath)
-        {
-            CurrentLocation = navigationPath;
-        }
-
-        public void NavigateBackward()
-        {
-            navigationManager.NavigateBackward();
-        }
-
-        public void NavigateForward()
-        {
-            navigationManager.NavigateForward();
-        }
-
-        internal void ClearNavigation()
-        {
-            navigationManager.Clear();
         }
         #endregion
 
@@ -812,7 +752,7 @@ namespace CairoDesktop
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

@@ -341,7 +341,7 @@ namespace CairoDesktop.SupportingClasses
                         else
                         {
                             bool contains = false;
-                            foreach(SystemDirectory dir in StacksManager.StackLocations)
+                            foreach(SystemDirectory dir in StacksManager.Instance.StackLocations)
                             {
                                 if (dir.Equals(file.FullName))
                                 {
@@ -495,7 +495,7 @@ namespace CairoDesktop.SupportingClasses
                 contextMenu = ShellFolders.CreatePopupMenu();
 
                 ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.OpenInNewWindow, Localization.DisplayString.sStacks_OpenInNewWindow);
-                if (!StacksManager.StackLocations.Contains(directory))
+                if (!StacksManager.Instance.StackLocations.Contains(directory))
                 {
                     ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.BYCOMMAND, (int)CairoContextMenuItem.AddToStacks, Localization.DisplayString.sInterface_AddToStacks);
                 }

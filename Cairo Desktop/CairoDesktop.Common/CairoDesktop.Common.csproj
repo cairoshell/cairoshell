@@ -79,6 +79,7 @@
     <Compile Include="Dialogs.cs" />
     <Compile Include="DisposableCollection.cs" />
     <Compile Include="DisposableObject.cs" />
+    <Compile Include="NavigationManager.cs" />
     <Compile Include="Helpers\GroupPolicy.cs" />
     <Compile Include="Helpers\RegistryChangeMonitor.cs" />
     <Compile Include="LowLevelKeyboardListener.cs" />

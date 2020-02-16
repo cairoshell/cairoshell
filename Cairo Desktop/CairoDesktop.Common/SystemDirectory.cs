@@ -242,8 +242,6 @@ namespace CairoDesktop.Common {
             return FullName.GetHashCode();
         }
 
-
-
         public void PasteFromClipboard()
         {
             IDataObject clipFiles = Clipboard.GetDataObject();

@@ -15,16 +15,21 @@ namespace CairoDesktop {
         public StacksContainer() 
         {
             InitializeComponent();
+
+            DataContext = StacksManager.Instance;
         }
 
-        private void locationDisplay_DragOver(object sender, DragEventArgs e)
+        private void locationDisplay_DragEnter(object sender, DragEventArgs e)
         {
-            String[] formats = e.Data.GetFormats(true);
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effects = DragDropEffects.Link;
             }
-            else if (!e.Data.GetDataPresent(typeof(SystemDirectory)))
+            else if (e.Data.GetDataPresent(typeof(SystemDirectory)))
+            {
+                e.Effects = DragDropEffects.Move;
+            }
+            else
             {
                 e.Effects = DragDropEffects.None;
             }
@@ -32,22 +37,54 @@ namespace CairoDesktop {
             e.Handled = true;
         }
 
+        private void locationDisplay_DragOver(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop) && !e.Data.GetDataPresent(typeof(SystemDirectory)))
+            {
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+            }
+            else if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // check to see if there at least one path we can add
+                string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+                bool canAdd = false;
+                if (fileNames != null)
+                {
+                    foreach (string fileName in fileNames)
+                    {
+                        if (StacksManager.Instance.CanAdd(fileName))
+                        {
+                            canAdd = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!canAdd)
+                {
+                    e.Effects = DragDropEffects.None;
+                    e.Handled = true;
+                }
+            }
+        }
+
         private void locationDisplay_Drop(object sender, DragEventArgs e)
         {
-            String[] fileNames = e.Data.GetData(DataFormats.FileDrop) as String[];
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null) 
             {
-                foreach (String fileName in fileNames)
+                foreach (string fileName in fileNames)
                 {
-                    StacksManager.AddLocation(fileName);
+                    StacksManager.Instance.AddLocation(fileName);
                 }
             }
             else if (e.Data.GetDataPresent(typeof(SystemDirectory)))
             {
                 SystemDirectory dropData = e.Data.GetData(typeof(SystemDirectory)) as SystemDirectory;
 
-                int initialIndex = StacksManager.StackLocations.IndexOf(dropData);
-                StacksManager.StackLocations.Move(initialIndex, StacksManager.StackLocations.Count - 1);
+                int initialIndex = StacksManager.Instance.StackLocations.IndexOf(dropData);
+                StacksManager.Instance.StackLocations.Move(initialIndex, StacksManager.Instance.StackLocations.Count - 1);
             }
 
             e.Handled = true;
@@ -55,7 +92,7 @@ namespace CairoDesktop {
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-            StacksManager.StackLocations.Remove((sender as MenuItem).CommandParameter as SystemDirectory);
+            StacksManager.Instance.StackLocations.Remove((sender as MenuItem).CommandParameter as SystemDirectory);
         }
         
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -145,15 +182,15 @@ namespace CairoDesktop {
             Menu dropContainer = sender as Menu;
             SystemDirectory replacedDir = dropContainer.DataContext as SystemDirectory;
 
-            String[] fileNames = e.Data.GetData(DataFormats.FileDrop) as String[];
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
-                foreach (String fileName in fileNames)
+                foreach (string fileName in fileNames)
                 {
-                    if (StacksManager.AddLocation(fileName))
+                    if (StacksManager.Instance.AddLocation(fileName))
                     {
-                        int dropIndex = StacksManager.StackLocations.IndexOf(replacedDir);
-                        StacksManager.StackLocations.Move(StacksManager.StackLocations.Count - 1, dropIndex);
+                        int dropIndex = StacksManager.Instance.StackLocations.IndexOf(replacedDir);
+                        StacksManager.Instance.StackLocations.Move(StacksManager.Instance.StackLocations.Count - 1, dropIndex);
                     }
                 }
             }
@@ -161,9 +198,9 @@ namespace CairoDesktop {
             {
                 SystemDirectory dropData = e.Data.GetData(typeof(SystemDirectory)) as SystemDirectory;
 
-                int initialIndex = StacksManager.StackLocations.IndexOf(dropData);
-                int dropIndex = StacksManager.StackLocations.IndexOf(replacedDir);
-                StacksManager.StackLocations.Move(initialIndex, dropIndex);
+                int initialIndex = StacksManager.Instance.StackLocations.IndexOf(dropData);
+                int dropIndex = StacksManager.Instance.StackLocations.IndexOf(replacedDir);
+                StacksManager.Instance.StackLocations.Move(initialIndex, dropIndex);
             }
 
             e.Handled = true;
@@ -180,7 +217,7 @@ namespace CairoDesktop {
             startPoint = null;
             ctxOpen = true;
 
-            if (!Configuration.Settings.Instance.EnableDynamicDesktop || !Configuration.Settings.Instance.EnableDesktop)
+            if (!Settings.Instance.EnableDynamicDesktop || !Settings.Instance.EnableDesktop)
             {
                 ContextMenu menu = (sender as ContextMenu);
                 foreach (Control item in menu.Items)

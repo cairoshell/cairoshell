@@ -22,20 +22,22 @@ namespace CairoDesktop
             isTour = commandLineParser.ToBoolean("tour");
         }
 
-        private static void SingleInstanceCheck()
+        private static bool SingleInstanceCheck()
         {
             cairoMutex = new System.Threading.Mutex(true, "CairoShell", out bool ok);
 
             if (!ok && !isRestart)
             {
                 // Another instance is already running.
-                return;
+                return false;
             }
             else if (!ok && isRestart)
             {
                 // this is a restart so let's wait for the old instance to end
                 System.Threading.Thread.Sleep(2000);
             }
+
+            return true;
         }
 
         private static void SetShellReadyEvent()
@@ -274,7 +276,7 @@ namespace CairoDesktop
             if (Shell.IsCairoConfiguredAsShell)
             {
                 // Commenting out as per comments on PR #274
-                SystemHotKeys.RegisterSystemHotkeys();
+                SupportingClasses.SystemHotKeys.RegisterSystemHotkeys();
             }
         }
     }

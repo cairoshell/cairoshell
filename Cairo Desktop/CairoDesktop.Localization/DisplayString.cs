@@ -87,7 +87,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu");
+                return getString();
             }
         }
 
@@ -95,7 +95,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sPlacesMenu");
+                return getString();
             }
         }
 
@@ -103,7 +103,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_AboutCairo");
+                return getString();
             }
         }
 
@@ -111,7 +111,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_CheckForUpdates");
+                return getString();
             }
         }
 
@@ -119,7 +119,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_CairoSettings");
+                return getString();
             }
         }
 
@@ -127,7 +127,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_WindowsControlPanel");
+                return getString();
             }
         }
 
@@ -135,7 +135,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_WindowsSettings");
+                return getString();
             }
         }
 
@@ -143,7 +143,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_Run");
+                return getString();
             }
         }
 
@@ -151,7 +151,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_TaskManager");
+                return getString();
             }
         }
 
@@ -159,7 +159,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_ExitCairo");
+                return getString();
             }
         }
 
@@ -167,7 +167,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_Hibernate");
+                return getString();
             }
         }
 
@@ -175,7 +175,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_Sleep");
+                return getString();
             }
         }
 
@@ -183,7 +183,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_Restart");
+                return getString();
             }
         }
 
@@ -191,7 +191,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_ShutDown");
+                return getString();
             }
         }
 
@@ -199,7 +199,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sCairoMenu_LogOff");
+                return getString();
             }
         }
 
@@ -207,7 +207,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAbout_Version");
+                return getString();
             }
         }
 
@@ -215,7 +215,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAbout_PreRelease");
+                return getString();
             }
         }
 
@@ -223,7 +223,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAbout_Copyright");
+                return getString();
             }
         }
 
@@ -231,7 +231,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_OK");
+                return getString();
             }
         }
 
@@ -239,7 +239,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_Cancel");
+                return getString();
             }
         }
 
@@ -247,7 +247,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_Continue");
+                return getString();
             }
         }
 
@@ -255,7 +255,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_Finish");
+                return getString();
             }
         }
 
@@ -263,7 +263,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_Yes");
+                return getString();
             }
         }
 
@@ -271,7 +271,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_No");
+                return getString();
             }
         }
 
@@ -279,7 +279,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_Open");
+                return getString();
             }
         }
 
@@ -287,7 +287,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_OpenWith");
+                return getString();
             }
         }
 
@@ -295,7 +295,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_OpenAsAdministrator");
+                return getString();
             }
         }
 
@@ -303,7 +303,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_RunAsUser");
+                return getString();
             }
         }
 
@@ -311,7 +311,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_AddToStacks");
+                return getString();
             }
         }
 
@@ -319,7 +319,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_RemoveFromStacks");
+                return getString();
             }
         }
 
@@ -327,7 +327,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_Copy");
+                return getString();
             }
         }
 
@@ -335,7 +335,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_Paste");
+                return getString();
             }
         }
 
@@ -343,7 +343,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_Delete");
+                return getString();
             }
         }
 
@@ -351,7 +351,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_Rename");
+                return getString();
             }
         }
 
@@ -359,7 +359,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_Properties");
+                return getString();
             }
         }
 
@@ -367,7 +367,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sInterface_Browse");
+                return getString();
             }
         }
 
@@ -375,7 +375,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber");
+                return getString();
             }
         }
 
@@ -383,7 +383,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_PleaseWait");
+                return getString();
             }
         }
 
@@ -391,7 +391,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page1Title");
+                return getString();
             }
         }
 
@@ -399,7 +399,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page1Line1");
+                return getString();
             }
         }
 
@@ -407,7 +407,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page1Line2");
+                return getString();
             }
         }
 
@@ -415,7 +415,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_ProgramsMenuItems");
+                return getString();
             }
         }
 
@@ -423,7 +423,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_InstalledApplications");
+                return getString();
             }
         }
 
@@ -431,7 +431,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page2Title");
+                return getString();
             }
         }
 
@@ -439,7 +439,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page2Line1");
+                return getString();
             }
         }
 
@@ -447,7 +447,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page2Directions");
+                return getString();
             }
         }
 
@@ -455,7 +455,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page2Directions1");
+                return getString();
             }
         }
 
@@ -463,7 +463,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page2Directions2");
+                return getString();
             }
         }
 
@@ -471,7 +471,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page2Directions3");
+                return getString();
             }
         }
 
@@ -479,7 +479,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page2Directions4");
+                return getString();
             }
         }
 
@@ -487,7 +487,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page2Directions5");
+                return getString();
             }
         }
 
@@ -495,7 +495,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Page2Directions6");
+                return getString();
             }
         }
 
@@ -503,7 +503,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_ProgramCategories");
+                return getString();
             }
         }
 
@@ -511,7 +511,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Hide");
+                return getString();
             }
         }
 
@@ -519,7 +519,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_QuickLaunch");
+                return getString();
             }
         }
 
@@ -527,7 +527,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Uncategorized");
+                return getString();
             }
         }
 
@@ -535,7 +535,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_All");
+                return getString();
             }
         }
 
@@ -543,7 +543,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Untitled");
+                return getString();
             }
         }
 
@@ -551,7 +551,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Category_Accessories");
+                return getString();
             }
         }
 
@@ -559,7 +559,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Category_Productivity");
+                return getString();
             }
         }
 
@@ -567,7 +567,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Category_Development");
+                return getString();
             }
         }
 
@@ -575,7 +575,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Category_Graphics");
+                return getString();
             }
         }
 
@@ -583,7 +583,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Category_Media");
+                return getString();
             }
         }
 
@@ -591,7 +591,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Category_Internet");
+                return getString();
             }
         }
 
@@ -599,7 +599,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sAppGrabber_Category_Games");
+                return getString();
             }
         }
 
@@ -607,7 +607,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sRun_Title");
+                return getString();
             }
         }
 
@@ -615,7 +615,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sRun_Info");
+                return getString();
             }
         }
 
@@ -623,7 +623,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sExitCairo_Title");
+                return getString();
             }
         }
 
@@ -631,7 +631,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sExitCairo_Info");
+                return getString();
             }
         }
 
@@ -639,7 +639,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sExitCairo_ExitCairo");
+                return getString();
             }
         }
 
@@ -647,7 +647,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sLogoff_Title");
+                return getString();
             }
         }
 
@@ -655,7 +655,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sLogoff_Info");
+                return getString();
             }
         }
 
@@ -663,7 +663,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sLogoff_Logoff");
+                return getString();
             }
         }
 
@@ -671,7 +671,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sRestart_Title");
+                return getString();
             }
         }
 
@@ -679,7 +679,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sRestart_Info");
+                return getString();
             }
         }
 
@@ -687,7 +687,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sRestart_Restart");
+                return getString();
             }
         }
 
@@ -695,7 +695,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sShutDown_Title");
+                return getString();
             }
         }
 
@@ -703,7 +703,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sShutDown_Info");
+                return getString();
             }
         }
 
@@ -711,7 +711,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sShutDown_ShutDown");
+                return getString();
             }
         }
 
@@ -719,7 +719,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu_Empty");
+                return getString();
             }
         }
 
@@ -727,7 +727,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu_UninstallAProgram");
+                return getString();
             }
         }
 
@@ -735,7 +735,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu_RemoveFromMenu");
+                return getString();
             }
         }
 
@@ -743,7 +743,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu_RemoveTitle");
+                return getString();
             }
         }
 
@@ -751,7 +751,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu_RemoveInfo");
+                return getString();
             }
         }
 
@@ -759,7 +759,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu_AlwaysAdminTitle");
+                return getString();
             }
         }
 
@@ -767,7 +767,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu_AlwaysAdminInfo");
+                return getString();
             }
         }
 
@@ -775,7 +775,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu_Remove");
+                return getString();
             }
         }
 
@@ -783,7 +783,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu_UWPInfo");
+                return getString();
             }
         }
 
@@ -791,7 +791,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu_AddToQuickLaunch");
+                return getString();
             }
         }
 
@@ -799,7 +799,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sProgramsMenu_ChangeCategory");
+                return getString();
             }
         }
 
@@ -807,7 +807,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sPlacesMenu_Documents");
+                return getString();
             }
         }
 
@@ -815,7 +815,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sPlacesMenu_Downloads");
+                return getString();
             }
         }
 
@@ -823,7 +823,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sPlacesMenu_Music");
+                return getString();
             }
         }
 
@@ -831,7 +831,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sPlacesMenu_Pictures");
+                return getString();
             }
         }
 
@@ -839,7 +839,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sPlacesMenu_Videos");
+                return getString();
             }
         }
 
@@ -847,7 +847,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sPlacesMenu_ThisPC");
+                return getString();
             }
         }
 
@@ -855,7 +855,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sPlacesMenu_ProgramFiles");
+                return getString();
             }
         }
 
@@ -863,7 +863,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sPlacesMenu_RecycleBin");
+                return getString();
             }
         }
 
@@ -871,7 +871,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sStacks_Tooltip");
+                return getString();
             }
         }
 
@@ -879,7 +879,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sStacks_OpenInNewWindow");
+                return getString();
             }
         }
 
@@ -887,7 +887,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sStacks_OpenOnDesktop");
+                return getString();
             }
         }
 
@@ -895,7 +895,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sStacks_Remove");
+                return getString();
             }
         }
 
@@ -903,7 +903,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sStacks_Empty");
+                return getString();
             }
         }
 
@@ -911,7 +911,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sMenuBar_OpenDateTimeSettings");
+                return getString();
             }
         }
 
@@ -919,7 +919,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sMenuBar_OpenActionCenter");
+                return getString();
             }
         }
 
@@ -927,7 +927,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sMenuBar_ToggleNotificationArea");
+                return getString();
             }
         }
 
@@ -935,7 +935,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sMenuBar_Volume");
+                return getString();
             }
         }
 
@@ -943,7 +943,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sMenuBar_OpenSoundSettings");
+                return getString();
             }
         }
 
@@ -951,7 +951,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSearch_Title");
+                return getString();
             }
         }
 
@@ -959,7 +959,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSearch_ViewAllResults");
+                return getString();
             }
         }
 
@@ -967,7 +967,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSearch_LastModified");
+                return getString();
             }
         }
 
@@ -975,7 +975,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSearch_Error");
+                return getString();
             }
         }
 
@@ -983,7 +983,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sDesktop_DisplaySettings");
+                return getString();
             }
         }
 
@@ -991,7 +991,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sDesktop_Personalize");
+                return getString();
             }
         }
 
@@ -999,7 +999,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sDesktop_DeleteTitle");
+                return getString();
             }
         }
 
@@ -1007,7 +1007,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sDesktop_DeleteInfo");
+                return getString();
             }
         }
 
@@ -1015,7 +1015,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sDesktop_BrowseTitle");
+                return getString();
             }
         }
 
@@ -1023,7 +1023,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sDesktop_CurrentFolder");
+                return getString();
             }
         }
 
@@ -1031,7 +1031,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sDesktop_Back");
+                return getString();
             }
         }
 
@@ -1039,7 +1039,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sDesktop_Forward");
+                return getString();
             }
         }
 
@@ -1047,7 +1047,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sDesktop_Browse");
+                return getString();
             }
         }
 
@@ -1055,7 +1055,31 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sDesktop_Home");
+                return getString();
+            }
+        }
+
+        public static string sDesktop_Up
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sDesktop_SetHome
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sDesktop_ClearHistory
+        {
+            get
+            {
+                return getString();
             }
         }
 
@@ -1063,7 +1087,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sTaskbar_Empty");
+                return getString();
             }
         }
 
@@ -1071,7 +1095,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sTaskbar_Minimize");
+                return getString();
             }
         }
 
@@ -1079,7 +1103,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sTaskbar_Restore");
+                return getString();
             }
         }
 
@@ -1087,7 +1111,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sTaskbar_Maximize");
+                return getString();
             }
         }
 
@@ -1095,7 +1119,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sTaskbar_NewWindow");
+                return getString();
             }
         }
 
@@ -1103,7 +1127,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sTaskbar_Close");
+                return getString();
             }
         }
 
@@ -1111,7 +1135,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sTaskbar_TaskView");
+                return getString();
             }
         }
 
@@ -1119,7 +1143,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sTaskbar_TaskListToolTip");
+                return getString();
             }
         }
 
@@ -1127,7 +1151,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sTaskbar_DesktopOverlayToolTip");
+                return getString();
             }
         }
 
@@ -1135,7 +1159,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sError_OhNo");
+                return getString();
             }
         }
 
@@ -1143,7 +1167,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sError_FileNotFoundInfo");
+                return getString();
             }
         }
 
@@ -1151,7 +1175,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sError_CantOpenAppWiz");
+                return getString();
             }
         }
 
@@ -1159,7 +1183,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General");
+                return getString();
             }
         }
 
@@ -1167,7 +1191,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar");
+                return getString();
             }
         }
 
@@ -1175,7 +1199,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Desktop");
+                return getString();
             }
         }
 
@@ -1183,7 +1207,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar");
+                return getString();
             }
         }
 
@@ -1191,7 +1215,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Appearance");
+                return getString();
             }
         }
 
@@ -1199,7 +1223,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Advanced");
+                return getString();
             }
         }
 
@@ -1207,7 +1231,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Behavior");
+                return getString();
             }
         }
 
@@ -1215,7 +1239,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Default");
+                return getString();
             }
         }
 
@@ -1223,7 +1247,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_RestartCairo");
+                return getString();
             }
         }
 
@@ -1231,7 +1255,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Restarting");
+                return getString();
             }
         }
 
@@ -1239,7 +1263,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_UpdateCheck");
+                return getString();
             }
         }
 
@@ -1247,7 +1271,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_RunAtLogOn");
+                return getString();
             }
         }
 
@@ -1255,7 +1279,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_Language");
+                return getString();
             }
         }
 
@@ -1263,7 +1287,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_Theme");
+                return getString();
             }
         }
 
@@ -1271,7 +1295,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_ThemeTooltip");
+                return getString();
             }
         }
 
@@ -1279,7 +1303,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_TimeFormat");
+                return getString();
             }
         }
 
@@ -1287,7 +1311,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_TimeFormatTooltip");
+                return getString();
             }
         }
 
@@ -1295,7 +1319,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_DateFormat");
+                return getString();
             }
         }
 
@@ -1303,7 +1327,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_DateFormatTooltip");
+                return getString();
             }
         }
 
@@ -1311,7 +1335,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_FilesAndFolders");
+                return getString();
             }
         }
 
@@ -1319,7 +1343,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_ShowSubDirectories");
+                return getString();
             }
         }
 
@@ -1327,7 +1351,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_ShowFileExtensions");
+                return getString();
             }
         }
 
@@ -1335,7 +1359,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_ForceSoftwareRendering");
+                return getString();
             }
         }
 
@@ -1343,7 +1367,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_FileManager");
+                return getString();
             }
         }
 
@@ -1351,7 +1375,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_General_FoldersOpenDesktopOverlay");
+                return getString();
             }
         }
 
@@ -1359,7 +1383,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_DefaultProgramsCategory");
+                return getString();
             }
         }
 
@@ -1367,7 +1391,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_EnableMenuBarShadow");
+                return getString();
             }
         }
 
@@ -1375,7 +1399,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_NotificationArea");
+                return getString();
             }
         }
 
@@ -1383,7 +1407,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_EnableNotificationArea");
+                return getString();
             }
         }
 
@@ -1391,7 +1415,15 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_NotificationAreaError");
+                return getString();
+            }
+        }
+
+        public static string sSettings_MenuBar_NotificationAreaTaskbarWarning
+        {
+            get
+            {
+                return getString();
             }
         }
 
@@ -1399,7 +1431,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_ShowNotifyIcons");
+                return getString();
             }
         }
 
@@ -1407,7 +1439,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_ShowNotifyIconsCollapsed");
+                return getString();
             }
         }
 
@@ -1415,7 +1447,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_ShowNotifyIconsAlways");
+                return getString();
             }
         }
 
@@ -1423,7 +1455,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_EnableCairoMenuHotKey");
+                return getString();
             }
         }
 
@@ -1431,7 +1463,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_EnableMenuBarBlur");
+                return getString();
             }
         }
 
@@ -1439,7 +1471,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_EnableMenuBarMultiMon");
+                return getString();
             }
         }
 
@@ -1447,7 +1479,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_ShowHibernate");
+                return getString();
             }
         }
 
@@ -1455,7 +1487,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_ProgramsMenuLayout");
+                return getString();
             }
         }
 
@@ -1463,7 +1495,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_ProgramsMenuLayoutRight");
+                return getString();
             }
         }
 
@@ -1471,7 +1503,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_MenuBar_ProgramsMenuLayoutLeft");
+                return getString();
             }
         }
 
@@ -1479,7 +1511,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Desktop_EnableDesktop");
+                return getString();
             }
         }
 
@@ -1487,7 +1519,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Desktop_DesktopHome");
+                return getString();
             }
         }
 
@@ -1495,7 +1527,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Desktop_LabelPosition");
+                return getString();
             }
         }
 
@@ -1503,7 +1535,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Desktop_LabelPositionRight");
+                return getString();
             }
         }
 
@@ -1511,7 +1543,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Desktop_LabelPositionBottom");
+                return getString();
             }
         }
 
@@ -1519,7 +1551,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Desktop_DynamicDesktop");
+                return getString();
             }
         }
 
@@ -1527,7 +1559,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Desktop_EnableDynamicDesktop");
+                return getString();
             }
         }
 
@@ -1535,7 +1567,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Desktop_EnableDesktopOverlayHotKey");
+                return getString();
             }
         }
 
@@ -1547,6 +1579,7 @@ namespace CairoDesktop.Localization
                 return getString();
             }
         }
+
         public static string sSettings_Desktop_BackgroundType
         {
             get
@@ -1554,6 +1587,7 @@ namespace CairoDesktop.Localization
                 return getString();
             }
         }
+
         public static string sSettings_Desktop_BackgroundType_windowsDefaultBackground
         {
             get
@@ -1561,6 +1595,7 @@ namespace CairoDesktop.Localization
                 return getString();
             }
         }
+
         public static string sSettings_Desktop_BackgroundType_cairoImageWallpaper
         {
             get
@@ -1568,6 +1603,7 @@ namespace CairoDesktop.Localization
                 return getString();
             }
         }
+
         public static string sSettings_Desktop_BackgroundType_cairoVideoWallpaper
         {
             get
@@ -1575,6 +1611,7 @@ namespace CairoDesktop.Localization
                 return getString();
             }
         }
+
         public static string sSettings_Desktop_BackgroundType_bingWallpaper
         {
             get
@@ -1582,6 +1619,7 @@ namespace CairoDesktop.Localization
                 return getString();
             }
         }
+
         public static string sSettings_Desktop_Background_Path
         {
             get
@@ -1589,6 +1627,7 @@ namespace CairoDesktop.Localization
                 return getString();
             }
         }
+
         public static string sSettings_Desktop_Background_Style
         {
             get
@@ -1596,12 +1635,60 @@ namespace CairoDesktop.Localization
                 return getString();
             }
         }
-        
+
+        public static string sSettings_Desktop_BackgroundStyle_Tile
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_Desktop_BackgroundStyle_Center
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_Desktop_BackgroundStyle_Fit
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_Desktop_BackgroundStyle_Fill
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_Desktop_BackgroundStyle_Stretch
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_Desktop_BackgroundStyle_Span
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
         public static string sSettings_IconSize
         {
             get
             {
-                return getString("sSettings_IconSize");
+                return getString();
             }
         }
 
@@ -1609,7 +1696,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_IconSizeLarge");
+                return getString();
             }
         }
 
@@ -1617,7 +1704,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_IconSizeMedium");
+                return getString();
             }
         }
 
@@ -1625,7 +1712,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_IconSizeSmall");
+                return getString();
             }
         }
 
@@ -1633,7 +1720,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_EnableTaskbar");
+                return getString();
             }
         }
 
@@ -1641,7 +1728,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_TaskbarPosition");
+                return getString();
             }
         }
 
@@ -1649,7 +1736,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_PositionBottom");
+                return getString();
             }
         }
 
@@ -1657,7 +1744,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_PositionTop");
+                return getString();
             }
         }
 
@@ -1665,7 +1752,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_DisplayMode");
+                return getString();
             }
         }
 
@@ -1673,7 +1760,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_DisplayModeAppBar");
+                return getString();
             }
         }
 
@@ -1681,7 +1768,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_DisplayModeOverlap");
+                return getString();
             }
         }
 
@@ -1689,7 +1776,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_DisplayModeAutoHide");
+                return getString();
             }
         }
 
@@ -1697,7 +1784,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_EnableTaskbarMultiMon");
+                return getString();
             }
         }
 
@@ -1705,7 +1792,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_FullWidthTaskBar");
+                return getString();
             }
         }
 
@@ -1713,7 +1800,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_MiddleClick");
+                return getString();
             }
         }
 
@@ -1721,7 +1808,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_MiddleClickNewWindow");
+                return getString();
             }
         }
 
@@ -1729,7 +1816,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Taskbar_MiddleClickCloseWindow");
+                return getString();
             }
         }
 
@@ -1737,7 +1824,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Advanced_LoggingLevel");
+                return getString();
             }
         }
 
@@ -1745,7 +1832,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Advanced_Shell");
+                return getString();
             }
         }
 
@@ -1753,7 +1840,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Advanced_CairoIsShell");
+                return getString();
             }
         }
 
@@ -1761,7 +1848,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Advanced_ExplorerIsShell");
+                return getString();
             }
         }
 
@@ -1769,7 +1856,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Advanced_SetCairoAsShell");
+                return getString();
             }
         }
 
@@ -1777,7 +1864,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Advanced_SetExplorerAsShell");
+                return getString();
             }
         }
 
@@ -1785,7 +1872,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Advanced_ShellChanged");
+                return getString();
             }
         }
 
@@ -1793,7 +1880,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Advanced_ShellChangedText");
+                return getString();
             }
         }
 
@@ -1801,7 +1888,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Advanced_LogOffNow");
+                return getString();
             }
         }
 
@@ -1809,7 +1896,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sSettings_Advanced_LogOffLater");
+                return getString();
             }
         }
 
@@ -1817,7 +1904,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_StartTour");
+                return getString();
             }
         }
 
@@ -1825,7 +1912,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_FinishTour");
+                return getString();
             }
         }
 
@@ -1833,7 +1920,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_Welcome");
+                return getString();
             }
         }
 
@@ -1841,7 +1928,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_SelectLanguage");
+                return getString();
             }
         }
 
@@ -1849,7 +1936,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_ChangingLanguage");
+                return getString();
             }
         }
 
@@ -1857,7 +1944,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_ChangingLanguageText");
+                return getString();
             }
         }
 
@@ -1865,7 +1952,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBar");
+                return getString();
             }
         }
 
@@ -1873,7 +1960,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_DynamicDesktop");
+                return getString();
             }
         }
 
@@ -1881,7 +1968,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_Taskbar");
+                return getString();
             }
         }
 
@@ -1889,7 +1976,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarText");
+                return getString();
             }
         }
 
@@ -1897,7 +1984,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec1Heading");
+                return getString();
             }
         }
 
@@ -1905,7 +1992,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec1Text");
+                return getString();
             }
         }
 
@@ -1913,7 +2000,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec2Heading");
+                return getString();
             }
         }
 
@@ -1921,7 +2008,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec2Text");
+                return getString();
             }
         }
 
@@ -1929,7 +2016,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec3Heading");
+                return getString();
             }
         }
 
@@ -1937,7 +2024,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec3Text");
+                return getString();
             }
         }
 
@@ -1945,7 +2032,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec4Heading");
+                return getString();
             }
         }
 
@@ -1953,7 +2040,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec4Text");
+                return getString();
             }
         }
 
@@ -1961,7 +2048,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec5Heading");
+                return getString();
             }
         }
 
@@ -1969,7 +2056,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec5Text");
+                return getString();
             }
         }
 
@@ -1977,7 +2064,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec6Heading");
+                return getString();
             }
         }
 
@@ -1985,7 +2072,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_MenuBarSec6Text");
+                return getString();
             }
         }
 
@@ -1993,7 +2080,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_DesktopText");
+                return getString();
             }
         }
 
@@ -2001,7 +2088,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_DesktopSec1Heading");
+                return getString();
             }
         }
 
@@ -2009,7 +2096,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_DesktopSec1Text");
+                return getString();
             }
         }
 
@@ -2017,7 +2104,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_DesktopSec2Heading");
+                return getString();
             }
         }
 
@@ -2025,7 +2112,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_DesktopSec2Text");
+                return getString();
             }
         }
 
@@ -2033,7 +2120,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_TaskbarText");
+                return getString();
             }
         }
 
@@ -2041,7 +2128,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_TaskbarSec1Heading");
+                return getString();
             }
         }
 
@@ -2049,7 +2136,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_TaskbarSec1Text");
+                return getString();
             }
         }
 
@@ -2057,7 +2144,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_TaskbarSec2Heading");
+                return getString();
             }
         }
 
@@ -2065,7 +2152,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_TaskbarSec2Text");
+                return getString();
             }
         }
 
@@ -2073,7 +2160,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_TaskbarSec3Heading");
+                return getString();
             }
         }
 
@@ -2081,7 +2168,7 @@ namespace CairoDesktop.Localization
         {
             get
             {
-                return getString("sWelcome_TaskbarSec3Text");
+                return getString();
             }
         }
     }

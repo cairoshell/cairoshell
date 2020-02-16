@@ -191,7 +191,16 @@ namespace CairoDesktop.SupportingClasses
                 int right = SystemInformation.WorkingArea.Right;
                 int bottom = PrimaryMonitorDeviceSize.Height;
 
-                double dpiScale = PresentationSource.FromVisual(abWindow).CompositionTarget.TransformToDevice.M11;
+                PresentationSource ps = PresentationSource.FromVisual(abWindow);
+
+                if (ps == null)
+                {
+                    // if we are racing with screen setting changes, this will be null
+                    CairoLogger.Instance.Debug("Aborting ABSetPos due to window destruction");
+                    return;
+                }
+
+                double dpiScale = ps.CompositionTarget.TransformToDevice.M11;
 
                 if (screen != null)
                 {
@@ -303,7 +312,7 @@ namespace CairoDesktop.SupportingClasses
         {
             get
             {
-                return new System.Drawing.Size(Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenWidth / Shell.DpiScaleAdjustment), Convert.ToInt32(System.Windows.SystemParameters.PrimaryScreenHeight / Shell.DpiScaleAdjustment));
+                return new System.Drawing.Size(Convert.ToInt32(SystemParameters.PrimaryScreenWidth / Shell.DpiScaleAdjustment), Convert.ToInt32(SystemParameters.PrimaryScreenHeight / Shell.DpiScaleAdjustment));
             }
         }
 
@@ -330,7 +339,7 @@ namespace CairoDesktop.SupportingClasses
             rc.right = screen.Bounds.Right;
 
             // only allocate space for taskbar if enabled
-            if (Settings.Instance.EnableTaskbar && Configuration.Settings.Instance.TaskbarMode == 0)
+            if (Settings.Instance.EnableTaskbar && Settings.Instance.TaskbarMode == 0)
             {
                 if (Settings.Instance.TaskbarPosition == 1)
                 {
