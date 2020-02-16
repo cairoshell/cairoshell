@@ -4,9 +4,9 @@
     <SolidColorBrush Color="#BF2a2a2a" x:Key="MenuBarBackground" />
     <SolidColorBrush Color="#BF4a4a4a" x:Key="MenuBarBorder" />
     <SolidColorBrush Color="#cF0f0f0f" x:Key="MenuBackgroundGradient" />
-    <SolidColorBrush Color="#DF0875d4" x:Key="MenuItemHoverGradient" />
-    <SolidColorBrush Color="#DF0875d4" x:Key="MenuHeaderPressedGradient" />
-    <SolidColorBrush Color="#DF0875d4" x:Key="MenuTopBorderBrush" />
+    <SolidColorBrush Color="#DF0080ff" x:Key="MenuItemHoverGradient" />
+    <SolidColorBrush Color="#DF0080ff" x:Key="MenuHeaderPressedGradient" />
+    <SolidColorBrush Color="#DF0080ff" x:Key="MenuTopBorderBrush" />
     <SolidColorBrush Color="#20FFFFFF" x:Key="ProgramsMenuCategoryHoverBackground" />
 
     <!-- Search resources -->
@@ -57,7 +57,7 @@
 
     <!-- Dialog resources -->
     <SolidColorBrush Color="#FFFFFFFF" x:Key="DialogWindowBackground" />
-    <SolidColorBrush Color="#FFEFEFEF" x:Key="DialogButtonNormalBackground" />
+    <SolidColorBrush Color="#FFF9F9F9" x:Key="DialogButtonNormalBackground" />
     <SolidColorBrush Color="#602e2e2e" x:Key="DialogButtonNormalBorder" />
     <SolidColorBrush Color="#FFDCE1E6" x:Key="DialogButtonHoverBackground" />
     <SolidColorBrush Color="#6028292a" x:Key="DialogButtonHoverBorder" />

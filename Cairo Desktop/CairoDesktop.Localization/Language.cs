@@ -134,6 +134,8 @@ namespace CairoDesktop.Localization
             { "sTaskbar_Empty", "Open windows to see them listed here." },
             { "sTaskbar_Minimize", "Minimize" },
             { "sTaskbar_Restore", "Restore" },
+            { "sTaskbar_Move", "Move" },
+            { "sTaskbar_Size", "Size" },
             { "sTaskbar_Maximize", "Maximize" },
             { "sTaskbar_NewWindow", "New window" },
             { "sTaskbar_Close", "Close" },

@@ -1107,6 +1107,22 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sTaskbar_Move
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sTaskbar_Size
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
         public static string sTaskbar_Maximize
         {
             get

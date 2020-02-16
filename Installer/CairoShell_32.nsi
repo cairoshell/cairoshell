@@ -92,6 +92,7 @@ Section "$(SECT_cairo)" cairo
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.UWPInterop.dll"
   File "..\Cairo Desktop\Build\x86\Release\Interop.IWshRuntimeLibrary.dll"
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.WindowsTasks.dll"
+  File "..\Cairo Desktop\Build\x86\Release\Flat.xaml"
   File "..\Cairo Desktop\Build\x86\Release\White.xaml"
   File "..\Cairo Desktop\Build\x86\Release\WinSparkle.dll"
 
@@ -215,6 +216,7 @@ Section "Uninstall"
   Delete "$INSTDIR\PostSharp.Laos.dll"
   Delete "$INSTDIR\PostSharp.Core.XmlSerializers.dll"
   Delete "$INSTDIR\RemoveCairo.exe"
+  Delete "$INSTDIR\Flat.xaml"
   Delete "$INSTDIR\White.xaml"
   Delete "$INSTDIR\WinSparkle.dll"
 

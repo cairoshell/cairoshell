@@ -120,11 +120,11 @@ namespace CairoDesktop
         #region Positioning
         private void SetPosition()
         {
-            if (Settings.Instance.DesktopNavigationToolbarLocation != default(System.Windows.Point) &&
+            if (Settings.Instance.DesktopNavigationToolbarLocation != default &&
                 PointExistsOnScreen(Settings.Instance.DesktopNavigationToolbarLocation))
             {
-                Top = Settings.Instance.DesktopNavigationToolbarLocation.Y;
-                Left = Settings.Instance.DesktopNavigationToolbarLocation.X;
+                Top = Settings.Instance.DesktopNavigationToolbarLocation.Y / Shell.DpiScale;
+                Left = Settings.Instance.DesktopNavigationToolbarLocation.X / Shell.DpiScale;
             }
             else
             {
@@ -363,7 +363,7 @@ namespace CairoDesktop
 
         private void DesktopToolbar_LocationChanged(object sender, EventArgs e)
         {
-            Settings.Instance.DesktopNavigationToolbarLocation = new Point(Left, Top);
+            Settings.Instance.DesktopNavigationToolbarLocation = new Point(Left * Shell.DpiScale, Top * Shell.DpiScale);
         }
         #endregion
 

@@ -532,6 +532,22 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
+        public void Move()
+        {
+            // move window via arrow keys; must be active window to control
+            BringToFront();
+            IntPtr retval = IntPtr.Zero;
+            NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_MOVE, 0, 2, 200, ref retval);
+        }
+
+        public void Size()
+        {
+            // size window via arrow keys; must be active window to control
+            BringToFront();
+            IntPtr retval = IntPtr.Zero;
+            NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_SIZE, 0, 2, 200, ref retval);
+        }
+
         public void PinToQuickLaunch()
         {
             if (isUWP)

@@ -33,6 +33,8 @@ namespace CairoDesktop.Common {
             }
         }
 
+        private BackgroundWorker fileOperationWorker = new BackgroundWorker();
+
         private InvokingObservableCollection<SystemFile> files;
         /// <summary>
         /// Gets an ObservableCollection of files contained in this folder as FileSystemInfo objects.
@@ -87,6 +89,8 @@ namespace CairoDesktop.Common {
                 fileWatcher.Deleted += deletedHandler;
                 fileWatcher.Renamed += renamedHandler;
                 fileWatcher.EnableRaisingEvents = true;
+
+                fileOperationWorker.DoWork += fileOperationWorker_DoWork;
             }
             catch (UnauthorizedAccessException)
             {
@@ -256,17 +260,19 @@ namespace CairoDesktop.Common {
 
         public void CopyInto(string[] files)
         {
-            CopyInto(files, FullName);
+            fileOperationWorker.RunWorkerAsync(new BackgroundFileOperation() { files = files, isMove = false });
         }
 
         public void MoveInto(string[] files)
         {
-            MoveInto(files, FullName);
+            fileOperationWorker.RunWorkerAsync(new BackgroundFileOperation() { files = files, isMove = true });
         }
 
-        public static void CopyInto(string[] files, string directory)
+        private void fileOperationWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            foreach (string file in files)
+            BackgroundFileOperation operation = (BackgroundFileOperation)e.Argument;
+
+            foreach (string file in operation.files)
             {
                 if (Shell.Exists(file))
                 {
@@ -275,44 +281,24 @@ namespace CairoDesktop.Common {
                         FileAttributes attr = File.GetAttributes(file);
                         if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                         {
-                            if (file != directory)
+                            if (file != FullName)
                             {
-                                string futureName = directory + "\\" + new DirectoryInfo(file).Name;
-                                if (!(futureName == file)) FileSystem.CopyDirectory(file, futureName, UIOption.AllDialogs);
+                                string futureName = FullName + "\\" + new DirectoryInfo(file).Name;
+                                if (!(futureName == file))
+                                {
+                                    if (operation.isMove) FileSystem.MoveDirectory(file, futureName, UIOption.AllDialogs);
+                                    else FileSystem.CopyDirectory(file, futureName, UIOption.AllDialogs);
+                                }
                             }
                         }
                         else
                         {
-                            string futureName = directory + "\\" + Path.GetFileName(file);
-                            if (!(futureName == file)) FileSystem.CopyFile(file, futureName, UIOption.AllDialogs);
-                        }
-                    }
-                    catch { }
-                }
-            }
-        }
-
-        public static void MoveInto(string[] files, string directory)
-        {
-            foreach (string file in files)
-            {
-                if (Shell.Exists(file))
-                {
-                    try
-                    {
-                        FileAttributes attr = File.GetAttributes(file);
-                        if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-                        {
-                            if (file != directory)
+                            string futureName = FullName + "\\" + Path.GetFileName(file);
+                            if (!(futureName == file))
                             {
-                                string futureName = directory + "\\" + new DirectoryInfo(file).Name;
-                                if (!(futureName == file)) FileSystem.MoveDirectory(file, futureName, UIOption.AllDialogs);
+                                if (operation.isMove) FileSystem.MoveFile(file, futureName, UIOption.AllDialogs);
+                                else FileSystem.CopyFile(file, futureName, UIOption.AllDialogs);
                             }
-                        }
-                        else
-                        {
-                            string futureName = directory + "\\" + Path.GetFileName(file);
-                            if (!(futureName == file)) FileSystem.MoveFile(file, futureName, UIOption.AllDialogs);
                         }
                     }
                     catch { }
@@ -344,5 +330,11 @@ namespace CairoDesktop.Common {
             }
         }
         #endregion
+
+        internal struct BackgroundFileOperation
+        {
+            internal string[] files;
+            internal bool isMove;
+        }
     }
 }
