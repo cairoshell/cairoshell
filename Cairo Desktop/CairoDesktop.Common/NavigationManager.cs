@@ -87,7 +87,7 @@ namespace CairoDesktop.Common
 
         public void NavigateTo(string path)
         {
-            if (path != CurrentPath)
+            if (path != CurrentPath && Directory.Exists(path))
             {
                 if (CanGoForward)
                 {
@@ -103,7 +103,7 @@ namespace CairoDesktop.Common
 
         public void NavigateForward()
         {
-            if (CanGoForward)
+            if (CanGoForward && Directory.Exists(list[currentIndex + 1]))
             {
                 currentIndex += 1;
             }
@@ -111,7 +111,7 @@ namespace CairoDesktop.Common
 
         public void NavigateBackward()
         {
-            if (CanGoBack)
+            if (CanGoBack && Directory.Exists(list[currentIndex - 1]))
             {
                 currentIndex -= 1;
             }
@@ -119,7 +119,7 @@ namespace CairoDesktop.Common
 
         public void NavigateToIndex(int index)
         {
-            if (index < list.Count)
+            if (index < list.Count && Directory.Exists(list[index]))
             {
                 currentIndex = index;
             }
