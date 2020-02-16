@@ -26,6 +26,8 @@ namespace CairoDesktop.Common
                 OnPropertyChanged("CurrentPath");
                 OnPropertyChanged("CanGoBack");
                 OnPropertyChanged("CanGoForward");
+                OnPropertyChanged("CurrentPathFriendly");
+                OnPropertyChanged("HomePathFriendly");
             }
         }
 
@@ -33,6 +35,21 @@ namespace CairoDesktop.Common
         {
             list = new List<string>();
             currentIndex = 0;
+
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+            {
+                switch (e.PropertyName)
+                {
+                    case "DesktopDirectory":
+                        OnPropertyChanged("HomePathFriendly");
+                        break;
+                }
+            }
         }
 
         public string CurrentPath
@@ -74,6 +91,22 @@ namespace CairoDesktop.Common
                 return list != null &&
                        list.Count > 1 &&
                        currentIndex < list.Count - 1;
+            }
+        }
+
+        public string CurrentPathFriendly
+        {
+            get
+            {
+                return Localization.DisplayString.sDesktop_CurrentFolder + " " + CurrentPath;
+            }
+        }
+
+        public string HomePathFriendly
+        {
+            get
+            {
+                return string.Format("{0} ({1})", Localization.DisplayString.sDesktop_Home, Settings.Instance.DesktopDirectory);
             }
         }
 
