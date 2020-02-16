@@ -61,6 +61,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -78,6 +79,8 @@
     <Compile Include="Dialogs.cs" />
     <Compile Include="DisposableCollection.cs" />
     <Compile Include="DisposableObject.cs" />
+    <Compile Include="Helpers\GroupPolicy.cs" />
+    <Compile Include="Helpers\RegistryChangeMonitor.cs" />
     <Compile Include="LowLevelKeyboardListener.cs" />
     <Compile Include="Helpers\EventHandlerHelper.cs" />
     <Compile Include="Helpers\TypeHelper.cs" />
