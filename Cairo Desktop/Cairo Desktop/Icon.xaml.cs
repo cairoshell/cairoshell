@@ -283,13 +283,14 @@ namespace CairoDesktop
             {
                 if (file.IsDirectory)
                 {
-                    if (!isDropMove) SystemDirectory.CopyInto(fileNames, file.FullName);
-                    else if (isDropMove) SystemDirectory.MoveInto(fileNames, file.FullName);
+                    SystemDirectory destDirectory = new SystemDirectory(file.FullName, Dispatcher);
+                    if (isDropMove) destDirectory.MoveInto(fileNames);
+                    else destDirectory.CopyInto(fileNames);
                 }
                 else
                 {
-                    if (!isDropMove) file.ParentDirectory.CopyInto(fileNames);
-                    else if (isDropMove) file.ParentDirectory.MoveInto(fileNames);
+                    if (isDropMove) file.ParentDirectory.MoveInto(fileNames);
+                    else file.ParentDirectory.CopyInto(fileNames);
                 }
 
                 e.Handled = true;
