@@ -1,35 +1,25 @@
-﻿using System.Linq;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace CairoDesktop.SupportingClasses
 {
-    public sealed class Dialogs
+    public static class DialogExtensionMethods
     {
-        static Dialogs() { }
-        private Dialogs() { }
-
-        public static DialogResult OpenFileDialog(string filter, out string filename)
+        static DialogExtensionMethods() { }
+        
+        public static DialogResult SafeShowDialog(this OpenFileDialog openFileDialog)
         {
-            OpenFileDialog dlg = new OpenFileDialog
-            {
-                Filter = filter
-            };
-
             DialogResult result;
-            filename = null;
 
             try
             {
-                result = dlg.ShowDialog();
+                result = openFileDialog.ShowDialog();
             }
             catch
             {
                 // show retro dialog if the better one fails to load
-                dlg.AutoUpgradeEnabled = false;
-                result = dlg.ShowDialog();
+                openFileDialog.AutoUpgradeEnabled = false;
+                result = openFileDialog.ShowDialog();
             }
-
-            filename = dlg.FileName;
 
             return result;
         }

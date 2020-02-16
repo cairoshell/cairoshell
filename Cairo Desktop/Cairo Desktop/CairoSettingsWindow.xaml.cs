@@ -1,22 +1,25 @@
-﻿namespace CairoDesktop
+﻿using CairoDesktop.AppGrabber;
+using CairoDesktop.Common;
+using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
+using CairoDesktop.SupportingClasses;
+using CairoDesktop.WindowsTray;
+using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Forms;
+using System.Windows.Interop;
+using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
+
+namespace CairoDesktop
 {
-    using AppGrabber;
-    using CairoDesktop.Common;
-    using CairoDesktop.WindowsTray;
-    using Configuration;
-    using Interop;
-    using Microsoft.Win32;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing.Imaging;
-    using System.IO;
-    using System.IO.Compression;
-    using System.Linq;
-    using System.Text;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Forms;
-    using System.Windows.Interop;
 
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
@@ -652,7 +655,7 @@
                     Tag = bingImageBackgroundStackPanel
                 };
                 cboDesktopBackgroundType.Items.Add(bingWallpaperItem);
-                
+
                 foreach (var backgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
                 {
                     ComboBoxItem cboItem = new ComboBoxItem()
@@ -680,61 +683,72 @@
 
         private void btnWindowsBackgroundFileBrowse_Click(object sender, RoutedEventArgs e)
         {
-            if (ShowOpenFileDialog(GetImageFilter(), out string wallpaperPath) == System.Windows.Forms.DialogResult.OK)
+            using (OpenFileDialog dlg = new OpenFileDialog
             {
-                txtWindowsBackgroundPath.Text = wallpaperPath;
-                Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", txtWindowsBackgroundPath.Text);
+                Filter = GetImageFilter()
+            })
+            {
+                if (dlg.SafeShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    txtWindowsBackgroundPath.Text = dlg.FileName;
+                    Registry.SetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "Wallpaper", dlg.FileName);
 
-                NativeMethods.SystemParametersInfo(NativeMethods.SPI.SETDESKWALLPAPER, 0, wallpaperPath, (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
+                    NativeMethods.SystemParametersInfo(NativeMethods.SPI.SETDESKWALLPAPER, 0, dlg.FileName, (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
+                }
             }
         }
 
         private void btnCairoBackgroundFileBrowse_Click(object sender, RoutedEventArgs e)
         {
-            if (ShowOpenFileDialog(GetImageFilter(), out string wallpaperPath) == System.Windows.Forms.DialogResult.OK)
+            using (System.Windows.Forms.OpenFileDialog dlg = new System.Windows.Forms.OpenFileDialog
             {
-                txtCairoBackgroundPath.Text = wallpaperPath;
-                Settings.Instance.CairoBackgroundImagePath = wallpaperPath;
+                Filter = GetImageFilter()
+            })
+            {
+                if (dlg.SafeShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    txtCairoBackgroundPath.Text = dlg.FileName;
+                    Settings.Instance.CairoBackgroundImagePath = dlg.FileName;
+                }
             }
         }
-
         private void btnCairoVideoFileBrowse_Click(object sender, RoutedEventArgs e)
         {
-            string wallpaperPath;
-            if (ShowOpenFileDialog(GetVideoFilter(), out wallpaperPath) == System.Windows.Forms.DialogResult.OK)
+            using (OpenFileDialog dlg = new OpenFileDialog
             {
-                if (Path.GetExtension(wallpaperPath) == ".zip")
+                Filter = GetImageFilter()
+            })
+            {
+                if (dlg.SafeShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    string[] exts = new[] { ".wmv", ".3g2", ".3gp", ".3gp2", ".3gpp", ".amv", ".asf", ".avi", ".bin", ".cue", ".divx", ".dv", ".flv", ".gxf", ".iso", ".m1v", ".m2v", ".m2t", ".m2ts", ".m4v", ".mkv", ".mov", ".mp2", ".mp2v", ".mp4", ".mp4v", ".mpa", ".mpe", ".mpeg", ".mpeg1", ".mpeg2", ".mpeg4", ".mpg", ".mpv2", ".mts", ".nsv", ".nuv", ".ogg", ".ogm", ".ogv", ".ogx", ".ps", ".rec", ".rm", ".rmvb", ".tod", ".ts", ".tts", ".vob", ".vro", ".webm", ".wmv" };
-
-                    FileInfo fileInfo = new FileInfo(wallpaperPath);
-                    string extractPath = fileInfo.FullName.Remove((fileInfo.FullName.Length - fileInfo.Extension.Length), fileInfo.Extension.Length);
-
-                    if (Directory.Exists(extractPath) && System.Windows.MessageBox.Show("Path alreadt exists, overwrite?", "DreamScene", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                    if (Path.GetExtension(dlg.FileName) == ".zip")
                     {
-                        Directory.Delete(extractPath, true);
+                        string[] exts = new[] { ".wmv", ".3g2", ".3gp", ".3gp2", ".3gpp", ".amv", ".asf", ".avi", ".bin", ".cue", ".divx", ".dv", ".flv", ".gxf", ".iso", ".m1v", ".m2v", ".m2t", ".m2ts", ".m4v", ".mkv", ".mov", ".mp2", ".mp2v", ".mp4", ".mp4v", ".mpa", ".mpe", ".mpeg", ".mpeg1", ".mpeg2", ".mpeg4", ".mpg", ".mpv2", ".mts", ".nsv", ".nuv", ".ogg", ".ogm", ".ogv", ".ogx", ".ps", ".rec", ".rm", ".rmvb", ".tod", ".ts", ".tts", ".vob", ".vro", ".webm", ".wmv" };
+
+                        FileInfo fileInfo = new FileInfo(dlg.FileName);
+                        string extractPath = fileInfo.FullName.Remove((fileInfo.FullName.Length - fileInfo.Extension.Length), fileInfo.Extension.Length);
+
+                        if (Directory.Exists(extractPath) && System.Windows.MessageBox.Show("Path alreadt exists, overwrite?", "DreamScene", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                        {
+                            Directory.Delete(extractPath, true);
+                        }
+
+                        if (!Directory.Exists(extractPath))
+                        {
+                            ZipFile.ExtractToDirectory(dlg.FileName, extractPath);
+                        }
+
+                        string file = Directory.GetFiles(extractPath).FirstOrDefault(f => exts.Contains(Path.GetExtension(f)));
+                        if (!string.IsNullOrWhiteSpace(file))
+                        {
+                            dlg.FileName = file;
+                        }
                     }
 
-                    if (!Directory.Exists(extractPath))
-                    {
-                        ZipFile.ExtractToDirectory(wallpaperPath, extractPath);
-                    }
-
-                    string file = Directory.GetFiles(extractPath).FirstOrDefault(f => exts.Contains(Path.GetExtension(f)));
-                    if (!string.IsNullOrWhiteSpace(file))
-                    {
-                        wallpaperPath = file;
-                    }
+                    txtCairoVideoBackgroundPath.Text = dlg.FileName;
+                    Settings.Instance.CairoBackgroundVideoPath = dlg.FileName;
                 }
-
-                txtCairoVideoBackgroundPath.Text = wallpaperPath;
-                Settings.Instance.CairoBackgroundVideoPath = wallpaperPath;
             }
-        }
-
-        private System.Windows.Forms.DialogResult ShowOpenFileDialog(string filter, out string filename)
-        {
-            return SupportingClasses.Dialogs.OpenFileDialog(filter, out filename);
         }
 
         private string GetImageFilter()
