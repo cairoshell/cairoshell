@@ -155,6 +155,11 @@ namespace CairoDesktop.AppGrabber
                         if (source.Type != AppCategoryType.QuickLaunch)
                         {
                             target.Add(dropData); // if coming from quick launch, simply remove from quick launch
+
+                            if (dropTarget.Items.Contains(dropData))
+                            {
+                                dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.IndexOf(dropData)]);
+                            }
                         }
                     }
                 }
@@ -164,6 +169,11 @@ namespace CairoDesktop.AppGrabber
 
                     (sourceView.ItemsSource as IList<ApplicationInfo>).Remove(dropData);
                     (dropTarget.ItemsSource as IList<ApplicationInfo>).Add(dropData);
+
+                    if (dropTarget.Items.Contains(dropData))
+                    {
+                        dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.IndexOf(dropData)]);
+                    }
                 }
             }
             else if (e.Data.GetDataPresent(DataFormats.FileDrop))
