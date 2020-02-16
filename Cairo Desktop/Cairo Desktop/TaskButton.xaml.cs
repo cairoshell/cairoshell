@@ -89,6 +89,22 @@ namespace CairoDesktop
             }
         }
 
+        private void miMove_Click(object sender, RoutedEventArgs e)
+        {
+            if (Window != null)
+            {
+                Window.Move();
+            }
+        }
+
+        private void miSize_Click(object sender, RoutedEventArgs e)
+        {
+            if (Window != null)
+            {
+                Window.Size();
+            }
+        }
+
         private void miMinimize_Click(object sender, RoutedEventArgs e)
         {
             if (Window != null)
@@ -145,6 +161,8 @@ namespace CairoDesktop
                 miMaximize.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowMaximized && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0);
                 miMinimize.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowMinimized && (ws & (int)NativeMethods.WindowStyles.WS_MINIMIZEBOX) != 0);
                 miRestore.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowNormal);
+                miMove.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal;
+                miSize.IsEnabled = (wss == NativeMethods.WindowShowStyle.ShowNormal && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0);
             }
         }
 

@@ -29,6 +29,8 @@
                         <TextBlock FontFamily="Marlett" Text="&#x32;" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Move)}" Click="miMove_Click"  Name="miMove" />
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Size)}" Click="miSize_Click"  Name="miSize" />
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Minimize)}" Click="miMinimize_Click" Name="miMinimize">
                     <MenuItem.Icon>
                         <TextBlock FontFamily="Marlett" Text="&#x30;" />
