@@ -1,33 +1,13 @@
 ﻿using CairoDesktop.Common.DesignPatterns;
 using Microsoft.Win32;
-using System;
-using System.ComponentModel;
-using System.Management;
 
 namespace CairoDesktop.Common.Helpers
 {
-    public sealed class GroupPolicyManager : SingletonObject<GroupPolicyManager>, INotifyPropertyChanged, IDisposable
+    public sealed class GroupPolicyManager : SingletonObject<GroupPolicyManager>
     {
         private GroupPolicyManager()
         {
-            RegistryChangeMonitor registryChangeMonitor = new RegistryChangeMonitor(@"HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer");
-            registryChangeMonitor.Changed += RegistryChangeMonitor_Changed;
-            registryChangeMonitor.Start();
         }
-
-        private void RegistryChangeMonitor_Changed(object sender, RegistryChangeEventArgs e)
-        {
-            // Was this one of our keys?
-        }
-        
-        public void Dispose()
-        {
-            //_watcher.Stop();
-            //_watcher.EventArrived -= HandleEvent;
-            //_watcher.Dispose();
-            //_watcher = null;
-        }
-
 
         /// <summary>
         /// Removes icons, shortcuts, and other default and user-defined items from the desktop, including 
@@ -55,14 +35,14 @@ namespace CairoDesktop.Common.Helpers
             {
                 bool result = false;
 
-                if (Registry.CurrentUser.OpenSubKey(@"\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer")?.GetValue("NoDesktop", 0) is int noDesktopValue)
+                var reg = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer");
+                object val = reg?.GetValue("NoDesktop", 0);
+                if (val is int noDesktopValue)
                     if (noDesktopValue == 1)
                         result = true;
 
                 return result;
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

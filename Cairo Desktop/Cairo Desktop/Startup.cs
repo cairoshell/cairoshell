@@ -1,5 +1,6 @@
 ﻿namespace CairoDesktop
 {
+    using CairoDesktop.Common.Helpers;
     using CairoDesktop.Common.Logging;
     using CairoDesktop.Configuration;
     using CairoDesktop.WindowsTray;
@@ -140,7 +141,7 @@
             MenuBarWindows.Add(MenuBarWindow);
 
             // Future: This should be moved to whatever plugin is responsible for Desktop stuff
-            if (Settings.Instance.EnableDesktop)
+            if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop)
             {
                 DesktopWindow = new Desktop();
                 DesktopWindow.Show();
