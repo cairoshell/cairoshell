@@ -175,7 +175,7 @@
                 Grid.Row="4"
                 Grid.Column="3">
                     <Button Content="{Binding sInterface_Finish}" Style="{StaticResource CairoButtonStyle}"
-                    Click="btnSave_Click" IsDefault="True"/>
+                    Click="btnSave_Click" />
                 </StackPanel>
             </Grid>
         </Border>

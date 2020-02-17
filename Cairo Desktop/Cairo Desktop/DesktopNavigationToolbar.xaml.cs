@@ -60,14 +60,6 @@ namespace CairoDesktop
             }
         }
 
-        public string CurrentDirectoryFriendly
-        {
-            get
-            {
-                return Localization.DisplayString.sDesktop_CurrentFolder + " " + NavigationManager.CurrentPath;
-            }
-        }
-
         public DesktopNavigationToolbar()
         {
             InitializeComponent();

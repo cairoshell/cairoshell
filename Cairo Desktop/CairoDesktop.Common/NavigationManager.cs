@@ -26,6 +26,8 @@ namespace CairoDesktop.Common
                 OnPropertyChanged("CurrentPath");
                 OnPropertyChanged("CanGoBack");
                 OnPropertyChanged("CanGoForward");
+                OnPropertyChanged("CurrentPathFriendly");
+                OnPropertyChanged("HomePathFriendly");
             }
         }
 
@@ -33,6 +35,21 @@ namespace CairoDesktop.Common
         {
             list = new List<string>();
             currentIndex = 0;
+
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+            {
+                switch (e.PropertyName)
+                {
+                    case "DesktopDirectory":
+                        OnPropertyChanged("HomePathFriendly");
+                        break;
+                }
+            }
         }
 
         public string CurrentPath
@@ -77,6 +94,22 @@ namespace CairoDesktop.Common
             }
         }
 
+        public string CurrentPathFriendly
+        {
+            get
+            {
+                return Localization.DisplayString.sDesktop_CurrentFolder + " " + CurrentPath;
+            }
+        }
+
+        public string HomePathFriendly
+        {
+            get
+            {
+                return string.Format("{0} ({1})", Localization.DisplayString.sDesktop_Home, Settings.Instance.DesktopDirectory);
+            }
+        }
+
         public void Clear()
         {
             string current = CurrentPath;
@@ -87,7 +120,7 @@ namespace CairoDesktop.Common
 
         public void NavigateTo(string path)
         {
-            if (path != CurrentPath)
+            if (path != CurrentPath && Directory.Exists(path))
             {
                 if (CanGoForward)
                 {
@@ -103,7 +136,7 @@ namespace CairoDesktop.Common
 
         public void NavigateForward()
         {
-            if (CanGoForward)
+            if (CanGoForward && Directory.Exists(list[currentIndex + 1]))
             {
                 currentIndex += 1;
             }
@@ -111,7 +144,7 @@ namespace CairoDesktop.Common
 
         public void NavigateBackward()
         {
-            if (CanGoBack)
+            if (CanGoBack && Directory.Exists(list[currentIndex - 1]))
             {
                 currentIndex -= 1;
             }
@@ -119,7 +152,7 @@ namespace CairoDesktop.Common
 
         public void NavigateToIndex(int index)
         {
-            if (index < list.Count)
+            if (index < list.Count && Directory.Exists(list[index]))
             {
                 currentIndex = index;
             }

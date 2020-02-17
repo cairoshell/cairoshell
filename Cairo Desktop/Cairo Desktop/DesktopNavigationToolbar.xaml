@@ -123,7 +123,7 @@
             <ImageBrush ImageSource="Resources\desktopControlsBg.png" />
         </StackPanel.Background>
         <StackPanel.ToolTip>
-            <ToolTip Content="{Binding Path=CurrentDirectoryFriendly}" />
+            <ToolTip Content="{Binding Path=NavigationManager.CurrentPathFriendly}" />
         </StackPanel.ToolTip>
         <StackPanel.Style>
             <Style TargetType="{x:Type StackPanel}">
@@ -175,7 +175,7 @@
                 Margin="22,-5,0,0"
                 Click="btnHome_Click"
                 MouseRightButtonDown="btnHome_MouseRightButtonDown"
-                ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Home)}">
+                ToolTip="{Binding Path=NavigationManager.HomePathFriendly}">
             <Image Source="Resources\controlsHome.png"
                    Width="19"
                    Height="19" />
