@@ -1,5 +1,6 @@
 ﻿using CairoDesktop.Common.Logging;
 using CairoDesktop.Interop;
+using CairoDesktop.SupportingClasses;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -82,26 +83,30 @@ namespace CairoDesktop.AppGrabber
             string filter = "Programs and shortcuts|";
             foreach (string ext in AppGrabber.ExecutableExtensions)
             {
-                filter += "*" + ext + ";";
+                filter += $"*{ext};";
             }
 
             filter = filter.Substring(0, filter.Length - 2);
 
-            string filename;
-            DialogResult result = SupportingClasses.Dialogs.OpenFileDialog(filter, out filename);
-            if (result == System.Windows.Forms.DialogResult.OK && Interop.Shell.Exists(filename))
+            using (OpenFileDialog dlg = new OpenFileDialog
             {
-                ApplicationInfo customApp = AppGrabber.PathToApp(filename, true);
-                if (!ReferenceEquals(customApp, null))
+                Filter = filter
+            })
+            {
+                if (dlg.SafeShowDialog() == System.Windows.Forms.DialogResult.OK && Interop.Shell.Exists(dlg.FileName))
                 {
-                    if (!programsMenuAppsCollection.Contains(customApp) && !(InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Contains(customApp))
+                    ApplicationInfo customApp = AppGrabber.PathToApp(dlg.FileName, true);
+                    if (!ReferenceEquals(customApp, null))
                     {
-                        programsMenuAppsCollection.Add(customApp);
-                    }
-                    else
-                    {
-                        // disallow adding a duplicate
-                        CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                        if (!programsMenuAppsCollection.Contains(customApp) && !(InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Contains(customApp))
+                        {
+                            programsMenuAppsCollection.Add(customApp);
+                        }
+                        else
+                        {
+                            // disallow adding a duplicate
+                            CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                        }
                     }
                 }
             }
