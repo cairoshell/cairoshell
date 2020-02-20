@@ -514,5 +514,18 @@ namespace CairoDesktop.Configuration.Properties {
                 this["DesktopNavigationToolbarLocation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7820ae75-23e3-4229-82c1-e41cb67d5b9c|7820ae74-23e3-4229-82c1-e41cb67d5b9c|7820ae7" +
+            "6-23e3-4229-82c1-e41cb67d5b9c")]
+        public string PinnedNotifyIcons {
+            get {
+                return ((string)(this["PinnedNotifyIcons"]));
+            }
+            set {
+                this["PinnedNotifyIcons"] = value;
+            }
+        }
     }
 }

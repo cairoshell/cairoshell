@@ -14,17 +14,30 @@ namespace CairoDesktop
 
             this.DataContext = NotificationArea.Instance;
 
-            ((INotifyCollectionChanged)TrayItems.Items).CollectionChanged += TrayItems_CollectionChanged;
+            ((INotifyCollectionChanged)PinnedItems.Items).CollectionChanged += PinnedItems_CollectionChanged;
+            ((INotifyCollectionChanged)UnpinnedItems.Items).CollectionChanged += UnpinnedItems_CollectionChanged;
         }
 
-        private void TrayItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void PinnedItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (PinnedItems.Items.Count > 0)
+            {
+                PinnedItems.Margin = new Thickness(16, 0, 0, 0);
+            }
+            else
+            {
+                PinnedItems.Margin = new Thickness(0, 0, 0, 0);
+            }
+        }
+
+        private void UnpinnedItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (Configuration.Settings.Instance.SysTrayAlwaysExpanded)
             {
-                LayoutRoot.Visibility = Visibility.Visible;
+                UnpinnedItems.Visibility = Visibility.Visible;
                 btnToggle.Visibility = Visibility.Collapsed;
             }
-            else if (TrayItems.Items.Count > 0)
+            else if (UnpinnedItems.Items.Count > 0)
                 btnToggle.Visibility = Visibility.Visible;
             else
                 btnToggle.Visibility = Visibility.Collapsed;
@@ -32,13 +45,13 @@ namespace CairoDesktop
 
         private void btnToggle_Click(object sender, RoutedEventArgs e)
         {
-            if (LayoutRoot.Visibility == Visibility.Visible)
+            if (UnpinnedItems.Visibility == Visibility.Visible)
             {
-                LayoutRoot.Visibility = Visibility.Collapsed;
+                UnpinnedItems.Visibility = Visibility.Collapsed;
             }
             else
             {
-                LayoutRoot.Visibility = Visibility.Visible;
+                UnpinnedItems.Visibility = Visibility.Visible;
             }
         }
 
@@ -53,7 +66,7 @@ namespace CairoDesktop
             
             if (trayIcon != null)
             {
-                NotificationArea.Instance.IconMouseClick(trayIcon, e.ChangedButton, getMousePos(), System.Windows.Forms.SystemInformation.DoubleClickTime);
+                trayIcon.IconMouseClick(e.ChangedButton, getMousePos(), System.Windows.Forms.SystemInformation.DoubleClickTime);
             }
         }
 
@@ -69,7 +82,7 @@ namespace CairoDesktop
                 double dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
 
                 trayIcon.Placement = new Interop.NativeMethods.RECT { top = (int)location.Y, left = (int)location.X, bottom = (int)(sendingDecorator.ActualHeight * dpiScale), right = (int)(sendingDecorator.ActualWidth * dpiScale) };
-                NotificationArea.Instance.IconMouseEnter(trayIcon, getMousePos());
+                trayIcon.IconMouseEnter(getMousePos());
             }
         }
 
@@ -79,7 +92,7 @@ namespace CairoDesktop
 
             if (trayIcon != null)
             {
-                NotificationArea.Instance.IconMouseLeave(trayIcon, getMousePos());
+                trayIcon.IconMouseLeave(getMousePos());
             }
         }
 
@@ -89,7 +102,7 @@ namespace CairoDesktop
 
             if (trayIcon != null)
             {
-                NotificationArea.Instance.IconMouseMove(trayIcon, getMousePos());
+                trayIcon.IconMouseMove(getMousePos());
             }
         }
     }

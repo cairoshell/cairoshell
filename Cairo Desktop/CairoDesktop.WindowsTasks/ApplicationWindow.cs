@@ -113,7 +113,7 @@ namespace CairoDesktop.WindowsTasks
             {
                 if(string.IsNullOrEmpty(_winFileName))
                 {
-                    _winFileName = GetFileNameForWindow(Handle);
+                    _winFileName = Shell.GetPathForHandle(Handle);
                 }
 
                 return _winFileName;
@@ -178,27 +178,6 @@ namespace CairoDesktop.WindowsTasks
 
                 return null;
             }
-        }
-
-        public static string GetFileNameForWindow(IntPtr hWnd)
-        {
-            // get process id
-            uint procId;
-            NativeMethods.GetWindowThreadProcessId(hWnd, out procId);
-
-            // open process
-            // QueryLimitedInformation flag allows us to access elevated applications as well
-            IntPtr hProc = NativeMethods.OpenProcess(NativeMethods.ProcessAccessFlags.QueryLimitedInformation, false, (int)procId);
-
-            // get filename
-            StringBuilder outFileName = new StringBuilder(1024);
-            int len = outFileName.Capacity;
-            NativeMethods.QueryFullProcessImageName(hProc, 0, outFileName, ref len);
-
-            outFileName.Replace("Excluded,", "");
-            outFileName.Replace(",SFC protected", "");
-
-            return outFileName.ToString();
         }
 
         public string Title

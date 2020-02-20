@@ -548,6 +548,27 @@ namespace CairoDesktop.Interop
             return (info.dwStyle & 0x10000000) == 0x10000000;
         }
 
+        public static string GetPathForHandle(IntPtr hWnd)
+        {
+            // get process id
+            uint procId;
+            GetWindowThreadProcessId(hWnd, out procId);
+
+            // open process
+            // QueryLimitedInformation flag allows us to access elevated applications as well
+            IntPtr hProc = OpenProcess(ProcessAccessFlags.QueryLimitedInformation, false, (int)procId);
+
+            // get filename
+            StringBuilder outFileName = new StringBuilder(1024);
+            int len = outFileName.Capacity;
+            QueryFullProcessImageName(hProc, 0, outFileName, ref len);
+
+            outFileName.Replace("Excluded,", "");
+            outFileName.Replace(",SFC protected", "");
+
+            return outFileName.ToString();
+        }
+
         /// <summary>
         /// Transforms device independent units (1/96 of an inch)
         /// to pixels

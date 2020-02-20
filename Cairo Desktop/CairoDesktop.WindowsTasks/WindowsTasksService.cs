@@ -61,9 +61,6 @@ namespace CairoDesktop.WindowsTasks
                 groupedWindows.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
                 groupedWindows.CollectionChanged += groupedWindows_Changed;
                 groupedWindows.Filter = groupedWindows_Filter;
-                var taskbarItemsView = groupedWindows as ICollectionViewLiveShaping;
-                taskbarItemsView.IsLiveFiltering = true;
-                taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
 
                 // enumerate windows already opened
                 EnumWindows(new CallBackPtr((hwnd, lParam) =>
@@ -81,6 +78,7 @@ namespace CairoDesktop.WindowsTasks
             
             IsStarting = false;
         }
+
         private void groupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
             // yup, do nothing. helps prevent a NRE

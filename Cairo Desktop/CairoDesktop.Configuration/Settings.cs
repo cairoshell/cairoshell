@@ -633,6 +633,22 @@ namespace CairoDesktop.Configuration
                 }
             }
         }
+
+        public string[] PinnedNotifyIcons
+        {
+            get
+            {
+                return parseConcatString(cairoSettings.PinnedNotifyIcons, '|').ToArray();
+            }
+            set
+            {
+                string val = concatStringList(value, '|');
+                if (cairoSettings.PinnedNotifyIcons != val)
+                {
+                    cairoSettings.PinnedNotifyIcons = val;
+                }
+            }
+        }
         #endregion
 
         #region Advanced

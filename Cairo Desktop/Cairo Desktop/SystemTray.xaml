@@ -3,32 +3,40 @@
     x:Class="CairoDesktop.SystemTray"
     x:Name="CairoSystemTray"
     Height="22">
-    <StackPanel Orientation="Horizontal">
-        <Grid x:Name="LayoutRoot" Visibility="Collapsed">
-            <ItemsControl ItemsSource="{Binding Path=TrayIcons}" Name="TrayItems">
-                <ItemsControl.Template>
+    <UserControl.Resources>
+        <Style TargetType="ItemsControl">
+            <Setter Property="Template">
+                <Setter.Value>
                     <ControlTemplate TargetType="ItemsControl">
                         <ItemsPresenter />
                     </ControlTemplate>
-                </ItemsControl.Template>
-                <ItemsControl.ItemsPanel>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal"
                             HorizontalAlignment="Right" />
                     </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
                     <DataTemplate>
                         <Border MouseUp="Image_MouseUp" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave" MouseMove="Image_MouseMove" Background="Transparent" ToolTip="{Binding Path=Title}" ToolTipService.Placement="Bottom">
-                        <Image Source="{Binding Path=Icon, Mode=OneWay}"
+                            <Image Source="{Binding Path=Icon, Mode=OneWay}"
                             Width="16"
                             Height="16"
                             Margin="5,0,5,2" />
                         </Border>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Grid>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal">
+        <ItemsControl ItemsSource="{Binding Path=UnpinnedIcons}" Name="UnpinnedItems" Visibility="Collapsed" />
         <ToggleButton Name="btnToggle" Click="btnToggle_Click" Visibility="Collapsed" ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_ToggleNotificationArea)}" ToolTipService.Placement="Bottom" Style="{StaticResource CairoSystrayExpanderStyle}" />
+        <ItemsControl ItemsSource="{Binding Path=PinnedIcons}" Name="PinnedItems" />
     </StackPanel>
 </UserControl>
