@@ -5,6 +5,7 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Input;
+using CairoDesktop.Common.Helpers;
 
 namespace CairoDesktop {
     /// <summary>
@@ -217,7 +218,7 @@ namespace CairoDesktop {
             startPoint = null;
             ctxOpen = true;
 
-            if (!Settings.Instance.EnableDynamicDesktop || !Settings.Instance.EnableDesktop)
+            if (!Settings.Instance.EnableDynamicDesktop || !Settings.Instance.EnableDesktop || GroupPolicyManager.Instance.NoDesktop)
             {
                 ContextMenu menu = (sender as ContextMenu);
                 foreach (Control item in menu.Items)

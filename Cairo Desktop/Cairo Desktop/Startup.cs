@@ -79,7 +79,7 @@
             IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
             IsCairoRunningAsShell = Shell.IsCairoConfiguredAsShell && taskbarHwnd == IntPtr.Zero;       // Move to CairoDesktop.Plugins.CairoShellCoreServices.... Make this more robust, to account for system-shell or per-user-shell;
 
-            if (Settings.Instance.EnableDesktop) // Future: This should be moved to whatever plugin is responsible for desktop stuff
+            if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop) // Future: This should be moved to whatever plugin is responsible for desktop stuff
             {
                 // hide the windows desktop
                 Shell.ToggleDesktopIcons(false);

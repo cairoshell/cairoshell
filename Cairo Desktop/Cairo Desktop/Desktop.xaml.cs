@@ -1,4 +1,5 @@
 ﻿using CairoDesktop.Common;
+using CairoDesktop.Common.Helpers;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
@@ -179,7 +180,7 @@ namespace CairoDesktop
             Handle = helper.Handle;
             HwndSource.FromHwnd(helper.Handle).AddHook(new HwndSourceHook(WndProc));
 
-            if (Settings.Instance.EnableDesktop && Icons == null)
+            if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop && Icons == null)
             {
                 grid.Children.Add(Icons = new DesktopIcons());
 
