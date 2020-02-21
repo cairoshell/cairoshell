@@ -638,7 +638,7 @@ namespace CairoDesktop.Configuration
         {
             get
             {
-                return parseConcatString(cairoSettings.PinnedNotifyIcons, '|').ToArray();
+                return parseConcatString(cairoSettings.PinnedNotifyIcons, '|');
             }
             set
             {

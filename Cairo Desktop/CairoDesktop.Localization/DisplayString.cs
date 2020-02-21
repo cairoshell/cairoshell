@@ -1467,6 +1467,30 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_MenuBar_CollapsibleIcons
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_MenuBar_PinnedIcons
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_MenuBar_NotificationAreaPinHelp
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
         public static string sSettings_MenuBar_EnableCairoMenuHotKey
         {
             get

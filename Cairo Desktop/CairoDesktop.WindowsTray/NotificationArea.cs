@@ -116,10 +116,18 @@ namespace CairoDesktop.WindowsTray
             PinnedIcons.CollectionChanged += PinnedIcons_Changed;
             PinnedIcons.Filter = PinnedIcons_Filter;
             PinnedIcons.SortDescriptions.Add(new SortDescription("PinOrder", ListSortDirection.Ascending));
+            var pinnedIconsView = PinnedIcons as ICollectionViewLiveShaping;
+            pinnedIconsView.IsLiveFiltering = true;
+            pinnedIconsView.LiveFilteringProperties.Add("IsPinned");
+            pinnedIconsView.IsLiveSorting = true;
+            pinnedIconsView.LiveSortingProperties.Add("PinOrder");
 
             UnpinnedIcons = new ListCollectionView(TrayIcons);
             UnpinnedIcons.CollectionChanged += PinnedIcons_Changed;
             UnpinnedIcons.Filter = UnpinnedIcons_Filter;
+            var unpinnedIconsView = UnpinnedIcons as ICollectionViewLiveShaping;
+            unpinnedIconsView.IsLiveFiltering = true;
+            unpinnedIconsView.LiveFilteringProperties.Add("IsPinned");
         }
 
         private void PinnedIcons_Changed(object sender, NotifyCollectionChangedEventArgs e)

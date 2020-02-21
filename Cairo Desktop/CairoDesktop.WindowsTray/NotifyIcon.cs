@@ -6,6 +6,8 @@ using System.Windows.Media;
 using System.Windows.Input;
 using static CairoDesktop.Interop.NativeMethods;
 using CairoDesktop.Common.Logging;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CairoDesktop.WindowsTray
 {
@@ -157,6 +159,66 @@ namespace CairoDesktop.WindowsTray
         {
             get;
             set;
+        }
+
+        private string Identifier
+        {
+            get
+            {
+                if (GUID != default) return GUID.ToString();
+                else return Path + ":" + UID.ToString();
+            }
+        }
+
+        public void Pin(int position)
+        {
+            bool updated = false;
+
+            if (IsPinned && position != PinOrder)
+            {
+                // already pinned, just moving
+                List<string> icons = Settings.Instance.PinnedNotifyIcons.ToList();
+                icons.Remove(Identifier);
+                icons.Insert(position, Identifier);
+                Settings.Instance.PinnedNotifyIcons = icons.ToArray();
+                updated = true;
+            }
+            else if (!IsPinned)
+            {
+                // newly pinned. welcome to the party!
+                List<string> icons = Settings.Instance.PinnedNotifyIcons.ToList();
+                icons.Insert(position, Identifier);
+                Settings.Instance.PinnedNotifyIcons = icons.ToArray();
+                updated = true;
+            }
+
+            if (updated)
+            {
+                // update all pinned icons
+                foreach (NotifyIcon notifyIcon in NotificationArea.Instance.TrayIcons)
+                {
+                    notifyIcon.SetPinValues();
+                }
+            }
+        }
+
+        public void Unpin()
+        {
+            if (IsPinned)
+            {
+                List<string> icons = Settings.Instance.PinnedNotifyIcons.ToList();
+                icons.Remove(Identifier);
+                Settings.Instance.PinnedNotifyIcons = icons.ToArray();
+
+                IsPinned = false;
+                PinOrder = 0;
+
+                // update all pinned icons
+                foreach (NotifyIcon notifyIcon in NotificationArea.Instance.TrayIcons)
+                {
+                    notifyIcon.SetPinValues();
+                }
+            }
         }
 
         public void SetPinValues()

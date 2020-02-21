@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Interop;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
@@ -41,6 +41,7 @@ namespace CairoDesktop
             loadDesktopBackgroundSettings();
             loadHotKeys();
             loadLoggingLevels();
+            loadNotficationSettings();
 
             checkUpdateConfig();
             checkTrayStatus();
@@ -241,6 +242,170 @@ namespace CairoDesktop
             }
         }
 
+        private void loadNotficationSettings()
+        {
+            if (Settings.Instance.EnableSysTray)
+            {
+                PinnedIcons.ItemsSource = NotificationArea.Instance.PinnedIcons;
+                UnpinnedIcons.ItemsSource = NotificationArea.Instance.UnpinnedIcons;
+            }
+            else
+            {
+                pnlTraySettings.Visibility = Visibility.Collapsed;
+            }
+        }
+
+
+
+        #region Notification area icon drag and drop
+
+        private Point? startPoint = null;
+        private bool inDrag = false;
+
+        // receive drop functions
+        private void UnpinnedIcons_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(NotifyIcon)))
+            {
+                NotifyIcon dropData = e.Data.GetData(typeof(NotifyIcon)) as NotifyIcon;
+
+                if (dropData.IsPinned) e.Effects = DragDropEffects.Move;
+                else e.Effects = DragDropEffects.None;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+
+            e.Handled = true;
+        }
+
+        private void PinnedIcons_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(NotifyIcon)))
+            {
+                e.Effects = DragDropEffects.Move;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+
+            e.Handled = true;
+        }
+
+        private void UnpinnedIcons_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(NotifyIcon)))
+            {
+                NotifyIcon dropData = e.Data.GetData(typeof(NotifyIcon)) as NotifyIcon;
+
+                if (dropData.IsPinned) dropData.Unpin();
+            }
+
+            e.Handled = true;
+        }
+
+        private void PinnedIcons_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(NotifyIcon)))
+            {
+                NotifyIcon dropData = e.Data.GetData(typeof(NotifyIcon)) as NotifyIcon;
+
+                dropData.Pin(Settings.Instance.PinnedNotifyIcons.Length);
+            }
+
+            e.Handled = true;
+        }
+
+        private void icon_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(typeof(NotifyIcon)))
+            {
+                Border border = sender as Border;
+                NotifyIcon existingNotifyIcon = border.DataContext as NotifyIcon;
+                NotifyIcon dropData = e.Data.GetData(typeof(NotifyIcon)) as NotifyIcon;
+
+                // allow move if we are dragging into pinned items, out of pinned items, or we are rearranging inside pinned items
+                if (dropData.IsPinned || existingNotifyIcon.IsPinned) e.Effects = DragDropEffects.Move;
+                else e.Effects = DragDropEffects.None;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+
+            e.Handled = true;
+        }
+
+        private void icon_Drop(object sender, DragEventArgs e)
+        {
+            Border border = sender as Border;
+            NotifyIcon existingNotifyIcon = border.DataContext as NotifyIcon;
+
+            if (e.Data.GetDataPresent(typeof(NotifyIcon)))
+            {
+                NotifyIcon dropData = e.Data.GetData(typeof(NotifyIcon)) as NotifyIcon;
+
+                if (existingNotifyIcon.IsPinned)
+                {
+                    // pinned area; allow sorting
+                    dropData.Pin(existingNotifyIcon.PinOrder);
+                }
+                else
+                {
+                    // non-pinned icons area
+                    dropData.Unpin();
+                }
+            }
+
+            e.Handled = true;
+        }
+
+        // send drag functions
+        private void icon_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Store the mouse position
+            startPoint = e.GetPosition(this);
+        }
+
+        private void icon_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (!inDrag && startPoint != null)
+            {
+                inDrag = true;
+
+                Point mousePos = e.GetPosition(this);
+                Vector diff = (Point)startPoint - mousePos;
+
+                if (mousePos.Y <= ActualHeight && ((Point)startPoint).Y <= ActualHeight && e.LeftButton == MouseButtonState.Pressed && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
+                {
+                    Border border = sender as Border;
+                    NotifyIcon notifyIcon = border.DataContext as NotifyIcon;
+
+                    try
+                    {
+                        DragDrop.DoDragDrop(border, notifyIcon, DragDropEffects.Move);
+                    }
+                    catch { }
+
+                    // reset the stored mouse position
+                    startPoint = null;
+                }
+                else if (e.LeftButton != MouseButtonState.Pressed)
+                {
+                    // reset the stored mouse position
+                    startPoint = null;
+                }
+
+                inDrag = false;
+            }
+
+            e.Handled = true;
+        }
+
+        #endregion
+
         #region Startup checks
         private void checkUpdateConfig()
         {
@@ -347,7 +512,7 @@ namespace CairoDesktop
 
         private void btnDesktopHomeSelect_Click(object sender, RoutedEventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.Description = Localization.DisplayString.sDesktop_BrowseTitle;
             fbd.ShowNewFolderButton = false;
             fbd.SelectedPath = Settings.Instance.DesktopDirectory;

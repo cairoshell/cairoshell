@@ -217,6 +217,58 @@
             <Setter Property="Height"
                     Value="23" />
         </Style>
+        <Style TargetType="ItemsControl">
+            <Setter Property="Width"
+                    Value="160" />
+            <Setter Property="AllowDrop"
+                    Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <Border BorderThickness="1"
+                                Background="Transparent">
+                            <Border.BorderBrush>
+                                <VisualBrush>
+                                    <VisualBrush.Visual>
+                                        <Rectangle StrokeDashArray="4 2"
+                                                   Stroke="#55ffffff"
+                                                   StrokeThickness="1"
+                                                   Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
+                                                   Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
+                                    </VisualBrush.Visual>
+                                </VisualBrush>
+                            </Border.BorderBrush>
+                            <ItemsPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <WrapPanel MinHeight="26" />
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Border Background="Transparent"
+                                ToolTip="{Binding Path=Title}"
+                                ToolTipService.Placement="Bottom"
+                                DragOver="icon_DragOver"
+                                Drop="icon_Drop"
+                                PreviewMouseLeftButtonDown="icon_PreviewMouseLeftButtonDown"
+                                PreviewMouseMove="icon_PreviewMouseMove">
+                            <Image Source="{Binding Path=Icon, Mode=OneWay}"
+                                   Width="16"
+                                   Height="16"
+                                   Margin="5" />
+                        </Border>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid Background="#ff2e3034">
         <TabControl TabStripPlacement="Left"
@@ -369,25 +421,42 @@
                                Width="300"
                                TextWrapping="Wrap"
                                Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationAreaError)}" />
-                    <StackPanel Orientation="Horizontal"
-                                Style="{StaticResource RadioGroup}"
+                    <StackPanel Orientation="Vertical"
                                 Name="pnlTraySettings">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIcons)}"
-                                   MinWidth="165"
-                                   VerticalAlignment="Top"
-                                   Margin="5,3,5,4" />
-                        <StackPanel Orientation="Vertical">
-                            <RadioButton GroupName="rdoTrayMode"
-                                         Name="radTrayMode0"
-                                         Click="radTrayMode0_Click">
-                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIconsCollapsed)}" />
-                            </RadioButton>
-                            <RadioButton GroupName="rdoTrayMode"
-                                         Name="radTrayMode1"
-                                         Click="radTrayMode1_Click">
-                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIconsAlways)}" />
-                            </RadioButton>
+                        <StackPanel Orientation="Horizontal"
+                                    Style="{StaticResource RadioGroup}">
+                            <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIcons)}"
+                                       MinWidth="165"
+                                       VerticalAlignment="Top"
+                                       Margin="5,3,5,4" />
+                            <StackPanel Orientation="Vertical">
+                                <RadioButton GroupName="rdoTrayMode"
+                                             Name="radTrayMode0"
+                                             Click="radTrayMode0_Click">
+                                    <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIconsCollapsed)}" />
+                                </RadioButton>
+                                <RadioButton GroupName="rdoTrayMode"
+                                             Name="radTrayMode1"
+                                             Click="radTrayMode1_Click">
+                                    <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowNotifyIconsAlways)}" />
+                                </RadioButton>
+                            </StackPanel>
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_CollapsibleIcons)}" />
+                                <ItemsControl x:Name="UnpinnedIcons" DragOver="UnpinnedIcons_DragOver" Drop="UnpinnedIcons_Drop" />
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="16,0,0,0">
+                                <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_PinnedIcons)}" />
+                                <ItemsControl x:Name="PinnedIcons" DragOver="PinnedIcons_DragOver" Drop="PinnedIcons_Drop" />
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Width="300"
+                                   Foreground="#55ffffff"
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Center"
+                                   Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationAreaPinHelp)}" />
                     </StackPanel>
                 </StackPanel>
             </TabItem>
