@@ -15,6 +15,7 @@ namespace CairoDesktop
     {
         // AppGrabber instance
         private AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
+        bool hasLoaded;
 
         public ProgramsMenu()
         {
@@ -23,12 +24,17 @@ namespace CairoDesktop
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            // Set Programs Menu to use appGrabber's ProgramList as its source
-            categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
+            if (!hasLoaded)
+            {
+                // Set Programs Menu to use appGrabber's ProgramList as its source
+                categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
 
-            // set tab based on user preference
-            int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.Instance.DefaultProgramsCategory));
-            categorizedProgramsList.SelectedIndex = i;
+                // set tab based on user preference
+                int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.Instance.DefaultProgramsCategory));
+                categorizedProgramsList.SelectedIndex = i;
+
+                hasLoaded = true;
+            }
         }
 
         #region Sidebar items
