@@ -179,7 +179,7 @@ namespace CairoDesktop.Localization
             { "sSettings_MenuBar_ShowNotifyIcons", "Show notification area icons:" },
             { "sSettings_MenuBar_ShowNotifyIconsCollapsed", "Collapsed" },
             { "sSettings_MenuBar_ShowNotifyIconsAlways", "Always" },
-            { "sSettings_MenuBar_CollapsibleIcons", "Collapsable icons:" },
+            { "sSettings_MenuBar_CollapsibleIcons", "Collapsible icons:" },
             { "sSettings_MenuBar_PinnedIcons", "Pinned icons:" },
             { "sSettings_MenuBar_NotificationAreaPinHelp", "To pin a notification area icon, drag it to the pinned icons area. To unpin an icon, drag it to the collapsible icons area." },
             { "sSettings_MenuBar_EnableCairoMenuHotKey", "Enable Cairo menu hotkey:" },

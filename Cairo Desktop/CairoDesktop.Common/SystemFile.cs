@@ -7,11 +7,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Threading;
+using System.Windows;
 
 namespace CairoDesktop.Common
 {
     public class SystemFile : INotifyPropertyChanged
     {
+        private const int MAX_IMAGE_RELOAD_ATTEMPTS = 2;
+
         private static readonly string[] ImageFileTypes = new string[] { ".jpg", ".jpeg", ".jfif", ".gif", ".bmp", ".png" };
         private ImageSource _icon;
         private ImageSource _largeIcon;
@@ -22,6 +25,7 @@ namespace CairoDesktop.Common
         private List<string> _verbs;
         private bool _iconLoading = false;
         private bool _iconLargeLoading = false;
+        private int _imageReloadAttempts;
 
         /// <summary>
         /// Gets whether or not the file is a directory.
@@ -294,7 +298,7 @@ namespace CairoDesktop.Common
                     string ext = Path.GetExtension(FullName);
                     foreach (string fileType in ImageFileTypes)
                     {
-                        if (ext.Equals(fileType, StringComparison.OrdinalIgnoreCase) && GetFileSize(FullName) >= 1)
+                        if (ext.Equals(fileType, StringComparison.OrdinalIgnoreCase))
                         {
                             return true;
                         }
@@ -361,12 +365,27 @@ namespace CairoDesktop.Common
                     }
                     catch
                     {
-                        return IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
+                        if (_imageReloadAttempts < MAX_IMAGE_RELOAD_ATTEMPTS)
+                        {
+                            // retry soon because this file might still be writing to disk
+                            DispatcherTimer iconcheck = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
+                            iconcheck.Interval = new TimeSpan(0, 0, 1);
+                            iconcheck.Tick += iconcheck_Tick;
+                            iconcheck.Start();
+
+                            // show the placeholder icon so we don't show multiple icon changes. we'll show the default file icon if we run out of attempts.
+                            return IconImageConverter.GetDefaultIcon();
+                        }
+                        else
+                        {
+                            // get the default icon for the file
+                            return IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
+                        }
                     }
                 }
                 else
                 {
-                    // This will attempts to get the icon via AppGrabber - if it fails the default icon will be returned.
+                    // This will attempt to get the icon - if it fails the default icon will be returned.
                     return IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
                 }
             }
@@ -374,6 +393,15 @@ namespace CairoDesktop.Common
             {
                 return IconImageConverter.GetDefaultIcon();
             }
+        }
+
+        private void iconcheck_Tick(object sender, EventArgs e)
+        {
+            // set icons to null to trigger re-fetch of icon
+            _imageReloadAttempts++;
+            Icon = null;
+            LargeIcon = null;
+            (sender as DispatcherTimer).Stop();
         }
 
         #region INotifyPropertyChanged Members

@@ -233,8 +233,8 @@
                                         <Rectangle StrokeDashArray="4 2"
                                                    Stroke="#55ffffff"
                                                    StrokeThickness="1"
-                                                   Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
-                                                   Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
+                                                   Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualWidth}"
+                                                   Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ActualHeight}"/>
                                     </VisualBrush.Visual>
                                 </VisualBrush>
                             </Border.BorderBrush>
