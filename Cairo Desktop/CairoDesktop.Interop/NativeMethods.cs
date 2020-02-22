@@ -3017,6 +3017,9 @@ namespace CairoDesktop.Interop
         public static extern bool SetTaskmanWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
+        public static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
         public static extern bool DeregisterShellHookWindow(IntPtr hWnd);
 
         public static int WINEVENT_OUTOFCONTEXT = 0;
@@ -3065,6 +3068,9 @@ namespace CairoDesktop.Interop
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        [DllImport("kernel32.dll")]
+        public static extern uint GetCurrentProcessId();
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern IntPtr OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, int processId);
@@ -4142,6 +4148,58 @@ namespace CairoDesktop.Interop
             ref Guid riid,
             out IImageList ppv
             );
+
+        /*
+         * These interfaces can be used to display a shell desktop with the correct zordering, kept for future reference
+        [ComImport()]
+        [Guid("213E2DF9-9A14-4328-99B1-6961F9143CE9")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        public interface IDeskTray
+        {
+            [PreserveSig]
+            uint AppBarGetState();
+
+            [PreserveSig]
+            IntPtr GetTrayWindow(ref IntPtr hwnd);
+
+            [PreserveSig]
+            IntPtr SetDesktopWindow(IntPtr hwnd);
+
+            [PreserveSig]
+            IntPtr SetVar(int i, ulong l);
+        }
+
+        public class ShellDesktopTray : IDeskTray {
+            public uint AppBarGetState()
+            {
+                return 0;
+            }
+
+            public IntPtr GetTrayWindow(ref IntPtr hwnd)
+            {
+                return IntPtr.Zero;
+            }
+
+            public IntPtr SetDesktopWindow(IntPtr hwnd)
+            {
+                return IntPtr.Zero;
+            }
+
+            public IntPtr SetVar(int i, ulong l)
+            {
+                return IntPtr.Zero;
+            }
+        }
+
+        [DllImport("shell32.dll", EntryPoint = "#200")]
+        public extern static IntPtr SHCreateDesktop(IDeskTray iTray);
+
+        [DllImport("shell32.dll", EntryPoint = "#201")]
+        public extern static IntPtr SHDesktopMessageLoop(IntPtr hDesktop);
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DestroyWindow(IntPtr hwnd);*/
 
         [DllImport("user32.dll")]
         public static extern IntPtr DefWindowProc(IntPtr hWnd, int uMsg, IntPtr wParam, IntPtr lParam);
