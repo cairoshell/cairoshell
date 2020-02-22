@@ -341,57 +341,69 @@ namespace CairoDesktop.Common
         /// </summary>
         private ImageSource GetDisplayIcon(int size)
         {
-            if (Interop.Shell.Exists(this.FullName))
+            if (Interop.Shell.Exists(FullName))
             {
                 if (IsImage)
                 {
                     try
                     {
-                        BitmapImage img = new BitmapImage();
-                        img.BeginInit();
-                        img.UriSource = new Uri(this.FullName);
-                        img.CacheOption = BitmapCacheOption.OnLoad;
-                        int dSize = 32;
-
-                        if (size == 2)
-                            dSize = 48;
-
-                        Interop.Shell.TransformToPixels(dSize, dSize, out dSize, out dSize);
-                        img.DecodePixelWidth = dSize;
-                        img.EndInit();
-                        img.Freeze();
-
-                        return img;
-                    }
-                    catch
-                    {
-                        if (_imageReloadAttempts < MAX_IMAGE_RELOAD_ATTEMPTS)
+                        if (GetFileSize(FullName) > 0)
                         {
-                            // retry soon because this file might still be writing to disk
-                            DispatcherTimer iconcheck = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
-                            iconcheck.Interval = new TimeSpan(0, 0, 1);
-                            iconcheck.Tick += iconcheck_Tick;
-                            iconcheck.Start();
+                            BitmapImage img = new BitmapImage();
+                            img.BeginInit();
+                            img.CacheOption = BitmapCacheOption.OnLoad;
+                            img.UriSource = new Uri(FullName);
+                            int dSize = 32;
 
-                            // show the placeholder icon so we don't show multiple icon changes. we'll show the default file icon if we run out of attempts.
-                            return IconImageConverter.GetDefaultIcon();
+                            if (size == 2)
+                                dSize = 48;
+
+                            Interop.Shell.TransformToPixels(dSize, dSize, out dSize, out dSize);
+                            img.DecodePixelWidth = dSize;
+                            img.EndInit();
+                            img.Freeze();
+
+                            return img;
                         }
                         else
                         {
-                            // get the default icon for the file
-                            return IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
+                            return handleThumbnailError(size);
                         }
+                    }
+                    catch
+                    {
+                        return handleThumbnailError(size);
                     }
                 }
                 else
                 {
                     // This will attempt to get the icon - if it fails the default icon will be returned.
-                    return IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
+                    return IconImageConverter.GetImageFromAssociatedIcon(FullName, size);
                 }
             }
             else
             {
                 return IconImageConverter.GetDefaultIcon();
+            }
+        }
+
+        private ImageSource handleThumbnailError(int size)
+        {
+            if (_imageReloadAttempts < MAX_IMAGE_RELOAD_ATTEMPTS)
+            {
+                // retry soon because this file might still be writing to disk
+                DispatcherTimer iconcheck = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
+                iconcheck.Interval = new TimeSpan(0, 0, 1);
+                iconcheck.Tick += iconcheck_Tick;
+                iconcheck.Start();
+
+                // show the placeholder icon so we don't show multiple icon changes. we'll show the default file icon if we run out of attempts.
+                return IconImageConverter.GetDefaultIcon();
+            }
+            else
+            {
+                // get the default icon for the file
+                return IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
             }
         }
 
