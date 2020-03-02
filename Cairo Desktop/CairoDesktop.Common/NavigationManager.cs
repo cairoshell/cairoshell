@@ -170,10 +170,18 @@ namespace CairoDesktop.Common
 
         public void NavigateHome()
         {
+            string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string desktopPath = Settings.Instance.DesktopDirectory;
 
+            // first run won't have desktop directory set
+            if (string.IsNullOrWhiteSpace(desktopPath))
+            {
+                Settings.Instance.DesktopDirectory = defaultDesktopPath;
+                desktopPath = defaultDesktopPath;
+            }
+
             if (!Directory.Exists(desktopPath))
-                desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                desktopPath = defaultDesktopPath;
 
             NavigateTo(desktopPath);
         }

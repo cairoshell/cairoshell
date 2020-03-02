@@ -24,7 +24,7 @@ namespace CairoDesktop
         private System.Windows.Controls.ContextMenu homeContextMenu;
         private LowLevelKeyboardListener lowLevelKeyboardListener;
 
-        private DependencyProperty navigationManagerProperty = DependencyProperty.Register("NavigationManager", typeof(NavigationManager), typeof(DesktopNavigationToolbar), new PropertyMetadata(new NavigationManager()));
+        private DependencyProperty navigationManagerProperty = DependencyProperty.Register("NavigationManager", typeof(NavigationManager), typeof(DesktopNavigationToolbar));
         private DependencyProperty isShiftKeyHeldProperty = DependencyProperty.Register("isShiftKeyHeld", typeof(bool), typeof(DesktopNavigationToolbar), new PropertyMetadata(new bool()));
 
         public Desktop ToolbarOwner

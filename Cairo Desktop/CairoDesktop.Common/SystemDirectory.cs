@@ -230,6 +230,7 @@ namespace CairoDesktop.Common {
             fileWatcher.Created -= createdHandler;
             fileWatcher.Deleted -= deletedHandler;
             fileWatcher.Renamed -= renamedHandler;
+            fileWatcher.Dispose();
         }
 
         public override bool Equals(object other) {

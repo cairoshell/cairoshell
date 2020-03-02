@@ -77,9 +77,25 @@ namespace CairoDesktop
 
         private void SetupPostInit()
         {
-            Shell.HideWindowFromTasks(helper.Handle);
+            if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop && Icons == null)
+            {
+                grid.Children.Add(Icons = new DesktopIcons());
 
-            int result = NativeMethods.SetShellWindow(helper.Handle);
+                NavigationManager.NavigateHome();
+
+                if (Settings.Instance.EnableDynamicDesktop)
+                {
+                    TryAndEat(() =>
+                    {
+                        DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this, NavigationManager = NavigationManager };
+                        nav.Show();
+                    });
+                }
+            }
+
+            Shell.HideWindowFromTasks(Handle);
+
+            int result = NativeMethods.SetShellWindow(Handle);
             SendToBottom();
 
             if (Settings.Instance.EnableDesktopOverlayHotKey)
@@ -143,6 +159,12 @@ namespace CairoDesktop
 
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
+            else if (msg == (int)NativeMethods.WM.SETTINGCHANGE &&
+                    wParam.ToInt32() == (int)NativeMethods.SPI.SETWORKAREA)
+            {
+                ResetPosition();
+                handled = true;
+            }
 
             return IntPtr.Zero;
         }
@@ -175,39 +197,9 @@ namespace CairoDesktop
 
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
-            Top = 0;
             helper = new WindowInteropHelper(this);
             Handle = helper.Handle;
-            HwndSource.FromHwnd(helper.Handle).AddHook(new HwndSourceHook(WndProc));
-
-            if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop && Icons == null)
-            {
-                grid.Children.Add(Icons = new DesktopIcons());
-
-                string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                string userDesktopPath = Settings.Instance.DesktopDirectory;
-
-                // first run won't have desktop directory set
-                if (string.IsNullOrWhiteSpace(userDesktopPath))
-                {
-                    Settings.Instance.DesktopDirectory = defaultDesktopPath;
-                    userDesktopPath = defaultDesktopPath;
-                }
-
-                if (Directory.Exists(userDesktopPath))
-                    NavigationManager.NavigateTo(userDesktopPath);
-                else if (Directory.Exists(defaultDesktopPath))
-                    NavigationManager.NavigateTo(defaultDesktopPath);
-
-                if (Settings.Instance.EnableDynamicDesktop)
-                {
-                    TryAndEat(() =>
-                    {
-                        DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this, NavigationManager = NavigationManager };
-                        nav.Show();
-                    });
-                }
-            }
+            HwndSource.FromHwnd(Handle).AddHook(new HwndSourceHook(WndProc));
 
             SetupPostInit();
         }
@@ -314,6 +306,12 @@ namespace CairoDesktop
             {
                 if (Icons.Location == null || Icons.Location.FullName != NavigationManager.CurrentPath)
                 {
+                    if (Icons.Location != null)
+                    {
+                        // dispose of current directory so that we don't keep a lock on it
+                        Icons.Location.Dispose();
+                    }
+
                     Icons.Location = new SystemDirectory(NavigationManager.CurrentPath, Dispatcher.CurrentDispatcher);
                 }
             }
@@ -325,11 +323,11 @@ namespace CairoDesktop
         {
             if (!Startup.IsCairoRunningAsShell)
             {
-                Shell.ShowWindowDesktop(helper.Handle);
+                Shell.ShowWindowDesktop(Handle);
             }
             else
             {
-                Shell.ShowWindowBottomMost(helper.Handle);
+                Shell.ShowWindowBottomMost(Handle);
             }
         }
 
@@ -631,7 +629,7 @@ namespace CairoDesktop
         private void ShowOverlay()
         {
             Topmost = true;
-            NativeMethods.SetForegroundWindow(helper.Handle);
+            NativeMethods.SetForegroundWindow(Handle);
             grid.Background = new SolidColorBrush(Color.FromArgb(0x88, 0, 0, 0));
             Background = null;
         }

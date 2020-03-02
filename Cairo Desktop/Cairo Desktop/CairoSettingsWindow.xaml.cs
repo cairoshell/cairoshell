@@ -865,7 +865,7 @@ namespace CairoDesktop
 
         private void btnCairoBackgroundFileBrowse_Click(object sender, RoutedEventArgs e)
         {
-            using (System.Windows.Forms.OpenFileDialog dlg = new System.Windows.Forms.OpenFileDialog
+            using (OpenFileDialog dlg = new OpenFileDialog
             {
                 Filter = GetImageFilter()
             })
@@ -881,7 +881,7 @@ namespace CairoDesktop
         {
             using (OpenFileDialog dlg = new OpenFileDialog
             {
-                Filter = GetImageFilter()
+                Filter = GetVideoFilter()
             })
             {
                 if (dlg.SafeShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -893,7 +893,7 @@ namespace CairoDesktop
                         FileInfo fileInfo = new FileInfo(dlg.FileName);
                         string extractPath = fileInfo.FullName.Remove((fileInfo.FullName.Length - fileInfo.Extension.Length), fileInfo.Extension.Length);
 
-                        if (Directory.Exists(extractPath) && System.Windows.MessageBox.Show("Path alreadt exists, overwrite?", "DreamScene", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                        if (Directory.Exists(extractPath) && MessageBox.Show("Path already exists, overwrite?", "DreamScene", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
                         {
                             Directory.Delete(extractPath, true);
                         }
