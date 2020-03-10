@@ -360,15 +360,7 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
-                if ((Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon) && !Startup.IsSettingScreens)
-                {
-                    Startup.ScreenSetup(); // update Cairo window list based on new screen setup
-                }
-                else if (!(Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon))
-                {
-                    Startup.ResetScreenCache();
-                    Screen = System.Windows.Forms.Screen.PrimaryScreen;
-                }
+                setScreenProperties();
 
                 if (Screen.Primary)
                 {
@@ -381,25 +373,14 @@ namespace CairoDesktop
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
-                if ((Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
-                {
-                    Startup.ScreenSetup(); // update Cairo window list based on new screen setup
-                }
-                else if (!(Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon))
-                {
-                    Startup.ResetScreenCache();
-                    Screen = System.Windows.Forms.Screen.PrimaryScreen;
-                }
+                setScreenProperties();
 
                 setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;
             }
             else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
             {
-                if ((Settings.Instance.EnableMenuBarMultiMon || Configuration.Settings.Instance.EnableTaskbarMultiMon) && !Startup.IsSettingScreens && Screen.Primary)
-                {
-                    Startup.ScreenSetup(); // update Cairo window list based on new screen setup
-                }
+                setScreenProperties();
             }
 
             return IntPtr.Zero;
@@ -426,6 +407,21 @@ namespace CairoDesktop
             else if (!found && !Topmost)
             {
                 setFullScreenMode(false);
+            }
+        }
+
+        private void setScreenProperties()
+        {
+            if (!Startup.IsSettingScreens && Screen.Primary)
+            {
+                Startup.ScreenSetup(); // update Cairo window list based on new screen setup
+            }
+
+            if (!(Settings.Instance.EnableMenuBarMultiMon || Settings.Instance.EnableTaskbarMultiMon))
+            {
+                // Update our screen here since if multi-mon features are disabled it doesn't happen in screensetup
+                // Should this really be handled here or shold screensetup just use primaryscreen in this situation?
+                Screen = System.Windows.Forms.Screen.PrimaryScreen;
             }
         }
 

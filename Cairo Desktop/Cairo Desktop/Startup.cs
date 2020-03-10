@@ -163,11 +163,8 @@
                 TaskbarWindows.Add(TaskbarWindow);
             }
 
-            // Future: This should be moved to whatever plugin is responsible for Taskbar/MennuBart stuff
-            if (Settings.Instance.EnableMenuBarMultiMon || Settings.Instance.EnableTaskbarMultiMon)
-                ScreenSetup(true);
-            else if (IsCairoRunningAsShell) // Set desktop work area for when Explorer isn't running
-                AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
+            // Future: This should be moved to whatever plugin is responsible for Taskbar/MenuBar stuff
+            ScreenSetup(true);
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
             // Don't allow showing both the Windows taskbar and the Cairo tray
@@ -499,13 +496,24 @@
                 else
                     screenState = System.Windows.Forms.Screen.AllScreens;
 
+                if (!Settings.Instance.EnableMenuBarMultiMon && !Settings.Instance.EnableTaskbarMultiMon)
+                {
+                    // skip screen setup since no multi-mon features enabled
+                    CairoLogger.Instance.Debug("Skipping screen setup due to no multi-mon features enabled");
+                    shouldSetScreens = false;
+
+                    // also set work area for when Explorer isn't running, since screen setup code isn't running
+                    if (IsCairoRunningAsShell)
+                        AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
+                }
+
                 if (shouldSetScreens)
                 {
                     if (!skipChecks)
                     {
                         // enumerate screens
 
-                        if (Settings.Instance.EnableMenuBarMultiMon || !Configuration.Settings.Instance.EnableTaskbar)
+                        if (Settings.Instance.EnableMenuBarMultiMon || !Settings.Instance.EnableTaskbar)
                         {
                             foreach (MenuBar bar in MenuBarWindows)
                             {
