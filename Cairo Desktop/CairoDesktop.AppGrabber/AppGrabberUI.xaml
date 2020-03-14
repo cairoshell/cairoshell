@@ -125,6 +125,7 @@
                 Grid.RowSpan="2">
                     <TextBlock Style="{StaticResource AppGrabberHeading}" Text="{Binding sAppGrabber_Page2Title}" />
                     <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page2Line1}" />
+                    <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page2Line2}" />
                     <TextBlock Style="{StaticResource AppGrabberSubHeading}" Text="{Binding sAppGrabber_Page2Directions}" />
                     <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page2Directions1}" />
                     <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page2Directions2}" />

@@ -51,6 +51,7 @@ namespace CairoDesktop.Localization
             { "sAppGrabber_InstalledApplications", "Installed Applications" },
             { "sAppGrabber_Page2Title", "Categories" },
             { "sAppGrabber_Page2Line1", "Categories allow you to group applications by type so they are easier to find. Once you finish, you can add, remove, or edit categories and applications through the Programs menu itself. For convenience, you may also run the App Grabber from the Cairo menu." },
+            { "sAppGrabber_Page2Line2", "Tip: Taskbar buttons will also be grouped by the categories you set here." },
             { "sAppGrabber_Page2Directions", "Directions:" },
             { "sAppGrabber_Page2Directions1", "Drag and drop applications into the categories you desire." },
             { "sAppGrabber_Page2Directions2", "Click the plus button to add a new category." },

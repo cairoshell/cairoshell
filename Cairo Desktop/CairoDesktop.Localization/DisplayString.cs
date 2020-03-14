@@ -443,6 +443,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sAppGrabber_Page2Line2
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
         public static string sAppGrabber_Page2Directions
         {
             get
