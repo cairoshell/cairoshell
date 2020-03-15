@@ -180,6 +180,10 @@ namespace CairoDesktop.SupportingClasses
                     wndPos.UpdateMessage(lParam);
                 }
             }
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED)
+            {
+                AppBarHelper.AppBarWindowPosChanged(hwnd);
+            }
             else if (msg == NativeMethods.WM_DPICHANGED)
             {
                 if (Screen.Primary)
@@ -214,27 +218,6 @@ namespace CairoDesktop.SupportingClasses
         #endregion
 
         #region Helpers
-        internal void afterAppBarPos(bool isSameCoords)
-        {
-            // apparently the taskbars like to pop up when app bars change
-            if (Settings.Instance.EnableTaskbar)
-            {
-                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
-            }
-
-            if (!isSameCoords)
-            {
-                foreach (MenuBarShadow barShadow in Startup.MenuBarShadowWindows)
-                {
-                    if (barShadow.MenuBar != null && barShadow.MenuBar.Handle == Handle)
-                        barShadow.SetPosition();
-                }
-
-                if (Startup.DesktopWindow != null)
-                    Startup.DesktopWindow.ResetPosition();
-            }
-        }
-
         private void delaySetPosition()
         {
             // delay changing things when we are shell. it seems that AppBars do this automagically
@@ -284,7 +267,22 @@ namespace CairoDesktop.SupportingClasses
         }
         #endregion
 
-        #region Abstracts
+        #region Virtual methods
+        internal virtual void afterAppBarPos(bool isSameCoords)
+        {
+            // apparently the taskbars like to pop up when app bars change
+            if (Settings.Instance.EnableTaskbar)
+            {
+                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
+            }
+
+            if (!isSameCoords)
+            {
+                if (Screen.Primary && Startup.DesktopWindow != null)
+                    Startup.DesktopWindow.ResetPosition();
+            }
+        }
+
         protected virtual void postInit() { }
 
         protected virtual void customClosing() { }

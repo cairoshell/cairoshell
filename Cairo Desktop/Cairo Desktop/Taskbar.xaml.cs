@@ -122,7 +122,7 @@ namespace CairoDesktop
             {
                 appBarEdge = AppBarHelper.ABEdge.ABE_BOTTOM;
                 bdrTaskListPopup.Margin = new Thickness(5, 0, 5, Height - 1);
-                setTopPosition(Screen.Bounds.Bottom / dpiScale);
+                Top = getDesiredTopPosition(Screen.Bounds.Bottom / dpiScale);
             }
 
             // show task view on windows >= 10, adjust margin if not shown
@@ -186,7 +186,7 @@ namespace CairoDesktop
 
             Height = desiredHeight;
 
-            setTopPosition(Screen.Bounds.Bottom / dpiScale);
+            Top = getDesiredTopPosition(Screen.Bounds.Bottom / dpiScale);
 
             Left = Screen.Bounds.Left / dpiScale;
 
@@ -199,17 +199,17 @@ namespace CairoDesktop
             Width = screenWidth;
         }
 
-        private void setTopPosition(double top)
+        private double getDesiredTopPosition(double top)
         {
             if (Settings.Instance.TaskbarPosition == 1)
             {
                 // set to bottom of menu bar
-                Top = (Screen.Bounds.Y / dpiScale) + Startup.MenuBarWindow.Height;
+                return (Screen.Bounds.Y / dpiScale) + Startup.MenuBarWindow.Height;
             }
             else
             {
                 // set to bottom of workspace
-                Top = top - Height;
+                return top - Height;
             }
         }
 
@@ -217,6 +217,17 @@ namespace CairoDesktop
         {
             // because we are setting WS_EX_NOACTIVATE, popups won't go away when clicked outside, since they are not losing focus (they never got it). calling this fixes that.
             NativeMethods.SetForegroundWindow(Handle);
+        }
+
+        private void TaskbarWindow_LocationChanged(object sender, EventArgs e)
+        {
+            // primarily for win7/8, they will set up the appbar correctly but then put it in the wrong place
+            double desiredTop = getDesiredTopPosition(Screen.Bounds.Bottom / dpiScale);
+
+            if (Top != desiredTop)
+            {
+                Top = desiredTop;
+            }
         }
         #endregion
 

@@ -258,6 +258,20 @@ namespace CairoDesktop
 
         #region Events
 
+        internal override void afterAppBarPos(bool isSameCoords)
+        {
+            base.afterAppBarPos(isSameCoords);
+
+            if (!isSameCoords)
+            {
+                foreach (MenuBarShadow barShadow in Startup.MenuBarShadowWindows)
+                {
+                    if (barShadow.MenuBar != null && barShadow.MenuBar.Handle == Handle)
+                        barShadow.SetPosition();
+                }
+            }
+        }
+
         internal override void setPosition()
         {
             Top = Screen.Bounds.Y / dpiScale;

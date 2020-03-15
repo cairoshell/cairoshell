@@ -13,6 +13,7 @@
     AllowDrop="True"
     Visibility="Visible"
     Loaded="TaskbarWindow_Loaded"
+    LocationChanged="TaskbarWindow_LocationChanged"
     Background="Transparent"
     HorizontalAlignment="Center">
     <Border Name="bdrBackground">
