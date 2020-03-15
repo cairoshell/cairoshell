@@ -9,11 +9,13 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace CairoDesktop
 {
     public partial class MenuBar : AppBarWindow
     {
+        private MenuBarShadow shadow = null;
         private static bool isCairoMenuHotkeyRegistered = false;
         private static bool isProgramsMenuHotkeyRegistered = false;
 
@@ -171,6 +173,15 @@ namespace CairoDesktop
             }
         }
 
+        private void setupShadow()
+        {
+            if (Settings.Instance.EnableMenuBarShadow && shadow == null)
+            {
+                shadow = new MenuBarShadow(this);
+                shadow.Show();
+            }
+        }
+
         protected override void postInit()
         {
             setupMenuExtras();
@@ -200,6 +211,8 @@ namespace CairoDesktop
             {
                 Shell.EnableWindowBlur(Handle);
             }
+
+            setupShadow();
         }
 
         private int canShutdown()
@@ -264,11 +277,7 @@ namespace CairoDesktop
 
             if (!isSameCoords)
             {
-                foreach (MenuBarShadow barShadow in Startup.MenuBarShadowWindows)
-                {
-                    if (barShadow.MenuBar != null && barShadow.MenuBar.Handle == Handle)
-                        barShadow.SetPosition();
-                }
+                setShadowPosition();
             }
         }
 
@@ -283,28 +292,36 @@ namespace CairoDesktop
 
         private void setShadowPosition()
         {
-            foreach (MenuBarShadow barShadow in Startup.MenuBarShadowWindows)
+            if (shadow != null)
             {
-                if (barShadow != null && barShadow.MenuBar == this)
+                shadow.SetPosition();
+                // running this on a short delay fixes changing dpi on multiple displays
+                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.1) };
+                timer.Start();
+                timer.Tick += (sender1, args) =>
                 {
-                    barShadow.SetPosition();
-                    break;
-                }
+                    shadow.SetPosition();
+                    timer.Stop();
+                };
             }
         }
 
-        private void OnWindowInitialized(object sender, EventArgs e)
+        private void closeShadow()
         {
-            Visibility = Visibility.Visible;
+            if (shadow != null && !shadow.IsClosing)
+            {
+                shadow.Close();
+                shadow = null;
+            }
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
         {
             double top = Screen.Bounds.Y / dpiScale;
 
-            if (this.Top != top)
+            if (Top != top)
             {
-                this.Top = top;
+                Top = top;
                 setShadowPosition();
             }
         }
@@ -314,6 +331,11 @@ namespace CairoDesktop
             if (Startup.IsShuttingDown && Screen.Primary)
             {
                 WinSparkle.win_sparkle_cleanup();
+            }
+            
+            if (Startup.IsSettingScreens || Startup.IsShuttingDown)
+            {
+                closeShadow();
             }
         }
 

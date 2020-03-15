@@ -12,7 +12,9 @@
     AllowDrop="False"
     Visibility="Visible"
     Focusable="False"
-    Topmost="False" Background="Transparent"
-    Loaded="MenuBarShadow_Loaded" Closing="Window_Closing">
+    Topmost="False"
+    Background="Transparent"
+    Loaded="MenuBarShadow_Loaded"
+    Closing="Window_Closing">
     <Image Source="{StaticResource MenubarShadow}" Stretch="Fill" />
 </Window>

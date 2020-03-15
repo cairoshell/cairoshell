@@ -220,7 +220,7 @@ namespace CairoDesktop.SupportingClasses
         #region Helpers
         private void delaySetPosition()
         {
-            // delay changing things when we are shell. it seems that AppBars do this automagically
+            // delay changing things when we are shell. it seems that explorer AppBars do this too.
             // if we don't, the system moves things to bad places
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             timer.Start();

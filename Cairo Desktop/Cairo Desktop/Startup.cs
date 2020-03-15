@@ -25,9 +25,6 @@
         public static MenuBar MenuBarWindow { get; set; }
         public static List<MenuBar> MenuBarWindows = new List<MenuBar>();
 
-        public static MenuBarShadow MenuBarShadowWindow { get; set; }
-        public static List<MenuBarShadow> MenuBarShadowWindows = new List<MenuBarShadow>();
-
         public static Taskbar TaskbarWindow { get; set; }
         public static List<Taskbar> TaskbarWindows = new List<Taskbar>();
 
@@ -45,6 +42,7 @@
         public static bool IsShuttingDown { get; set; }
 
         public static bool IsSettingScreens { get; set; }
+        private static bool hasCompletedInitialScreenSetup = false;
 
         public static System.Windows.Forms.Screen[] screenState = { };
         private static Object screenSetupLock = new Object();
@@ -145,14 +143,6 @@
             {
                 DesktopWindow = new Desktop();
                 DesktopWindow.Show();
-            }
-
-            // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-            if (Settings.Instance.EnableMenuBarShadow)
-            {
-                MenuBarShadowWindow = new MenuBarShadow(MenuBarWindow, System.Windows.Forms.Screen.PrimaryScreen);
-                MenuBarShadowWindow.Show();
-                MenuBarShadowWindows.Add(MenuBarShadowWindow);
             }
 
             // Future: This should be moved to whatever plugin is responsible for Taskbar stuff
@@ -463,6 +453,12 @@
         {
             lock (screenSetupLock)
             {
+                if (!skipChecks && !hasCompletedInitialScreenSetup)
+                {
+                    CairoLogger.Instance.Debug("Screen setup ran before startup completed, aborting");
+                    return;
+                }
+
                 CairoLogger.Instance.Debug("Beginning screen setup");
                 IsSettingScreens = true;
 
@@ -554,6 +550,7 @@
                         else
                         {
                             IsSettingScreens = false;
+                            hasCompletedInitialScreenSetup = true;
                             return;
                         }
 
@@ -582,6 +579,7 @@
                         {
                             // remove everything?! no way!
                             IsSettingScreens = false;
+                            hasCompletedInitialScreenSetup = true;
                             return;
                         }
 
@@ -626,24 +624,6 @@
                                     barToClose.Close();
                                 MenuBarWindows.Remove(barToClose);
                             }
-
-                            // close menu bar shadows
-                            MenuBarShadow barShadowToClose = null;
-                            foreach (MenuBarShadow bar in MenuBarShadowWindows)
-                            {
-                                if (bar.Screen != null && bar.Screen.DeviceName == name)
-                                {
-                                    barShadowToClose = bar;
-                                    break;
-                                }
-                            }
-
-                            if (barShadowToClose != null)
-                            {
-                                if (!barShadowToClose.IsClosing)
-                                    barShadowToClose.Close();
-                                MenuBarShadowWindows.Remove(barShadowToClose);
-                            }
                         }
 
                         CairoLogger.Instance.Debug("Refreshing screen information for stale windows");
@@ -659,21 +639,6 @@
                                     {
                                         bar.Screen = screen;
                                         bar.setScreenPosition();
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        foreach (MenuBarShadow bar in MenuBarShadowWindows)
-                        {
-                            if (bar.Screen != null)
-                            {
-                                foreach (System.Windows.Forms.Screen screen in screenState)
-                                {
-                                    if (screen.DeviceName == bar.Screen.DeviceName)
-                                    {
-                                        bar.Screen = screen;
                                         break;
                                     }
                                 }
@@ -712,14 +677,6 @@
                                 MenuBar newMenuBar = new MenuBar(screen);
                                 newMenuBar.Show();
                                 MenuBarWindows.Add(newMenuBar);
-
-                                if (Settings.Instance.EnableMenuBarShadow)
-                                {
-                                    // menu bar shadows
-                                    MenuBarShadow newMenuBarShadow = new MenuBarShadow(newMenuBar, screen);
-                                    newMenuBarShadow.Show();
-                                    MenuBarShadowWindows.Add(newMenuBarShadow);
-                                }
                             }
 
                             if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
@@ -738,6 +695,7 @@
                 }
 
                 IsSettingScreens = false;
+                hasCompletedInitialScreenSetup = true;
                 CairoLogger.Instance.Debug("Completed screen setup");
             }
         }
