@@ -186,7 +186,16 @@ namespace CairoDesktop.Interop
                 }
                 else
                 {
-                    Process.Start(filename);
+                    if (IsCairoConfiguredAsShell && filename.ToLower().EndsWith("explorer.exe"))
+                    {
+                        // if we are shell and launching explorer, give it a parameter so that it doesn't do shell things.
+                        // this opens My Computer
+                        Process.Start(filename, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
+                    }
+                    else
+                    {
+                        Process.Start(filename);
+                    }
                 }
 
                 return true;
