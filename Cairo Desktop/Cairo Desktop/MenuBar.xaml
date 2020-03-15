@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
+<supportingclasses:AppBarWindow
+        xmlns:supportingclasses="clr-namespace:CairoDesktop.SupportingClasses"
+        xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
         xmlns:control="clr-namespace:CairoDesktop"
         x:Class="CairoDesktop.MenuBar"
-        x:Name="Window"
-        Title=""
-        WindowStyle="None"
-        AllowsTransparency="True"
+        x:Name="MenuBarWindow"
         Height="23"
         Top="0"
         Style="{StaticResource MenuBarWindowStyle}"
         Left="0"
-        Topmost="True"
-        ResizeMode="NoResize"
-        ShowInTaskbar="False"
         Focusable="False"
         Initialized="OnWindowInitialized"
-        SourceInitialized="Window_SourceInitialized"
-        Closing="OnWindowClosing"
         LocationChanged="Window_LocationChanged"
-        UseLayoutRounding="True"
         MaxHeight="23">
     <Window.DataContext>
         <l10n:DisplayString />
@@ -139,4 +132,4 @@
         <!-- Last item added to DockPanel fills the remaining space! -->
         <control:StacksContainer x:Name="stacksContainer" />
     </DockPanel>
-</Window>
+</supportingclasses:AppBarWindow>

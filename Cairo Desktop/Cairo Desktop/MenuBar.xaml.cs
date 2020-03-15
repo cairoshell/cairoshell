@@ -5,28 +5,15 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 
 namespace CairoDesktop
 {
-    public partial class MenuBar : Window
+    public partial class MenuBar : AppBarWindow
     {
-        public System.Windows.Forms.Screen Screen;
-        private double dpiScale = 1.0;
-
-        // AppBar properties
-        private WindowInteropHelper helper;
-        public IntPtr handle;
-        private int appbarMessageId = -1;
-        private bool isRaising;
-
-        public bool IsClosing = false;
-
         private static bool isCairoMenuHotkeyRegistered = false;
         private static bool isProgramsMenuHotkeyRegistered = false;
 
@@ -48,6 +35,7 @@ namespace CairoDesktop
             InitializeComponent();
 
             Screen = screen;
+            desiredHeight = 23;
 
             setPosition();
 
@@ -132,7 +120,7 @@ namespace CairoDesktop
             if (Shell.IsWindows10OrBetter && !Startup.IsCairoRunningAsShell)
             {
                 // add action center
-                MenuExtrasHost.Children.Add(new MenuExtraActionCenter(helper.Handle));
+                MenuExtrasHost.Children.Add(new MenuExtraActionCenter(Handle));
             }
 
             // add date/time
@@ -183,23 +171,9 @@ namespace CairoDesktop
             }
         }
 
-        private void setupPostInit()
+        protected override void postInit()
         {
             setupMenuExtras();
-
-            // set initial DPI. We do it here so that we get the correct value when DPI has changed since initial user logon to the system.
-            if (Screen.Primary)
-            {
-                Shell.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
-            }
-
-            this.dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
-
-            setPosition();
-
-            appbarMessageId = AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, AppBarHelper.ABEdge.ABE_TOP);
-
-            Shell.HideWindowFromTasks(handle);
 
             if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary && !isCairoMenuHotkeyRegistered)
             {
@@ -221,12 +195,11 @@ namespace CairoDesktop
 
                 isProgramsMenuHotkeyRegistered = true;
             }
+
             if (Settings.Instance.EnableMenuBarBlur)
             {
-                Shell.EnableWindowBlur(handle);
+                Shell.EnableWindowBlur(Handle);
             }
-
-            FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
         }
 
         private int canShutdown()
@@ -244,7 +217,7 @@ namespace CairoDesktop
         {
             if (!ProgramsMenu.IsSubmenuOpen)
             {
-                NativeMethods.SetForegroundWindow(helper.Handle);
+                NativeMethods.SetForegroundWindow(Handle);
                 ProgramsMenu.IsSubmenuOpen = true;
             }
             else
@@ -284,187 +257,13 @@ namespace CairoDesktop
         #endregion
 
         #region Events
-        public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            if (msg == appbarMessageId && appbarMessageId != -1)
-            {
-                switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
-                {
-                    case NativeMethods.AppBarNotifications.PosChanged:
-                        // Reposition to the top of the screen.
-                        AppBarHelper.ABSetPos(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, AppBarHelper.ABEdge.ABE_TOP);
-                        break;
 
-                    case NativeMethods.AppBarNotifications.FullScreenApp:
-                        // we have our own implementation now
-                        /*if ((int)lParam == 1)
-                        {
-                            CairoLogger.Instance.Debug("Cairo leaving on-top");
-                            this.Topmost = false;
-                            Shell.ShowWindowBottomMost(this.handle);
-
-                            if (Settings.Instance.EnableTaskbar)
-                            {
-                                Startup.TaskbarWindow.SetFullScreenMode(true);
-                            }
-                        }
-                        else
-                        {
-                            CairoLogger.Instance.Debug("Cairo entering on-top");
-                            this.Topmost = true;
-                            Shell.ShowWindowTopMost(this.handle);
-
-                            if (Settings.Instance.EnableTaskbar)
-                            {
-                                Startup.TaskbarWindow.SetFullScreenMode(false);
-                            }
-                        }
-                        */
-                        break;
-
-                    case NativeMethods.AppBarNotifications.WindowArrange:
-                        if ((int)lParam != 0)    // before
-                        {
-                            this.Visibility = Visibility.Collapsed;
-                        }
-                        else                         // after
-                        {
-                            this.Visibility = Visibility.Visible;
-                        }
-
-                        break;
-                }
-                handled = true;
-            }
-            else if (msg == NativeMethods.WM_ACTIVATE)
-            {
-                AppBarHelper.AppBarActivate(hwnd);
-            }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
-            {
-                // Extract the WINDOWPOS structure corresponding to this message
-                NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
-
-                // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
-                // If we are intentionally trying to become topmost, make it so
-                if (isRaising && (wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
-                {
-                    // Sometimes Windows thinks we shouldn't go topmost, so poke here to make it happen.
-                    wndPos.hwndInsertAfter = (IntPtr)NativeMethods.HWND_TOPMOST;
-                    wndPos.UpdateMessage(lParam);
-                }
-            }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED)
-            {
-                AppBarHelper.AppBarWindowPosChanged(hwnd);
-            }
-            else if (msg == NativeMethods.WM_DPICHANGED)
-            {
-                setScreenProperties();
-
-                if (Screen.Primary)
-                {
-                    Shell.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
-                }
-
-                this.dpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
-                setPosition();
-                AppBarHelper.ABSetPos(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale, AppBarHelper.ABEdge.ABE_TOP);
-            }
-            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
-            {
-                setScreenProperties();
-
-                setPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
-                handled = true;
-            }
-            else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
-            {
-                setScreenProperties();
-            }
-
-            return IntPtr.Zero;
-        }
-
-        private void FullScreenApps_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            bool found = false;
-
-            foreach (FullScreenHelper.FullScreenApp app in FullScreenHelper.Instance.FullScreenApps)
-            {
-                if (app.screen.DeviceName == Screen.DeviceName)
-                {
-                    // we need to not be on top now
-                    found = true;
-                    break;
-                }
-            }
-
-            if (found && Topmost)
-            {
-                setFullScreenMode(true);
-            }
-            else if (!found && !Topmost)
-            {
-                setFullScreenMode(false);
-            }
-        }
-
-        private void setScreenProperties()
-        {
-            if (!Startup.IsSettingScreens && Screen.Primary)
-            {
-                Startup.ScreenSetup(); // update Cairo window list based on new screen setup
-            }
-
-            if (!(Settings.Instance.EnableMenuBarMultiMon || Settings.Instance.EnableTaskbarMultiMon))
-            {
-                // Update our screen here since if multi-mon features are disabled it doesn't happen in screensetup
-                // Should this really be handled here or shold screensetup just use primaryscreen in this situation?
-                Screen = System.Windows.Forms.Screen.PrimaryScreen;
-            }
-        }
-
-        private void setFullScreenMode(bool entering)
-        {
-            if (entering)
-            {
-                CairoLogger.Instance.Debug(string.Format("Menu Bar on {0} conceeding to full-screen app", Screen.DeviceName));
-
-                Topmost = false;
-                Shell.ShowWindowBottomMost(handle);
-            }
-            else
-            {
-                CairoLogger.Instance.Debug(string.Format("Menu Bar on {0} returning to normal state", Screen.DeviceName));
-
-                isRaising = true;
-                Topmost = true;
-                Shell.ShowWindowTopMost(handle);
-                isRaising = false;
-            }
-        }
-
-        private void setPosition()
+        internal override void setPosition()
         {
             Top = Screen.Bounds.Y / dpiScale;
             Left = Screen.Bounds.X / dpiScale;
             Width = Screen.WorkingArea.Width / dpiScale;
-            setShadowPosition();
-        }
-
-        private void setPosition(uint x, uint y)
-        {
-            // adjust size for dpi
-            Shell.TransformFromPixels(x, y, out int sWidth, out int sHeight);
-
-
-            double top = Screen.Bounds.Y / dpiScale;
-            double left = Screen.Bounds.X / dpiScale;
-
-            this.Top = top;
-            this.Left = left;
-            this.Width = sWidth;
+            Height = desiredHeight;
             setShadowPosition();
         }
 
@@ -475,6 +274,7 @@ namespace CairoDesktop
                 if (barShadow != null && barShadow.MenuBar == this)
                 {
                     barShadow.SetPosition();
+                    break;
                 }
             }
         }
@@ -482,18 +282,6 @@ namespace CairoDesktop
         private void OnWindowInitialized(object sender, EventArgs e)
         {
             Visibility = Visibility.Visible;
-        }
-
-        private void Window_SourceInitialized(object sender, EventArgs e)
-        {
-            helper = new WindowInteropHelper(this);
-
-            HwndSource source = HwndSource.FromHwnd(helper.Handle);
-            source.AddHook(new HwndSourceHook(WndProc));
-
-            handle = helper.Handle;
-
-            setupPostInit();
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
@@ -507,40 +295,11 @@ namespace CairoDesktop
             }
         }
 
-        private void OnWindowClosing(object sender, CancelEventArgs e)
+        protected override void customClosing()
         {
-            IsClosing = true;
-
             if (Startup.IsShuttingDown && Screen.Primary)
             {
-                AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale);
-
                 WinSparkle.win_sparkle_cleanup();
-
-                // Currently Unused
-                /*if (keyboardListener != null)
-                {
-                    keyboardListener.UnHookKeyboard();
-                }*/
-
-                if (Startup.IsCairoRunningAsShell)
-                {
-                    AppBarHelper.ResetWorkArea();
-                }
-
-                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
-                FullScreenHelper.Instance.Dispose();
-            }
-            else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
-            {
-                AppBarHelper.RegisterBar(this, Screen, this.ActualWidth * dpiScale, this.ActualHeight * dpiScale);
-
-                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
-            }
-            else
-            {
-                IsClosing = false;
-                e.Cancel = true;
             }
         }
 
@@ -548,7 +307,7 @@ namespace CairoDesktop
         {
             if (!CairoMenu.IsSubmenuOpen)
             {
-                NativeMethods.SetForegroundWindow(helper.Handle);
+                NativeMethods.SetForegroundWindow(Handle);
                 CairoMenu.IsSubmenuOpen = true;
             }
             else

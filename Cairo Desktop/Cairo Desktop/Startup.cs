@@ -231,6 +231,9 @@
             // dispose notification area in case we started it earlier
             NotificationArea.Instance.Dispose();
 
+            // reset work area
+            if (IsCairoRunningAsShell) AppBarHelper.ResetWorkArea();
+
             Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
         }
 
@@ -505,6 +508,25 @@
                     // also set work area for when Explorer isn't running, since screen setup code isn't running
                     if (IsCairoRunningAsShell)
                         AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
+
+                    // update screens
+                    if (MenuBarWindow != null)
+                    {
+                        MenuBarWindow.Screen = System.Windows.Forms.Screen.PrimaryScreen;
+                    }
+
+                    if (TaskbarWindow != null)
+                    {
+                        TaskbarWindow.Screen = System.Windows.Forms.Screen.PrimaryScreen;
+                    }
+                }
+                else if (!shouldSetScreens && IsCairoRunningAsShell)
+                {
+                    // if multi-mon enabled and only DPI changed, still need to set work area when we are shell
+                    foreach (var screen in screenState)
+                    {
+                        AppBarHelper.SetWorkArea(screen);
+                    }
                 }
 
                 if (shouldSetScreens)
@@ -636,6 +658,7 @@
                                     if (screen.DeviceName == bar.Screen.DeviceName)
                                     {
                                         bar.Screen = screen;
+                                        bar.setScreenPosition();
                                         break;
                                     }
                                 }
@@ -666,7 +689,7 @@
                                     if (screen.DeviceName == bar.Screen.DeviceName)
                                     {
                                         bar.Screen = screen;
-                                        bar.setPosition();
+                                        bar.setScreenPosition();
                                         break;
                                     }
                                 }
@@ -699,7 +722,7 @@
                                 }
                             }
 
-                            if (Settings.Instance.EnableTaskbarMultiMon && Configuration.Settings.Instance.EnableTaskbar)
+                            if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
                             {
                                 // taskbars
                                 Taskbar newTaskbar = new Taskbar(screen);

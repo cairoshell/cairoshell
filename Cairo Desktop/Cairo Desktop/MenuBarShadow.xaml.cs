@@ -35,9 +35,12 @@ namespace CairoDesktop
         {
             if (MenuBar != null)
             {
-                this.Width = MenuBar.ActualWidth;
-                this.Top = MenuBar.Top + MenuBar.ActualHeight;
-                this.Left = MenuBar.Left;
+                // reset properties so we actually reposition
+                Top = 0;
+                
+                Width = MenuBar.ActualWidth;
+                Top = MenuBar.Top + MenuBar.ActualHeight;
+                Left = MenuBar.Left;
             }
         }
 
@@ -66,11 +69,6 @@ namespace CairoDesktop
             // Makes click-through by adding transparent style
             // basically same as Shell.HideWindowFromTasks(helper.Handle);
             NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE, NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TRANSPARENT);
-        }
-
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            SetPosition();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

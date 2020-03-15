@@ -146,11 +146,25 @@ namespace CairoDesktop
                     }
                 }
             }
-            else if (msg == NativeMethods.WM_DISPLAYCHANGE && (Startup.IsCairoRunningAsShell))
+            else if (msg == NativeMethods.WM_DISPLAYCHANGE && Startup.IsCairoRunningAsShell)
             {
-                SetPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
+                ResetPosition();
                 ReloadBackground();
+
                 handled = true;
+            }
+            else if (msg == NativeMethods.WM_DPICHANGED && Startup.IsCairoRunningAsShell)
+            {
+                // delay changing things when we are shell. it seems that AppBars do this automagically
+                // if we don't, the system moves things to bad places
+                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+                timer.Start();
+                timer.Tick += (sender1, args) =>
+                {
+                    ResetPosition();
+                    ReloadBackground();
+                    timer.Stop();
+                };
             }
             else if (msg == (int)NativeMethods.WM.SETTINGCHANGE &&
                     wParam.ToInt32() == (int)NativeMethods.SPI.SETDESKWALLPAPER)
@@ -331,17 +345,6 @@ namespace CairoDesktop
             }
         }
 
-        private void SetPosition(uint x, uint y)
-        {
-            Top = 0;
-            Left = 0;
-
-            Width = x;
-            if (Startup.IsCairoRunningAsShell) Height = y;
-            else Height = y - 1;
-            setGridPosition();
-        }
-
         public void ResetPosition()
         {
             Top = 0;
@@ -361,7 +364,17 @@ namespace CairoDesktop
         private void setGridPosition()
         {
             grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width / Shell.DpiScale;
-            grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height / Shell.DpiScale;
+
+            if (Settings.Instance.TaskbarMode == 1 && Startup.TaskbarWindow != null)
+            {
+                // special case, since work area is not reduced with this setting
+                grid.Height = (AppBarHelper.PrimaryMonitorWorkArea.Height / Shell.DpiScale) - Startup.TaskbarWindow.ActualHeight;
+            }
+            else
+            {
+                grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height / Shell.DpiScale;
+            }
+
             grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.DpiScale, System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.DpiScale, 0, 0);
         }
         #endregion

@@ -30,7 +30,7 @@ namespace CairoDesktop.SupportingClasses
 
         private static object appBarLock = new object();
 
-        public static int RegisterBar(Window abWindow, Screen screen, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
+        public static int RegisterBar(AppBarWindow abWindow, Screen screen, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
         {
             lock (appBarLock)
             {
@@ -174,7 +174,7 @@ namespace CairoDesktop.SupportingClasses
             interopDone();
         }
 
-        public static void ABSetPos(Window abWindow, Screen screen, double width, double height, ABEdge edge, bool isCreate = false)
+        public static void ABSetPos(AppBarWindow abWindow, Screen screen, double width, double height, ABEdge edge, bool isCreate = false)
         {
             lock (appBarLock)
             {
@@ -187,8 +187,8 @@ namespace CairoDesktop.SupportingClasses
                 int sHeight = (int)height;
 
                 int top = 0;
-                int left = SystemInformation.WorkingArea.Left;
-                int right = SystemInformation.WorkingArea.Right;
+                int left = 0;
+                int right = PrimaryMonitorDeviceSize.Width;
                 int bottom = PrimaryMonitorDeviceSize.Height;
 
                 PresentationSource ps = PresentationSource.FromVisual(abWindow);
@@ -205,8 +205,8 @@ namespace CairoDesktop.SupportingClasses
                 if (screen != null)
                 {
                     top = screen.Bounds.Y;
-                    left = screen.WorkingArea.Left;
-                    right = screen.WorkingArea.Right;
+                    left = screen.Bounds.X;
+                    right = screen.Bounds.Right;
                     bottom = screen.Bounds.Bottom;
                 }
 
@@ -270,41 +270,23 @@ namespace CairoDesktop.SupportingClasses
                 NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETPOS, ref abd);
                 interopDone();
 
-                // tracing
+                // check if new coords
                 bool isSameCoords = false;
                 if (!isCreate) isSameCoords = abd.rc.top == (abWindow.Top * dpiScale) && abd.rc.left == (abWindow.Left * dpiScale) && abd.rc.bottom == (abWindow.Top * dpiScale) + sHeight && abd.rc.right == (abWindow.Left * dpiScale) + sWidth;
-                int h = abd.rc.bottom - abd.rc.top;
-                if (!isSameCoords) CairoLogger.Instance.Debug(abWindow.Name + " AppBar height is " + h.ToString());
-
-                abWindow.Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle,
-                    new ResizeDelegate(DoResize), abd.hWnd, abd.rc.left, abd.rc.top, abd.rc.right - abd.rc.left, abd.rc.bottom - abd.rc.top, isSameCoords);
-
-                if (h < sHeight)
-                    ABSetPos(abWindow, screen, width, height, edge);
-            }
-        }
-
-        private delegate void ResizeDelegate(IntPtr hWnd, int x, int y, int cx, int cy, bool isSameCoords);
-        private static void DoResize(IntPtr hWnd, int x, int y, int cx, int cy, bool isSameCoords)
-        {
-            if (!isSameCoords) NativeMethods.MoveWindow(hWnd, x, y, cx, cy, true);
-
-            // apparently the taskbars like to pop up when app bars change
-            if (Settings.Instance.EnableTaskbar)
-            {
-                SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
-            }
-
-            if (!isSameCoords)
-            {
-                foreach (MenuBarShadow barShadow in Startup.MenuBarShadowWindows)
+                
+                if (!isSameCoords)
                 {
-                    if (barShadow.MenuBar != null && barShadow.MenuBar.handle == hWnd)
-                        barShadow.SetPosition();
+                    CairoLogger.Instance.Debug(string.Format("{0} AppBar changing position (TxLxBxR) to {1}x{2}x{3}x{4} from {5}x{6}x{7}x{8}", abWindow.Name, abd.rc.top, abd.rc.left, abd.rc.bottom, abd.rc.right, (abWindow.Top * dpiScale), (abWindow.Left * dpiScale), (abWindow.Top * dpiScale) + sHeight, (abWindow.Left * dpiScale) + sWidth));
+                    abWindow.Top = abd.rc.top / dpiScale;
+                    abWindow.Left = abd.rc.left / dpiScale;
+                    abWindow.Width = (abd.rc.right - abd.rc.left) / dpiScale;
+                    abWindow.Height = (abd.rc.bottom - abd.rc.top) / dpiScale;
                 }
 
-                if (Startup.DesktopWindow != null)
-                    Startup.DesktopWindow.ResetPosition();
+                abWindow.afterAppBarPos(isSameCoords);
+
+                if (abd.rc.bottom - abd.rc.top < sHeight)
+                    ABSetPos(abWindow, screen, width, height, edge);
             }
         }
 
@@ -334,34 +316,54 @@ namespace CairoDesktop.SupportingClasses
         
         public static void SetWorkArea(Screen screen)
         {
+            double dpiScale = 1;
+            double menuBarHeight = 0;
+            double taskbarHeight = 0;
             NativeMethods.RECT rc;
             rc.left = screen.Bounds.Left;
             rc.right = screen.Bounds.Right;
+
+            // get appropriate windows for this display
+            foreach (MenuBar bar in Startup.MenuBarWindows)
+            {
+                if (bar.Screen.DeviceName == screen.DeviceName)
+                {
+                    menuBarHeight = bar.ActualHeight;
+                    dpiScale = bar.dpiScale;
+                    break;
+                }
+            }
+
+            foreach (Taskbar bar in Startup.TaskbarWindows)
+            {
+                if (bar.Screen.DeviceName == screen.DeviceName)
+                {
+                    taskbarHeight = bar.ActualHeight;
+                    break;
+                }
+            }
 
             // only allocate space for taskbar if enabled
             if (Settings.Instance.EnableTaskbar && Settings.Instance.TaskbarMode == 0)
             {
                 if (Settings.Instance.TaskbarPosition == 1)
                 {
-                    rc.top = screen.Bounds.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale) + (int)(Startup.TaskbarWindow.ActualHeight * Shell.DpiScale);
+                    rc.top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale) + (int)(taskbarHeight * dpiScale);
                     rc.bottom = screen.Bounds.Bottom;
                 }
                 else
                 {
-                    rc.top = screen.Bounds.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale);
-                    rc.bottom = screen.Bounds.Bottom - (int)(Startup.TaskbarWindow.ActualHeight * Shell.DpiScale);
+                    rc.top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale);
+                    rc.bottom = screen.Bounds.Bottom - (int)(taskbarHeight * dpiScale);
                 }
             }
             else
             {
-                rc.top = screen.Bounds.Top + (int)(Startup.MenuBarWindow.ActualHeight * Shell.DpiScale);
+                rc.top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale);
                 rc.bottom = screen.Bounds.Bottom;
             }
 
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref rc, (1 | 2));
-
-            if (Startup.DesktopWindow != null)
-                Startup.DesktopWindow.ResetPosition();
         }
         
         public static void ResetWorkArea()

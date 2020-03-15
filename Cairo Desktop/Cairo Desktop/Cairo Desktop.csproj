@@ -100,6 +100,7 @@
       <DependentUpon>ProgramsMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Startup.InitializationRoutines.cs" />
+    <Compile Include="SupportingClasses\AppBarWindow.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
     <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
     <Compile Include="SupportingClasses\FilePathValidationRule.cs" />
