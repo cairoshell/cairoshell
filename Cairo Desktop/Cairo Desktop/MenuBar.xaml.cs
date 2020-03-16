@@ -300,7 +300,7 @@ namespace CairoDesktop
                 timer.Start();
                 timer.Tick += (sender1, args) =>
                 {
-                    shadow.SetPosition();
+                    if (shadow != null) shadow.SetPosition();
                     timer.Stop();
                 };
             }

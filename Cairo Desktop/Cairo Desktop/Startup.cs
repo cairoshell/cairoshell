@@ -495,15 +495,6 @@
                 else
                     screenState = System.Windows.Forms.Screen.AllScreens;
 
-                if (!shouldSetScreens && IsCairoRunningAsShell)
-                {
-                    // if multi-mon enabled and only DPI changed, still need to set work area when we are shell
-                    foreach (var screen in screenState)
-                    {
-                        AppBarHelper.SetWorkArea(screen);
-                    }
-                }
-
                 if (!skipChecks)
                 {
                     if (shouldSetScreens)
@@ -554,43 +545,51 @@
                         // close windows associated with removed screens
                         foreach (string name in removedScreens)
                         {
-                            CairoLogger.Instance.Debug("Removing windows associated with screen " + name);
+                            CairoLogger.Instance.DebugIf(Settings.Instance.EnableMenuBarMultiMon || Settings.Instance.EnableTaskbarMultiMon, "Removing windows associated with screen " + name);
 
-                            // close taskbars
-                            Taskbar taskbarToClose = null;
-                            foreach (Taskbar bar in TaskbarWindows)
+                            if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
                             {
-                                if (bar.Screen != null && bar.Screen.DeviceName == name)
+                                // close taskbars
+                                Taskbar taskbarToClose = null;
+                                foreach (Taskbar bar in TaskbarWindows)
                                 {
-                                    taskbarToClose = bar;
-                                    break;
+                                    if (bar.Screen != null && bar.Screen.DeviceName == name)
+                                    {
+                                        CairoLogger.Instance.DebugIf(bar.Screen.Primary, "Closing taskbar on primary display");
+
+                                        taskbarToClose = bar;
+                                        break;
+                                    }
+                                }
+
+                                if (taskbarToClose != null)
+                                {
+                                    taskbarToClose.Close();
+                                    TaskbarWindows.Remove(taskbarToClose);
                                 }
                             }
 
-                            if (taskbarToClose != null)
+                            if (Settings.Instance.EnableMenuBarMultiMon)
                             {
-                                taskbarToClose.Close();
-                                TaskbarWindows.Remove(taskbarToClose);
-                            }
-
-                            // close menu bars
-                            MenuBar barToClose = null;
-                            foreach (MenuBar bar in MenuBarWindows)
-                            {
-                                if (bar.Screen != null && bar.Screen.DeviceName == name)
+                                // close menu bars
+                                MenuBar barToClose = null;
+                                foreach (MenuBar bar in MenuBarWindows)
                                 {
-                                    CairoLogger.Instance.DebugIf(bar.Screen.Primary, "Closing menu bar on primary display");
+                                    if (bar.Screen != null && bar.Screen.DeviceName == name)
+                                    {
+                                        CairoLogger.Instance.DebugIf(bar.Screen.Primary, "Closing menu bar on primary display");
 
-                                    barToClose = bar;
-                                    break;
+                                        barToClose = bar;
+                                        break;
+                                    }
                                 }
-                            }
 
-                            if (barToClose != null)
-                            {
-                                if (!barToClose.IsClosing)
-                                    barToClose.Close();
-                                MenuBarWindows.Remove(barToClose);
+                                if (barToClose != null)
+                                {
+                                    if (!barToClose.IsClosing)
+                                        barToClose.Close();
+                                    MenuBarWindows.Remove(barToClose);
+                                }
                             }
                         }
                     }
@@ -641,22 +640,26 @@
 
                         if (Settings.Instance.EnableMenuBarMultiMon)
                         {
-                            CairoLogger.Instance.DebugIf(screen.Primary, "Opening MenuBar on new primary display");
+                            CairoLogger.Instance.DebugIf(screen.Primary, "Opening menu bar on new primary display");
 
                             // menu bars
                             MenuBar newMenuBar = new MenuBar(screen);
                             newMenuBar.Show();
                             MenuBarWindows.Add(newMenuBar);
+
+                            if (screen.Primary) MenuBarWindow = newMenuBar;
                         }
 
                         if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
                         {
-                            CairoLogger.Instance.DebugIf(screen.Primary, "Opening Taskbar on new primary display");
+                            CairoLogger.Instance.DebugIf(screen.Primary, "Opening taskbar on new primary display");
 
                             // taskbars
                             Taskbar newTaskbar = new Taskbar(screen);
                             newTaskbar.Show();
                             TaskbarWindows.Add(newTaskbar);
+
+                            if (screen.Primary) TaskbarWindow = newTaskbar;
                         }
                     }
 
