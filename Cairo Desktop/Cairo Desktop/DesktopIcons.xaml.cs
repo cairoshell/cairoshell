@@ -68,5 +68,20 @@ namespace CairoDesktop
 
             panel.Margin = new Thickness(xOffset, yOffset, 0, 0);
         }
+
+        private void IconsControl_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            var scrollViewer = System.Windows.Media.VisualTreeHelper.GetChild(sender as ItemsControl, 0) as ScrollViewer;
+
+            if (scrollViewer == null)
+                return;
+
+            if (e.Delta < 0)
+                scrollViewer.LineRight();
+            else
+                scrollViewer.LineLeft();
+
+            e.Handled = true;
+        }
     }
 }

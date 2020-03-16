@@ -8,6 +8,7 @@
         <ItemsControl Name="IconsControl" 
                       DataContext="{Binding ElementName=CairoDesktopIcons, Path=Location}" 
                       Style="{StaticResource DesktopFolderViewStyle}" 
-                      ItemsSource="{Binding Path=Files, IsAsync=True}" />
+                      ItemsSource="{Binding Path=Files, IsAsync=True}"
+                      PreviewMouseWheel="IconsControl_PreviewMouseWheel" />
     </DockPanel>
 </UserControl>
