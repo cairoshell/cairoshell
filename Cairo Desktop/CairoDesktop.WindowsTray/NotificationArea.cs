@@ -84,10 +84,28 @@ namespace CairoDesktop.WindowsTray
                 hooksWrapper.SetIconDataCallback(iconDataDelegate);
                 Handle = hooksWrapper.InitializeSystray();
                 hooksWrapper.Run();
+                startShellIcons();
             }
             catch
             {
                 IsFailed = true;
+            }
+        }
+
+        private void startShellIcons()
+        {
+            if (Shell.IsCairoConfiguredAsShell)
+            {
+                try
+                {
+                    IOleCommandTarget sto = (IOleCommandTarget)(new SysTrayObject());
+                    Guid sso = new Guid("000214D2-0000-0000-C000-000000000046"); // CGID_SHELLSERVICEOBJECT
+                    sto.Exec(ref sso, 2, 0, IntPtr.Zero, IntPtr.Zero);
+                }
+                catch
+                {
+                    CairoLogger.Instance.Info("Failed to start shell notification icons service object.");
+                }
             }
         }
 

@@ -4259,5 +4259,15 @@ namespace CairoDesktop.Interop
         [DllImport("kernel32.dll")]
         public static extern IntPtr LoadLibrary(string lpFileName);
 
+        [ComImport, Guid("b722bccb-4e68-101b-a2bc-00aa00404770"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        public interface IOleCommandTarget
+        {
+            [PreserveSig()]
+            int QueryStatus(ref Guid pguidCmdGroup, int cCmds, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] IntPtr[] prgCmds, ref IntPtr pCmdText);
+
+            [PreserveSig()]
+            int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdExecOpt, ref object pvaIn, ref object pvaOut);
+        }
+
     }
 }

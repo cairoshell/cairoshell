@@ -89,6 +89,7 @@
     <Compile Include="NotificationArea.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NotifyIcon.cs" />
+    <Compile Include="SysTrayObject.cs" />
     <Compile Include="WindowsHooksWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
