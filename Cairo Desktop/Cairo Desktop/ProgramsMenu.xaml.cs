@@ -40,8 +40,12 @@ namespace CairoDesktop
         #region Sidebar items
         private void btnAppGrabber_Click(object sender, RoutedEventArgs e)
         {
-            Startup.MenuBarWindow.ProgramsMenu.IsSubmenuOpen = false;
-            Startup.MenuBarWindow.appGrabber.ShowDialog();
+            foreach(MenuBar bar in Startup.MenuBarWindows)
+            {
+                bar.ProgramsMenu.IsSubmenuOpen = false;
+            }
+
+            appGrabber.ShowDialog();
         }
 
         private void btnUninstallApps_Click(object sender, RoutedEventArgs e)

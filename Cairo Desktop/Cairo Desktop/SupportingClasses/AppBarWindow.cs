@@ -69,7 +69,7 @@ namespace CairoDesktop.SupportingClasses
             }
 
             // register appbar
-            if (enableAppBar) appbarMessageId = AppBarHelper.RegisterBar(this, Screen, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
+            if (!Startup.IsCairoRunningAsShell && enableAppBar) appbarMessageId = AppBarHelper.RegisterBar(this, Screen, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
 
             // hide from alt-tab etc
             Shell.HideWindowFromTasks(Handle);
@@ -193,7 +193,7 @@ namespace CairoDesktop.SupportingClasses
 
                 dpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
 
-                setScreenProperties();
+                setScreenProperties("DpiChange");
 
                 if (Startup.IsCairoRunningAsShell || !enableAppBar)
                 {
@@ -204,12 +204,13 @@ namespace CairoDesktop.SupportingClasses
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
-                setScreenProperties();
+                setScreenProperties("DisplayChange");
                 handled = true;
             }
             else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
             {
-                setScreenProperties();
+                setScreenProperties("DeviceChange");
+                handled = true;
             }
 
             // call custom implementations' window procedure
@@ -238,10 +239,11 @@ namespace CairoDesktop.SupportingClasses
             else if (enableAppBar) AppBarHelper.ABSetPos(this, Screen, desiredHeight * dpiScale, ActualHeight * dpiScale, appBarEdge);
         }
 
-        private void setScreenProperties()
+        private void setScreenProperties(string reason)
         {
-            if (!Startup.IsSettingScreens && Screen.Primary)
+            if (!Startup.IsSettingScreens && Screen.Primary && this is MenuBar)
             {
+                CairoLogger.Instance.Debug("Calling screen setup due to " + reason);
                 Startup.ScreenSetup(); // update Cairo window list based on new screen setup
             }
         }

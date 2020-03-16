@@ -495,28 +495,7 @@
                 else
                     screenState = System.Windows.Forms.Screen.AllScreens;
 
-                if (!Settings.Instance.EnableMenuBarMultiMon && !Settings.Instance.EnableTaskbarMultiMon)
-                {
-                    // skip screen setup since no multi-mon features enabled
-                    CairoLogger.Instance.Debug("Skipping screen setup due to no multi-mon features enabled");
-                    shouldSetScreens = false;
-
-                    // also set work area for when Explorer isn't running, since screen setup code isn't running
-                    if (IsCairoRunningAsShell)
-                        AppBarHelper.SetWorkArea(System.Windows.Forms.Screen.PrimaryScreen);
-
-                    // update screens
-                    if (MenuBarWindow != null)
-                    {
-                        MenuBarWindow.Screen = System.Windows.Forms.Screen.PrimaryScreen;
-                    }
-
-                    if (TaskbarWindow != null)
-                    {
-                        TaskbarWindow.Screen = System.Windows.Forms.Screen.PrimaryScreen;
-                    }
-                }
-                else if (!shouldSetScreens && IsCairoRunningAsShell)
+                if (!shouldSetScreens && IsCairoRunningAsShell)
                 {
                     // if multi-mon enabled and only DPI changed, still need to set work area when we are shell
                     foreach (var screen in screenState)
@@ -525,33 +504,22 @@
                     }
                 }
 
-                if (shouldSetScreens)
+                if (!skipChecks)
                 {
-                    if (!skipChecks)
+                    if (shouldSetScreens)
                     {
                         // enumerate screens
 
-                        if (Settings.Instance.EnableMenuBarMultiMon || !Settings.Instance.EnableTaskbar)
+                        foreach (MenuBar bar in MenuBarWindows)
                         {
-                            foreach (MenuBar bar in MenuBarWindows)
-                            {
-                                if (bar.Screen != null)
-                                    openScreens.Add(bar.Screen.DeviceName);
-                            }
+                            if (bar.Screen != null && !openScreens.Contains(bar.Screen.DeviceName))
+                                openScreens.Add(bar.Screen.DeviceName);
                         }
-                        else if (Settings.Instance.EnableTaskbarMultiMon)
+
+                        foreach (Taskbar bar in TaskbarWindows)
                         {
-                            foreach (Taskbar bar in TaskbarWindows)
-                            {
-                                if (bar.Screen != null)
-                                    openScreens.Add(bar.Screen.DeviceName);
-                            }
-                        }
-                        else
-                        {
-                            IsSettingScreens = false;
-                            hasCompletedInitialScreenSetup = true;
-                            return;
+                            if (bar.Screen != null && !openScreens.Contains(bar.Screen.DeviceName))
+                                openScreens.Add(bar.Screen.DeviceName);
                         }
 
                         foreach (var screen in screenState)
@@ -625,73 +593,76 @@
                                 MenuBarWindows.Remove(barToClose);
                             }
                         }
-
-                        CairoLogger.Instance.Debug("Refreshing screen information for stale windows");
-
-                        // update screens of stale windows
-                        foreach (MenuBar bar in MenuBarWindows)
-                        {
-                            if (bar.Screen != null)
-                            {
-                                foreach (System.Windows.Forms.Screen screen in screenState)
-                                {
-                                    if (screen.DeviceName == bar.Screen.DeviceName)
-                                    {
-                                        bar.Screen = screen;
-                                        bar.setScreenPosition();
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        foreach (Taskbar bar in TaskbarWindows)
-                        {
-                            if (bar.Screen != null)
-                            {
-                                foreach (System.Windows.Forms.Screen screen in screenState)
-                                {
-                                    if (screen.DeviceName == bar.Screen.DeviceName)
-                                    {
-                                        bar.Screen = screen;
-                                        bar.setScreenPosition();
-                                        break;
-                                    }
-                                }
-                            }
-                        }
                     }
 
-                    // open windows on newly added screens
-                    foreach (var screen in screenState)
+                    CairoLogger.Instance.Debug("Refreshing screen information for stale windows");
+
+                    // update screens of stale windows
+                    foreach (MenuBar bar in MenuBarWindows)
                     {
-                        if ((skipChecks && !screen.Primary) || addedScreens.Contains(screen.DeviceName))
+                        if (bar.Screen != null)
                         {
-                            CairoLogger.Instance.Debug("Opening windows on screen " + screen.DeviceName);
-
-                            if (Settings.Instance.EnableMenuBarMultiMon)
+                            foreach (System.Windows.Forms.Screen screen in screenState)
                             {
-                                CairoLogger.Instance.DebugIf(screen.Primary, "Opening MenuBar on new primary display");
-
-                                // menu bars
-                                MenuBar newMenuBar = new MenuBar(screen);
-                                newMenuBar.Show();
-                                MenuBarWindows.Add(newMenuBar);
-                            }
-
-                            if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
-                            {
-                                // taskbars
-                                Taskbar newTaskbar = new Taskbar(screen);
-                                newTaskbar.Show();
-                                TaskbarWindows.Add(newTaskbar);
+                                if (screen.DeviceName == bar.Screen.DeviceName)
+                                {
+                                    bar.Screen = screen;
+                                    bar.setScreenPosition();
+                                    break;
+                                }
                             }
                         }
-
-                        // Set desktop work area for when Explorer isn't running
-                        if (IsCairoRunningAsShell)
-                            AppBarHelper.SetWorkArea(screen);
                     }
+
+                    foreach (Taskbar bar in TaskbarWindows)
+                    {
+                        if (bar.Screen != null)
+                        {
+                            foreach (System.Windows.Forms.Screen screen in screenState)
+                            {
+                                if (screen.DeviceName == bar.Screen.DeviceName)
+                                {
+                                    bar.Screen = screen;
+                                    bar.setScreenPosition();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // open windows on newly added screens
+                foreach (var screen in screenState)
+                {
+                    // if skipChecks, that means this is initial startup and primary display windows have already opened, so skip them
+                    if (shouldSetScreens && ((skipChecks && !screen.Primary) || addedScreens.Contains(screen.DeviceName)))
+                    {
+                        CairoLogger.Instance.DebugIf(Settings.Instance.EnableMenuBarMultiMon || Settings.Instance.EnableTaskbarMultiMon, "Opening windows on screen " + screen.DeviceName);
+
+                        if (Settings.Instance.EnableMenuBarMultiMon)
+                        {
+                            CairoLogger.Instance.DebugIf(screen.Primary, "Opening MenuBar on new primary display");
+
+                            // menu bars
+                            MenuBar newMenuBar = new MenuBar(screen);
+                            newMenuBar.Show();
+                            MenuBarWindows.Add(newMenuBar);
+                        }
+
+                        if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
+                        {
+                            CairoLogger.Instance.DebugIf(screen.Primary, "Opening Taskbar on new primary display");
+
+                            // taskbars
+                            Taskbar newTaskbar = new Taskbar(screen);
+                            newTaskbar.Show();
+                            TaskbarWindows.Add(newTaskbar);
+                        }
+                    }
+
+                    // Set desktop work area for when Explorer isn't running
+                    if (IsCairoRunningAsShell)
+                        AppBarHelper.SetWorkArea(screen);
                 }
 
                 IsSettingScreens = false;

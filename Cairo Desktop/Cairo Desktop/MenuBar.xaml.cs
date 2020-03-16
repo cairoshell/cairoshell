@@ -285,7 +285,7 @@ namespace CairoDesktop
         {
             Top = Screen.Bounds.Y / dpiScale;
             Left = Screen.Bounds.X / dpiScale;
-            Width = Screen.WorkingArea.Width / dpiScale;
+            Width = Screen.Bounds.Width / dpiScale;
             Height = desiredHeight;
             setShadowPosition();
         }
