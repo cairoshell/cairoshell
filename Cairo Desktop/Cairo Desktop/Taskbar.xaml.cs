@@ -122,7 +122,7 @@ namespace CairoDesktop
             {
                 appBarEdge = AppBarHelper.ABEdge.ABE_BOTTOM;
                 bdrTaskListPopup.Margin = new Thickness(5, 0, 5, Height - 1);
-                Top = getDesiredTopPosition(Screen.Bounds.Bottom / dpiScale);
+                Top = getDesiredTopPosition();
             }
 
             // show task view on windows >= 10, adjust margin if not shown
@@ -186,20 +186,20 @@ namespace CairoDesktop
 
             Height = desiredHeight;
 
-            Top = getDesiredTopPosition(Screen.Bounds.Bottom / dpiScale);
+            Top = getDesiredTopPosition();
 
             Left = Screen.Bounds.Left / dpiScale;
 
             if (Settings.Instance.FullWidthTaskBar)
-                bdrTaskbar.Width = screenWidth - btnDesktopOverlay.Width - btnTaskList.Width + 1; // account for border
+                bdrTaskbar.Width = getDesiredWidth(); // account for border
 
             // set maxwidth always
-            bdrTaskbar.MaxWidth = screenWidth - btnDesktopOverlay.Width - btnTaskList.Width + 1;
+            bdrTaskbar.MaxWidth = getDesiredWidth();
 
             Width = screenWidth;
         }
 
-        private double getDesiredTopPosition(double top)
+        private double getDesiredTopPosition()
         {
             if (Settings.Instance.TaskbarPosition == 1)
             {
@@ -209,8 +209,13 @@ namespace CairoDesktop
             else
             {
                 // set to bottom of workspace
-                return top - Height;
+                return (Screen.Bounds.Bottom / dpiScale) - Height;
             }
+        }
+
+        private double getDesiredWidth()
+        {
+            return (Screen.Bounds.Width / dpiScale) - btnDesktopOverlay.Width - btnTaskList.Width + 1; // account for border
         }
 
         private void takeFocus()
@@ -222,12 +227,23 @@ namespace CairoDesktop
         private void TaskbarWindow_LocationChanged(object sender, EventArgs e)
         {
             // primarily for win7/8, they will set up the appbar correctly but then put it in the wrong place
-            double desiredTop = getDesiredTopPosition(Screen.Bounds.Bottom / dpiScale);
+            double desiredTop = getDesiredTopPosition();
 
             if (Top != desiredTop)
             {
                 Top = desiredTop;
             }
+        }
+
+        internal override void afterAppBarPos(bool isSameCoords)
+        {
+            base.afterAppBarPos(isSameCoords);
+
+            if (Settings.Instance.FullWidthTaskBar)
+                bdrTaskbar.Width = getDesiredWidth();
+
+            // set maxwidth always
+            bdrTaskbar.MaxWidth = getDesiredWidth();
         }
         #endregion
 
