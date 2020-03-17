@@ -62,7 +62,7 @@ namespace CairoDesktop
             // setup taskbar item source
             TasksList.ItemsSource = WindowsTasks.WindowsTasksService.Instance.GroupedWindows;
             TasksList2.ItemsSource = WindowsTasks.WindowsTasksService.Instance.GroupedWindows;
-            WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged += GroupedWindows_Changed;
+            if (WindowsTasks.WindowsTasksService.Instance.GroupedWindows != null) WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged += GroupedWindows_Changed;
 
             // setup data contexts
             bdrMain.DataContext = Settings.Instance;
@@ -172,12 +172,15 @@ namespace CairoDesktop
         #region Position and appearance
         private void setTaskButtonSize()
         {
-            double size = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - bdrTaskbarEnd.ActualWidth - (TasksList.Items.Groups.Count * (5 * dpiScale)) - 14) / TasksList.Items.Count);
-            if (size > (140 + addToSize))
-                ButtonWidth = 140 + addToSize;
-            else
-                ButtonWidth = size;
-            ButtonTextWidth = ButtonWidth - 33 - addToSize;
+            if (TasksList.Items.Groups != null)
+            {
+                double size = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - bdrTaskbarEnd.ActualWidth - (TasksList.Items.Groups.Count * (5 * dpiScale)) - 14) / TasksList.Items.Count);
+                if (size > (140 + addToSize))
+                    ButtonWidth = 140 + addToSize;
+                else
+                    ButtonWidth = size;
+                ButtonTextWidth = ButtonWidth - 33 - addToSize;
+            }
         }
 
         internal override void setPosition()

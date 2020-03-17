@@ -4297,5 +4297,8 @@ namespace CairoDesktop.Interop
             TBPF_ERROR = 0x4,
             TBPF_PAUSED = 0x8
         }
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern bool SendNotifyMessage(IntPtr hWnd, uint Msg, UIntPtr wParam, IntPtr lParam);
     }
 }

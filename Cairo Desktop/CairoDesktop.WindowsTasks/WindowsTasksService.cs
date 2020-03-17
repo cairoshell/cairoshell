@@ -20,6 +20,7 @@ namespace CairoDesktop.WindowsTasks
 
         private static int WM_SHELLHOOKMESSAGE = -1;
         private static int WM_TASKBARCREATEDMESSAGE = -1;
+        private static int TASKBARBUTTONCREATEDMESSAGE = -1;
 
         public static bool IsStarting = false;
         
@@ -53,6 +54,7 @@ namespace CairoDesktop.WindowsTasks
                 RegisterShellHookWindow(_HookWin.Handle);
                 WM_SHELLHOOKMESSAGE = RegisterWindowMessage("SHELLHOOK");
                 WM_TASKBARCREATEDMESSAGE = RegisterWindowMessage("TaskbarCreated");
+                TASKBARBUTTONCREATEDMESSAGE = RegisterWindowMessage("TaskbarButtonCreated");
                 _HookWin.MessageReceived += ShellWinProc;
 
                 // set window for ITaskbarList
@@ -81,7 +83,7 @@ namespace CairoDesktop.WindowsTasks
             }
             catch (Exception ex)
             {
-                Debug.Print(ex.Message);
+                CairoLogger.Instance.Info("Unable to start WindowsTasksService: " + ex.Message);
             }
             
             IsStarting = false;
@@ -139,7 +141,11 @@ namespace CairoDesktop.WindowsTasks
         private void addWindow(ApplicationWindow win)
         {
             if (!Windows.Contains(win))
+            {
                 Windows.Add(win);
+
+                if (Interop.Shell.IsCairoConfiguredAsShell) SendNotifyMessage(win.Handle, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
+            }
         }
 
         private void removeWindow(ApplicationWindow win)
