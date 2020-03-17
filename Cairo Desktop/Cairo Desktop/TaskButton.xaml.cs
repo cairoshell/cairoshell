@@ -34,6 +34,8 @@ namespace CairoDesktop
         {
             Window = DataContext as WindowsTasks.ApplicationWindow;
 
+            Window.PropertyChanged += Window_PropertyChanged;
+
             if (!ListMode)
             {
                 switch (Configuration.Settings.Instance.TaskbarIconSize)
@@ -64,6 +66,17 @@ namespace CairoDesktop
             // drag support - delayed activation using system setting
             dragTimer = new DispatcherTimer { Interval = SystemParameters.MouseHoverTime };
             dragTimer.Tick += dragTimer_Tick;
+        }
+
+        private void Window_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                // handle progress changes
+                case "ProgressState":
+                    pbProgress.IsIndeterminate = Window.ProgressState == NativeMethods.TBPFLAG.TBPF_INDETERMINATE;
+                    break;
+            }
         }
 
         private void btnClick(object sender, RoutedEventArgs e)

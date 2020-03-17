@@ -60,5 +60,10 @@ namespace CairoDesktop
         {
             Shell.StartProcess("mmsys.cpl");
         }
+
+        private void miOpenVolumeMixer_Click(object sender, RoutedEventArgs e)
+        {
+            Shell.StartProcess("sndvol.exe", "-T " + (int)(((ushort)(System.Windows.Forms.Cursor.Position.X / Shell.DpiScaleAdjustment)) | (uint)((int)ActualHeight << 16)));
+        }
     }
 }

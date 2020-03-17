@@ -55,6 +55,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <ProgressBar Name="pbProgress" Grid.ColumnSpan="2" Minimum="0" Maximum="65534" Value="{Binding Path=ProgressValue}" Style="{StaticResource TaskbarProgressBar}" />
             <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" Name="imgIcon"
                     Width="16"
                     Height="16"

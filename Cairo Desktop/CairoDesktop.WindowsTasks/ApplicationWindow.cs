@@ -223,6 +223,44 @@ namespace CairoDesktop.WindowsTasks
 
         private ImageSource _icon = null;
 
+        private NativeMethods.TBPFLAG _progressState;
+
+        public NativeMethods.TBPFLAG ProgressState
+        {
+            get
+            {
+                return _progressState;
+            }
+
+            set
+            {
+                _progressState = value;
+
+                if (value == NativeMethods.TBPFLAG.TBPF_NOPROGRESS)
+                {
+                    ProgressValue = 0;
+                }
+
+                OnPropertyChanged("ProgressState");
+            }
+        }
+
+        private int _progressValue;
+
+        public int ProgressValue
+        {
+            get
+            {
+                return _progressValue;
+            }
+
+            set
+            {
+                _progressValue = value;
+                OnPropertyChanged("ProgressValue");
+            }
+        }
+
         private WindowState _state;
 
         public WindowState State
@@ -276,13 +314,9 @@ namespace CairoDesktop.WindowsTasks
             get
             {
                 // Don't show empty buttons.
-                if (string.IsNullOrEmpty(Title))
+                if (string.IsNullOrEmpty(Title) || State == WindowState.Hidden)
                 {
-                    return false;
-                }
-
-                if ((State == WindowState.Hidden) || (NativeMethods.GetParent(Handle) != IntPtr.Zero))
-                {
+                    //CairoLogger.Instance.Debug(string.Format("Hid {0} window with Title: {1} State: {2}", Handle, Title, State));
                     return false;
                 }
 
@@ -317,6 +351,7 @@ namespace CairoDesktop.WindowsTasks
                 }
                 else
                 {
+                    //CairoLogger.Instance.Debug(string.Format("Hid {0} window with properties: {1} {2} {3} {4} {5} {6} {7} {8} {9}", Handle, isAppWindow, hasEdge, isTopmostOnly, isToolWindow, isAcceptFiles, isVisible, ShowStyle, ownerWin, ExtendedWindowStyles));
                     return false;
                 }
             }

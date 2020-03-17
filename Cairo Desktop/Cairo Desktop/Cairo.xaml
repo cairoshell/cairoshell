@@ -343,6 +343,8 @@
                                  Value="#3affffff" />
         </ColorAnimationUsingKeyFrames>
     </Storyboard>
+    <SolidColorBrush Color="#992AEE28"
+                     x:Key="TaskbarProgressBarFill" />
 
     <!-- Dialog resources -->
     <LinearGradientBrush x:Key="DialogWindowBackground"
@@ -1664,6 +1666,48 @@
                             <Setter TargetName="Border"
                                     Property="Background"
                                     Value="{DynamicResource ResourceKey=TaskbarItemFlashingPressedBackground}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="TaskbarProgressBar"
+           TargetType="{x:Type ProgressBar}">
+        <Setter Property="Margin"
+                Value="-6" />
+        <Setter Property="Opacity"
+                Value="0.6" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ProgressBar}">
+                    <Grid>
+                        <Border x:Name="PART_Track"
+                                BorderThickness="0">
+                        </Border>
+                        <Border x:Name="PART_Indicator"
+                                HorizontalAlignment="Left"
+                                Background="{DynamicResource ResourceKey=TaskbarProgressBarFill}"
+                                Margin="0">
+                            <Grid ClipToBounds="True"
+                                  x:Name="Animation"
+                                  Visibility="Collapsed">
+                                <Rectangle x:Name="PART_GlowRect"
+                                           Width="140"
+                                           HorizontalAlignment="Left"
+                                           Margin="-140,0,0,0" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsIndeterminate"
+                                 Value="True">
+                            <Setter TargetName="Animation"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                            <Setter TargetName="PART_Indicator"
+                                    Property="Background"
+                                    Value="Transparent" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -20,6 +20,9 @@
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sMenuBar_OpenSoundSettings)}"
                               Click="miOpenSoundSettings_Click"
                               Name="miOpenSoundSettings" />
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sMenuBar_OpenVolumeMixer)}"
+                              Click="miOpenVolumeMixer_Click"
+                              Name="miOpenVolumeMixer" />
                 </ContextMenu>
             </MenuItem.ContextMenu>
         </MenuItem>

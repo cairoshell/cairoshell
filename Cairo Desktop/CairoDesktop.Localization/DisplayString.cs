@@ -955,6 +955,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sMenuBar_OpenVolumeMixer
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
         public static string sSearch_Title
         {
             get

@@ -4269,5 +4269,33 @@ namespace CairoDesktop.Interop
             int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdExecOpt, ref object pvaIn, ref object pvaOut);
         }
 
+        public const int OLECMDID_NEW = 2;
+        public const int OLECMDID_SAVE = 3;
+        public const int OLECMDEXECOPT_DODEFAULT = 0;
+        public const string CGID_SHELLSERVICEOBJECT = "000214D2-0000-0000-C000-000000000046";
+
+        /// <summary>
+        /// The SetProp function adds a new entry or changes an existing entry in the property list of the specified window. The function adds a new entry to the list if the specified character string does not exist already in the list. The new entry contains the string and the handle. Otherwise, the function replaces the string's current handle with the specified handle.
+        /// </summary>
+        /// <remarks>
+        /// <para>Before a window is destroyed (that is, before it returns from processing the WM_NCDESTROY message), an application must remove all entries it has added to the property list. The application must use the RemoveProp function to remove the entries.</para>
+        /// <para>Windows 95/98/Me: SetPropW is supported by the Microsoft Layer for Unicode (MSLU). SetPropA is also supported to provide more consistent behavior across all Microsoft Windows operating systems. To use this, you must add certain files to your application, as outlined in Microsoft Layer for Unicode on Windows 95/98/Me Systems.</para>
+        /// <para>Windows Vista: SetProp is subject to the restrictions of User Interface Privilege Isolation (UIPI). A process can only call this function on a window belonging to a process of lesser or equal integrity level. When UIPI blocks property changes, GetLastError will return 5.</para>
+        /// </remarks>
+        /// <param name="hWnd">Handle to the window whose property list receives the new entry.</param>
+        /// <param name="lpString">Pointer to a null-terminated string or contains an atom that identifies a string. If this parameter is an atom, it must be a global atom created by a previous call to the GlobalAddAtom function. The atom must be placed in the low-order word of lpString; the high-order word must be zero.</param>
+        /// <param name="hData">Handle to the data to be copied to the property list. The data handle can identify any value useful to the application. </param>
+        /// <returns>If the data handle and string are added to the property list, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.</returns>
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool SetProp(IntPtr hWnd, string lpString, IntPtr hData);
+
+        public enum TBPFLAG
+        {
+            TBPF_NOPROGRESS = 0,
+            TBPF_INDETERMINATE = 0x1,
+            TBPF_NORMAL = 0x2,
+            TBPF_ERROR = 0x4,
+            TBPF_PAUSED = 0x8
+        }
     }
 }

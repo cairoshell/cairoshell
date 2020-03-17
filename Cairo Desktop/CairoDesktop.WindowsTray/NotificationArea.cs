@@ -20,6 +20,7 @@ namespace CairoDesktop.WindowsTray
         private object _lockObject = new object();
         public IntPtr Handle;
         public bool IsFailed = false;
+        private IOleCommandTarget sysTrayObject = null;
 
         private static NotificationArea _instance = new NotificationArea();
         public static NotificationArea Instance
@@ -84,7 +85,9 @@ namespace CairoDesktop.WindowsTray
                 hooksWrapper.SetIconDataCallback(iconDataDelegate);
                 Handle = hooksWrapper.InitializeSystray();
                 hooksWrapper.Run();
-                startShellIcons();
+
+                // load the shell system tray objects (network, power, etc)
+                startShellServiceObject();
             }
             catch
             {
@@ -92,23 +95,42 @@ namespace CairoDesktop.WindowsTray
             }
         }
 
-        private void startShellIcons()
+        #region Shell Service Object
+        private void startShellServiceObject()
         {
             if (Shell.IsCairoConfiguredAsShell)
             {
                 try
                 {
-                    IOleCommandTarget sto = (IOleCommandTarget)(new SysTrayObject());
-                    Guid sso = new Guid("000214D2-0000-0000-C000-000000000046"); // CGID_SHELLSERVICEOBJECT
-                    sto.Exec(ref sso, 2, 0, IntPtr.Zero, IntPtr.Zero);
+                    sysTrayObject = (IOleCommandTarget)new SysTrayObject();
+                    Guid sso = new Guid(CGID_SHELLSERVICEOBJECT);
+                    sysTrayObject.Exec(ref sso, OLECMDID_NEW, OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
                 }
                 catch
                 {
-                    CairoLogger.Instance.Info("Failed to start shell notification icons service object.");
+                    CairoLogger.Instance.Debug("Unable to start shell service object.");
                 }
             }
         }
 
+        private void stopShellServiceObject()
+        {
+            if (sysTrayObject != null)
+            {
+                try
+                {
+                    Guid sso = new Guid(CGID_SHELLSERVICEOBJECT);
+                    sysTrayObject.Exec(ref sso, OLECMDID_SAVE, OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
+                }
+                catch
+                {
+                    CairoLogger.Instance.Debug("Unable to stop shell service object.");
+                }
+            }
+        }
+        #endregion
+
+        #region Pause for AppBar interop
         public void Suspend()
         {
             if (Handle != null && Handle != IntPtr.Zero)
@@ -123,7 +145,9 @@ namespace CairoDesktop.WindowsTray
                 setWindowsTaskbarBottommost();
             }
         }
+        #endregion
 
+        #region Collections
         private void prepareCollections()
         {
             // prepare grouped collections like the taskbar
@@ -162,22 +186,9 @@ namespace CairoDesktop.WindowsTray
         {
             return !(item as NotifyIcon).IsPinned;
         }
+        #endregion
 
-        private void setWindowsTaskbarBottommost()
-        {
-            IntPtr taskbarHwnd = FindWindow("Shell_TrayWnd", "");
-
-            if (Handle != null && Handle != IntPtr.Zero)
-            {
-                while (taskbarHwnd == Handle)
-                {
-                    taskbarHwnd = FindWindowEx(IntPtr.Zero, taskbarHwnd, "Shell_TrayWnd", "");
-                }
-            }
-
-            SetWindowPos(taskbarHwnd, (IntPtr)1, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
-        }
-
+        #region Callbacks
         private IntPtr IconDataCallback(CAIROWINNOTIFYICONIDENTIFIER iconData)
         {
             NotifyIcon icon = null;
@@ -345,11 +356,30 @@ namespace CairoDesktop.WindowsTray
             }
             return true;
         }
+        #endregion
+
+        private void setWindowsTaskbarBottommost()
+        {
+            IntPtr taskbarHwnd = FindWindow("Shell_TrayWnd", "");
+
+            if (Handle != null && Handle != IntPtr.Zero)
+            {
+                while (taskbarHwnd == Handle)
+                {
+                    taskbarHwnd = FindWindowEx(IntPtr.Zero, taskbarHwnd, "Shell_TrayWnd", "");
+                }
+            }
+
+            SetWindowPos(taskbarHwnd, (IntPtr)1, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+        }
 
         public void Dispose()
         {
             if (!IsFailed && trayDelegate != null)
+            {
+                stopShellServiceObject();
                 hooksWrapper.ShutdownSystray();
+            }
         }
     }
 }
