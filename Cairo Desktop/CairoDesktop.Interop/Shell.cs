@@ -682,6 +682,8 @@ namespace CairoDesktop.Interop
             }
         }
 
+        private static bool? isCairoConfiguredAsShell;
+
         /// <summary>
         /// Checks the currently configured shell, NOT the currently running shell! Use Startup.IsCairoRunningAsShell for that.
         /// </summary>
@@ -689,25 +691,30 @@ namespace CairoDesktop.Interop
         {
             get
             {
-                // check if we are the current user's shell
-                string userShell = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell") as string;
-                if (userShell != null) // CurrentUser Shell
+                if (isCairoConfiguredAsShell == null)
                 {
-                    return userShell.ToString().ToLower().Contains("cairodesktop");
-                }
-                else
-                {
-                    // check if we are the current system's shell
-                    string systemShell = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell") as string;
-                    if (systemShell != null)
+                    // check if we are the current user's shell
+                    string userShell = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell") as string;
+                    if (userShell != null) // CurrentUser Shell
                     {
-                        return systemShell.ToLower().Contains("cairodesktop");
+                        isCairoConfiguredAsShell = userShell.ToString().ToLower().Contains("cairodesktop");
                     }
                     else
                     {
-                        return false;
+                        // check if we are the current system's shell
+                        string systemShell = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell") as string;
+                        if (systemShell != null)
+                        {
+                            isCairoConfiguredAsShell = systemShell.ToLower().Contains("cairodesktop");
+                        }
+                        else
+                        {
+                            isCairoConfiguredAsShell = false;
+                        }
                     }
                 }
+
+                return (bool)isCairoConfiguredAsShell;
             }
             set
             {
@@ -730,7 +737,26 @@ namespace CairoDesktop.Interop
                             regKey.DeleteValue("Shell");
                         }
                     }
+
+                    isCairoConfiguredAsShell = value;
                 }
+            }
+        }
+
+        private static bool? isServerCore;
+
+        public static bool IsServerCore
+        {
+            get
+            {
+                if (isServerCore == null)
+                {
+                    string installationType = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false).GetValue("InstallationType") as string;
+
+                    isServerCore = installationType == "Server Core";
+                }
+
+                return (bool)isServerCore;
             }
         }
 
