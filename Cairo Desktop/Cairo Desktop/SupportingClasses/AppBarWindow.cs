@@ -14,6 +14,7 @@ namespace CairoDesktop.SupportingClasses
         // Screen properties
         public System.Windows.Forms.Screen Screen;
         internal double dpiScale = 1.0;
+        protected bool processScreenChanges = false;
 
         // Window properties
         private WindowInteropHelper helper;
@@ -241,7 +242,7 @@ namespace CairoDesktop.SupportingClasses
 
         private void setScreenProperties(string reason)
         {
-            if (!Startup.IsSettingScreens && Screen.Primary && this is MenuBar)
+            if (Screen.Primary && processScreenChanges)
             {
                 CairoLogger.Instance.Debug("Calling screen setup due to " + reason);
                 Startup.ScreenSetup(); // update Cairo window list based on new screen setup

@@ -38,6 +38,7 @@ namespace CairoDesktop
 
             Screen = screen;
             desiredHeight = 23;
+            processScreenChanges = true;
 
             setPosition();
 
