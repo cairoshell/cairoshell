@@ -2189,7 +2189,7 @@ namespace CairoDesktop.Localization
             { "sShutDown_Info", "Вы потеряете все несохраненные документы и ПК выключится." },
             { "sShutDown_ShutDown", "Завершить" },
             { "sProgramsMenu_Empty", "Здесь нет программ. Но вы можете их добавить, нажав на пункт Добавить программы!" },
-            { "sProgramsMenu_UninstallAProgram", "Удалить программу" },
+            { "sProgramsMenu_UninstallAProgram", "Удалить программы" },
             { "sProgramsMenu_RemoveFromMenu", "Удалить из списка" },
             { "sProgramsMenu_RemoveTitle", "Удалить эту программу из списка?" },
             { "sProgramsMenu_RemoveInfo", "\"{0}\" будет удалена из списка {1}. Это не удалит программу с Вашего ПК." },
