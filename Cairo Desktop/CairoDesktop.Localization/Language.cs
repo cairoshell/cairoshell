@@ -2304,7 +2304,7 @@ namespace CairoDesktop.Localization
             { "sSettings_Desktop_DesktopBackgroundSettings", "Фон рабочего стола" },
             { "sSettings_Desktop_BackgroundType", "Тип фона:" },
             { "sSettings_Desktop_BackgroundType_windowsDefaultBackground", "Windows" },
-            { "sSettings_Desktop_BackgroundType_cairoImageWallpaper", "Изображения" },
+            { "sSettings_Desktop_BackgroundType_cairoImageWallpaper", "Изображение" },
             { "sSettings_Desktop_BackgroundType_cairoVideoWallpaper", "Видео" },
             { "sSettings_Desktop_BackgroundType_bingWallpaper", "Изображение дня Bing" },
             { "sSettings_Desktop_Background_Path", "Путь:" },
