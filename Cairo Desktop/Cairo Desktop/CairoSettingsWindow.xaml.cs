@@ -735,6 +735,8 @@ namespace CairoDesktop
 
             txtWindowsBackgroundPath.Text = regWallpaper;
 
+            #endregion
+
             foreach (var backgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
             {
                 string display;
@@ -764,17 +766,39 @@ namespace CairoDesktop
                         break;
                 }
 
-                ComboBoxItem cboItem = new ComboBoxItem()
+                // windows
+                ComboBoxItem cboWindowsItem = new ComboBoxItem()
                 {
                     Tag = backgroundStyleItem,
                     Content = display
                 };
-                cboWindowsBackgroundStyle.Items.Add(cboItem);
+                cboWindowsBackgroundStyle.Items.Add(cboWindowsItem);
 
-                if (backgroundStyleItem == style) cboItem.IsSelected = true;
+                if (backgroundStyleItem == style) cboWindowsItem.IsSelected = true;
+
+                if (Startup.IsCairoRunningAsShell)
+                {
+                    // image
+                    ComboBoxItem cboImageItem = new ComboBoxItem()
+                    {
+                        Tag = backgroundStyleItem,
+                        Content = display
+                    };
+                    cboCairoBackgroundStyle.Items.Add(cboImageItem);
+
+                    if (backgroundStyleItem == (Desktop.CairoWallpaperStyle)Settings.Instance.CairoBackgroundImageStyle) cboImageItem.IsSelected = true;
+
+                    // bing
+                    ComboBoxItem cboBingItem = new ComboBoxItem()
+                    {
+                        Tag = backgroundStyleItem,
+                        Content = display
+                    };
+                    cboBingBackgroundStyle.Items.Add(cboBingItem);
+
+                    if (backgroundStyleItem == (Desktop.CairoWallpaperStyle)Settings.Instance.BingWallpaperStyle) cboBingItem.IsSelected = true;
+                }
             }
-
-            #endregion
 
             if (Startup.IsCairoRunningAsShell)
             {
@@ -787,18 +811,6 @@ namespace CairoDesktop
                 };
                 cboDesktopBackgroundType.Items.Add(cairoImageWallpaperItem);
                 txtCairoBackgroundPath.Text = Settings.Instance.CairoBackgroundImagePath;
-
-                foreach (var backgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
-                {
-                    ComboBoxItem cboItem = new ComboBoxItem()
-                    {
-                        Tag = backgroundStyleItem,
-                        Content = backgroundStyleItem.ToString()
-                    };
-                    cboCairoBackgroundStyle.Items.Add(cboItem);
-
-                    if (backgroundStyleItem == (Desktop.CairoWallpaperStyle)Settings.Instance.CairoBackgroundImageStyle) cboItem.IsSelected = true;
-                }
                 #endregion
 
                 #region  cairoVideoWallpaper
@@ -820,18 +832,6 @@ namespace CairoDesktop
                     Tag = bingImageBackgroundStackPanel
                 };
                 cboDesktopBackgroundType.Items.Add(bingWallpaperItem);
-
-                foreach (var backgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
-                {
-                    ComboBoxItem cboItem = new ComboBoxItem()
-                    {
-                        Tag = backgroundStyleItem,
-                        Content = backgroundStyleItem.ToString()
-                    };
-                    cboBingBackgroundStyle.Items.Add(cboItem);
-
-                    if (backgroundStyleItem == (Desktop.CairoWallpaperStyle)Settings.Instance.BingWallpaperStyle) cboItem.IsSelected = true;
-                }
                 #endregion
 
                 var listBoxItems = cboDesktopBackgroundType.Items.Cast<ComboBoxItem>().ToList();
