@@ -1,4 +1,5 @@
 ﻿using CairoDesktop.Interop;
+using CairoDesktop.SupportingClasses;
 using System;
 using System.Windows;
 using System.Windows.Interop;
@@ -66,7 +67,7 @@ namespace CairoDesktop
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             IsClosing = true;
-            if (!Startup.IsShuttingDown && !Startup.IsSettingScreens)
+            if (!Startup.IsShuttingDown && !WindowManager.Instance.IsSettingDisplays)
             {
                 IsClosing = false;
                 e.Cancel = true;

@@ -2205,7 +2205,6 @@
                                     </Border>
                                     <Image Source="{StaticResource MenubarShadow}"
                                            Stretch="Fill"
-                                           Width="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}"
                                            Height="16" />
                                 </StackPanel>
                             </Popup>
@@ -2416,13 +2415,11 @@
                         <ScrollContentPresenter Grid.Column="1"
                                                 Width="{TemplateBinding Width}"
                                                 Height="{TemplateBinding Height}"
-                                                Margin="0,0,16,0"
                                                 CanContentScroll="{TemplateBinding CanContentScroll}"
                                                 Content="{TemplateBinding Content}" />
                         <RepeatButton Grid.Column="2"
                                       Command="ScrollBar.PageRightCommand"
                                       Style="{StaticResource StackScrollButton}"
-                                      Margin="-32,0,0,0"
                                       Content="4" />
                     </Grid>
                 </ControlTemplate>
@@ -2536,8 +2533,6 @@
            TargetType="ListView">
         <Setter Property="Height"
                 Value="85" />
-        <Setter Property="Width"
-                Value="{DynamicResource {x:Static SystemParameters.MaximizedPrimaryScreenWidthKey}}" />
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="ListViewItem">

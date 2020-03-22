@@ -13,6 +13,8 @@ namespace CairoDesktop
     /// </summary>
     public partial class ProgramsMenu : UserControl
     {
+        public MenuBar MenuBar;
+
         // AppGrabber instance
         private AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
         bool hasLoaded;
@@ -40,9 +42,9 @@ namespace CairoDesktop
         #region Sidebar items
         private void btnAppGrabber_Click(object sender, RoutedEventArgs e)
         {
-            foreach(MenuBar bar in Startup.MenuBarWindows)
+            if (MenuBar != null)
             {
-                bar.ProgramsMenu.IsSubmenuOpen = false;
+                MenuBar.ProgramsMenu.IsSubmenuOpen = false;
             }
 
             appGrabber.ShowDialog();

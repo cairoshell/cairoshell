@@ -42,6 +42,8 @@ namespace CairoDesktop
 
             setPosition();
 
+            setupChildren();
+
             setupMenu();
 
             setupCairoMenu();
@@ -62,6 +64,12 @@ namespace CairoDesktop
                 WinSparkle.win_sparkle_set_shutdown_request_callback(shutdownDelegate);
                 WinSparkle.win_sparkle_init();
             }
+        }
+
+        private void setupChildren()
+        {
+            stacksContainer.MenuBar = this;
+            programsMenuControl.MenuBar = this;
         }
 
         private void setupMenu()
@@ -180,6 +188,7 @@ namespace CairoDesktop
             {
                 shadow = new MenuBarShadow(this);
                 shadow.Show();
+                setShadowPosition();
             }
         }
 
@@ -334,7 +343,7 @@ namespace CairoDesktop
                 WinSparkle.win_sparkle_cleanup();
             }
             
-            if (Startup.IsSettingScreens || Startup.IsShuttingDown)
+            if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
             {
                 closeShadow();
             }

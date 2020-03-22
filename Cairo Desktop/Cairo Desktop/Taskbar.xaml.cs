@@ -150,7 +150,7 @@ namespace CairoDesktop
                 AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.OnTop);
                 AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_SHOWWINDOW);
             }
-            else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
+            else if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
             {
                 WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
             }

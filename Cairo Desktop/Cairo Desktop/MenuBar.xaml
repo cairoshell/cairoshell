@@ -85,7 +85,7 @@
                           StaysOpenOnClick="True">
                     <MenuItem StaysOpenOnClick="True">
                         <MenuItem.Header>
-                            <control:ProgramsMenu />
+                            <control:ProgramsMenu x:Name="programsMenuControl" />
                         </MenuItem.Header>
                     </MenuItem>
                 </MenuItem>

@@ -91,7 +91,7 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.GetWindowRect(hWnd, out rect);
 
             // check if this is a full screen app
-            foreach (Screen screen in Startup.screenState)
+            foreach (Screen screen in WindowManager.Instance.ScreenState)
             {
                 if (rect.top == screen.Bounds.Top && rect.left == screen.Bounds.Left && rect.bottom == screen.Bounds.Bottom && rect.right == screen.Bounds.Right)
                 {

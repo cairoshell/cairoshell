@@ -23,10 +23,8 @@
         private static System.Threading.Mutex cairoMutex;
 
         public static MenuBar MenuBarWindow { get; set; }
-        public static List<MenuBar> MenuBarWindows = new List<MenuBar>();
 
         public static Taskbar TaskbarWindow { get; set; }
-        public static List<Taskbar> TaskbarWindows = new List<Taskbar>();
 
         public static Desktop DesktopWindow { get; set; }
 
@@ -40,12 +38,6 @@
         private static bool isTour;
 
         public static bool IsShuttingDown { get; set; }
-
-        public static bool IsSettingScreens { get; set; }
-        private static bool hasCompletedInitialScreenSetup = false;
-
-        public static System.Windows.Forms.Screen[] screenState = { };
-        private static Object screenSetupLock = new Object();
 
         /// <summary>
         /// The main entry point for the application
@@ -86,46 +78,10 @@
             App app = new App();
             app.InitializeComponent();  // This sets up the Unhandled Exception stuff... 
 
-            // Themes are very UI centric. We should devise a way of having Plugins/Extensions contribute to this.
-            string theme = Settings.Instance.CairoTheme;
-            if (theme != "Default")
-            {
-                string themeFilePath = AppDomain.CurrentDomain.BaseDirectory + theme;
-                if (System.IO.File.Exists(themeFilePath))
-                {
-                    ResourceDictionary newRes = new ResourceDictionary();
-                    newRes.Source = new Uri(themeFilePath, UriKind.RelativeOrAbsolute);
-                    app.Resources.MergedDictionaries.Add(newRes);
-                }
-            }
-
-            Settings.Instance.PropertyChanged += (s, e) =>
-              {
-                  if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName) && e.PropertyName == "CairoTheme")
-                  {
-                      App.Current.Resources.MergedDictionaries.Clear();
-                      ResourceDictionary cairoResource = new ResourceDictionary();
-
-                      // Put our base theme back
-                      cairoResource.Source = new Uri("Cairo.xaml", UriKind.RelativeOrAbsolute);
-                      App.Current.Resources.MergedDictionaries.Add(cairoResource);
-
-                      string newTheme = Settings.Instance.CairoTheme;
-                      if (newTheme != "Default")
-                      {
-                          string newThemeFilePath = AppDomain.CurrentDomain.BaseDirectory + newTheme;
-                          if (System.IO.File.Exists(newThemeFilePath))
-                          {
-                              ResourceDictionary newRes = new ResourceDictionary();
-                              newRes.Source = new Uri(newThemeFilePath, UriKind.RelativeOrAbsolute);
-                              app.Resources.MergedDictionaries.Add(newRes);
-                          }
-                      }
-                  }
-              };
+            setTheme(app);
 
 
-            // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
+            // Future: This should be moved to whatever plugin is responsible for Taskbar stuff
             if (Settings.Instance.EnableTaskbar)
             {
                 AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
@@ -136,7 +92,7 @@
             MenuBarWindow = new MenuBar(System.Windows.Forms.Screen.PrimaryScreen);
             app.MainWindow = MenuBarWindow;
             MenuBarWindow.Show();
-            MenuBarWindows.Add(MenuBarWindow);
+            WindowManager.Instance.MenuBarWindows.Add(MenuBarWindow);
 
             // Future: This should be moved to whatever plugin is responsible for Desktop stuff
             if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop)
@@ -150,11 +106,11 @@
             {
                 TaskbarWindow = new Taskbar(System.Windows.Forms.Screen.PrimaryScreen);
                 TaskbarWindow.Show();
-                TaskbarWindows.Add(TaskbarWindow);
+                WindowManager.Instance.TaskbarWindows.Add(TaskbarWindow);
             }
 
-            // Future: This should be moved to whatever plugin is responsible for Taskbar/MenuBar stuff
-            ScreenSetup(true);
+            // Open windows on secondary displays and set work area
+            WindowManager.Instance.InitialSetup();
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
             // Don't allow showing both the Windows taskbar and the Cairo tray
@@ -222,7 +178,7 @@
             NotificationArea.Instance.Dispose();
 
             // reset work area
-            if (IsCairoRunningAsShell) AppBarHelper.ResetWorkArea();
+            if (IsCairoRunningAsShell) WindowManager.Instance.ResetWorkArea();
 
             Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
         }
@@ -436,242 +392,45 @@
 
         #endregion
 
-
-
-        public static void ResetScreenCache()
+        private static void setTheme(App app)
         {
-            // use reflection to empty screens cache
-            typeof(System.Windows.Forms.Screen).GetField("screens", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
-        }
-
-        /// <summary>
-        /// Compares the system screen list to the screens associated with Cairo windows, then creates or destroys windows as necessary.
-        /// Only affects non-primary screens, as Cairo always opens on at least the primary screen.
-        /// Runs at startup and when a WM_DISPLAYCHANGE message is received by the main MenuBar window.
-        /// </summary>
-        public static void ScreenSetup(bool skipChecks = false)
-        {
-            lock (screenSetupLock)
+            // Themes are very UI centric. We should devise a way of having Plugins/Extensions contribute to this.
+            string theme = Settings.Instance.CairoTheme;
+            if (theme != "Default")
             {
-                if (!skipChecks && !hasCompletedInitialScreenSetup)
+                string themeFilePath = AppDomain.CurrentDomain.BaseDirectory + theme;
+                if (System.IO.File.Exists(themeFilePath))
                 {
-                    CairoLogger.Instance.Debug("Screen setup ran before startup completed, aborting");
-                    return;
+                    ResourceDictionary newRes = new ResourceDictionary();
+                    newRes.Source = new Uri(themeFilePath, UriKind.RelativeOrAbsolute);
+                    app.Resources.MergedDictionaries.Add(newRes);
                 }
-
-                CairoLogger.Instance.Debug("Beginning screen setup");
-                IsSettingScreens = true;
-
-                bool shouldSetScreens = true;
-
-                List<string> sysScreens = new List<string>();
-                List<string> openScreens = new List<string>();
-                List<string> addedScreens = new List<string>();
-                List<string> removedScreens = new List<string>();
-
-                ResetScreenCache();
-
-                if (screenState.Length == System.Windows.Forms.Screen.AllScreens.Length)
-                {
-                    bool same = true;
-                    for (int i = 0; i < screenState.Length; i++)
-                    {
-                        System.Windows.Forms.Screen current = System.Windows.Forms.Screen.AllScreens[i];
-                        if (!(screenState[i].Bounds == current.Bounds && screenState[i].DeviceName == current.DeviceName && screenState[i].Primary == current.Primary && screenState[i].WorkingArea == current.WorkingArea))
-                        {
-                            same = false;
-                            break;
-                        }
-                    }
-
-                    if (same)
-                    {
-                        CairoLogger.Instance.Debug("Skipping screen setup due to no differences");
-                        shouldSetScreens = false;
-                    }
-                    else
-                        screenState = System.Windows.Forms.Screen.AllScreens;
-                }
-                else
-                    screenState = System.Windows.Forms.Screen.AllScreens;
-
-                if (!skipChecks)
-                {
-                    if (shouldSetScreens)
-                    {
-                        // enumerate screens
-
-                        foreach (MenuBar bar in MenuBarWindows)
-                        {
-                            if (bar.Screen != null && !openScreens.Contains(bar.Screen.DeviceName))
-                                openScreens.Add(bar.Screen.DeviceName);
-                        }
-
-                        foreach (Taskbar bar in TaskbarWindows)
-                        {
-                            if (bar.Screen != null && !openScreens.Contains(bar.Screen.DeviceName))
-                                openScreens.Add(bar.Screen.DeviceName);
-                        }
-
-                        foreach (var screen in screenState)
-                        {
-                            CairoLogger.Instance.Debug(string.Format("{0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
-
-                            sysScreens.Add(screen.DeviceName);
-                        }
-
-                        // figure out which screens have been added vs removed
-
-                        foreach (string name in sysScreens)
-                        {
-                            if (!openScreens.Contains(name))
-                                addedScreens.Add(name);
-                        }
-
-                        foreach (string name in openScreens)
-                        {
-                            if (!sysScreens.Contains(name))
-                                removedScreens.Add(name);
-                        }
-
-                        if (sysScreens.Count == 0)
-                        {
-                            // remove everything?! no way!
-                            IsSettingScreens = false;
-                            hasCompletedInitialScreenSetup = true;
-                            return;
-                        }
-
-                        // close windows associated with removed screens
-                        foreach (string name in removedScreens)
-                        {
-                            CairoLogger.Instance.DebugIf(Settings.Instance.EnableMenuBarMultiMon || Settings.Instance.EnableTaskbarMultiMon, "Removing windows associated with screen " + name);
-
-                            if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
-                            {
-                                // close taskbars
-                                Taskbar taskbarToClose = null;
-                                foreach (Taskbar bar in TaskbarWindows)
-                                {
-                                    if (bar.Screen != null && bar.Screen.DeviceName == name)
-                                    {
-                                        CairoLogger.Instance.DebugIf(bar.Screen.Primary, "Closing taskbar on primary display");
-
-                                        taskbarToClose = bar;
-                                        break;
-                                    }
-                                }
-
-                                if (taskbarToClose != null)
-                                {
-                                    taskbarToClose.Close();
-                                    TaskbarWindows.Remove(taskbarToClose);
-                                }
-                            }
-
-                            if (Settings.Instance.EnableMenuBarMultiMon)
-                            {
-                                // close menu bars
-                                MenuBar barToClose = null;
-                                foreach (MenuBar bar in MenuBarWindows)
-                                {
-                                    if (bar.Screen != null && bar.Screen.DeviceName == name)
-                                    {
-                                        CairoLogger.Instance.DebugIf(bar.Screen.Primary, "Closing menu bar on primary display");
-
-                                        barToClose = bar;
-                                        break;
-                                    }
-                                }
-
-                                if (barToClose != null)
-                                {
-                                    if (!barToClose.IsClosing)
-                                        barToClose.Close();
-                                    MenuBarWindows.Remove(barToClose);
-                                }
-                            }
-                        }
-                    }
-
-                    CairoLogger.Instance.Debug("Refreshing screen information for stale windows");
-
-                    // update screens of stale windows
-                    foreach (MenuBar bar in MenuBarWindows)
-                    {
-                        if (bar.Screen != null)
-                        {
-                            foreach (System.Windows.Forms.Screen screen in screenState)
-                            {
-                                if (screen.DeviceName == bar.Screen.DeviceName)
-                                {
-                                    bar.Screen = screen;
-                                    bar.setScreenPosition();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    foreach (Taskbar bar in TaskbarWindows)
-                    {
-                        if (bar.Screen != null)
-                        {
-                            foreach (System.Windows.Forms.Screen screen in screenState)
-                            {
-                                if (screen.DeviceName == bar.Screen.DeviceName)
-                                {
-                                    bar.Screen = screen;
-                                    bar.setScreenPosition();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // open windows on newly added screens
-                foreach (var screen in screenState)
-                {
-                    // if skipChecks, that means this is initial startup and primary display windows have already opened, so skip them
-                    if (shouldSetScreens && ((skipChecks && !screen.Primary) || addedScreens.Contains(screen.DeviceName)))
-                    {
-                        CairoLogger.Instance.DebugIf(Settings.Instance.EnableMenuBarMultiMon || Settings.Instance.EnableTaskbarMultiMon, "Opening windows on screen " + screen.DeviceName);
-
-                        if (Settings.Instance.EnableMenuBarMultiMon)
-                        {
-                            CairoLogger.Instance.DebugIf(screen.Primary, "Opening menu bar on new primary display");
-
-                            // menu bars
-                            MenuBar newMenuBar = new MenuBar(screen);
-                            newMenuBar.Show();
-                            MenuBarWindows.Add(newMenuBar);
-
-                            if (screen.Primary) MenuBarWindow = newMenuBar;
-                        }
-
-                        if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
-                        {
-                            CairoLogger.Instance.DebugIf(screen.Primary, "Opening taskbar on new primary display");
-
-                            // taskbars
-                            Taskbar newTaskbar = new Taskbar(screen);
-                            newTaskbar.Show();
-                            TaskbarWindows.Add(newTaskbar);
-
-                            if (screen.Primary) TaskbarWindow = newTaskbar;
-                        }
-                    }
-
-                    // Set desktop work area for when Explorer isn't running
-                    if (IsCairoRunningAsShell)
-                        AppBarHelper.SetWorkArea(screen);
-                }
-
-                IsSettingScreens = false;
-                hasCompletedInitialScreenSetup = true;
-                CairoLogger.Instance.Debug("Completed screen setup");
             }
+
+            Settings.Instance.PropertyChanged += (s, e) =>
+            {
+                if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName) && e.PropertyName == "CairoTheme")
+                {
+                    App.Current.Resources.MergedDictionaries.Clear();
+                    ResourceDictionary cairoResource = new ResourceDictionary();
+
+                    // Put our base theme back
+                    cairoResource.Source = new Uri("Cairo.xaml", UriKind.RelativeOrAbsolute);
+                    App.Current.Resources.MergedDictionaries.Add(cairoResource);
+
+                    string newTheme = Settings.Instance.CairoTheme;
+                    if (newTheme != "Default")
+                    {
+                        string newThemeFilePath = AppDomain.CurrentDomain.BaseDirectory + newTheme;
+                        if (System.IO.File.Exists(newThemeFilePath))
+                        {
+                            ResourceDictionary newRes = new ResourceDictionary();
+                            newRes.Source = new Uri(newThemeFilePath, UriKind.RelativeOrAbsolute);
+                            app.Resources.MergedDictionaries.Add(newRes);
+                        }
+                    }
+                }
+            };
         }
     }
 }

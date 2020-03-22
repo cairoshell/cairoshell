@@ -120,8 +120,8 @@ namespace CairoDesktop
             }
             else
             {
-                Top = AppBarHelper.PrimaryMonitorSize.Height - Height - 150;
-                Left = (AppBarHelper.PrimaryMonitorSize.Width / 2) - (Width / 2);
+                Top = WindowManager.PrimaryMonitorSize.Height - Height - 150;
+                Left = (WindowManager.PrimaryMonitorSize.Width / 2) - (Width / 2);
             }
         }
 

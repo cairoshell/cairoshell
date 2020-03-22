@@ -31,11 +31,11 @@
                                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_Remove)}" Click="Remove_Click" CommandParameter="{Binding}" />
                             </ContextMenu>
                         </Menu.ContextMenu>
-                        <MenuItem Header="{Binding Path=NameLabel, Mode=OneTime}" CommandParameter="{Binding}" Style="{StaticResource CairoStacksStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Margin="0" PreviewMouseUp="NameLabel_PreviewMouseUp">
+                        <MenuItem Header="{Binding Path=NameLabel, Mode=OneTime}" CommandParameter="{Binding}" Style="{StaticResource CairoStacksStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Margin="0" PreviewMouseUp="NameLabel_PreviewMouseUp" PreviewMouseDown="NameLabel_PreviewMouseDown">
                             <MenuItem>
                                 <MenuItem.Header>
                                     <Grid>
-                                        <ListView x:Name="Scroller" FocusManager.IsFocusScope="True" Style="{StaticResource FolderViewStyle}" ItemsSource="{Binding Path=Files}" PreviewMouseWheel="Scroller_PreviewMouseWheel" />
+                                        <ListView x:Name="Scroller" FocusManager.IsFocusScope="True" Style="{StaticResource FolderViewStyle}" Width="{Binding Path=PopupWidth, ElementName=CairoStacksContainer}" ItemsSource="{Binding Path=Files}" PreviewMouseWheel="Scroller_PreviewMouseWheel" />
                                         <Button Style="{StaticResource StackTopButton}" Click="Open_Click" CommandParameter="{Binding Path=FullName}" Content="2" ToolTip="{Binding Path=(l10n:DisplayString.sStacks_OpenInNewWindow)}" />
                                     </Grid>
                                 </MenuItem.Header>

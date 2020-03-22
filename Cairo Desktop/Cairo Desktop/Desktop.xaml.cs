@@ -157,7 +157,7 @@ namespace CairoDesktop
             {
                 // delay changing things when we are shell. it seems that AppBars do this automagically
                 // if we don't, the system moves things to bad places
-                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.1) };
                 timer.Start();
                 timer.Tick += (sender1, args) =>
                 {
@@ -356,23 +356,23 @@ namespace CairoDesktop
 
         private void setSize()
         {
-            Width = AppBarHelper.PrimaryMonitorSize.Width;
-            if (Startup.IsCairoRunningAsShell) Height = AppBarHelper.PrimaryMonitorSize.Height;
-            else Height = AppBarHelper.PrimaryMonitorSize.Height - 1; // TODO making size of screen causes explorer to send ABN_FULLSCREENAPP (but is that a bad thing?)
+            Width = WindowManager.PrimaryMonitorSize.Width;
+            if (Startup.IsCairoRunningAsShell) Height = WindowManager.PrimaryMonitorSize.Height;
+            else Height = WindowManager.PrimaryMonitorSize.Height - 1; // TODO making size of screen causes explorer to send ABN_FULLSCREENAPP (but is that a bad thing?)
         }
 
         private void setGridPosition()
         {
-            grid.Width = AppBarHelper.PrimaryMonitorWorkArea.Width / Shell.DpiScale;
+            grid.Width = WindowManager.PrimaryMonitorWorkArea.Width / Shell.DpiScale;
 
             if (Settings.Instance.TaskbarMode == 1 && Startup.TaskbarWindow != null)
             {
                 // special case, since work area is not reduced with this setting
-                grid.Height = (AppBarHelper.PrimaryMonitorWorkArea.Height / Shell.DpiScale) - Startup.TaskbarWindow.ActualHeight;
+                grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / Shell.DpiScale) - Startup.TaskbarWindow.ActualHeight;
             }
             else
             {
-                grid.Height = AppBarHelper.PrimaryMonitorWorkArea.Height / Shell.DpiScale;
+                grid.Height = WindowManager.PrimaryMonitorWorkArea.Height / Shell.DpiScale;
             }
 
             grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.DpiScale, System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.DpiScale, 0, 0);

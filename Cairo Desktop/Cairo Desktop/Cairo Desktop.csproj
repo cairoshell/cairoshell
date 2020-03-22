@@ -103,6 +103,7 @@
     <Compile Include="SupportingClasses\AppBarWindow.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
     <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
+    <Compile Include="SupportingClasses\WindowManager.cs" />
     <Compile Include="SupportingClasses\FilePathValidationRule.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
     <Compile Include="SupportingClasses\DirectoryPathValidationRule.cs" />

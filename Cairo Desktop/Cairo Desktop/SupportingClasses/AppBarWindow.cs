@@ -16,6 +16,13 @@ namespace CairoDesktop.SupportingClasses
         internal double dpiScale = 1.0;
         protected bool processScreenChanges = false;
 
+        private enum ScreenSetupReason
+        {
+            DeviceChange,
+            DisplayChange,
+            DpiChange
+        }
+
         // Window properties
         private WindowInteropHelper helper;
         private bool isRaising;
@@ -99,7 +106,7 @@ namespace CairoDesktop.SupportingClasses
                 // dispose the full screen helper since we are the primary instance
                 FullScreenHelper.Instance.Dispose();
             }
-            else if (Startup.IsSettingScreens || Startup.IsShuttingDown)
+            else if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
             {
                 // unregister appbar
                 if (AppBarHelper.appBars.Contains(Handle))
@@ -194,23 +201,16 @@ namespace CairoDesktop.SupportingClasses
 
                 dpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
 
-                setScreenProperties("DpiChange");
-
-                if (Startup.IsCairoRunningAsShell || !enableAppBar)
-                {
-                    delaySetPosition();
-                }
-                else if (enableAppBar) AppBarHelper.ABSetPos(this, Screen, desiredHeight * dpiScale, ActualHeight * dpiScale, appBarEdge);
-
+                setScreenProperties(ScreenSetupReason.DpiChange);
             }
             else if (msg == NativeMethods.WM_DISPLAYCHANGE)
             {
-                setScreenProperties("DisplayChange");
+                setScreenProperties(ScreenSetupReason.DisplayChange);
                 handled = true;
             }
             else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
             {
-                setScreenProperties("DeviceChange");
+                setScreenProperties(ScreenSetupReason.DeviceChange);
                 handled = true;
             }
 
@@ -224,7 +224,7 @@ namespace CairoDesktop.SupportingClasses
         {
             // delay changing things when we are shell. it seems that explorer AppBars do this too.
             // if we don't, the system moves things to bad places
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.1) };
             timer.Start();
             timer.Tick += (sender1, args) =>
             {
@@ -236,16 +236,18 @@ namespace CairoDesktop.SupportingClasses
         internal void setScreenPosition()
         {
             // set our position if running as shell, otherwise let AppBar do the work
-            if (Startup.IsCairoRunningAsShell || !enableAppBar) setPosition();
+            if (Startup.IsCairoRunningAsShell || !enableAppBar) delaySetPosition();
             else if (enableAppBar) AppBarHelper.ABSetPos(this, Screen, desiredHeight * dpiScale, ActualHeight * dpiScale, appBarEdge);
         }
 
-        private void setScreenProperties(string reason)
+        private void setScreenProperties(ScreenSetupReason reason)
         {
-            if (Screen.Primary && processScreenChanges)
+            // process screen changes if we are on the primary display (or any display in the case of a DPI change, since only the changed display receives that message)
+            // and the designated window.
+            if ((Screen.Primary || reason == ScreenSetupReason.DpiChange) && processScreenChanges)
             {
-                CairoLogger.Instance.Debug("Calling screen setup due to " + reason);
-                Startup.ScreenSetup(); // update Cairo window list based on new screen setup
+                CairoLogger.Instance.Debug("AppBarWindow: Calling screen setup due to " + reason);
+                WindowManager.Instance.NotifyDisplayChange(); // update Cairo window list based on new screen setup
             }
         }
 

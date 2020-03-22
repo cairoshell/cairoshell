@@ -17,7 +17,7 @@ namespace CairoDesktop
         {
             InitializeComponent();
 
-            double size = SupportingClasses.AppBarHelper.PrimaryMonitorSize.Height - 100;
+            double size = SupportingClasses.WindowManager.PrimaryMonitorSize.Height - 100;
             if (size >= maxSize)
             {
                 Height = maxSize;
@@ -27,7 +27,7 @@ namespace CairoDesktop
                 Height = size;
             }
 
-            MaxHeight = SupportingClasses.AppBarHelper.PrimaryMonitorSize.Height;
+            MaxHeight = SupportingClasses.WindowManager.PrimaryMonitorSize.Height;
             loadLanguages();
         }
 

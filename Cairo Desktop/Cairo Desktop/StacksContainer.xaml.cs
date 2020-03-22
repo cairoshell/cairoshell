@@ -13,12 +13,78 @@ namespace CairoDesktop {
     /// </summary>
     public partial class StacksContainer : UserControl 
     {
+        public MenuBar MenuBar;
+
+        public static DependencyProperty PopupWidthProperty = DependencyProperty.Register("PopupWidth", typeof(double), typeof(StacksContainer), new PropertyMetadata(new double()));
+        public double PopupWidth
+        {
+            get { return (double)GetValue(PopupWidthProperty); }
+            set { SetValue(PopupWidthProperty, value); }
+        }
+
         public StacksContainer() 
         {
             InitializeComponent();
 
             DataContext = StacksManager.Instance;
         }
+
+        private void Remove_Click(object sender, RoutedEventArgs e)
+        {
+            StacksManager.Instance.StackLocations.Remove((sender as MenuItem).CommandParameter as SystemDirectory);
+        }
+        
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+            openDir((sender as ICommandSource).CommandParameter.ToString(), true);
+        }
+
+        private void OpenDesktop_Click(object sender, RoutedEventArgs e)
+        {
+            openDir((sender as ICommandSource).CommandParameter.ToString(), false);
+        }
+
+        private void NameLabel_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // set popup width in case the display changed
+            if (e.ChangedButton == MouseButton.Left && MenuBar != null)
+            {
+                PopupWidth = MenuBar.Width;
+            }
+        }
+
+        private void NameLabel_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            // Open folders with middle button clicks.
+            if (e.ChangedButton == MouseButton.Middle)
+            {
+                // Some checks just in case.
+                ICommandSource cmdsrc = sender as ICommandSource;
+                if (cmdsrc?.CommandParameter is SystemDirectory cmdparam)
+                {
+                    openDir(cmdparam.FullName, false); 
+                    e.Handled = true;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Launches the FileManager specified in the application Settings object to the specified directory.
+        /// </summary>
+        /// <param name="directoryPath">Directory to open.</param>
+        private void openDir(string directoryPath, bool openWithShell) 
+        {
+            if ((!openWithShell && !FolderHelper.OpenLocation(directoryPath)) || (openWithShell && !FolderHelper.OpenWithShell(directoryPath)))
+            {
+                CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        #region Drag and drop
+
+        private Point? startPoint = null;
+        private bool ctxOpen = false;
+        private bool inMove = false;
 
         private void locationDisplay_DragEnter(object sender, DragEventArgs e)
         {
@@ -61,7 +127,7 @@ namespace CairoDesktop {
                         }
                     }
                 }
-                
+
                 if (!canAdd)
                 {
                     e.Effects = DragDropEffects.None;
@@ -73,7 +139,7 @@ namespace CairoDesktop {
         private void locationDisplay_Drop(object sender, DragEventArgs e)
         {
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNames != null) 
+            if (fileNames != null)
             {
                 foreach (string fileName in fileNames)
                 {
@@ -90,54 +156,6 @@ namespace CairoDesktop {
 
             e.Handled = true;
         }
-
-        private void Remove_Click(object sender, RoutedEventArgs e)
-        {
-            StacksManager.Instance.StackLocations.Remove((sender as MenuItem).CommandParameter as SystemDirectory);
-        }
-        
-        private void Open_Click(object sender, RoutedEventArgs e)
-        {
-            openDir((sender as ICommandSource).CommandParameter.ToString(), true);
-        }
-
-        private void OpenDesktop_Click(object sender, RoutedEventArgs e)
-        {
-            openDir((sender as ICommandSource).CommandParameter.ToString(), false);
-        }
-
-        private void NameLabel_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            // Open folders with middle button clicks.
-            if (e.ChangedButton == MouseButton.Middle)
-            {
-                // Some checks just in case.
-                ICommandSource cmdsrc = sender as ICommandSource;
-                if (cmdsrc?.CommandParameter is SystemDirectory cmdparam)
-                {
-                    openDir(cmdparam.FullName, false); 
-                    e.Handled = true;
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Launches the FileManager specified in the application Settings object to the specified directory.
-        /// </summary>
-        /// <param name="directoryPath">Directory to open.</param>
-        private void openDir(string directoryPath, bool openWithShell) 
-        {
-            if ((!openWithShell && !FolderHelper.OpenLocation(directoryPath)) || (openWithShell && !FolderHelper.OpenWithShell(directoryPath)))
-            {
-                CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        #region Drag and drop reordering
-
-        private Point? startPoint = null;
-        private bool ctxOpen = false;
-        private bool inMove = false;
 
         private void StackMenu_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
