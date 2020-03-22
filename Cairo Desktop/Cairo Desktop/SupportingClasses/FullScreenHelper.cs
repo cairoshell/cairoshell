@@ -66,7 +66,7 @@ namespace CairoDesktop.SupportingClasses
             // remove any changed windows we found
             if (removeApps.Count > 0)
             {
-                CairoLogger.Instance.Debug("Removing full screen apps");
+                CairoLogger.Instance.Debug("Removing full screen app(s)");
                 foreach (FullScreenApp existingApp in removeApps)
                 {
                     FullScreenApps.Remove(existingApp);
@@ -116,6 +116,19 @@ namespace CairoDesktop.SupportingClasses
                     if (cName.ToString() == "Progman" || cName.ToString() == "WorkerW")
                     {
                         return null;
+                    }
+
+                    // make sure this is not a cloaked window
+                    if (Shell.IsWindows8OrBetter)
+                    {
+                        uint cloaked;
+                        int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(uint));
+                        NativeMethods.DwmGetWindowAttribute(hWnd, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out cloaked, cbSize);
+
+                        if (cloaked > 0)
+                        {
+                            return null;
+                        }
                     }
 
                     // this is a full screen app on this screen
