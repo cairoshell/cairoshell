@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.ComponentModel;
 using System.Diagnostics;
 using CairoDesktop.Common.Logging;
+using Microsoft.Win32;
 
 namespace CairoDesktop.Common
 {
@@ -68,12 +69,13 @@ namespace CairoDesktop.Common
             doSearch(searchObjState);
         }
 
-        static void doSearch(Object state)
+        static void doSearch(object state)
         {
             // check if user wants to show file extensions. always show on windows < 8 due to property missing
             string displayNameColumn = "System.ItemNameDisplayWithoutExtension";
-            object hideFileExt = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", false).GetValue("HideFileExt");
-            if ((hideFileExt != null && hideFileExt.ToString() == "0") || !CairoDesktop.Interop.Shell.IsWindows8OrBetter)
+            RegistryKey hideFileExt = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", false);
+            object hideFileExtValue = hideFileExt?.GetValue("HideFileExt");
+            if ((hideFileExtValue != null && hideFileExtValue.ToString() == "0") || !Interop.Shell.IsWindows8OrBetter)
                 displayNameColumn = "System.ItemNameDisplay";
 
             SearchObjectState sos = (SearchObjectState)state;
@@ -158,7 +160,7 @@ namespace CairoDesktop.Common
         public string Path { get; set; }
         public string PathDisplay { get; set; }
         public string DateModified { get; set; }
-        public string DateModifiedDisplay { get { return String.Format(CairoDesktop.Localization.DisplayString.sSearch_LastModified, DateModified); } }
+        public string DateModifiedDisplay { get { return String.Format(Localization.DisplayString.sSearch_LastModified, DateModified); } }
 
         public ImageSource Icon
         {
@@ -171,7 +173,7 @@ namespace CairoDesktop.Common
                     var thread = new Thread(() =>
                     {
                         string iconPath = Path.Substring(Path.IndexOf(':') + 1).Replace("/", "\\");
-                        Icon = CairoDesktop.Common.IconImageConverter.GetImageFromAssociatedIcon(iconPath, 0);
+                        Icon = IconImageConverter.GetImageFromAssociatedIcon(iconPath, 0);
                         _iconLoading = false;
                     });
                     thread.IsBackground = true;

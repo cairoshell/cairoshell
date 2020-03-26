@@ -126,7 +126,7 @@ namespace CairoDesktop
                     // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
                     if ((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
                     {
-                        if (!Startup.IsCairoRunningAsShell)
+                        if (!Shell.IsCairoRunningAsShell)
                         {
                             IntPtr lowestHwnd = Shell.GetLowestDesktopHwnd();
                             if (lowestHwnd != IntPtr.Zero)
@@ -146,14 +146,14 @@ namespace CairoDesktop
                     }
                 }
             }
-            else if (msg == NativeMethods.WM_DISPLAYCHANGE && Startup.IsCairoRunningAsShell)
+            else if (msg == NativeMethods.WM_DISPLAYCHANGE && Shell.IsCairoRunningAsShell)
             {
                 ResetPosition();
                 ReloadBackground();
 
                 handled = true;
             }
-            else if (msg == NativeMethods.WM_DPICHANGED && Startup.IsCairoRunningAsShell)
+            else if (msg == NativeMethods.WM_DPICHANGED && Shell.IsCairoRunningAsShell)
             {
                 // delay changing things when we are shell. it seems that AppBars do this automagically
                 // if we don't, the system moves things to bad places
@@ -335,7 +335,7 @@ namespace CairoDesktop
         #region Size and positioning
         public void SendToBottom()
         {
-            if (!Startup.IsCairoRunningAsShell)
+            if (!Shell.IsCairoRunningAsShell)
             {
                 Shell.ShowWindowDesktop(Handle);
             }
@@ -357,7 +357,7 @@ namespace CairoDesktop
         private void setSize()
         {
             Width = WindowManager.PrimaryMonitorSize.Width;
-            if (Startup.IsCairoRunningAsShell) Height = WindowManager.PrimaryMonitorSize.Height;
+            if (Shell.IsCairoRunningAsShell) Height = WindowManager.PrimaryMonitorSize.Height;
             else Height = WindowManager.PrimaryMonitorSize.Height - 1; // TODO making size of screen causes explorer to send ABN_FULLSCREENAPP (but is that a bad thing?)
         }
 
@@ -382,7 +382,7 @@ namespace CairoDesktop
         #region Background
         private void setBackground()
         {
-            if (Startup.IsCairoRunningAsShell)
+            if (Shell.IsCairoRunningAsShell)
             {
                 try
                 {

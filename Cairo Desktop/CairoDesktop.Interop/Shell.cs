@@ -186,7 +186,7 @@ namespace CairoDesktop.Interop
                 }
                 else
                 {
-                    if (IsCairoConfiguredAsShell && filename.ToLower().EndsWith("explorer.exe"))
+                    if (IsCairoRunningAsShell && filename.ToLower().EndsWith("explorer.exe"))
                     {
                         // if we are shell and launching explorer, give it a parameter so that it doesn't do shell things.
                         // this opens My Computer
@@ -685,7 +685,7 @@ namespace CairoDesktop.Interop
         private static bool? isCairoConfiguredAsShell;
 
         /// <summary>
-        /// Checks the currently configured shell, NOT the currently running shell! Use Startup.IsCairoRunningAsShell for that.
+        /// Checks the currently configured shell, NOT the currently running shell! Use Shell.IsCairoRunningAsShell for that.
         /// </summary>
         public static bool IsCairoConfiguredAsShell
         {
@@ -693,16 +693,18 @@ namespace CairoDesktop.Interop
             {
                 if (isCairoConfiguredAsShell == null)
                 {
-                    // check if we are the current user's shell
-                    string userShell = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell") as string;
-                    if (userShell != null) // CurrentUser Shell
+                    // first check if we are the current user's shell
+                    RegistryKey userShellKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false);
+                    string userShell = userShellKey?.GetValue("Shell") as string;
+                    if (userShell != null)
                     {
                         isCairoConfiguredAsShell = userShell.ToString().ToLower().Contains("cairodesktop");
                     }
                     else
                     {
                         // check if we are the current system's shell
-                        string systemShell = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false).GetValue("Shell") as string;
+                        RegistryKey systemShellKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false);
+                        string systemShell = systemShellKey?.GetValue("Shell") as string;
                         if (systemShell != null)
                         {
                             isCairoConfiguredAsShell = systemShell.ToLower().Contains("cairodesktop");
@@ -743,6 +745,32 @@ namespace CairoDesktop.Interop
             }
         }
 
+        private static bool? isCairoRunningAsShell;
+
+        /// <summary>
+        /// Checks the currently running shell. If another shell is running or we are not configured to be shell, returns false.
+        /// This MUST be initialized prior to creating our own Shell_TrayWnd so that the value is accurate.
+        /// </summary>
+        public static bool IsCairoRunningAsShell
+        {
+            get
+            {
+                if (isCairoRunningAsShell == null)
+                {
+                    SetIsCairoRunningAsShell();
+                }
+
+                return (bool)isCairoRunningAsShell;
+            }
+        }
+
+        public static void SetIsCairoRunningAsShell()
+        {
+            // check if there is an existing Shell_TrayWnd. If so, then Explorer is actually running as shell so assume we are not.
+            IntPtr taskbarHwnd = FindWindow("Shell_TrayWnd", "");
+            isCairoRunningAsShell = IsCairoConfiguredAsShell && taskbarHwnd == IntPtr.Zero;
+        }
+
         private static bool? isServerCore;
 
         public static bool IsServerCore
@@ -751,7 +779,8 @@ namespace CairoDesktop.Interop
             {
                 if (isServerCore == null)
                 {
-                    string installationType = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false).GetValue("InstallationType") as string;
+                    RegistryKey installationTypeKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
+                    string installationType = installationTypeKey?.GetValue("InstallationType") as string;
 
                     isServerCore = installationType == "Server Core";
                 }

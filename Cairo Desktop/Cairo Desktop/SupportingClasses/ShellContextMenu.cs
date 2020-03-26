@@ -538,7 +538,7 @@ namespace CairoDesktop.SupportingClasses
                 ShellFolders.AppendMenu(contextMenu, 0, (int)CairoContextMenuItem.Properties, Localization.DisplayString.sInterface_Properties);
                 ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.SEPARATOR, 0, string.Empty);
 
-                if (!Startup.IsCairoRunningAsShell)
+                if (!Shell.IsCairoRunningAsShell)
                 {
                     ShellFolders.AppendMenu(contextMenu, 0, (int)CairoContextMenuItem.DisplaySettings, Localization.DisplayString.sDesktop_DisplaySettings);
                 }

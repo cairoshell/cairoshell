@@ -147,7 +147,7 @@ namespace CairoDesktop.WindowsTasks
                 // Only send TaskbarButtonCreated if we are shell, and if OS is not Server Core
                 // This is because if Explorer is running, it will send the message, so we don't need to
                 // Server Core doesn't support ITaskbarList, so sending this message on that OS could cause some assuming apps to crash
-                if (Interop.Shell.IsCairoConfiguredAsShell && !Interop.Shell.IsServerCore) SendNotifyMessage(win.Handle, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
+                if (Interop.Shell.IsCairoRunningAsShell && !Interop.Shell.IsServerCore) SendNotifyMessage(win.Handle, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
             }
         }
 

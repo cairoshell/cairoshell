@@ -70,14 +70,14 @@ namespace CairoDesktop.SupportingClasses
 
             setPosition();
 
-            if (Startup.IsCairoRunningAsShell)
+            if (Shell.IsCairoRunningAsShell)
             {
                 // set position again, on a delay, in case one display has a different DPI. for some reason the system overrides us if we don't wait
                 delaySetPosition();
             }
 
             // register appbar
-            if (!Startup.IsCairoRunningAsShell && enableAppBar) appbarMessageId = AppBarHelper.RegisterBar(this, Screen, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
+            if (!Shell.IsCairoRunningAsShell && enableAppBar) appbarMessageId = AppBarHelper.RegisterBar(this, Screen, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
 
             // hide from alt-tab etc
             Shell.HideWindowFromTasks(Handle);
@@ -236,7 +236,7 @@ namespace CairoDesktop.SupportingClasses
         internal void setScreenPosition()
         {
             // set our position if running as shell, otherwise let AppBar do the work
-            if (Startup.IsCairoRunningAsShell || !enableAppBar) delaySetPosition();
+            if (Shell.IsCairoRunningAsShell || !enableAppBar) delaySetPosition();
             else if (enableAppBar) AppBarHelper.ABSetPos(this, Screen, desiredHeight * dpiScale, ActualHeight * dpiScale, appBarEdge);
         }
 

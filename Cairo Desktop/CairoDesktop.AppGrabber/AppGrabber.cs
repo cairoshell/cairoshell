@@ -302,7 +302,7 @@ namespace CairoDesktop.AppGrabber
                 {
                     Shell.StartProcess(app.Path, "", "runas");
                 }
-                else if (Shell.IsCairoConfiguredAsShell && app.Target.ToLower().EndsWith("explorer.exe"))
+                else if (Shell.IsCairoRunningAsShell && app.Target.ToLower().EndsWith("explorer.exe"))
                 {
                     // special case: if we are shell and launching explorer, give it a parameter so that it doesn't do shell things.
                     // this opens My Computer

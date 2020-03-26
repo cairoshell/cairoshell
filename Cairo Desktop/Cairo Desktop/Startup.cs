@@ -28,11 +28,6 @@
 
         public static Desktop DesktopWindow { get; set; }
 
-        /// <summary>
-        /// Checks the currently running shell. If another shell is running or we are not configured to be shell, returns false.
-        /// </summary>
-        public static bool IsCairoRunningAsShell;
-
         private static CommandLineParser commandLineParser;
         private static bool isRestart;
         private static bool isTour;
@@ -55,19 +50,16 @@
             SetupLoggingSystem();
             WriteApplicationDebugInfoToConsole();
 
+            // Initialize current shell information here, since it won't be accurate if we wait until after we create our own Shell_TrayWnd
+            Shell.SetIsCairoRunningAsShell();
+            CairoLogger.Instance.Info(string.Format("Configured as shell: {0}; Running as shell: {1}", Shell.IsCairoConfiguredAsShell, Shell.IsCairoRunningAsShell));
+
             SetSystemKeyboardShortcuts();
 
             // Move to App??? app.SetupPluginSystem();
-            SetupPluginSystem(); // This will Load the Core Plugin and all other, will either reference it as a dependancy or dont need it to be started first
-
+            SetupPluginSystem(); // This will Load the Core Plugin and all other, will either reference it as a dependency or dont need it to be started first
 
             #endregion
-
-            // check if we are the current user's shell
-            // set here as well so that we don't behave differently once user changes setting
-            // First check if there is an existing Shell_TrayWnd. If so, then Explorer is actually running as shell so assume we are not.
-            IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
-            IsCairoRunningAsShell = Shell.IsCairoConfiguredAsShell && taskbarHwnd == IntPtr.Zero;       // Move to CairoDesktop.Plugins.CairoShellCoreServices.... Make this more robust, to account for system-shell or per-user-shell;
 
             if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop) // Future: This should be moved to whatever plugin is responsible for desktop stuff
             {
@@ -114,7 +106,7 @@
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
             // Don't allow showing both the Windows taskbar and the Cairo tray
-            if (Settings.Instance.EnableSysTray == true && (Settings.Instance.EnableTaskbar == true || IsCairoRunningAsShell))
+            if (Settings.Instance.EnableSysTray == true && (Settings.Instance.EnableTaskbar == true || Shell.IsCairoRunningAsShell))
             {
                 NotificationArea.Instance.Initialize();
             }
@@ -124,7 +116,7 @@
 #endif
 
             // login items only necessary if Explorer didn't start them
-            if (IsCairoRunningAsShell && !isRestart)
+            if (Shell.IsCairoRunningAsShell && !isRestart)
             {
                 RunStartupApps();
             }
@@ -178,7 +170,7 @@
             NotificationArea.Instance.Dispose();
 
             // reset work area
-            if (IsCairoRunningAsShell) WindowManager.Instance.ResetWorkArea();
+            if (Shell.IsCairoRunningAsShell) WindowManager.Instance.ResetWorkArea();
 
             Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
         }

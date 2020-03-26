@@ -98,7 +98,7 @@ namespace CairoDesktop.WindowsTray
         #region Shell Service Object
         private void startShellServiceObject()
         {
-            if (Shell.IsCairoConfiguredAsShell)
+            if (Shell.IsCairoRunningAsShell)
             {
                 try
                 {

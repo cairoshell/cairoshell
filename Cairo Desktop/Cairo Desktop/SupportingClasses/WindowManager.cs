@@ -391,7 +391,7 @@ namespace CairoDesktop.SupportingClasses
         private void setDisplayWorkAreas()
         {
             // Set desktop work area for when Explorer isn't running
-            if (Startup.IsCairoRunningAsShell)
+            if (Shell.IsCairoRunningAsShell)
             {
                 foreach (var screen in ScreenState)
                 {

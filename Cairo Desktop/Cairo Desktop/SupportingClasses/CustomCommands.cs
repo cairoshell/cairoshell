@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,6 +7,7 @@ using System.Globalization;
 using System.Collections.Specialized;
 using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop
 {
@@ -50,7 +50,7 @@ namespace CairoDesktop
                 if (Startup.DesktopWindow != null)
                     Startup.DesktopWindow.IsOverlayOpen = false;
 
-                Interop.Shell.StartProcess(fileName);
+                Shell.StartProcess(fileName);
 
                 return;
             }
@@ -59,23 +59,23 @@ namespace CairoDesktop
                 if (Startup.DesktopWindow != null)
                     Startup.DesktopWindow.IsOverlayOpen = false;
 
-                Interop.Shell.ShowOpenWithDialog(fileName);
+                Shell.ShowOpenWithDialog(fileName);
 
                 return;
             }
             else if (verb == "delete")
             {
-                string displayName = Interop.Shell.GetDisplayName(fileName);
-                bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sDesktop_DeleteInfo, displayName), Localization.DisplayString.sDesktop_DeleteTitle, "Resources/cairoIcon.png", Localization.DisplayString.sInterface_Delete, Localization.DisplayString.sInterface_Cancel);
+                string displayName = Shell.GetDisplayName(fileName);
+                bool? deleteChoice = CairoMessage.ShowOkCancel(string.Format(Localization.DisplayString.sDesktop_DeleteInfo, displayName), Localization.DisplayString.sDesktop_DeleteTitle, "Resources/cairoIcon.png", Localization.DisplayString.sInterface_Delete, Localization.DisplayString.sInterface_Cancel);
                 if (deleteChoice.HasValue && deleteChoice.Value)
                 {
-                    Interop.Shell.SendToRecycleBin(fileName);
+                    Shell.SendToRecycleBin(fileName);
                 }
                 return;
             }
             else if (verb == "properties")
             {
-                Interop.Shell.ShowFileProperties(fileName);
+                Shell.ShowFileProperties(fileName);
                 Startup.DesktopWindow.IsOverlayOpen = false;
 
                 return;
@@ -103,7 +103,7 @@ namespace CairoDesktop
             }
             else if (verb == "personalize")
             {
-                if (Startup.IsCairoRunningAsShell)
+                if (Shell.IsCairoRunningAsShell)
                 {
                     CairoSettingsWindow.Instance.Show();
                     CairoSettingsWindow.Instance.Activate();
@@ -111,16 +111,16 @@ namespace CairoDesktop
                 }
                 else
                 {
-                    Interop.Shell.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,2");
+                    Shell.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,2");
                 }
             }
             else if (verb == "displaySettings")
             {
-                Interop.Shell.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,3");
+                Shell.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,3");
             }
             else
             {
-                Interop.Shell.StartProcess(fileName, "", verb);
+                Shell.StartProcess(fileName, "", verb);
             }
         }
 

@@ -423,7 +423,7 @@ namespace CairoDesktop
 
                 lblTrayWarning.Visibility = Visibility.Visible;
             }
-            else if (!Settings.Instance.EnableTaskbar && !Startup.IsCairoRunningAsShell)
+            else if (!Settings.Instance.EnableTaskbar && !Shell.IsCairoRunningAsShell)
             {
                 // if taskbar is disabled and we aren't running as shell, then Explorer tray is visible. Show warning.
                 lblTrayTaskbarWarning.Visibility = Visibility.Visible;
@@ -776,7 +776,7 @@ namespace CairoDesktop
 
                 if (backgroundStyleItem == style) cboWindowsItem.IsSelected = true;
 
-                if (Startup.IsCairoRunningAsShell)
+                if (Shell.IsCairoRunningAsShell)
                 {
                     // image
                     ComboBoxItem cboImageItem = new ComboBoxItem()
@@ -800,7 +800,7 @@ namespace CairoDesktop
                 }
             }
 
-            if (Startup.IsCairoRunningAsShell)
+            if (Shell.IsCairoRunningAsShell)
             {
                 #region  cairoImageWallpaper
                 ComboBoxItem cairoImageWallpaperItem = new ComboBoxItem()
