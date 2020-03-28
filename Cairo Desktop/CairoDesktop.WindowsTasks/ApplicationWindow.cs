@@ -176,7 +176,11 @@ namespace CairoDesktop.WindowsTasks
                         }
                     }
 
-                    if (appInfo != null) appInfo.PropertyChanged += AppInfo_PropertyChanged;
+                    if (appInfo != null)
+                    {
+                        appInfo.PropertyChanged += AppInfo_PropertyChanged;
+                        if (appInfo.Category != null) appInfo.Category.PropertyChanged += Category_PropertyChanged;
+                    }
                     _applicationInfo = appInfo;
                 }
 
@@ -502,6 +506,15 @@ namespace CairoDesktop.WindowsTasks
                 thread.IsBackground = true;
                 thread.SetApartmentState(ApartmentState.STA);
                 thread.Start();
+            }
+        }
+
+        private void Category_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e?.PropertyName == "DisplayName")
+            {
+                _category = null;
+                OnPropertyChanged("Category");
             }
         }
 
