@@ -38,6 +38,9 @@ namespace CairoDesktop.WindowsTasks
                     OnPropertyChanged("ShowInTaskbar");
                 }, Application.Current.Dispatcher);
             }
+
+            // register for app grabber changes so that our app association is accurate
+            AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged += CategoryList_CategoryChanged;
         }
 
         public ApplicationWindow(IntPtr handle) : this(handle, null)
@@ -128,24 +131,16 @@ namespace CairoDesktop.WindowsTasks
             {
                 if(_category == null)
                 {
-                    string backupCategory = "";
-                    foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
+                    if (ApplicationInfo != null && ApplicationInfo.Category == null)
                     {
-                        if (ai.Target.ToLower() == WinFileName.ToLower() || (isUWP && ai.Target == AppUserModelID))
-                        {
-                            _category = ai.Category.DisplayName;
-                            break;
-                        }
-                        else if (Title.ToLower().Contains(ai.Name.ToLower()))
-                        {
-                            backupCategory = ai.Category.DisplayName;
-                        }
+                        // if app was removed, category is null, so stop using that app
+                        ApplicationInfo.PropertyChanged -= AppInfo_PropertyChanged;
+                        _applicationInfo = null;
                     }
+                    _category = ApplicationInfo?.Category?.DisplayName;
 
                     if (_category == null && WinFileName.ToLower().Contains("cairodesktop.exe"))
                         _category = "Cairo";
-                    else if (_category == null && !string.IsNullOrEmpty(backupCategory))
-                        _category = backupCategory;
                     else if (_category == null && WinFileName.ToLower().Contains("\\windows\\") && !isUWP)
                         _category = "Windows";
                     else if (_category == null)
@@ -156,6 +151,36 @@ namespace CairoDesktop.WindowsTasks
             set
             {
                 _category = value;
+            }
+        }
+
+        private ApplicationInfo _applicationInfo;
+
+        public ApplicationInfo ApplicationInfo
+        {
+            get
+            {
+                if (_applicationInfo == null)
+                {
+                    ApplicationInfo appInfo = null;
+                    foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
+                    {
+                        if ((ai.Target.ToLower() == WinFileName.ToLower() || (isUWP && ai.Target == AppUserModelID)) && ai.Category != null)
+                        {
+                            appInfo = ai;
+                            break;
+                        }
+                        else if (Title.ToLower().Contains(ai.Name.ToLower()) && ai.Category != null)
+                        {
+                            appInfo = ai;
+                        }
+                    }
+
+                    if (appInfo != null) appInfo.PropertyChanged += AppInfo_PropertyChanged;
+                    _applicationInfo = appInfo;
+                }
+
+                return _applicationInfo;
             }
         }
 
@@ -479,7 +504,22 @@ namespace CairoDesktop.WindowsTasks
                 thread.Start();
             }
         }
-        
+
+        private void CategoryList_CategoryChanged(object sender, EventArgs e)
+        {
+            _category = null;
+            OnPropertyChanged("Category");
+        }
+
+        private void AppInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e?.PropertyName == "Category")
+            {
+                _category = null;
+                OnPropertyChanged("Category");
+            }
+        }
+
         public void BringToFront()
         {
             // call restore if window is minimized

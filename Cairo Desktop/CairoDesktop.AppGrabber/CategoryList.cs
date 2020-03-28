@@ -7,6 +7,8 @@ namespace CairoDesktop.AppGrabber {
 
     public class CategoryList : ObservableCollection<Category> {
 
+        public event EventHandler<EventArgs> CategoryChanged;
+
         /// <summary>
         /// Simple wrapper around an ObservableCollection of Category objects.
         /// </summary>
@@ -74,6 +76,22 @@ namespace CairoDesktop.AppGrabber {
         public new void Add(Category category) {
             base.Add(category);
             category.ParentCategoryList = this;
+            category.CollectionChanged += Category_CollectionChanged;
+        }
+
+        /// <summary>
+        /// Removes a Category object from this CategoryList.
+        /// </summary>
+        /// <param name="category">Category to remove.</param>
+        public new void Remove(Category category)
+        {
+            category.CollectionChanged -= Category_CollectionChanged;
+            base.Remove(category);
+        }
+
+        private void Category_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnCategoryChanged(new EventArgs());
         }
 
         /// <summary>
@@ -205,6 +223,11 @@ namespace CairoDesktop.AppGrabber {
                 }
             }
             return catList;
+        }
+
+        protected virtual void OnCategoryChanged(EventArgs e)
+        {
+            CategoryChanged?.Invoke(this, e);
         }
     }
 }

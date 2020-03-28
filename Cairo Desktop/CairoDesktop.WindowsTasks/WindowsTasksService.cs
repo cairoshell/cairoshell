@@ -71,6 +71,8 @@ namespace CairoDesktop.WindowsTasks
                 var taskbarItemsView = groupedWindows as ICollectionViewLiveShaping;
                 taskbarItemsView.IsLiveFiltering = true;
                 taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
+                taskbarItemsView.IsLiveGrouping = true;
+                taskbarItemsView.LiveGroupingProperties.Add("Category");
 
                 // enumerate windows already opened
                 EnumWindows(new CallBackPtr((hwnd, lParam) =>
