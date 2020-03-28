@@ -391,21 +391,6 @@ namespace CairoDesktop.Configuration
             }
         }
 
-        public bool EnableTaskbarPolling
-        {
-            get
-            {
-                return cairoSettings.EnableTaskbarPolling;
-            }
-            set
-            {
-                if (cairoSettings.EnableTaskbarPolling != value)
-                {
-                    cairoSettings.EnableTaskbarPolling = value;
-                }
-            }
-        }
-
         public int TaskbarPosition
         {
             get

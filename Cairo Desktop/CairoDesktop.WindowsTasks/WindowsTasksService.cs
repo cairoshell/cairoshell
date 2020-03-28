@@ -171,8 +171,6 @@ namespace CairoDesktop.WindowsTasks
             {
                 do
                 {
-                    if (Configuration.Settings.Instance.EnableTaskbarPolling)
-                        win.VisCheck.Stop();
                     win.Dispose();
                     Windows.Remove(win);
                 }

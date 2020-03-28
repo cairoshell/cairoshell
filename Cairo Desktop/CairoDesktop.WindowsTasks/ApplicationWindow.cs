@@ -17,7 +17,6 @@ namespace CairoDesktop.WindowsTasks
     [DebuggerDisplay("Title: {Title}, Handle: {Handle}")]
     public class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPropertyChanged, IDisposable
     {
-        public DispatcherTimer VisCheck;
         const int TITLE_LENGTH = 1024;
         StringBuilder titleBuilder = new StringBuilder(TITLE_LENGTH);
 
@@ -29,16 +28,6 @@ namespace CairoDesktop.WindowsTasks
             if (sourceService != null)
             {
                 TasksService = sourceService;
-            }
-
-            if (Configuration.Settings.Instance.EnableTaskbarPolling)
-            {
-                VisCheck = new DispatcherTimer(new TimeSpan(0, 0, 2), DispatcherPriority.Background, delegate
-                {
-                    // some windows don't send a redraw notification after a property changes, try to catch those cases here
-                    OnPropertyChanged("Title");
-                    OnPropertyChanged("ShowInTaskbar");
-                }, Application.Current.Dispatcher);
             }
         }
 
@@ -451,21 +440,6 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        int iconTries = 0;
-
-        private void getIcon_Tick(object sender, EventArgs e)
-        {
-            if (_icon != null || iconTries > 5)
-            {
-                (sender as DispatcherTimer).Stop();
-            }
-            else
-            {
-                iconTries++;
-                SetIcon();
-            }
-        }
-
         public void SetIcon()
         {
             if (!_iconLoading && ShowInTaskbar)
@@ -564,13 +538,6 @@ namespace CairoDesktop.WindowsTasks
                             {
                                 NativeMethods.DestroyIcon(hIco);
                             }
-                        }
-                        else if (Configuration.Settings.Instance.EnableTaskbarPolling && iconTries == 0)
-                        {
-                            DispatcherTimer getIcon = new DispatcherTimer(DispatcherPriority.Background, Application.Current.Dispatcher);
-                            getIcon.Interval = new TimeSpan(0, 0, 2);
-                            getIcon.Tick += getIcon_Tick;
-                            getIcon.Start();
                         }
                     }
 
