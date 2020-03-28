@@ -186,9 +186,9 @@ namespace CairoDesktop
                         if (file.IsDirectory
                             && Location == "Desktop"
                             && Settings.Instance.EnableDynamicDesktop
-                            && Startup.DesktopWindow != null)
+                            && WindowManager.Instance.DesktopWindow != null)
                         {
-                            Startup.DesktopWindow.NavigationManager.NavigateTo(file.FullName);
+                            WindowManager.Instance.DesktopWindow.NavigationManager.NavigateTo(file.FullName);
                             return;
                         }
                         else if (file.IsDirectory)
@@ -198,8 +198,8 @@ namespace CairoDesktop
                         }
                     }
 
-                    if (Startup.DesktopWindow != null)
-                        Startup.DesktopWindow.IsOverlayOpen = false;
+                    if (WindowManager.Instance.DesktopWindow != null)
+                        WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
 
                     Shell.ExecuteProcess(file.FullName);
                     return;

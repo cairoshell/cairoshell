@@ -21,13 +21,6 @@
     public partial class Startup
     {
         private static System.Threading.Mutex cairoMutex;
-
-        public static MenuBar MenuBarWindow { get; set; }
-
-        public static Taskbar TaskbarWindow { get; set; }
-
-        public static Desktop DesktopWindow { get; set; }
-
         private static CommandLineParser commandLineParser;
         private static bool isRestart;
         private static bool isTour;
@@ -47,12 +40,12 @@
             SetShellReadyEvent();
 
             SetupSettings(); // run this before logging setup so that preferences are always used
-            SetupLoggingSystem();
-            WriteApplicationDebugInfoToConsole();
 
             // Initialize current shell information here, since it won't be accurate if we wait until after we create our own Shell_TrayWnd
             Shell.SetIsCairoRunningAsShell();
-            CairoLogger.Instance.Info(string.Format("Configured as shell: {0}; Running as shell: {1}", Shell.IsCairoConfiguredAsShell, Shell.IsCairoRunningAsShell));
+
+            SetupLoggingSystem();
+            WriteApplicationDebugInfoToConsole();
 
             SetSystemKeyboardShortcuts();
 
@@ -81,24 +74,24 @@
             }
 
             // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-            MenuBarWindow = new MenuBar(System.Windows.Forms.Screen.PrimaryScreen);
-            app.MainWindow = MenuBarWindow;
-            MenuBarWindow.Show();
-            WindowManager.Instance.MenuBarWindows.Add(MenuBarWindow);
+            MenuBar initialMenuBar = new MenuBar(System.Windows.Forms.Screen.PrimaryScreen);
+            app.MainWindow = initialMenuBar;
+            WindowManager.Instance.MenuBarWindows.Add(initialMenuBar);
+            initialMenuBar.Show();
 
             // Future: This should be moved to whatever plugin is responsible for Desktop stuff
             if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop)
             {
-                DesktopWindow = new Desktop();
-                DesktopWindow.Show();
+                WindowManager.Instance.DesktopWindow = new Desktop();
+                WindowManager.Instance.DesktopWindow.Show();
             }
 
             // Future: This should be moved to whatever plugin is responsible for Taskbar stuff
             if (Settings.Instance.EnableTaskbar)
             {
-                TaskbarWindow = new Taskbar(System.Windows.Forms.Screen.PrimaryScreen);
-                TaskbarWindow.Show();
-                WindowManager.Instance.TaskbarWindows.Add(TaskbarWindow);
+                Taskbar initialTaskbar = new Taskbar(System.Windows.Forms.Screen.PrimaryScreen);
+                WindowManager.Instance.TaskbarWindows.Add(initialTaskbar);
+                initialTaskbar.Show();
             }
 
             // Open windows on secondary displays and set work area
@@ -115,11 +108,13 @@
             FirstRun();
 #endif
 
+#if !DEBUG
             // login items only necessary if Explorer didn't start them
             if (Shell.IsCairoRunningAsShell && !isRestart)
             {
                 RunStartupApps();
             }
+#endif
 
             app.Run();
         }
@@ -175,7 +170,7 @@
             Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
         }
 
-        #region Shell: Autorun Apps
+#region Shell: Autorun Apps
 
         private static async void RunStartupApps()
         {
@@ -382,7 +377,7 @@
 
 
 
-        #endregion
+#endregion
 
         private static void setTheme(App app)
         {

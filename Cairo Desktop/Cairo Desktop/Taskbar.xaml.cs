@@ -68,10 +68,10 @@ namespace CairoDesktop
             bdrMain.DataContext = Settings.Instance;
             quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
 
-            if (Startup.DesktopWindow != null)
+            if (WindowManager.Instance.DesktopWindow != null)
             {
-                btnDesktopOverlay.DataContext = Startup.DesktopWindow;
-                bdrBackground.DataContext = Startup.DesktopWindow;
+                btnDesktopOverlay.DataContext = WindowManager.Instance.DesktopWindow;
+                bdrBackground.DataContext = WindowManager.Instance.DesktopWindow;
             }
             else
             {
@@ -103,11 +103,11 @@ namespace CairoDesktop
 
             Height = 29 + addToSize;
             desiredHeight = Height;
+            Top = getDesiredTopPosition();
 
             // set taskbar edge based on preference
             if (Settings.Instance.TaskbarPosition == 1)
             {
-                Top = Startup.MenuBarWindow.Height;
                 appBarEdge = AppBarHelper.ABEdge.ABE_TOP;
                 bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarTopBorderStyle") as Style;
                 bdrTaskbarEnd.Style = Application.Current.FindResource("CairoTaskbarEndTopBorderStyle") as Style;
@@ -122,7 +122,6 @@ namespace CairoDesktop
             {
                 appBarEdge = AppBarHelper.ABEdge.ABE_BOTTOM;
                 bdrTaskListPopup.Margin = new Thickness(5, 0, 5, Height - 1);
-                Top = getDesiredTopPosition();
             }
 
             // show task view on windows >= 10, adjust margin if not shown
@@ -159,6 +158,11 @@ namespace CairoDesktop
         protected override void postInit()
         {
             setTaskButtonSize();
+
+            // if we are showing but not reserving space, tell the desktop to adjust here
+            // since we aren't changing the work area, it doesn't do this on its own
+            if (Settings.Instance.TaskbarMode == 1 && Screen.Primary && WindowManager.Instance.DesktopWindow != null)
+                WindowManager.Instance.DesktopWindow.ResetPosition();
         }
 
         private void TaskbarWindow_Loaded(object sender, RoutedEventArgs e)
@@ -206,8 +210,13 @@ namespace CairoDesktop
         {
             if (Settings.Instance.TaskbarPosition == 1)
             {
-                // set to bottom of menu bar
-                return (Screen.Bounds.Y / dpiScale) + Startup.MenuBarWindow.Height;
+                // set to bottom of this display's menu bar
+                MenuBar menuBar = WindowManager.Instance.GetScreenWindow(WindowManager.Instance.MenuBarWindows, Screen);
+                double menuBarHeight = 0;
+
+                if (menuBar != null) menuBarHeight = menuBar.Height;
+
+                return (Screen.Bounds.Y / dpiScale) + menuBarHeight;
             }
             else
             {
@@ -238,9 +247,9 @@ namespace CairoDesktop
             }
         }
 
-        internal override void afterAppBarPos(bool isSameCoords)
+        internal override void afterAppBarPos(bool isSameCoords, NativeMethods.RECT rect)
         {
-            base.afterAppBarPos(isSameCoords);
+            base.afterAppBarPos(isSameCoords, rect);
 
             if (Settings.Instance.FullWidthTaskBar)
                 bdrTaskbar.Width = getDesiredWidth();
@@ -278,8 +287,8 @@ namespace CairoDesktop
 
         private void btnDesktopOverlay_Click(object sender, RoutedEventArgs e)
         {
-            if (Startup.DesktopWindow != null)
-                Startup.DesktopWindow.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
+            if (WindowManager.Instance.DesktopWindow != null)
+                WindowManager.Instance.DesktopWindow.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
         }
 
         private void btnTaskList_Click(object sender, RoutedEventArgs e)

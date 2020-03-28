@@ -39,6 +39,7 @@ namespace CairoDesktop
             Screen = screen;
             desiredHeight = 23;
             processScreenChanges = true;
+            requiresScreenEdge = true;
 
             setPosition();
 
@@ -281,9 +282,9 @@ namespace CairoDesktop
 
         #region Events
 
-        internal override void afterAppBarPos(bool isSameCoords)
+        internal override void afterAppBarPos(bool isSameCoords, NativeMethods.RECT rect)
         {
-            base.afterAppBarPos(isSameCoords);
+            base.afterAppBarPos(isSameCoords, rect);
 
             if (!isSameCoords)
             {

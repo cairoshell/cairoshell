@@ -32,8 +32,9 @@ namespace CairoDesktop.SupportingClasses
 
         // AppBar properties
         private int appbarMessageId = -1;
-        protected AppBarHelper.ABEdge appBarEdge = AppBarHelper.ABEdge.ABE_TOP;
+        internal AppBarHelper.ABEdge appBarEdge = AppBarHelper.ABEdge.ABE_TOP;
         protected bool enableAppBar = true;
+        internal bool requiresScreenEdge = false;
 
         public AppBarWindow()
         {
@@ -237,14 +238,22 @@ namespace CairoDesktop.SupportingClasses
         {
             // set our position if running as shell, otherwise let AppBar do the work
             if (Shell.IsCairoRunningAsShell || !enableAppBar) delaySetPosition();
-            else if (enableAppBar) AppBarHelper.ABSetPos(this, Screen, desiredHeight * dpiScale, ActualHeight * dpiScale, appBarEdge);
+            else if (enableAppBar) AppBarHelper.ABSetPos(this, Screen, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
+        }
+
+        internal void setAppBarPosition(NativeMethods.RECT rect)
+        {
+            Top = rect.top / dpiScale;
+            Left = rect.left / dpiScale;
+            Width = (rect.right - rect.left) / dpiScale;
+            Height = (rect.bottom - rect.top) / dpiScale;
         }
 
         private void setScreenProperties(ScreenSetupReason reason)
         {
             // process screen changes if we are on the primary display (or any display in the case of a DPI change, since only the changed display receives that message)
-            // and the designated window.
-            if ((Screen.Primary || reason == ScreenSetupReason.DpiChange) && processScreenChanges)
+            // and the designated window. suppress this if we are shutting down (which can trigger this method on multi-dpi setups due to window movements)
+            if ((Screen.Primary || reason == ScreenSetupReason.DpiChange) && processScreenChanges && !Startup.IsShuttingDown)
             {
                 CairoLogger.Instance.Debug("AppBarWindow: Calling screen setup due to " + reason);
                 WindowManager.Instance.NotifyDisplayChange(); // update Cairo window list based on new screen setup
@@ -273,18 +282,29 @@ namespace CairoDesktop.SupportingClasses
         #endregion
 
         #region Virtual methods
-        internal virtual void afterAppBarPos(bool isSameCoords)
+        internal virtual void afterAppBarPos(bool isSameCoords, NativeMethods.RECT rect)
         {
             // apparently the taskbars like to pop up when app bars change
-            if (Settings.Instance.EnableTaskbar)
+            if (Settings.Instance.EnableTaskbar && !Startup.IsShuttingDown)
             {
+                AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
                 AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
             }
 
             if (!isSameCoords)
             {
-                if (Screen.Primary && Startup.DesktopWindow != null)
-                    Startup.DesktopWindow.ResetPosition();
+                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.1) };
+                timer.Start();
+                timer.Tick += (sender1, args) =>
+                {
+                    // set position again, since WPF may have overridden the original change from AppBarHelper
+                    setAppBarPosition(rect);
+
+                    if (Screen.Primary && WindowManager.Instance.DesktopWindow != null)
+                        WindowManager.Instance.DesktopWindow.ResetPosition();
+
+                    timer.Stop();
+                };
             }
         }
 

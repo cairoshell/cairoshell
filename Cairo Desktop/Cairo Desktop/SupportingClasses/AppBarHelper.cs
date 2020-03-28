@@ -231,15 +231,22 @@ namespace CairoDesktop.SupportingClasses
                     abd.rc.right = right;
                     if (abd.uEdge == (int)ABEdge.ABE_TOP)
                     {
-                        if (abWindow is Taskbar) // TODO: This is gross
-                            abd.rc.top = top + Convert.ToInt32(Startup.MenuBarWindow.Height);
+                        if (!abWindow.requiresScreenEdge)
+                        {
+                            abd.rc.top = top + getAppBarEdgeWindowsHeight((ABEdge)abd.uEdge);
+                        }
                         else
                             abd.rc.top = top;
                         abd.rc.bottom = abd.rc.top + sHeight;
                     }
                     else
                     {
-                        abd.rc.bottom = bottom;
+                        if (!abWindow.requiresScreenEdge)
+                        {
+                            abd.rc.bottom = bottom + getAppBarEdgeWindowsHeight((ABEdge)abd.uEdge);
+                        }
+                        else
+                            abd.rc.bottom = bottom;
                         abd.rc.top = abd.rc.bottom - sHeight;
                     }
                 }
@@ -276,17 +283,31 @@ namespace CairoDesktop.SupportingClasses
                 if (!isSameCoords)
                 {
                     CairoLogger.Instance.Debug(string.Format("AppBarHelper: {0} changing position (TxLxBxR) to {1}x{2}x{3}x{4} from {5}x{6}x{7}x{8}", abWindow.Name, abd.rc.top, abd.rc.left, abd.rc.bottom, abd.rc.right, (abWindow.Top * dpiScale), (abWindow.Left * dpiScale), (abWindow.Top * dpiScale) + sHeight, (abWindow.Left * dpiScale) + sWidth));
-                    abWindow.Top = abd.rc.top / dpiScale;
-                    abWindow.Left = abd.rc.left / dpiScale;
-                    abWindow.Width = (abd.rc.right - abd.rc.left) / dpiScale;
-                    abWindow.Height = (abd.rc.bottom - abd.rc.top) / dpiScale;
+                    abWindow.setAppBarPosition(abd.rc);
                 }
 
-                abWindow.afterAppBarPos(isSameCoords);
+                abWindow.afterAppBarPos(isSameCoords, abd.rc);
 
                 if (abd.rc.bottom - abd.rc.top < sHeight)
                     ABSetPos(abWindow, screen, width, height, edge);
             }
+        }
+
+        private static int getAppBarEdgeWindowsHeight(ABEdge edge)
+        {
+            int edgeHeight = 0;
+
+            foreach (MenuBar menuBar in WindowManager.Instance.MenuBarWindows)
+            {
+                if (menuBar.requiresScreenEdge && menuBar.appBarEdge == edge) edgeHeight += Convert.ToInt32(menuBar.Height);
+            }
+
+            foreach (Taskbar taskbar in WindowManager.Instance.TaskbarWindows)
+            {
+                if (taskbar.requiresScreenEdge && taskbar.appBarEdge == edge) edgeHeight += Convert.ToInt32(taskbar.Height);
+            }
+
+            return edgeHeight;
         }
     }
 }

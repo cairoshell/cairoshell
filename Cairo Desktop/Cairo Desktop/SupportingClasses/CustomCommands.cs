@@ -39,16 +39,16 @@ namespace CairoDesktop
 
             PerformAction(verb, fileName, ((Button)((ContextMenu)item.Parent).PlacementTarget));
             
-            if (Startup.DesktopWindow != null)
-                Startup.DesktopWindow.IsOverlayOpen = false;
+            if (WindowManager.Instance.DesktopWindow != null)
+                WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
         }
 
         public static void PerformAction(string verb, string fileName)
         {
             if (verb == "open")
             {
-                if (Startup.DesktopWindow != null)
-                    Startup.DesktopWindow.IsOverlayOpen = false;
+                if (WindowManager.Instance.DesktopWindow != null)
+                    WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
 
                 Shell.StartProcess(fileName);
 
@@ -56,8 +56,8 @@ namespace CairoDesktop
             }
             else if (verb == "openwith")
             {
-                if (Startup.DesktopWindow != null)
-                    Startup.DesktopWindow.IsOverlayOpen = false;
+                if (WindowManager.Instance.DesktopWindow != null)
+                    WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
 
                 Shell.ShowOpenWithDialog(fileName);
 
@@ -76,7 +76,7 @@ namespace CairoDesktop
             else if (verb == "properties")
             {
                 Shell.ShowFileProperties(fileName);
-                Startup.DesktopWindow.IsOverlayOpen = false;
+                WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
 
                 return;
             }

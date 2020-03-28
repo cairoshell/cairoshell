@@ -23,6 +23,8 @@ namespace CairoDesktop.SupportingClasses
         public List<MenuBar> MenuBarWindows = new List<MenuBar>();
         public List<Taskbar> TaskbarWindows = new List<Taskbar>();
 
+        public Desktop DesktopWindow { get; set; }
+
         public static System.Drawing.Size PrimaryMonitorSize
         {
             get
@@ -303,50 +305,40 @@ namespace CairoDesktop.SupportingClasses
             // update screens of stale windows
             if (Settings.Instance.EnableMenuBarMultiMon)
             {
-                foreach (MenuBar bar in MenuBarWindows)
+                foreach (Screen screen in ScreenState)
                 {
-                    if (bar.Screen != null)
+                    MenuBar bar = GetScreenWindow(MenuBarWindows, screen);
+
+                    if (bar != null)
                     {
-                        foreach (Screen screen in ScreenState)
-                        {
-                            if (screen.DeviceName == bar.Screen.DeviceName)
-                            {
-                                bar.Screen = screen;
-                                bar.setScreenPosition();
-                                break;
-                            }
-                        }
+                        bar.Screen = screen;
+                        bar.setScreenPosition();
                     }
                 }
             }
-            else if (Startup.MenuBarWindow != null)
+            else if (MenuBarWindows.Count > 0)
             {
-                Startup.MenuBarWindow.Screen = Screen.PrimaryScreen;
-                Startup.MenuBarWindow.setScreenPosition();
+                MenuBarWindows[0].Screen = Screen.PrimaryScreen;
+                MenuBarWindows[0].setScreenPosition();
             }
 
             if (Settings.Instance.EnableTaskbarMultiMon)
             {
-                foreach (Taskbar bar in TaskbarWindows)
+                foreach (Screen screen in ScreenState)
                 {
-                    if (bar.Screen != null)
+                    Taskbar bar = GetScreenWindow(TaskbarWindows, screen);
+
+                    if (bar != null)
                     {
-                        foreach (Screen screen in ScreenState)
-                        {
-                            if (screen.DeviceName == bar.Screen.DeviceName)
-                            {
-                                bar.Screen = screen;
-                                bar.setScreenPosition();
-                                break;
-                            }
-                        }
+                        bar.Screen = screen;
+                        bar.setScreenPosition();
                     }
                 }
             }
-            else if (Startup.TaskbarWindow != null)
+            else if (TaskbarWindows.Count > 0)
             {
-                Startup.TaskbarWindow.Screen = Screen.PrimaryScreen;
-                Startup.TaskbarWindow.setScreenPosition();
+                TaskbarWindows[0].Screen = Screen.PrimaryScreen;
+                TaskbarWindows[0].setScreenPosition();
             }
         }
 
@@ -367,8 +359,6 @@ namespace CairoDesktop.SupportingClasses
                         MenuBar newMenuBar = new MenuBar(screen);
                         newMenuBar.Show();
                         MenuBarWindows.Add(newMenuBar);
-
-                        if (screen.Primary) Startup.MenuBarWindow = newMenuBar;
                     }
 
                     if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
@@ -379,11 +369,22 @@ namespace CairoDesktop.SupportingClasses
                         Taskbar newTaskbar = new Taskbar(screen);
                         newTaskbar.Show();
                         TaskbarWindows.Add(newTaskbar);
-
-                        if (screen.Primary) Startup.TaskbarWindow = newTaskbar;
                     }
                 }
             }
+        }
+
+        public T GetScreenWindow<T>(List<T> windowList, Screen screen) where T : AppBarWindow
+        {
+            foreach (AppBarWindow window in windowList)
+            {
+                if (window.Screen?.DeviceName == screen.DeviceName)
+                {
+                    return (T)window;
+                }
+            }
+
+            return null;
         }
         #endregion
 

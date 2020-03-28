@@ -243,6 +243,7 @@ namespace CairoDesktop
             CairoLogger.Instance.Info(string.Format(@"Processor Type: {0}", string.Format(@"{0}-bit", IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)));
             CairoLogger.Instance.Info(string.Format(@"Startup Path: {0}", _CairoShell.StartupPath));
             CairoLogger.Instance.Info(string.Format(@"Running As: {0}-bit Process", IntPtr.Size * 8));
+            CairoLogger.Instance.Info(string.Format("Configured as shell: {0}; Running as shell: {1}", Shell.IsCairoConfiguredAsShell, Shell.IsCairoRunningAsShell));
             CairoLogger.Instance.Info(@break);
         }
 

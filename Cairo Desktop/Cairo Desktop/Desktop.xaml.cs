@@ -363,19 +363,29 @@ namespace CairoDesktop
 
         private void setGridPosition()
         {
+            double top = System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.DpiScale;
             grid.Width = WindowManager.PrimaryMonitorWorkArea.Width / Shell.DpiScale;
 
-            if (Settings.Instance.TaskbarMode == 1 && Startup.TaskbarWindow != null)
+            if (Settings.Instance.TaskbarMode == 1 && WindowManager.Instance.TaskbarWindows.Count > 0)
             {
                 // special case, since work area is not reduced with this setting
-                grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / Shell.DpiScale) - Startup.TaskbarWindow.ActualHeight;
+                // this keeps the desktop going beneath the taskbar
+                // get the taskbar's height
+                Taskbar taskbar = WindowManager.Instance.GetScreenWindow(WindowManager.Instance.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
+                double taskbarHeight = 0;
+
+                if (taskbar != null) taskbarHeight = taskbar.ActualHeight;
+
+                grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / Shell.DpiScale) - taskbarHeight;
+
+                if (Settings.Instance.TaskbarPosition == 1) top += taskbarHeight;
             }
             else
             {
                 grid.Height = WindowManager.PrimaryMonitorWorkArea.Height / Shell.DpiScale;
             }
 
-            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.DpiScale, System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.DpiScale, 0, 0);
+            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.DpiScale, top, 0, 0);
         }
         #endregion
 
@@ -664,8 +674,6 @@ namespace CairoDesktop
         #region Files and folders
         private void executeFileAction(string action, string path, Button sender)
         {
-            SystemFile file = new SystemFile(path);
-
             if (action == "openFolder")
             {
                 if (Settings.Instance.EnableDynamicDesktop)
@@ -683,8 +691,7 @@ namespace CairoDesktop
             }
             else if (action != "cut" && action != "copy" && action != "link")
             {
-                if (Startup.DesktopWindow != null)
-                    Startup.DesktopWindow.IsOverlayOpen = false;
+                IsOverlayOpen = false;
             }
         }
 
@@ -703,8 +710,7 @@ namespace CairoDesktop
             {
                 CustomCommands.PerformAction(action, path);
 
-                if (Startup.DesktopWindow != null)
-                    Startup.DesktopWindow.IsOverlayOpen = false;
+                IsOverlayOpen = false;
             }
         }
         #endregion
