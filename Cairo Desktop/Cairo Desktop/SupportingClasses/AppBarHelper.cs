@@ -190,7 +190,7 @@ namespace CairoDesktop.SupportingClasses
                 int right = WindowManager.PrimaryMonitorDeviceSize.Width;
                 int bottom = WindowManager.PrimaryMonitorDeviceSize.Height;
 
-                PresentationSource ps = PresentationSource.FromVisual(abWindow);
+                /*PresentationSource ps = PresentationSource.FromVisual(abWindow);
 
                 if (ps == null)
                 {
@@ -199,7 +199,7 @@ namespace CairoDesktop.SupportingClasses
                     return;
                 }
 
-                double dpiScale = ps.CompositionTarget.TransformToDevice.M11;
+                double dpiScale = ps.CompositionTarget.TransformToDevice.M11;*/
 
                 if (screen != null)
                 {
@@ -278,11 +278,11 @@ namespace CairoDesktop.SupportingClasses
 
                 // check if new coords
                 bool isSameCoords = false;
-                if (!isCreate) isSameCoords = abd.rc.top == (abWindow.Top * dpiScale) && abd.rc.left == (abWindow.Left * dpiScale) && abd.rc.bottom == (abWindow.Top * dpiScale) + sHeight && abd.rc.right == (abWindow.Left * dpiScale) + sWidth;
+                if (!isCreate) isSameCoords = abd.rc.top == (abWindow.Top * abWindow.dpiScale) && abd.rc.left == (abWindow.Left * abWindow.dpiScale) && abd.rc.bottom == (abWindow.Top * abWindow.dpiScale) + sHeight && abd.rc.right == (abWindow.Left * abWindow.dpiScale) + sWidth;
                 
                 if (!isSameCoords)
                 {
-                    CairoLogger.Instance.Debug(string.Format("AppBarHelper: {0} changing position (TxLxBxR) to {1}x{2}x{3}x{4} from {5}x{6}x{7}x{8}", abWindow.Name, abd.rc.top, abd.rc.left, abd.rc.bottom, abd.rc.right, (abWindow.Top * dpiScale), (abWindow.Left * dpiScale), (abWindow.Top * dpiScale) + sHeight, (abWindow.Left * dpiScale) + sWidth));
+                    CairoLogger.Instance.Debug(string.Format("AppBarHelper: {0} changing position (TxLxBxR) to {1}x{2}x{3}x{4} from {5}x{6}x{7}x{8}", abWindow.Name, abd.rc.top, abd.rc.left, abd.rc.bottom, abd.rc.right, (abWindow.Top * abWindow.dpiScale), (abWindow.Left * abWindow.dpiScale), (abWindow.Top * abWindow.dpiScale) + sHeight, (abWindow.Left * abWindow.dpiScale) + sWidth));
                     abWindow.setAppBarPosition(abd.rc);
                 }
 

@@ -82,6 +82,9 @@ namespace CairoDesktop.WindowsTasks
                         Windows.Add(win);
                     return true;
                 }), 0);
+
+                // register for app grabber changes so that our app association is accurate
+                AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged += CategoryList_CategoryChanged;
             }
             catch (Exception ex)
             {
@@ -109,10 +112,19 @@ namespace CairoDesktop.WindowsTasks
         public void Dispose()
         {
             CairoLogger.Instance.Debug("Disposing of WindowsTasksService");
+            AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged -= CategoryList_CategoryChanged;
             DeregisterShellHookWindow(_HookWin.Handle);
             // May be contributing to #95
             //RegisterShellHook(_HookWin.Handle, 0);// 0 = RSH_UNREGISTER - this seems to be undocumented....
             _HookWin.DestroyHandle();
+        }
+
+        private void CategoryList_CategoryChanged(object sender, EventArgs e)
+        {
+            foreach (ApplicationWindow window in Windows)
+            {
+                window.SetCategory();
+            }
         }
 
         private void SetMinimizedMetrics()
@@ -161,6 +173,7 @@ namespace CairoDesktop.WindowsTasks
                 {
                     if (Configuration.Settings.Instance.EnableTaskbarPolling)
                         win.VisCheck.Stop();
+                    win.Dispose();
                     Windows.Remove(win);
                 }
                 while (Windows.Contains(win));
@@ -195,7 +208,7 @@ namespace CairoDesktop.WindowsTasks
                                 {
                                     win = Windows.First(wnd => wnd.Handle == msg.LParam);
                                     win.State = ApplicationWindow.WindowState.Inactive;
-                                    win.OnPropertyChanged("ShowInTaskbar");
+                                    win.SetShowInTaskbar();
                                 }
                                 else
                                 {
@@ -224,7 +237,7 @@ namespace CairoDesktop.WindowsTasks
                                     {
                                         win = Windows.First(wnd => wnd.Handle == msg.LParam);
                                         win.State = ApplicationWindow.WindowState.Active;
-                                        win.OnPropertyChanged("ShowInTaskbar");
+                                        win.SetShowInTaskbar();
                                     }
                                     else
                                     {
@@ -235,7 +248,7 @@ namespace CairoDesktop.WindowsTasks
                                     foreach (ApplicationWindow wind in Windows)
                                     {
                                         if (wind.WinFileName == win.WinFileName)
-                                            wind.OnPropertyChanged("ShowInTaskbar");
+                                            wind.SetShowInTaskbar();
                                     }
                                 }
                                 break;
@@ -276,16 +289,16 @@ namespace CairoDesktop.WindowsTasks
                                 if (Windows.Contains(win))
                                 {
                                     win = Windows.First(wnd => wnd.Handle == msg.LParam);
-                                    win.OnPropertyChanged("ShowInTaskbar");
-                                    win.OnPropertyChanged("Title");
+                                    win.SetShowInTaskbar();
+                                    win.SetTitle();
                                     win.SetIcon();
 
                                     foreach (ApplicationWindow wind in Windows)
                                     {
                                         if (wind.WinFileName == win.WinFileName)
                                         {
-                                            wind.OnPropertyChanged("ShowInTaskbar");
-                                            win.OnPropertyChanged("Title");
+                                            wind.SetShowInTaskbar();
+                                            win.SetTitle();
                                             win.SetIcon();
                                         }
                                     }
@@ -305,8 +318,8 @@ namespace CairoDesktop.WindowsTasks
                                 if (Windows.Contains(win))
                                 {
                                     win = Windows.First(wnd => wnd.Handle == msg.LParam);
-                                    win.OnPropertyChanged("ShowInTaskbar");
-                                    win.OnPropertyChanged("Title");
+                                    win.SetShowInTaskbar();
+                                    win.SetTitle();
                                     win.SetIcon();
                                 }
                                 break;

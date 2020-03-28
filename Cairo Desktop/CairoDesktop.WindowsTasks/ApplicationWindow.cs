@@ -15,9 +15,11 @@ using CairoDesktop.Common.Logging;
 namespace CairoDesktop.WindowsTasks
 {
     [DebuggerDisplay("Title: {Title}, Handle: {Handle}")]
-    public class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPropertyChanged
+    public class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPropertyChanged, IDisposable
     {
         public DispatcherTimer VisCheck;
+        const int TITLE_LENGTH = 1024;
+        StringBuilder titleBuilder = new StringBuilder(TITLE_LENGTH);
 
         public ApplicationWindow(IntPtr handle, WindowsTasksService sourceService)
         {
@@ -38,13 +40,19 @@ namespace CairoDesktop.WindowsTasks
                     OnPropertyChanged("ShowInTaskbar");
                 }, Application.Current.Dispatcher);
             }
-
-            // register for app grabber changes so that our app association is accurate
-            AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged += CategoryList_CategoryChanged;
         }
 
         public ApplicationWindow(IntPtr handle) : this(handle, null)
         {
+        }
+
+        public void Dispose()
+        {
+            if (_applicationInfo != null)
+            {
+                _applicationInfo.PropertyChanged -= AppInfo_PropertyChanged;
+                if (_applicationInfo?.Category != null) _applicationInfo.Category.PropertyChanged -= Category_PropertyChanged;
+            }
         }
 
         public IntPtr Handle
@@ -100,11 +108,18 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
+        private bool? _isUWP = null;
+
         private bool isUWP
         {
             get
             {
-                return WinFileName.ToLower().Contains("applicationframehost.exe");
+                if (_isUWP == null)
+                {
+                    _isUWP = WinFileName.ToLower().Contains("applicationframehost.exe");
+                }
+
+                return (bool)_isUWP;
             }
         }
 
@@ -131,26 +146,35 @@ namespace CairoDesktop.WindowsTasks
             {
                 if(_category == null)
                 {
-                    if (ApplicationInfo != null && ApplicationInfo.Category == null)
-                    {
-                        // if app was removed, category is null, so stop using that app
-                        ApplicationInfo.PropertyChanged -= AppInfo_PropertyChanged;
-                        _applicationInfo = null;
-                    }
-                    _category = ApplicationInfo?.Category?.DisplayName;
-
-                    if (_category == null && WinFileName.ToLower().Contains("cairodesktop.exe"))
-                        _category = "Cairo";
-                    else if (_category == null && WinFileName.ToLower().Contains("\\windows\\") && !isUWP)
-                        _category = "Windows";
-                    else if (_category == null)
-                        _category = Localization.DisplayString.sAppGrabber_Uncategorized;
+                    SetCategory();
                 }
                 return _category;
             }
-            set
+        }
+
+        public void SetCategory()
+        {
+            string category;
+
+            if (_applicationInfo != null && _applicationInfo.Category == null)
             {
-                _category = value;
+                // if app was removed, category is null, so stop using that app
+                _applicationInfo.PropertyChanged -= AppInfo_PropertyChanged;
+                _applicationInfo = null;
+            }
+            category = ApplicationInfo?.Category?.DisplayName;
+
+            if (category == null && WinFileName.ToLower().Contains("cairodesktop.exe"))
+                category = "Cairo";
+            else if (category == null && WinFileName.ToLower().Contains("\\windows\\") && !isUWP)
+                category = "Windows";
+            else if (category == null)
+                category = Localization.DisplayString.sAppGrabber_Uncategorized;
+
+            if (_category != category)
+            {
+                _category = category;
+                OnPropertyChanged("Category");
             }
         }
 
@@ -209,26 +233,43 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
+        private string _title;
+
         public string Title
         {
             get
             {
-                try
+                if (_title == null)
                 {
-                    int len = NativeMethods.GetWindowTextLength(Handle);
-
-                    if (len < 1)
-                        return "";
-
-                    StringBuilder sb = new StringBuilder(len);
-                    NativeMethods.GetWindowText(Handle, sb, len + 1);
-
-                    return sb.ToString();
+                    SetTitle();
                 }
-                catch
+
+                return _title;
+            }
+        }
+
+        public void SetTitle()
+        {
+            string title = "";
+            try
+            {
+                /*int len = NativeMethods.GetWindowTextLength(Handle);
+
+                if (len > 0)
                 {
-                    return "";
-                }
+                    
+                }*/
+                titleBuilder.Clear();
+                NativeMethods.GetWindowText(Handle, titleBuilder, TITLE_LENGTH + 1);
+
+                title = titleBuilder.ToString();
+            }
+            catch { }
+
+            if (_title != title)
+            {
+                _title = title;
+                OnPropertyChanged("Title");
             }
         }
 
@@ -251,6 +292,7 @@ namespace CairoDesktop.WindowsTasks
         private bool _iconLoading = false;
 
         private ImageSource _icon = null;
+        private IntPtr _hIcon = IntPtr.Zero;
 
         private NativeMethods.TBPFLAG _progressState;
 
@@ -337,52 +379,75 @@ namespace CairoDesktop.WindowsTasks
         // set to true the first time the window state becomes active
         private bool hasActivated = false;
 
+        private bool? _showInTaskbar;
+
         // True if this window should be shown in the taskbar
         public bool ShowInTaskbar
         {
             get
             {
-                // Don't show empty buttons.
-                if (string.IsNullOrEmpty(Title) || State == WindowState.Hidden)
+                if (_showInTaskbar == null)
                 {
-                    //CairoLogger.Instance.Debug(string.Format("Hid {0} window with Title: {1} State: {2}", Handle, Title, State));
+                    SetShowInTaskbar();
+                }
+
+                return (bool)_showInTaskbar;
+            }
+        }
+
+        public void SetShowInTaskbar()
+        {
+            bool showInTaskbar = GetShowInTaskbar();
+
+            if (_showInTaskbar != showInTaskbar)
+            {
+                _showInTaskbar = showInTaskbar;
+                OnPropertyChanged("ShowInTaskbar");
+            }
+        }
+
+        public bool GetShowInTaskbar()
+        {
+            // Don't show empty buttons.
+            if (string.IsNullOrEmpty(Title) || State == WindowState.Hidden)
+            {
+                //CairoLogger.Instance.Debug(string.Format("Hid {0} window with Title: {1} State: {2}", Handle, Title, State));
+                return false;
+            }
+
+            /* EnumWindows and ShellHook return UWP app windows that are 'cloaked', which should not be visible in the taskbar.
+             * The DWMA_CLOAKED attribute is set sometimes even when a window should be shown, so skip this check if the window has been activated. */
+            if ((WindowsTasksService.IsStarting || !hasActivated) && Shell.IsWindows8OrBetter)
+            {
+                uint cloaked;
+                int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(uint));
+                NativeMethods.DwmGetWindowAttribute(Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out cloaked, cbSize);
+
+                if (cloaked > 0)
+                {
+                    CairoLogger.Instance.Debug(string.Format("Cloaked ({0}) window ({1}) hidden from taskbar", cloaked, Title));
                     return false;
                 }
+            }
 
-                /* EnumWindows and ShellHook return UWP app windows that are 'cloaked', which should not be visible in the taskbar.
-                 * The DWMA_CLOAKED attribute is set sometimes even when a window should be shown, so skip this check if the window has been activated. */
-                if ((WindowsTasksService.IsStarting || !hasActivated) && Shell.IsWindows8OrBetter)
-                {
-                    uint cloaked;
-                    int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(uint));
-                    NativeMethods.DwmGetWindowAttribute(Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out cloaked, cbSize);
+            // Make sure this is a real application window and not a child or tool window
+            IntPtr ownerWin = NativeMethods.GetWindow(Handle, NativeMethods.GW_OWNER);
 
-                    if (cloaked > 0)
-                    {
-                        CairoLogger.Instance.Debug(string.Format("Cloaked ({0}) window ({1}) hidden from taskbar", cloaked, Title));
-                        return false;
-                    }
-                }
+            bool isAppWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
+            bool hasEdge = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0;
+            bool isTopmostOnly = ExtendedWindowStyles == (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST;
+            bool isToolWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
+            bool isAcceptFiles = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_ACCEPTFILES) != 0;
+            bool isVisible = NativeMethods.IsWindowVisible(Handle);
 
-                // Make sure this is a real application window and not a child or tool window
-                IntPtr ownerWin = NativeMethods.GetWindow(Handle, NativeMethods.GW_OWNER);
-
-                bool isAppWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
-                bool hasEdge = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0;
-                bool isTopmostOnly = ExtendedWindowStyles == (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST;
-                bool isToolWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
-                bool isAcceptFiles = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_ACCEPTFILES) != 0;
-                bool isVisible = NativeMethods.IsWindowVisible(Handle);
-
-                if ((isAppWindow || ((hasEdge || isTopmostOnly || ExtendedWindowStyles == 0) && ownerWin == IntPtr.Zero) || (isAcceptFiles && ShowStyle == NativeMethods.WindowShowStyle.ShowMaximized && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
-                {
-                    return true;
-                }
-                else
-                {
-                    //CairoLogger.Instance.Debug(string.Format("Hid {0} window with properties: {1} {2} {3} {4} {5} {6} {7} {8} {9}", Handle, isAppWindow, hasEdge, isTopmostOnly, isToolWindow, isAcceptFiles, isVisible, ShowStyle, ownerWin, ExtendedWindowStyles));
-                    return false;
-                }
+            if ((isAppWindow || ((hasEdge || isTopmostOnly || ExtendedWindowStyles == 0) && ownerWin == IntPtr.Zero) || (isAcceptFiles && ShowStyle == NativeMethods.WindowShowStyle.ShowMaximized && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
+            {
+                return true;
+            }
+            else
+            {
+                //CairoLogger.Instance.Debug(string.Format("Hid {0} window with properties: {1} {2} {3} {4} {5} {6} {7} {8} {9}", Handle, isAppWindow, hasEdge, isTopmostOnly, isToolWindow, isAcceptFiles, isVisible, ShowStyle, ownerWin, ExtendedWindowStyles));
+                return false;
             }
         }
 
@@ -403,7 +468,7 @@ namespace CairoDesktop.WindowsTasks
 
         public void SetIcon()
         {
-            if (!_iconLoading)
+            if (!_iconLoading && ShowInTaskbar)
             {
                 _iconLoading = true;
 
@@ -484,12 +549,20 @@ namespace CairoDesktop.WindowsTasks
 
                         if (hIco != IntPtr.Zero)
                         {
-                            bool returnDefault = (_icon == null); // only return a default icon if we don't already have one. otherwise let's use what we have.
-                            ImageSource icon = IconImageConverter.GetImageFromHIcon(hIco, returnDefault);
-                            if (icon != null)
+                            if (_hIcon != hIco)
                             {
-                                icon.Freeze();
-                                Icon = icon;
+                                _hIcon = hIco;
+                                bool returnDefault = (_icon == null); // only return a default icon if we don't already have one. otherwise let's use what we have.
+                                ImageSource icon = IconImageConverter.GetImageFromHIcon(hIco, returnDefault);
+                                if (icon != null)
+                                {
+                                    icon.Freeze();
+                                    Icon = icon;
+                                }
+                            }
+                            else
+                            {
+                                NativeMethods.DestroyIcon(hIco);
                             }
                         }
                         else if (Configuration.Settings.Instance.EnableTaskbarPolling && iconTries == 0)
@@ -513,23 +586,15 @@ namespace CairoDesktop.WindowsTasks
         {
             if (e?.PropertyName == "DisplayName")
             {
-                _category = null;
-                OnPropertyChanged("Category");
+                SetCategory();
             }
-        }
-
-        private void CategoryList_CategoryChanged(object sender, EventArgs e)
-        {
-            _category = null;
-            OnPropertyChanged("Category");
         }
 
         private void AppInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e?.PropertyName == "Category")
             {
-                _category = null;
-                OnPropertyChanged("Category");
+                SetCategory();
             }
         }
 
