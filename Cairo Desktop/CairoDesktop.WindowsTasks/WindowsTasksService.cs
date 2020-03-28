@@ -289,17 +289,17 @@ namespace CairoDesktop.WindowsTasks
                                 if (Windows.Contains(win))
                                 {
                                     win = Windows.First(wnd => wnd.Handle == msg.LParam);
-                                    win.SetShowInTaskbar();
                                     win.SetTitle();
+                                    win.SetShowInTaskbar();
                                     win.SetIcon();
 
                                     foreach (ApplicationWindow wind in Windows)
                                     {
                                         if (wind.WinFileName == win.WinFileName)
                                         {
+                                            wind.SetTitle();
                                             wind.SetShowInTaskbar();
-                                            win.SetTitle();
-                                            win.SetIcon();
+                                            wind.SetIcon();
                                         }
                                     }
                                 }
@@ -318,8 +318,8 @@ namespace CairoDesktop.WindowsTasks
                                 if (Windows.Contains(win))
                                 {
                                     win = Windows.First(wnd => wnd.Handle == msg.LParam);
-                                    win.SetShowInTaskbar();
                                     win.SetTitle();
+                                    win.SetShowInTaskbar();
                                     win.SetIcon();
                                 }
                                 break;
