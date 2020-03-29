@@ -211,17 +211,12 @@ namespace CairoDesktop
             if (Settings.Instance.TaskbarPosition == 1)
             {
                 // set to bottom of this display's menu bar
-                MenuBar menuBar = WindowManager.Instance.GetScreenWindow(WindowManager.Instance.MenuBarWindows, Screen);
-                double menuBarHeight = 0;
-
-                if (menuBar != null) menuBarHeight = menuBar.Height;
-
-                return (Screen.Bounds.Y / dpiScale) + menuBarHeight;
+                return (Screen.Bounds.Y / dpiScale) + AppBarHelper.GetAppBarEdgeWindowsHeight(appBarEdge, Screen);
             }
             else
             {
                 // set to bottom of workspace
-                return (Screen.Bounds.Bottom / dpiScale) - Height;
+                return (Screen.Bounds.Bottom / dpiScale) - Height - AppBarHelper.GetAppBarEdgeWindowsHeight(appBarEdge, Screen);
             }
         }
 

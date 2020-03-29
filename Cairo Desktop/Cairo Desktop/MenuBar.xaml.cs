@@ -19,6 +19,8 @@ namespace CairoDesktop
         private static bool isCairoMenuHotkeyRegistered = false;
         private static bool isProgramsMenuHotkeyRegistered = false;
 
+        private bool secretBottomMenuBar = false;
+
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
@@ -40,6 +42,7 @@ namespace CairoDesktop
             desiredHeight = 23;
             processScreenChanges = true;
             requiresScreenEdge = true;
+            if (secretBottomMenuBar) appBarEdge = AppBarHelper.ABEdge.ABE_BOTTOM;
 
             setPosition();
 
@@ -185,7 +188,7 @@ namespace CairoDesktop
 
         private void setupShadow()
         {
-            if (Settings.Instance.EnableMenuBarShadow && shadow == null)
+            if (Settings.Instance.EnableMenuBarShadow && shadow == null && !secretBottomMenuBar)
             {
                 shadow = new MenuBarShadow(this);
                 shadow.Show();
@@ -294,7 +297,7 @@ namespace CairoDesktop
 
         internal override void setPosition()
         {
-            Top = Screen.Bounds.Y / dpiScale;
+            Top = getDesiredTopPosition();
             Left = Screen.Bounds.X / dpiScale;
             Width = Screen.Bounds.Width / dpiScale;
             Height = desiredHeight;
@@ -328,13 +331,23 @@ namespace CairoDesktop
 
         private void Window_LocationChanged(object sender, EventArgs e)
         {
-            double top = Screen.Bounds.Y / dpiScale;
+            double top = getDesiredTopPosition();
 
             if (Top != top)
             {
                 Top = top;
                 setShadowPosition();
             }
+        }
+
+        private double getDesiredTopPosition()
+        {
+            double top;
+
+            if (secretBottomMenuBar) top = (Screen.Bounds.Bottom / dpiScale) - desiredHeight;
+            else top = Screen.Bounds.Y / dpiScale;
+
+            return top;
         }
 
         protected override void customClosing()

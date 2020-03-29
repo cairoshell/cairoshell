@@ -233,7 +233,7 @@ namespace CairoDesktop.SupportingClasses
                     {
                         if (!abWindow.requiresScreenEdge)
                         {
-                            abd.rc.top = top + getAppBarEdgeWindowsHeight((ABEdge)abd.uEdge);
+                            abd.rc.top = top + Convert.ToInt32(GetAppBarEdgeWindowsHeight((ABEdge)abd.uEdge, screen));
                         }
                         else
                             abd.rc.top = top;
@@ -243,7 +243,7 @@ namespace CairoDesktop.SupportingClasses
                     {
                         if (!abWindow.requiresScreenEdge)
                         {
-                            abd.rc.bottom = bottom + getAppBarEdgeWindowsHeight((ABEdge)abd.uEdge);
+                            abd.rc.bottom = bottom - Convert.ToInt32(GetAppBarEdgeWindowsHeight((ABEdge)abd.uEdge, screen));
                         }
                         else
                             abd.rc.bottom = bottom;
@@ -293,18 +293,18 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        private static int getAppBarEdgeWindowsHeight(ABEdge edge)
+        public static double GetAppBarEdgeWindowsHeight(ABEdge edge, Screen screen)
         {
-            int edgeHeight = 0;
+            double edgeHeight = 0;
 
             foreach (MenuBar menuBar in WindowManager.Instance.MenuBarWindows)
             {
-                if (menuBar.requiresScreenEdge && menuBar.appBarEdge == edge) edgeHeight += Convert.ToInt32(menuBar.Height);
+                if (menuBar.requiresScreenEdge && menuBar.appBarEdge == edge && menuBar.Screen.DeviceName == screen.DeviceName) edgeHeight += menuBar.Height;
             }
 
             foreach (Taskbar taskbar in WindowManager.Instance.TaskbarWindows)
             {
-                if (taskbar.requiresScreenEdge && taskbar.appBarEdge == edge) edgeHeight += Convert.ToInt32(taskbar.Height);
+                if (taskbar.requiresScreenEdge && taskbar.appBarEdge == edge && taskbar.Screen.DeviceName == screen.DeviceName) edgeHeight += taskbar.Height;
             }
 
             return edgeHeight;
