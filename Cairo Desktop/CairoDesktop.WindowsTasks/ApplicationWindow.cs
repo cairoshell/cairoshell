@@ -4,13 +4,12 @@ using System.Diagnostics;
 using System.ComponentModel;
 using CairoDesktop.Interop;
 using CairoDesktop.AppGrabber;
-using System.Windows.Threading;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
-using System.Windows;
 using CairoDesktop.Common;
 using System.Threading;
 using CairoDesktop.Common.Logging;
+using System.Threading.Tasks;
 
 namespace CairoDesktop.WindowsTasks
 {
@@ -446,7 +445,7 @@ namespace CairoDesktop.WindowsTasks
             {
                 _iconLoading = true;
 
-                var thread = new Thread(() =>
+                Task.Factory.StartNew(() =>
                 {
                     if (isUWP && !string.IsNullOrEmpty(AppUserModelID))
                     {
@@ -542,10 +541,7 @@ namespace CairoDesktop.WindowsTasks
                     }
 
                     _iconLoading = false;
-                });
-                thread.IsBackground = true;
-                thread.SetApartmentState(ApartmentState.STA);
-                thread.Start();
+                }, CancellationToken.None, TaskCreationOptions.None, Shell.IconScheduler);
             }
         }
 

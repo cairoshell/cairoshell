@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using CairoDesktop.Common.Logging;
 using Microsoft.Win32;
+using System.Threading.Tasks;
 
 namespace CairoDesktop.Common
 {
@@ -170,15 +171,12 @@ namespace CairoDesktop.Common
                 {
                     _iconLoading = true;
 
-                    var thread = new Thread(() =>
+                    Task.Factory.StartNew(() =>
                     {
                         string iconPath = Path.Substring(Path.IndexOf(':') + 1).Replace("/", "\\");
                         Icon = IconImageConverter.GetImageFromAssociatedIcon(iconPath, 0);
                         _iconLoading = false;
-                    });
-                    thread.IsBackground = true;
-                    thread.SetApartmentState(ApartmentState.STA);
-                    thread.Start();
+                    }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
                 }
 
                 return icon;

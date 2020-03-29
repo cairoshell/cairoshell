@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using CairoDesktop.Common.Logging;
@@ -131,7 +132,6 @@ namespace CairoDesktop.Common {
                 if (newFile.Name != null)
                 {
                     files.Add(newFile);
-                    OnPropertyChanged("Files");
                 }
             }
         }
@@ -148,7 +148,6 @@ namespace CairoDesktop.Common {
             if (removalIndex > -1)
             {
                 files.RemoveAt(removalIndex);
-                OnPropertyChanged("Files");
             }
         }
 
@@ -200,29 +199,34 @@ namespace CairoDesktop.Common {
         private void initialize()
         {
             files.Clear();
-            
-            if (Settings.Instance.EnableSubDirs)
+
+            // Enumerate the directory on a new thread so that we don't block the UI during a potentially long operation
+            // Because files is an ObservableCollection, we don't need to do anything special for the UI to update
+            var thread = new Thread(() =>
             {
-                IEnumerable<string> dirs = Directory.EnumerateDirectories(DirectoryInfo.FullName);
-                foreach (string subDir in dirs)
+                if (Settings.Instance.EnableSubDirs)
                 {
-                    if (isFileVisible(subDir))
+                    IEnumerable<string> dirs = Directory.EnumerateDirectories(DirectoryInfo.FullName);
+                    foreach (string subDir in dirs)
                     {
-                        files.Add(new SystemFile(subDir));
+                        if (isFileVisible(subDir))
+                        {
+                            files.Add(new SystemFile(subDir));
+                        }
                     }
                 }
-            }
 
-            IEnumerable<string> dirFiles = Directory.EnumerateFiles(DirectoryInfo.FullName, "*");
-            foreach (String file in dirFiles)
-            {
-                if (isFileVisible(file))
+                IEnumerable<string> dirFiles = Directory.EnumerateFiles(DirectoryInfo.FullName, "*");
+                foreach (string file in dirFiles)
                 {
-                    files.Add(new SystemFile(file));
+                    if (isFileVisible(file))
+                    {
+                        files.Add(new SystemFile(file));
+                    }
                 }
-            }
-
-            OnPropertyChanged("Files");
+            });
+            thread.IsBackground = true;
+            thread.Start();
         }
 
         public void Dispose()

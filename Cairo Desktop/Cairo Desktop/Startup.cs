@@ -167,6 +167,9 @@
             // reset work area
             if (Shell.IsCairoRunningAsShell) WindowManager.Instance.ResetWorkArea();
 
+            // dispose of long-lived COM objects
+            Shell.DisposeIml();
+
             Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
         }
 

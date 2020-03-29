@@ -101,6 +101,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComTaskScheduler.cs" />
     <Compile Include="KnownFolders.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

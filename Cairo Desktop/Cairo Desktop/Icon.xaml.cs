@@ -37,8 +37,6 @@ namespace CairoDesktop
         public Icon()
         {
             InitializeComponent();
-
-            Settings.Instance.PropertyChanged += Instance_PropertyChanged;
         }
 
         private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -57,6 +55,9 @@ namespace CairoDesktop
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            // register for settings changes
+            Settings.Instance.PropertyChanged += Instance_PropertyChanged;
+
             // set SystemFile from binding
             file = DataContext as SystemFile;
             if (file != null)
@@ -343,5 +344,11 @@ namespace CairoDesktop
             e.Handled = true;
         }
         #endregion
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            // unregister settings changes
+            Settings.Instance.PropertyChanged -= Instance_PropertyChanged;
+        }
     }
 }

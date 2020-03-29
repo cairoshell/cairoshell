@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -202,15 +203,12 @@ namespace CairoDesktop.AppGrabber
                 {
                     _iconLoading = true;
 
-                    var thread = new Thread(() =>
+                    Task.Factory.StartNew(() =>
                     {
                         Icon = GetAssociatedIcon();
                         Icon.Freeze();
                         _iconLoading = false;
-                    });
-                    thread.IsBackground = true;
-                    thread.SetApartmentState(ApartmentState.STA);
-                    thread.Start();
+                    }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
                 }
 
                 return icon;

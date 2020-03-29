@@ -12,7 +12,7 @@ namespace CairoDesktop.Interop
     public partial class Shell
     {
         private const int MAX_PATH = 260;
-        public static Object ComLock = new Object();
+        public static object ComLock = new object();
 
         // DPI at user logon to the system
         private static double? _oldDpiScale;
@@ -58,6 +58,56 @@ namespace CairoDesktop.Interop
             get { return DpiScale / OldDpiScale; }
         }
 
+        // IImageList references
+        private static Guid iidImageList = new Guid("46EB5926-582E-4017-9FDF-E8998DAA0950");
+        private static IImageList iml0; // 32pt
+        private static IImageList iml1; // 16pt
+        private static IImageList iml2; // 48pt
+        public static ComTaskScheduler IconScheduler = new ComTaskScheduler();
+
+        private static void initIml(int size)
+        {
+            // Initialize the appropriate IImageList for the desired icon size if it hasn't been already
+
+            if (size == 0 && iml0 == null)
+            {
+                SHGetImageList(0, ref iidImageList, out iml0);
+            }
+            else if (size == 1 && iml1 == null)
+            {
+                SHGetImageList(1, ref iidImageList, out iml1);
+            }
+            else if (size == 2 && iml2 == null)
+            {
+                SHGetImageList(2, ref iidImageList, out iml2);
+            }
+        }
+
+        public static void DisposeIml()
+        {
+            // Dispose any IImageList objects we instantiated.
+            // Called by the main shutdown method.
+
+            lock (ComLock)
+            {
+                if (iml0 != null)
+                {
+                    Marshal.ReleaseComObject(iml0);
+                    iml0 = null;
+                }
+                if (iml1 != null)
+                {
+                    Marshal.ReleaseComObject(iml1);
+                    iml1 = null;
+                }
+                if (iml2 != null)
+                {
+                    Marshal.ReleaseComObject(iml2);
+                    iml2 = null;
+                }
+            }
+        }
+
         public static IntPtr GetIconByFilename(string fileName, int size)
         {
             return GetIcon(fileName, size);
@@ -87,15 +137,24 @@ namespace CairoDesktop.Interop
 
                     var iconIndex = shinfo.iIcon;
 
-                    // Get the System IImageList object from the Shell:
-                    Guid iidImageList = new Guid("46EB5926-582E-4017-9FDF-E8998DAA0950");
-
-                    SHGetImageList(size, ref iidImageList, out IImageList iml);
+                    // Initialize the IImageList object
+                    initIml(size);
 
                     IntPtr hIcon = IntPtr.Zero;
                     int ILD_TRANSPARENT = 1;
-                    iml.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
-                    Marshal.ReleaseComObject(iml);
+
+                    switch (size)
+                    {
+                        case 0:
+                            iml0.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
+                            break;
+                        case 1:
+                            iml1.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
+                            break;
+                        case 2:
+                            iml2.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
+                            break;
+                    }
 
                     return hIcon;
                 }

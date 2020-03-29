@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows.Threading;
 using System.Windows;
+using System.Threading.Tasks;
 
 namespace CairoDesktop.Common
 {
@@ -157,15 +158,12 @@ namespace CairoDesktop.Common
                 {
                     _iconLoading = true;
 
-                    var thread = new Thread(() =>
+                    Task.Factory.StartNew(() =>
                     {
                         Icon = GetDisplayIcon(0);
                         Icon.Freeze();
                         _iconLoading = false;
-                    });
-                    thread.IsBackground = true;
-                    thread.SetApartmentState(ApartmentState.STA);
-                    thread.Start();
+                    }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
                 }
 
                 return _icon;
@@ -189,15 +187,12 @@ namespace CairoDesktop.Common
                 {
                     _iconLargeLoading = true;
 
-                    var thread = new Thread(() =>
+                    Task.Factory.StartNew(() =>
                     {
                         LargeIcon = GetDisplayIcon(2);
                         LargeIcon.Freeze();
                         _iconLargeLoading = false;
-                    });
-                    thread.IsBackground = true;
-                    thread.SetApartmentState(ApartmentState.STA);
-                    thread.Start();
+                    }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
                 }
 
                 return _largeIcon;
