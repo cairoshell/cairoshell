@@ -290,8 +290,8 @@ namespace CairoDesktop
                 }
                 else
                 {
-                    if (isDropMove) file.ParentDirectory.MoveInto(fileNames);
-                    else file.ParentDirectory.CopyInto(fileNames);
+                    if (isDropMove) file.ParentDirectory?.MoveInto(fileNames);
+                    else file.ParentDirectory?.CopyInto(fileNames);
                 }
 
                 e.Handled = true;

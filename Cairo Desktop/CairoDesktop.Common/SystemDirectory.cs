@@ -128,7 +128,7 @@ namespace CairoDesktop.Common {
         private void addFile(string filePath) {
             if (Shell.Exists(filePath) && isFileVisible(filePath))
             {
-                SystemFile newFile = new SystemFile(filePath);
+                SystemFile newFile = new SystemFile(filePath, this);
                 if (newFile.Name != null)
                 {
                     files.Add(newFile);
@@ -169,7 +169,7 @@ namespace CairoDesktop.Common {
                 {
                     if (file.FullName == oldPath)
                     {
-                        file.SetFilePath(newPath);
+                        file.SetFilePath(newPath, this);
                         break;
                     }
                 }
@@ -211,7 +211,7 @@ namespace CairoDesktop.Common {
                     {
                         if (isFileVisible(subDir))
                         {
-                            files.Add(new SystemFile(subDir));
+                            files.Add(new SystemFile(subDir, this));
                         }
                     }
                 }
@@ -221,7 +221,7 @@ namespace CairoDesktop.Common {
                 {
                     if (isFileVisible(file))
                     {
-                        files.Add(new SystemFile(file));
+                        files.Add(new SystemFile(file, this));
                     }
                 }
             });

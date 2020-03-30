@@ -22,7 +22,6 @@ namespace CairoDesktop.Common
         private string _friendlyName;
         private string _fullName;
         private string _name;
-        private SystemDirectory _parentDirectory;
         private List<string> _verbs;
         private bool _iconLoading = false;
         private bool _iconLargeLoading = false;
@@ -49,24 +48,7 @@ namespace CairoDesktop.Common
         /// <summary>
         /// Gets the parent SystemDirectory for the file.
         /// </summary>
-        public SystemDirectory ParentDirectory
-        {
-            get
-            {
-                try
-                {
-                    if (_parentDirectory == null)
-                    {
-                        _parentDirectory = new SystemDirectory(Path.GetDirectoryName(FullName.TrimEnd(new char[] { '\\' })), Dispatcher.CurrentDispatcher);
-                    }
-                    return _parentDirectory;
-                }
-                catch
-                {
-                    return _parentDirectory;
-                }
-            }
-        }
+        public SystemDirectory ParentDirectory { get; private set; }
 
         /// <summary>
         /// Gets or sets the name of the file.
@@ -134,9 +116,6 @@ namespace CairoDesktop.Common
 
                 _friendlyName = null;
                 OnPropertyChanged("FriendlyName");
-
-                _parentDirectory = null;
-                OnPropertyChanged("ParentDirectory");
 
                 _icon = null;
                 OnPropertyChanged("Icon");
@@ -229,16 +208,20 @@ namespace CairoDesktop.Common
         /// Initializes a new instance of the SystemFile class.
         /// </summary>
         /// <param name="filePath">The file path of the file in question.</param>
-        public SystemFile(string filePath)
+        /// <param name="parentDirectory">The SystemDirectory that contains this SystemFile.</param>
+        public SystemFile(string filePath, SystemDirectory parentDirectory)
         {
-            SetFilePath(filePath);
+            SetFilePath(filePath, parentDirectory);
         }
 
-        public bool SetFilePath(string filePath)
+        public bool SetFilePath(string filePath, SystemDirectory parentDirectory)
         {
             if (Interop.Shell.Exists(filePath))
             {
-                this.FullName = filePath;
+                FullName = filePath;
+
+                ParentDirectory = parentDirectory;
+                OnPropertyChanged("ParentDirecrory");
 
                 return true;
             }

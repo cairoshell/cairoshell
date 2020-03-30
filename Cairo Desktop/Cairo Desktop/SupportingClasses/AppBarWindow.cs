@@ -171,7 +171,7 @@ namespace CairoDesktop.SupportingClasses
                 }
                 handled = true;
             }
-            else if (enableAppBar && msg == NativeMethods.WM_ACTIVATE)
+            else if (msg == NativeMethods.WM_ACTIVATE && enableAppBar && !Shell.IsCairoRunningAsShell)
             {
                 AppBarHelper.AppBarActivate(hwnd);
             }
@@ -189,7 +189,7 @@ namespace CairoDesktop.SupportingClasses
                     wndPos.UpdateMessage(lParam);
                 }
             }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED)
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && enableAppBar && !Shell.IsCairoRunningAsShell)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
             }

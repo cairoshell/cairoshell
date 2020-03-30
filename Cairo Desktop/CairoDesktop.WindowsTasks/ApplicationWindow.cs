@@ -623,6 +623,7 @@ namespace CairoDesktop.WindowsTasks
             if (retval != IntPtr.Zero)
             {
                 CairoLogger.Instance.Debug(string.Format("Removing window {0} from collection due to no response", Title));
+                Dispose();
                 TasksService.Windows.Remove(this);
             }
         }
