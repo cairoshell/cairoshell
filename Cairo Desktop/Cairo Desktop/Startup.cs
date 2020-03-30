@@ -197,7 +197,10 @@
                 {
                     Process.Start(startInfo);
                 }
-                catch { }
+                catch
+                {
+                    CairoLogger.Instance.Info("Failed to start program: " + startInfo.FileName);
+                }
             }
         }
 
@@ -305,44 +308,58 @@
             }
 
             // startup folders
-            Dictionary<SystemDirectory, RegistryKey> startupFolderKeys = new Dictionary<SystemDirectory, RegistryKey>()
+            Dictionary<string, RegistryKey> startupFolderKeys = new Dictionary<string, RegistryKey>()
             {
                 {
-                    new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup), Dispatcher.CurrentDispatcher),
+                    Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup),
                     Registry.LocalMachine.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false)
                 },
                 {
-                    new SystemDirectory(Environment.GetFolderPath(Environment.SpecialFolder.Startup), Dispatcher.CurrentDispatcher),
-                    Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false) }
+                    Environment.GetFolderPath(Environment.SpecialFolder.Startup),
+                    Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\StartupApproved\\StartupFolder", false)
+                }
               };
 
-            foreach (KeyValuePair<SystemDirectory, RegistryKey> startupFolder in startupFolderKeys)
+            foreach (KeyValuePair<string, RegistryKey> startupFolder in startupFolderKeys)
             {
-                foreach (SystemFile startupFile in startupFolder.Key.Files)
+                try
                 {
-                    bool canRun = true;
-
-                    if (startupFolder.Value != null)
+                    if (Shell.Exists(startupFolder.Key))
                     {
-                        foreach (string approvedName in startupFolder.Value.GetValueNames())
+                        SystemDirectory directory = new SystemDirectory(startupFolder.Key, Dispatcher.CurrentDispatcher);
+                        foreach (SystemFile startupFile in directory.Files)
                         {
-                            try
-                            {
-                                string s = ((byte[])startupFolder.Value.GetValue(approvedName))[0].ToString();
-                                if (approvedName == startupFile.Name && ((byte[])startupFolder.Value.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
-                                {
-                                    canRun = false;
-                                    break;
-                                }
-                                else if (approvedName == startupFile.Name)
-                                    break;
-                            }
-                            catch { } // in case of invalid registry key values
-                        }
-                    }
+                            bool canRun = true;
 
-                    if (canRun)
-                        startupApps.Add(startupFile.FullName);
+                            if (startupFolder.Value != null)
+                            {
+                                foreach (string approvedName in startupFolder.Value.GetValueNames())
+                                {
+                                    try
+                                    {
+                                        string s = ((byte[])startupFolder.Value.GetValue(approvedName))[0].ToString();
+                                        if (approvedName == startupFile.Name && ((byte[])startupFolder.Value.GetValue(approvedName))[0] % 2 != 0) // if value is odd number, item is disabled
+                                        {
+                                            canRun = false;
+                                            break;
+                                        }
+                                        else if (approvedName == startupFile.Name)
+                                            break;
+                                    }
+                                    catch { } // in case of invalid registry key values
+                                }
+                            }
+
+                            if (canRun)
+                                startupApps.Add(startupFile.FullName);
+                        }
+
+                        directory.Dispose();
+                    }
+                }
+                catch
+                {
+                    CairoLogger.Instance.Info("Failed to run startup apps from location:" + startupFolder.Key);
                 }
             }
 

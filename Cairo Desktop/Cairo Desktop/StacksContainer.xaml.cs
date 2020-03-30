@@ -31,7 +31,7 @@ namespace CairoDesktop {
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-            StacksManager.Instance.StackLocations.Remove((sender as MenuItem).CommandParameter as SystemDirectory);
+            StacksManager.Instance.RemoveLocation((sender as MenuItem).CommandParameter as SystemDirectory);
         }
         
         private void Open_Click(object sender, RoutedEventArgs e)

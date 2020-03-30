@@ -8,7 +8,7 @@ using System.Windows.Threading;
 
 namespace CairoDesktop.Common
 {
-    public class StacksManager
+    public class StacksManager : DependencyObject
     {
         private string stackConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoStacksConfig.xml";
         private System.Xml.Serialization.XmlSerializer serializer;
@@ -81,6 +81,12 @@ namespace CairoDesktop.Common
         public bool CanAdd(string path)
         {
             return Directory.Exists(path) && !StackLocations.Any(i => i.Equals(path));
+        }
+
+        public void RemoveLocation(SystemDirectory directory)
+        {
+            directory.Dispose();
+            StackLocations.Remove(directory);
         }
 
         private void serializeStacks()

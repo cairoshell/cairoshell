@@ -651,8 +651,8 @@ namespace CairoDesktop
 
         private void ShowOverlay()
         {
-            Topmost = true;
             NativeMethods.SetForegroundWindow(Handle);
+            Topmost = true;
             grid.Background = new SolidColorBrush(Color.FromArgb(0x88, 0, 0, 0));
             Background = null;
         }
