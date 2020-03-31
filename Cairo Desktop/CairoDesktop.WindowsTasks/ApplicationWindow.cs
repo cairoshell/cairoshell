@@ -229,24 +229,18 @@ namespace CairoDesktop.WindowsTasks
             {
                 if (_title == null)
                 {
-                    SetTitle();
+                    setTitle();
                 }
 
                 return _title;
             }
         }
 
-        public void SetTitle()
+        private void setTitle()
         {
             string title = "";
             try
             {
-                /*int len = NativeMethods.GetWindowTextLength(Handle);
-
-                if (len > 0)
-                {
-                    
-                }*/
                 titleBuilder.Clear();
                 NativeMethods.GetWindowText(Handle, titleBuilder, TITLE_LENGTH + 1);
 
@@ -266,7 +260,7 @@ namespace CairoDesktop.WindowsTasks
             get
             {
                 if (_icon == null)
-                    SetIcon();
+                    setIcon();
 
                 return _icon;
             }
@@ -385,7 +379,7 @@ namespace CairoDesktop.WindowsTasks
 
         public void SetShowInTaskbar()
         {
-            bool showInTaskbar = GetShowInTaskbar();
+            bool showInTaskbar = getShowInTaskbar();
 
             if (_showInTaskbar != showInTaskbar)
             {
@@ -394,7 +388,7 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        public bool GetShowInTaskbar()
+        private bool getShowInTaskbar()
         {
             // Don't show empty buttons.
             if (string.IsNullOrEmpty(Title) || State == WindowState.Hidden)
@@ -439,7 +433,7 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        public void SetIcon()
+        private void setIcon()
         {
             if (!_iconLoading && ShowInTaskbar)
             {
@@ -543,6 +537,13 @@ namespace CairoDesktop.WindowsTasks
                     _iconLoading = false;
                 }, CancellationToken.None, TaskCreationOptions.None, Shell.IconScheduler);
             }
+        }
+
+        public void UpdateProperties()
+        {
+            setTitle();
+            SetShowInTaskbar();
+            setIcon();
         }
 
         private void Category_PropertyChanged(object sender, PropertyChangedEventArgs e)

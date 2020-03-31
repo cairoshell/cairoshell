@@ -152,37 +152,21 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        private void addWindow(IntPtr hWnd)
+        private ApplicationWindow addWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive)
         {
-            if (!Windows.Any(i => i.Handle == hWnd))
-            {
-                ApplicationWindow win = new ApplicationWindow(hWnd, this);
-                Windows.Add(win);
+            ApplicationWindow win = new ApplicationWindow(hWnd, this);
 
-                // Only send TaskbarButtonCreated if we are shell, and if OS is not Server Core
-                // This is because if Explorer is running, it will send the message, so we don't need to
-                // Server Core doesn't support ITaskbarList, so sending this message on that OS could cause some assuming apps to crash
-                if (Interop.Shell.IsCairoRunningAsShell && !Interop.Shell.IsServerCore) SendNotifyMessage(win.Handle, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
-            }
-        }
+            // set window state if a non-default value is provided
+            if (initialState != ApplicationWindow.WindowState.Inactive) win.State = initialState;
 
-        private ApplicationWindow addWindow(IntPtr hWnd, ApplicationWindow.WindowState state)
-        {
-            if (!Windows.Any(i => i.Handle == hWnd))
-            {
-                ApplicationWindow win = new ApplicationWindow(hWnd, this);
-                win.State = state;
-                Windows.Add(win);
+            Windows.Add(win);
 
-                // Only send TaskbarButtonCreated if we are shell, and if OS is not Server Core
-                // This is because if Explorer is running, it will send the message, so we don't need to
-                // Server Core doesn't support ITaskbarList, so sending this message on that OS could cause some assuming apps to crash
-                if (Interop.Shell.IsCairoRunningAsShell && !Interop.Shell.IsServerCore) SendNotifyMessage(win.Handle, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
+            // Only send TaskbarButtonCreated if we are shell, and if OS is not Server Core
+            // This is because if Explorer is running, it will send the message, so we don't need to
+            // Server Core doesn't support ITaskbarList, so sending this message on that OS could cause some assuming apps to crash
+            if (Interop.Shell.IsCairoRunningAsShell && !Interop.Shell.IsServerCore) SendNotifyMessage(win.Handle, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
 
-                return win;
-            }
-
-            return null;
+            return win;
         }
 
         private void removeWindow(IntPtr hWnd)
@@ -211,7 +195,15 @@ namespace CairoDesktop.WindowsTasks
                         {
                             case HSHELL_WINDOWCREATED:
                                 CairoLogger.Instance.Debug("Created: " + msg.LParam.ToString());
-                                addWindow(msg.LParam);
+                                if (!Windows.Any(i => i.Handle == msg.LParam))
+                                {
+                                    addWindow(msg.LParam);
+                                }
+                                else
+                                {
+                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
+                                    win.UpdateProperties();
+                                }
                                 break;
 
                             case HSHELL_WINDOWDESTROYED:
@@ -229,7 +221,7 @@ namespace CairoDesktop.WindowsTasks
                                 }
                                 else
                                 {
-                                    addWindow(msg.LParam, ApplicationWindow.WindowState.Inactive);
+                                    addWindow(msg.LParam);
                                 }
                                 break;
                             case HSHELL_WINDOWREPLACED:
@@ -307,17 +299,13 @@ namespace CairoDesktop.WindowsTasks
                                 if (Windows.Any(i => i.Handle == msg.LParam))
                                 {
                                     ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
-                                    win.SetTitle();
-                                    win.SetShowInTaskbar();
-                                    win.SetIcon();
+                                    win.UpdateProperties();
 
                                     foreach (ApplicationWindow wind in Windows)
                                     {
                                         if (wind.WinFileName == win.WinFileName)
                                         {
-                                            wind.SetTitle();
-                                            wind.SetShowInTaskbar();
-                                            wind.SetIcon();
+                                            wind.UpdateProperties();
                                         }
                                     }
                                 }
@@ -336,9 +324,7 @@ namespace CairoDesktop.WindowsTasks
                                 if (Windows.Any(i => i.Handle == msg.LParam))
                                 {
                                     ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
-                                    win.SetTitle();
-                                    win.SetShowInTaskbar();
-                                    win.SetIcon();
+                                    win.UpdateProperties();
                                 }
                                 break;
                         }
