@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Diagnostics;
 using System.Windows.Forms;
 using System.Windows;
-using System.Collections.ObjectModel;
-using static CairoDesktop.Interop.NativeMethods;
-using CairoDesktop.Common.Logging;
-using System.ComponentModel;
 using System.Windows.Data;
-using System.Collections.Specialized;
+
+using CairoDesktop.Common.Logging;
+using static CairoDesktop.Interop.NativeMethods;
 
 namespace CairoDesktop.WindowsTasks
 {
@@ -23,16 +24,12 @@ namespace CairoDesktop.WindowsTasks
         private static int TASKBARBUTTONCREATEDMESSAGE = -1;
 
         public static bool IsStarting = false;
-        
-        private static WindowsTasksService _instance = new WindowsTasksService();
-        public static WindowsTasksService Instance
-        {
-            get { return _instance; }
-        }
+
+        public static WindowsTasksService Instance { get; } = new WindowsTasksService();
 
         private WindowsTasksService()
         {
-            this.initialize();
+            initialize();
         }
 
         private void initialize()
@@ -68,11 +65,14 @@ namespace CairoDesktop.WindowsTasks
                 groupedWindows.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
                 groupedWindows.CollectionChanged += groupedWindows_Changed;
                 groupedWindows.Filter = groupedWindows_Filter;
-                var taskbarItemsView = groupedWindows as ICollectionViewLiveShaping;
-                taskbarItemsView.IsLiveFiltering = true;
-                taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
-                taskbarItemsView.IsLiveGrouping = true;
-                taskbarItemsView.LiveGroupingProperties.Add("Category");
+
+                if (groupedWindows is ICollectionViewLiveShaping taskbarItemsView)
+                {
+                    taskbarItemsView.IsLiveFiltering = true;
+                    taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
+                    taskbarItemsView.IsLiveGrouping = true;
+                    taskbarItemsView.LiveGroupingProperties.Add("Category");
+                }
 
                 // enumerate windows already opened
                 EnumWindows(new CallBackPtr((hwnd, lParam) =>
@@ -80,6 +80,7 @@ namespace CairoDesktop.WindowsTasks
                     ApplicationWindow win = new ApplicationWindow(hwnd, this);
                     if(win.ShowInTaskbar && !Windows.Contains(win))
                         Windows.Add(win);
+
                     return true;
                 }), 0);
 

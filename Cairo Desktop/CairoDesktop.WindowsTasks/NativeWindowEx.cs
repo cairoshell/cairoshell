@@ -2,7 +2,7 @@
 
 namespace CairoDesktop.WindowsTasks
 {
-    public class NativeWindowEx : System.Windows.Forms.NativeWindow
+    public class NativeWindowEx : NativeWindow
     {
         public delegate void MessageReceivedEventHandler(Message m);
 
@@ -11,7 +11,7 @@ namespace CairoDesktop.WindowsTasks
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
-            if (MessageReceived != null) MessageReceived(m);
+            MessageReceived?.Invoke(m);
         }
 
         public override void CreateHandle(CreateParams cp)
