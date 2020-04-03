@@ -1,34 +1,44 @@
-﻿using CairoDesktop.Extensibility.Plugins;
-using CairoDesktop.Extensibility.Providers;
-using CairoDesktop.Extensibility.Providers.Custom;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
+using System.IO;
 
 namespace CairoDesktop.Extensibility.ObjectModel.Services
 {
     public sealed class PluginService : ShellService
     {
-        PluginContext pluginContext;
+        [ImportMany(typeof(ShellExtension))]
+        private IEnumerable<ShellExtension> _shellExtensions;
 
-        public List<Plugin> Plugins { get; private set; }
+        private string pluginsPath;
+        private AggregateCatalog catalog;
+        private CompositionContainer container;
 
         public PluginService()
         {
-            Plugins = new List<Plugin>();
+            pluginsPath = Path.Combine(_CairoShell.StartupPath, "Extensions");
+            if (!Directory.Exists(pluginsPath))
+                Directory.CreateDirectory(pluginsPath);
+
+            _CairoShell.Instance.ShellServices.Add(GetType(), this);
         }
+
+        public IEnumerable<ShellExtension> ShellExtensions { get => _shellExtensions; private set => _shellExtensions = value; }
 
         public override void Start()
         {
-            pluginContext = new PluginContext();
-            var fileSystemPluginProvider = new FileSystemPluginProvider(nameof(FileSystemPluginProvider));
-            var pluginProviders = new PluginProviderCollection { fileSystemPluginProvider };
+            catalog = new AggregateCatalog(new DirectoryCatalog(pluginsPath));
+            container = new CompositionContainer(catalog);
+            container.ComposeParts(this);
 
-            pluginContext.Initialize(pluginProviders);
-            pluginContext.Start();
+            foreach (ShellExtension shellExtension in ShellExtensions)
+                shellExtension.Start();
         }
 
         public override void Stop()
         {
-            pluginContext.Stop();
+            foreach (ShellExtension shellExtension in ShellExtensions)
+                shellExtension.Stop();
         }
     }
 }

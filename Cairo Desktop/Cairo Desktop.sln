@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo Desktop", "Cairo Desktop\Cairo Desktop.csproj", "{F0383E91-6ADC-4016-9E21-D3DC0FFC55FF}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -35,17 +35,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Localization",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensibility", "CairoDesktop.Extensibility\CairoDesktop.Extensibility.csproj", "{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{9AE12052-2D12-456D-AFD3-9CE77E4DC6A7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensions.Places.ShellFolders", "Extensions\CairoDesktop.Extensions.Places.ShellFolders\CairoDesktop.Extensions.Places.ShellFolders.csproj", "{F210BBD4-65BF-4EDA-B087-B601A259DA7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Plugins.ShellExtensionSupport", "Plugins\CairoDesktop.Plugins.ShellExtensionService\CairoDesktop.Plugins.ShellExtensionSupport.csproj", "{2825E205-7588-482F-8C84-7D1A3A33E58A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensions.ConsoleOutput", "Extensions\CairoDesktop.Extensions.ConsoleOutput\CairoDesktop.Extensions.ConsoleOutput.csproj", "{D515AC48-7613-445E-A192-D79A1CA638FE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Plugins.CairoShellCoreServices", "Plugins\CairoDesktop.Plugins.CairoShellCoreServices\CairoDesktop.Plugins.CairoShellCoreServices.csproj", "{D744C35D-F35E-4F84-9C61-5703BD2A48FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,14 +149,6 @@ Global
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D}.Release|x64.Build.0 = Release|x64
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D}.Release|x86.ActiveCfg = Release|Any CPU
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D}.Release|x86.Build.0 = Release|Any CPU
-		{2825E205-7588-482F-8C84-7D1A3A33E58A}.Debug|x64.ActiveCfg = Debug|x64
-		{2825E205-7588-482F-8C84-7D1A3A33E58A}.Debug|x64.Build.0 = Debug|x64
-		{2825E205-7588-482F-8C84-7D1A3A33E58A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{2825E205-7588-482F-8C84-7D1A3A33E58A}.Debug|x86.Build.0 = Debug|Any CPU
-		{2825E205-7588-482F-8C84-7D1A3A33E58A}.Release|x64.ActiveCfg = Release|x64
-		{2825E205-7588-482F-8C84-7D1A3A33E58A}.Release|x64.Build.0 = Release|x64
-		{2825E205-7588-482F-8C84-7D1A3A33E58A}.Release|x86.ActiveCfg = Release|Any CPU
-		{2825E205-7588-482F-8C84-7D1A3A33E58A}.Release|x86.Build.0 = Release|Any CPU
 		{D515AC48-7613-445E-A192-D79A1CA638FE}.Debug|x64.ActiveCfg = Debug|x64
 		{D515AC48-7613-445E-A192-D79A1CA638FE}.Debug|x64.Build.0 = Debug|x64
 		{D515AC48-7613-445E-A192-D79A1CA638FE}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -171,23 +157,13 @@ Global
 		{D515AC48-7613-445E-A192-D79A1CA638FE}.Release|x64.Build.0 = Release|x64
 		{D515AC48-7613-445E-A192-D79A1CA638FE}.Release|x86.ActiveCfg = Release|Any CPU
 		{D515AC48-7613-445E-A192-D79A1CA638FE}.Release|x86.Build.0 = Release|Any CPU
-		{D744C35D-F35E-4F84-9C61-5703BD2A48FC}.Debug|x64.ActiveCfg = Debug|x64
-		{D744C35D-F35E-4F84-9C61-5703BD2A48FC}.Debug|x64.Build.0 = Debug|x64
-		{D744C35D-F35E-4F84-9C61-5703BD2A48FC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D744C35D-F35E-4F84-9C61-5703BD2A48FC}.Debug|x86.Build.0 = Debug|Any CPU
-		{D744C35D-F35E-4F84-9C61-5703BD2A48FC}.Release|x64.ActiveCfg = Release|x64
-		{D744C35D-F35E-4F84-9C61-5703BD2A48FC}.Release|x64.Build.0 = Release|x64
-		{D744C35D-F35E-4F84-9C61-5703BD2A48FC}.Release|x86.ActiveCfg = Release|Any CPU
-		{D744C35D-F35E-4F84-9C61-5703BD2A48FC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D} = {D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}
-		{2825E205-7588-482F-8C84-7D1A3A33E58A} = {9AE12052-2D12-456D-AFD3-9CE77E4DC6A7}
 		{D515AC48-7613-445E-A192-D79A1CA638FE} = {D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}
-		{D744C35D-F35E-4F84-9C61-5703BD2A48FC} = {9AE12052-2D12-456D-AFD3-9CE77E4DC6A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7566EAA4-435C-4795-BB55-54BA364D0419}
