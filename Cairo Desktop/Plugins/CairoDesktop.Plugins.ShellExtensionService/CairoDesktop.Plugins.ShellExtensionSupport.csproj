@@ -68,10 +68,6 @@
       <Project>{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}</Project>
       <Name>CairoDesktop.Extensibility</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Plugins.CairoShellCoreServices\CairoDesktop.Plugins.CairoShellCoreServices.csproj">
-      <Project>{D744C35D-F35E-4F84-9C61-5703BD2A48FC}</Project>
-      <Name>CairoDesktop.Plugins.CairoShellCoreServices</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -517,7 +517,7 @@ namespace CairoDesktop
                 return GetCairoBackgroundBrush_Windows();
             }
         }
-
+        
         private Brush GetCairoBackgroundBrush_Image(string wallpaper, CairoWallpaperStyle wallpaperStyle)
         {
             ImageBrush backgroundImageBrush = null;

@@ -165,7 +165,8 @@
             NotificationArea.Instance.Dispose();
 
             // reset work area
-            if (Shell.IsCairoRunningAsShell) WindowManager.Instance.ResetWorkArea();
+            if (Shell.IsCairoRunningAsShell) 
+                WindowManager.Instance.ResetWorkArea();
 
             // dispose of long-lived COM objects
             Shell.DisposeIml();
