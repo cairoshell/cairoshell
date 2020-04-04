@@ -226,9 +226,7 @@ namespace CairoDesktop
 
         internal static void SetupPluginSystem()
         {
-            PluginService pluginService = new PluginService();
-            _CairoShell.Instance.ShellServices.Add(pluginService.GetType(), pluginService);
-            pluginService.Start();
+            new PluginService().Start();
         }
 
         internal static void WriteApplicationDebugInfoToConsole()

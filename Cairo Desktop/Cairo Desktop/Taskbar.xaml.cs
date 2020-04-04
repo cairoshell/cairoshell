@@ -320,5 +320,16 @@ namespace CairoDesktop
             e.Handled = true;
         }
         #endregion
+
+
+
+        private void OpenRunWindow(object sender, RoutedEventArgs e)
+        {
+            Shell.ShowRunDialog();
+        }
+        private void OpenTaskManager(object sender, RoutedEventArgs e)
+        {
+            Shell.StartTaskManager();
+        }
     }
 }

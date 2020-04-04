@@ -57,6 +57,14 @@
                 </Style>
             </Border.Style>
             <StackPanel Orientation="Horizontal" x:Name="grdTaskbar" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                <StackPanel.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Run)}"
+                              Click="OpenRunWindow" />
+                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_TaskManager)}"
+                              Click="OpenTaskManager" />
+                    </ContextMenu>
+                </StackPanel.ContextMenu>
                 <Border HorizontalAlignment="Left" Style="{StaticResource CairoTaskbarLeftBorderStyle}" Name="bdrTaskbarLeft">
                     <ToggleButton x:Name="btnDesktopOverlay" Style="{StaticResource CairoTaskbarButtonDesktopOverlay}" Click="btnDesktopOverlay_Click" IsChecked="{Binding Path=IsOverlayOpen, Mode=OneWay}" ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_DesktopOverlayToolTip)}" ToolTipService.Placement="Top">
                         <Image Source="Resources\desktopOverlayIcon.png"
@@ -92,12 +100,13 @@
                             </ListView.ItemContainerStyle>
                         </ListView>
                         <ListView HorizontalAlignment="Stretch"
-                    Style="{StaticResource TaskbarListView}"
-                    x:Name="TasksList" Margin="-3,-1,0,0">
+                                  Style="{StaticResource TaskbarListView}"
+                                  x:Name="TasksList" 
+                                  Margin="-3,-1,0,0">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Horizontal"
-                                Margin="0"></StackPanel>
+                                                Margin="0"></StackPanel>
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
                             <ListView.GroupStyle>
