@@ -20,4 +20,10 @@ namespace CairoDesktop.WindowsTray
     /// <param name="guidItem">The GUID of the icon</param>
     /// <returns>Indication of message outcome.</returns>
     public delegate IntPtr IconDataDelegate(int dwMessage, uint hWnd, uint uID, Guid guidItem);
+
+    /// <summary>
+    /// Delegate signature for the menu bar size callback.
+    /// </summary>
+    /// <returns>Indication of message outcome.</returns>
+    public delegate MenuBarSizeData MenuBarSizeDelegate();
 }

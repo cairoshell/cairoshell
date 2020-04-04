@@ -8,6 +8,8 @@ namespace CairoDesktop
 {
     public partial class SystemTray
     {
+        public MenuBar MenuBar;
+
         public SystemTray()
         {
             this.InitializeComponent();
@@ -66,6 +68,11 @@ namespace CairoDesktop
             
             if (trayIcon != null)
             {
+                if (MenuBar != null)
+                {
+                    // set current menu bar to return placement for ABM_GETTASKBARPOS message
+                    NotificationArea.Instance.SetMenuBarSizeData(MenuBar.GetMenuBarSizeData());
+                }
                 trayIcon.IconMouseClick(e.ChangedButton, getMousePos(), System.Windows.Forms.SystemInformation.DoubleClickTime);
             }
         }

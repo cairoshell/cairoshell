@@ -16,6 +16,7 @@
 	// Callbacks for the delegates
 	CALLBACK_NOTIFYICON_FUNCTION pSystrayFunction;
 	CALLBACK_NOTIFYICONID_FUNCTION pIconDataFunction;
+	CALLBACK_MENUBARSIZE_FUNCTION pMenuBarSizeFunction;
 	
 	// Member variables&
 	WNDCLASS	   m_TrayClass;
@@ -52,6 +53,12 @@ void __cdecl SetIconDataCallback(LPVOID theCallbackFunctionAddress)
 {
 	pIconDataFunction = (CALLBACK_NOTIFYICONID_FUNCTION)theCallbackFunctionAddress;
 	ODS("IconData callback set.\n");
+}
+
+void __cdecl SetMenuBarSizeCallback(LPVOID theCallbackFunctionAddress)
+{
+	pMenuBarSizeFunction = (CALLBACK_MENUBARSIZE_FUNCTION)theCallbackFunctionAddress;
+	ODS("Menu bar size callback set.\n");
 }
 
 HWND __cdecl InitializeSystray(int width, float scale)
@@ -158,6 +165,20 @@ LRESULT CallIconDataDelegate(PWINNOTIFYICONIDENTIFIER iconData)
 	}
 }
 
+MENUBARSIZEDATA CallMenuBarSizeDelegate()
+{
+	if (pMenuBarSizeFunction != NULL)
+	{
+		ODS("Calling menu bar size delegate\n");
+		return (pMenuBarSizeFunction)();
+	}
+	else
+	{
+		ODS("Attempted to call the menu bar size delegate, however the pointer is null\n");
+		return MENUBARSIZEDATA{ RECT{ 0, 0, 0, 0 }, 0 };
+	}
+}
+
 BOOL CALLBACK fwdProc(HWND hWnd, LPARAM lParam)
 {
 	if (hWnd != m_hWndTray && hWnd != m_FwdHwnd)
@@ -181,8 +202,9 @@ LRESULT appBarMessageAction(PAPPBARMSGDATAV3 pamd)
 	{
 		case ABM_GETTASKBARPOS:
 			PAPPBARDATAV2 abd = (PAPPBARDATAV2)SHLockShared((HANDLE)(UINT_PTR)pamd->hSharedMemory, pamd->dwSourceProcessId);
-			abd->rc = { 0, 0, 1920, 23 };
-			abd->uEdge = ABE_TOP;
+			MENUBARSIZEDATA msd = CallMenuBarSizeDelegate();
+			abd->rc = msd.rc;
+			abd->uEdge = msd.edge;
 			SHUnlockShared(abd);
 			ODS("Responded to ABM_GETTASKBARPOS\n");
 			return 1;
@@ -209,7 +231,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				case 0:
 				{
 					// AppBar message
-					/*if (sizeof(APPBARMSGDATAV3) == copyData->cbData)
+					if (sizeof(APPBARMSGDATAV3) == copyData->cbData)
 					{
 						PAPPBARMSGDATAV3 pamd = (PAPPBARMSGDATAV3)copyData->lpData;
 
@@ -224,7 +246,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 					else
 					{
 						ODS("AppBar message received, but with unknown size\n");
-					}*/
+					}
 				}
 				break;
 				case 1:
