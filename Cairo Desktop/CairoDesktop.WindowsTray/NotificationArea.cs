@@ -17,10 +17,12 @@ namespace CairoDesktop.WindowsTray
         IWindowsHooksWrapper hooksWrapper = new WindowsHooksWrapper();
         private SystrayDelegate trayDelegate;
         private IconDataDelegate iconDataDelegate;
+        private MenuBarSizeDelegate menuBarSizeDelegate;
         private object _lockObject = new object();
         public IntPtr Handle;
         public bool IsFailed = false;
         private IOleCommandTarget sysTrayObject = null;
+        private MenuBarSizeData menuBarSizeData = new MenuBarSizeData { edge = (int)ABEdge.ABE_TOP, rc = new RECT { top = 0, left = 0, bottom = 23, right = GetSystemMetrics(0) } };
 
         private static NotificationArea _instance = new NotificationArea();
         public static NotificationArea Instance
@@ -81,8 +83,10 @@ namespace CairoDesktop.WindowsTray
                 prepareCollections();
                 trayDelegate = new SystrayDelegate(SysTrayCallback);
                 iconDataDelegate = new IconDataDelegate(IconDataCallback);
+                menuBarSizeDelegate = new MenuBarSizeDelegate(MenuBarSizeCallback);
                 hooksWrapper.SetSystrayCallback(trayDelegate);
                 hooksWrapper.SetIconDataCallback(iconDataDelegate);
+                hooksWrapper.SetMenuBarSizeCallback(menuBarSizeDelegate);
                 Handle = hooksWrapper.InitializeSystray();
                 hooksWrapper.Run();
 
@@ -189,12 +193,17 @@ namespace CairoDesktop.WindowsTray
         #endregion
 
         #region Callbacks
-        private IntPtr IconDataCallback(CAIROWINNOTIFYICONIDENTIFIER iconData)
+        private MenuBarSizeData MenuBarSizeCallback()
+        {
+            return menuBarSizeData;
+        }
+
+        private IntPtr IconDataCallback(int dwMessage, uint hWnd, uint uID, Guid guidItem)
         {
             NotifyIcon icon = null;
             foreach (NotifyIcon ti in TrayIcons)
             {
-                if ((iconData.guidItem != Guid.Empty && iconData.guidItem == ti.GUID) || (ti.HWnd == (IntPtr)iconData.hWnd && ti.UID == iconData.uID))
+                if ((guidItem != Guid.Empty && guidItem == ti.GUID) || (ti.HWnd == (IntPtr)hWnd && ti.UID == uID))
                 {
                     icon = ti;
                     break;
@@ -203,16 +212,16 @@ namespace CairoDesktop.WindowsTray
 
             if (icon != null)
             {
-                if (iconData.dwMessage == 1)
+                if (dwMessage == 1)
                     return Shell.MakeLParam(icon.Placement.left, icon.Placement.top);
-                else if (iconData.dwMessage == 2)
+                else if (dwMessage == 2)
                     return Shell.MakeLParam(icon.Placement.right, icon.Placement.bottom);
             }
-            else if (iconData.guidItem == new Guid(VOLUME_GUID))
+            else if (guidItem == new Guid(VOLUME_GUID))
             {
-                if (iconData.dwMessage == 1)
+                if (dwMessage == 1)
                     return Shell.MakeLParam(defaultPlacement.left, defaultPlacement.top);
-                else if (iconData.dwMessage == 2)
+                else if (dwMessage == 2)
                     return Shell.MakeLParam(defaultPlacement.right, defaultPlacement.bottom);
             }
 
@@ -357,6 +366,12 @@ namespace CairoDesktop.WindowsTray
             return true;
         }
         #endregion
+
+        // The notification area control calls this when an icon is clicked to set the placement of its menu bar for ABM_GETTASKBARPOS usage
+        public void SetMenuBarSizeData(MenuBarSizeData data)
+        {
+            menuBarSizeData = data;
+        }
 
         private void setWindowsTaskbarBottommost()
         {

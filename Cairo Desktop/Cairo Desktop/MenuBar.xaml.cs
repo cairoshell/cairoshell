@@ -42,7 +42,7 @@ namespace CairoDesktop
             desiredHeight = 23;
             processScreenChanges = true;
             requiresScreenEdge = true;
-            if (secretBottomMenuBar) appBarEdge = AppBarHelper.ABEdge.ABE_BOTTOM;
+            if (secretBottomMenuBar) appBarEdge = NativeMethods.ABEdge.ABE_BOTTOM;
 
             setPosition();
 
@@ -126,6 +126,7 @@ namespace CairoDesktop
                 // add systray
                 SystemTray systemTray = new SystemTray();
                 systemTray.Margin = new Thickness(0, 0, 8, 0);
+                systemTray.MenuBar = this;
                 MenuExtrasHost.Children.Add(systemTray);
 
                 // add volume
@@ -348,6 +349,11 @@ namespace CairoDesktop
             else top = Screen.Bounds.Y / dpiScale;
 
             return top;
+        }
+
+        public NativeMethods.MenuBarSizeData GetMenuBarSizeData()
+        {
+            return new NativeMethods.MenuBarSizeData { edge = (int)appBarEdge, rc = new NativeMethods.RECT { top = (int)(Top * dpiScale), left = (int)(Left * dpiScale), bottom = (int)((Top + Height) * dpiScale), right = (int)((Left + Width) * dpiScale) } };
         }
 
         protected override void customClosing()

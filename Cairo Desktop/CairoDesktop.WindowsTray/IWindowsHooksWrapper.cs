@@ -21,6 +21,12 @@ namespace CairoDesktop.WindowsTray
         void SetIconDataCallback(IconDataDelegate theDelegate);
 
         /// <summary>
+        /// Sets the delegate for the menu bar size callback.
+        /// </summary>
+        /// <param name="theDelegate">The system tray callback delegate.</param>
+        void SetMenuBarSizeCallback(MenuBarSizeDelegate theDelegate);
+
+        /// <summary>
         /// Initializes the system tray hooks.
         /// </summary>
         IntPtr InitializeSystray();

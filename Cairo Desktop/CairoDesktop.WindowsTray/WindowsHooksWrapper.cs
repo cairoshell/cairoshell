@@ -32,6 +32,15 @@ namespace CairoDesktop.WindowsTray
         }
 
         /// <summary>
+        /// Sets the delegate for the menu bar size callback.
+        /// </summary>
+        /// <param name="theDelegate">The system tray callback delegate.</param>
+        public void SetMenuBarSizeCallback(MenuBarSizeDelegate theDelegate)
+        {
+            InteropCalls.SetMenuBarSizeCallback(theDelegate);
+        }
+
+        /// <summary>
         /// Initializes the system tray hooks.
         /// </summary>
         public IntPtr InitializeSystray()

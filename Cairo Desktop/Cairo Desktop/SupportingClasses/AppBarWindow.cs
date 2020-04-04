@@ -32,7 +32,7 @@ namespace CairoDesktop.SupportingClasses
 
         // AppBar properties
         private int appbarMessageId = -1;
-        internal AppBarHelper.ABEdge appBarEdge = AppBarHelper.ABEdge.ABE_TOP;
+        internal NativeMethods.ABEdge appBarEdge = NativeMethods.ABEdge.ABE_TOP;
         protected bool enableAppBar = true;
         internal bool requiresScreenEdge = false;
 

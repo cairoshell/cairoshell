@@ -260,6 +260,13 @@ namespace CairoDesktop.Interop
             ABM_WINDOWPOSCHANGED,
             ABM_SETSTATE
         }
+        public enum ABEdge : int
+        {
+            ABE_LEFT = 0,
+            ABE_TOP,
+            ABE_RIGHT,
+            ABE_BOTTOM
+        }
 
         [DllImport("SHELL32", CallingConvention = CallingConvention.StdCall)]
         public static extern uint SHAppBarMessage(int dwMessage, ref APPBARDATA pData);
@@ -3288,29 +3295,13 @@ namespace CairoDesktop.Interop
         }
 
         /// <summary>
-        /// Notify icon data identifier structure type
+        /// AppBar message data structure type
         /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct CAIROWINNOTIFYICONIDENTIFIER
+        public struct MenuBarSizeData
         {
-            public int dwMagic;
-            public int dwMessage;
-            public int cbSize;
-            public int dwPadding;
-            public int hWnd;
-            public uint uID;
-            public Guid guidItem;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct TASKINFORMATION
-        {
-            public string WindowName;
-            public IntPtr WindowHandle;
-            public IntPtr NewWindowHandle;
-            public IntPtr WindowIcon;
-            public WindowActions WindowAction; // Enum
-            public IntPtr SystemMenu;
+            public RECT rc;
+            public int edge;
         }
 
         /// <summary>

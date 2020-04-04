@@ -108,7 +108,7 @@ namespace CairoDesktop
             // set taskbar edge based on preference
             if (Settings.Instance.TaskbarPosition == 1)
             {
-                appBarEdge = AppBarHelper.ABEdge.ABE_TOP;
+                appBarEdge = NativeMethods.ABEdge.ABE_TOP;
                 bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarTopBorderStyle") as Style;
                 bdrTaskbarEnd.Style = Application.Current.FindResource("CairoTaskbarEndTopBorderStyle") as Style;
                 bdrTaskbarLeft.Style = Application.Current.FindResource("CairoTaskbarLeftTopBorderStyle") as Style;
@@ -120,7 +120,7 @@ namespace CairoDesktop
             }
             else
             {
-                appBarEdge = AppBarHelper.ABEdge.ABE_BOTTOM;
+                appBarEdge = NativeMethods.ABEdge.ABE_BOTTOM;
                 bdrTaskListPopup.Margin = new Thickness(5, 0, 5, Height - 1);
             }
 

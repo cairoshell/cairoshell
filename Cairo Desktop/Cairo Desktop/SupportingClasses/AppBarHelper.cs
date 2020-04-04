@@ -1,25 +1,17 @@
 using System;
 using System.Runtime.InteropServices;
-using CairoDesktop.Interop;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using CairoDesktop.Configuration;
-using System.Windows;
 using System.Windows.Interop;
 using CairoDesktop.WindowsTray;
 using CairoDesktop.Common.Logging;
+using static CairoDesktop.Interop.NativeMethods;
 
 namespace CairoDesktop.SupportingClasses
 {
     public static class AppBarHelper
     {
-        public enum ABEdge : int
-        {
-            ABE_LEFT = 0,
-            ABE_TOP,
-            ABE_RIGHT,
-            ABE_BOTTOM
-        }
 
         public enum WinTaskbarState : int
         {
@@ -33,18 +25,18 @@ namespace CairoDesktop.SupportingClasses
         {
             lock (appBarLock)
             {
-                NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-                abd.cbSize = Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
+                APPBARDATA abd = new APPBARDATA();
+                abd.cbSize = Marshal.SizeOf(typeof(APPBARDATA));
                 IntPtr handle = new WindowInteropHelper(abWindow).Handle;
                 abd.hWnd = handle;
 
                 if (!appBars.Contains(handle))
                 {
-                    uCallBack = NativeMethods.RegisterWindowMessage("AppBarMessage");
+                    uCallBack = RegisterWindowMessage("AppBarMessage");
                     abd.uCallbackMessage = uCallBack;
 
                     prepareForInterop();
-                    uint ret = NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_NEW, ref abd);
+                    uint ret = SHAppBarMessage((int)ABMsg.ABM_NEW, ref abd);
                     interopDone();
                     appBars.Add(handle);
                     CairoLogger.Instance.Debug("AppBarHelper: Created AppBar for handle " + handle.ToString());
@@ -54,7 +46,7 @@ namespace CairoDesktop.SupportingClasses
                 else
                 {
                     prepareForInterop();
-                    NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_REMOVE, ref abd);
+                    SHAppBarMessage((int)ABMsg.ABM_REMOVE, ref abd);
                     interopDone();
                     appBars.Remove(handle);
                     CairoLogger.Instance.Debug("AppBarHelper: Removed AppBar for handle " + handle.ToString());
@@ -86,60 +78,60 @@ namespace CairoDesktop.SupportingClasses
 
         public static void SetWinTaskbarPos(int swp)
         {
-            IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
+            IntPtr taskbarHwnd = FindWindow("Shell_TrayWnd", "");
             IntPtr taskbarInsertAfter = (IntPtr)1;
 
             if (NotificationArea.Instance.Handle != null && NotificationArea.Instance.Handle != IntPtr.Zero)
             {
                 while (taskbarHwnd == NotificationArea.Instance.Handle)
                 {
-                    taskbarHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, taskbarHwnd, "Shell_TrayWnd", "");
+                    taskbarHwnd = FindWindowEx(IntPtr.Zero, taskbarHwnd, "Shell_TrayWnd", "");
                 }
             }
 
-            IntPtr startButtonHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
-            NativeMethods.SetWindowPos(taskbarHwnd, taskbarInsertAfter, 0, 0, 0, 0, swp | (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
-            NativeMethods.SetWindowPos(startButtonHwnd, taskbarInsertAfter, 0, 0, 0, 0, swp | (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
+            IntPtr startButtonHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
+            SetWindowPos(taskbarHwnd, taskbarInsertAfter, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+            SetWindowPos(startButtonHwnd, taskbarInsertAfter, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
             
             // adjust secondary taskbars for multi-mon
-            if (swp == (int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW)
-                SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.Hide);
+            if (swp == (int)SetWindowPosFlags.SWP_HIDEWINDOW)
+                SetSecondaryTaskbarVisibility(WindowShowStyle.Hide);
             else
-                SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.ShowNoActivate);
+                SetSecondaryTaskbarVisibility(WindowShowStyle.ShowNoActivate);
         }
 
         public static void SetWinTaskbarState(WinTaskbarState state)
         {
-            NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-            abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
-            abd.hWnd = NativeMethods.FindWindow("Shell_TrayWnd");
+            APPBARDATA abd = new APPBARDATA();
+            abd.cbSize = (int)Marshal.SizeOf(typeof(APPBARDATA));
+            abd.hWnd = FindWindow("Shell_TrayWnd");
 
             if (NotificationArea.Instance.Handle != null && NotificationArea.Instance.Handle != IntPtr.Zero)
             {
                 while (abd.hWnd == NotificationArea.Instance.Handle)
                 {
-                    abd.hWnd = NativeMethods.FindWindowEx(IntPtr.Zero, abd.hWnd, "Shell_TrayWnd", "");
+                    abd.hWnd = FindWindowEx(IntPtr.Zero, abd.hWnd, "Shell_TrayWnd", "");
                 }
             }
 
             abd.lParam = (IntPtr)state;
             prepareForInterop();
-            NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETSTATE, ref abd);
+            SHAppBarMessage((int)ABMsg.ABM_SETSTATE, ref abd);
             interopDone();
         }
 
-        private static void SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle shw)
+        private static void SetSecondaryTaskbarVisibility(WindowShowStyle shw)
         {
             bool complete = false;
-            IntPtr secTaskbarHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Shell_SecondaryTrayWnd", null);
+            IntPtr secTaskbarHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Shell_SecondaryTrayWnd", null);
 
             // if we have 3+ monitors there may be multiple secondary taskbars
             while (!complete)
             {
                 if (secTaskbarHwnd != IntPtr.Zero)
                 {
-                    NativeMethods.ShowWindowAsync(secTaskbarHwnd, shw);
-                    secTaskbarHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, secTaskbarHwnd, "Shell_SecondaryTrayWnd", null);
+                    ShowWindowAsync(secTaskbarHwnd, shw);
+                    secTaskbarHwnd = FindWindowEx(IntPtr.Zero, secTaskbarHwnd, "Shell_SecondaryTrayWnd", null);
                 }
                 else
                     complete = true;
@@ -148,28 +140,28 @@ namespace CairoDesktop.SupportingClasses
 
         public static void AppBarActivate(IntPtr hwnd)
         {
-            NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-            abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
+            APPBARDATA abd = new APPBARDATA();
+            abd.cbSize = (int)Marshal.SizeOf(typeof(APPBARDATA));
             abd.hWnd = hwnd;
             abd.lParam = (IntPtr)Convert.ToInt32(true);
             prepareForInterop();
-            NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_ACTIVATE, ref abd);
+            SHAppBarMessage((int)ABMsg.ABM_ACTIVATE, ref abd);
             interopDone();
 
             // apparently the taskbars like to pop up when app bars change
             if (Settings.Instance.EnableTaskbar)
             {
-                SetSecondaryTaskbarVisibility(NativeMethods.WindowShowStyle.Hide);
+                SetSecondaryTaskbarVisibility(WindowShowStyle.Hide);
             }
         }
 
         public static void AppBarWindowPosChanged(IntPtr hwnd)
         {
-            NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-            abd.cbSize = (int)Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
+            APPBARDATA abd = new APPBARDATA();
+            abd.cbSize = (int)Marshal.SizeOf(typeof(APPBARDATA));
             abd.hWnd = hwnd;
             prepareForInterop();
-            NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
+            SHAppBarMessage((int)ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
             interopDone();
         }
 
@@ -177,8 +169,8 @@ namespace CairoDesktop.SupportingClasses
         {
             lock (appBarLock)
             {
-                NativeMethods.APPBARDATA abd = new NativeMethods.APPBARDATA();
-                abd.cbSize = Marshal.SizeOf(typeof(NativeMethods.APPBARDATA));
+                APPBARDATA abd = new APPBARDATA();
+                abd.cbSize = Marshal.SizeOf(typeof(APPBARDATA));
                 IntPtr handle = new WindowInteropHelper(abWindow).Handle;
                 abd.hWnd = handle;
                 abd.uEdge = (int)edge;
@@ -252,7 +244,7 @@ namespace CairoDesktop.SupportingClasses
                 }
 
                 prepareForInterop();
-                NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_QUERYPOS, ref abd);
+                SHAppBarMessage((int)ABMsg.ABM_QUERYPOS, ref abd);
                 interopDone();
 
                 // system doesn't adjust all edges for us, do some adjustments
@@ -273,7 +265,7 @@ namespace CairoDesktop.SupportingClasses
                 }
 
                 prepareForInterop();
-                NativeMethods.SHAppBarMessage((int)NativeMethods.ABMsg.ABM_SETPOS, ref abd);
+                SHAppBarMessage((int)ABMsg.ABM_SETPOS, ref abd);
                 interopDone();
 
                 // check if new coords

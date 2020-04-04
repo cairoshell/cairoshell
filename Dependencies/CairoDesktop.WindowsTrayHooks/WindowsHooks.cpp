@@ -10,11 +10,13 @@
 #include <Winuser.h>
 #include <tchar.h>
 #include <stdio.h>
+#include <Shlwapi.h>
 #include "WindowsHooks.h"
 
 	// Callbacks for the delegates
 	CALLBACK_NOTIFYICON_FUNCTION pSystrayFunction;
 	CALLBACK_NOTIFYICONID_FUNCTION pIconDataFunction;
+	CALLBACK_MENUBARSIZE_FUNCTION pMenuBarSizeFunction;
 	
 	// Member variables&
 	WNDCLASS	   m_TrayClass;
@@ -41,19 +43,25 @@ BOOL WINAPI DllMain(HINSTANCE hInstDll, DWORD dwReason, LPVOID reserved)
 	return TRUE;
 }
 
-void SetSystrayCallback(LPVOID theCallbackFunctionAddress)
+void __cdecl SetSystrayCallback(LPVOID theCallbackFunctionAddress)
 {
 	pSystrayFunction = (CALLBACK_NOTIFYICON_FUNCTION)theCallbackFunctionAddress;
 	ODS("Systray callback set.\n");
 }
 
-void SetIconDataCallback(LPVOID theCallbackFunctionAddress)
+void __cdecl SetIconDataCallback(LPVOID theCallbackFunctionAddress)
 {
 	pIconDataFunction = (CALLBACK_NOTIFYICONID_FUNCTION)theCallbackFunctionAddress;
 	ODS("IconData callback set.\n");
 }
 
-HWND InitializeSystray(int width, float scale)
+void __cdecl SetMenuBarSizeCallback(LPVOID theCallbackFunctionAddress)
+{
+	pMenuBarSizeFunction = (CALLBACK_MENUBARSIZE_FUNCTION)theCallbackFunctionAddress;
+	ODS("Menu bar size callback set.\n");
+}
+
+HWND __cdecl InitializeSystray(int width, float scale)
 {
 	ShutdownSystray();
 
@@ -103,7 +111,7 @@ HWND InitializeSystray(int width, float scale)
 }
 
 
-void Run()
+void __cdecl Run()
 {
 	// move to top of z-order
 	SetWindowPos(m_hWndTray, 0, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOSIZE);
@@ -112,7 +120,7 @@ void Run()
 	ODS("Sent TaskbarCreated message.\n");
 }
 
-void ShutdownSystray()
+void __cdecl ShutdownSystray()
 {
 	if(m_hWndTray != NULL)
 	{
@@ -143,17 +151,31 @@ BOOL CallSystrayDelegate(int message, NOTIFYICONDATA nicData)
 	}
 }
 
-LRESULT CallIconDataDelegate(CAIROWINNOTIFYICONIDENTIFIER iconData)
+LRESULT CallIconDataDelegate(PWINNOTIFYICONIDENTIFIER iconData)
 {
 	if (pIconDataFunction != NULL)
 	{
 		ODS("Calling IconData Delegate\n");
-		return (pIconDataFunction)(iconData);
+		return (pIconDataFunction)(iconData->dwMessage, iconData->hWnd, iconData->uID, iconData->guidItem);
 	}
 	else
 	{
 		ODS("Attempted to call the IconData Delegate, however the pointer is null\n");
 		return FALSE;
+	}
+}
+
+MENUBARSIZEDATA CallMenuBarSizeDelegate()
+{
+	if (pMenuBarSizeFunction != NULL)
+	{
+		ODS("Calling menu bar size delegate\n");
+		return (pMenuBarSizeFunction)();
+	}
+	else
+	{
+		ODS("Attempted to call the menu bar size delegate, however the pointer is null\n");
+		return MENUBARSIZEDATA{ RECT{ 0, 0, 0, 0 }, 0 };
 	}
 }
 
@@ -173,21 +195,22 @@ BOOL CALLBACK fwdProc(HWND hWnd, LPARAM lParam)
 	return true;
 }
 
-LRESULT appBarMessageAction(PSHELLAPPBARDATA abmd)
+LRESULT appBarMessageAction(PAPPBARMSGDATAV3 pamd)
 {
 	// only handle ABM_GETTASKBARPOS, send other AppBar messages to default handler
-	switch (abmd->dwMessage)
+	switch (pamd->dwMessage)
 	{
-	case ABM_GETTASKBARPOS:
-		APPBARDATAV2& abd = abmd->abd;
-		abd.rc = { 0, 0, 1920, 23 };
-		abd.uEdge = ABE_TOP;
-		ODS("Responded to GetTaskbarPos\n");
-		return 0;
-		break;
+		case ABM_GETTASKBARPOS:
+			PAPPBARDATAV2 abd = (PAPPBARDATAV2)SHLockShared((HANDLE)(UINT_PTR)pamd->hSharedMemory, pamd->dwSourceProcessId);
+			MENUBARSIZEDATA msd = CallMenuBarSizeDelegate();
+			abd->rc = msd.rc;
+			abd->uEdge = msd.edge;
+			SHUnlockShared(abd);
+			ODS("Responded to ABM_GETTASKBARPOS\n");
+			return 1;
 	}
 
-	return 1;
+	return 0;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -208,18 +231,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				case 0:
 				{
 					// AppBar message
-					/*switch (copyData->cbData)
+					if (sizeof(APPBARMSGDATAV3) == copyData->cbData)
 					{
-						default :
-						{
-							PSHELLAPPBARDATA sbd = (PSHELLAPPBARDATA)copyData->lpData;
-							
-							if (appBarMessageAction(sbd) == 0)
-								return 0;
-						}
-						break;
+						PAPPBARMSGDATAV3 pamd = (PAPPBARMSGDATAV3)copyData->lpData;
 
-					}*/
+						if (sizeof(APPBARDATAV2) != pamd->abd.cbSize)
+						{
+							ODS("Size incorrect for APPBARMSGDATAV3\n");
+							break;
+						}
+
+						if (appBarMessageAction(pamd) == 1) return 1;
+					}
+					else
+					{
+						ODS("AppBar message received, but with unknown size\n");
+					}
 				}
 				break;
 				case 1:
@@ -235,7 +262,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				break;
 				case 3:
 				{
-					CAIROWINNOTIFYICONIDENTIFIER iconData = (CAIROWINNOTIFYICONIDENTIFIER)copyData->lpData;
+					PWINNOTIFYICONIDENTIFIER iconData = (PWINNOTIFYICONIDENTIFIER)copyData->lpData;
 
 					return CallIconDataDelegate(iconData);
 				}
