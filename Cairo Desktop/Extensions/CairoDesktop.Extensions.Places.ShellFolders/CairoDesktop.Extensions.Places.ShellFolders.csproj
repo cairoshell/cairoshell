@@ -62,14 +62,14 @@
     <Compile Include="ShellFolderMenuItem.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Cairo Desktop\Cairo Desktop.csproj">
+      <Project>{F0383E91-6ADC-4016-9E21-D3DC0FFC55FF}</Project>
+      <Name>Cairo Desktop</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\CairoDesktop.Common\CairoDesktop.Common.csproj">
       <Project>{963EB868-7672-4557-8FE9-6A1A388AA5FF}</Project>
       <Name>CairoDesktop.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CairoDesktop.Extensibility\CairoDesktop.Extensibility.csproj">
-      <Project>{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}</Project>
-      <Name>CairoDesktop.Extensibility</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

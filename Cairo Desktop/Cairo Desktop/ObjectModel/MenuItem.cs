@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace CairoDesktop.Extensibility.ObjectModel
+namespace CairoDesktop.ObjectModel
 {
     public abstract class MenuItem
     {

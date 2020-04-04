@@ -1,4 +1,4 @@
-﻿using CairoDesktop.Extensibility.ObjectModel;
+﻿using CairoDesktop.ObjectModel;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;

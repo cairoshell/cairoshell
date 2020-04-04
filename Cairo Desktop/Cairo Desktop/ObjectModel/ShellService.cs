@@ -1,4 +1,4 @@
-﻿namespace CairoDesktop.Extensibility.ObjectModel
+﻿namespace CairoDesktop.ObjectModel
 {
     public abstract class ShellService
     {

@@ -33,8 +33,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Common", "Cair
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Localization", "CairoDesktop.Localization\CairoDesktop.Localization.csproj", "{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensibility", "CairoDesktop.Extensibility\CairoDesktop.Extensibility.csproj", "{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensions.Places.ShellFolders", "Extensions\CairoDesktop.Extensions.Places.ShellFolders\CairoDesktop.Extensions.Places.ShellFolders.csproj", "{F210BBD4-65BF-4EDA-B087-B601A259DA7D}"
@@ -133,14 +131,6 @@ Global
 		{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}.Release|x64.Build.0 = Release|x64
 		{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}.Release|x86.ActiveCfg = Release|Any CPU
 		{9EEA28C8-3AF4-4853-A31C-46E6FBF7FBB5}.Release|x86.Build.0 = Release|Any CPU
-		{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}.Debug|x64.ActiveCfg = Debug|x64
-		{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}.Debug|x64.Build.0 = Debug|x64
-		{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}.Debug|x86.Build.0 = Debug|Any CPU
-		{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}.Release|x64.ActiveCfg = Release|x64
-		{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}.Release|x64.Build.0 = Release|x64
-		{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}.Release|x86.ActiveCfg = Release|Any CPU
-		{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}.Release|x86.Build.0 = Release|Any CPU
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D}.Debug|x64.ActiveCfg = Debug|x64
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D}.Debug|x64.Build.0 = Debug|x64
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D}.Debug|x86.ActiveCfg = Debug|Any CPU

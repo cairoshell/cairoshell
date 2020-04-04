@@ -149,10 +149,10 @@ namespace CairoDesktop
         private void setupCairoMenu()
         {
             // Add _Application CairoMenu MenuItems
-            if (Extensibility.ObjectModel._CairoShell.Instance.CairoMenu.Count > 0)
+            if (ObjectModel._CairoShell.Instance.CairoMenu.Count > 0)
             {
                 CairoMenu.Items.Insert(7, new Separator());
-                foreach (var cairoMenuItem in Extensibility.ObjectModel._CairoShell.Instance.CairoMenu)
+                foreach (var cairoMenuItem in ObjectModel._CairoShell.Instance.CairoMenu)
                 {
                     MenuItem menuItem = new MenuItem { Header = cairoMenuItem.Header };
                     menuItem.Click += cairoMenuItem.MenuItem_Click;
@@ -175,10 +175,10 @@ namespace CairoDesktop
             }
 
             // Add _Application PlacesMenu MenuItems
-            if (Extensibility.ObjectModel._CairoShell.Instance.PlacesMenu.Count > 0)
+            if (ObjectModel._CairoShell.Instance.PlacesMenu.Count > 0)
             {
                 PlacesMenu.Items.Add(new Separator());
-                foreach (var placesMenuItem in Extensibility.ObjectModel._CairoShell.Instance.PlacesMenu)
+                foreach (var placesMenuItem in ObjectModel._CairoShell.Instance.PlacesMenu)
                 {
                     MenuItem menuItem = new MenuItem { Header = placesMenuItem.Header };
                     menuItem.Click += placesMenuItem.MenuItem_Click;

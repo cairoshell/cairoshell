@@ -2,8 +2,8 @@
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Common.Logging.Observers;
 using CairoDesktop.Configuration;
-using CairoDesktop.Extensibility.ObjectModel;
-using CairoDesktop.Extensibility.ObjectModel.Services;
+using CairoDesktop.ObjectModel;
+using CairoDesktop.Services;
 using CairoDesktop.Interop;
 using Microsoft.VisualBasic.Devices;
 using System;
