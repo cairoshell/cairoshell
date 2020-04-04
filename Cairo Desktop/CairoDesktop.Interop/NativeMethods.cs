@@ -3288,32 +3288,6 @@ namespace CairoDesktop.Interop
         }
 
         /// <summary>
-        /// Notify icon data identifier structure type
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct CAIROWINNOTIFYICONIDENTIFIER
-        {
-            public int dwMagic;
-            public int dwMessage;
-            public int cbSize;
-            public int dwPadding;
-            public int hWnd;
-            public uint uID;
-            public Guid guidItem;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct TASKINFORMATION
-        {
-            public string WindowName;
-            public IntPtr WindowHandle;
-            public IntPtr NewWindowHandle;
-            public IntPtr WindowIcon;
-            public WindowActions WindowAction; // Enum
-            public IntPtr SystemMenu;
-        }
-
-        /// <summary>
         /// The window actions enumerations for the action of a task event.
         /// </summary>
         public enum WindowActions

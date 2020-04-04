@@ -189,12 +189,12 @@ namespace CairoDesktop.WindowsTray
         #endregion
 
         #region Callbacks
-        private IntPtr IconDataCallback(CAIROWINNOTIFYICONIDENTIFIER iconData)
+        private IntPtr IconDataCallback(int dwMessage, uint hWnd, uint uID, Guid guidItem)
         {
             NotifyIcon icon = null;
             foreach (NotifyIcon ti in TrayIcons)
             {
-                if ((iconData.guidItem != Guid.Empty && iconData.guidItem == ti.GUID) || (ti.HWnd == (IntPtr)iconData.hWnd && ti.UID == iconData.uID))
+                if ((guidItem != Guid.Empty && guidItem == ti.GUID) || (ti.HWnd == (IntPtr)hWnd && ti.UID == uID))
                 {
                     icon = ti;
                     break;
@@ -203,16 +203,16 @@ namespace CairoDesktop.WindowsTray
 
             if (icon != null)
             {
-                if (iconData.dwMessage == 1)
+                if (dwMessage == 1)
                     return Shell.MakeLParam(icon.Placement.left, icon.Placement.top);
-                else if (iconData.dwMessage == 2)
+                else if (dwMessage == 2)
                     return Shell.MakeLParam(icon.Placement.right, icon.Placement.bottom);
             }
-            else if (iconData.guidItem == new Guid(VOLUME_GUID))
+            else if (guidItem == new Guid(VOLUME_GUID))
             {
-                if (iconData.dwMessage == 1)
+                if (dwMessage == 1)
                     return Shell.MakeLParam(defaultPlacement.left, defaultPlacement.top);
-                else if (iconData.dwMessage == 2)
+                else if (dwMessage == 2)
                     return Shell.MakeLParam(defaultPlacement.right, defaultPlacement.bottom);
             }
 
