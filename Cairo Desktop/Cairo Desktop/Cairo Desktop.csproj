@@ -96,9 +96,14 @@
     <Compile Include="Icon.xaml.cs">
       <DependentUpon>Icon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ObjectModel\MenuItem.cs" />
+    <Compile Include="ObjectModel\ShellExtension.cs" />
+    <Compile Include="ObjectModel\ShellService.cs" />
+    <Compile Include="ObjectModel\_CairoShell.cs" />
     <Compile Include="ProgramsMenu.xaml.cs">
       <DependentUpon>ProgramsMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\PluginService.cs" />
     <Compile Include="Startup.InitializationRoutines.cs" />
     <Compile Include="SupportingClasses\AppBarWindow.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
@@ -154,6 +159,7 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -416,10 +422,6 @@
     <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj">
       <Project>{8E50FC68-8BF3-44F2-9229-708500625757}</Project>
       <Name>CairoDesktop.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Extensibility\CairoDesktop.Extensibility.csproj">
-      <Project>{015a0ea4-b61a-4a16-a71f-dfa1df4ab17c}</Project>
-      <Name>CairoDesktop.Extensibility</Name>
     </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
       <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>

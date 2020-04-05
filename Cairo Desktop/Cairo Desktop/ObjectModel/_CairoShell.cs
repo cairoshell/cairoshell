@@ -5,7 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Threading;
 
-namespace CairoDesktop.Extensibility.ObjectModel
+namespace CairoDesktop.ObjectModel
 {
     public sealed class _CairoShell : SingletonObject<_CairoShell>
     {
@@ -60,8 +60,8 @@ namespace CairoDesktop.Extensibility.ObjectModel
         public static string ProductName { get { return (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Name; } }
         public static Version ProductVersion { get { return (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Version; } }
 
-        public static string CairoApplicarionDataFolder { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team"); } }
-        public static string LogsFolder { get { return Path.Combine(CairoApplicarionDataFolder, "Logs"); } }
+        public static string CairoApplicationDataFolder { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team"); } }
+        public static string LogsFolder { get { return Path.Combine(CairoApplicationDataFolder, "Logs"); } }
 
 
         public List<MenuItem> CairoMenu { get; private set; }

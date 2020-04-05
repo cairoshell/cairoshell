@@ -1,4 +1,4 @@
-﻿using CairoDesktop.Extensibility.ObjectModel;
+﻿using CairoDesktop.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 

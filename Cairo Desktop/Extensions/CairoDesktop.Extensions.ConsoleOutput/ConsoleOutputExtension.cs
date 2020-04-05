@@ -1,6 +1,6 @@
 ﻿using CairoDesktop.Common.Logging;
 using CairoDesktop.Common.Logging.Observers;
-using CairoDesktop.Extensibility.ObjectModel;
+using CairoDesktop.ObjectModel;
 using System;
 using System.ComponentModel.Composition;
 using System.Diagnostics;

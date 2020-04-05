@@ -67,13 +67,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Cairo Desktop\Cairo Desktop.csproj">
+      <Project>{F0383E91-6ADC-4016-9E21-D3DC0FFC55FF}</Project>
+      <Name>Cairo Desktop</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\CairoDesktop.Common\CairoDesktop.Common.csproj">
       <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
       <Name>CairoDesktop.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CairoDesktop.Extensibility\CairoDesktop.Extensibility.csproj">
-      <Project>{015A0EA4-B61A-4A16-A71F-DFA1DF4AB17C}</Project>
-      <Name>CairoDesktop.Extensibility</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

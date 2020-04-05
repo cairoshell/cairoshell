@@ -1,24 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using CairoDesktop.ObjectModel;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 
-namespace CairoDesktop.Extensibility.ObjectModel.Services
+namespace CairoDesktop.Services
 {
     public sealed class PluginService : ShellService
     {
         [ImportMany(typeof(ShellExtension))]
         private IEnumerable<ShellExtension> _shellExtensions;
 
-        private string pluginsPath;
+        private string userExtensionsPath;
+        private string systemExtensionsPath;
+
         private AggregateCatalog catalog;
         private CompositionContainer container;
 
         public PluginService()
         {
-            pluginsPath = Path.Combine(_CairoShell.StartupPath, "Extensions");
-            if (!Directory.Exists(pluginsPath))
-                Directory.CreateDirectory(pluginsPath);
+            systemExtensionsPath = Path.Combine(_CairoShell.StartupPath, "Extensions");
+            userExtensionsPath = Path.Combine(_CairoShell.CairoApplicationDataFolder, "Extensions");
 
             _CairoShell.Instance.ShellServices.Add(GetType(), this);
         }
@@ -27,7 +29,14 @@ namespace CairoDesktop.Extensibility.ObjectModel.Services
 
         public override void Start()
         {
-            catalog = new AggregateCatalog(new DirectoryCatalog(pluginsPath));
+            catalog = new AggregateCatalog(new AssemblyCatalog(System.Reflection.Assembly.GetEntryAssembly()));
+
+            if (Directory.Exists(systemExtensionsPath))
+                catalog.Catalogs.Add(new DirectoryCatalog(systemExtensionsPath));
+
+            if (Directory.Exists(userExtensionsPath))
+                catalog.Catalogs.Add(new DirectoryCatalog(userExtensionsPath));
+
             container = new CompositionContainer(catalog);
             container.ComposeParts(this);
 
