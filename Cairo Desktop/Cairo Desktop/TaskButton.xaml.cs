@@ -83,6 +83,13 @@ namespace CairoDesktop
         {
             if (Window != null)
             {
+                if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift) ||
+                    System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightShift))
+                {
+                    Shell.StartProcess(Window.WinFileName);
+                    return;
+                }
+
                 if (Window.State == WindowsTasks.ApplicationWindow.WindowState.Active)
                 {
                     Window.Minimize();

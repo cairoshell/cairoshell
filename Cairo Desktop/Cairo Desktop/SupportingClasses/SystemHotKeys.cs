@@ -10,6 +10,7 @@ namespace CairoDesktop.SupportingClasses
         {
             new HotKey(Key.R, KeyModifier.Win | KeyModifier.NoRepeat, OnWinRCommand);
             new HotKey(Key.D, KeyModifier.Win | KeyModifier.NoRepeat, OnWinDCommand);
+            new HotKey(Key.OemComma, KeyModifier.Win | KeyModifier.NoRepeat, OnWinDCommand);
             new HotKey(Key.E, KeyModifier.Win | KeyModifier.NoRepeat, OnWinECommand);
             new HotKey(Key.I, KeyModifier.Win | KeyModifier.NoRepeat, OnWinICommand);
             new HotKey(Key.Pause, KeyModifier.Win | KeyModifier.NoRepeat, OnWinPauseCommand);

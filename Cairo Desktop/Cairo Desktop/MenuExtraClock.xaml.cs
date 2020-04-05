@@ -68,5 +68,10 @@ namespace CairoDesktop
         {
             TimeZoneInfo.ClearCachedData();
         }
+
+        public void ToggleClockDisplay()
+        {
+            miClock.IsSubmenuOpen = !miClock.IsSubmenuOpen;
+        }
     }
 }
