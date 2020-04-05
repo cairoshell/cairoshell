@@ -86,7 +86,6 @@ Section "$(SECT_cairo)" cairo
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.Common.dll"
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.AppGrabber.dll"
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.Configuration.dll"
-  File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.Extensibility.dll"
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.Interop.dll"
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.Localization.dll"
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.UWPInterop.dll"
