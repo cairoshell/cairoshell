@@ -1,8 +1,10 @@
-﻿using CairoDesktop.Configuration;
+﻿using CairoDesktop.Common;
+using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace CairoDesktop
@@ -13,14 +15,14 @@ namespace CairoDesktop
     public partial class MenuExtraClock : UserControl
     {
         private bool _isPrimaryScreen;
+        private static bool isClockHotkeyRegistered;
 
-        public MenuExtraClock() : this(false) { }
-
-        public MenuExtraClock(bool isPrimaryScreen)
+        public MenuExtraClock(MenuBar menuBar)
         {
             InitializeComponent();
 
-            _isPrimaryScreen = isPrimaryScreen;
+            _isPrimaryScreen = menuBar.Screen.Primary;
+
             initializeClock();
         }
 
@@ -40,7 +42,22 @@ namespace CairoDesktop
                 // register time changed handler to receive time zone updates for the clock to update correctly
                 Microsoft.Win32.SystemEvents.TimeChanged += new EventHandler(TimeChanged);
                 Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
+
+                try
+                {
+                    if (!isClockHotkeyRegistered)
+                    {
+                        new HotKey(Key.D, KeyModifier.Win | KeyModifier.Alt | KeyModifier.NoRepeat, OnShowClock);
+                        isClockHotkeyRegistered = true;
+                    }
+                }
+                catch { }
             }
+        }
+
+        private void OnShowClock(HotKey hotKey)
+        {
+            ToggleClockDisplay();
         }
 
         private void Dispatcher_ShutdownStarted(object sender, EventArgs e)

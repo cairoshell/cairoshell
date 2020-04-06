@@ -10,11 +10,12 @@ namespace CairoDesktop
     {
         public MenuBar MenuBar;
 
-        public SystemTray()
+        public SystemTray(MenuBar menuBar)
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
-            this.DataContext = NotificationArea.Instance;
+            DataContext = NotificationArea.Instance;
+            MenuBar = menuBar;
 
             ((INotifyCollectionChanged)PinnedItems.Items).CollectionChanged += PinnedItems_CollectionChanged;
             ((INotifyCollectionChanged)UnpinnedItems.Items).CollectionChanged += UnpinnedItems_CollectionChanged;

@@ -99,6 +99,7 @@
     <Compile Include="Icon.xaml.cs">
       <DependentUpon>Icon.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ObjectModel\MenuExtra.cs" />
     <Compile Include="ObjectModel\MenuItem.cs" />
     <Compile Include="ObjectModel\ShellExtension.cs" />
     <Compile Include="ObjectModel\ShellService.cs" />

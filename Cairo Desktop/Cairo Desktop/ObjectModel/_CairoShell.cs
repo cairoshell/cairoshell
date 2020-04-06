@@ -19,6 +19,7 @@ namespace CairoDesktop.ObjectModel
         {
             CairoMenu = new List<MenuItem>();
             PlacesMenu = new List<MenuItem>();
+            MenuExtras = new List<MenuExtra>();
             ShellServices = new Dictionary<Type, ShellService>();
         }
 
@@ -66,6 +67,8 @@ namespace CairoDesktop.ObjectModel
 
         public List<MenuItem> CairoMenu { get; private set; }
         public List<MenuItem> PlacesMenu { get; private set; }
+
+        public List<MenuExtra> MenuExtras { get; private set; }
 
         public Dictionary<Type, ShellService> ShellServices { get; private set; }
     }

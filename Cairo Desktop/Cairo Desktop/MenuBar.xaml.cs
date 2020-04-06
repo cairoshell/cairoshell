@@ -18,8 +18,6 @@ namespace CairoDesktop
         private MenuBarShadow shadow = null;
         private static bool isCairoMenuHotkeyRegistered = false;
         private static bool isProgramsMenuHotkeyRegistered = false;
-        private static bool isClockHotkeyRegistered = false;
-        private static bool isSearchHotkeyRegistered = false;
 
         private bool secretBottomMenuBar = false;
 
@@ -29,6 +27,8 @@ namespace CairoDesktop
         // delegates for WinSparkle
         private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
         private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
+
+        // menu extras
         private SystemTray systemTray;
         private MenuExtraVolume menuExtraVolume;
         private MenuExtraActionCenter menuExtraActionCenter;
@@ -128,12 +128,16 @@ namespace CairoDesktop
         private void setupMenuExtras()
         {
             // set up menu extras
+            foreach (var extra in ObjectModel._CairoShell.Instance.MenuExtras)
+            {
+                UserControl menuExtra = extra.StartControl(this);
+                if (menuExtra != null) MenuExtrasHost.Children.Add(menuExtra);
+            }
+
             if (Settings.Instance.EnableSysTray)
             {
                 // add systray
-                systemTray = new SystemTray();
-                systemTray.Margin = new Thickness(0, 0, 8, 0);
-                systemTray.MenuBar = this;
+                systemTray = new SystemTray(this);
                 MenuExtrasHost.Children.Add(systemTray);
 
                 // add volume
@@ -144,16 +148,16 @@ namespace CairoDesktop
             if (Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
             {
                 // add action center
-                menuExtraActionCenter = new MenuExtraActionCenter(Handle);
+                menuExtraActionCenter = new MenuExtraActionCenter(this);
                 MenuExtrasHost.Children.Add(menuExtraActionCenter);
             }
 
             // add date/time
-            menuExtraClock = new MenuExtraClock(Screen.Primary);
+            menuExtraClock = new MenuExtraClock(this);
             MenuExtrasHost.Children.Add(menuExtraClock);
 
             // add search
-            menuExtraSearch = new MenuExtraSearch();
+            menuExtraSearch = new MenuExtraSearch(this);
             MenuExtrasHost.Children.Add(menuExtraSearch);
         }
 
@@ -216,18 +220,6 @@ namespace CairoDesktop
             {
                 HotKeyManager.RegisterHotKey(Settings.Instance.CairoMenuHotKey, OnShowCairoMenu);
                 isCairoMenuHotkeyRegistered = true;
-            }
-
-            if (Screen.Primary && !isClockHotkeyRegistered)
-            {
-                new HotKey(Key.D, KeyModifier.Win | KeyModifier.Alt | KeyModifier.NoRepeat, OnShowClock);
-                isClockHotkeyRegistered = true;
-            }
-
-            if (Screen.Primary && !isSearchHotkeyRegistered)
-            {
-                new HotKey(Key.S, KeyModifier.Win | KeyModifier.NoRepeat, OnShowSearchHotkey);
-                isSearchHotkeyRegistered = true;
             }
 
             // Register L+R Windows key to open Programs menu
@@ -547,21 +539,5 @@ namespace CairoDesktop
             FolderHelper.OpenLocation("::{645FF040-5081-101B-9F08-00AA002F954E}");
         }
         #endregion
-
-        private void OnShowClock(HotKey hotKey)
-        {
-            if (menuExtraClock != null)
-            {
-                menuExtraClock.ToggleClockDisplay();
-            }
-        }
-
-        private void OnShowSearchHotkey(HotKey hotKey)
-        {
-            if (menuExtraSearch != null)
-            {
-                menuExtraSearch.ToggleSearch();
-            }
-        }
     }
 }

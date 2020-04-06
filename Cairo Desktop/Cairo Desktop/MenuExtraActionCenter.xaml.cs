@@ -13,13 +13,11 @@ namespace CairoDesktop
     {
         private IntPtr _parentHwnd;
 
-        public MenuExtraActionCenter() : this(IntPtr.Zero) { }
-
-        public MenuExtraActionCenter(IntPtr parentHwnd)
+        public MenuExtraActionCenter(MenuBar menuBar)
         {
             InitializeComponent();
 
-            _parentHwnd = parentHwnd;
+            _parentHwnd = menuBar.Handle;
         }
 
         private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)

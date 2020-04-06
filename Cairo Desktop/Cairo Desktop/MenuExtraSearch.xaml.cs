@@ -15,9 +15,14 @@ namespace CairoDesktop
     /// </summary>
     public partial class MenuExtraSearch : UserControl
     {
-        public MenuExtraSearch()
+        public bool _isPrimaryScreen;
+        private static bool isSearchHotkeyRegistered;
+
+        public MenuExtraSearch(MenuBar menuBar)
         {
             InitializeComponent();
+
+            _isPrimaryScreen = menuBar.Screen.Primary;
 
             setupSearch();
         }
@@ -39,6 +44,11 @@ namespace CairoDesktop
                 searchcheck.Tick += searchcheck_Tick;
                 searchcheck.Start();
             }
+        }
+
+        private void OnShowSearchHotkey(HotKey hotKey)
+        {
+            ToggleSearch();
         }
 
         private void searchcheck_Tick(object sender, EventArgs e)
@@ -84,6 +94,16 @@ namespace CairoDesktop
             thread.IsBackground = true;
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
+
+            try
+            {
+                if (_isPrimaryScreen && !isSearchHotkeyRegistered)
+                {
+                    new HotKey(Key.S, KeyModifier.Win | KeyModifier.NoRepeat, OnShowSearchHotkey);
+                    isSearchHotkeyRegistered = true;
+                }
+            }
+            catch { }
         }
 
         private void btnViewResults_Click(object sender, RoutedEventArgs e)
