@@ -241,12 +241,12 @@ namespace CairoDesktop.SupportingClasses
             else if (enableAppBar) AppBarHelper.ABSetPos(this, Screen, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
         }
 
-        internal void setAppBarPosition(NativeMethods.RECT rect)
+        internal void setAppBarPosition(NativeMethods.Rect rect)
         {
-            Top = rect.top / dpiScale;
-            Left = rect.left / dpiScale;
-            Width = (rect.right - rect.left) / dpiScale;
-            Height = (rect.bottom - rect.top) / dpiScale;
+            Top = rect.Top / dpiScale;
+            Left = rect.Left / dpiScale;
+            Width = (rect.Right - rect.Left) / dpiScale;
+            Height = (rect.Bottom - rect.Top) / dpiScale;
         }
 
         private void setScreenProperties(ScreenSetupReason reason)
@@ -282,7 +282,7 @@ namespace CairoDesktop.SupportingClasses
         #endregion
 
         #region Virtual methods
-        internal virtual void afterAppBarPos(bool isSameCoords, NativeMethods.RECT rect)
+        internal virtual void afterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
             // apparently the taskbars like to pop up when app bars change
             if (Settings.Instance.EnableTaskbar && !Startup.IsShuttingDown)

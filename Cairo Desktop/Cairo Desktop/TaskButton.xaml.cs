@@ -66,6 +66,11 @@ namespace CairoDesktop
             // drag support - delayed activation using system setting
             dragTimer = new DispatcherTimer { Interval = SystemParameters.MouseHoverTime };
             dragTimer.Tick += dragTimer_Tick;
+
+            if (false)
+            {
+                dwmThumbnail.SourceWindowHandle = Window.Handle;
+            }
         }
 
         private void Window_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

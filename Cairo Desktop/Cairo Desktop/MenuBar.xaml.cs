@@ -310,7 +310,7 @@ namespace CairoDesktop
 
         #region Events
 
-        internal override void afterAppBarPos(bool isSameCoords, NativeMethods.RECT rect)
+        internal override void afterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
             base.afterAppBarPos(isSameCoords, rect);
 
@@ -377,7 +377,7 @@ namespace CairoDesktop
 
         public NativeMethods.MenuBarSizeData GetMenuBarSizeData()
         {
-            return new NativeMethods.MenuBarSizeData { edge = (int)appBarEdge, rc = new NativeMethods.RECT { top = (int)(Top * dpiScale), left = (int)(Left * dpiScale), bottom = (int)((Top + Height) * dpiScale), right = (int)((Left + Width) * dpiScale) } };
+            return new NativeMethods.MenuBarSizeData { edge = (int)appBarEdge, rc = new NativeMethods.Rect { Top = (int)(Top * dpiScale), Left = (int)(Left * dpiScale), Bottom = (int)((Top + Height) * dpiScale), Right = (int)((Left + Width) * dpiScale) } };
         }
 
         protected override void customClosing()

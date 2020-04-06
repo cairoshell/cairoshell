@@ -35,7 +35,7 @@ namespace CairoDesktop.WindowsTasks
         private void initialize()
         {
             IsStarting = true;
-            
+
             try
             {
                 CairoLogger.Instance.Debug("Starting WindowsTasksService");
@@ -43,7 +43,7 @@ namespace CairoDesktop.WindowsTasks
                 // create window to receive task events
                 _HookWin = new NativeWindowEx();
                 _HookWin.CreateHandle(new CreateParams());
-                
+
                 // prevent other shells from working properly
                 SetTaskmanWindow(_HookWin.Handle);
 
@@ -78,7 +78,7 @@ namespace CairoDesktop.WindowsTasks
                 EnumWindows(new CallBackPtr((hwnd, lParam) =>
                 {
                     ApplicationWindow win = new ApplicationWindow(hwnd, this);
-                    if(win.ShowInTaskbar && !Windows.Contains(win))
+                    if (win.ShowInTaskbar && !Windows.Contains(win))
                         Windows.Add(win);
 
                     return true;
@@ -91,7 +91,7 @@ namespace CairoDesktop.WindowsTasks
             {
                 CairoLogger.Instance.Info("Unable to start WindowsTasksService: " + ex.Message);
             }
-            
+
             IsStarting = false;
         }
 
@@ -148,7 +148,7 @@ namespace CairoDesktop.WindowsTasks
             }
             finally
             {
-            	Marshal.DestroyStructure(mmPtr, typeof(MinimizedMetrics));
+                Marshal.DestroyStructure(mmPtr, typeof(MinimizedMetrics));
                 Marshal.FreeHGlobal(mmPtr);
             }
         }
@@ -290,7 +290,7 @@ namespace CairoDesktop.WindowsTasks
                             case HSHELL_GETMINRECT:
                                 CairoLogger.Instance.Debug("GetMinRect called: " + msg.LParam.ToString());
                                 SHELLHOOKINFO winHandle = (SHELLHOOKINFO)Marshal.PtrToStructure(msg.LParam, typeof(SHELLHOOKINFO));
-                                winHandle.rc = new RECT { bottom = 100, left = 0, right = 100, top = 0 };
+                                winHandle.rc = new Interop.NativeMethods.Rect { Bottom = 100, Left = 0, Right = 100, Top = 0 };
                                 Marshal.StructureToPtr(winHandle, msg.LParam, true);
                                 msg.Result = winHandle.hwnd;
                                 return; // return here so the result isnt reset to DefWindowProc
@@ -454,7 +454,7 @@ namespace CairoDesktop.WindowsTasks
                         return;
                 }
             }
-            
+
             msg.Result = DefWindowProc(msg.HWnd, msg.Msg, msg.WParam, msg.LParam);
         }
 

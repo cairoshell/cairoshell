@@ -203,43 +203,43 @@ namespace CairoDesktop.SupportingClasses
 
                 if (abd.uEdge == (int)ABEdge.ABE_LEFT || abd.uEdge == (int)ABEdge.ABE_RIGHT)
                 {
-                    abd.rc.top = top;
-                    abd.rc.bottom = bottom;
+                    abd.rc.Top = top;
+                    abd.rc.Bottom = bottom;
                     if (abd.uEdge == (int)ABEdge.ABE_LEFT)
                     {
-                        abd.rc.left = left;
-                        abd.rc.right = abd.rc.left + sWidth;
+                        abd.rc.Left = left;
+                        abd.rc.Right = abd.rc.Left + sWidth;
                     }
                     else
                     {
-                        abd.rc.right = right;
-                        abd.rc.left = abd.rc.right - sWidth;
+                        abd.rc.Right = right;
+                        abd.rc.Left = abd.rc.Right - sWidth;
                     }
 
                 }
                 else
                 {
-                    abd.rc.left = left;
-                    abd.rc.right = right;
+                    abd.rc.Left = left;
+                    abd.rc.Right = right;
                     if (abd.uEdge == (int)ABEdge.ABE_TOP)
                     {
                         if (!abWindow.requiresScreenEdge)
                         {
-                            abd.rc.top = top + Convert.ToInt32(GetAppBarEdgeWindowsHeight((ABEdge)abd.uEdge, screen));
+                            abd.rc.Top = top + Convert.ToInt32(GetAppBarEdgeWindowsHeight((ABEdge)abd.uEdge, screen));
                         }
                         else
-                            abd.rc.top = top;
-                        abd.rc.bottom = abd.rc.top + sHeight;
+                            abd.rc.Top = top;
+                        abd.rc.Bottom = abd.rc.Top + sHeight;
                     }
                     else
                     {
                         if (!abWindow.requiresScreenEdge)
                         {
-                            abd.rc.bottom = bottom - Convert.ToInt32(GetAppBarEdgeWindowsHeight((ABEdge)abd.uEdge, screen));
+                            abd.rc.Bottom = bottom - Convert.ToInt32(GetAppBarEdgeWindowsHeight((ABEdge)abd.uEdge, screen));
                         }
                         else
-                            abd.rc.bottom = bottom;
-                        abd.rc.top = abd.rc.bottom - sHeight;
+                            abd.rc.Bottom = bottom;
+                        abd.rc.Top = abd.rc.Bottom - sHeight;
                     }
                 }
 
@@ -251,16 +251,16 @@ namespace CairoDesktop.SupportingClasses
                 switch (abd.uEdge)
                 {
                     case (int)ABEdge.ABE_LEFT:
-                        abd.rc.right = abd.rc.left + sWidth;
+                        abd.rc.Right = abd.rc.Left + sWidth;
                         break;
                     case (int)ABEdge.ABE_RIGHT:
-                        abd.rc.left = abd.rc.right - sWidth;
+                        abd.rc.Left = abd.rc.Right - sWidth;
                         break;
                     case (int)ABEdge.ABE_TOP:
-                        abd.rc.bottom = abd.rc.top + sHeight;
+                        abd.rc.Bottom = abd.rc.Top + sHeight;
                         break;
                     case (int)ABEdge.ABE_BOTTOM:
-                        abd.rc.top = abd.rc.bottom - sHeight;
+                        abd.rc.Top = abd.rc.Bottom - sHeight;
                         break;
                 }
 
@@ -270,17 +270,17 @@ namespace CairoDesktop.SupportingClasses
 
                 // check if new coords
                 bool isSameCoords = false;
-                if (!isCreate) isSameCoords = abd.rc.top == (abWindow.Top * abWindow.dpiScale) && abd.rc.left == (abWindow.Left * abWindow.dpiScale) && abd.rc.bottom == (abWindow.Top * abWindow.dpiScale) + sHeight && abd.rc.right == (abWindow.Left * abWindow.dpiScale) + sWidth;
+                if (!isCreate) isSameCoords = abd.rc.Top == (abWindow.Top * abWindow.dpiScale) && abd.rc.Left == (abWindow.Left * abWindow.dpiScale) && abd.rc.Bottom == (abWindow.Top * abWindow.dpiScale) + sHeight && abd.rc.Right == (abWindow.Left * abWindow.dpiScale) + sWidth;
                 
                 if (!isSameCoords)
                 {
-                    CairoLogger.Instance.Debug(string.Format("AppBarHelper: {0} changing position (TxLxBxR) to {1}x{2}x{3}x{4} from {5}x{6}x{7}x{8}", abWindow.Name, abd.rc.top, abd.rc.left, abd.rc.bottom, abd.rc.right, (abWindow.Top * abWindow.dpiScale), (abWindow.Left * abWindow.dpiScale), (abWindow.Top * abWindow.dpiScale) + sHeight, (abWindow.Left * abWindow.dpiScale) + sWidth));
+                    CairoLogger.Instance.Debug(string.Format("AppBarHelper: {0} changing position (TxLxBxR) to {1}x{2}x{3}x{4} from {5}x{6}x{7}x{8}", abWindow.Name, abd.rc.Top, abd.rc.Left, abd.rc.Bottom, abd.rc.Right, (abWindow.Top * abWindow.dpiScale), (abWindow.Left * abWindow.dpiScale), (abWindow.Top * abWindow.dpiScale) + sHeight, (abWindow.Left * abWindow.dpiScale) + sWidth));
                     abWindow.setAppBarPosition(abd.rc);
                 }
 
                 abWindow.afterAppBarPos(isSameCoords, abd.rc);
 
-                if (abd.rc.bottom - abd.rc.top < sHeight)
+                if (abd.rc.Bottom - abd.rc.Top < sHeight)
                     ABSetPos(abWindow, screen, width, height, edge);
             }
         }

@@ -242,7 +242,7 @@ namespace CairoDesktop
             }
         }
 
-        internal override void afterAppBarPos(bool isSameCoords, NativeMethods.RECT rect)
+        internal override void afterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
             base.afterAppBarPos(isSameCoords, rect);
 
