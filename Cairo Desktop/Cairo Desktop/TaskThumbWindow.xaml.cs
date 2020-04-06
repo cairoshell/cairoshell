@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace CairoDesktop
 {
@@ -12,6 +13,7 @@ namespace CairoDesktop
     {
         private TaskButton taskButton;
         private bool isClosing;
+        private bool isAnimating;
 
         public TaskThumbWindow(TaskButton parent)
         {
@@ -23,6 +25,11 @@ namespace CairoDesktop
 
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
+            // hide from alt-tab
+            WindowInteropHelper helper = new WindowInteropHelper(this);
+            Interop.Shell.HideWindowFromTasks(helper.Handle);
+
+            // get anchor point
             Point taskButtonPoint = taskButton.GetThumbnailAnchor();
 
             if (Configuration.Settings.Instance.TaskbarPosition == 1)
@@ -42,7 +49,30 @@ namespace CairoDesktop
 
             Left = taskButtonPoint.X - ((ActualWidth - taskButton.ActualWidth) / 2);
 
+            // set up thumbnail
+            dwmThumbnail.ThumbnailOpacity = 0;
             dwmThumbnail.SourceWindowHandle = taskButton.Window.Handle;
+
+            // set up animation
+            isAnimating = true;
+            System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
+        }
+
+        private void CompositionTarget_Rendering(object sender, EventArgs e)
+        {
+            // runs once per frame for the duration of the animation
+            if (isAnimating)
+            {
+                dwmThumbnail.ThumbnailOpacity = Convert.ToByte(bdrThumb.Opacity * 255);
+                dwmThumbnail.Refresh();
+            }
+            else
+            {
+                // refresh one last time to get the final frame's updates
+                dwmThumbnail.ThumbnailOpacity = 255;
+                dwmThumbnail.Refresh();
+                System.Windows.Media.CompositionTarget.Rendering -= CompositionTarget_Rendering;
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -71,6 +101,11 @@ namespace CairoDesktop
         {
             taskButton.ConfigureContextMenu();
             taskButton.btn.ContextMenu.IsOpen = true;
+        }
+
+        private void Storyboard_Completed(object sender, EventArgs e)
+        {
+            isAnimating = false;
         }
     }
 }

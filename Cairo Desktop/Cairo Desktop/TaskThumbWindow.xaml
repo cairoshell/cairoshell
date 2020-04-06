@@ -19,6 +19,25 @@
         ToolTipService.Placement="Top">
     <Border Name="bdrThumb"
             Style="{StaticResource TaskThumbWindowBorderStyle}">
+        <Border.RenderTransform>
+            <TranslateTransform X="0"
+                                Y="20" />
+        </Border.RenderTransform>
+        <Border.Triggers>
+            <EventTrigger RoutedEvent="Border.Loaded">
+                <BeginStoryboard>
+                    <Storyboard Completed="Storyboard_Completed">
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                         From="0.0"
+                                         To="1.0"
+                                         Duration="0:0:0.15"/>
+                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                         To="0"
+                                         Duration="0:0:0.15"/>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Border.Triggers>
         <Border Name="bdrThumbInner"
                 Style="{StaticResource TaskThumbWindowInnerBorderStyle}"
                 MouseUp="bdrThumbInner_MouseUp"

@@ -11,6 +11,8 @@ namespace CairoDesktop
     /// </summary>
     public partial class DwmThumbnail : UserControl
     {
+        public byte ThumbnailOpacity = 255;
+
         public DwmThumbnail()
         {
             InitializeComponent();
@@ -107,7 +109,7 @@ namespace CairoDesktop
                 {
                     fVisible = true,
                     dwFlags = NativeMethods.DWM_TNP_VISIBLE | NativeMethods.DWM_TNP_RECTDESTINATION | NativeMethods.DWM_TNP_OPACITY,
-                    opacity = 255,
+                    opacity = ThumbnailOpacity,
                     rcDestination = Rect
                 };
 
