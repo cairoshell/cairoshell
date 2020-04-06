@@ -155,7 +155,7 @@ namespace CairoDesktop.WindowsTray
             set;
         }
 
-        public RECT Placement
+        public Rect Placement
         {
             get;
             set;

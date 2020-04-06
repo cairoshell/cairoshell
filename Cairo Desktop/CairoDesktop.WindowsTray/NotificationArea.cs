@@ -13,7 +13,7 @@ namespace CairoDesktop.WindowsTray
     public class NotificationArea : DependencyObject, IDisposable
     {
         const string VOLUME_GUID = "7820ae73-23e3-4229-82c1-e41cb67d5b9c";
-        RECT defaultPlacement = new RECT { top = 0, left = GetSystemMetrics(0) - 200, bottom = 23, right = 23 };
+        NativeMethods.Rect defaultPlacement = new NativeMethods.Rect { Top = 0, Left = GetSystemMetrics(0) - 200, Bottom = 23, Right = 23 };
         IWindowsHooksWrapper hooksWrapper = new WindowsHooksWrapper();
         private SystrayDelegate trayDelegate;
         private IconDataDelegate iconDataDelegate;
@@ -22,7 +22,7 @@ namespace CairoDesktop.WindowsTray
         public IntPtr Handle;
         public bool IsFailed = false;
         private IOleCommandTarget sysTrayObject = null;
-        private MenuBarSizeData menuBarSizeData = new MenuBarSizeData { edge = (int)ABEdge.ABE_TOP, rc = new RECT { top = 0, left = 0, bottom = 23, right = GetSystemMetrics(0) } };
+        private MenuBarSizeData menuBarSizeData = new MenuBarSizeData { edge = (int)ABEdge.ABE_TOP, rc = new NativeMethods.Rect { Top = 0, Left = 0, Bottom = 23, Right = GetSystemMetrics(0) } };
 
         private static NotificationArea _instance = new NotificationArea();
         public static NotificationArea Instance
@@ -213,16 +213,16 @@ namespace CairoDesktop.WindowsTray
             if (icon != null)
             {
                 if (dwMessage == 1)
-                    return Shell.MakeLParam(icon.Placement.left, icon.Placement.top);
+                    return Shell.MakeLParam(icon.Placement.Left, icon.Placement.Top);
                 else if (dwMessage == 2)
-                    return Shell.MakeLParam(icon.Placement.right, icon.Placement.bottom);
+                    return Shell.MakeLParam(icon.Placement.Right, icon.Placement.Bottom);
             }
             else if (guidItem == new Guid(VOLUME_GUID))
             {
                 if (dwMessage == 1)
-                    return Shell.MakeLParam(defaultPlacement.left, defaultPlacement.top);
+                    return Shell.MakeLParam(defaultPlacement.Left, defaultPlacement.Top);
                 else if (dwMessage == 2)
-                    return Shell.MakeLParam(defaultPlacement.right, defaultPlacement.bottom);
+                    return Shell.MakeLParam(defaultPlacement.Right, defaultPlacement.Bottom);
             }
 
             return IntPtr.Zero;

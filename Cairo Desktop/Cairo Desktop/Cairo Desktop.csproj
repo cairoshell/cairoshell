@@ -84,6 +84,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CairoWallpaperStyle.cs" />
+    <Compile Include="DwmThumbnail.xaml.cs">
+      <DependentUpon>DwmThumbnail.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MenuExtraActionCenter.xaml.cs">
       <DependentUpon>MenuExtraActionCenter.xaml</DependentUpon>
     </Compile>
@@ -121,6 +124,10 @@
     <Compile Include="Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
     </Compile>
+    <Page Include="DwmThumbnail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Icon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

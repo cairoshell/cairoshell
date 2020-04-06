@@ -87,13 +87,13 @@ namespace CairoDesktop.SupportingClasses
 
         private FullScreenApp getFullScreenApp(IntPtr hWnd)
         {
-            NativeMethods.RECT rect;
+            NativeMethods.Rect rect;
             NativeMethods.GetWindowRect(hWnd, out rect);
 
             // check if this is a full screen app
             foreach (Screen screen in WindowManager.Instance.ScreenState)
             {
-                if (rect.top == screen.Bounds.Top && rect.left == screen.Bounds.Left && rect.bottom == screen.Bounds.Bottom && rect.right == screen.Bounds.Right)
+                if (rect.Top == screen.Bounds.Top && rect.Left == screen.Bounds.Left && rect.Bottom == screen.Bounds.Bottom && rect.Right == screen.Bounds.Right)
                 {
                     // make sure this is not us
                     uint hwndProcId;
@@ -148,7 +148,7 @@ namespace CairoDesktop.SupportingClasses
         {
             public IntPtr hWnd;
             public Screen screen;
-            public NativeMethods.RECT rect;
+            public NativeMethods.Rect rect;
         }
     }
 }

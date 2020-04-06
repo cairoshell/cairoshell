@@ -406,9 +406,9 @@ namespace CairoDesktop.SupportingClasses
             double dpiScale = 1;
             double menuBarHeight = 0;
             double taskbarHeight = 0;
-            NativeMethods.RECT rc;
-            rc.left = screen.Bounds.Left;
-            rc.right = screen.Bounds.Right;
+            NativeMethods.Rect rc;
+            rc.Left = screen.Bounds.Left;
+            rc.Right = screen.Bounds.Right;
 
             // get appropriate windows for this display
             foreach (MenuBar bar in MenuBarWindows)
@@ -435,19 +435,19 @@ namespace CairoDesktop.SupportingClasses
             {
                 if (Settings.Instance.TaskbarPosition == 1)
                 {
-                    rc.top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale) + (int)(taskbarHeight * dpiScale);
-                    rc.bottom = screen.Bounds.Bottom;
+                    rc.Top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale) + (int)(taskbarHeight * dpiScale);
+                    rc.Bottom = screen.Bounds.Bottom;
                 }
                 else
                 {
-                    rc.top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale);
-                    rc.bottom = screen.Bounds.Bottom - (int)(taskbarHeight * dpiScale);
+                    rc.Top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale);
+                    rc.Bottom = screen.Bounds.Bottom - (int)(taskbarHeight * dpiScale);
                 }
             }
             else
             {
-                rc.top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale);
-                rc.bottom = screen.Bounds.Bottom;
+                rc.Top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale);
+                rc.Bottom = screen.Bounds.Bottom;
             }
 
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref rc, (1 | 2));
@@ -457,11 +457,11 @@ namespace CairoDesktop.SupportingClasses
         {
             // TODO this is wrong for multi-display
             // set work area back to full screen size. we can't assume what pieces of the old workarea may or may not be still used
-            NativeMethods.RECT oldWorkArea;
-            oldWorkArea.left = SystemInformation.VirtualScreen.Left;
-            oldWorkArea.top = SystemInformation.VirtualScreen.Top;
-            oldWorkArea.right = SystemInformation.VirtualScreen.Right;
-            oldWorkArea.bottom = SystemInformation.VirtualScreen.Bottom;
+            NativeMethods.Rect oldWorkArea;
+            oldWorkArea.Left = SystemInformation.VirtualScreen.Left;
+            oldWorkArea.Top = SystemInformation.VirtualScreen.Top;
+            oldWorkArea.Right = SystemInformation.VirtualScreen.Right;
+            oldWorkArea.Bottom = SystemInformation.VirtualScreen.Bottom;
 
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
         }

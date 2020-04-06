@@ -11,7 +11,7 @@ namespace CairoDesktop.Interop
     /// <summary>
     /// Container class for Win32 Native methods used within the desktop application (e.g. shutdown, sleep, et al).
     /// </summary>
-    public class NativeMethods
+    public partial class NativeMethods
     {
         public const uint TOKENADJUSTPRIVILEGES = 0x00000020;
         public const uint TOKENQUERY = 0x00000008;
@@ -39,8 +39,6 @@ namespace CairoDesktop.Interop
             /// </summary>
             ForceIfHung = 0x10
         }
-
-
 
         public static IntPtr FindWindow(string className)
         {
@@ -227,12 +225,24 @@ namespace CairoDesktop.Interop
         public static extern bool MoveWindow(IntPtr hWnd, int x, int y, int cx, int cy, bool repaint);
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct RECT
+        public struct Rect
         {
-            public int left;
-            public int top;
-            public int right;
-            public int bottom;
+            public Rect(int left, int top, int right, int bottom)
+            {
+                Left = left;
+                Top = top;
+                Right = right;
+                Bottom = bottom;
+            }
+
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+
+            public int Width => Right - Left;
+
+            public int Height => Bottom - Top;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -242,7 +252,7 @@ namespace CairoDesktop.Interop
             public IntPtr hWnd;
             public int uCallbackMessage;
             public int uEdge;
-            public RECT rc;
+            public Rect rc;
             public IntPtr lParam;
         }
 
@@ -540,8 +550,8 @@ namespace CairoDesktop.Interop
         public struct WINDOWINFO
         {
             public uint cbSize;
-            public RECT rcWindow;
-            public RECT rcClient;
+            public Rect rcWindow;
+            public Rect rcClient;
             public uint dwStyle;
             public uint dwExStyle;
             public uint dwWindowStatus;
@@ -642,9 +652,6 @@ namespace CairoDesktop.Interop
         [DllImport("user32.dll")]
         public static extern int GetWindowTextLength(IntPtr hwnd);
 
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        public static extern int GetWindowText(IntPtr hwnd, StringBuilder sb, int Length);
-
         [DllImport("user32.dll")]
         public static extern IntPtr GetClassLong(IntPtr handle, int longClass);
 
@@ -669,7 +676,7 @@ namespace CairoDesktop.Interop
         public static extern bool IsIconic(IntPtr hWnd);
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool SystemParametersInfo(uint uiAction, uint uiParam, ref RECT pvParam, uint fWinIni);
+        public static extern bool SystemParametersInfo(uint uiAction, uint uiParam, ref Rect pvParam, uint fWinIni);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, string pvParam, SPIF fWinIni);
@@ -3012,10 +3019,6 @@ namespace CairoDesktop.Interop
             ForceMinimized = 11
         }
 
-        public delegate bool CallBackPtr(IntPtr hwnd, int lParam);
-
-        [DllImport("user32.dll")]
-        public static extern int EnumWindows(CallBackPtr callPtr, int lPar);
 
         [DllImport("user32.dll")]
         public static extern bool RegisterShellHookWindow(IntPtr hWnd);
@@ -3043,7 +3046,7 @@ namespace CairoDesktop.Interop
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+        public static extern bool GetWindowRect(IntPtr hWnd, out Rect lpRect);
 
         [DllImport("user32.dll")]
         public static extern IntPtr GetDesktopWindow();
@@ -3208,7 +3211,7 @@ namespace CairoDesktop.Interop
         public struct SHELLHOOKINFO
         {
             public IntPtr hwnd;
-            public RECT rc;
+            public Rect rc;
         }
 
         /// <summary>
@@ -3300,7 +3303,7 @@ namespace CairoDesktop.Interop
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct MenuBarSizeData
         {
-            public RECT rc;
+            public Rect rc;
             public int edge;
         }
 
@@ -3964,7 +3967,7 @@ namespace CairoDesktop.Interop
             public IntPtr hbmMask;
             public int Unused1;
             public int Unused2;
-            public RECT rcImage;
+            public Rect rcImage;
         }
 
         public struct POINT
@@ -4051,7 +4054,7 @@ namespace CairoDesktop.Interop
             [PreserveSig]
             int GetImageRect(
                 int i,
-                ref RECT prc);
+                ref Rect prc);
 
             [PreserveSig]
             int GetIconSize(
@@ -4291,5 +4294,21 @@ namespace CairoDesktop.Interop
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern bool SendNotifyMessage(IntPtr hWnd, uint Msg, UIntPtr wParam, IntPtr lParam);
+
+
+        #region Shell32
+        #endregion
+
+        #region User32
+        #endregion
+
+        #region DwmApi
+        [StructLayout(LayoutKind.Sequential)]
+        public struct PSIZE
+        {
+            public int x;
+            public int y;
+        }
+        #endregion
     }
 }
