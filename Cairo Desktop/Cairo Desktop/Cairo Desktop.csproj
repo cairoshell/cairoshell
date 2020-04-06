@@ -122,6 +122,9 @@
     <Compile Include="MenuExtraVolume.xaml.cs">
       <DependentUpon>MenuExtraVolume.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TaskThumbWindow.xaml.cs">
+      <DependentUpon>TaskThumbWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
     </Compile>
@@ -150,6 +153,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MenuExtraVolume.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TaskThumbWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

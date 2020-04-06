@@ -494,6 +494,30 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="CairoMenuBorderStyle"
+           TargetType="{x:Type Border}">
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource ResourceKey=MenuTopBorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="0,1,0,0" />
+        <Setter Property="Margin"
+                Value="5,0,5,11" />
+        <Setter Property="Effect"
+                Value="{DynamicResource ResourceKey=MenuShadow}" />
+    </Style>
+    <Style x:Key="CairoMenuInnerBorderStyle"
+           TargetType="{x:Type Border}">
+        <Setter Property="Background"
+                Value="{DynamicResource ResourceKey=MenuBackgroundGradient}" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="1,0,1,1" />
+        <Setter Property="CornerRadius"
+                Value="0,0,5,5" />
+        <Setter Property="Padding"
+                Value="0,3,0,3" />
+    </Style>
     <Style x:Key="{x:Type MenuItem}"
            TargetType="{x:Type MenuItem}">
         <Setter Property="Foreground"
@@ -575,34 +599,8 @@
                                    Focusable="false"
                                    PopupAnimation="Fade"
                                    AllowsTransparency="True">
-                                <Border x:Name="SubMenuBorderTop">
-                                    <Border.Style>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="BorderBrush"
-                                                    Value="{DynamicResource ResourceKey=MenuTopBorderBrush}" />
-                                            <Setter Property="BorderThickness"
-                                                    Value="0,1,0,0" />
-                                            <Setter Property="Margin"
-                                                    Value="5,0,5,11" />
-                                            <Setter Property="Effect"
-                                                    Value="{DynamicResource ResourceKey=MenuShadow}" />
-                                        </Style>
-                                    </Border.Style>
-                                    <Border x:Name="SubMenuBorder">
-                                        <Border.Style>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="Background"
-                                                        Value="{DynamicResource ResourceKey=MenuBackgroundGradient}" />
-                                                <Setter Property="BorderBrush"
-                                                        Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
-                                                <Setter Property="BorderThickness"
-                                                        Value="1,0,1,1" />
-                                                <Setter Property="CornerRadius"
-                                                        Value="0,0,5,5" />
-                                                <Setter Property="Padding"
-                                                        Value="0,3,0,3" />
-                                            </Style>
-                                        </Border.Style>
+                                <Border x:Name="SubMenuBorderTop" Style="{StaticResource ResourceKey=CairoMenuBorderStyle}">
+                                    <Border x:Name="SubMenuBorder" Style="{StaticResource ResourceKey=CairoMenuInnerBorderStyle}">
                                         <Grid x:Name="SubMenu"
                                               Grid.IsSharedSizeScope="True">
                                             <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
@@ -832,32 +830,10 @@
                                        PopupAnimation="Fade"
                                        AllowsTransparency="True">
                                     <Border x:Name="SubMenuBorderTop"
+                                            Style="{StaticResource ResourceKey=CairoMenuBorderStyle}"
                                             Margin="11,0,5,11">
-                                        <Border.Style>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="BorderBrush"
-                                                        Value="{DynamicResource ResourceKey=MenuTopBorderBrush}" />
-                                                <Setter Property="BorderThickness"
-                                                        Value="0,1,0,0" />
-                                                <Setter Property="Effect"
-                                                        Value="{DynamicResource ResourceKey=MenuShadow}" />
-                                            </Style>
-                                        </Border.Style>
-                                        <Border x:Name="SubMenuBorder">
-                                            <Border.Style>
-                                                <Style TargetType="{x:Type Border}">
-                                                    <Setter Property="Background"
-                                                            Value="{DynamicResource ResourceKey=MenuBackgroundGradient}" />
-                                                    <Setter Property="BorderBrush"
-                                                            Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
-                                                    <Setter Property="BorderThickness"
-                                                            Value="1,0,1,1" />
-                                                    <Setter Property="CornerRadius"
-                                                            Value="0,0,5,5" />
-                                                    <Setter Property="Padding"
-                                                            Value="0,3,0,3" />
-                                                </Style>
-                                            </Border.Style>
+                                        <Border x:Name="SubMenuBorder"
+                                                Style="{StaticResource ResourceKey=CairoMenuInnerBorderStyle}">
                                             <Grid x:Name="SubMenu"
                                                   Grid.IsSharedSizeScope="True">
                                                 <StackPanel IsItemsHost="True"
@@ -1713,6 +1689,56 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <!-- Task button thumbnails -->
+    <Style x:Key="TaskThumbWindowBorderStyle"
+           BasedOn="{StaticResource CairoMenuBorderStyle}"
+           TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="Margin"
+                Value="5,0,5,0" />
+        <Setter Property="Effect"
+                Value="{DynamicResource ResourceKey=MenuShadow}" />
+    </Style>
+    <Style x:Key="TaskThumbWindowInnerBorderStyle"
+           BasedOn="{StaticResource CairoMenuInnerBorderStyle}"
+           TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness"
+                Value="1,1,1,0" />
+        <Setter Property="CornerRadius"
+                Value="5,5,0,0" />
+        <Setter Property="Padding"
+                Value="10" />
+    </Style>
+    <Style x:Key="TaskThumbWindowBorderTopStyle"
+           BasedOn="{StaticResource TaskThumbWindowBorderStyle}"
+           TargetType="{x:Type Border}">
+        <Setter Property="Margin"
+                Value="5,0,5,11" />
+    </Style>
+    <Style x:Key="TaskThumbWindowInnerBorderTopStyle"
+           BasedOn="{StaticResource TaskThumbWindowInnerBorderStyle}"
+           TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness"
+                Value="1,0,1,1" />
+        <Setter Property="CornerRadius"
+                Value="0,0,5,5" />
+    </Style>
+    <Style x:Key="TaskThumbTitleStyle"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground"
+                Value="{DynamicResource ResourceKey=MenuItemForeground}" />
+        <Setter Property="Margin"
+                Value="5,0,0,0" />
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="TextAlignment"
+                Value="Center" />
+        <Setter Property="TextTrimming"
+                Value="CharacterEllipsis" />
     </Style>
     <!-- Style for task list -->
     <Style x:Key="CairoTaskListPopupStyle"

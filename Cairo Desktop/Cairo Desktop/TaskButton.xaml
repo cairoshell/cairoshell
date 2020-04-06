@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<UserControl  xmlns:CairoDesktop="clr-namespace:CairoDesktop" 
-              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-              xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
-              x:Class="CairoDesktop.TaskButton"
-              x:Name="UserControl"
-              xmlns:support="clr-namespace:CairoDesktop.SupportingClasses" 
-              Loaded="UserControl_Loaded">
+<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+             x:Class="CairoDesktop.TaskButton"
+             x:Name="UserControl"
+             xmlns:support="clr-namespace:CairoDesktop.SupportingClasses" 
+             Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <support:TaskButtonStyleConverter x:Key="styleConverter" />
@@ -16,12 +15,14 @@
             BorderThickness="0"
             VerticalAlignment="Stretch"
             Click="btnClick"
-            ToolTip="{Binding Path=Title}" 
-            ToolTipService.Placement="Top" 
+            ToolTip="{Binding Path=Title}"
+            ToolTipService.Placement="Top"
             MouseUp="btn_MouseUp" 
-            ContextMenuOpening="ContextMenu_Opening" 
+            ContextMenuOpening="ContextMenu_Opening"
             DragEnter="btn_DragEnter" 
-            DragLeave="btn_DragLeave">
+            DragLeave="btn_DragLeave"
+            MouseEnter="btn_MouseEnter"
+            MouseLeave="btn_MouseLeave">
         <Button.Style>
             <MultiBinding Converter="{StaticResource styleConverter}" 
                           NotifyOnSourceUpdated="True">
@@ -31,7 +32,7 @@
             </MultiBinding>
         </Button.Style>
         <Button.ContextMenu>
-            <ContextMenu>
+            <ContextMenu Closed="ContextMenu_Closed">
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_TaskManager)}" 
                           Click="miTaskMan_Click" />
                 <Separator />
@@ -93,12 +94,6 @@
                          Maximum="65534" 
                          Value="{Binding Path=ProgressValue}" 
                          Style="{StaticResource TaskbarProgressBar}" />
-            <CairoDesktop:DwmThumbnail x:Name="dwmThumbnail"
-                                       Width="16"
-                                       Height="16"
-                                       Grid.Column="0" 
-                                       Margin="0,0,5,0"
-                                       Visibility="Collapsed"/>
             <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                    Name="imgIcon"
                    Width="16"

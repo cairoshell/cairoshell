@@ -1,0 +1,42 @@
+﻿<Window x:Class="CairoDesktop.TaskThumbWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:CairoDesktop"
+        Title="TaskThumbWindow"
+        SizeToContent="WidthAndHeight"
+        Focusable="False"
+        ShowActivated="False"
+        ShowInTaskbar="False"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        SourceInitialized="Window_SourceInitialized"
+        Closing="Window_Closing"
+        MouseLeave="Window_MouseLeave"
+        Topmost="True"
+        ToolTip="{Binding Path=Title}"
+        ToolTipService.Placement="Top">
+    <Border Name="bdrThumb"
+            Style="{StaticResource TaskThumbWindowBorderStyle}">
+        <Border Name="bdrThumbInner"
+                Style="{StaticResource TaskThumbWindowInnerBorderStyle}"
+                MouseUp="bdrThumbInner_MouseUp"
+                MouseRightButtonUp="bdrThumbInner_MouseRightButtonUp">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Margin="0,0,0,5">
+                    <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
+                           Width="16"
+                           Height="16" />
+                    <TextBlock Style="{StaticResource TaskThumbTitleStyle}"
+                               Text="{Binding Path=Title}"
+                               Width="164" />
+                </StackPanel>
+                <local:DwmThumbnail x:Name="dwmThumbnail"
+                                    Width="180"
+                                    Height="120" />
+            </StackPanel>
+        </Border>
+    </Border>
+</Window>

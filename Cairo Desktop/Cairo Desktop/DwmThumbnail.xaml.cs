@@ -44,10 +44,13 @@ namespace CairoDesktop
             set
             {
                 if (_sourceWindowHandle != IntPtr.Zero)
-                    NativeMethods.DwmUnregisterThumbnail(_sourceWindowHandle);
+                {
+                    NativeMethods.DwmUnregisterThumbnail(_thumbHandle);
+                    _thumbHandle = IntPtr.Zero;
+                }
 
                 _sourceWindowHandle = value;
-                if (NativeMethods.DwmRegisterThumbnail(Handle, _sourceWindowHandle, out _thumbHandle) == 0)
+                if (_sourceWindowHandle != IntPtr.Zero && NativeMethods.DwmRegisterThumbnail(Handle, _sourceWindowHandle, out _thumbHandle) == 0)
                     Refresh();
             }
         }
@@ -61,16 +64,24 @@ namespace CairoDesktop
                     if (this == null)
                         return new NativeMethods.Rect(0, 0, 0, 0);
 
-                    var generalTransform = this.TransformToAncestor(Window.GetWindow(this));
-                    var leftTopPoint = generalTransform.Transform(new Point(0, 0));
-                    using (var graphics = System.Drawing.Graphics.FromHwnd(IntPtr.Zero))
+                    Window ancestor = Window.GetWindow(this);
+                    if (ancestor != null)
                     {
-                        return new NativeMethods.Rect(
-                          (int)(leftTopPoint.X * graphics.DpiX / 96.0),
-                          (int)(leftTopPoint.Y * graphics.DpiY / 96.0),
-                          (int)(leftTopPoint.X * graphics.DpiX / 96.0) + (int)(ActualWidth * graphics.DpiX / 96.0),
-                          (int)(leftTopPoint.Y * graphics.DpiY / 96.0) + (int)(ActualHeight * graphics.DpiY / 96.0)
-                         );
+                        var generalTransform = this.TransformToAncestor(ancestor);
+                        var leftTopPoint = generalTransform.Transform(new Point(0, 0));
+                        using (var graphics = System.Drawing.Graphics.FromHwnd(IntPtr.Zero))
+                        {
+                            return new NativeMethods.Rect(
+                              (int)(leftTopPoint.X * graphics.DpiX / 96.0),
+                              (int)(leftTopPoint.Y * graphics.DpiY / 96.0),
+                              (int)(leftTopPoint.X * graphics.DpiX / 96.0) + (int)(ActualWidth * graphics.DpiX / 96.0),
+                              (int)(leftTopPoint.Y * graphics.DpiY / 96.0) + (int)(ActualHeight * graphics.DpiY / 96.0)
+                             );
+                        }
+                    }
+                    else
+                    {
+                        return new NativeMethods.Rect(0, 0, 0, 0);
                     }
                 }
                 catch
@@ -115,8 +126,11 @@ namespace CairoDesktop
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            //if (_thumbHandle != IntPtr.Zero)
-            //    NativeMethods.DwmUnregisterThumbnail(_thumbHandle);
+            if (_thumbHandle != IntPtr.Zero)
+            {
+                NativeMethods.DwmUnregisterThumbnail(_thumbHandle);
+                _thumbHandle = IntPtr.Zero;
+            }
         }
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)

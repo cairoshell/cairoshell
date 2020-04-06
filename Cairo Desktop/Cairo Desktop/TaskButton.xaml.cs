@@ -22,14 +22,41 @@ namespace CairoDesktop
             set { SetValue(ListModeProperty, value); }
         }
 
-        private WindowsTasks.ApplicationWindow Window;
+        public WindowsTasks.ApplicationWindow Window;
         private DispatcherTimer dragTimer;
+        private DispatcherTimer thumbTimer;
+        public TaskThumbWindow ThumbWindow;
 
         public TaskButton()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
+        public void SelectWindow()
+        {
+            if (Window != null)
+            {
+                if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift) ||
+                    System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightShift))
+                {
+                    Shell.StartProcess(Window.WinFileName);
+                    return;
+                }
+
+                if (Window.State == WindowsTasks.ApplicationWindow.WindowState.Active)
+                {
+                    Window.Minimize();
+                }
+                else
+                {
+                    Window.BringToFront();
+                }
+            }
+
+            closeThumb(true);
+        }
+
+        #region Events
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             Window = DataContext as WindowsTasks.ApplicationWindow;
@@ -53,6 +80,8 @@ namespace CairoDesktop
                         imgIcon.Height = 16;
                         break;
                 }
+
+                btn.ToolTip = null;
             }
             else
             {
@@ -67,10 +96,9 @@ namespace CairoDesktop
             dragTimer = new DispatcherTimer { Interval = SystemParameters.MouseHoverTime };
             dragTimer.Tick += dragTimer_Tick;
 
-            if (false)
-            {
-                dwmThumbnail.SourceWindowHandle = Window.Handle;
-            }
+            // thumbnails - delayed activation using system setting
+            thumbTimer = new DispatcherTimer { Interval = SystemParameters.MouseHoverTime };
+            thumbTimer.Tick += thumbTimer_Tick;
         }
 
         private void Window_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -86,24 +114,7 @@ namespace CairoDesktop
 
         private void btnClick(object sender, RoutedEventArgs e)
         {
-            if (Window != null)
-            {
-                if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift) ||
-                    System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightShift))
-                {
-                    Shell.StartProcess(Window.WinFileName);
-                    return;
-                }
-
-                if (Window.State == WindowsTasks.ApplicationWindow.WindowState.Active)
-                {
-                    Window.Minimize();
-                }
-                else
-                {
-                    Window.BringToFront();
-                }
-            }
+            SelectWindow();
         }
 
         private void miRestore_Click(object sender, RoutedEventArgs e)
@@ -191,6 +202,11 @@ namespace CairoDesktop
             }
         }
 
+        private void ContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            if (!IsMouseOver) closeThumb(true);
+        }
+
         private void miPin_Click(object sender, RoutedEventArgs e)
         {
             if (Window != null)
@@ -223,6 +239,22 @@ namespace CairoDesktop
             }
         }
 
+        private void btn_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (!ListMode)
+                thumbTimer.Start();
+        }
+
+        private void btn_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (!ListMode)
+            {
+                thumbTimer.Stop();
+                closeThumb();
+            }
+        }
+        #endregion
+
         #region Drag support
         private bool inDrag = false;
 
@@ -252,6 +284,50 @@ namespace CairoDesktop
                 dragTimer.Stop();
                 inDrag = false;
             }
+        }
+        #endregion
+
+        #region Thumbnails
+        private void thumbTimer_Tick(object sender, EventArgs e)
+        {
+            thumbTimer.Stop();
+            if (IsMouseOver) openThumb();
+        }
+
+        private void openThumb()
+        {
+            if (!ListMode && ThumbWindow == null)
+            {
+                ThumbWindow = new TaskThumbWindow(this);
+                ThumbWindow.Show();
+            }
+        }
+
+        private void closeThumb(bool force = false)
+        {
+            thumbTimer.Stop();
+            if (!ListMode && ThumbWindow != null && !btn.ContextMenu.IsOpen && (!ThumbWindow.IsMouseOver || force))
+            {
+                ThumbWindow.Close();
+                ThumbWindow = null;
+            }
+        }
+
+        public Point GetThumbnailAnchor()
+        {
+            Window ancestor = System.Windows.Window.GetWindow(this);
+            if (ancestor != null)
+            {
+                var generalTransform = TransformToAncestor(ancestor);
+                var anchorPoint = generalTransform.Transform(new Point(0, 0));
+
+                anchorPoint.Y += ancestor.Top;
+                anchorPoint.X += ancestor.Left;
+
+                return anchorPoint;
+            }
+
+            return new Point(0, 0);
         }
         #endregion
     }
