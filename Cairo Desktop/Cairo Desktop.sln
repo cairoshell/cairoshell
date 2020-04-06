@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensions.Pla
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensions.ConsoleOutput", "Extensions\CairoDesktop.Extensions.ConsoleOutput\CairoDesktop.Extensions.ConsoleOutput.csproj", "{D515AC48-7613-445E-A192-D79A1CA638FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensions.SystemMenuExtras", "Extensions\CairoDesktop.Extensions.SystemMenuExtras\CairoDesktop.Extensions.SystemMenuExtras.csproj", "{08652123-2F69-4E0A-916B-67B2F6C4DE9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -147,6 +149,14 @@ Global
 		{D515AC48-7613-445E-A192-D79A1CA638FE}.Release|x64.Build.0 = Release|x64
 		{D515AC48-7613-445E-A192-D79A1CA638FE}.Release|x86.ActiveCfg = Release|Any CPU
 		{D515AC48-7613-445E-A192-D79A1CA638FE}.Release|x86.Build.0 = Release|Any CPU
+		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Debug|x64.ActiveCfg = Debug|x64
+		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Debug|x64.Build.0 = Debug|x64
+		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Debug|x86.Build.0 = Debug|Any CPU
+		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Release|x64.ActiveCfg = Release|x64
+		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Release|x64.Build.0 = Release|x64
+		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Release|x86.ActiveCfg = Release|Any CPU
+		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -154,6 +164,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D} = {D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}
 		{D515AC48-7613-445E-A192-D79A1CA638FE} = {D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}
+		{08652123-2F69-4E0A-916B-67B2F6C4DE9D} = {D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7566EAA4-435C-4795-BB55-54BA364D0419}
