@@ -69,6 +69,7 @@ namespace CairoDesktop
 
         private void bdrThumbInner_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
+            taskButton.ConfigureContextMenu();
             taskButton.btn.ContextMenu.IsOpen = true;
         }
     }

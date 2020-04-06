@@ -56,6 +56,30 @@ namespace CairoDesktop
             closeThumb(true);
         }
 
+        public void ConfigureContextMenu()
+        {
+            if (Window != null)
+            {
+                Visibility vis = Visibility.Collapsed;
+                NativeMethods.WindowShowStyle wss = Window.ShowStyle;
+                int ws = Window.WindowStyles;
+
+                // show pin option if this app is not yet in quick launch
+                if (Window.QuickLaunchAppInfo == null)
+                    vis = Visibility.Visible;
+
+                miPin.Visibility = vis;
+                miPinSeparator.Visibility = vis;
+
+                // disable window operations depending on current window state. originally tried implementing via bindings but found there is no notification we get regarding maximized state
+                miMaximize.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowMaximized && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0);
+                miMinimize.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowMinimized && (ws & (int)NativeMethods.WindowStyles.WS_MINIMIZEBOX) != 0);
+                miRestore.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowNormal);
+                miMove.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal;
+                miSize.IsEnabled = (wss == NativeMethods.WindowShowStyle.ShowNormal && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0);
+            }
+        }
+
         #region Events
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -180,26 +204,7 @@ namespace CairoDesktop
         /// <param name="e"></param>
         private void ContextMenu_Opening(object sender, ContextMenuEventArgs e)
         {
-            if (Window != null)
-            {
-                Visibility vis = Visibility.Collapsed;
-                NativeMethods.WindowShowStyle wss = Window.ShowStyle;
-                int ws = Window.WindowStyles;
-
-                // show pin option if this app is not yet in quick launch
-                if (Window.QuickLaunchAppInfo == null)
-                    vis = Visibility.Visible;
-
-                miPin.Visibility = vis;
-                miPinSeparator.Visibility = vis;
-
-                // disable window operations depending on current window state. originally tried implementing via bindings but found there is no notification we get regarding maximized state
-                miMaximize.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowMaximized && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0);
-                miMinimize.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowMinimized && (ws & (int)NativeMethods.WindowStyles.WS_MINIMIZEBOX) != 0);
-                miRestore.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowNormal);
-                miMove.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal;
-                miSize.IsEnabled = (wss == NativeMethods.WindowShowStyle.ShowNormal && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0);
-            }
+            ConfigureContextMenu();
         }
 
         private void ContextMenu_Closed(object sender, RoutedEventArgs e)
