@@ -573,19 +573,16 @@ namespace CairoDesktop
         private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarIconSize = 0;
-            showRestartButton();
         }
 
         private void radTaskbarSize1_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarIconSize = 1;
-            showRestartButton();
         }
 
         private void radTaskbarSize10_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarIconSize = 10;
-            showRestartButton();
         }
 
         private void radTaskbarMiddleClick0_Click(object sender, RoutedEventArgs e)
@@ -661,7 +658,7 @@ namespace CairoDesktop
         private void chkRunAtLogOn_Click(object sender, RoutedEventArgs e)
         {
             RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-            var chkBox = (System.Windows.Controls.CheckBox)sender;
+            var chkBox = (CheckBox)sender;
 
             if (chkBox.IsChecked.Equals(false))
             {

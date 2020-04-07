@@ -1,5 +1,7 @@
-﻿using CairoDesktop.Interop;
+﻿using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -10,6 +12,8 @@ namespace CairoDesktop
     {
         public static readonly DependencyProperty TextWidthProperty = DependencyProperty.Register("TextWidth", typeof(double), typeof(TaskButton), new PropertyMetadata(new double()));
         public static readonly DependencyProperty ListModeProperty = DependencyProperty.Register("ListMode", typeof(bool), typeof(TaskButton), new PropertyMetadata(new bool()));
+        public static DependencyProperty ParentTaskbarProperty = DependencyProperty.Register("ParentTaskbar", typeof(Taskbar), typeof(TaskButton));
+
         public double TextWidth
         {
             get { return (double)GetValue(TextWidthProperty); }
@@ -22,6 +26,12 @@ namespace CairoDesktop
             set { SetValue(ListModeProperty, value); }
         }
 
+        public Taskbar ParentTaskbar
+        {
+            get { return (Taskbar)GetValue(ParentTaskbarProperty); }
+            set { SetValue(ParentTaskbarProperty, value); }
+        }
+
         public WindowsTasks.ApplicationWindow Window;
         private DispatcherTimer dragTimer;
         private DispatcherTimer thumbTimer;
@@ -30,6 +40,9 @@ namespace CairoDesktop
         public TaskButton()
         {
             InitializeComponent();
+
+            // register for settings changes
+            Settings.Instance.PropertyChanged += Instance_PropertyChanged;
         }
 
         public void SelectWindow()
@@ -80,6 +93,11 @@ namespace CairoDesktop
             }
         }
 
+        public void SetParentAutoHide(bool enabled)
+        {
+            if (!ListMode && ParentTaskbar != null) ParentTaskbar.CanAutoHide = enabled;
+        }
+
         #region Events
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -89,21 +107,7 @@ namespace CairoDesktop
 
             if (!ListMode)
             {
-                switch (Configuration.Settings.Instance.TaskbarIconSize)
-                {
-                    case 0:
-                        imgIcon.Width = 32;
-                        imgIcon.Height = 32;
-                        break;
-                    case 10:
-                        imgIcon.Width = 24;
-                        imgIcon.Height = 24;
-                        break;
-                    default:
-                        imgIcon.Width = 16;
-                        imgIcon.Height = 16;
-                        break;
-                }
+                setIconSize();
 
                 btn.ToolTip = null;
             }
@@ -125,7 +129,20 @@ namespace CairoDesktop
             thumbTimer.Tick += thumbTimer_Tick;
         }
 
-        private void Window_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+            {
+                switch (e.PropertyName)
+                {
+                    case "TaskbarIconSize":
+                        setIconSize();
+                        break;
+                }
+            }
+        }
+
+        private void Window_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -133,6 +150,28 @@ namespace CairoDesktop
                 case "ProgressState":
                     pbProgress.IsIndeterminate = Window.ProgressState == NativeMethods.TBPFLAG.TBPF_INDETERMINATE;
                     break;
+            }
+        }
+
+        private void setIconSize()
+        {
+            if (!ListMode)
+            {
+                switch (Settings.Instance.TaskbarIconSize)
+                {
+                    case 0:
+                        imgIcon.Width = 32;
+                        imgIcon.Height = 32;
+                        break;
+                    case 10:
+                        imgIcon.Width = 24;
+                        imgIcon.Height = 24;
+                        break;
+                    default:
+                        imgIcon.Width = 16;
+                        imgIcon.Height = 16;
+                        break;
+                }
             }
         }
 
@@ -210,6 +249,7 @@ namespace CairoDesktop
         private void ContextMenu_Closed(object sender, RoutedEventArgs e)
         {
             if (!IsMouseOver) closeThumb(true);
+            SetParentAutoHide(true);
         }
 
         private void miPin_Click(object sender, RoutedEventArgs e)
@@ -231,7 +271,7 @@ namespace CairoDesktop
             {
                 if (Window != null)
                 {
-                    switch (Configuration.Settings.Instance.TaskbarMiddleClick)
+                    switch (Settings.Instance.TaskbarMiddleClick)
                     {
                         case 1:
                             Window.Close();
@@ -325,9 +365,11 @@ namespace CairoDesktop
             {
                 var generalTransform = TransformToAncestor(ancestor);
                 var anchorPoint = generalTransform.Transform(new Point(0, 0));
+                var dpiScale = 1.0;
+                if (ParentTaskbar != null) dpiScale = ParentTaskbar.dpiScale;
 
-                anchorPoint.Y += ancestor.Top;
-                anchorPoint.X += ancestor.Left;
+                anchorPoint.Y = (anchorPoint.Y + ancestor.Top) * dpiScale;
+                anchorPoint.X = (anchorPoint.X + ancestor.Left) * dpiScale;
 
                 return anchorPoint;
             }

@@ -12,6 +12,7 @@ namespace CairoDesktop
     public partial class DwmThumbnail : UserControl
     {
         public byte ThumbnailOpacity = 255;
+        public double DpiScale = 1.0;
 
         public DwmThumbnail()
         {
@@ -69,17 +70,14 @@ namespace CairoDesktop
                     Window ancestor = Window.GetWindow(this);
                     if (ancestor != null)
                     {
-                        var generalTransform = this.TransformToAncestor(ancestor);
+                        var generalTransform = TransformToAncestor(ancestor);
                         var leftTopPoint = generalTransform.Transform(new Point(0, 0));
-                        using (var graphics = System.Drawing.Graphics.FromHwnd(IntPtr.Zero))
-                        {
-                            return new NativeMethods.Rect(
-                              (int)(leftTopPoint.X * graphics.DpiX / 96.0),
-                              (int)(leftTopPoint.Y * graphics.DpiY / 96.0),
-                              (int)(leftTopPoint.X * graphics.DpiX / 96.0) + (int)(ActualWidth * graphics.DpiX / 96.0),
-                              (int)(leftTopPoint.Y * graphics.DpiY / 96.0) + (int)(ActualHeight * graphics.DpiY / 96.0)
+                        return new NativeMethods.Rect(
+                              (int)(leftTopPoint.X * DpiScale),
+                              (int)(leftTopPoint.Y * DpiScale),
+                              (int)(leftTopPoint.X * DpiScale) + (int)(ActualWidth * DpiScale),
+                              (int)(leftTopPoint.Y * DpiScale) + (int)(ActualHeight * DpiScale)
                              );
-                        }
                     }
                     else
                     {

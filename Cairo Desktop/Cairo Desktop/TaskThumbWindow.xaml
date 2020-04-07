@@ -16,11 +16,13 @@
         MouseLeave="Window_MouseLeave"
         Topmost="True"
         ToolTip="{Binding Path=Title}"
-        ToolTipService.Placement="Top">
+        ToolTipService.Placement="Top"
+        UseLayoutRounding="True">
     <Border Name="bdrThumb"
             Style="{StaticResource TaskThumbWindowBorderStyle}">
         <Border.RenderTransform>
-            <TranslateTransform X="0"
+            <TranslateTransform x:Name="bdrTranslate"
+                                X="0"
                                 Y="20" />
         </Border.RenderTransform>
         <Border.Triggers>

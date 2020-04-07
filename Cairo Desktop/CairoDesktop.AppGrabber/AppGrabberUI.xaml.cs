@@ -93,9 +93,9 @@ namespace CairoDesktop.AppGrabber
                 Filter = filter
             })
             {
-                if (dlg.SafeShowDialog() == System.Windows.Forms.DialogResult.OK && Interop.Shell.Exists(dlg.FileName))
+                if (dlg.SafeShowDialog() == System.Windows.Forms.DialogResult.OK && Shell.Exists(dlg.FileName))
                 {
-                    ApplicationInfo customApp = AppGrabber.PathToApp(dlg.FileName, true);
+                    ApplicationInfo customApp = AppGrabber.PathToApp(dlg.FileName, true, true);
                     if (!ReferenceEquals(customApp, null))
                     {
                         if (!programsMenuAppsCollection.Contains(customApp) && !(InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Contains(customApp))

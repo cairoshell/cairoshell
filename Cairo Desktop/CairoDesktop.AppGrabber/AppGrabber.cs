@@ -173,7 +173,7 @@ namespace CairoDesktop.AppGrabber
 
                 foreach (string file in files)
                 {
-                    ApplicationInfo app = PathToApp(file, false);
+                    ApplicationInfo app = PathToApp(file, false, false);
                     if (!ReferenceEquals(app, null))
                         rval.Add(app);
                 }
@@ -183,7 +183,7 @@ namespace CairoDesktop.AppGrabber
             return rval;
         }
 
-        public static ApplicationInfo PathToApp(string file, bool allowNonApps)
+        public static ApplicationInfo PathToApp(string file, bool allowNonApps, bool allowExcludedNames)
         {
             ApplicationInfo ai = new ApplicationInfo();
             string fileExt = Path.GetExtension(file);
@@ -218,12 +218,15 @@ namespace CairoDesktop.AppGrabber
                         }
 
                         // remove things that aren't apps (help, uninstallers, etc)
-                        foreach (string word in excludedNames)
+                        if (!allowExcludedNames)
                         {
-                            if (ai.Name.ToLower().Contains(word))
+                            foreach (string word in excludedNames)
                             {
-                                CairoLogger.Instance.Debug("Excluded item: " + file + ": " + target);
-                                return null;
+                                if (ai.Name.ToLower().Contains(word))
+                                {
+                                    CairoLogger.Instance.Debug("Excluded item: " + file + ": " + target);
+                                    return null;
+                                }
                             }
                         }
                     }
@@ -407,7 +410,7 @@ namespace CairoDesktop.AppGrabber
             {
                 if (Shell.Exists(fileName))
                 {
-                    ApplicationInfo customApp = PathToApp(fileName, false);
+                    ApplicationInfo customApp = PathToApp(fileName, false, true);
                     if (!ReferenceEquals(customApp, null))
                     {
                         Category category;

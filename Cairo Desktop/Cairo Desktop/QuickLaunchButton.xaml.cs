@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CairoDesktop.AppGrabber;
+using CairoDesktop.Configuration;
 
 namespace CairoDesktop
 {
@@ -10,11 +12,39 @@ namespace CairoDesktop
 	{
         static AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
-		public QuickLaunchButton()
-		{
-			this.InitializeComponent();
+        public static DependencyProperty ParentTaskbarProperty = DependencyProperty.Register("ParentTaskbar", typeof(Taskbar), typeof(QuickLaunchButton));
+        public Taskbar ParentTaskbar
+        {
+            get { return (Taskbar)GetValue(ParentTaskbarProperty); }
+            set { SetValue(ParentTaskbarProperty, value); }
+        }
 
-            switch (Configuration.Settings.Instance.TaskbarIconSize)
+        public QuickLaunchButton()
+		{
+			InitializeComponent();
+
+            setIconSize();
+
+            // register for settings changes
+            Settings.Instance.PropertyChanged += Instance_PropertyChanged;
+        }
+
+        private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+            {
+                switch (e.PropertyName)
+                {
+                    case "TaskbarIconSize":
+                        setIconSize();
+                        break;
+                }
+            }
+        }
+
+        private void setIconSize()
+        {
+            switch (Settings.Instance.TaskbarIconSize)
             {
                 case 0:
                     imgIcon.Width = 32;
@@ -112,6 +142,8 @@ namespace CairoDesktop
                 appGrabber.Save();
             }
 
+            setParentAutoHide(true);
+
             e.Handled = true;
         }
 
@@ -139,6 +171,8 @@ namespace CairoDesktop
                     try
                     {
                         DragDrop.DoDragDrop(button, selectedApp, DragDropEffects.Move);
+
+                        setParentAutoHide(true);
                     }
                     catch { }
 
@@ -158,5 +192,15 @@ namespace CairoDesktop
         }
 
         #endregion
+
+        private void ContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            setParentAutoHide(true);
+        }
+
+        private void setParentAutoHide(bool enabled)
+        {
+            if (ParentTaskbar != null) ParentTaskbar.CanAutoHide = enabled;
+        }
     }
 }

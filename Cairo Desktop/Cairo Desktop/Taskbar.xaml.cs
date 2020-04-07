@@ -3,6 +3,7 @@ using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
 using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 
@@ -33,6 +34,13 @@ namespace CairoDesktop
             get { return (double)GetValue(ButtonTextWidthProperty); }
             set { SetValue(ButtonTextWidthProperty, value); }
         }
+
+        public static DependencyProperty CanAutoHideProperty = DependencyProperty.Register("CanAutoHide", typeof(bool), typeof(Taskbar), new PropertyMetadata(new bool()));
+        public bool CanAutoHide
+        {
+            get { return (bool)GetValue(CanAutoHideProperty); }
+            set { SetValue(CanAutoHideProperty, value); }
+        }
         #endregion
 
         public Taskbar() : this(System.Windows.Forms.Screen.PrimaryScreen)
@@ -58,6 +66,7 @@ namespace CairoDesktop
             {
                 enableAppBar = false;
             }
+            CanAutoHide = true;
 
             // setup taskbar item source
             TasksList.ItemsSource = WindowsTasks.WindowsTasksService.Instance.GroupedWindows;
@@ -79,6 +88,9 @@ namespace CairoDesktop
                 btnDesktopOverlay.DataContext = null;
                 bdrBackground.DataContext = null;
             }
+
+            // register for settings changes
+            Settings.Instance.PropertyChanged += Instance_PropertyChanged;
         }
 
         private void setupTaskbarAppearance()
@@ -88,21 +100,7 @@ namespace CairoDesktop
             bdrTaskbar.MaxWidth = screenWidth - 36;
             Width = screenWidth;
 
-            switch (Settings.Instance.TaskbarIconSize)
-            {
-                case 0:
-                    addToSize = 16;
-                    break;
-                case 10:
-                    addToSize = 8;
-                    break;
-                default:
-                    addToSize = 0;
-                    break;
-            }
-
-            Height = 29 + addToSize;
-            desiredHeight = Height;
+            setTaskbarSize();
             Top = getDesiredTopPosition();
 
             // set taskbar edge based on preference
@@ -130,10 +128,56 @@ namespace CairoDesktop
             else
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);
 
+            setFullWidthTaskbar();
+        }
+
+        private void setTaskbarSize()
+        {
+            // because these don't make sense:
+            // 1 = small
+            // 0 = large
+            // 10 = medium
+            switch (Settings.Instance.TaskbarIconSize)
+            {
+                case 0:
+                    addToSize = 16;
+                    break;
+                case 10:
+                    addToSize = 8;
+                    break;
+                default:
+                    addToSize = 0;
+                    break;
+            }
+
+            Height = 29 + addToSize;
+            desiredHeight = Height;
+        }
+
+        private void setFullWidthTaskbar()
+        {
+            if (Settings.Instance.FullWidthTaskBar)
+                bdrTaskbar.Width = getDesiredWidth();
+            else
+                bdrTaskbar.Width = double.NaN;
+
             if (Settings.Instance.FullWidthTaskBar)
             {
                 bdrTaskbarLeft.CornerRadius = new CornerRadius(0);
                 bdrTaskbarEnd.CornerRadius = new CornerRadius(0);
+            }
+            else
+            {
+                if (Settings.Instance.TaskbarPosition == 1)
+                {
+                    bdrTaskbarLeft.CornerRadius = new CornerRadius(0, 0, 0, 8);
+                    bdrTaskbarEnd.CornerRadius = new CornerRadius(0, 0, 8, 0);
+                }
+                else
+                {
+                    bdrTaskbarLeft.CornerRadius = new CornerRadius(8, 0, 0, 0);
+                    bdrTaskbarEnd.CornerRadius = new CornerRadius(0, 8, 0, 0);
+                }
             }
         }
 
@@ -171,6 +215,23 @@ namespace CairoDesktop
             NativeMethods.SetWindowLong(Handle, NativeMethods.GWL_EXSTYLE,
                 NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
         }
+
+        private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+            {
+                switch (e.PropertyName)
+                {
+                    case "TaskbarIconSize":
+                        setTaskbarSize();
+                        setScreenPosition();
+                        break;
+                    case "FullWidthTaskBar":
+                        setFullWidthTaskbar();
+                        break;
+                }
+            }
+        }
         #endregion
 
         #region Position and appearance
@@ -197,8 +258,7 @@ namespace CairoDesktop
 
             Left = Screen.Bounds.Left / dpiScale;
 
-            if (Settings.Instance.FullWidthTaskBar)
-                bdrTaskbar.Width = getDesiredWidth(); // account for border
+            setFullWidthTaskbar();
 
             // set maxwidth always
             bdrTaskbar.MaxWidth = getDesiredWidth();
@@ -252,6 +312,11 @@ namespace CairoDesktop
             // set maxwidth always
             bdrTaskbar.MaxWidth = getDesiredWidth();
         }
+
+        private void CairoTaskbarTaskList_Closed(object sender, EventArgs e)
+        {
+            CanAutoHide = true;
+        }
         #endregion
 
         #region Window procedure
@@ -289,11 +354,15 @@ namespace CairoDesktop
         private void btnTaskList_Click(object sender, RoutedEventArgs e)
         {
             takeFocus();
+
+            CanAutoHide = false;
         }
 
         private void TaskButton_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             takeFocus();
+
+            CanAutoHide = false;
         }
         #endregion
 
@@ -306,30 +375,45 @@ namespace CairoDesktop
                 appGrabber.AddByPath(fileNames, AppGrabber.AppCategoryType.QuickLaunch);
             }
 
+            CanAutoHide = true;
+
             e.Handled = true;
         }
 
         private void quickLaunchList_DragEnter(object sender, DragEventArgs e)
         {
-            String[] formats = e.Data.GetFormats(true);
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effects = DragDropEffects.Copy;
             }
 
+            CanAutoHide = false;
+
             e.Handled = true;
         }
         #endregion
 
+        #region Taskbar context menu items
+        private void grdTaskbar_ContextMenuOpening(object sender, System.Windows.Controls.ContextMenuEventArgs e)
+        {
+            takeFocus();
+            CanAutoHide = false;
+        }
 
+        private void ContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            CanAutoHide = true;
+        }
 
         private void OpenRunWindow(object sender, RoutedEventArgs e)
         {
             Shell.ShowRunDialog();
         }
+        
         private void OpenTaskManager(object sender, RoutedEventArgs e)
         {
             Shell.StartTaskManager();
         }
+        #endregion
     }
 }

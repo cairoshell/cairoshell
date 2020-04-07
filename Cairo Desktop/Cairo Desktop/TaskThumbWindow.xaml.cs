@@ -21,6 +21,8 @@ namespace CairoDesktop
 
             taskButton = parent;
             DataContext = parent.Window;
+
+            taskButton.SetParentAutoHide(false);
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)
@@ -35,21 +37,24 @@ namespace CairoDesktop
             if (Configuration.Settings.Instance.TaskbarPosition == 1)
             {
                 // taskbar on top
-                Top = taskButtonPoint.Y + taskButton.ActualHeight;
+                Top = taskButtonPoint.Y + (taskButton.ActualHeight * taskButton.ParentTaskbar.dpiScale);
 
                 bdrThumb.Style = Application.Current.FindResource("TaskThumbWindowBorderTopStyle") as Style;
                 bdrThumbInner.Style = Application.Current.FindResource("TaskThumbWindowInnerBorderTopStyle") as Style;
+
+                bdrTranslate.Y *= -1;
 
                 ToolTipService.SetPlacement(this, System.Windows.Controls.Primitives.PlacementMode.Bottom);
             }
             else
             {
-                Top = taskButtonPoint.Y - ActualHeight;
+                Top = taskButtonPoint.Y - (ActualHeight * taskButton.ParentTaskbar.dpiScale);
             }
 
-            Left = taskButtonPoint.X - ((ActualWidth - taskButton.ActualWidth) / 2);
+            Left = taskButtonPoint.X - (((ActualWidth - taskButton.ActualWidth) / 2) * taskButton.ParentTaskbar.dpiScale);
 
             // set up thumbnail
+            dwmThumbnail.DpiScale = taskButton.ParentTaskbar.dpiScale;
             dwmThumbnail.ThumbnailOpacity = 0;
             dwmThumbnail.SourceWindowHandle = taskButton.Window.Handle;
 
@@ -80,6 +85,7 @@ namespace CairoDesktop
             isClosing = true;
             dwmThumbnail.SourceWindowHandle = IntPtr.Zero;
             taskButton.ThumbWindow = null;
+            taskButton.SetParentAutoHide(true);
         }
 
         private void Window_MouseLeave(object sender, MouseEventArgs e)
