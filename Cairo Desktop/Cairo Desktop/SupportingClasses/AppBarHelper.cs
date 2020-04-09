@@ -21,7 +21,7 @@ namespace CairoDesktop.SupportingClasses
 
         private static object appBarLock = new object();
 
-        public static int RegisterBar(AppBarWindow abWindow, Screen screen, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
+        public static int RegisterBar(AppBarWindow abWindow, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
         {
             lock (appBarLock)
             {
@@ -41,7 +41,7 @@ namespace CairoDesktop.SupportingClasses
                     appBars.Add(handle);
                     CairoLogger.Instance.Debug("AppBarHelper: Created AppBar for handle " + handle.ToString());
 
-                    ABSetPos(abWindow, screen, width, height, edge, true);
+                    ABSetPos(abWindow, width, height, edge, true);
                 }
                 else
                 {
@@ -165,7 +165,7 @@ namespace CairoDesktop.SupportingClasses
             interopDone();
         }
 
-        public static void ABSetPos(AppBarWindow abWindow, Screen screen, double width, double height, ABEdge edge, bool isCreate = false)
+        public static void ABSetPos(AppBarWindow abWindow, double width, double height, ABEdge edge, bool isCreate = false)
         {
             lock (appBarLock)
             {
@@ -182,23 +182,12 @@ namespace CairoDesktop.SupportingClasses
                 int right = WindowManager.PrimaryMonitorDeviceSize.Width;
                 int bottom = WindowManager.PrimaryMonitorDeviceSize.Height;
 
-                /*PresentationSource ps = PresentationSource.FromVisual(abWindow);
-
-                if (ps == null)
+                if (abWindow.Screen != null)
                 {
-                    // if we are racing with screen setting changes, this will be null
-                    CairoLogger.Instance.Debug("AppBarHelper: Aborting ABSetPos due to window destruction");
-                    return;
-                }
-
-                double dpiScale = ps.CompositionTarget.TransformToDevice.M11;*/
-
-                if (screen != null)
-                {
-                    top = screen.Bounds.Y;
-                    left = screen.Bounds.X;
-                    right = screen.Bounds.Right;
-                    bottom = screen.Bounds.Bottom;
+                    top = abWindow.Screen.Bounds.Y;
+                    left = abWindow.Screen.Bounds.X;
+                    right = abWindow.Screen.Bounds.Right;
+                    bottom = abWindow.Screen.Bounds.Bottom;
                 }
 
                 if (abd.uEdge == (int)ABEdge.ABE_LEFT || abd.uEdge == (int)ABEdge.ABE_RIGHT)
@@ -225,7 +214,7 @@ namespace CairoDesktop.SupportingClasses
                     {
                         if (!abWindow.requiresScreenEdge)
                         {
-                            abd.rc.Top = top + Convert.ToInt32(GetAppBarEdgeWindowsHeight((ABEdge)abd.uEdge, screen));
+                            abd.rc.Top = top + Convert.ToInt32(GetAppBarEdgeWindowsHeight((ABEdge)abd.uEdge, abWindow.Screen));
                         }
                         else
                             abd.rc.Top = top;
@@ -235,7 +224,7 @@ namespace CairoDesktop.SupportingClasses
                     {
                         if (!abWindow.requiresScreenEdge)
                         {
-                            abd.rc.Bottom = bottom - Convert.ToInt32(GetAppBarEdgeWindowsHeight((ABEdge)abd.uEdge, screen));
+                            abd.rc.Bottom = bottom - Convert.ToInt32(GetAppBarEdgeWindowsHeight((ABEdge)abd.uEdge, abWindow.Screen));
                         }
                         else
                             abd.rc.Bottom = bottom;
@@ -281,7 +270,7 @@ namespace CairoDesktop.SupportingClasses
                 abWindow.afterAppBarPos(isSameCoords, abd.rc);
 
                 if (abd.rc.Bottom - abd.rc.Top < sHeight)
-                    ABSetPos(abWindow, screen, width, height, edge);
+                    ABSetPos(abWindow, width, height, edge);
             }
         }
 

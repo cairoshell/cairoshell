@@ -78,7 +78,7 @@ namespace CairoDesktop.SupportingClasses
             }
 
             // register appbar
-            if (!Shell.IsCairoRunningAsShell && enableAppBar) appbarMessageId = AppBarHelper.RegisterBar(this, Screen, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
+            if (!Shell.IsCairoRunningAsShell && enableAppBar) appbarMessageId = AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
 
             // hide from alt-tab etc
             Shell.HideWindowFromTasks(Handle);
@@ -99,7 +99,7 @@ namespace CairoDesktop.SupportingClasses
             {
                 // unregister appbar
                 if (AppBarHelper.appBars.Contains(Handle))
-                    AppBarHelper.RegisterBar(this, Screen, ActualWidth * dpiScale, desiredHeight * dpiScale);
+                    AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale);
 
                 // unregister full-screen notifications
                 FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
@@ -111,7 +111,7 @@ namespace CairoDesktop.SupportingClasses
             {
                 // unregister appbar
                 if (AppBarHelper.appBars.Contains(Handle))
-                    AppBarHelper.RegisterBar(this, Screen, ActualWidth * dpiScale, desiredHeight * dpiScale);
+                    AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale);
 
                 // unregister full-screen notifications
                 FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
@@ -154,7 +154,7 @@ namespace CairoDesktop.SupportingClasses
                 switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
                 {
                     case NativeMethods.AppBarNotifications.PosChanged:
-                        AppBarHelper.ABSetPos(this, Screen, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
+                        AppBarHelper.ABSetPos(this, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
                         break;
 
                     case NativeMethods.AppBarNotifications.WindowArrange:
@@ -238,7 +238,7 @@ namespace CairoDesktop.SupportingClasses
         {
             // set our position if running as shell, otherwise let AppBar do the work
             if (Shell.IsCairoRunningAsShell || !enableAppBar) delaySetPosition();
-            else if (enableAppBar) AppBarHelper.ABSetPos(this, Screen, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
+            else if (enableAppBar) AppBarHelper.ABSetPos(this, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
         }
 
         internal void setAppBarPosition(NativeMethods.Rect rect)
