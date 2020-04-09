@@ -168,10 +168,14 @@ namespace CairoDesktop.SupportingClasses
                         }
 
                         break;
+
+                    case NativeMethods.AppBarNotifications.FullScreenApp:
+                        AppBarHelper.SetWinTaskbarVisibility((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
+                        break;
                 }
                 handled = true;
             }
-            else if (msg == NativeMethods.WM_ACTIVATE && enableAppBar && !Shell.IsCairoRunningAsShell)
+            else if (msg == NativeMethods.WM_ACTIVATE && enableAppBar && !Shell.IsCairoRunningAsShell && !Startup.IsShuttingDown)
             {
                 AppBarHelper.AppBarActivate(hwnd);
             }
@@ -189,7 +193,7 @@ namespace CairoDesktop.SupportingClasses
                     wndPos.UpdateMessage(lParam);
                 }
             }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && enableAppBar && !Shell.IsCairoRunningAsShell)
+            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && enableAppBar && !Shell.IsCairoRunningAsShell && !Startup.IsShuttingDown)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
             }
@@ -288,7 +292,7 @@ namespace CairoDesktop.SupportingClasses
             if (Settings.Instance.EnableTaskbar && !Startup.IsShuttingDown)
             {
                 AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
-                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
+                AppBarHelper.SetWinTaskbarVisibility((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
             }
 
             if (!isSameCoords)

@@ -191,7 +191,7 @@ namespace CairoDesktop
 
                 // show the windows taskbar again
                 AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.OnTop);
-                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_SHOWWINDOW);
+                AppBarHelper.SetWinTaskbarVisibility((int)NativeMethods.SetWindowPosFlags.SWP_SHOWWINDOW);
             }
             else if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
             {

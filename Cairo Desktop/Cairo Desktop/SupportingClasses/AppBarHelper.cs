@@ -20,6 +20,8 @@ namespace CairoDesktop.SupportingClasses
         }
 
         private static object appBarLock = new object();
+        public static List<IntPtr> appBars = new List<IntPtr>();
+        private static int uCallBack = 0;
 
         public static int RegisterBar(AppBarWindow abWindow, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
         {
@@ -58,10 +60,6 @@ namespace CairoDesktop.SupportingClasses
             return uCallBack;
         }
 
-        public static List<IntPtr> appBars = new List<IntPtr>();
-
-        private static int uCallBack = 0;
-
         private static void prepareForInterop()
         {
             // get shell window back so we can do appbar stuff
@@ -76,10 +74,51 @@ namespace CairoDesktop.SupportingClasses
                 NotificationArea.Instance.MakeActive();
         }
 
-        public static void SetWinTaskbarPos(int swp)
+        public static void SetWinTaskbarVisibility(int swp)
+        {
+            IntPtr taskbarHwnd = findTaskbarHwnd();
+            IntPtr startButtonHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
+
+            if (taskbarHwnd != IntPtr.Zero && (swp == (int)SetWindowPosFlags.SWP_HIDEWINDOW) == IsWindowVisible(taskbarHwnd))
+            {
+                SetWindowPos(taskbarHwnd, (IntPtr)HWND_BOTTOMMOST, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+                if (startButtonHwnd != IntPtr.Zero) SetWindowPos(startButtonHwnd, (IntPtr)HWND_BOTTOMMOST, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+            }
+
+            // adjust secondary taskbars for multi-mon
+            SetSecondaryTaskbarVisibility(swp);
+        }
+
+        private static void SetSecondaryTaskbarVisibility(int swp)
+        {
+            IntPtr secTaskbarHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Shell_SecondaryTrayWnd", null);
+
+            // if we have 3+ monitors there may be multiple secondary taskbars
+            while (secTaskbarHwnd != IntPtr.Zero)
+            {
+                if ((swp == (int)SetWindowPosFlags.SWP_HIDEWINDOW) == IsWindowVisible(secTaskbarHwnd))
+                {
+                    SetWindowPos(secTaskbarHwnd, (IntPtr)HWND_BOTTOMMOST, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+                }
+                secTaskbarHwnd = FindWindowEx(IntPtr.Zero, secTaskbarHwnd, "Shell_SecondaryTrayWnd", null);
+            }
+        }
+
+        public static void SetWinTaskbarState(WinTaskbarState state)
+        {
+            APPBARDATA abd = new APPBARDATA();
+            abd.cbSize = (int)Marshal.SizeOf(typeof(APPBARDATA));
+            abd.hWnd = findTaskbarHwnd();
+            abd.lParam = (IntPtr)state;
+
+            prepareForInterop();
+            SHAppBarMessage((int)ABMsg.ABM_SETSTATE, ref abd);
+            interopDone();
+        }
+
+        private static IntPtr findTaskbarHwnd()
         {
             IntPtr taskbarHwnd = FindWindow("Shell_TrayWnd", "");
-            IntPtr taskbarInsertAfter = (IntPtr)1;
 
             if (NotificationArea.Instance.Handle != null && NotificationArea.Instance.Handle != IntPtr.Zero)
             {
@@ -89,53 +128,7 @@ namespace CairoDesktop.SupportingClasses
                 }
             }
 
-            IntPtr startButtonHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
-            SetWindowPos(taskbarHwnd, taskbarInsertAfter, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
-            SetWindowPos(startButtonHwnd, taskbarInsertAfter, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
-            
-            // adjust secondary taskbars for multi-mon
-            if (swp == (int)SetWindowPosFlags.SWP_HIDEWINDOW)
-                SetSecondaryTaskbarVisibility(WindowShowStyle.Hide);
-            else
-                SetSecondaryTaskbarVisibility(WindowShowStyle.ShowNoActivate);
-        }
-
-        public static void SetWinTaskbarState(WinTaskbarState state)
-        {
-            APPBARDATA abd = new APPBARDATA();
-            abd.cbSize = (int)Marshal.SizeOf(typeof(APPBARDATA));
-            abd.hWnd = FindWindow("Shell_TrayWnd");
-
-            if (NotificationArea.Instance.Handle != null && NotificationArea.Instance.Handle != IntPtr.Zero)
-            {
-                while (abd.hWnd == NotificationArea.Instance.Handle)
-                {
-                    abd.hWnd = FindWindowEx(IntPtr.Zero, abd.hWnd, "Shell_TrayWnd", "");
-                }
-            }
-
-            abd.lParam = (IntPtr)state;
-            prepareForInterop();
-            SHAppBarMessage((int)ABMsg.ABM_SETSTATE, ref abd);
-            interopDone();
-        }
-
-        private static void SetSecondaryTaskbarVisibility(WindowShowStyle shw)
-        {
-            bool complete = false;
-            IntPtr secTaskbarHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Shell_SecondaryTrayWnd", null);
-
-            // if we have 3+ monitors there may be multiple secondary taskbars
-            while (!complete)
-            {
-                if (secTaskbarHwnd != IntPtr.Zero)
-                {
-                    ShowWindowAsync(secTaskbarHwnd, shw);
-                    secTaskbarHwnd = FindWindowEx(IntPtr.Zero, secTaskbarHwnd, "Shell_SecondaryTrayWnd", null);
-                }
-                else
-                    complete = true;
-            }
+            return taskbarHwnd;
         }
 
         public static void AppBarActivate(IntPtr hwnd)
@@ -151,7 +144,7 @@ namespace CairoDesktop.SupportingClasses
             // apparently the taskbars like to pop up when app bars change
             if (Settings.Instance.EnableTaskbar)
             {
-                SetSecondaryTaskbarVisibility(WindowShowStyle.Hide);
+                SetSecondaryTaskbarVisibility((int)SetWindowPosFlags.SWP_HIDEWINDOW);
             }
         }
 
@@ -163,6 +156,12 @@ namespace CairoDesktop.SupportingClasses
             prepareForInterop();
             SHAppBarMessage((int)ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
             interopDone();
+
+            // apparently the taskbars like to pop up when app bars change
+            if (Settings.Instance.EnableTaskbar)
+            {
+                SetSecondaryTaskbarVisibility((int)SetWindowPosFlags.SWP_HIDEWINDOW);
+            }
         }
 
         public static void ABSetPos(AppBarWindow abWindow, double width, double height, ABEdge edge, bool isCreate = false)
@@ -171,8 +170,7 @@ namespace CairoDesktop.SupportingClasses
             {
                 APPBARDATA abd = new APPBARDATA();
                 abd.cbSize = Marshal.SizeOf(typeof(APPBARDATA));
-                IntPtr handle = new WindowInteropHelper(abWindow).Handle;
-                abd.hWnd = handle;
+                abd.hWnd = abWindow.Handle;
                 abd.uEdge = (int)edge;
                 int sWidth = (int)width;
                 int sHeight = (int)height;
@@ -260,7 +258,7 @@ namespace CairoDesktop.SupportingClasses
                 // check if new coords
                 bool isSameCoords = false;
                 if (!isCreate) isSameCoords = abd.rc.Top == (abWindow.Top * abWindow.dpiScale) && abd.rc.Left == (abWindow.Left * abWindow.dpiScale) && abd.rc.Bottom == (abWindow.Top * abWindow.dpiScale) + sHeight && abd.rc.Right == (abWindow.Left * abWindow.dpiScale) + sWidth;
-                
+
                 if (!isSameCoords)
                 {
                     CairoLogger.Instance.Debug(string.Format("AppBarHelper: {0} changing position (TxLxBxR) to {1}x{2}x{3}x{4} from {5}x{6}x{7}x{8}", abWindow.Name, abd.rc.Top, abd.rc.Left, abd.rc.Bottom, abd.rc.Right, (abWindow.Top * abWindow.dpiScale), (abWindow.Left * abWindow.dpiScale), (abWindow.Top * abWindow.dpiScale) + sHeight, (abWindow.Left * abWindow.dpiScale) + sWidth));

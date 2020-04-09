@@ -70,7 +70,7 @@
             if (Settings.Instance.EnableTaskbar)
             {
                 AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
-                AppBarHelper.SetWinTaskbarPos((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
+                AppBarHelper.SetWinTaskbarVisibility((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
             }
 
             // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
