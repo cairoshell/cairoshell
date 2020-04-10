@@ -89,7 +89,7 @@
             </Border>
         </DockPanel>
         <Button.ContextMenu>
-            <ContextMenu Loaded="ctxFile_Loaded" Tag="{Binding Path=FullName}">
+            <ContextMenu Name="ctxFile" Loaded="ctxFile_Loaded">
                 <ContextMenu.Resources>
                     <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
                         <EventSetter Event="Click" Handler="miVerb_Click" />

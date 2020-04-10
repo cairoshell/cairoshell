@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows;
 using System.Windows.Forms;
-using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Interop;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Common
 {
     // Provides ability to use the shell context menu functions within Cairo.
     // Derived from Steven Roebert's C# File Browser
@@ -28,7 +27,7 @@ namespace CairoDesktop.SupportingClasses
         }
         
         // Properties
-        public delegate void ItemSelectAction(string item, string path, System.Windows.Controls.Button sender);
+        public delegate void ItemSelectAction(string item, string path, FrameworkElement sender);
         public delegate void FolderItemSelectAction(string item, string path);
         private ItemSelectAction itemSelected;
         private FolderItemSelectAction folderItemSelected;
@@ -49,20 +48,20 @@ namespace CairoDesktop.SupportingClasses
         private int y;
         private string parent;
         private IShellFolder parentShellFolder;
-        private System.Windows.Controls.Button sender;
+        private FrameworkElement sender;
 
-        public ShellContextMenu(SystemFile[] files, System.Windows.Controls.Button sender, ItemSelectAction itemSelected)
+        public ShellContextMenu(SystemFile[] files, FrameworkElement sender, ItemSelectAction itemSelected)
         {
             lock (Shell.ComLock)
             {
-                this.CreateHandle(new CreateParams());
-                this.paths = files;
+                CreateHandle(new CreateParams());
+                paths = files;
 
-                this.parent = getParentDir(this.paths[0].FullName);
-                this.parentShellFolder = getParentShellFolder(this.paths[0].FullName);
-                this.pidls = pathsToPidls(this.paths);
-                this.x = Cursor.Position.X;
-                this.y = Cursor.Position.Y;
+                parent = getParentDir(paths[0].FullName);
+                parentShellFolder = getParentShellFolder(paths[0].FullName);
+                pidls = pathsToPidls(paths);
+                x = Cursor.Position.X;
+                y = Cursor.Position.Y;
 
                 this.itemSelected = itemSelected;
                 this.sender = sender;
@@ -75,16 +74,16 @@ namespace CairoDesktop.SupportingClasses
         {
             lock (Shell.ComLock)
             {
-                this.CreateHandle(new CreateParams());
+                CreateHandle(new CreateParams());
                 this.directory = directory;
-                this.folder = directory.FullName;
+                folder = directory.FullName;
 
-                this.parent = getParentDir(this.folder);
-                this.parentShellFolder = getParentShellFolder(this.folder);
-                this.folderPidl = pathToFullPidl(this.folder);
-                this.folderRelPidl = pathToRelPidl(this.folder);
-                this.x = Cursor.Position.X;
-                this.y = Cursor.Position.Y;
+                parent = getParentDir(folder);
+                parentShellFolder = getParentShellFolder(folder);
+                folderPidl = pathToFullPidl(folder);
+                folderRelPidl = pathToRelPidl(folder);
+                x = Cursor.Position.X;
+                y = Cursor.Position.Y;
 
                 this.folderItemSelected = folderItemSelected;
 
@@ -92,46 +91,15 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        // Helper method for common icon invokation code.
+        // Helper method for common icon invocation code.
         public static void OpenContextMenuFromIcon(System.Windows.Input.MouseButtonEventArgs e, ItemSelectAction action)
         {
-            System.Windows.Controls.Button btn = null;
-            if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Image))
+            if (typeof(FrameworkElement).IsAssignableFrom(e.OriginalSource.GetType()))
             {
-                System.Windows.Controls.Image img = e.OriginalSource as System.Windows.Controls.Image;
-                System.Windows.Controls.DockPanel dock = img.Parent as System.Windows.Controls.DockPanel;
-                btn = dock.Parent as System.Windows.Controls.Button;
-            }
-            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.TextBlock))
-            {
-                System.Windows.Controls.TextBlock txt = e.OriginalSource as System.Windows.Controls.TextBlock;
-                System.Windows.Controls.Border bdr = txt.Parent as System.Windows.Controls.Border;
-                System.Windows.Controls.DockPanel dock = bdr.Parent as System.Windows.Controls.DockPanel;
-                btn = dock.Parent as System.Windows.Controls.Button;
-            }
-            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border) && (e.OriginalSource as System.Windows.Controls.Border).Parent != null && (e.OriginalSource as System.Windows.Controls.Border).Parent.GetType() == typeof(System.Windows.Controls.DockPanel))
-            {
-                System.Windows.Controls.Border bdr = e.OriginalSource as System.Windows.Controls.Border;
-                System.Windows.Controls.DockPanel dock = bdr.Parent as System.Windows.Controls.DockPanel;
-                btn = dock.Parent as System.Windows.Controls.Button;
-            }
-            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.DockPanel))
-            {
-                System.Windows.Controls.DockPanel dock = e.OriginalSource as System.Windows.Controls.DockPanel;
-                btn = dock.Parent as System.Windows.Controls.Button;
-            }
-            else if (e.OriginalSource.GetType() == typeof(System.Windows.Controls.Border))
-            {
-                System.Windows.Controls.Border bdr = e.OriginalSource as System.Windows.Controls.Border;
-                btn = bdr.TemplatedParent as System.Windows.Controls.Button;
-            }
+                FrameworkElement el = e.OriginalSource as FrameworkElement;
+                SystemFile file = el.DataContext as SystemFile;
 
-            if (btn != null)
-            {
-                //string filePath = btn.CommandParameter as string;
-                SystemFile file = btn.DataContext as SystemFile;
-
-                ShellContextMenu cm = new ShellContextMenu(new SystemFile[] { file }, btn, action);
+                ShellContextMenu cm = new ShellContextMenu(new SystemFile[] { file }, el, action);
 
                 e.Handled = true;
             }
@@ -385,9 +353,9 @@ namespace CairoDesktop.SupportingClasses
                     uint selected = ShellFolders.TrackPopupMenuEx(
                                         contextMenu,
                                         ShellFolders.TPM.RETURNCMD,
-                                        this.x,
-                                        this.y,
-                                        this.Handle,
+                                        x,
+                                        y,
+                                        Handle,
                                         IntPtr.Zero);
                     
 
@@ -422,12 +390,12 @@ namespace CairoDesktop.SupportingClasses
                                     iContextMenu,
                                     selected - ShellFolders.CMD_FIRST,
                                     parent,
-                                    new Point(this.x, this.y));
+                                    new System.Drawing.Point(x, y));
                                 }
                                 break;
                         }
 
-                        if (this.itemSelected != null)
+                        if (itemSelected != null)
                             itemSelected(command, paths[0].FullName, sender);
                     }
                 }
@@ -548,9 +516,9 @@ namespace CairoDesktop.SupportingClasses
                 CairoContextMenuItem selected = (CairoContextMenuItem)ShellFolders.TrackPopupMenuEx(
                                     contextMenu,
                                     ShellFolders.TPM.RETURNCMD,
-                                    this.x,
-                                    this.y,
-                                    this.Handle,
+                                    x,
+                                    y,
+                                    Handle,
                                     IntPtr.Zero);
                 
                 if ((int)selected >= ShellFolders.CMD_FIRST)
@@ -585,7 +553,7 @@ namespace CairoDesktop.SupportingClasses
                                 parentShellFolder,
                                 new IntPtr[] { folderPidl },
                                 command,
-                                new Point(this.x, this.y));
+                                new System.Drawing.Point(x, y));
                             break;
 
                         case CairoContextMenuItem.Paste:
@@ -595,7 +563,7 @@ namespace CairoDesktop.SupportingClasses
                                 parentShellFolder,
                                 new IntPtr[] { folderPidl },
                                 command,
-                                new Point(this.x, this.y));
+                                new System.Drawing.Point(x, y));
                             break;
 
                         default:
@@ -604,13 +572,13 @@ namespace CairoDesktop.SupportingClasses
                                 ShellFolders.InvokeCommand(
                                     newContextMenu,
                                     (uint)selected - ShellFolders.CMD_FIRST,
-                                    this.folder,
-                                    new Point(this.x, this.y));
+                                    folder,
+                                    new System.Drawing.Point(x, y));
                             }
                             break;
                     }
 
-                    if (this.folderItemSelected != null)
+                    if (folderItemSelected != null)
                         folderItemSelected(command, folder);
                 }
             }

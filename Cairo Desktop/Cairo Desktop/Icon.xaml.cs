@@ -5,6 +5,7 @@ using CairoDesktop.Localization;
 using CairoDesktop.SupportingClasses;
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,6 +33,7 @@ namespace CairoDesktop
             set { SetValue(LocationProperty, value); }
         }
 
+        private bool currentlyRenaming;
         private SystemFile file;
 
         public Icon()
@@ -69,6 +71,7 @@ namespace CairoDesktop
                     btnFile.ContextMenu = null;
                     btnFile.Click -= btnFile_Click;
                     btnFile.MouseDoubleClick += btnFile_MouseDoubleClick;
+                    btnFile.MouseRightButtonUp += btnFile_MouseRightButtonUp;
                     txtFilename.Foreground = Application.Current.FindResource("DesktopIconText") as SolidColorBrush;
 
                     setDesktopIconAppearance();
@@ -211,18 +214,104 @@ namespace CairoDesktop
         }
 
         #region Context menu
+        private void btnFile_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            // desktop icon context menu
+            // not used for stacks, which use our own menu due to the shell menu causing stacks to close
+            if (!currentlyRenaming)
+            {
+                ShellContextMenu.OpenContextMenuFromIcon(e, executeFileAction);
+                e.Handled = true;
+            }
+        }
+
+        private void executeFileAction(string action, string path, FrameworkElement sender)
+        {
+            if (action == "openFolder")
+            {
+                if (Settings.Instance.EnableDynamicDesktop)
+                {
+                    WindowManager.Instance.DesktopWindow.NavigationManager.NavigateTo(path);
+                }
+                else
+                {
+                    FolderHelper.OpenLocation(path);
+                }
+            }
+            else if (action == "rename")
+            {
+                enterRename();
+            }
+            else if (action == "addStack" || action == "removeStack" || action == "openWithShell")
+            {
+                CustomCommands.PerformAction(action, path);
+            }
+            else if (action != "cut" && action != "copy" && action != "link")
+            {
+                WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
+            }
+        }
+
         private void miVerb_Click(object sender, RoutedEventArgs e)
         {
-            CustomCommands.Icon_MenuItem_Click(sender, e);
+            MenuItem item = sender as MenuItem;
+            string verb = item.Tag as string;
+
+            if (verb == "rename")
+            {
+                enterRename();
+            }
+            else
+            {
+                CustomCommands.PerformAction(verb, file.FullName);
+            }
+
+            if (WindowManager.Instance.DesktopWindow != null)
+                WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
         }
 
         private void ctxFile_Loaded(object sender, RoutedEventArgs e)
         {
-            CustomCommands.Icon_ContextMenu_Loaded(sender, e);
+            ctxFile.Items.Clear();
+
+            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Open, Tag = "open" });
+
+            if (!file.IsDirectory)
+                ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_OpenWith, Tag = "openwith" });
+            else
+                ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_AddToStacks, Tag = "addStack" });
+
+            foreach (string verb in file.Verbs)
+            {
+                if (verb.ToLower() != "open")
+                    ctxFile.Items.Add(new MenuItem { Header = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(verb), Tag = verb });
+            }
+
+            ctxFile.Items.Add(new Separator());
+
+            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Copy, Tag = "copy" });
+
+            ctxFile.Items.Add(new Separator());
+
+            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Delete, Tag = "delete" });
+            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Rename, Tag = "rename" });
+
+            ctxFile.Items.Add(new Separator());
+
+            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Properties, Tag = "properties" });
         }
         #endregion
 
         #region Rename
+        private void enterRename()
+        {
+            txtRename.Visibility = Visibility.Visible;
+            bdrFilename.Visibility = Visibility.Collapsed;
+            txtRename.Focus();
+            txtRename.SelectAll();
+            currentlyRenaming = true;
+        }
+
         private void txtRename_LostFocus(object sender, RoutedEventArgs e)
         {
             TextBox box = sender as TextBox;
@@ -236,6 +325,8 @@ namespace CairoDesktop
                     peer.Visibility = Visibility.Visible;
 
             box.Visibility = Visibility.Collapsed;
+
+            currentlyRenaming = false;
         }
 
         private void txtRename_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
@@ -305,7 +396,7 @@ namespace CairoDesktop
         private void btnFile_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Store the mouse position
-            startPoint = e.GetPosition(this);
+            if (!currentlyRenaming) startPoint = e.GetPosition(this);
         }
 
         private void btnFile_PreviewMouseMove(object sender, MouseEventArgs e)

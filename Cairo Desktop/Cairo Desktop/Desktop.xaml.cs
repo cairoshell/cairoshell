@@ -233,16 +233,12 @@ namespace CairoDesktop
 
         private void CairoDesktopWindow_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            // handle icon and desktop context menus
-            if (e.OriginalSource.GetType() == typeof(ScrollViewer) || e.Source.GetType() == typeof(Desktop))
+            // handle desktop context menu
+            // we check source here so that we don't prevent the rename textbox context menu
+            if (e.OriginalSource.GetType() == typeof(ScrollViewer) || e.Source.GetType() == typeof(Desktop) || e.Source.GetType() == typeof(Grid))
             {
                 ShellContextMenu cm = new ShellContextMenu(Icons.Location, executeFolderAction);
-
                 e.Handled = true;
-            }
-            else
-            {
-                ShellContextMenu.OpenContextMenuFromIcon(e, executeFileAction);
             }
         }
 
@@ -671,30 +667,7 @@ namespace CairoDesktop
         }
         #endregion
 
-        #region Files and folders
-        private void executeFileAction(string action, string path, Button sender)
-        {
-            if (action == "openFolder")
-            {
-                if (Settings.Instance.EnableDynamicDesktop)
-                {
-                    NavigationManager.NavigateTo(path);
-                }
-                else
-                {
-                    FolderHelper.OpenLocation(path);
-                }
-            }
-            else if (action == "rename" || action == "addStack" || action == "removeStack" || action == "openWithShell")
-            {
-                CustomCommands.PerformAction(action, path, sender);
-            }
-            else if (action != "cut" && action != "copy" && action != "link")
-            {
-                IsOverlayOpen = false;
-            }
-        }
-
+        #region Desktop context menu
         private void executeFolderAction(string action, string path)
         {
             if (action == "paste")
