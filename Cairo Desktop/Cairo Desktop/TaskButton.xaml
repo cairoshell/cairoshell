@@ -85,7 +85,6 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <ProgressBar Name="pbProgress" 
@@ -98,7 +97,7 @@
                    Name="imgIcon"
                    Width="16"
                    Height="16"
-                   Grid.Column="1" 
+                   Grid.Column="0" 
                    Margin="0,0,5,0"/>
             <TextBlock Padding="0,0,5,0"
                        Width="{Binding ElementName=UserControl, Path=TextWidth}" 
@@ -107,7 +106,7 @@
                        VerticalAlignment="Center"
                        Text="{Binding Path=Title}"
                        TextTrimming="CharacterEllipsis"
-                       Grid.Column="2" 
+                       Grid.Column="1" 
                        TextAlignment="Center" />
         </Grid>
     </Button>

@@ -1690,6 +1690,12 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="TaskListProgressBar"
+           TargetType="{x:Type ProgressBar}"
+           BasedOn="{StaticResource TaskbarProgressBar}">
+        <Setter Property="Margin"
+                Value="-5,-4" />
+    </Style>
     <!-- Task button thumbnails -->
     <Style x:Key="TaskThumbWindowBorderStyle"
            BasedOn="{StaticResource CairoMenuBorderStyle}"
@@ -1698,8 +1704,6 @@
                 Value="0" />
         <Setter Property="Margin"
                 Value="5,0,5,0" />
-        <Setter Property="Effect"
-                Value="{DynamicResource ResourceKey=MenuShadow}" />
     </Style>
     <Style x:Key="TaskThumbWindowInnerBorderStyle"
            BasedOn="{StaticResource CairoMenuInnerBorderStyle}"
