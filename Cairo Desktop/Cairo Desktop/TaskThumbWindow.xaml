@@ -41,12 +41,12 @@
             </EventTrigger>
         </Border.Triggers>
         <Border Name="bdrThumbInner"
-                Style="{StaticResource TaskThumbWindowInnerBorderStyle}"
-                MouseEnter="bdrThumbInner_OnMouseEnter"
-                MouseLeave="bdrThumbInner_OnMouseLeave"
-                MouseUp="bdrThumbInner_MouseUp"
-                MouseRightButtonUp="bdrThumbInner_MouseRightButtonUp">
-            <Border Style="{StaticResource TaskThumbWindowInnerStyle}">
+                Style="{StaticResource TaskThumbWindowInnerBorderStyle}">
+            <Border Style="{StaticResource TaskThumbWindowInnerStyle}"
+                    MouseEnter="bdrThumbInner_OnMouseEnter"
+                    MouseLeave="bdrThumbInner_OnMouseLeave"
+                    MouseUp="bdrThumbInner_MouseUp"
+                    MouseRightButtonUp="bdrThumbInner_MouseRightButtonUp">
                 <StackPanel>
                     <StackPanel Name="pnlTitle"
                                 Orientation="Horizontal"

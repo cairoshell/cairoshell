@@ -43,9 +43,6 @@ namespace CairoDesktop
             handle = helper.Handle;
             Shell.HideWindowFromTasks(handle);
 
-            if (!isDwmEnabled)
-                dwmThumbnail.Visibility = Visibility.Collapsed;
-
             // get anchor point
             Point taskButtonPoint = taskButton.GetThumbnailAnchor();
 
