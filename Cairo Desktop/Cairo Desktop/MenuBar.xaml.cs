@@ -5,6 +5,7 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,9 +16,9 @@ namespace CairoDesktop
 {
     public partial class MenuBar : AppBarWindow
     {
-        private MenuBarShadow shadow = null;
-        private static bool isCairoMenuHotkeyRegistered = false;
-        private static bool isProgramsMenuHotkeyRegistered = false;
+        private MenuBarShadow shadow;
+        private static HotKey cairoMenuHotKey;
+        private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
 
         private bool secretBottomMenuBar = false;
 
@@ -216,14 +217,17 @@ namespace CairoDesktop
         {
             setupMenuExtras();
 
-            if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary && !isCairoMenuHotkeyRegistered)
+            if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary && cairoMenuHotKey == null)
             {
-                HotKeyManager.RegisterHotKey(Settings.Instance.CairoMenuHotKey, OnShowCairoMenu);
-                isCairoMenuHotkeyRegistered = true;
+                cairoMenuHotKey = HotKeyManager.RegisterHotKey(Settings.Instance.CairoMenuHotKey, OnShowCairoMenu);
+            }
+            else if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary)
+            {
+                cairoMenuHotKey.Action = OnShowCairoMenu;
             }
 
             // Register L+R Windows key to open Programs menu
-            if (Shell.IsCairoRunningAsShell && Screen.Primary && !isProgramsMenuHotkeyRegistered)
+            if (Shell.IsCairoRunningAsShell && Screen.Primary && programsMenuHotKeys.Count < 1)
             {
                 /*if (keyboardListener == null)
                     keyboardListener = new LowLevelKeyboardListener();
@@ -231,11 +235,16 @@ namespace CairoDesktop
                 keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
                 keyboardListener.HookKeyboard();*/
 
-                new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
-                new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu);
-                new HotKey(Key.Escape, KeyModifier.Ctrl | KeyModifier.NoRepeat, OnShowProgramsMenu);
-
-                isProgramsMenuHotkeyRegistered = true;
+                programsMenuHotKeys.Add(new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu));
+                programsMenuHotKeys.Add(new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu));
+                programsMenuHotKeys.Add(new HotKey(Key.Escape, KeyModifier.Ctrl | KeyModifier.NoRepeat, OnShowProgramsMenu));
+            }
+            else if (Shell.IsCairoRunningAsShell && Screen.Primary)
+            {
+                foreach (var hotkey in programsMenuHotKeys)
+                {
+                    hotkey.Action = OnShowProgramsMenu;
+                }
             }
 
             if (Settings.Instance.EnableMenuBarBlur)

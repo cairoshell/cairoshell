@@ -1,7 +1,6 @@
 ﻿using CairoDesktop.Common.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows.Input;
 using System.Windows.Interop;
 using static CairoDesktop.Interop.NativeMethods;
@@ -10,7 +9,7 @@ namespace CairoDesktop.Common
 {
     public class HotKeyManager
     {
-        public static void RegisterHotKey(IList<string> keys, Action<HotKey> action)
+        public static HotKey RegisterHotKey(IList<string> keys, Action<HotKey> action)
         {
             KeyModifier mod1 = KeyModifier.None;
             KeyModifier mod2 = KeyModifier.None;
@@ -26,11 +25,13 @@ namespace CairoDesktop.Common
             else if (keys.Count == 2)
                 Enum.TryParse(keys[1], out key);
 
-            HotKey hotkey;
+            HotKey hotkey = null;
             if (mod1 != KeyModifier.None && mod2 != KeyModifier.None && key != Key.None)
                 hotkey = new HotKey(key, mod2 | mod1, action);
             else if (mod1 != KeyModifier.None && key != Key.None)
                 hotkey = new HotKey(key, mod1, action);
+
+            return hotkey;
         }
     }
 
@@ -42,7 +43,7 @@ namespace CairoDesktop.Common
 
         public Key Key { get; private set; }
         public KeyModifier KeyModifiers { get; private set; }
-        public Action<HotKey> Action { get; private set; }
+        public Action<HotKey> Action { get; set; }
         public int Id { get; set; }
 
         public HotKey(Key k, KeyModifier keyModifiers, Action<HotKey> action, bool register = true)
