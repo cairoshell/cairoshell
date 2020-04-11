@@ -345,6 +345,10 @@
     </Storyboard>
     <SolidColorBrush Color="#992AEE28"
                      x:Key="TaskbarProgressBarFill" />
+    <SolidColorBrush Color="#01FFFFFF"
+                     x:Key="TaskThumbInactiveBackground" />
+    <SolidColorBrush Color="#22FFFFFF"
+                     x:Key="TaskThumbHoverBackground" />
 
     <!-- Dialog resources -->
     <LinearGradientBrush x:Key="DialogWindowBackground"
@@ -1713,7 +1717,25 @@
         <Setter Property="CornerRadius"
                 Value="5,5,0,0" />
         <Setter Property="Padding"
-                Value="10" />
+                Value="5" />
+    </Style>
+    <Style x:Key="TaskThumbWindowInnerStyle"
+           TargetType="{x:Type Border}">
+        <Setter Property="Background"
+                Value="{DynamicResource ResourceKey=TaskThumbInactiveBackground}" />
+        <Setter Property="CornerRadius"
+                Value="3" />
+        <Setter Property="Padding"
+                Value="5" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Trigger.Setters>
+                    <Setter Property="Background"
+                            Value="{DynamicResource ResourceKey=TaskThumbHoverBackground}" />
+                </Trigger.Setters>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="TaskThumbWindowBorderTopStyle"
            BasedOn="{StaticResource TaskThumbWindowBorderStyle}"

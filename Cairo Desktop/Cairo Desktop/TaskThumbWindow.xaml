@@ -42,22 +42,27 @@
         </Border.Triggers>
         <Border Name="bdrThumbInner"
                 Style="{StaticResource TaskThumbWindowInnerBorderStyle}"
+                MouseEnter="bdrThumbInner_OnMouseEnter"
+                MouseLeave="bdrThumbInner_OnMouseLeave"
                 MouseUp="bdrThumbInner_MouseUp"
                 MouseRightButtonUp="bdrThumbInner_MouseRightButtonUp">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal"
-                            Margin="0,0,0,5">
-                    <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
-                           Width="16"
-                           Height="16" />
-                    <TextBlock Style="{StaticResource TaskThumbTitleStyle}"
-                               Text="{Binding Path=Title}"
-                               Width="164" />
+            <Border Style="{StaticResource TaskThumbWindowInnerStyle}">
+                <StackPanel>
+                    <StackPanel Name="pnlTitle"
+                                Orientation="Horizontal"
+                                Margin="0,0,0,5">
+                        <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
+                               Width="16"
+                               Height="16" />
+                        <TextBlock Style="{StaticResource TaskThumbTitleStyle}"
+                                   Text="{Binding Path=Title}"
+                                   Width="164" />
+                    </StackPanel>
+                    <local:DwmThumbnail x:Name="dwmThumbnail"
+                                        Width="180"
+                                        Height="120" />
                 </StackPanel>
-                <local:DwmThumbnail x:Name="dwmThumbnail"
-                                    Width="180"
-                                    Height="120" />
-            </StackPanel>
+            </Border>
         </Border>
     </Border>
 </Window>

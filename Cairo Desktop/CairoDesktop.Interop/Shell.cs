@@ -522,6 +522,17 @@ namespace CairoDesktop.Interop
         public static void HideWindowFromTasks(IntPtr hWnd)
         {
             SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW);
+
+            ExcludeWindowFromPeek(hWnd);
+        }
+
+        public static void ExcludeWindowFromPeek(IntPtr hWnd)
+        {
+            int status = (int)DWMNCRENDERINGPOLICY.DWMNCRP_ENABLED;
+            DwmSetWindowAttribute(hWnd,
+                DWMWINDOWATTRIBUTE.DWMWA_EXCLUDED_FROM_PEEK,
+                ref status,
+                sizeof(int));
         }
 
         public static void EnableWindowBlur(IntPtr hWnd)
@@ -712,6 +723,19 @@ namespace CairoDesktop.Interop
                 }
 
                 return (osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2));
+            }
+        }
+
+        public static bool IsWindows81OrBetter
+        {
+            get
+            {
+                if (osVersionMajor == 0)
+                {
+                    getOSVersion();
+                }
+
+                return (osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2 && osVersionBuild >= 9600));
             }
         }
 

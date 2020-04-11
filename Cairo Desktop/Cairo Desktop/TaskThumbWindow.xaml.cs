@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop
 {
@@ -14,6 +15,8 @@ namespace CairoDesktop
         private TaskButton taskButton;
         private bool isClosing;
         private bool isAnimating;
+        private bool isDwmEnabled;
+        private IntPtr handle;
 
         public TaskThumbWindow(TaskButton parent)
         {
@@ -23,13 +26,25 @@ namespace CairoDesktop
             DataContext = parent.Window;
 
             taskButton.SetParentAutoHide(false);
+
+            // check if DWM is enabled, if not, hide the thumbnail placeholder
+            isDwmEnabled = NativeMethods.DwmIsCompositionEnabled();
+            if (!isDwmEnabled)
+            {
+                dwmThumbnail.Visibility = Visibility.Collapsed;
+                pnlTitle.Margin = new Thickness(0);
+            }
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)
         {
             // hide from alt-tab
             WindowInteropHelper helper = new WindowInteropHelper(this);
-            Interop.Shell.HideWindowFromTasks(helper.Handle);
+            handle = helper.Handle;
+            Shell.HideWindowFromTasks(handle);
+
+            if (!isDwmEnabled)
+                dwmThumbnail.Visibility = Visibility.Collapsed;
 
             // get anchor point
             Point taskButtonPoint = taskButton.GetThumbnailAnchor();
@@ -53,14 +68,17 @@ namespace CairoDesktop
 
             Left = taskButtonPoint.X - (((ActualWidth - taskButton.ActualWidth) / 2) * taskButton.ParentTaskbar.dpiScale);
 
-            // set up thumbnail
-            dwmThumbnail.DpiScale = taskButton.ParentTaskbar.dpiScale;
-            dwmThumbnail.ThumbnailOpacity = 0;
-            dwmThumbnail.SourceWindowHandle = taskButton.Window.Handle;
+            if (isDwmEnabled)
+            {
+                // set up thumbnail
+                dwmThumbnail.DpiScale = taskButton.ParentTaskbar.dpiScale;
+                dwmThumbnail.ThumbnailOpacity = 0;
+                dwmThumbnail.SourceWindowHandle = taskButton.Window.Handle;
 
-            // set up animation
-            isAnimating = true;
-            System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
+                // set up animation
+                isAnimating = true;
+                System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
+            }
         }
 
         private void CompositionTarget_Rendering(object sender, EventArgs e)
@@ -83,7 +101,7 @@ namespace CairoDesktop
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             isClosing = true;
-            dwmThumbnail.SourceWindowHandle = IntPtr.Zero;
+            if (isDwmEnabled) dwmThumbnail.SourceWindowHandle = IntPtr.Zero;
             taskButton.ThumbWindow = null;
             taskButton.SetParentAutoHide(true);
         }
@@ -112,6 +130,40 @@ namespace CairoDesktop
         private void Storyboard_Completed(object sender, EventArgs e)
         {
             isAnimating = false;
+        }
+
+        private void bdrThumbInner_OnMouseEnter(object sender, MouseEventArgs e)
+        {
+            if (isDwmEnabled)
+            {
+                if (Shell.IsWindows81OrBetter)
+                {
+                    NativeMethods.DwmActivateLivePreview(1, taskButton.Window.Handle, handle,
+                        NativeMethods.AeroPeekType.Window, IntPtr.Zero);
+                }
+                else
+                {
+                    NativeMethods.DwmActivateLivePreview(1, taskButton.Window.Handle, handle,
+                        NativeMethods.AeroPeekType.Window);
+                }
+            }
+        }
+
+        private void bdrThumbInner_OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            if (isDwmEnabled)
+            {
+                if (Shell.IsWindows81OrBetter)
+                {
+                    NativeMethods.DwmActivateLivePreview(0, taskButton.Window.Handle, handle,
+                        NativeMethods.AeroPeekType.Window, IntPtr.Zero);
+                }
+                else
+                {
+                    NativeMethods.DwmActivateLivePreview(0, taskButton.Window.Handle, handle,
+                        NativeMethods.AeroPeekType.Window);
+                }
+            }
         }
     }
 }

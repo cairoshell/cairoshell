@@ -62,6 +62,8 @@ namespace CairoDesktop
             // Makes click-through by adding transparent style
             // basically same as Shell.HideWindowFromTasks(helper.Handle);
             NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE, NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TRANSPARENT);
+
+            Shell.ExcludeWindowFromPeek(helper.Handle);
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
