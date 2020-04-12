@@ -101,7 +101,6 @@ namespace CairoDesktop
             Width = screenWidth;
 
             setTaskbarSize();
-            Top = getDesiredTopPosition();
 
             // set taskbar edge based on preference
             if (Settings.Instance.TaskbarPosition == 1)
@@ -114,12 +113,10 @@ namespace CairoDesktop
                 btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarTopButtonDesktopOverlay") as Style;
                 TaskbarGroupStyle.ContainerStyle = Application.Current.FindResource("CairoTaskbarTopGroupStyle") as Style;
                 TasksList.Margin = new Thickness(0);
-                bdrTaskListPopup.Margin = new Thickness(5, Top + Height - 1, 5, 11);
             }
             else
             {
                 appBarEdge = NativeMethods.ABEdge.ABE_BOTTOM;
-                bdrTaskListPopup.Margin = new Thickness(5, 0, 5, Height - 1);
             }
 
             // show task view on windows >= 10, adjust margin if not shown
@@ -152,6 +149,12 @@ namespace CairoDesktop
 
             Height = 29 + addToSize;
             desiredHeight = Height;
+            Top = getDesiredTopPosition();
+
+            if (Settings.Instance.TaskbarPosition == 1)
+                bdrTaskListPopup.Margin = new Thickness(5, Top + Height - 1, 5, 11);
+            else
+                bdrTaskListPopup.Margin = new Thickness(5, 0, 5, Height - 1);
         }
 
         private void setFullWidthTaskbar()
@@ -225,6 +228,7 @@ namespace CairoDesktop
                     case "TaskbarIconSize":
                         setTaskbarSize();
                         setScreenPosition();
+                        if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
                         break;
                     case "FullWidthTaskBar":
                         setFullWidthTaskbar();
