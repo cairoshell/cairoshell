@@ -655,9 +655,6 @@
                               Name="chkEnableTaskbar">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableTaskbar)}" />
                     </CheckBox>
-                    <!--<CheckBox IsChecked="{Binding Path=EnableTaskbarPolling}" Click="chkEnableTaskbarPolling_Click"  Name="chkEnableTaskbarPolling">
-                        <Label>Poll taskbar buttons for updates</Label>
-                    </CheckBox>-->
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
                                Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal"

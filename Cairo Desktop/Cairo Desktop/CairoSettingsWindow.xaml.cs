@@ -561,13 +561,11 @@ namespace CairoDesktop
         private void radTaskbarPos0_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarPosition = 0;
-            showRestartButton();
         }
 
         private void radTaskbarPos1_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarPosition = 1;
-            showRestartButton();
         }
 
         private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)

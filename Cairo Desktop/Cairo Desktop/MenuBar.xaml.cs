@@ -417,6 +417,26 @@ namespace CairoDesktop
             }
         }
 
+        private void MenuBar_OnMouseEnter(object sender, MouseEventArgs e)
+        {
+            if (Settings.Instance.TaskbarMode == 2)
+            {
+                Taskbar taskbar = WindowManager.Instance.GetScreenWindow(WindowManager.Instance.TaskbarWindows, Screen);
+
+                if (taskbar != null && taskbar.appBarEdge == appBarEdge) taskbar.CanAutoHide = false;
+            }
+        }
+
+        private void MenuBar_OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            if (Settings.Instance.TaskbarMode == 2)
+            {
+                Taskbar taskbar = WindowManager.Instance.GetScreenWindow(WindowManager.Instance.TaskbarWindows, Screen);
+
+                if (taskbar != null && taskbar.appBarEdge == appBarEdge) taskbar.CanAutoHide = true;
+            }
+        }
+
         #endregion
 
         #region Cairo menu items

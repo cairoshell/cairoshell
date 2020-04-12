@@ -100,8 +100,6 @@ namespace CairoDesktop
             bdrTaskbar.MaxWidth = screenWidth - 36;
             Width = screenWidth;
 
-            setTaskbarSize();
-
             // set taskbar edge based on preference
             if (Settings.Instance.TaskbarPosition == 1)
             {
@@ -117,6 +115,13 @@ namespace CairoDesktop
             else
             {
                 appBarEdge = NativeMethods.ABEdge.ABE_BOTTOM;
+                bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarBorderStyle") as Style;
+                bdrTaskbarEnd.Style = Application.Current.FindResource("CairoTaskbarEndBorderStyle") as Style;
+                bdrTaskbarLeft.Style = Application.Current.FindResource("CairoTaskbarLeftBorderStyle") as Style;
+                btnTaskList.Style = Application.Current.FindResource("CairoTaskbarButtonList") as Style;
+                btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarButtonDesktopOverlay") as Style;
+                TaskbarGroupStyle.ContainerStyle = Application.Current.FindResource("CairoTaskbarGroupStyle") as Style;
+                TasksList.Margin = new Thickness(-3, -1, 0, 0);
             }
 
             // show task view on windows >= 10, adjust margin if not shown
@@ -124,7 +129,8 @@ namespace CairoDesktop
                 bdrTaskView.Visibility = Visibility.Visible;
             else
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);
-
+            
+            setTaskbarSize();
             setFullWidthTaskbar();
         }
 
@@ -154,7 +160,7 @@ namespace CairoDesktop
             if (Settings.Instance.TaskbarPosition == 1)
                 bdrTaskListPopup.Margin = new Thickness(5, Top + Height - 1, 5, 11);
             else
-                bdrTaskListPopup.Margin = new Thickness(5, 0, 5, Height - 1);
+                bdrTaskListPopup.Margin = new Thickness(5, 0, 5, (Screen.Bounds.Bottom / dpiScale) - Top - 1);
         }
 
         private void setFullWidthTaskbar()
@@ -227,6 +233,11 @@ namespace CairoDesktop
                 {
                     case "TaskbarIconSize":
                         setTaskbarSize();
+                        setScreenPosition();
+                        if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
+                        break;
+                    case "TaskbarPosition":
+                        setupTaskbarAppearance();
                         setScreenPosition();
                         if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
                         break;

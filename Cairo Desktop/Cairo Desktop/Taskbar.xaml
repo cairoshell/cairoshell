@@ -133,7 +133,7 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="-24"
+                                                         To="-27"
                                                          BeginTime="0:0:0.5"
                                                          Duration="0:0:0.15"/>
                                     </Storyboard>
@@ -161,7 +161,7 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="-32"
+                                                         To="-35"
                                                          BeginTime="0:0:0.5"
                                                          Duration="0:0:0.15"/>
                                     </Storyboard>
@@ -189,7 +189,7 @@
                                 <BeginStoryboard>
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="-40"
+                                                         To="-43"
                                                          BeginTime="0:0:0.5"
                                                          Duration="0:0:0.15"/>
                                     </Storyboard>
@@ -217,15 +217,15 @@
                               Click="OpenTaskManager" />
                     </ContextMenu>
                 </StackPanel.ContextMenu>
-                <Border HorizontalAlignment="Left" Style="{StaticResource CairoTaskbarLeftBorderStyle}" Name="bdrTaskbarLeft">
-                    <ToggleButton x:Name="btnDesktopOverlay" Style="{StaticResource CairoTaskbarButtonDesktopOverlay}" Click="btnDesktopOverlay_Click" IsChecked="{Binding Path=IsOverlayOpen, Mode=OneWay}" ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_DesktopOverlayToolTip)}" ToolTipService.Placement="Top">
+                <Border HorizontalAlignment="Left" Name="bdrTaskbarLeft">
+                    <ToggleButton x:Name="btnDesktopOverlay" Click="btnDesktopOverlay_Click" IsChecked="{Binding Path=IsOverlayOpen, Mode=OneWay}" ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_DesktopOverlayToolTip)}" ToolTipService.Placement="Top">
                         <Image Source="Resources\desktopOverlayIcon.png"
                            Width="15"
                            Height="14"
                            Margin="0"></Image>
                     </ToggleButton>
                 </Border>
-                <Border HorizontalAlignment="Center" Style="{StaticResource CairoTaskbarBorderStyle}" Name="bdrTaskbar">
+                <Border HorizontalAlignment="Center" Name="bdrTaskbar">
                     <StackPanel Orientation="Horizontal">
                         <ListView HorizontalAlignment="Stretch"
                                   Name="quickLaunchList"
@@ -254,8 +254,7 @@
                         </ListView>
                         <ListView HorizontalAlignment="Stretch"
                                   Style="{StaticResource TaskbarListView}"
-                                  x:Name="TasksList" 
-                                  Margin="-3,-1,0,0">
+                                  x:Name="TasksList">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Horizontal"
@@ -263,7 +262,7 @@
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
                             <ListView.GroupStyle>
-                                <GroupStyle x:Name="TaskbarGroupStyle" ContainerStyle="{StaticResource CairoTaskbarGroupStyle}">
+                                <GroupStyle x:Name="TaskbarGroupStyle">
                                     <GroupStyle.Panel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Horizontal"></StackPanel>
@@ -307,9 +306,9 @@
                         </ListView>
                     </StackPanel>
                 </Border>
-                <Border HorizontalAlignment="Left" Style="{StaticResource CairoTaskbarEndBorderStyle}" Name="bdrTaskbarEnd">
+                <Border HorizontalAlignment="Left" Name="bdrTaskbarEnd">
                     <StackPanel Orientation="Horizontal">
-                        <ToggleButton x:Name="btnTaskList" Style="{StaticResource CairoTaskbarButtonList}" Click="btnTaskList_Click" ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_TaskListToolTip)}" ToolTipService.Placement="Top">
+                        <ToggleButton x:Name="btnTaskList" Click="btnTaskList_Click" ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_TaskListToolTip)}" ToolTipService.Placement="Top">
                             <Image Source="Resources\taskListIcon.png"
                            Width="14"
                            Height="12"
