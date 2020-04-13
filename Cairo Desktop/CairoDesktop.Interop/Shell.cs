@@ -535,6 +535,21 @@ namespace CairoDesktop.Interop
                 sizeof(int));
         }
 
+        public static void PeekWindow(bool show, IntPtr targetHwnd, IntPtr callingHwnd)
+        {
+            uint enable = 0;
+            if (show) enable = 1;
+
+            if (IsWindows81OrBetter)
+            {
+                DwmActivateLivePreview(enable, targetHwnd, callingHwnd, AeroPeekType.Window, IntPtr.Zero);
+            }
+            else
+            {
+                DwmActivateLivePreview(enable, targetHwnd, callingHwnd, AeroPeekType.Window);
+            }
+        }
+
         public static void EnableWindowBlur(IntPtr hWnd)
         {
             if (IsWindows10OrBetter)

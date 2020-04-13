@@ -133,16 +133,7 @@ namespace CairoDesktop
         {
             if (isDwmEnabled)
             {
-                if (Shell.IsWindows81OrBetter)
-                {
-                    NativeMethods.DwmActivateLivePreview(1, taskButton.Window.Handle, handle,
-                        NativeMethods.AeroPeekType.Window, IntPtr.Zero);
-                }
-                else
-                {
-                    NativeMethods.DwmActivateLivePreview(1, taskButton.Window.Handle, handle,
-                        NativeMethods.AeroPeekType.Window);
-                }
+                Shell.PeekWindow(true, taskButton.Window.Handle, handle);
             }
         }
 
@@ -150,16 +141,7 @@ namespace CairoDesktop
         {
             if (isDwmEnabled)
             {
-                if (Shell.IsWindows81OrBetter)
-                {
-                    NativeMethods.DwmActivateLivePreview(0, taskButton.Window.Handle, handle,
-                        NativeMethods.AeroPeekType.Window, IntPtr.Zero);
-                }
-                else
-                {
-                    NativeMethods.DwmActivateLivePreview(0, taskButton.Window.Handle, handle,
-                        NativeMethods.AeroPeekType.Window);
-                }
+                Shell.PeekWindow(false, taskButton.Window.Handle, handle);
             }
         }
     }

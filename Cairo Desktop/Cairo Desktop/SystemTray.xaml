@@ -3,7 +3,7 @@
              x:Class="CairoDesktop.SystemTray"
              x:Name="CairoSystemTray"
              Height="22"
-             Margin="0,0,8,0">
+             Margin="8,0,8,0">
     <UserControl.Resources>
         <Style TargetType="ItemsControl">
             <Setter Property="Template">
