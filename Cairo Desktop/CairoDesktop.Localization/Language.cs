@@ -230,7 +230,7 @@ namespace CairoDesktop.Localization
             { "sSettings_Taskbar_DisplayModeAppBar", "Taskbar reserves space" },
             { "sSettings_Taskbar_DisplayModeOverlap", "Taskbar overlaps windows" },
             { "sSettings_Taskbar_DisplayModeAutoHide", "Taskbar automatically hides" },
-            { "sSettings_Taskbar_EnableTaskbarMultiMon", "Show Taskbar on multiple monitors" },
+            { "sSettings_Taskbar_EnableTaskbarMultiMon", "Show taskbar on multiple monitors" },
             { "sSettings_Taskbar_FullWidthTaskBar", "Use full display width for the taskbar" },
             { "sSettings_Taskbar_MiddleClick", "Middle-click action:" },
             { "sSettings_Taskbar_MiddleClickNewWindow", "Open new window" },
