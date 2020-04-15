@@ -32,6 +32,8 @@ namespace CairoDesktop.SupportingClasses
             if (WindowManager.Instance.DesktopWindow != null)
                 WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
 
+            path = Environment.ExpandEnvironmentVariables(path);
+
             return Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.Instance.FileManager), "\"" + path + "\"");
         }
     }

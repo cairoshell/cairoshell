@@ -465,6 +465,21 @@ namespace CairoDesktop.Configuration
                 }
             }
         }
+
+        public bool EnableTaskbarThumbnails
+        {
+            get
+            {
+                return cairoSettings.EnableTaskbarThumbnails;
+            }
+            set
+            {
+                if (cairoSettings.EnableTaskbarThumbnails != value)
+                {
+                    cairoSettings.EnableTaskbarThumbnails = value;
+                }
+            }
+        }
         #endregion
 
         #region Menu Bar
@@ -631,6 +646,66 @@ namespace CairoDesktop.Configuration
                 if (cairoSettings.PinnedNotifyIcons != val)
                 {
                     cairoSettings.PinnedNotifyIcons = val;
+                }
+            }
+        }
+
+        public bool EnableMenuExtraVolume
+        {
+            get
+            {
+                return cairoSettings.EnableMenuExtraVolume;
+            }
+            set
+            {
+                if (cairoSettings.EnableMenuExtraVolume != value)
+                {
+                    cairoSettings.EnableMenuExtraVolume = value;
+                }
+            }
+        }
+
+        public bool EnableMenuExtraActionCenter
+        {
+            get
+            {
+                return cairoSettings.EnableMenuExtraActionCenter;
+            }
+            set
+            {
+                if (cairoSettings.EnableMenuExtraActionCenter != value)
+                {
+                    cairoSettings.EnableMenuExtraActionCenter = value;
+                }
+            }
+        }
+
+        public bool EnableMenuExtraClock
+        {
+            get
+            {
+                return cairoSettings.EnableMenuExtraClock;
+            }
+            set
+            {
+                if (cairoSettings.EnableMenuExtraClock != value)
+                {
+                    cairoSettings.EnableMenuExtraClock = value;
+                }
+            }
+        }
+
+        public bool EnableMenuExtraSearch
+        {
+            get
+            {
+                return cairoSettings.EnableMenuExtraSearch;
+            }
+            set
+            {
+                if (cairoSettings.EnableMenuExtraSearch != value)
+                {
+                    cairoSettings.EnableMenuExtraSearch = value;
                 }
             }
         }

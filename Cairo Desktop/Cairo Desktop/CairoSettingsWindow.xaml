@@ -404,6 +404,34 @@
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
+                    <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_MenuExtras)}"
+                               Style="{StaticResource SettingGroupHeader}" />
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Vertical">
+                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuExtraClock, UpdateSourceTrigger=PropertyChanged}"
+                                      Click="CheckBox_Click"
+                                      Name="chkEnableMenuExtraClock">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraClock)}" />
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuExtraSearch, UpdateSourceTrigger=PropertyChanged}"
+                                      Click="CheckBox_Click"
+                                      Name="chkEnableMenuExtraSearch">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraSearch)}" />
+                            </CheckBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuExtraVolume, UpdateSourceTrigger=PropertyChanged}"
+                                      Click="CheckBox_Click"
+                                      Name="chkEnableMenuExtraVolume">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraVolume)}" />
+                            </CheckBox>
+                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuExtraActionCenter, UpdateSourceTrigger=PropertyChanged}"
+                                      Click="CheckBox_Click"
+                                      Name="chkEnableMenuExtraActionCenter">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraActionCenter)}" />
+                            </CheckBox>
+                        </StackPanel>
+                    </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}"
                                Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableSysTray, UpdateSourceTrigger=PropertyChanged}"
@@ -721,6 +749,10 @@
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarThumbnails, UpdateSourceTrigger=PropertyChanged}"
+                              Name="chkEnableTaskbarThumbnails">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableThumbnails)}" />
+                    </CheckBox>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
                               Click="CheckBox_Click"
                               Name="chkEnableTaskbarMultiMon">
@@ -762,7 +794,15 @@
                                   DropDownClosed="DropDown_Changed"
                                   IsDropDownOpen="False"
                                   IsEditable="False"
+                                  Width="109"
                                   SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=LogSeverity, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button Height="24"
+                                Padding="10,0"
+                                Margin="5,0,0,0"
+                                HorizontalAlignment="Left"
+                                Name="btnOpenLogsFolder"
+                                Click="btnOpenLogsFolder_OnClick"
+                                Content="{Binding Path=(l10n:DisplayString.sSettings_Advanced_OpenLogsFolder)}" />
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
                                Style="{StaticResource SettingGroupHeader}" />
@@ -795,7 +835,6 @@
                                 </Binding>
                             </TextBox.Text>
                         </TextBox>
-
                     </StackPanel>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ForceSoftwareRendering, UpdateSourceTrigger=PropertyChanged}"
                               Click="CheckBox_Click"

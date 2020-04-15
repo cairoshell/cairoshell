@@ -1568,6 +1568,46 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_MenuBar_MenuExtras
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_MenuBar_EnableMenuExtraVolume
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_MenuBar_EnableMenuExtraActionCenter
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_MenuBar_EnableMenuExtraClock
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_MenuBar_EnableMenuExtraSearch
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
         public static string sSettings_Desktop_EnableDesktop
         {
             get
@@ -1881,6 +1921,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sSettings_Taskbar_EnableThumbnails
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
         public static string sSettings_Advanced_LoggingLevel
         {
             get
@@ -1954,6 +2002,14 @@ namespace CairoDesktop.Localization
         }
 
         public static string sSettings_Advanced_LogOffLater
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
+        public static string sSettings_Advanced_OpenLogsFolder
         {
             get
             {

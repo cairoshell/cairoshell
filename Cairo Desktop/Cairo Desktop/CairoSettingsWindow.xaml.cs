@@ -42,6 +42,7 @@ namespace CairoDesktop
             loadHotKeys();
             loadLoggingLevels();
             loadNotficationSettings();
+            loadVersionDependentSettings();
 
             checkUpdateConfig();
             checkTrayStatus();
@@ -255,6 +256,14 @@ namespace CairoDesktop
             }
         }
 
+        private void loadVersionDependentSettings()
+        {
+            if (!Shell.IsWindows10OrBetter)
+            {
+                chkEnableMenuBarBlur.Visibility = Visibility.Collapsed;
+                chkEnableMenuExtraActionCenter.Visibility = Visibility.Collapsed;
+            }
+        }
 
 
         #region Notification area icon drag and drop
@@ -651,6 +660,11 @@ namespace CairoDesktop
 
             if (LogoffChoice.HasValue && LogoffChoice.Value)
                 Shell.Logoff();
+        }
+
+        private void btnOpenLogsFolder_OnClick(object sender, RoutedEventArgs e)
+        {
+            FolderHelper.OpenWithShell("%localappdata%\\Cairo_Development_Team\\Logs");
         }
 
         private void chkRunAtLogOn_Click(object sender, RoutedEventArgs e)

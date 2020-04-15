@@ -108,8 +108,7 @@ namespace CairoDesktop
             if (!ListMode)
             {
                 setIconSize();
-
-                btn.ToolTip = null;
+                setToolTip();
             }
             else
             {
@@ -136,6 +135,9 @@ namespace CairoDesktop
             {
                 switch (e.PropertyName)
                 {
+                    case "EnableTaskbarThumbnails":
+                        setToolTip();
+                        break;
                     case "TaskbarIconSize":
                         setIconSize();
                         break;
@@ -151,6 +153,15 @@ namespace CairoDesktop
                 case "ProgressState":
                     pbProgress.IsIndeterminate = Window.ProgressState == NativeMethods.TBPFLAG.TBPF_INDETERMINATE;
                     break;
+            }
+        }
+
+        private void setToolTip()
+        {
+            // list mode always shows tooltips; button mode only shows when thumbnails are disabled
+            if (!ListMode)
+            {
+                ToolTipService.SetIsEnabled(btn, !Settings.Instance.EnableTaskbarThumbnails);
             }
         }
 
@@ -342,7 +353,7 @@ namespace CairoDesktop
 
         private void openThumb()
         {
-            if (!ListMode && ThumbWindow == null)
+            if (!ListMode && ThumbWindow == null && Settings.Instance.EnableTaskbarThumbnails)
             {
                 ThumbWindow = new TaskThumbWindow(this);
                 ThumbWindow.Show();

@@ -12,7 +12,7 @@ namespace CairoDesktop.Configuration.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.4.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.5.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -505,14 +505,74 @@ namespace CairoDesktop.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("7820ae75-23e3-4229-82c1-e41cb67d5b9c|7820ae74-23e3-4229-82c1-e41cb67d5b9c|7820ae7" +
-            "6-23e3-4229-82c1-e41cb67d5b9c")]
+        [global::System.Configuration.DefaultSettingValueAttribute("7820ae76-23e3-4229-82c1-e41cb67d5b9c|7820ae75-23e3-4229-82c1-e41cb67d5b9c|7820ae7" +
+            "4-23e3-4229-82c1-e41cb67d5b9c")]
         public string PinnedNotifyIcons {
             get {
                 return ((string)(this["PinnedNotifyIcons"]));
             }
             set {
                 this["PinnedNotifyIcons"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableTaskbarThumbnails {
+            get {
+                return ((bool)(this["EnableTaskbarThumbnails"]));
+            }
+            set {
+                this["EnableTaskbarThumbnails"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableMenuExtraVolume {
+            get {
+                return ((bool)(this["EnableMenuExtraVolume"]));
+            }
+            set {
+                this["EnableMenuExtraVolume"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableMenuExtraActionCenter {
+            get {
+                return ((bool)(this["EnableMenuExtraActionCenter"]));
+            }
+            set {
+                this["EnableMenuExtraActionCenter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableMenuExtraClock {
+            get {
+                return ((bool)(this["EnableMenuExtraClock"]));
+            }
+            set {
+                this["EnableMenuExtraClock"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableMenuExtraSearch {
+            get {
+                return ((bool)(this["EnableMenuExtraSearch"]));
+            }
+            set {
+                this["EnableMenuExtraSearch"] = value;
             }
         }
     }

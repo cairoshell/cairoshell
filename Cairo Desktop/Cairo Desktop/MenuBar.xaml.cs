@@ -140,26 +140,35 @@ namespace CairoDesktop
                 // add systray
                 systemTray = new SystemTray(this);
                 MenuExtrasHost.Children.Add(systemTray);
+            }
 
+            if (Settings.Instance.EnableMenuExtraVolume)
+            {
                 // add volume
                 menuExtraVolume = new MenuExtraVolume();
                 MenuExtrasHost.Children.Add(menuExtraVolume);
             }
 
-            if (Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
+            if (Settings.Instance.EnableMenuExtraActionCenter && Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
             {
                 // add action center
                 menuExtraActionCenter = new MenuExtraActionCenter(this);
                 MenuExtrasHost.Children.Add(menuExtraActionCenter);
             }
 
-            // add date/time
-            menuExtraClock = new MenuExtraClock(this);
-            MenuExtrasHost.Children.Add(menuExtraClock);
+            if (Settings.Instance.EnableMenuExtraClock)
+            {
+                // add date/time
+                menuExtraClock = new MenuExtraClock(this);
+                MenuExtrasHost.Children.Add(menuExtraClock);
+            }
 
-            // add search
-            menuExtraSearch = new MenuExtraSearch(this);
-            MenuExtrasHost.Children.Add(menuExtraSearch);
+            if (Settings.Instance.EnableMenuExtraSearch)
+            {
+                // add search
+                menuExtraSearch = new MenuExtraSearch(this);
+                MenuExtrasHost.Children.Add(menuExtraSearch);
+            }
         }
 
         private void setupCairoMenu()
