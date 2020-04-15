@@ -356,6 +356,7 @@ namespace CairoDesktop
             if (!ListMode && ThumbWindow == null && Settings.Instance.EnableTaskbarThumbnails)
             {
                 ThumbWindow = new TaskThumbWindow(this);
+                ThumbWindow.Owner = ParentTaskbar;
                 ThumbWindow.Show();
             }
         }

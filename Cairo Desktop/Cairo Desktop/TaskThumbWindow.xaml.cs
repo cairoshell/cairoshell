@@ -133,7 +133,7 @@ namespace CairoDesktop
         {
             if (isDwmEnabled)
             {
-                Shell.PeekWindow(true, taskButton.Window.Handle, handle);
+                Shell.PeekWindow(true, taskButton.Window.Handle, taskButton.ParentTaskbar.Handle);
             }
         }
 
@@ -141,7 +141,7 @@ namespace CairoDesktop
         {
             if (isDwmEnabled)
             {
-                Shell.PeekWindow(false, taskButton.Window.Handle, handle);
+                Shell.PeekWindow(false, taskButton.Window.Handle, taskButton.ParentTaskbar.Handle);
             }
         }
     }
