@@ -378,11 +378,9 @@ namespace CairoDesktop
             {
                 var generalTransform = TransformToAncestor(ancestor);
                 var anchorPoint = generalTransform.Transform(new Point(0, 0));
-                var dpiScale = 1.0;
-                if (ParentTaskbar != null) dpiScale = ParentTaskbar.dpiScale;
 
-                anchorPoint.Y = (anchorPoint.Y + ancestor.Top) * dpiScale;
-                anchorPoint.X = (anchorPoint.X + ancestor.Left) * dpiScale;
+                anchorPoint.Y += ancestor.Top;
+                anchorPoint.X += ancestor.Left;
 
                 return anchorPoint;
             }

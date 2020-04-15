@@ -49,7 +49,7 @@ namespace CairoDesktop
             if (Configuration.Settings.Instance.TaskbarPosition == 1)
             {
                 // taskbar on top
-                Top = taskButtonPoint.Y + (taskButton.ActualHeight * taskButton.ParentTaskbar.dpiScale);
+                Top = taskButtonPoint.Y + taskButton.ActualHeight;
 
                 bdrThumb.Style = Application.Current.FindResource("TaskThumbWindowBorderTopStyle") as Style;
                 bdrThumbInner.Style = Application.Current.FindResource("TaskThumbWindowInnerBorderTopStyle") as Style;
@@ -60,10 +60,10 @@ namespace CairoDesktop
             }
             else
             {
-                Top = taskButtonPoint.Y - (ActualHeight * taskButton.ParentTaskbar.dpiScale);
+                Top = taskButtonPoint.Y - ActualHeight;
             }
 
-            Left = taskButtonPoint.X - (((ActualWidth - taskButton.ActualWidth) / 2) * taskButton.ParentTaskbar.dpiScale);
+            Left = taskButtonPoint.X - ((ActualWidth - taskButton.ActualWidth) / 2);
 
             if (isDwmEnabled)
             {
