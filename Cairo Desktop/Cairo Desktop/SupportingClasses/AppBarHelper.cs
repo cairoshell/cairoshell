@@ -76,17 +76,21 @@ namespace CairoDesktop.SupportingClasses
 
         public static void SetWinTaskbarVisibility(int swp)
         {
-            IntPtr taskbarHwnd = findTaskbarHwnd();
-            IntPtr startButtonHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
-
-            if (taskbarHwnd != IntPtr.Zero && (swp == (int)SetWindowPosFlags.SWP_HIDEWINDOW) == IsWindowVisible(taskbarHwnd))
+            // only run this if our taskbar is enabled, or if we are showing the Windows taskbar
+            if (swp != (int) SetWindowPosFlags.SWP_HIDEWINDOW || Settings.Instance.EnableTaskbar)
             {
-                SetWindowPos(taskbarHwnd, (IntPtr)HWND_BOTTOMMOST, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
-                if (startButtonHwnd != IntPtr.Zero) SetWindowPos(startButtonHwnd, (IntPtr)HWND_BOTTOMMOST, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
-            }
+                IntPtr taskbarHwnd = findTaskbarHwnd();
+                IntPtr startButtonHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
 
-            // adjust secondary taskbars for multi-mon
-            SetSecondaryTaskbarVisibility(swp);
+                if (taskbarHwnd != IntPtr.Zero && (swp == (int)SetWindowPosFlags.SWP_HIDEWINDOW) == IsWindowVisible(taskbarHwnd))
+                {
+                    SetWindowPos(taskbarHwnd, (IntPtr)HWND_BOTTOMMOST, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+                    if (startButtonHwnd != IntPtr.Zero) SetWindowPos(startButtonHwnd, (IntPtr)HWND_BOTTOMMOST, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+                }
+
+                // adjust secondary taskbars for multi-mon
+                SetSecondaryTaskbarVisibility(swp);
+            }
         }
 
         private static void SetSecondaryTaskbarVisibility(int swp)
