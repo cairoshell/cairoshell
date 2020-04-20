@@ -619,7 +619,7 @@ namespace CairoDesktop.WindowsTasks
         public void Close()
         {
             IntPtr retval = IntPtr.Zero;
-            NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, (int)NativeMethods.WM.CLOSE, 0, 2, 200, ref retval);
+            NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_CLOSE, 0, 2, 200, ref retval);
 
             if (retval != IntPtr.Zero)
             {

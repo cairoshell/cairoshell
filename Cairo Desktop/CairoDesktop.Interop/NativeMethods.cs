@@ -745,6 +745,7 @@ namespace CairoDesktop.Interop
         public const int SC_MOVE = 0xF010;
         public const int SC_RESTORE = 0xF120;
         public const int SC_SIZE = 0xF000;
+        public const int SC_CLOSE = 0xF060;
 
         /*/// <summary>
         /// Unregisters a window class, freeing the memory required for the class.
