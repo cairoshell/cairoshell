@@ -175,11 +175,11 @@ namespace CairoDesktop.SupportingClasses
                 }
                 handled = true;
             }
-            else if (msg == NativeMethods.WM_ACTIVATE && enableAppBar && !Shell.IsCairoRunningAsShell && !Startup.IsShuttingDown)
+            else if (msg == (int)NativeMethods.WM.ACTIVATE && enableAppBar && !Shell.IsCairoRunningAsShell && !Startup.IsShuttingDown)
             {
                 AppBarHelper.AppBarActivate(hwnd);
             }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
+            else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
             {
                 // Extract the WINDOWPOS structure corresponding to this message
                 NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
@@ -189,15 +189,15 @@ namespace CairoDesktop.SupportingClasses
                 if (isRaising && (wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
                 {
                     // Sometimes Windows thinks we shouldn't go topmost, so poke here to make it happen.
-                    wndPos.hwndInsertAfter = (IntPtr)NativeMethods.HWND_TOPMOST;
+                    wndPos.hwndInsertAfter = (IntPtr)NativeMethods.WindowZOrder.HWND_TOPMOST;
                     wndPos.UpdateMessage(lParam);
                 }
             }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGED && enableAppBar && !Shell.IsCairoRunningAsShell && !Startup.IsShuttingDown)
+            else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGED && enableAppBar && !Shell.IsCairoRunningAsShell && !Startup.IsShuttingDown)
             {
                 AppBarHelper.AppBarWindowPosChanged(hwnd);
             }
-            else if (msg == NativeMethods.WM_DPICHANGED)
+            else if (msg == (int)NativeMethods.WM.DPICHANGED)
             {
                 if (Screen.Primary)
                 {
@@ -208,12 +208,12 @@ namespace CairoDesktop.SupportingClasses
 
                 setScreenProperties(ScreenSetupReason.DpiChange);
             }
-            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            else if (msg == (int)NativeMethods.WM.DISPLAYCHANGE)
             {
                 setScreenProperties(ScreenSetupReason.DisplayChange);
                 handled = true;
             }
-            else if (msg == NativeMethods.WM_DEVICECHANGE && (int)wParam == 0x0007)
+            else if (msg == (int)NativeMethods.WM.DEVICECHANGE && (int)wParam == 0x0007)
             {
                 setScreenProperties(ScreenSetupReason.DeviceChange);
                 handled = true;

@@ -84,5 +84,12 @@ namespace CairoDesktop.Interop
             Desktop = 1,
             Window = 3
         }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct PSIZE
+        {
+            public int x;
+            public int y;
+        }
     }
 }

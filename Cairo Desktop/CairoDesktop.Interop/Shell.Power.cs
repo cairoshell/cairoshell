@@ -84,6 +84,14 @@ namespace CairoDesktop.Interop
             NativeMethods.SetSuspendState(true, false, false);
         }
 
+        /// <summary>
+        /// Calls the LockWorkStation method on the User32 API.
+        /// </summary>
+        public static void Lock()
+        {
+            NativeMethods.LockWorkStation();
+        }
+
         private static void fetchCapabilities()
         {
             if (!hasFetchedCapabilities)

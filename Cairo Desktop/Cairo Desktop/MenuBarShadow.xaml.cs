@@ -40,7 +40,7 @@ namespace CairoDesktop
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
         {
             int HTTRANSPARENT = (-1);
-            if (msg == NativeMethods.WM_NCHITTEST)
+            if (msg == (int)NativeMethods.WM.NCHITTEST)
             {
                 handled = true;
                 return (IntPtr)HTTRANSPARENT;

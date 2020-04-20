@@ -28,13 +28,13 @@ namespace CairoDesktop
         private void miOpenActionCenter_MouseEnter(object sender, MouseEventArgs e)
         {
             NativeMethods.SetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE,
-                        NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
+                        NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
         }
 
         private void miOpenActionCenter_MouseLeave(object sender, MouseEventArgs e)
         {
             NativeMethods.SetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE,
-                        NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) & ~NativeMethods.WS_EX_NOACTIVATE);
+                        NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) & ~(int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
         }
     }
 }

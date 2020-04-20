@@ -84,8 +84,8 @@ namespace CairoDesktop.SupportingClasses
 
                 if (taskbarHwnd != IntPtr.Zero && (swp == (int)SetWindowPosFlags.SWP_HIDEWINDOW) == IsWindowVisible(taskbarHwnd))
                 {
-                    SetWindowPos(taskbarHwnd, (IntPtr)HWND_BOTTOMMOST, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
-                    if (startButtonHwnd != IntPtr.Zero) SetWindowPos(startButtonHwnd, (IntPtr)HWND_BOTTOMMOST, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+                    SetWindowPos(taskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+                    if (startButtonHwnd != IntPtr.Zero) SetWindowPos(startButtonHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
                 }
 
                 // adjust secondary taskbars for multi-mon
@@ -102,7 +102,7 @@ namespace CairoDesktop.SupportingClasses
             {
                 if ((swp == (int)SetWindowPosFlags.SWP_HIDEWINDOW) == IsWindowVisible(secTaskbarHwnd))
                 {
-                    SetWindowPos(secTaskbarHwnd, (IntPtr)HWND_BOTTOMMOST, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+                    SetWindowPos(secTaskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
                 }
                 secTaskbarHwnd = FindWindowEx(IntPtr.Zero, secTaskbarHwnd, "Shell_SecondaryTrayWnd", null);
             }

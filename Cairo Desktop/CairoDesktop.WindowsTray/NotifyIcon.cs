@@ -254,7 +254,7 @@ namespace CairoDesktop.WindowsTray
                 if (Version > 3)
                     wparam = mouse;
 
-                PostMessage(HWnd, CallbackMessage, wparam, WM_MOUSEHOVER);
+                PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSEHOVER);
 
                 if (Version > 3)
                     PostMessage(HWnd, CallbackMessage, wparam, NIN_POPUPOPEN);
@@ -275,7 +275,7 @@ namespace CairoDesktop.WindowsTray
                 if (Version > 3)
                     wparam = mouse;
 
-                PostMessage(HWnd, CallbackMessage, wparam, WM_MOUSELEAVE);
+                PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSELEAVE);
 
                 if (Version > 3)
                     PostMessage(HWnd, CallbackMessage, wparam, NIN_POPUPCLOSE);
@@ -296,7 +296,7 @@ namespace CairoDesktop.WindowsTray
                 if (Version > 3)
                     wparam = mouse;
 
-                PostMessage(HWnd, CallbackMessage, wparam, WM_MOUSEMOVE);
+                PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSEMOVE);
             }
         }
 
@@ -313,14 +313,14 @@ namespace CairoDesktop.WindowsTray
             {
                 if (DateTime.Now.Subtract(_lastLClick).TotalMilliseconds <= doubleClickTime)
                 {
-                    PostMessage(HWnd, CallbackMessage, wparam, WM_LBUTTONDBLCLK);
+                    PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.LBUTTONDBLCLK);
                 }
                 else
                 {
-                    PostMessage(HWnd, CallbackMessage, wparam, WM_LBUTTONDOWN);
+                    PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.LBUTTONDOWN);
                 }
 
-                PostMessage(HWnd, CallbackMessage, wparam, WM_LBUTTONUP);
+                PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.LBUTTONUP);
                 if (Version >= 4) PostMessage(HWnd, CallbackMessage, mouse, (NIN_SELECT | (UID << 16)));
 
                 _lastLClick = DateTime.Now;
@@ -329,15 +329,15 @@ namespace CairoDesktop.WindowsTray
             {
                 if (DateTime.Now.Subtract(_lastRClick).TotalMilliseconds <= doubleClickTime)
                 {
-                    PostMessage(HWnd, CallbackMessage, wparam, WM_RBUTTONDBLCLK);
+                    PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.RBUTTONDBLCLK);
                 }
                 else
                 {
-                    PostMessage(HWnd, CallbackMessage, wparam, WM_RBUTTONDOWN);
+                    PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.RBUTTONDOWN);
                 }
 
-                PostMessage(HWnd, CallbackMessage, wparam, WM_RBUTTONUP);
-                if (Version >= 4) PostMessage(HWnd, CallbackMessage, mouse, (WM_CONTEXTMENU | (UID << 16)));
+                PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.RBUTTONUP);
+                if (Version >= 4) PostMessage(HWnd, CallbackMessage, mouse, ((uint)WM.CONTEXTMENU | (UID << 16)));
 
                 _lastRClick = DateTime.Now;
             }

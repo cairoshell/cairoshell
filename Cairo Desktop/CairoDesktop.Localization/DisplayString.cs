@@ -200,6 +200,14 @@ namespace CairoDesktop.Localization
             }
         }
 
+        public static string sCairoMenu_Lock
+        {
+            get
+            {
+                return getString();
+            }
+        }
+
         public static string sCairoMenu_LogOff
         {
             get

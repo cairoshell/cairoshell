@@ -86,7 +86,7 @@ namespace CairoDesktop.Common
         {
             if (!handled)
             {
-                if (msg.message == WM_HOTKEY)
+                if (msg.message == (int)WM.HOTKEY)
                 {
                     HotKey hotKey;
 

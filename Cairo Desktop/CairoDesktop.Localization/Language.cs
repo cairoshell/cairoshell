@@ -20,6 +20,7 @@ namespace CairoDesktop.Localization
             { "sCairoMenu_Sleep", "Sleep" },
             { "sCairoMenu_Restart", "Restart..." },
             { "sCairoMenu_ShutDown", "Shut Down..." },
+            { "sCairoMenu_Lock", "Lock" },
             { "sCairoMenu_LogOff", "Log Off..." },
             { "sAbout_Version", "Version" },
             { "sAbout_PreRelease", "Pre-release" },

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CairoDesktop.Interop;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -17,10 +18,6 @@ namespace CairoDesktop.Common
     public class LowLevelKeyboardListener
     {
         private const int WH_KEYBOARD_LL = 13;
-        private const int WM_KEYDOWN = 0x0100;
-        private const int WM_KEYUP = 0x0101;
-        private const int WM_SYSKEYDOWN = 0x0104;
-        private const int WM_SYSKEYUP = 0x0105;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
@@ -77,7 +74,7 @@ namespace CairoDesktop.Common
                 int vkCode = Marshal.ReadInt32(lParam);
 
                 // keep track of pressed keys so we don't intercept hotkeys
-                if (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)
+                if (wParam == (IntPtr)NativeMethods.WM.KEYDOWN || wParam == (IntPtr)NativeMethods.WM.SYSKEYDOWN)
                 {
                     if (!keysPressed.Contains(vkCode))
                         keysPressed.Add(vkCode);
@@ -89,7 +86,7 @@ namespace CairoDesktop.Common
                 }
 
                 // act only when key is raised
-                if (wParam == (IntPtr)WM_KEYUP || wParam == (IntPtr)WM_SYSKEYUP)
+                if (wParam == (IntPtr)NativeMethods.WM.KEYUP || wParam == (IntPtr)NativeMethods.WM.SYSKEYUP)
                 {
                     // if more than one key was pressed before a key was raised, user attempted hotkey
                     if (keysPressed.Count == 1 && OnKeyPressed != null)

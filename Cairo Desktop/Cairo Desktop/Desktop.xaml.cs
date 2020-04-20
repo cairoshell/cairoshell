@@ -114,7 +114,7 @@ namespace CairoDesktop
         #region Window events
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
+            if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
             {
                 if (!IsOverlayOpen)
                 {
@@ -135,25 +135,25 @@ namespace CairoDesktop
                             }
                             else
                             {
-                                wndPos.hwndInsertAfter = (IntPtr)NativeMethods.HWND_BOTTOMMOST;
+                                wndPos.hwndInsertAfter = (IntPtr)NativeMethods.WindowZOrder.HWND_BOTTOM;
                             }
                         }
                         else
                         {
-                            wndPos.hwndInsertAfter = (IntPtr)NativeMethods.HWND_BOTTOMMOST;
+                            wndPos.hwndInsertAfter = (IntPtr)NativeMethods.WindowZOrder.HWND_BOTTOM;
                         }
                         wndPos.UpdateMessage(lParam);
                     }
                 }
             }
-            else if (msg == NativeMethods.WM_DISPLAYCHANGE && Shell.IsCairoRunningAsShell)
+            else if (msg == (int)NativeMethods.WM.DISPLAYCHANGE && Shell.IsCairoRunningAsShell)
             {
                 ResetPosition();
                 ReloadBackground();
 
                 handled = true;
             }
-            else if (msg == NativeMethods.WM_DPICHANGED && Shell.IsCairoRunningAsShell)
+            else if (msg == (int)NativeMethods.WM.DPICHANGED && Shell.IsCairoRunningAsShell)
             {
                 // delay changing things when we are shell. it seems that AppBars do this automagically
                 // if we don't, the system moves things to bad places

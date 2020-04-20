@@ -332,7 +332,7 @@ namespace CairoDesktop.Interop
         {
             SetWindowPos(
                 handle,
-                (IntPtr)HWND_BOTTOMMOST,
+                (IntPtr)WindowZOrder.HWND_BOTTOM,
                 0,
                 0,
                 0,
@@ -344,7 +344,7 @@ namespace CairoDesktop.Interop
         {
             SetWindowPos(
                 handle,
-                (IntPtr)HWND_TOPMOST,
+                (IntPtr)WindowZOrder.HWND_TOPMOST,
                 0,
                 0,
                 0,
@@ -405,7 +405,7 @@ namespace CairoDesktop.Interop
             info.cbSize = Marshal.SizeOf(info);
             info.lpVerb = "properties";
             info.lpFile = Filename;
-            info.nShow = SW_SHOW;
+            info.nShow = (int)WindowShowStyle.Show;
             info.fMask = SEE_MASK_INVOKEIDLIST;
             return ShellExecuteEx(ref info);
         }
@@ -608,7 +608,7 @@ namespace CairoDesktop.Interop
 
             if (IsDesktopVisible() != enable)
             {
-                SendMessageTimeout(hWnd, WM_COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
+                SendMessageTimeout(hWnd, (uint)WM.COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
             }
         }
 

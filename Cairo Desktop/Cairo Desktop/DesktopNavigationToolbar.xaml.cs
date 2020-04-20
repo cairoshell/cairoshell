@@ -262,12 +262,12 @@ namespace CairoDesktop
         #region Window events
         public IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == NativeMethods.WM_MOUSEACTIVATE)
+            if (msg == (int)NativeMethods.WM.MOUSEACTIVATE)
             {
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
-            else if (msg == NativeMethods.WM_WINDOWPOSCHANGING)
+            else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
             {
                 // WM_WINDOWPOSCHANGING arrives here before the desktop window.
                 if (!ToolbarOwner.IsOverlayOpen)
@@ -288,7 +288,7 @@ namespace CairoDesktop
                     }
                 }
             }
-            else if (msg == NativeMethods.WM_DISPLAYCHANGE)
+            else if (msg == (int)NativeMethods.WM.DISPLAYCHANGE)
             {
                 SetPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;

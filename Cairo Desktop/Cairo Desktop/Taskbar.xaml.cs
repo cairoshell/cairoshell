@@ -222,7 +222,7 @@ namespace CairoDesktop
         {
             //Set the window style to noactivate.
             NativeMethods.SetWindowLong(Handle, NativeMethods.GWL_EXSTYLE,
-                NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE) | NativeMethods.WS_EX_NOACTIVATE);
+                NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
         }
 
         private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -337,7 +337,7 @@ namespace CairoDesktop
         #region Window procedure
         protected override IntPtr customWndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == NativeMethods.WM_MOUSEACTIVATE)
+            if (msg == (int)NativeMethods.WM.MOUSEACTIVATE)
             {
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);

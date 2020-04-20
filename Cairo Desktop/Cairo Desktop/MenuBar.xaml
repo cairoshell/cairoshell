@@ -74,6 +74,8 @@
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_ShutDown)}"
                               Click="OpenShutDownBox" />
                     <Separator />
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Lock)}"
+                              Click="SysLock" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_LogOff)}"
                               Click="OpenLogoffBox" />
                 </MenuItem>

@@ -519,6 +519,11 @@ namespace CairoDesktop
             Shell.Sleep();
         }
 
+        private void SysLock(object sender, RoutedEventArgs e)
+        {
+            Shell.Lock();
+        }
+
         private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
         {
             CairoSettingsWindow.Instance.Show();

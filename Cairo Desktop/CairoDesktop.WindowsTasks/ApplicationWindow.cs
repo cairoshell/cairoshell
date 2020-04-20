@@ -413,7 +413,7 @@ namespace CairoDesktop.WindowsTasks
             }
 
             // Make sure this is a real application window and not a child or tool window
-            IntPtr ownerWin = NativeMethods.GetWindow(Handle, NativeMethods.GW_OWNER);
+            IntPtr ownerWin = NativeMethods.GetWindow(Handle, NativeMethods.GetWindow_Cmd.GW_OWNER);
 
             bool isAppWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
             bool hasEdge = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0;
@@ -587,7 +587,7 @@ namespace CairoDesktop.WindowsTasks
                 {
                     // elevated windows require WM_SYSCOMMAND messages
                     IntPtr retval = IntPtr.Zero;
-                    NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_MINIMIZE, 0, 2, 200, ref retval);
+                    NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_MINIMIZE, 0, 2, 200, ref retval);
                 }
             }
         }
@@ -599,7 +599,7 @@ namespace CairoDesktop.WindowsTasks
             {
                 // elevated windows require WM_SYSCOMMAND messages
                 IntPtr retval = IntPtr.Zero;
-                NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
+                NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
             }
             NativeMethods.SetForegroundWindow(Handle);
         }
@@ -611,7 +611,7 @@ namespace CairoDesktop.WindowsTasks
             {
                 // we don't have a fallback for elevated windows here since our only hope, SC_MAXIMIZE, doesn't seem to work for them. fall back to restore.
                 IntPtr retval = IntPtr.Zero;
-                NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
+                NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
             }
             NativeMethods.SetForegroundWindow(Handle);
         }
@@ -619,7 +619,7 @@ namespace CairoDesktop.WindowsTasks
         public void Close()
         {
             IntPtr retval = IntPtr.Zero;
-            NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.WM_CLOSE, 0, 2, 200, ref retval);
+            NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, (int)NativeMethods.WM.CLOSE, 0, 2, 200, ref retval);
 
             if (retval != IntPtr.Zero)
             {
@@ -634,7 +634,7 @@ namespace CairoDesktop.WindowsTasks
             // move window via arrow keys; must be active window to control
             BringToFront();
             IntPtr retval = IntPtr.Zero;
-            NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_MOVE, 0, 2, 200, ref retval);
+            NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_MOVE, 0, 2, 200, ref retval);
         }
 
         public void Size()
@@ -642,7 +642,7 @@ namespace CairoDesktop.WindowsTasks
             // size window via arrow keys; must be active window to control
             BringToFront();
             IntPtr retval = IntPtr.Zero;
-            NativeMethods.SendMessageTimeout(Handle, NativeMethods.WM_SYSCOMMAND, NativeMethods.SC_SIZE, 0, 2, 200, ref retval);
+            NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_SIZE, 0, 2, 200, ref retval);
         }
 
         public void PinToQuickLaunch()
