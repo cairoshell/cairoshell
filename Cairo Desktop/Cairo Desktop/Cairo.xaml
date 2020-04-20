@@ -154,6 +154,38 @@
     <SolidColorBrush Color="#99282828"
                      x:Key="DesktopPressedBottomBorder" />
 
+    <!-- Desktop toolbar resources -->
+    <SolidColorBrush Color="#FF9b9b9b"
+                     x:Key="DesktopNavToolbarBorder" />
+    <LinearGradientBrush x:Key="DesktopNavToolbarBackground"
+                         StartPoint="0,0"
+                         EndPoint="0,1">
+        <GradientStop Color="#8261615f"
+                      Offset="0.0" />
+        <GradientStop Color="#aa131313"
+                      Offset="0.5" />
+        <GradientStop Color="#b2000000"
+                      Offset="0.5" />
+        <GradientStop Color="#b2000000"
+                      Offset="1.0" />
+    </LinearGradientBrush>
+    <DropShadowEffect x:Key="DesktopNavToolbarShadow"
+                      Color="Black"
+                      ShadowDepth="2"
+                      Direction="270"
+                      Opacity="0.6"
+                      BlurRadius="6" />
+    <DropShadowEffect x:Key="DesktopNavToolbarItemHoverEffect"
+                      Color="White"
+                      ShadowDepth="0"
+                      Opacity="1"
+                      BlurRadius="7" />
+    <DropShadowEffect x:Key="DesktopNavToolbarItemPressedEffect"
+                      Color="White"
+                      ShadowDepth="0"
+                      Opacity="1"
+                      BlurRadius="5" />
+
     <!-- Taskbar resources -->
     <LinearGradientBrush x:Key="TaskbarBottomBackground"
                          StartPoint="0,0"
@@ -2630,6 +2662,90 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <!-- Desktop navigation toolbar -->
+    <Style x:Key="DesktopNavToolbar"
+           TargetType="{x:Type Border}">
+        <Setter Property="Width"
+                Value="188" />
+        <Setter Property="Height"
+                Value="42" />
+        <Setter Property="Margin"
+                Value="4,6,8,6" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource ResourceKey=DesktopNavToolbarBorder}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="CornerRadius"
+                Value="3" />
+        <Setter Property="Opacity"
+                Value="0.6" />
+        <Setter Property="Background"
+                Value="{DynamicResource ResourceKey=DesktopNavToolbarBackground}" />
+        <Setter Property="Effect"
+                Value="{DynamicResource ResourceKey=DesktopNavToolbarShadow}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             To="0.9"
+                                             Duration="0:0:0.15" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                             To="0.6"
+                                             Duration="0:0:1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="CairoDesktopNavItemStyle"
+           TargetType="{x:Type Button}">
+        <Setter Property="OverridesDefaultStyle"
+                Value="true" />
+        <Setter Property="Height"
+                Value="18" />
+        <Setter Property="Width"
+                Value="16" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter x:Name="ContentPresenter"
+                                      Margin="0"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="true">
+                <Setter Property="Effect" Value="{DynamicResource ResourceKey=DesktopNavToolbarItemHoverEffect}" />
+            </Trigger>
+            <Trigger Property="IsPressed"
+                     Value="true">
+                <Setter Property="Effect" Value="{DynamicResource ResourceKey=DesktopNavToolbarItemPressedEffect}" />
+            </Trigger>
+            <Trigger Property="IsEnabled"
+                     Value="false">
+                <Setter Property="Opacity"
+                        Value="0.5" />
             </Trigger>
         </Style.Triggers>
     </Style>

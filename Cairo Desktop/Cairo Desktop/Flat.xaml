@@ -18,6 +18,12 @@
     <!-- Folder view resources -->
     <SolidColorBrush Color="#44282828" x:Key="DesktopHoverBackground" />
 
+    <!-- Desktop toolbar resources -->
+    <SolidColorBrush Color="#C0595959"
+                     x:Key="DesktopNavToolbarBorder" />
+    <SolidColorBrush Color="#CF101010"
+                     x:Key="DesktopNavToolbarBackground" />
+
     <!-- Taskbar resources -->
     <SolidColorBrush Color="#CF101010" x:Key="TaskbarBottomBackground" />
     <SolidColorBrush Color="#C0595959" x:Key="TaskbarBottomBorder" />

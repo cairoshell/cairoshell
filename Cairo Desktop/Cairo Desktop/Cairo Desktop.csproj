@@ -338,7 +338,6 @@
     </Resource>
     <Resource Include="Resources\controlsHome.png">
     </Resource>
-    <Resource Include="Resources\desktopControlsBg.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\menubarShadow.png" />

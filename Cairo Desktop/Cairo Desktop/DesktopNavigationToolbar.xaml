@@ -17,58 +17,6 @@
         LocationChanged="DesktopToolbar_LocationChanged"
         Closing="DesktopToolbar_Closing">
     <Window.Resources>
-        <Style x:Key="CairoDesktopNavItemStyle"
-               TargetType="{x:Type Button}">
-            <Setter Property="OverridesDefaultStyle"
-                    Value="true" />
-            <Setter Property="Height"
-                    Value="18" />
-            <Setter Property="Width"
-                    Value="16" />
-            <Setter Property="HorizontalAlignment"
-                    Value="Center" />
-            <Setter Property="VerticalAlignment"
-                    Value="Center" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Margin="0"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center" />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver"
-                         Value="true">
-                    <Setter Property="Effect">
-                        <Setter.Value>
-                            <DropShadowEffect Color="White"
-                                              ShadowDepth="0"
-                                              Opacity="1"
-                                              BlurRadius="7" />
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-                <Trigger Property="IsPressed"
-                         Value="true">
-                    <Setter Property="Effect">
-                        <Setter.Value>
-                            <DropShadowEffect Color="White"
-                                              ShadowDepth="0"
-                                              Opacity="1"
-                                              BlurRadius="5" />
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-                <Trigger Property="IsEnabled"
-                         Value="false">
-                    <Setter Property="Opacity"
-                            Value="0.5" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
         <Style x:Key="CairoDesktopBackNavItemStyle"
                TargetType="{x:Type Button}"
                BasedOn="{StaticResource CairoDesktopNavItemStyle}">
@@ -114,89 +62,58 @@
                     Value="21" />
         </Style>
     </Window.Resources>
-    <StackPanel Orientation="Horizontal"
-                Width="200"
-                Height="54"
-                Opacity="0.8"
-                DataContext="{Binding ElementName=DesktopToolbar}">
-        <StackPanel.Background>
-            <ImageBrush ImageSource="Resources\desktopControlsBg.png" />
-        </StackPanel.Background>
-        <StackPanel.ToolTip>
-            <ToolTip Content="{Binding Path=NavigationManager.CurrentPathFriendly}" />
-        </StackPanel.ToolTip>
-        <StackPanel.Style>
-            <Style TargetType="{x:Type StackPanel}">
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver"
-                             Value="True">
-                        <Trigger.EnterActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                     To="1"
-                                                     Duration="0:0:0.15" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </Trigger.EnterActions>
-                        <Trigger.ExitActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                     To="0.8"
-                                                     Duration="0:0:1" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </Trigger.ExitActions>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </StackPanel.Style>
-        <Button x:Name="btnBack"
-                Style="{StaticResource CairoDesktopBackNavItemStyle}"
-                Margin="29,-4,1,0"
-                Click="btnBack_Click"
-                MouseRightButtonDown="btnBack_MouseRightButtonDown"
-                ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Back)}">
-            <Image Source="Resources\controlsBack.png"
-                   Width="16"
-                   Height="18" />
-        </Button>
-        <Button x:Name="btnUp"
-                Style="{StaticResource CairoDesktopUpNavItemStyle}"
-                Margin="29,-4,-1,0"
-                Click="btnUp_Click"
-                ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Up)}">
-            <Image Source="Resources\controlsUp.png"
-                   Width="18"
-                   Height="16" />
-        </Button>
-        <Button Style="{StaticResource CairoDesktopNavItemWideStyle}"
-                Margin="22,-5,0,0"
-                Click="btnHome_Click"
-                MouseRightButtonDown="btnHome_MouseRightButtonDown"
-                ToolTip="{Binding Path=NavigationManager.HomePathFriendly}">
-            <Image Source="Resources\controlsHome.png"
-                   Width="19"
-                   Height="19" />
-        </Button>
-        <Button Style="{StaticResource CairoDesktopNavItemWideStyle}"
-                Margin="22,-5,0,0"
-                Click="btnBrowse_Click"
-                MouseRightButtonDown="btnBrowse_MouseRightButtonDown"
-                ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Browse)}">
-            <Image Source="Resources\controlsBrowse.png"
-                   Width="21"
-                   Height="17" />
-        </Button>
-        <Button Style="{StaticResource CairoDesktopNavItemStyle}"
-                Margin="23,-4,0,0"
-                Click="btnFwd_Click"
-                ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Forward)}"
-                IsEnabled="{Binding Path=NavigationManager.CanGoForward}">
-            <Image Source="Resources\controlsForward.png"
-                   Width="16"
-                   Height="18" />
-        </Button>
-    </StackPanel>
+    <Border Style="{StaticResource DesktopNavToolbar}">
+        <StackPanel Orientation="Horizontal"
+                    DataContext="{Binding ElementName=DesktopToolbar}">
+            <StackPanel.ToolTip>
+                <ToolTip Content="{Binding Path=NavigationManager.CurrentPathFriendly}" />
+            </StackPanel.ToolTip>
+            <Button x:Name="btnBack"
+                    Style="{StaticResource CairoDesktopBackNavItemStyle}"
+                    Margin="22,0,1,0"
+                    Click="btnBack_Click"
+                    MouseRightButtonDown="btnBack_MouseRightButtonDown"
+                    ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Back)}">
+                <Image Source="Resources\controlsBack.png"
+                       Width="16"
+                       Height="18" />
+            </Button>
+            <Button x:Name="btnUp"
+                    Style="{StaticResource CairoDesktopUpNavItemStyle}"
+                    Margin="22,0,-1,0"
+                    Click="btnUp_Click"
+                    ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Up)}">
+                <Image Source="Resources\controlsUp.png"
+                       Width="18"
+                       Height="16" />
+            </Button>
+            <Button Style="{StaticResource CairoDesktopNavItemWideStyle}"
+                    Margin="22,-1,0,0"
+                    Click="btnHome_Click"
+                    MouseRightButtonDown="btnHome_MouseRightButtonDown"
+                    ToolTip="{Binding Path=NavigationManager.HomePathFriendly}">
+                <Image Source="Resources\controlsHome.png"
+                       Width="19"
+                       Height="19" />
+            </Button>
+            <Button Style="{StaticResource CairoDesktopNavItemWideStyle}"
+                    Margin="22,-1,0,0"
+                    Click="btnBrowse_Click"
+                    MouseRightButtonDown="btnBrowse_MouseRightButtonDown"
+                    ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Browse)}">
+                <Image Source="Resources\controlsBrowse.png"
+                       Width="21"
+                       Height="17" />
+            </Button>
+            <Button Style="{StaticResource CairoDesktopNavItemStyle}"
+                    Margin="23,0,0,0"
+                    Click="btnFwd_Click"
+                    ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Forward)}"
+                    IsEnabled="{Binding Path=NavigationManager.CanGoForward}">
+                <Image Source="Resources\controlsForward.png"
+                       Width="16"
+                       Height="18" />
+            </Button>
+        </StackPanel>
+    </Border>
 </Window>
