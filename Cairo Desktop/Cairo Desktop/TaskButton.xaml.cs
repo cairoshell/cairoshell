@@ -330,6 +330,7 @@ namespace CairoDesktop
             if (!inDrag)
             {
                 inDrag = true;
+                SetParentAutoHide(false);
                 dragTimer.Start();
             }
         }
@@ -339,6 +340,7 @@ namespace CairoDesktop
             if (inDrag)
             {
                 dragTimer.Stop();
+                SetParentAutoHide(true);
                 inDrag = false;
             }
         }
