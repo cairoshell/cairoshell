@@ -99,7 +99,7 @@
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
             // Don't allow showing both the Windows taskbar and the Cairo tray
-            if (Settings.Instance.EnableSysTray == true && (Settings.Instance.EnableTaskbar == true || Shell.IsCairoRunningAsShell))
+            if (Settings.Instance.EnableSysTray && (Settings.Instance.EnableTaskbar || Shell.IsCairoRunningAsShell))
             {
                 NotificationArea.Instance.Initialize();
             }
@@ -126,7 +126,7 @@
         {
             try
             {
-                if (Settings.Instance.IsFirstRun == true || isTour)
+                if (Settings.Instance.IsFirstRun || isTour)
                 {
                     Welcome welcome = new Welcome();
                     welcome.Show();

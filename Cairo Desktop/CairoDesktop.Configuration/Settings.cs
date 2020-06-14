@@ -855,9 +855,6 @@ namespace CairoDesktop.Configuration
             _upgrading = true;
             cairoSettings.Upgrade();
             _upgrading = false;
-
-            // clear cached value since it may be wrong after upgrade
-            cairoSettings.IsFirstRun = false;
         }
 
         public object this[string propertyName]

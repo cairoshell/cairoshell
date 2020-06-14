@@ -42,7 +42,7 @@ namespace CairoDesktop
                 cboLangSelect.Items.Add(lang);
             }
 
-            cboLangSelect.SelectedItem = Settings.Instance.Language;
+            cboLangSelect.SelectedValue = Settings.Instance.Language;
         }
 
         private void btnGoPage2_Click(object sender, RoutedEventArgs e)
