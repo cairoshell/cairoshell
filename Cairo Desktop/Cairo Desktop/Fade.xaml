@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+   
+    <!-- Menu resources -->
+    <LinearGradientBrush StartPoint="0,0"
+                         EndPoint="0,1"
+                         x:Key="MenuBarBackground">
+        <GradientStop Color="#CF000000"
+                      Offset="0.1" />
+        <GradientStop
+                      Offset=".9" Color="#02000000" />
+    </LinearGradientBrush>
+    <SolidColorBrush Color="#BF4a4a4a" x:Key="MenuBarBorder" />
+    <SolidColorBrush Color="#cF0f0f0f" x:Key="MenuBackgroundGradient" />
+    <SolidColorBrush Color="#DF0080ff" x:Key="MenuItemHoverGradient" />
+    <SolidColorBrush Color="#DF0080ff" x:Key="MenuHeaderPressedGradient" />
+    <SolidColorBrush Color="#DF0080ff" x:Key="MenuTopBorderBrush" />
+    <SolidColorBrush Color="#20FFFFFF" x:Key="ProgramsMenuCategoryHoverBackground" />
+    <Thickness x:Key="MenuBarBorderThickness" Left="0" Right="0" Top="0" Bottom="0" />
+
+    <!-- Search resources -->
+    <SolidColorBrush Color="#FF020200" x:Key="SearchTitleBackground" />
+    <SolidColorBrush Color="#FF0073bc" x:Key="SearchViewAllResultsBackground" />
+    <SolidColorBrush Color="#ff0185d7" x:Key="SearchViewAllResultsHoverBackground" />
+    <SolidColorBrush Color="#ff0164a2" x:Key="SearchViewAllResultsPressedBackground" />
+
+    <!-- Folder view resources -->
+    <SolidColorBrush Color="#44282828" x:Key="DesktopHoverBackground" />
+
+    <!-- Desktop toolbar resources -->
+    <SolidColorBrush Color="#C0595959"
+                     x:Key="DesktopNavToolbarBorder" />
+    <SolidColorBrush Color="#CF101010"
+                     x:Key="DesktopNavToolbarBackground" />
+
+    <!-- Taskbar resources -->
+    <LinearGradientBrush StartPoint="0,0"
+                         EndPoint="0,1"
+                         x:Key="TaskbarBottomBackground">
+        <GradientStop Color="#02000000"
+                      Offset="0.1" />
+        <GradientStop
+                      Offset="1" Color="#CF000000" />
+    </LinearGradientBrush>
+        <SolidColorBrush Color="#00000000" x:Key="TaskbarBottomBorder" />
+    <SolidColorBrush Color="#9F2a2a2a" x:Key="TaskbarTopBackground" />
+    <SolidColorBrush Color="#AF707070" x:Key="TaskbarTopBorder" />
+    <SolidColorBrush Color="#77000000" x:Key="TaskGroupBorder" />
+    <SolidColorBrush Color="#10FFFFFF" x:Key="TaskbarItemInactiveBackground" />
+    <SolidColorBrush Color="#30FFFFFF" x:Key="TaskbarItemInactiveBorder" />
+    <SolidColorBrush Color="#AF0057a8" x:Key="TaskbarItemInactiveHoverBackground" />
+    <SolidColorBrush Color="#DF0f82c2" x:Key="TaskbarItemInactiveHoverBorder" />
+    <SolidColorBrush Color="#FF0057a8" x:Key="TaskbarItemInactivePressedBackground" />
+    <SolidColorBrush Color="#30FFFFFF" x:Key="TaskbarItemActiveBackground" />
+    <SolidColorBrush Color="#70FFFFFF" x:Key="TaskbarItemActiveBorder" />
+    <SolidColorBrush Color="#43FFFFFF" x:Key="TaskbarItemActiveHoverBackground" />
+    <SolidColorBrush Color="#53FFFFFF" x:Key="TaskbarItemActivePressedBackground" />
+    <LinearGradientBrush x:Key="TaskbarItemFlashingBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#5fff5400" Offset="1.0" />
+        <GradientStop Color="#5fff5400" Offset="0.35" />
+        <GradientStop Color="#5fff5400" Offset="0.0" />
+    </LinearGradientBrush>
+    <SolidColorBrush Color="#FFcb7900" x:Key="TaskbarItemFlashingBorder" />
+    <LinearGradientBrush x:Key="TaskbarItemFlashingDisabledBackground" StartPoint="0,1" EndPoint="0,0">
+        <GradientStop Color="#CFDBA715" Offset="1.0" />
+        <GradientStop Color="#CFDBA715" Offset="0.3" />
+        <GradientStop Color="#CFDBA715" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemFlashingHoverBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#6fff5400" Offset="1.0" />
+        <GradientStop Color="#6fff5400" Offset="0.3" />
+        <GradientStop Color="#6fff5400" Offset="0.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemFlashingPressedBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#7fff5400" Offset="1.0" />
+        <GradientStop Color="#7fff5400" Offset="0.3" />
+        <GradientStop Color="#7fff5400" Offset="0.0" />
+    </LinearGradientBrush>
+
+    <!-- Dialog resources -->
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="DialogWindowBackground" />
+    <SolidColorBrush Color="#FFF9F9F9" x:Key="DialogButtonNormalBackground" />
+    <SolidColorBrush Color="#602e2e2e" x:Key="DialogButtonNormalBorder" />
+    <SolidColorBrush Color="#FFDCE1E6" x:Key="DialogButtonHoverBackground" />
+    <SolidColorBrush Color="#6028292a" x:Key="DialogButtonHoverBorder" />
+    <SolidColorBrush Color="#FFc6cbcf" x:Key="DialogButtonPressedBackground" />
+    <SolidColorBrush Color="#60242525" x:Key="DialogButtonPressedBorder" />
+    <SolidColorBrush Color="DarkGray" x:Key="DialogButtonDisabledBackground" />
+</ResourceDictionary>

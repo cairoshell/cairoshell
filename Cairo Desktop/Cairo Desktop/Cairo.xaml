@@ -4,6 +4,7 @@
                     x:Class="CairoDesktop.Cairo"
                     xmlns:cairo="clr-namespace:CairoDesktop"
                     xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization">
+    
     <!-- Menu resources -->
     <LinearGradientBrush StartPoint="0,0"
                          EndPoint="0,1"
@@ -83,6 +84,8 @@
                       Direction="90"
                       Opacity="0.6"
                       BlurRadius="0" />
+    <Thickness x:Key="MenuBarBorderThickness" Right="1" />
+
 
     <!-- Search resources -->
     <SolidColorBrush Color="#FFFFFFFF"
@@ -500,7 +503,7 @@
         <Setter Property="BorderBrush"
                 Value="{DynamicResource ResourceKey=MenuBarBorder}" />
         <Setter Property="BorderThickness"
-                Value="0,0,0,1" />
+                Value="{DynamicResource ResourceKey=MenuBarBorderThickness}" />
         <Setter Property="Margin"
                 Value="0" />
     </Style>
