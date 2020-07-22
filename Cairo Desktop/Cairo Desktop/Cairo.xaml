@@ -84,7 +84,7 @@
                       Direction="90"
                       Opacity="0.6"
                       BlurRadius="0" />
-    <Thickness x:Key="MenuBarBorderThickness" Right="1" />
+    <Thickness x:Key="MenuBarBorderThickness" Bottom="1" />
 
 
     <!-- Search resources -->
