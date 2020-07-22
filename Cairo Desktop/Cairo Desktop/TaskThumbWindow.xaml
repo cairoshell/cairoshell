@@ -57,11 +57,22 @@
                         <TextBlock Style="{StaticResource TaskThumbTitleStyle}"
                                    Text="{Binding Path=Title}"
                                    Width="164" />
+                        <Button	Click="Button_Click" Height="10" Width="10" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" >
+                            <Path
+			Width="6"
+			Height="6"
+			Data="M 18,11 27,20 M 18,20 27,11"
+			Stroke="{Binding Path=Foreground,
+							 RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+			StrokeThickness="1" Stretch="Fill" />
+                        </Button>
                     </StackPanel>
                     <local:DwmThumbnail x:Name="dwmThumbnail"
                                         Width="180"
                                         Height="120" />
+                    
                 </StackPanel>
+                
             </Border>
         </Border>
     </Border>

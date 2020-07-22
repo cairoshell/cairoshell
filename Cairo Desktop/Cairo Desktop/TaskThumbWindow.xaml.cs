@@ -144,5 +144,11 @@ namespace CairoDesktop
                 Shell.PeekWindow(false, taskButton.Window.Handle, taskButton.ParentTaskbar.Handle);
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            taskButton.Window.Close();
+            Close();
+        }
     }
 }
