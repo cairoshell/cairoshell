@@ -23,7 +23,8 @@ namespace CairoDesktop.WindowsTasks
         private static int WM_TASKBARCREATEDMESSAGE = -1;
         private static int TASKBARBUTTONCREATEDMESSAGE = -1;
 
-        public static bool IsStarting = false;
+        private static IntPtr uncloakEventHook = IntPtr.Zero;
+        private WinEventProc uncloakEventProc;
 
         public static WindowsTasksService Instance { get; } = new WindowsTasksService();
 
@@ -34,8 +35,6 @@ namespace CairoDesktop.WindowsTasks
 
         private void initialize()
         {
-            IsStarting = true;
-
             try
             {
                 CairoLogger.Instance.Debug("Starting WindowsTasksService");
@@ -53,6 +52,24 @@ namespace CairoDesktop.WindowsTasks
                 WM_TASKBARCREATEDMESSAGE = RegisterWindowMessage("TaskbarCreated");
                 TASKBARBUTTONCREATEDMESSAGE = RegisterWindowMessage("TaskbarButtonCreated");
                 _HookWin.MessageReceived += ShellWinProc;
+
+                if (Interop.Shell.IsWindows8OrBetter)
+                {
+                    // set event hook for uncloak events
+                    uncloakEventProc = UncloakEventCallback;
+
+                    if (uncloakEventHook == IntPtr.Zero)
+                    {
+                        uncloakEventHook = SetWinEventHook(
+                            EVENT_OBJECT_UNCLOAKED,
+                            EVENT_OBJECT_UNCLOAKED,
+                            IntPtr.Zero,
+                            uncloakEventProc,
+                            0,
+                            0,
+                            WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS);
+                    }
+                }
 
                 // set window for ITaskbarList
                 setTaskbarListHwnd();
@@ -78,7 +95,8 @@ namespace CairoDesktop.WindowsTasks
                 EnumWindows(new CallBackPtr((hwnd, lParam) =>
                 {
                     ApplicationWindow win = new ApplicationWindow(hwnd, this);
-                    if (win.ShowInTaskbar && !Windows.Contains(win))
+
+                    if (win.CanAddToTaskbar && win.ShowInTaskbar && !Windows.Contains(win))
                         Windows.Add(win);
 
                     return true;
@@ -91,8 +109,6 @@ namespace CairoDesktop.WindowsTasks
             {
                 CairoLogger.Instance.Info("Unable to start WindowsTasksService: " + ex.Message);
             }
-
-            IsStarting = false;
         }
 
         private void groupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)
@@ -115,6 +131,7 @@ namespace CairoDesktop.WindowsTasks
             CairoLogger.Instance.Debug("Disposing of WindowsTasksService");
             AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged -= CategoryList_CategoryChanged;
             DeregisterShellHookWindow(_HookWin.Handle);
+            if (uncloakEventHook != IntPtr.Zero) UnhookWinEvent(uncloakEventHook);
             // May be contributing to #95
             //RegisterShellHook(_HookWin.Handle, 0);// 0 = RSH_UNREGISTER - this seems to be undocumented....
             _HookWin.DestroyHandle();
@@ -153,14 +170,15 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        private ApplicationWindow addWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive)
+        private ApplicationWindow addWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive, bool sanityCheck = false)
         {
             ApplicationWindow win = new ApplicationWindow(hWnd, this);
 
             // set window state if a non-default value is provided
             if (initialState != ApplicationWindow.WindowState.Inactive) win.State = initialState;
 
-            Windows.Add(win);
+            // add window unless we need to validate it is eligible to show in taskbar
+            if (!sanityCheck || win.CanAddToTaskbar) Windows.Add(win);
 
             // Only send TaskbarButtonCreated if we are shell, and if OS is not Server Core
             // This is because if Explorer is running, it will send the message, so we don't need to
@@ -274,7 +292,7 @@ namespace CairoDesktop.WindowsTasks
                                 }
                                 else
                                 {
-                                    addWindow(msg.LParam, ApplicationWindow.WindowState.Flashing);
+                                    addWindow(msg.LParam, ApplicationWindow.WindowState.Flashing, true);
                                 }
                                 break;
 
@@ -312,7 +330,7 @@ namespace CairoDesktop.WindowsTasks
                                 }
                                 else
                                 {
-                                    addWindow(msg.LParam);
+                                    addWindow(msg.LParam, ApplicationWindow.WindowState.Inactive, true);
                                 }
                                 break;
 
@@ -322,11 +340,6 @@ namespace CairoDesktop.WindowsTasks
                             //     break;
 
                             default:
-                                if (Windows.Any(i => i.Handle == msg.LParam))
-                                {
-                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
-                                    win.UpdateProperties();
-                                }
                                 break;
                         }
                     }
@@ -456,6 +469,18 @@ namespace CairoDesktop.WindowsTasks
             }
 
             msg.Result = DefWindowProc(msg.HWnd, msg.Msg, msg.WParam, msg.LParam);
+        }
+
+        private void UncloakEventCallback(IntPtr hWinEventHook, uint eventType, IntPtr hWnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+        {
+            if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0)
+            {
+                if (Windows.Any(i => i.Handle == hWnd))
+                {
+                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == hWnd);
+                    win.Uncloak();
+                }
+            }
         }
 
         private void setTaskbarListHwnd()
