@@ -325,8 +325,6 @@ namespace CairoDesktop.WindowsTasks
 
             set
             {
-                if (value == WindowState.Active) hasActivated = true;
-
                 _state = value;
                 OnPropertyChanged("State");
             }
@@ -358,8 +356,20 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        // set to true the first time the window state becomes active
-        private bool hasActivated = false;
+        public bool CanAddToTaskbar
+        {
+            get
+            {
+                bool isWindow = NativeMethods.IsWindow(Handle);
+                bool isVisible = NativeMethods.IsWindowVisible(Handle);
+                bool isToolWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
+                bool isAppWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
+                bool isNoActivate = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE) != 0;
+                IntPtr ownerWin = NativeMethods.GetWindow(Handle, NativeMethods.GetWindow_Cmd.GW_OWNER);
+
+                return isWindow && isVisible && (ownerWin == IntPtr.Zero || isAppWindow) && (!isNoActivate || isAppWindow) && !isToolWindow;
+            }
+        }
 
         private bool? _showInTaskbar;
 
@@ -390,16 +400,8 @@ namespace CairoDesktop.WindowsTasks
 
         private bool getShowInTaskbar()
         {
-            // Don't show empty buttons.
-            if (string.IsNullOrEmpty(Title) || State == WindowState.Hidden)
-            {
-                //CairoLogger.Instance.Debug(string.Format("Hid {0} window with Title: {1} State: {2}", Handle, Title, State));
-                return false;
-            }
-
-            /* EnumWindows and ShellHook return UWP app windows that are 'cloaked', which should not be visible in the taskbar.
-             * The DWMA_CLOAKED attribute is set sometimes even when a window should be shown, so skip this check if the window has been activated. */
-            if ((WindowsTasksService.IsStarting || !hasActivated) && Shell.IsWindows8OrBetter)
+            // EnumWindows and ShellHook return UWP app windows that are 'cloaked', which should not be visible in the taskbar.
+            if (Shell.IsWindows8OrBetter)
             {
                 uint cloaked;
                 int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(uint));
@@ -410,27 +412,28 @@ namespace CairoDesktop.WindowsTasks
                     CairoLogger.Instance.Debug(string.Format("Cloaked ({0}) window ({1}) hidden from taskbar", cloaked, Title));
                     return false;
                 }
+
+                // UWP shell windows that are not cloaked should be hidden from the taskbar, too.
+                StringBuilder cName = new StringBuilder(256);
+                NativeMethods.GetClassName(Handle, cName, cName.Capacity);
+                if (cName.ToString() == "ApplicationFrameWindow" || cName.ToString() == "Windows.UI.Core.CoreWindow")
+                {
+                    if ((ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) == 0)
+                    {
+                        CairoLogger.Instance.Debug($"Hiding UWP non-window {Title}");
+                        return false;
+                    }
+                }
             }
 
-            // Make sure this is a real application window and not a child or tool window
-            IntPtr ownerWin = NativeMethods.GetWindow(Handle, NativeMethods.GetWindow_Cmd.GW_OWNER);
+            return true;
+        }
 
-            bool isAppWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
-            bool hasEdge = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) != 0;
-            bool isTopmostOnly = ExtendedWindowStyles == (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOPMOST;
-            bool isToolWindow = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
-            bool isAcceptFiles = (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_ACCEPTFILES) != 0;
-            bool isVisible = NativeMethods.IsWindowVisible(Handle);
+        public void Uncloak()
+        {
+            CairoLogger.Instance.Debug($"Uncloak event received for {Title}");
 
-            if ((isAppWindow || ((hasEdge || isTopmostOnly || ExtendedWindowStyles == 0) && ownerWin == IntPtr.Zero) || (isAcceptFiles && ShowStyle == NativeMethods.WindowShowStyle.ShowMaximized && ownerWin == IntPtr.Zero)) && !isToolWindow && isVisible)
-            {
-                return true;
-            }
-            else
-            {
-                //CairoLogger.Instance.Debug(string.Format("Hid {0} window with properties: {1} {2} {3} {4} {5} {6} {7} {8} {9}", Handle, isAppWindow, hasEdge, isTopmostOnly, isToolWindow, isAcceptFiles, isVisible, ShowStyle, ownerWin, ExtendedWindowStyles));
-                return false;
-            }
+            SetShowInTaskbar();
         }
 
         private void setIcon()

@@ -217,16 +217,14 @@
                               Click="OpenTaskManager" />
                     </ContextMenu>
                 </StackPanel.ContextMenu>
-                <Border HorizontalAlignment="Left" Name="bdrTaskbarLeft">
-                    <ToggleButton x:Name="btnDesktopOverlay" Click="btnDesktopOverlay_Click" IsChecked="{Binding Path=IsOverlayOpen, Mode=OneWay}" ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_DesktopOverlayToolTip)}" ToolTipService.Placement="Top">
-                        <Image Source="Resources\desktopOverlayIcon.png"
-                           Width="15"
-                           Height="14"
-                           Margin="0"></Image>
-                    </ToggleButton>
-                </Border>
                 <Border HorizontalAlignment="Center" Name="bdrTaskbar">
-                    <StackPanel Orientation="Horizontal">
+                    <DockPanel>
+                        <ToggleButton x:Name="btnDesktopOverlay" Click="btnDesktopOverlay_Click" DockPanel.Dock="Left" IsChecked="{Binding Path=IsOverlayOpen, Mode=OneWay}" ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_DesktopOverlayToolTip)}" ToolTipService.Placement="Top">
+                            <Image Source="Resources\desktopOverlayIcon.png"
+                                   Width="15"
+                                   Height="14"
+                                   Margin="0"></Image>
+                        </ToggleButton>
                         <ListView HorizontalAlignment="Stretch"
                                   Name="quickLaunchList"
                                   Style="{StaticResource QuickLaunchListStyle}"
@@ -252,63 +250,7 @@
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
-                        <ListView HorizontalAlignment="Stretch"
-                                  Style="{StaticResource TaskbarListView}"
-                                  x:Name="TasksList">
-                            <ListView.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"
-                                                Margin="0"></StackPanel>
-                                </ItemsPanelTemplate>
-                            </ListView.ItemsPanel>
-                            <ListView.GroupStyle>
-                                <GroupStyle x:Name="TaskbarGroupStyle">
-                                    <GroupStyle.Panel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"></StackPanel>
-                                        </ItemsPanelTemplate>
-                                    </GroupStyle.Panel>
-                                </GroupStyle>
-                            </ListView.GroupStyle>
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="{x:Type ListViewItem}">
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                <Border BorderThickness="0" Margin="0,0,-1,0" BorderBrush="Transparent" Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}">
-                                                    <self:TaskButton ListMode="False" MouseRightButtonUp="TaskButton_MouseRightButtonUp" TextWidth="{Binding Path=ButtonTextWidth, ElementName=TaskbarWindow}" ParentTaskbar="{Binding ElementName=TaskbarWindow}" />
-                                                    <Border.Style>
-                                                        <Style TargetType="{x:Type Border}">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Path=ShowInTaskbar}" Value="True">
-                                                                    <Setter Property="Visibility" Value="Visible" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Border.Style>
-                                                    <Border.Triggers>
-                                                        <EventTrigger RoutedEvent="Loaded">
-                                                            <BeginStoryboard>
-                                                                <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetProperty="Width" From="0" To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}" Duration="0:0:0.2" FillBehavior="Stop" />
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </EventTrigger>
-                                                    </Border.Triggers>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>
-                    </StackPanel>
-                </Border>
-                <Border HorizontalAlignment="Left" Name="bdrTaskbarEnd">
-                    <StackPanel Orientation="Horizontal">
-                        <ToggleButton x:Name="btnTaskList" Click="btnTaskList_Click" ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_TaskListToolTip)}" ToolTipService.Placement="Top">
+                        <ToggleButton x:Name="btnTaskList" Click="btnTaskList_Click" DockPanel.Dock="Right" ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_TaskListToolTip)}" ToolTipService.Placement="Top">
                             <Image Source="Resources\taskListIcon.png"
                            Width="14"
                            Height="12"
@@ -354,7 +296,7 @@
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="{x:Type ListViewItem}">
                                                             <Border BorderThickness="0" BorderBrush="Transparent">
-                                                                <self:TaskButton ListMode="True" TextWidth="315">
+                                                                <self:TaskButton ListMode="True">
                                                                     <self:TaskButton.Style>
                                                                         <Style TargetType="self:TaskButton">
                                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -386,7 +328,59 @@
                                 </StackPanel>
                             </Border>
                         </Popup>
-                    </StackPanel>
+                        <ListView HorizontalAlignment="Stretch"
+                                  Style="{StaticResource TaskbarListView}"
+                                  x:Name="TasksList">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal"
+                                                Margin="0"></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.GroupStyle>
+                                <GroupStyle x:Name="TaskbarGroupStyle">
+                                    <GroupStyle.Panel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"></StackPanel>
+                                        </ItemsPanelTemplate>
+                                    </GroupStyle.Panel>
+                                </GroupStyle>
+                            </ListView.GroupStyle>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                <Border BorderThickness="0" Margin="0,0,-1,0" BorderBrush="Transparent" Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}">
+                                                    <self:TaskButton ListMode="False" MouseRightButtonUp="TaskButton_MouseRightButtonUp" ParentTaskbar="{Binding ElementName=TaskbarWindow}" />
+                                                    <Border.Style>
+                                                        <Style TargetType="{x:Type Border}">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Path=ShowInTaskbar}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <Border.Triggers>
+                                                        <EventTrigger RoutedEvent="Loaded">
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Width" From="0" To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}" Duration="0:0:0.2" FillBehavior="Stop" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </Border.Triggers>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    </DockPanel>
                 </Border>
             </StackPanel>
         </Border>

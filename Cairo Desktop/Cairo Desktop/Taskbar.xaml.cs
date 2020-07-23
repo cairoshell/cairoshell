@@ -19,20 +19,17 @@ namespace CairoDesktop
         private AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
         // display properties
-        private int addToSize = 0;
+        private int addToSize;
+        private int baseButtonWidth;
+        private bool isCondensed;
+
+        private bool useFullWidthAppearance => Settings.Instance.FullWidthTaskBar || isCondensed;
 
         public static DependencyProperty ButtonWidthProperty = DependencyProperty.Register("ButtonWidth", typeof(double), typeof(Taskbar), new PropertyMetadata(new double()));
         public double ButtonWidth
         {
             get { return (double)GetValue(ButtonWidthProperty); }
             set { SetValue(ButtonWidthProperty, value); }
-        }
-
-        public static DependencyProperty ButtonTextWidthProperty = DependencyProperty.Register("ButtonTextWidth", typeof(double), typeof(Taskbar), new PropertyMetadata(new double()));
-        public double ButtonTextWidth
-        {
-            get { return (double)GetValue(ButtonTextWidthProperty); }
-            set { SetValue(ButtonTextWidthProperty, value); }
         }
 
         public static DependencyProperty CanAutoHideProperty = DependencyProperty.Register("CanAutoHide", typeof(bool), typeof(Taskbar), new PropertyMetadata(new bool()));
@@ -81,6 +78,7 @@ namespace CairoDesktop
             {
                 btnDesktopOverlay.DataContext = WindowManager.Instance.DesktopWindow;
                 bdrBackground.DataContext = WindowManager.Instance.DesktopWindow;
+                bdrTaskbar.Padding = new Thickness(0);
             }
             else
             {
@@ -97,29 +95,19 @@ namespace CairoDesktop
         {
             double screenWidth = Screen.Bounds.Width / dpiScale;
             Left = Screen.Bounds.Left / dpiScale;
-            bdrTaskbar.MaxWidth = screenWidth - 36;
+            bdrTaskbar.MaxWidth = screenWidth;
             Width = screenWidth;
 
             // set taskbar edge based on preference
             if (Settings.Instance.TaskbarPosition == 1)
             {
                 appBarEdge = NativeMethods.ABEdge.ABE_TOP;
-                bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarTopBorderStyle") as Style;
-                bdrTaskbarEnd.Style = Application.Current.FindResource("CairoTaskbarEndTopBorderStyle") as Style;
-                bdrTaskbarLeft.Style = Application.Current.FindResource("CairoTaskbarLeftTopBorderStyle") as Style;
-                btnTaskList.Style = Application.Current.FindResource("CairoTaskbarTopButtonList") as Style;
-                btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarTopButtonDesktopOverlay") as Style;
                 TaskbarGroupStyle.ContainerStyle = Application.Current.FindResource("CairoTaskbarTopGroupStyle") as Style;
                 TasksList.Margin = new Thickness(0);
             }
             else
             {
                 appBarEdge = NativeMethods.ABEdge.ABE_BOTTOM;
-                bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarBorderStyle") as Style;
-                bdrTaskbarEnd.Style = Application.Current.FindResource("CairoTaskbarEndBorderStyle") as Style;
-                bdrTaskbarLeft.Style = Application.Current.FindResource("CairoTaskbarLeftBorderStyle") as Style;
-                btnTaskList.Style = Application.Current.FindResource("CairoTaskbarButtonList") as Style;
-                btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarButtonDesktopOverlay") as Style;
                 TaskbarGroupStyle.ContainerStyle = Application.Current.FindResource("CairoTaskbarGroupStyle") as Style;
                 TasksList.Margin = new Thickness(-3, -1, 0, 0);
             }
@@ -131,7 +119,7 @@ namespace CairoDesktop
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);
             
             setTaskbarSize();
-            setFullWidthTaskbar();
+            setTaskbarBorderStyles();
         }
 
         private void setTaskbarSize()
@@ -153,6 +141,7 @@ namespace CairoDesktop
                     break;
             }
 
+            baseButtonWidth = 140 + addToSize;
             Height = 29 + addToSize;
             desiredHeight = Height;
             Top = getDesiredTopPosition();
@@ -163,29 +152,40 @@ namespace CairoDesktop
                 bdrTaskListPopup.Margin = new Thickness(5, 0, 5, (Screen.Bounds.Bottom / dpiScale) - Top - 1);
         }
 
-        private void setFullWidthTaskbar()
+        private void setTaskbarBorderStyles()
         {
-            if (Settings.Instance.FullWidthTaskBar)
+            if (useFullWidthAppearance)
+            {
                 bdrTaskbar.Width = getDesiredWidth();
-            else
-                bdrTaskbar.Width = double.NaN;
 
-            if (Settings.Instance.FullWidthTaskBar)
-            {
-                bdrTaskbarLeft.CornerRadius = new CornerRadius(0);
-                bdrTaskbarEnd.CornerRadius = new CornerRadius(0);
-            }
-            else
-            {
                 if (Settings.Instance.TaskbarPosition == 1)
                 {
-                    bdrTaskbarLeft.CornerRadius = new CornerRadius(0, 0, 0, 8);
-                    bdrTaskbarEnd.CornerRadius = new CornerRadius(0, 0, 8, 0);
+                    bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarTopFullBorderStyle") as Style;
+                    btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarTopFullButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = Application.Current.FindResource("CairoTaskbarTopFullButtonList") as Style;
                 }
                 else
                 {
-                    bdrTaskbarLeft.CornerRadius = new CornerRadius(8, 0, 0, 0);
-                    bdrTaskbarEnd.CornerRadius = new CornerRadius(0, 8, 0, 0);
+                    bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarFullBorderStyle") as Style;
+                    btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarFullButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = Application.Current.FindResource("CairoTaskbarFullButtonList") as Style;
+                }
+            }
+            else
+            {
+                bdrTaskbar.Width = double.NaN;
+
+                if (Settings.Instance.TaskbarPosition == 1)
+                {
+                    bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarTopBorderStyle") as Style;
+                    btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarTopButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = Application.Current.FindResource("CairoTaskbarTopButtonList") as Style;
+                }
+                else
+                {
+                    bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarBorderStyle") as Style;
+                    btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = Application.Current.FindResource("CairoTaskbarButtonList") as Style;
                 }
             }
         }
@@ -242,7 +242,7 @@ namespace CairoDesktop
                         if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
                         break;
                     case "FullWidthTaskBar":
-                        setFullWidthTaskbar();
+                        setTaskbarBorderStyles();
                         break;
                 }
             }
@@ -254,12 +254,31 @@ namespace CairoDesktop
         {
             if (TasksList.Items.Groups != null)
             {
-                double size = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - bdrTaskbarEnd.ActualWidth - (TasksList.Items.Groups.Count * (5 * dpiScale)) - 14) / TasksList.Items.Count);
-                if (size > (140 + addToSize))
-                    ButtonWidth = 140 + addToSize;
+                // calculate the maximum per-button size
+                double adjustedSize = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - (btnDesktopOverlay.ActualWidth - 5) - btnTaskList.ActualWidth - (TasksList.Items.Groups.Count * 4 - 3) - 11) / TasksList.Items.Count);
+
+                if (adjustedSize > baseButtonWidth)
+                {
+                    ButtonWidth = baseButtonWidth;
+
+                    if (isCondensed)
+                    {
+                        // set back to non-condensed mode if appropriate
+                        isCondensed = false;
+                        setTaskbarBorderStyles();
+                    }
+                }
                 else
-                    ButtonWidth = size;
-                ButtonTextWidth = ButtonWidth - 33 - addToSize;
+                {
+                    ButtonWidth = adjustedSize;
+
+                    if (!isCondensed)
+                    {
+                        // use condensed appearance if not already
+                        isCondensed = true;
+                        setTaskbarBorderStyles();
+                    }
+                }
             }
         }
 
@@ -273,7 +292,7 @@ namespace CairoDesktop
 
             Left = Screen.Bounds.Left / dpiScale;
 
-            setFullWidthTaskbar();
+            setTaskbarBorderStyles();
 
             // set maxwidth always
             bdrTaskbar.MaxWidth = getDesiredWidth();
@@ -297,7 +316,7 @@ namespace CairoDesktop
 
         private double getDesiredWidth()
         {
-            return (Screen.Bounds.Width / dpiScale) - btnDesktopOverlay.Width - btnTaskList.Width + 1; // account for border
+            return Screen.Bounds.Width / dpiScale;
         }
 
         private void takeFocus()
@@ -321,7 +340,7 @@ namespace CairoDesktop
         {
             base.afterAppBarPos(isSameCoords, rect);
 
-            if (Settings.Instance.FullWidthTaskBar)
+            if (useFullWidthAppearance)
                 bdrTaskbar.Width = getDesiredWidth();
 
             // set maxwidth always

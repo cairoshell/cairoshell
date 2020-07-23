@@ -1744,6 +1744,18 @@ namespace CairoDesktop.Interop
         [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
         public static extern bool SendNotifyMessage(IntPtr hWnd, uint Msg, UIntPtr wParam, IntPtr lParam);
 
+        public static int WINEVENT_OUTOFCONTEXT = 0;
+        public static int WINEVENT_SKIPOWNPROCESS = 2;
+        public static int EVENT_OBJECT_UNCLOAKED = 0x8018;
+
+        public delegate void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+
+        [DllImport(User32_DllName, SetLastError = true)]
+        public static extern IntPtr SetWinEventHook(int eventMin, int eventMax, IntPtr hmodWinEventProc, WinEventProc lpfnWinEventProc, int idProcess, int idThread, int dwflags);
+
+        [DllImport(User32_DllName, SetLastError = true)]
+        public static extern int UnhookWinEvent(IntPtr hWinEventHook);
+
         /// <summary>
         /// Windows Messages
         /// Defined in winuser.h from Windows SDK v6.1

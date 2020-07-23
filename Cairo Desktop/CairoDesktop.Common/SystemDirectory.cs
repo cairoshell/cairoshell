@@ -30,7 +30,8 @@ namespace CairoDesktop.Common {
             set {
                 dir = value;
                 fileWatcher.Path = dir.FullName;
-                initialize();
+                if (initAsync) initializeAsync();
+                else initializeSync();
             }
         }
 
@@ -68,14 +69,17 @@ namespace CairoDesktop.Common {
         private FileSystemEventHandler deletedHandler;
         private RenamedEventHandler renamedHandler;
 
+        private bool initAsync;
+
         /// <summary>
         /// Creates a new SystemDirectory object for the given directory path.
         /// </summary>
-        public SystemDirectory(string pathToDirectory, Dispatcher dispatcher)
+        public SystemDirectory(string pathToDirectory, Dispatcher dispatcher, bool isAsync = true)
         {
             try
             {
                 this.dispatcher = dispatcher;
+                initAsync = isAsync;
                 files = new InvokingObservableCollection<SystemFile>(this.dispatcher);
                 DirectoryInfo = new DirectoryInfo(pathToDirectory);
                 fileWatcher.IncludeSubdirectories = false;
@@ -196,7 +200,7 @@ namespace CairoDesktop.Common {
             return false;
         }
 
-        private void initialize()
+        private void initializeAsync()
         {
             files.Clear();
 
@@ -204,29 +208,40 @@ namespace CairoDesktop.Common {
             // Because files is an ObservableCollection, we don't need to do anything special for the UI to update
             var thread = new Thread(() =>
             {
-                if (Settings.Instance.EnableSubDirs)
-                {
-                    IEnumerable<string> dirs = Directory.EnumerateDirectories(DirectoryInfo.FullName);
-                    foreach (string subDir in dirs)
-                    {
-                        if (isFileVisible(subDir))
-                        {
-                            files.Add(new SystemFile(subDir, this));
-                        }
-                    }
-                }
-
-                IEnumerable<string> dirFiles = Directory.EnumerateFiles(DirectoryInfo.FullName, "*");
-                foreach (string file in dirFiles)
-                {
-                    if (isFileVisible(file))
-                    {
-                        files.Add(new SystemFile(file, this));
-                    }
-                }
+                enumerateFiles();
             });
             thread.IsBackground = true;
             thread.Start();
+        }
+
+        private void initializeSync()
+        {
+            files.Clear();
+            enumerateFiles();
+        }
+
+        private void enumerateFiles()
+        {
+            if (Settings.Instance.EnableSubDirs)
+            {
+                IEnumerable<string> dirs = Directory.EnumerateDirectories(DirectoryInfo.FullName);
+                foreach (string subDir in dirs)
+                {
+                    if (isFileVisible(subDir))
+                    {
+                        files.Add(new SystemFile(subDir, this));
+                    }
+                }
+            }
+
+            IEnumerable<string> dirFiles = Directory.EnumerateFiles(DirectoryInfo.FullName, "*");
+            foreach (string file in dirFiles)
+            {
+                if (isFileVisible(file))
+                {
+                    files.Add(new SystemFile(file, this));
+                }
+            }
         }
 
         public void Dispose()

@@ -1366,63 +1366,43 @@
     <Style x:Key="CairoTaskbarBorderStyle"
            TargetType="{x:Type Border}">
         <Setter Property="BorderThickness"
-                Value="0,1,0,0" />
+                Value="1,1,1,0" />
+        <Setter Property="CornerRadius"
+                Value="8,8,0,0" />
         <Setter Property="Padding"
-                Value="0" />
+                Value="5,0,0,0" />
         <Setter Property="Background"
                 Value="{DynamicResource ResourceKey=TaskbarBottomBackground}" />
         <Setter Property="BorderBrush"
                 Value="{DynamicResource ResourceKey=TaskbarBottomBorder}" />
     </Style>
+    <Style x:Key="CairoTaskbarFullBorderStyle"
+           TargetType="{x:Type Border}"
+           BasedOn="{StaticResource CairoTaskbarBorderStyle}">
+        <Setter Property="BorderThickness"
+                Value="0,1,0,0" />
+        <Setter Property="CornerRadius"
+                Value="0" />
+    </Style>
     <Style x:Key="CairoTaskbarTopBorderStyle"
            TargetType="{x:Type Border}"
            BasedOn="{StaticResource CairoTaskbarBorderStyle}">
         <Setter Property="BorderThickness"
-                Value="0,0,0,1" />
+                Value="1,0,1,1" />
+        <Setter Property="CornerRadius"
+                Value="0,0,8,8" />
         <Setter Property="Background"
                 Value="{DynamicResource ResourceKey=TaskbarTopBackground}" />
         <Setter Property="BorderBrush"
                 Value="{DynamicResource ResourceKey=TaskbarTopBorder}" />
     </Style>
-    <Style x:Key="CairoTaskbarEndBorderStyle"
-           TargetType="{x:Type Border}"
-           BasedOn="{StaticResource CairoTaskbarBorderStyle}">
-        <Setter Property="BorderThickness"
-                Value="0,1,1,0" />
-        <Setter Property="CornerRadius"
-                Value="0,8,0,0" />
-        <Setter Property="Padding"
-                Value="0" />
-    </Style>
-    <Style x:Key="CairoTaskbarEndTopBorderStyle"
+    <Style x:Key="CairoTaskbarTopFullBorderStyle"
            TargetType="{x:Type Border}"
            BasedOn="{StaticResource CairoTaskbarTopBorderStyle}">
         <Setter Property="BorderThickness"
-                Value="0,0,1,1" />
+                Value="0,0,0,1" />
         <Setter Property="CornerRadius"
-                Value="0,0,8,0" />
-        <Setter Property="Padding"
                 Value="0" />
-    </Style>
-    <Style x:Key="CairoTaskbarLeftBorderStyle"
-           TargetType="{x:Type Border}"
-           BasedOn="{StaticResource CairoTaskbarEndBorderStyle}">
-        <Setter Property="BorderThickness"
-                Value="1,1,0,0" />
-        <Setter Property="CornerRadius"
-                Value="8,0,0,0" />
-        <Setter Property="MinWidth"
-                Value="9" />
-    </Style>
-    <Style x:Key="CairoTaskbarLeftTopBorderStyle"
-           TargetType="{x:Type Border}"
-           BasedOn="{StaticResource CairoTaskbarEndTopBorderStyle}">
-        <Setter Property="BorderThickness"
-                Value="1,0,0,1" />
-        <Setter Property="CornerRadius"
-                Value="0,0,0,8" />
-        <Setter Property="MinWidth"
-                Value="9" />
     </Style>
     <Style x:Key="TaskbarListView"
            TargetType="{x:Type ListView}">
@@ -1906,12 +1886,14 @@
                 Value="Stretch" />
         <Setter Property="Margin"
                 Value="1,-1,-1,0" />
+        <Setter Property="Border.CornerRadius"
+                Value="0,8,0,0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border x:Name="Border"
                             BorderThickness="1"
-                            CornerRadius="0,8,0,0"
+                            CornerRadius="{TemplateBinding Border.CornerRadius}"
                             Margin="0"
                             Background="Transparent"
                             BorderBrush="Transparent">
@@ -1948,152 +1930,62 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style x:Key="CairoTaskbarFullButtonList"
+           TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource CairoTaskbarButtonList}">
+        <Setter Property="Margin"
+                Value="1,-1,0,0" />
+        <Setter Property="Border.CornerRadius"
+                Value="0" />
     </Style>
     <Style x:Key="CairoTaskbarTopButtonList"
            TargetType="{x:Type ToggleButton}"
            BasedOn="{StaticResource CairoTaskbarButtonList}">
         <Setter Property="Margin"
                 Value="1,0,-1,-1" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <Border x:Name="Border"
-                            BorderThickness="1"
-                            CornerRadius="0,0,8,0"
-                            Margin="0"
-                            Background="Transparent"
-                            BorderBrush="Transparent">
-                        <ContentPresenter Margin="0,1,0,0"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver"
-                                 Value="true">
-                            <Setter TargetName="Border"
-                                    Property="Background"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBackground}" />
-                            <Setter TargetName="Border"
-                                    Property="BorderBrush"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBorder}" />
-                        </Trigger>
-                        <Trigger Property="IsPressed"
-                                 Value="true">
-                            <Setter TargetName="Border"
-                                    Property="Background"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemInactivePressedBackground}" />
-                        </Trigger>
-                        <Trigger Property="IsChecked"
-                                 Value="true">
-                            <Setter TargetName="Border"
-                                    Property="Background"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemActiveBackground}" />
-                            <Setter TargetName="Border"
-                                    Property="BorderBrush"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemActiveBorder}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Border.CornerRadius"
+                Value="0,0,8,0" />
+    </Style>
+    <Style x:Key="CairoTaskbarTopFullButtonList"
+           TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource CairoTaskbarButtonList}">
+        <Setter Property="Margin"
+                Value="1,0,0,-1" />
+        <Setter Property="Border.CornerRadius"
+                Value="0" />
     </Style>
     <Style x:Key="CairoTaskbarButtonDesktopOverlay"
            TargetType="{x:Type ToggleButton}"
            BasedOn="{StaticResource CairoTaskbarButtonList}">
         <Setter Property="Margin"
                 Value="-1,-1,0,0" />
-        <Setter Property="Width"
-                Value="26" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <Border x:Name="Border"
-                            BorderThickness="1"
-                            CornerRadius="8,0,0,0"
-                            Margin="0"
-                            Background="Transparent"
-                            BorderBrush="Transparent">
-                        <ContentPresenter Margin="0,1,0,0"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver"
-                                 Value="true">
-                            <Setter TargetName="Border"
-                                    Property="Background"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBackground}" />
-                            <Setter TargetName="Border"
-                                    Property="BorderBrush"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBorder}" />
-                        </Trigger>
-                        <Trigger Property="IsPressed"
-                                 Value="true">
-                            <Setter TargetName="Border"
-                                    Property="Background"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemInactivePressedBackground}" />
-                        </Trigger>
-                        <Trigger Property="IsChecked"
-                                 Value="true">
-                            <Setter TargetName="Border"
-                                    Property="Background"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemActiveBackground}" />
-                            <Setter TargetName="Border"
-                                    Property="BorderBrush"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemActiveBorder}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Border.CornerRadius"
+                Value="8,0,0,0" />
+    </Style>
+    <Style x:Key="CairoTaskbarFullButtonDesktopOverlay"
+           TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource CairoTaskbarButtonList}">
+        <Setter Property="Margin"
+                Value="0,-1,0,0" />
+        <Setter Property="Border.CornerRadius"
+                Value="0" />
     </Style>
     <Style x:Key="CairoTaskbarTopButtonDesktopOverlay"
            TargetType="{x:Type ToggleButton}"
-           BasedOn="{StaticResource CairoTaskbarButtonDesktopOverlay}">
+           BasedOn="{StaticResource CairoTaskbarButtonList}">
         <Setter Property="Margin"
                 Value="-1,0,0,-1" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ToggleButton}">
-                    <Border x:Name="Border"
-                            BorderThickness="1"
-                            CornerRadius="0,0,0,8"
-                            Margin="0"
-                            Background="Transparent"
-                            BorderBrush="Transparent">
-                        <ContentPresenter Margin="0,1,0,0"
-                                          HorizontalAlignment="Center"
-                                          VerticalAlignment="Center" />
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver"
-                                 Value="true">
-                            <Setter TargetName="Border"
-                                    Property="Background"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBackground}" />
-                            <Setter TargetName="Border"
-                                    Property="BorderBrush"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemInactiveHoverBorder}" />
-                        </Trigger>
-                        <Trigger Property="IsPressed"
-                                 Value="true">
-                            <Setter TargetName="Border"
-                                    Property="Background"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemInactivePressedBackground}" />
-                        </Trigger>
-                        <Trigger Property="IsChecked"
-                                 Value="true">
-                            <Setter TargetName="Border"
-                                    Property="Background"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemActiveBackground}" />
-                            <Setter TargetName="Border"
-                                    Property="BorderBrush"
-                                    Value="{DynamicResource ResourceKey=TaskbarItemActiveBorder}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Border.CornerRadius"
+                Value="0,0,0,8" />
+    </Style>
+    <Style x:Key="CairoTaskbarTopFullButtonDesktopOverlay"
+           TargetType="{x:Type ToggleButton}"
+           BasedOn="{StaticResource CairoTaskbarButtonList}">
+        <Setter Property="Margin"
+                Value="0,0,0,-1" />
+        <Setter Property="Border.CornerRadius"
+                Value="0" />
     </Style>
 
     <!-- Dialogs -->

@@ -424,7 +424,7 @@ namespace CairoDesktop.AppGrabber {
         #region INotifyCollectionChanged Members
 
         /// <summary>
-        /// This Event is raised whenever an object in the list is added, removed, or replaced. Necesary to sync state when binding.
+        /// This event is raised whenever an object in the list is added, removed, or replaced. Necessary to sync state when binding.
         /// </summary>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 

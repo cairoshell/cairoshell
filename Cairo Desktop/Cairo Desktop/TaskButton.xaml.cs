@@ -10,15 +10,8 @@ namespace CairoDesktop
 {
     public partial class TaskButton
     {
-        public static readonly DependencyProperty TextWidthProperty = DependencyProperty.Register("TextWidth", typeof(double), typeof(TaskButton), new PropertyMetadata(new double()));
         public static readonly DependencyProperty ListModeProperty = DependencyProperty.Register("ListMode", typeof(bool), typeof(TaskButton), new PropertyMetadata(new bool()));
         public static DependencyProperty ParentTaskbarProperty = DependencyProperty.Register("ParentTaskbar", typeof(Taskbar), typeof(TaskButton));
-
-        public double TextWidth
-        {
-            get { return (double)GetValue(TextWidthProperty); }
-            set { SetValue(TextWidthProperty, value); }
-        }
 
         public bool ListMode
         {
