@@ -150,5 +150,11 @@ namespace CairoDesktop
             taskButton.Window.Close();
             Close();
         }
+
+        private void Window_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (closeButton.Visibility != Visibility.Visible)
+                closeButton.Visibility = Visibility.Visible;
+        }
     }
 }
