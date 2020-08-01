@@ -22,6 +22,9 @@ namespace CairoDesktop.Interop
         public static extern bool LockWorkStation();
 
         [DllImport(User32_DllName)]
+        public static extern IntPtr GetShellWindow();
+
+        [DllImport(User32_DllName)]
         public static extern int SetShellWindow(IntPtr hWnd);
 
         [DllImport(User32_DllName)]

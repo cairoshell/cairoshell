@@ -11,6 +11,7 @@ using System.Windows.Data;
 
 using CairoDesktop.Common.Logging;
 using static CairoDesktop.Interop.NativeMethods;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop.WindowsTasks
 {

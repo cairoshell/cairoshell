@@ -864,9 +864,8 @@ namespace CairoDesktop.Interop
 
         public static void SetIsCairoRunningAsShell()
         {
-            // check if there is an existing Shell_TrayWnd. If so, then Explorer is actually running as shell so assume we are not.
-            IntPtr taskbarHwnd = FindWindow("Shell_TrayWnd", "");
-            isCairoRunningAsShell = IsCairoConfiguredAsShell && taskbarHwnd == IntPtr.Zero;
+            // check if there is an existing shell window. If not, we will assume the role of shell.
+            isCairoRunningAsShell = GetShellWindow() == IntPtr.Zero;
         }
 
         private static bool? isServerCore;

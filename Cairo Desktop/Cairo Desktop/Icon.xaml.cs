@@ -190,9 +190,9 @@ namespace CairoDesktop
                         if (file.IsDirectory
                             && Location == "Desktop"
                             && Settings.Instance.EnableDynamicDesktop
-                            && WindowManager.Instance.DesktopWindow != null)
+                            && DesktopManager.Instance.IsEnabled)
                         {
-                            WindowManager.Instance.DesktopWindow.NavigationManager.NavigateTo(file.FullName);
+                            DesktopManager.Instance.NavigationManager.NavigateTo(file.FullName);
                             return;
                         }
                         else if (file.IsDirectory)
@@ -202,8 +202,7 @@ namespace CairoDesktop
                         }
                     }
 
-                    if (WindowManager.Instance.DesktopWindow != null)
-                        WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
+                    DesktopManager.Instance.IsOverlayOpen = false;
 
                     Shell.ExecuteProcess(file.FullName);
                     return;
@@ -231,7 +230,7 @@ namespace CairoDesktop
             {
                 if (Settings.Instance.EnableDynamicDesktop)
                 {
-                    WindowManager.Instance.DesktopWindow.NavigationManager.NavigateTo(path);
+                    DesktopManager.Instance.NavigationManager.NavigateTo(path);
                 }
                 else
                 {
@@ -248,7 +247,7 @@ namespace CairoDesktop
             }
             else if (action != "cut" && action != "copy" && action != "link")
             {
-                WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
+                DesktopManager.Instance.IsOverlayOpen = false;
             }
         }
 
@@ -266,8 +265,7 @@ namespace CairoDesktop
                 CustomCommands.PerformAction(verb, file.FullName);
             }
 
-            if (WindowManager.Instance.DesktopWindow != null)
-                WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
+            DesktopManager.Instance.IsOverlayOpen = false;
         }
 
         private void ctxFile_Loaded(object sender, RoutedEventArgs e)

@@ -4,6 +4,9 @@ using System.Windows.Threading;
 using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using System.ComponentModel;
+using System.Windows.Media.Imaging;
+using CairoDesktop.Interop;
+using System.Windows.Media;
 
 namespace CairoDesktop
 {
@@ -45,6 +48,15 @@ namespace CairoDesktop
             }
         }
 
+        public RenderTargetBitmap GenerateBitmap(Grid sourceGrid)
+        {
+            RenderTargetBitmap bmp = new RenderTargetBitmap((int)(sourceGrid.ActualWidth * Shell.DpiScale), (int)(sourceGrid.ActualHeight * Shell.DpiScale), Shell.DpiScale * 96, Shell.DpiScale * 96, PixelFormats.Default);
+            bmp.Render(this);
+            bmp.Freeze();
+
+            return bmp;
+        }
+
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
@@ -71,7 +83,7 @@ namespace CairoDesktop
 
         private void IconsControl_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            var scrollViewer = System.Windows.Media.VisualTreeHelper.GetChild(sender as ItemsControl, 0) as ScrollViewer;
+            var scrollViewer = VisualTreeHelper.GetChild(sender as ItemsControl, 0) as ScrollViewer;
 
             if (scrollViewer == null)
                 return;

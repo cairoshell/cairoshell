@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Common.Helpers;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
@@ -15,7 +14,6 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -27,48 +25,22 @@ namespace CairoDesktop
         #region Properties
         private WindowInteropHelper helper;
         private bool altF4Pressed;
+        private DesktopManager desktopManager;
 
-        public bool IsToolbarContextMenuOpen;
         public IntPtr Handle;
 
         private Brush BackgroundBrush { get; set; }
-
-        public DesktopIcons Icons;
-        public DependencyProperty IsOverlayOpenProperty = DependencyProperty.Register("IsOverlayOpen", typeof(bool), typeof(Desktop), new PropertyMetadata(new bool()));
-        public NavigationManager NavigationManager;
-
-        public bool IsOverlayOpen
-        {
-            get
-            {
-                return (bool)GetValue(IsOverlayOpenProperty);
-            }
-            set
-            {
-                SetValue(IsOverlayOpenProperty, value);
-
-                if (value)
-                {
-                    ShowOverlay();
-                }
-                else
-                {
-                    CloseOverlay();
-                }
-            }
-        }
         #endregion
 
-        public Desktop()
+        public Desktop(DesktopManager manager)
         {
             InitializeComponent();
+
+            desktopManager = manager;
 
             setSize();
             setGridPosition();
             setBackground();
-
-            NavigationManager = new NavigationManager();
-            NavigationManager.PropertyChanged += NavigationManager_PropertyChanged;
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
 
@@ -77,31 +49,11 @@ namespace CairoDesktop
 
         private void SetupPostInit()
         {
-            if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop && Icons == null)
-            {
-                grid.Children.Add(Icons = new DesktopIcons());
-
-                NavigationManager.NavigateHome();
-
-                if (Settings.Instance.EnableDynamicDesktop)
-                {
-                    TryAndEat(() =>
-                    {
-                        DesktopNavigationToolbar nav = new DesktopNavigationToolbar() { Owner = this, NavigationManager = NavigationManager };
-                        nav.Show();
-                    });
-                }
-            }
-
             Shell.HideWindowFromTasks(Handle);
 
-            int result = NativeMethods.SetShellWindow(Handle);
             SendToBottom();
 
-            if (Settings.Instance.EnableDesktopOverlayHotKey)
-            {
-                HotKeyManager.RegisterHotKey(Settings.Instance.DesktopOverlayHotKey, OnShowDesktop);
-            }
+            desktopManager.ConfigureDesktop();
         }
 
         private void TryAndEat(Action action)
@@ -116,67 +68,43 @@ namespace CairoDesktop
         {
             if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
             {
-                if (!IsOverlayOpen)
+                if (desktopManager.ShellWindow == null)
                 {
-                    // if the overlay isn't open, we always want to be on the bottom. modify the WINDOWPOS structure so that we go to the bottom.
-
                     // Extract the WINDOWPOS structure corresponding to this message
                     NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
 
                     // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
                     if ((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
                     {
-                        if (!Shell.IsCairoRunningAsShell)
+                        // get the lowest window, we want to insert after it
+                        IntPtr lowestHwnd = Shell.GetLowestDesktopHwnd();
+
+                        if (lowestHwnd != IntPtr.Zero)
                         {
-                            IntPtr lowestHwnd = Shell.GetLowestDesktopHwnd();
-                            if (lowestHwnd != IntPtr.Zero)
-                            {
-                                wndPos.hwndInsertAfter = NativeMethods.GetWindow(lowestHwnd, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);
-                            }
-                            else
-                            {
-                                wndPos.hwndInsertAfter = (IntPtr)NativeMethods.WindowZOrder.HWND_BOTTOM;
-                            }
+                            wndPos.hwndInsertAfter = NativeMethods.GetWindow(lowestHwnd, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);
                         }
                         else
                         {
+                            // this will bring us lower but not always as low as we want to go; better than nothing
                             wndPos.hwndInsertAfter = (IntPtr)NativeMethods.WindowZOrder.HWND_BOTTOM;
                         }
+
                         wndPos.UpdateMessage(lParam);
                     }
                 }
             }
-            else if (msg == (int)NativeMethods.WM.DISPLAYCHANGE && Shell.IsCairoRunningAsShell)
+            else if (msg == (int)NativeMethods.WM.DISPLAYCHANGE)
             {
-                ResetPosition();
-                ReloadBackground();
-
-                handled = true;
+                desktopManager.OnDisplayChange(lParam);
             }
-            else if (msg == (int)NativeMethods.WM.DPICHANGED && Shell.IsCairoRunningAsShell)
+            else if (msg == (int)NativeMethods.WM.DPICHANGED)
             {
-                // delay changing things when we are shell. it seems that AppBars do this automagically
-                // if we don't, the system moves things to bad places
-                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.1) };
-                timer.Start();
-                timer.Tick += (sender1, args) =>
-                {
-                    ResetPosition();
-                    ReloadBackground();
-                    timer.Stop();
-                };
-            }
-            else if (msg == (int)NativeMethods.WM.SETTINGCHANGE &&
-                    wParam.ToInt32() == (int)NativeMethods.SPI.SETDESKWALLPAPER)
-            {
-                ReloadBackground();
-
-                return new IntPtr(NativeMethods.MA_NOACTIVATE);
+                desktopManager.OnDpiChanged();
             }
             else if (msg == (int)NativeMethods.WM.SETTINGCHANGE &&
                     wParam.ToInt32() == (int)NativeMethods.SPI.SETWORKAREA)
             {
-                ResetPosition();
+                desktopManager.OnSetWorkArea();
                 handled = true;
             }
 
@@ -220,9 +148,9 @@ namespace CairoDesktop
 
         private void grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.OriginalSource.GetType() == typeof(ScrollViewer) && !IsToolbarContextMenuOpen)
+            if (e.OriginalSource.GetType() == typeof(ScrollViewer) && !desktopManager.DesktopToolbar.IsContextMenuOpen)
             {
-                IsOverlayOpen = false;
+                desktopManager.IsOverlayOpen = false;
             }
         }
 
@@ -237,7 +165,7 @@ namespace CairoDesktop
             // we check source here so that we don't prevent the rename textbox context menu
             if (e.OriginalSource.GetType() == typeof(ScrollViewer) || e.Source.GetType() == typeof(Desktop) || e.Source.GetType() == typeof(Grid))
             {
-                ShellContextMenu cm = new ShellContextMenu(Icons.Location, executeFolderAction);
+                ShellContextMenu cm = new ShellContextMenu(desktopManager.DesktopLocation, executeFolderAction);
                 e.Handled = true;
             }
         }
@@ -254,10 +182,10 @@ namespace CairoDesktop
                 case MouseButton.Middle:
                     break;
                 case MouseButton.XButton1:
-                    NavigationManager.NavigateBackward();
+                    desktopManager.NavigationManager.NavigateBackward();
                     break;
                 case MouseButton.XButton2:
-                    NavigationManager.NavigateForward();
+                    desktopManager.NavigationManager.NavigateForward();
                     break;
             }
         }
@@ -309,35 +237,14 @@ namespace CairoDesktop
                 }
             }
         }
-
-        private void NavigationManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "CurrentPath")
-            {
-                if (Icons.Location == null || Icons.Location.FullName != NavigationManager.CurrentPath)
-                {
-                    if (Icons.Location != null)
-                    {
-                        // dispose of current directory so that we don't keep a lock on it
-                        Icons.Location.Dispose();
-                    }
-
-                    Icons.Location = new SystemDirectory(NavigationManager.CurrentPath, Dispatcher.CurrentDispatcher);
-                }
-            }
-        }
         #endregion
 
         #region Size and positioning
         public void SendToBottom()
         {
-            if (!Shell.IsCairoRunningAsShell)
+            if (desktopManager.ShellWindow == null)
             {
                 Shell.ShowWindowDesktop(Handle);
-            }
-            else
-            {
-                Shell.ShowWindowBottomMost(Handle);
             }
         }
 
@@ -352,14 +259,21 @@ namespace CairoDesktop
 
         private void setSize()
         {
-            Width = WindowManager.PrimaryMonitorSize.Width;
-            if (Shell.IsCairoRunningAsShell) Height = WindowManager.PrimaryMonitorSize.Height;
-            else Height = WindowManager.PrimaryMonitorSize.Height - 1; // TODO making size of screen causes explorer to send ABN_FULLSCREENAPP (but is that a bad thing?)
+            Width = System.Windows.Forms.SystemInformation.VirtualScreen.Width / Shell.DpiScale;
+            Height = (System.Windows.Forms.SystemInformation.VirtualScreen.Height / Shell.DpiScale) - (Shell.IsCairoRunningAsShell ? 0 : 1); // making size of screen causes explorer to send ABN_FULLSCREENAPP
         }
 
         private void setGridPosition()
         {
             double top = System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.DpiScale;
+            double left = System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.DpiScale;
+
+            if (desktopManager.ShellWindow != null)
+            {
+                top = (0 - System.Windows.Forms.SystemInformation.VirtualScreen.Top + System.Windows.Forms.SystemInformation.WorkingArea.Top) / Shell.DpiScale;
+                left = (0 - System.Windows.Forms.SystemInformation.VirtualScreen.Left + System.Windows.Forms.SystemInformation.WorkingArea.Left) / Shell.DpiScale;
+            }
+
             grid.Width = WindowManager.PrimaryMonitorWorkArea.Width / Shell.DpiScale;
 
             if (Settings.Instance.TaskbarMode == 1 && WindowManager.Instance.TaskbarWindows.Count > 0)
@@ -381,14 +295,14 @@ namespace CairoDesktop
                 grid.Height = WindowManager.PrimaryMonitorWorkArea.Height / Shell.DpiScale;
             }
 
-            grid.Margin = new Thickness(System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.DpiScale, top, 0, 0);
+            grid.Margin = new Thickness(left, top, 0, 0);
         }
         #endregion
 
         #region Background
         private void setBackground()
         {
-            if (Shell.IsCairoRunningAsShell)
+            if (desktopManager.ShellWindow != null)
             {
                 try
                 {
@@ -639,40 +553,12 @@ namespace CairoDesktop
         }
         #endregion
 
-        #region Desktop overlay
-        public void ToggleOverlay()
-        {
-            IsOverlayOpen = !IsOverlayOpen;
-        }
-
-        private void ShowOverlay()
-        {
-            NativeMethods.SetForegroundWindow(Handle);
-            Topmost = true;
-            grid.Background = new SolidColorBrush(Color.FromArgb(0x88, 0, 0, 0));
-            Background = null;
-        }
-
-        private void CloseOverlay()
-        {
-            Topmost = false;
-            SendToBottom();
-            grid.Background = new SolidColorBrush(Color.FromArgb(0x00, 0, 0, 0));
-            setBackground();
-        }
-
-        private void OnShowDesktop(HotKey hotKey)
-        {
-            ToggleOverlay();
-        }
-        #endregion
-
         #region Desktop context menu
         private void executeFolderAction(string action, string path)
         {
             if (action == "paste")
             {
-                Icons.Location.PasteFromClipboard();
+                desktopManager.DesktopLocation.PasteFromClipboard();
             }
             else if (action == "addStack" || action == "removeStack")
             {
@@ -683,7 +569,7 @@ namespace CairoDesktop
             {
                 CustomCommands.PerformAction(action, path);
 
-                IsOverlayOpen = false;
+                desktopManager.IsOverlayOpen = false;
             }
         }
         #endregion
@@ -733,8 +619,8 @@ namespace CairoDesktop
 
             if (fileNames != null)
             {
-                if (!isDropMove) Icons.Location.CopyInto(fileNames);
-                else if (isDropMove) Icons.Location.MoveInto(fileNames);
+                if (!isDropMove) desktopManager.DesktopLocation.CopyInto(fileNames);
+                else if (isDropMove) desktopManager.DesktopLocation.MoveInto(fileNames);
 
                 e.Handled = true;
             }

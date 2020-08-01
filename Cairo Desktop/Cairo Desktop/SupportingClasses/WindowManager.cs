@@ -17,13 +17,12 @@ namespace CairoDesktop.SupportingClasses
         private bool hasCompletedInitialDisplaySetup = false;
         private int pendingDisplayEvents = 0;
         private readonly static object displaySetupLock = new object();
+        private DesktopManager desktopManager;
 
         public bool IsSettingDisplays { get; set; }
         public Screen[] ScreenState = { };
         public List<MenuBar> MenuBarWindows = new List<MenuBar>();
         public List<Taskbar> TaskbarWindows = new List<Taskbar>();
-
-        public Desktop DesktopWindow { get; set; }
 
         public static System.Drawing.Size PrimaryMonitorSize
         {
@@ -53,6 +52,10 @@ namespace CairoDesktop.SupportingClasses
 
         private WindowManager()
         {
+            // create and maintain reference to desktop manager
+            // this will create and manage desktop windows and controls
+            desktopManager = DesktopManager.Instance;
+
             // start a timer to handle orphaned display events
             DispatcherTimer notificationCheckTimer = new DispatcherTimer();
 
@@ -450,7 +453,7 @@ namespace CairoDesktop.SupportingClasses
                 rc.Bottom = screen.Bounds.Bottom;
             }
 
-            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref rc, (1 | 2));
+            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref rc, (uint)(NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
         }
 
         public void ResetWorkArea()
@@ -463,7 +466,7 @@ namespace CairoDesktop.SupportingClasses
             oldWorkArea.Right = SystemInformation.VirtualScreen.Right;
             oldWorkArea.Bottom = SystemInformation.VirtualScreen.Bottom;
 
-            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref oldWorkArea, (1 | 2));
+            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref oldWorkArea, (uint)(NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
         }
         #endregion
     }

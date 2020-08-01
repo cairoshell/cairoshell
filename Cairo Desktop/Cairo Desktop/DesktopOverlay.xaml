@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window x:Class="CairoDesktop.DesktopOverlay" 
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        Title=""
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Top="0"
+        Left="0"
+        AllowsTransparency="True"
+        ShowActivated="False"
+        UseLayoutRounding="True" 
+        Name="DesktopOverlayWindow"
+        Background="#88000000"
+        Closing="Window_Closing"
+        SourceInitialized="DesktopOverlayWindow_SourceInitialized"
+        LocationChanged="DesktopOverlayWindow_LocationChanged"
+        KeyDown="DesktopOverlayWindow_KeyDown"
+        MouseUp="DesktopOverlayWindow_MouseUp"
+        MouseRightButtonUp="DesktopOverlayWindow_MouseRightButtonUp"
+        DragOver="DesktopOverlayWindow_DragOver"
+        Drop="DesktopOverlayWindow_Drop"
+        AllowDrop="True"
+        Topmost="True">
+    <Grid Name="grid" 
+          PreviewMouseLeftButtonDown="grid_PreviewMouseLeftButtonDown"
+          HorizontalAlignment="Left" 
+          VerticalAlignment="Top">
+    </Grid>
+</Window>

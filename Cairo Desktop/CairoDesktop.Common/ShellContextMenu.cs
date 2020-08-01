@@ -72,22 +72,25 @@ namespace CairoDesktop.Common
 
         public ShellContextMenu(SystemDirectory directory, FolderItemSelectAction folderItemSelected)
         {
-            lock (Shell.ComLock)
+            if (directory != null)
             {
-                CreateHandle(new CreateParams());
-                this.directory = directory;
-                folder = directory.FullName;
+                lock (Shell.ComLock)
+                {
+                    CreateHandle(new CreateParams());
+                    this.directory = directory;
+                    folder = directory.FullName;
 
-                parent = getParentDir(folder);
-                parentShellFolder = getParentShellFolder(folder);
-                folderPidl = pathToFullPidl(folder);
-                folderRelPidl = pathToRelPidl(folder);
-                x = Cursor.Position.X;
-                y = Cursor.Position.Y;
+                    parent = getParentDir(folder);
+                    parentShellFolder = getParentShellFolder(folder);
+                    folderPidl = pathToFullPidl(folder);
+                    folderRelPidl = pathToRelPidl(folder);
+                    x = Cursor.Position.X;
+                    y = Cursor.Position.Y;
 
-                this.folderItemSelected = folderItemSelected;
+                    this.folderItemSelected = folderItemSelected;
 
-                ShowFolderMenu();
+                    ShowFolderMenu();
+                }
             }
         }
 

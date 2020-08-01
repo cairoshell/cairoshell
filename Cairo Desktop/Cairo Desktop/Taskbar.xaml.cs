@@ -74,10 +74,10 @@ namespace CairoDesktop
             bdrMain.DataContext = Settings.Instance;
             quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
 
-            if (WindowManager.Instance.DesktopWindow != null)
+            if (DesktopManager.Instance.IsEnabled)
             {
-                btnDesktopOverlay.DataContext = WindowManager.Instance.DesktopWindow;
-                bdrBackground.DataContext = WindowManager.Instance.DesktopWindow;
+                btnDesktopOverlay.DataContext = DesktopManager.Instance;
+                bdrBackground.DataContext = DesktopManager.Instance;
                 bdrTaskbar.Padding = new Thickness(0);
             }
             else
@@ -214,8 +214,8 @@ namespace CairoDesktop
 
             // if we are showing but not reserving space, tell the desktop to adjust here
             // since we aren't changing the work area, it doesn't do this on its own
-            if (Settings.Instance.TaskbarMode == 1 && Screen.Primary && WindowManager.Instance.DesktopWindow != null)
-                WindowManager.Instance.DesktopWindow.ResetPosition();
+            if (Settings.Instance.TaskbarMode == 1 && Screen.Primary)
+                DesktopManager.Instance.ResetPosition();
         }
 
         private void TaskbarWindow_Loaded(object sender, RoutedEventArgs e)
@@ -345,6 +345,9 @@ namespace CairoDesktop
 
             // set maxwidth always
             bdrTaskbar.MaxWidth = getDesiredWidth();
+
+            // set button size since available space may have changed
+            setTaskButtonSize();
         }
 
         private void CairoTaskbarTaskList_Closed(object sender, EventArgs e)
@@ -381,8 +384,7 @@ namespace CairoDesktop
 
         private void btnDesktopOverlay_Click(object sender, RoutedEventArgs e)
         {
-            if (WindowManager.Instance.DesktopWindow != null)
-                WindowManager.Instance.DesktopWindow.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
+            DesktopManager.Instance.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
         }
 
         private void btnTaskList_Click(object sender, RoutedEventArgs e)

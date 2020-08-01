@@ -10,7 +10,6 @@ using CairoDesktop.Common;
 using System.Linq;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using CairoDesktop.Common.Logging;
 
 namespace CairoDesktop
 {
@@ -23,15 +22,17 @@ namespace CairoDesktop
         private System.Windows.Controls.ContextMenu browseContextMenu;
         private System.Windows.Controls.ContextMenu homeContextMenu;
         private LowLevelKeyboardListener lowLevelKeyboardListener;
+        private DesktopManager desktopManager;
 
         private DependencyProperty navigationManagerProperty = DependencyProperty.Register("NavigationManager", typeof(NavigationManager), typeof(DesktopNavigationToolbar));
         private DependencyProperty isShiftKeyHeldProperty = DependencyProperty.Register("isShiftKeyHeld", typeof(bool), typeof(DesktopNavigationToolbar), new PropertyMetadata(new bool()));
 
-        public Desktop ToolbarOwner
+        public bool IsContextMenuOpen
         {
             get
             {
-                return Owner as Desktop;
+                // this value is checked so that if we click away from the context menu, the desktop overlay does not get toggled
+                return browseContextMenu.IsOpen || homeContextMenu.IsOpen;
             }
         }
 
@@ -60,19 +61,19 @@ namespace CairoDesktop
             }
         }
 
-        public DesktopNavigationToolbar()
+        public DesktopNavigationToolbar(DesktopManager manager)
         {
             InitializeComponent();
+
+            desktopManager = manager;
 
             SetPosition();
 
             // set up browse context menu (is dynamically constructed)
             browseContextMenu = new System.Windows.Controls.ContextMenu();
-            browseContextMenu.Closed += contextMenu_Closed;
 
             // set up home context menu
             homeContextMenu = new System.Windows.Controls.ContextMenu();
-            homeContextMenu.Closed += contextMenu_Closed;
             System.Windows.Controls.MenuItem setHomeMenuItem = new System.Windows.Controls.MenuItem();
             setHomeMenuItem.Header = Localization.DisplayString.sDesktop_SetHome;
             setHomeMenuItem.Click += SetHomeMenuItem_Click; ;
@@ -144,6 +145,17 @@ namespace CairoDesktop
             Top = sHeight - Height - 150;
             Left = (sWidth / 2) - (Width / 2);
         }
+
+        public void BringToFront()
+        {
+            NativeMethods.SetWindowPos(helper.Handle, (IntPtr)NativeMethods.WindowZOrder.HWND_TOPMOST, 0, 0, 0, 0, (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE);
+        }
+
+        public void SendToBottom()
+        {
+            if (desktopManager.ShellWindow != null) NativeMethods.SetWindowPos(helper.Handle, NativeMethods.GetWindow(desktopManager.ShellWindow.Handle, NativeMethods.GetWindow_Cmd.GW_HWNDPREV), 0, 0, 0, 0, (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE);
+            else if (desktopManager.DesktopWindow != null) NativeMethods.SetWindowPos(helper.Handle, NativeMethods.GetWindow(desktopManager.DesktopWindow.Handle, NativeMethods.GetWindow_Cmd.GW_HWNDPREV), 0, 0, 0, 0, (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE);
+        }
         #endregion
 
         #region Button clicks
@@ -182,12 +194,10 @@ namespace CairoDesktop
                         NavigationManager.NavigateTo(fbd.SelectedPath);
             }
         }
+        
         private void btnHome_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             homeContextMenu.IsOpen = true;
-
-            // this value is set so that if we click away from the context menu, the desktop overlay does not get toggled
-            ToolbarOwner.IsToolbarContextMenuOpen = true;
 
             e.Handled = true;
         }
@@ -216,9 +226,6 @@ namespace CairoDesktop
                 browseContextMenu.Items.Add(clearHistoryMenuItem);
 
                 browseContextMenu.IsOpen = true;
-
-                // this value is set so that if we click away from the context menu, the desktop overlay does not get toggled
-                ToolbarOwner.IsToolbarContextMenuOpen = true;
 
                 e.Handled = true;
             }
@@ -269,8 +276,7 @@ namespace CairoDesktop
             }
             else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
             {
-                // WM_WINDOWPOSCHANGING arrives here before the desktop window.
-                if (!ToolbarOwner.IsOverlayOpen)
+                if (!desktopManager.IsOverlayOpen)
                 {
                     // if the overlay isn't open, we always want to be on the bottom. modify the WINDOWPOS structure so that we always go to right above the desktop.
                     // the desktop will do the work of bringing us to the bottom.
@@ -281,8 +287,18 @@ namespace CairoDesktop
                     // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
                     if ((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
                     {
-                        // be right above the desktop.
-                        wndPos.hwndInsertAfter = NativeMethods.GetWindow(ToolbarOwner.Handle, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);
+                        // if the overlay is not open, we want to be right above the desktop. otherwise, we want to be right above the overlay.
+                        IntPtr ownerWnd = IntPtr.Zero;
+                        if (desktopManager.ShellWindow != null)
+                        {
+                            ownerWnd = desktopManager.ShellWindow.Handle;
+                        }
+                        else if (desktopManager.DesktopWindow != null)
+                        {
+                            ownerWnd = desktopManager.DesktopWindow.Handle;
+                        }
+
+                        wndPos.hwndInsertAfter = NativeMethods.GetWindow(ownerWnd, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);
                         wndPos.flags = wndPos.flags | NativeMethods.SetWindowPosFlags.SWP_NOOWNERZORDER;
                         wndPos.UpdateMessage(lParam);
                     }
@@ -339,11 +355,6 @@ namespace CairoDesktop
                 lowLevelKeyboardListener.UnHookKeyboard();
                 lowLevelKeyboardListener = null;
             }
-        }
-
-        private void contextMenu_Closed(object sender, RoutedEventArgs e)
-        {
-            if (!browseContextMenu.IsOpen && !homeContextMenu.IsOpen) ToolbarOwner.IsToolbarContextMenuOpen = false;
         }
         #endregion
 

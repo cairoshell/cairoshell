@@ -18,8 +18,7 @@ namespace CairoDesktop.SupportingClasses
 
         private static void OnWinDCommand(HotKey obj)
         {
-            if (WindowManager.Instance.DesktopWindow != null)
-                WindowManager.Instance.DesktopWindow.IsOverlayOpen = !WindowManager.Instance.DesktopWindow.IsOverlayOpen;
+            DesktopManager.Instance.ToggleOverlay();
         }
         
         private static void OnWinRCommand(HotKey cmd)

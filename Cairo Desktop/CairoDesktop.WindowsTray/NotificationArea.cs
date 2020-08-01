@@ -138,14 +138,14 @@ namespace CairoDesktop.WindowsTray
         public void Suspend()
         {
             if (Handle != null && Handle != IntPtr.Zero)
-                SetWindowPos(Handle, (IntPtr)1, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
+                SetWindowPos(Handle, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
         }
 
         public void MakeActive()
         {
             if (Handle != null && Handle != IntPtr.Zero)
             {
-                SetWindowPos(Handle, (IntPtr)(-1), 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
+                SetWindowPos(Handle, (IntPtr)WindowZOrder.HWND_TOPMOST, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
                 setWindowsTaskbarBottommost();
             }
         }
@@ -385,7 +385,7 @@ namespace CairoDesktop.WindowsTray
                 }
             }
 
-            SetWindowPos(taskbarHwnd, (IntPtr)1, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+            SetWindowPos(taskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
         }
 
         public void Dispose()

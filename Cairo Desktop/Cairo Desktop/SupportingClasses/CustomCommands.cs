@@ -30,8 +30,7 @@ namespace CairoDesktop
         {
             if (verb == "open")
             {
-                if (WindowManager.Instance.DesktopWindow != null)
-                    WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
+                DesktopManager.Instance.IsOverlayOpen = false;
 
                 Shell.StartProcess(fileName);
 
@@ -39,8 +38,7 @@ namespace CairoDesktop
             }
             else if (verb == "openwith")
             {
-                if (WindowManager.Instance.DesktopWindow != null)
-                    WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
+                DesktopManager.Instance.IsOverlayOpen = false;
 
                 Shell.ShowOpenWithDialog(fileName);
 
@@ -59,7 +57,7 @@ namespace CairoDesktop
             else if (verb == "properties")
             {
                 Shell.ShowFileProperties(fileName);
-                WindowManager.Instance.DesktopWindow.IsOverlayOpen = false;
+                DesktopManager.Instance.IsOverlayOpen = false;
 
                 return;
             }

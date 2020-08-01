@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace CairoDesktop.WindowsTasks
+namespace CairoDesktop.Interop
 {
     public class NativeWindowEx : NativeWindow
     {

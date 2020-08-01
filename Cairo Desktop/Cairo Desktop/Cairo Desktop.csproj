@@ -84,6 +84,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CairoWallpaperStyle.cs" />
+    <Compile Include="DesktopOverlay.xaml.cs">
+      <DependentUpon>DesktopOverlay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DwmThumbnail.xaml.cs">
       <DependentUpon>DwmThumbnail.xaml</DependentUpon>
     </Compile>
@@ -112,6 +115,7 @@
     <Compile Include="SupportingClasses\AppBarWindow.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
     <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
+    <Compile Include="SupportingClasses\DesktopManager.cs" />
     <Compile Include="SupportingClasses\WindowManager.cs" />
     <Compile Include="SupportingClasses\FilePathValidationRule.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
@@ -127,6 +131,10 @@
     <Compile Include="Welcome.xaml.cs">
       <DependentUpon>Welcome.xaml</DependentUpon>
     </Compile>
+    <Page Include="DesktopOverlay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DwmThumbnail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

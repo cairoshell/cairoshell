@@ -54,12 +54,6 @@
 
             #endregion
 
-            if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop) // Future: This should be moved to whatever plugin is responsible for desktop stuff
-            {
-                // hide the windows desktop
-                Shell.ToggleDesktopIcons(false);
-            }
-
             App app = new App();
             app.InitializeComponent();  // This sets up the Unhandled Exception stuff... 
 
@@ -78,13 +72,6 @@
             app.MainWindow = initialMenuBar;
             WindowManager.Instance.MenuBarWindows.Add(initialMenuBar);
             initialMenuBar.Show();
-
-            // Future: This should be moved to whatever plugin is responsible for Desktop stuff
-            if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop)
-            {
-                WindowManager.Instance.DesktopWindow = new Desktop();
-                WindowManager.Instance.DesktopWindow.Show();
-            }
 
             // Future: This should be moved to whatever plugin is responsible for Taskbar stuff
             if (Settings.Instance.EnableTaskbar)

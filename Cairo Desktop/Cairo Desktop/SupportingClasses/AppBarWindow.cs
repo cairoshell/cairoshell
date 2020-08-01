@@ -304,9 +304,6 @@ namespace CairoDesktop.SupportingClasses
                     // set position again, since WPF may have overridden the original change from AppBarHelper
                     setAppBarPosition(rect);
 
-                    if (Screen.Primary && WindowManager.Instance.DesktopWindow != null)
-                        WindowManager.Instance.DesktopWindow.ResetPosition();
-
                     timer.Stop();
                 };
             }
