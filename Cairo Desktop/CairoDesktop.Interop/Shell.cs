@@ -354,7 +354,7 @@ namespace CairoDesktop.Interop
 
         public static void ShowWindowDesktop(IntPtr hwnd)
         {
-            IntPtr desktopHwnd = GetLowestDesktopHwnd();
+            IntPtr desktopHwnd = GetLowestDesktopParentHwnd();
 
             if (desktopHwnd != IntPtr.Zero)
             {
@@ -374,7 +374,7 @@ namespace CairoDesktop.Interop
             }
         }
 
-        public static IntPtr GetLowestDesktopHwnd()
+        public static IntPtr GetLowestDesktopParentHwnd()
         {
             IntPtr progmanHwnd = FindWindow("Progman", "Program Manager");
             IntPtr desktopHwnd = FindWindowEx(progmanHwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
@@ -394,6 +394,27 @@ namespace CairoDesktop.Interop
             else
             {
                 desktopHwnd = progmanHwnd;
+            }
+
+            return desktopHwnd;
+        }
+
+        public static IntPtr GetLowestDesktopChildHwnd()
+        {
+            IntPtr progmanHwnd = FindWindow("Progman", "Program Manager");
+            IntPtr desktopHwnd = FindWindowEx(progmanHwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+
+            if (desktopHwnd == IntPtr.Zero)
+            {
+                IntPtr workerHwnd = IntPtr.Zero;
+                IntPtr shellIconsHwnd;
+                do
+                {
+                    workerHwnd = FindWindowEx(IntPtr.Zero, workerHwnd, "WorkerW", null);
+                    shellIconsHwnd = FindWindowEx(workerHwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+                } while (shellIconsHwnd == IntPtr.Zero && workerHwnd != IntPtr.Zero);
+
+                desktopHwnd = shellIconsHwnd;
             }
 
             return desktopHwnd;

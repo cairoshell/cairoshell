@@ -27,16 +27,12 @@ namespace CairoDesktop.SupportingClasses
         private bool isShellWindow;
         private bool isOverlayOpen;
         private int renderOverlayFrames;
+
+        public bool SpicySauce; // set to true to enable experimental desktop as progman child
         public DesktopIcons DesktopIconsControl { get; private set; }
         public NavigationManager NavigationManager { get; private set; }
 
-        public bool IsEnabled
-        {
-            get
-            {
-                return DesktopWindow != null;
-            }
-        }
+        public bool IsEnabled => DesktopWindow != null;
 
         public bool IsOverlayOpen
         {
@@ -64,13 +60,8 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public SystemDirectory DesktopLocation
-        {
-            get
-            {
-                return DesktopIconsControl.Location;
-            }
-        }
+        public SystemDirectory DesktopLocation => DesktopIconsControl.Location;
+
         #endregion
 
         private DesktopManager()
@@ -131,21 +122,25 @@ namespace CairoDesktop.SupportingClasses
         {
             if (DesktopWindow != null)
             {
-                if (ShellWindow != null)
+                if (ShellWindow != null || SpicySauce)
                 {
                     // set the desktop window as a child of the shell window
                     NativeMethods.SetWindowLong(DesktopWindow.Handle, NativeMethods.GWL_STYLE, (NativeMethods.GetWindowLong(DesktopWindow.Handle, NativeMethods.GWL_STYLE) | (int)NativeMethods.WindowStyles.WS_CHILD) & ~unchecked((int)NativeMethods.WindowStyles.WS_OVERLAPPED));
-                    NativeMethods.SetParent(DesktopWindow.Handle, ShellWindow.Handle);
+                    NativeMethods.SetParent(DesktopWindow.Handle, ShellWindow != null ? ShellWindow.Handle : Shell.GetLowestDesktopChildHwnd());
                 }
 
                 // add the icons to the desktop grid and set initial directory
                 if (DesktopIconsControl != null) DesktopWindow.grid.Children.Add(DesktopIconsControl);
                 NavigationManager.NavigateHome();
 
-                // create the toolbar
+                // set up the toolbar
                 if (DesktopToolbar == null)
                 {
                     createToolbar();
+                }
+                else
+                {
+                    DesktopToolbar.Owner = DesktopWindow;
                 }
             }
             else
@@ -221,6 +216,12 @@ namespace CairoDesktop.SupportingClasses
                     msg.WParam.ToInt32() == (int)NativeMethods.SPI.SETDESKWALLPAPER)
             {
                 msg.Result = OnSetDeskWallpaper();
+            }
+            else if (msg.Msg == (int)NativeMethods.WM.ERASEBKGND)
+            {
+                OnEraseBackground();
+
+                msg.Result = IntPtr.Zero;
             }
         }
         #endregion
@@ -333,6 +334,17 @@ namespace CairoDesktop.SupportingClasses
         #endregion
 
         #region Event handling
+        private void OnEraseBackground()
+        {
+            NativeMethods.PAINTSTRUCT ps;
+            IntPtr hdc = NativeMethods.BeginPaint(ShellWindow.Handle, out ps);
+
+            // solid black fill
+            NativeMethods.FillRect(hdc, ref ps.rcPaint, NativeMethods.CreateSolidBrush(0x00000000));
+
+            NativeMethods.EndPaint(ShellWindow.Handle, ref ps);
+        }
+
         public void OnDisplayChange(IntPtr lParam)
         {
             ResetPosition();

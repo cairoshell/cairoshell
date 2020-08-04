@@ -16,16 +16,19 @@ namespace CairoDesktop.Common
     {
         private const int MAX_IMAGE_RELOAD_ATTEMPTS = 2;
 
-        private static readonly string[] ImageFileTypes = new string[] { ".jpg", ".jpeg", ".jfif", ".gif", ".bmp", ".png" };
+        private static readonly string[] ImageFileTypes = { ".jpg", ".jpeg", ".jfif", ".gif", ".bmp", ".png" };
         private ImageSource _icon;
         private ImageSource _largeIcon;
         private string _friendlyName;
         private string _fullName;
         private string _name;
         private List<string> _verbs;
-        private bool _iconLoading = false;
-        private bool _iconLargeLoading = false;
+        private bool _iconLoading;
+        private bool _iconLargeLoading;
         private int _imageReloadAttempts;
+
+        public bool InteractiveRenameRequested { get; private set; }
+        public EventHandler InteractiveRenameEvent;
 
         /// <summary>
         /// Gets whether or not the file is a directory.
@@ -219,9 +222,10 @@ namespace CairoDesktop.Common
             if (Interop.Shell.Exists(filePath))
             {
                 FullName = filePath;
+                InteractiveRenameRequested = false;
 
                 ParentDirectory = parentDirectory;
-                OnPropertyChanged("ParentDirecrory");
+                OnPropertyChanged("ParentDirectory");
 
                 return true;
             }
@@ -288,21 +292,22 @@ namespace CairoDesktop.Common
             }
         }
 
-        public static bool RenameFile(string oldFilePathName, string newFilename)
+        public bool Rename(string newFilename)
         {
             try
             {
+                InteractiveRenameRequested = false;
                 // get the file attributes for file or directory
-                FileAttributes attr = File.GetAttributes(oldFilePathName);
-                string newFilePathName = Path.GetDirectoryName(oldFilePathName) + "\\" + newFilename;
+                FileAttributes attr = File.GetAttributes(FullName);
+                string newFilePathName = Path.GetDirectoryName(FullName) + "\\" + newFilename;
 
-                if (newFilePathName != oldFilePathName)
+                if (newFilePathName != FullName)
                 {
                     //detect whether its a directory or file
                     if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-                        Directory.Move(oldFilePathName, newFilePathName);
+                        Directory.Move(FullName, newFilePathName);
                     else
-                        File.Move(oldFilePathName, newFilePathName);
+                        File.Move(FullName, newFilePathName);
                 }
                 return true;
             }
@@ -392,6 +397,12 @@ namespace CairoDesktop.Common
             Icon = null;
             LargeIcon = null;
             (sender as DispatcherTimer).Stop();
+        }
+
+        public void RequestInteractiveRename(object sender)
+        {
+            InteractiveRenameRequested = true;
+            InteractiveRenameEvent?.Invoke(sender, null);
         }
 
         #region INotifyPropertyChanged Members

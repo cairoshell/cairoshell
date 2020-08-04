@@ -96,7 +96,19 @@ namespace CairoDesktop
                     iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
                     imgIcon.SetBinding(Image.SourceProperty, iconBinding);
                 }
+
+                file.InteractiveRenameEvent += InteractiveRenameEvent;
+
+                if (file.InteractiveRenameRequested)
+                {
+                    enterRename();
+                }
             }
+        }
+
+        private void InteractiveRenameEvent(object sender, EventArgs e)
+        {
+            enterRename();
         }
 
         private void setDesktopIconAppearance()
@@ -179,37 +191,41 @@ namespace CairoDesktop
 
         private void execute()
         {
-            if (file != null)
+            if (!currentlyRenaming)
             {
-                if (!string.IsNullOrWhiteSpace(file.FullName))
+                if (file != null)
                 {
-                    // Determine if [SHIFT] key is held. Bypass Directory Processing, which will use the Shell to open the item.
-                    if (!KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
+                    if (!string.IsNullOrWhiteSpace(file.FullName))
                     {
-                        // if directory, perform special handling
-                        if (file.IsDirectory
-                            && Location == "Desktop"
-                            && Settings.Instance.EnableDynamicDesktop
-                            && DesktopManager.Instance.IsEnabled)
+                        // Determine if [SHIFT] key is held. Bypass Directory Processing, which will use the Shell to open the item.
+                        if (!KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
                         {
-                            DesktopManager.Instance.NavigationManager.NavigateTo(file.FullName);
-                            return;
+                            // if directory, perform special handling
+                            if (file.IsDirectory
+                                && Location == "Desktop"
+                                && Settings.Instance.EnableDynamicDesktop
+                                && DesktopManager.Instance.IsEnabled)
+                            {
+                                DesktopManager.Instance.NavigationManager.NavigateTo(file.FullName);
+                                return;
+                            }
+                            else if (file.IsDirectory)
+                            {
+                                FolderHelper.OpenLocation(file.FullName);
+                                return;
+                            }
                         }
-                        else if (file.IsDirectory)
-                        {
-                            FolderHelper.OpenLocation(file.FullName);
-                            return;
-                        }
+
+                        DesktopManager.Instance.IsOverlayOpen = false;
+
+                        Shell.ExecuteProcess(file.FullName);
+                        return;
                     }
-
-                    DesktopManager.Instance.IsOverlayOpen = false;
-
-                    Shell.ExecuteProcess(file.FullName);
-                    return;
                 }
-            }
 
-            CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         #region Context menu
@@ -239,7 +255,7 @@ namespace CairoDesktop
             }
             else if (action == "rename")
             {
-                enterRename();
+                file.RequestInteractiveRename(this);
             }
             else if (action == "addStack" || action == "removeStack" || action == "openWithShell")
             {
@@ -310,13 +326,12 @@ namespace CairoDesktop
             currentlyRenaming = true;
         }
 
-        private void txtRename_LostFocus(object sender, RoutedEventArgs e)
+        private void txtRename_LostKeyboardFocus(object sender, RoutedEventArgs e)
         {
             TextBox box = sender as TextBox;
-            string orig = ((Button)((DockPanel)box.Parent).Parent).CommandParameter as string;
 
-            if (!SystemFile.RenameFile(orig, box.Text))
-                box.Text = Path.GetFileName(orig);
+            if (!file.Rename(box.Text))
+                box.Text = Path.GetFileName(file.FullName);
 
             foreach (UIElement peer in (box.Parent as DockPanel).Children)
                 if (peer is Border)
@@ -338,52 +353,58 @@ namespace CairoDesktop
         private bool isDropMove = false;
         private void btnFile_DragOver(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(SystemFile)))
+            if (!currentlyRenaming)
             {
-                if ((e.KeyStates & DragDropKeyStates.RightMouseButton) != 0)
+                if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(SystemFile)))
                 {
-                    e.Effects = DragDropEffects.Copy;
+                    if ((e.KeyStates & DragDropKeyStates.RightMouseButton) != 0)
+                    {
+                        e.Effects = DragDropEffects.Copy;
+                        isDropMove = false;
+                    }
+                    else if ((e.KeyStates & DragDropKeyStates.LeftMouseButton) != 0)
+                    {
+                        e.Effects = DragDropEffects.Move;
+                        isDropMove = true;
+                    }
+                }
+                else
+                {
+                    e.Effects = DragDropEffects.None;
                     isDropMove = false;
                 }
-                else if ((e.KeyStates & DragDropKeyStates.LeftMouseButton) != 0)
-                {
-                    e.Effects = DragDropEffects.Move;
-                    isDropMove = true;
-                }
-            }
-            else
-            {
-                e.Effects = DragDropEffects.None;
-                isDropMove = false;
-            }
 
-            e.Handled = true;
+                e.Handled = true;
+            }
         }
 
         private void btnFile_Drop(object sender, DragEventArgs e)
         {
-            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (e.Data.GetDataPresent(typeof(SystemFile)))
+            if (!currentlyRenaming)
             {
-                SystemFile dropData = e.Data.GetData(typeof(SystemFile)) as SystemFile;
-                fileNames = new string[] { dropData.FullName };
-            }
-
-            if (fileNames != null)
-            {
-                if (file.IsDirectory)
+                string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+                if (e.Data.GetDataPresent(typeof(SystemFile)))
                 {
-                    SystemDirectory destDirectory = new SystemDirectory(file.FullName, Dispatcher);
-                    if (isDropMove) destDirectory.MoveInto(fileNames);
-                    else destDirectory.CopyInto(fileNames);
-                }
-                else
-                {
-                    if (isDropMove) file.ParentDirectory?.MoveInto(fileNames);
-                    else file.ParentDirectory?.CopyInto(fileNames);
+                    SystemFile dropData = e.Data.GetData(typeof(SystemFile)) as SystemFile;
+                    fileNames = new string[] {dropData.FullName};
                 }
 
-                e.Handled = true;
+                if (fileNames != null)
+                {
+                    if (file.IsDirectory)
+                    {
+                        SystemDirectory destDirectory = new SystemDirectory(file.FullName, Dispatcher);
+                        if (isDropMove) destDirectory.MoveInto(fileNames);
+                        else destDirectory.CopyInto(fileNames);
+                    }
+                    else
+                    {
+                        if (isDropMove) file.ParentDirectory?.MoveInto(fileNames);
+                        else file.ParentDirectory?.CopyInto(fileNames);
+                    }
+
+                    e.Handled = true;
+                }
             }
         }
         #endregion
@@ -399,38 +420,50 @@ namespace CairoDesktop
 
         private void btnFile_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (!inDrag && startPoint != null)
+            if (!currentlyRenaming)
             {
-                inDrag = true;
-
-                Point mousePos = e.GetPosition(this);
-                Vector diff = (Point)startPoint - mousePos;
-
-                if (mousePos.Y <= this.ActualHeight && ((Point)startPoint).Y <= this.ActualHeight && (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed) && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
+                if (!inDrag && startPoint != null)
                 {
-                    Button button = sender as Button;
-                    DataObject dragObject = new DataObject();
-                    dragObject.SetFileDropList(new System.Collections.Specialized.StringCollection() { file.FullName });
+                    inDrag = true;
 
-                    try
+                    Point mousePos = e.GetPosition(this);
+                    Vector diff = (Point) startPoint - mousePos;
+
+                    if (mousePos.Y <= this.ActualHeight && ((Point) startPoint).Y <= this.ActualHeight &&
+                        (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed) &&
+                        (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                            Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
                     {
-                        DragDrop.DoDragDrop(button, dragObject, (e.RightButton == MouseButtonState.Pressed ? DragDropEffects.All : DragDropEffects.Move));
+                        Button button = sender as Button;
+                        DataObject dragObject = new DataObject();
+                        dragObject.SetFileDropList(
+                            new System.Collections.Specialized.StringCollection() {file.FullName});
+
+                        try
+                        {
+                            DragDrop.DoDragDrop(button, dragObject,
+                                (e.RightButton == MouseButtonState.Pressed
+                                    ? DragDropEffects.All
+                                    : DragDropEffects.Move));
+                        }
+                        catch
+                        {
+                        }
+
+                        // reset the stored mouse position
+                        startPoint = null;
                     }
-                    catch { }
+                    else if (e.LeftButton != MouseButtonState.Pressed && e.RightButton != MouseButtonState.Pressed)
+                    {
+                        // reset the stored mouse position
+                        startPoint = null;
+                    }
 
-                    // reset the stored mouse position
-                    startPoint = null;
-                }
-                else if (e.LeftButton != MouseButtonState.Pressed && e.RightButton != MouseButtonState.Pressed)
-                {
-                    // reset the stored mouse position
-                    startPoint = null;
+                    inDrag = false;
                 }
 
-                inDrag = false;
+                e.Handled = true;
             }
-
-            e.Handled = true;
         }
         #endregion
 
@@ -438,6 +471,7 @@ namespace CairoDesktop
         {
             // unregister settings changes
             Settings.Instance.PropertyChanged -= Instance_PropertyChanged;
+            file.InteractiveRenameEvent -= InteractiveRenameEvent;
         }
     }
 }

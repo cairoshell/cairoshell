@@ -28,6 +28,26 @@ namespace CairoDesktop.Interop
         public static extern int SetShellWindow(IntPtr hWnd);
 
         [DllImport(User32_DllName)]
+        public static extern IntPtr BeginPaint(IntPtr hwnd, out PAINTSTRUCT lpPaint);
+
+        [DllImport(User32_DllName)]
+        public static extern int FillRect(IntPtr hDC, [In] ref Rect lprc, IntPtr hbr);
+
+        [DllImport(User32_DllName)]
+        public static extern bool EndPaint(IntPtr hWnd, [In] ref PAINTSTRUCT lpPaint);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct PAINTSTRUCT
+        {
+            public IntPtr hdc;
+            public bool fErase;
+            public Rect rcPaint;
+            public bool fRestore;
+            public bool fIncUpdate;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)] public byte[] rgbReserved;
+        }
+
+        [DllImport(User32_DllName)]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
 
         public enum WindowZOrder

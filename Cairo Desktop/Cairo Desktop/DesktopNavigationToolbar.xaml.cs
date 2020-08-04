@@ -295,7 +295,7 @@ namespace CairoDesktop
                         }
                         else if (desktopManager.DesktopWindow != null)
                         {
-                            ownerWnd = desktopManager.DesktopWindow.Handle;
+                            ownerWnd = desktopManager.SpicySauce ? Shell.GetLowestDesktopParentHwnd() : desktopManager.DesktopWindow.Handle;
                         }
 
                         wndPos.hwndInsertAfter = NativeMethods.GetWindow(ownerWnd, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);

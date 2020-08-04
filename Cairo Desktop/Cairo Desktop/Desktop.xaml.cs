@@ -68,7 +68,7 @@ namespace CairoDesktop
         {
             if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
             {
-                if (desktopManager.ShellWindow == null)
+                if (desktopManager.ShellWindow == null && !desktopManager.SpicySauce)
                 {
                     // Extract the WINDOWPOS structure corresponding to this message
                     NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
@@ -77,7 +77,7 @@ namespace CairoDesktop
                     if ((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
                     {
                         // get the lowest window, we want to insert after it
-                        IntPtr lowestHwnd = Shell.GetLowestDesktopHwnd();
+                        IntPtr lowestHwnd = Shell.GetLowestDesktopParentHwnd();
 
                         if (lowestHwnd != IntPtr.Zero)
                         {
@@ -162,7 +162,7 @@ namespace CairoDesktop
         private void CairoDesktopWindow_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             // handle desktop context menu
-            // we check source here so that we don't prevent the rename textbox context menu
+            // we check source here so that we don't override the rename textbox context menu
             if (e.OriginalSource.GetType() == typeof(ScrollViewer) || e.Source.GetType() == typeof(Desktop) || e.Source.GetType() == typeof(Grid))
             {
                 ShellContextMenu cm = new ShellContextMenu(desktopManager.DesktopLocation, executeFolderAction);
@@ -242,7 +242,7 @@ namespace CairoDesktop
         #region Size and positioning
         public void SendToBottom()
         {
-            if (desktopManager.ShellWindow == null)
+            if (desktopManager.ShellWindow == null && !desktopManager.SpicySauce)
             {
                 Shell.ShowWindowDesktop(Handle);
             }
@@ -268,7 +268,7 @@ namespace CairoDesktop
             double top = System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.DpiScale;
             double left = System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.DpiScale;
 
-            if (desktopManager.ShellWindow != null)
+            if (desktopManager.ShellWindow != null || desktopManager.SpicySauce)
             {
                 top = (0 - System.Windows.Forms.SystemInformation.VirtualScreen.Top + System.Windows.Forms.SystemInformation.WorkingArea.Top) / Shell.DpiScale;
                 left = (0 - System.Windows.Forms.SystemInformation.VirtualScreen.Left + System.Windows.Forms.SystemInformation.WorkingArea.Left) / Shell.DpiScale;
@@ -556,9 +556,9 @@ namespace CairoDesktop
         #region Desktop context menu
         private void executeFolderAction(string action, string path)
         {
-            if (action == "paste")
+            if (action == "paste" || action == "new")
             {
-                desktopManager.DesktopLocation.PasteFromClipboard();
+                if (desktopManager.DesktopLocation != null) CustomCommands.PerformDirectoryAction(action, desktopManager.DesktopLocation, desktopManager.IsOverlayOpen ? (Window)desktopManager.DesktopOverlayWindow : this);
             }
             else if (action == "addStack" || action == "removeStack")
             {

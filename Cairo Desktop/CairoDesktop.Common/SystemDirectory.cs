@@ -65,6 +65,8 @@ namespace CairoDesktop.Common {
             get { return dir.FullName; }
         }
 
+        public FileSystemEventHandler FileCreated;
+
         private FileSystemEventHandler createdHandler;
         private FileSystemEventHandler deletedHandler;
         private RenamedEventHandler renamedHandler;
@@ -86,9 +88,9 @@ namespace CairoDesktop.Common {
                 fileWatcher.Filter = "";
                 fileWatcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName;
 
-                createdHandler = new FileSystemEventHandler(fileWatcher_Created);
-                deletedHandler = new FileSystemEventHandler(fileWatcher_Deleted);
-                renamedHandler = new RenamedEventHandler(fileWatcher_Renamed);
+                createdHandler = fileWatcher_Created;
+                deletedHandler = fileWatcher_Deleted;
+                renamedHandler = fileWatcher_Renamed;
 
                 fileWatcher.Created += createdHandler;
                 fileWatcher.Deleted += deletedHandler;
@@ -126,18 +128,23 @@ namespace CairoDesktop.Common {
         }
 
         void fileWatcher_Created(object sender, FileSystemEventArgs e) {
-            addFile(e.FullPath);
+            SystemFile file = addFile(e.FullPath);
+            
+            FileCreated?.Invoke(file, e);
         }
 
-        private void addFile(string filePath) {
+        private SystemFile addFile(string filePath) {
             if (Shell.Exists(filePath) && isFileVisible(filePath))
             {
                 SystemFile newFile = new SystemFile(filePath, this);
                 if (newFile.Name != null)
                 {
                     files.Add(newFile);
+                    return newFile;
                 }
             }
+
+            return null;
         }
 
         private void removeFile(string filePath) {

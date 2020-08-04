@@ -398,8 +398,7 @@ namespace CairoDesktop.Common
                                 break;
                         }
 
-                        if (itemSelected != null)
-                            itemSelected(command, paths[0].FullName, sender);
+                        itemSelected?.Invoke(command, paths[0].FullName, sender);
                     }
                 }
                 else
@@ -572,6 +571,7 @@ namespace CairoDesktop.Common
                         default:
                             if ((uint)selected <= ShellFolders.CMD_LAST)
                             {
+                                command = "new";
                                 ShellFolders.InvokeCommand(
                                     newContextMenu,
                                     (uint)selected - ShellFolders.CMD_FIRST,
@@ -581,8 +581,7 @@ namespace CairoDesktop.Common
                             break;
                     }
 
-                    if (folderItemSelected != null)
-                        folderItemSelected(command, folder);
+                    folderItemSelected?.Invoke(command, folder);
                 }
             }
             catch (Exception) { }
