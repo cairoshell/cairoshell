@@ -334,7 +334,6 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableCairoMenuHotKey, UpdateSourceTrigger=PropertyChanged}"
-                                  Click="CheckBox_Click"
                                   Name="chkEnableCairoMenuHotKey">
                             <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableCairoMenuHotKey)}" />
                         </CheckBox>
@@ -344,7 +343,7 @@
                                   IsEditable="False"
                                   Width="55"
                                   Margin="5,-1,0,0"
-                                  DropDownClosed="cboCairoMenuHotKey_DropDownClosed"
+                                  SelectionChanged="cboCairoMenuHotKey_OnSelectionChanged"
                                   SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboCairoMenuHotKeyMod2"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}"
@@ -352,7 +351,7 @@
                                   IsEditable="False"
                                   Width="55"
                                   Margin="5,-1,0,0"
-                                  DropDownClosed="cboCairoMenuHotKey_DropDownClosed"
+                                  SelectionChanged="cboCairoMenuHotKey_OnSelectionChanged"
                                   SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboCairoMenuHotKeyKey"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}"
@@ -360,7 +359,7 @@
                                   IsEditable="False"
                                   Width="40"
                                   Margin="5,-1,0,0"
-                                  DropDownClosed="cboCairoMenuHotKey_DropDownClosed"
+                                  SelectionChanged="cboCairoMenuHotKey_OnSelectionChanged"
                                   SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ShowHibernate, UpdateSourceTrigger=PropertyChanged}"
@@ -493,7 +492,6 @@
                      Name="TabDesktop">
                 <StackPanel Orientation="Vertical">
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDesktop, UpdateSourceTrigger=PropertyChanged}"
-                              Click="CheckBox_Click"
                               Name="chkEnableDesktop">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDesktop)}" />
                     </CheckBox>
@@ -517,7 +515,6 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDesktopOverlayHotKey, UpdateSourceTrigger=PropertyChanged}"
-                                  Click="CheckBox_Click"
                                   Name="chkEnableDesktopOverlayHotKey">
                             <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDesktopOverlayHotKey)}" />
                         </CheckBox>
@@ -527,7 +524,7 @@
                                   IsEditable="False"
                                   Width="55"
                                   Margin="5,-1,0,0"
-                                  DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed"
+                                  SelectionChanged="cboDesktopOverlayHotKey_OnSelectionChanged"
                                   SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboDesktopOverlayHotKeyMod2"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}"
@@ -535,7 +532,7 @@
                                   IsEditable="False"
                                   Width="55"
                                   Margin="5,-1,0,0"
-                                  DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed"
+                                  SelectionChanged="cboDesktopOverlayHotKey_OnSelectionChanged"
                                   SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboDesktopOverlayHotKeyKey"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}"
@@ -543,7 +540,7 @@
                                   IsEditable="False"
                                   Width="40"
                                   Margin="5,-1,0,0"
-                                  DropDownClosed="cboDesktopOverlayHotKey_DropDownClosed"
+                                  SelectionChanged="cboDesktopOverlayHotKey_OnSelectionChanged"
                                   SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
@@ -587,7 +584,6 @@
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DynamicDesktop)}"
                                Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDynamicDesktop, UpdateSourceTrigger=PropertyChanged}"
-                              Click="CheckBox_Click"
                               Name="chkEnableDynamicDesktop">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDynamicDesktop)}" />
                     </CheckBox>

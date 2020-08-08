@@ -10,7 +10,7 @@ using CairoDesktop.Interop;
 
 namespace CairoDesktop.SupportingClasses
 {
-    public class WindowManager : SingletonObject<WindowManager>
+    public class WindowManager : SingletonObject<WindowManager>, IDisposable
     {
         #region Properties
 
@@ -23,6 +23,8 @@ namespace CairoDesktop.SupportingClasses
         public Screen[] ScreenState = { };
         public List<MenuBar> MenuBarWindows = new List<MenuBar>();
         public List<Taskbar> TaskbarWindows = new List<Taskbar>();
+
+        public EventHandler<WindowManagerEventArgs> ScreensChanged;
 
         public static System.Drawing.Size PrimaryMonitorSize
         {
@@ -55,6 +57,7 @@ namespace CairoDesktop.SupportingClasses
             // create and maintain reference to desktop manager
             // this will create and manage desktop windows and controls
             desktopManager = DesktopManager.Instance;
+            desktopManager.SetWindowManager(this);
 
             // start a timer to handle orphaned display events
             DispatcherTimer notificationCheckTimer = new DispatcherTimer();
@@ -133,7 +136,7 @@ namespace CairoDesktop.SupportingClasses
                     else
                     {
                         // if this is only a DPI change, screens will be the same but we still need to reposition
-                        refreshWindows();
+                        refreshWindows(false);
                         setDisplayWorkAreas();
                     }
 
@@ -204,7 +207,7 @@ namespace CairoDesktop.SupportingClasses
                 processRemovedScreens(removedScreens);
 
                 // refresh existing window screen properties with updated screen information
-                refreshWindows();
+                refreshWindows(true);
             }
 
             // open windows on newly added screens
@@ -301,10 +304,11 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        private void refreshWindows()
+        private void refreshWindows(bool displaysChanged)
         {
             CairoLogger.Instance.Debug("WindowManager: Refreshing screen information for existing windows");
 
+            // TODO: Handle these as events in respective classes
             // update screens of stale windows
             if (Settings.Instance.EnableMenuBarMultiMon)
             {
@@ -343,6 +347,10 @@ namespace CairoDesktop.SupportingClasses
                 TaskbarWindows[0].Screen = Screen.PrimaryScreen;
                 TaskbarWindows[0].setScreenPosition();
             }
+
+            // notify event subscribers
+            WindowManagerEventArgs args = new WindowManagerEventArgs {DisplaysChanged = displaysChanged};
+            ScreensChanged?.Invoke(this, args);
         }
 
         private void processAddedScreens(List<string> addedScreens, bool firstRun)
@@ -469,5 +477,15 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref oldWorkArea, (uint)(NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
         }
         #endregion
+
+        public void Dispose()
+        {
+            desktopManager.Dispose();
+        }
+    }
+
+    public class WindowManagerEventArgs : EventArgs
+    {
+        public bool DisplaysChanged;
     }
 }

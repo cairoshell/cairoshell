@@ -79,6 +79,7 @@ namespace CairoDesktop.Common
             if (hotkeys.TryGetValue(Id, out hotKey))
             {
                 UnregisterHotKey(IntPtr.Zero, Id);
+                hotkeys.Remove(hotKey.Id);
             }
         }
         

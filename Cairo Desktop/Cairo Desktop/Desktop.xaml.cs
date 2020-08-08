@@ -27,6 +27,7 @@ namespace CairoDesktop
         private bool altF4Pressed;
         private DesktopManager desktopManager;
 
+        public bool AllowClose;
         public IntPtr Handle;
 
         private Brush BackgroundBrush { get; set; }
@@ -93,14 +94,6 @@ namespace CairoDesktop
                     }
                 }
             }
-            else if (msg == (int)NativeMethods.WM.DISPLAYCHANGE)
-            {
-                desktopManager.OnDisplayChange(lParam);
-            }
-            else if (msg == (int)NativeMethods.WM.DPICHANGED)
-            {
-                desktopManager.OnDpiChanged();
-            }
             else if (msg == (int)NativeMethods.WM.SETTINGCHANGE &&
                     wParam.ToInt32() == (int)NativeMethods.SPI.SETWORKAREA)
             {
@@ -113,19 +106,22 @@ namespace CairoDesktop
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (Startup.IsShuttingDown) // show the windows desktop
-            {
-                Shell.ToggleDesktopIcons(true);
-            }
-            else if (altF4Pressed) // Show the Shutdown Confirmation Window
+            if (altF4Pressed) // Show the Shutdown Confirmation Window
             {
                 SystemPower.ShowShutdownConfirmation();
                 altF4Pressed = false;
                 e.Cancel = true;
             }
-            else // Eat it !!!
+            else if (!AllowClose) // Eat it !!!
             {
                 e.Cancel = true;
+            }
+
+            if (!e.Cancel)
+            {
+                // unsubscribe from things
+                Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
             }
         }
 

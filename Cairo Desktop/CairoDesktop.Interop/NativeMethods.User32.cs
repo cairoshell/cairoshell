@@ -18,6 +18,9 @@ namespace CairoDesktop.Interop
         [DllImport(User32_DllName, CharSet = CharSet.Unicode)]
         public static extern int GetWindowText(IntPtr hwnd, StringBuilder sb, int Length);
 
+        [DllImport(User32_DllName)]
+        public static extern bool DestroyWindow(IntPtr hWnd);
+
         [DllImport(User32_DllName, SetLastError = true)]
         public static extern bool LockWorkStation();
 

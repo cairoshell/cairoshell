@@ -63,6 +63,8 @@ namespace CairoDesktop
             setupPlacesMenu();
 
             initSparkle();
+
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         }
 
         private void initSparkle()
@@ -226,14 +228,7 @@ namespace CairoDesktop
         {
             setupMenuExtras();
 
-            if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary && cairoMenuHotKey == null)
-            {
-                cairoMenuHotKey = HotKeyManager.RegisterHotKey(Settings.Instance.CairoMenuHotKey, OnShowCairoMenu);
-            }
-            else if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary)
-            {
-                cairoMenuHotKey.Action = OnShowCairoMenu;
-            }
+            registerCairoMenuHotKey();
 
             // Register L+R Windows key to open Programs menu
             if (Shell.IsCairoRunningAsShell && Screen.Primary && programsMenuHotKeys.Count < 1)
@@ -267,6 +262,27 @@ namespace CairoDesktop
         private int canShutdown()
         {
             return 1;
+        }
+
+        private void registerCairoMenuHotKey()
+        {
+            if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary && cairoMenuHotKey == null)
+            {
+                cairoMenuHotKey = HotKeyManager.RegisterHotKey(Settings.Instance.CairoMenuHotKey, OnShowCairoMenu);
+            }
+            else if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary)
+            {
+                cairoMenuHotKey.Action = OnShowCairoMenu;
+            }
+        }
+
+        private void unregisterCairoMenuHotKey()
+        {
+            if (Screen.Primary)
+            {
+                cairoMenuHotKey?.Dispose();
+                cairoMenuHotKey = null;
+            }
         }
 
         #region Programs menu
@@ -400,6 +416,7 @@ namespace CairoDesktop
             if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
             {
                 closeShadow();
+                Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
             }
         }
 
@@ -443,6 +460,35 @@ namespace CairoDesktop
                 Taskbar taskbar = WindowManager.Instance.GetScreenWindow(WindowManager.Instance.TaskbarWindows, Screen);
 
                 if (taskbar != null && taskbar.appBarEdge == appBarEdge) taskbar.CanAutoHide = true;
+            }
+        }
+
+        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+            {
+                switch (e.PropertyName)
+                {
+                    case "EnableCairoMenuHotKey" when Screen.Primary:
+                        if (Settings.Instance.EnableCairoMenuHotKey)
+                        {
+                            registerCairoMenuHotKey();
+                        }
+                        else
+                        {
+                            unregisterCairoMenuHotKey();
+                        }
+
+                        break;
+                    case "CairoMenuHotKey" when Screen.Primary:
+                        if (Settings.Instance.EnableCairoMenuHotKey)
+                        {
+                            unregisterCairoMenuHotKey();
+                            registerCairoMenuHotKey();
+                        }
+
+                        break;
+                }
             }
         }
 

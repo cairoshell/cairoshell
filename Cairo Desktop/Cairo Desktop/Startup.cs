@@ -159,6 +159,9 @@
             // dispose of long-lived COM objects
             Shell.DisposeIml();
 
+            // dispose the window manager
+            WindowManager.Instance.Dispose();
+
             Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
         }
 

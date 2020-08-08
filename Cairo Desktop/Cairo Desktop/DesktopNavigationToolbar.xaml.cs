@@ -24,8 +24,10 @@ namespace CairoDesktop
         private LowLevelKeyboardListener lowLevelKeyboardListener;
         private DesktopManager desktopManager;
 
-        private DependencyProperty navigationManagerProperty = DependencyProperty.Register("NavigationManager", typeof(NavigationManager), typeof(DesktopNavigationToolbar));
-        private DependencyProperty isShiftKeyHeldProperty = DependencyProperty.Register("isShiftKeyHeld", typeof(bool), typeof(DesktopNavigationToolbar), new PropertyMetadata(new bool()));
+        private static DependencyProperty navigationManagerProperty = DependencyProperty.Register("NavigationManager", typeof(NavigationManager), typeof(DesktopNavigationToolbar));
+        private static DependencyProperty isShiftKeyHeldProperty = DependencyProperty.Register("isShiftKeyHeld", typeof(bool), typeof(DesktopNavigationToolbar), new PropertyMetadata(new bool()));
+
+        public bool AllowClose;
 
         public bool IsContextMenuOpen
         {
@@ -344,7 +346,7 @@ namespace CairoDesktop
         private void DesktopToolbar_Closing(object sender, CancelEventArgs e)
         {
 
-            if (!Startup.IsShuttingDown)
+            if (!Startup.IsShuttingDown && !AllowClose)
             {
                 e.Cancel = true;
             }

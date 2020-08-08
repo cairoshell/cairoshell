@@ -215,7 +215,7 @@ namespace CairoDesktop
             // if we are showing but not reserving space, tell the desktop to adjust here
             // since we aren't changing the work area, it doesn't do this on its own
             if (Settings.Instance.TaskbarMode == 1 && Screen.Primary)
-                DesktopManager.Instance.ResetPosition();
+                DesktopManager.Instance.ResetPosition(false);
         }
 
         private void TaskbarWindow_Loaded(object sender, RoutedEventArgs e)

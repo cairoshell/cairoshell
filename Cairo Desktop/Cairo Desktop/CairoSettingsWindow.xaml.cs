@@ -634,20 +634,16 @@ namespace CairoDesktop
             showRestartButton();
         }
 
-        private void cboCairoMenuHotKey_DropDownClosed(object sender, EventArgs e)
+        private void cboCairoMenuHotKey_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            List<string> hotkey = new List<string> { cboCairoMenuHotKeyMod1.SelectedValue.ToString(), cboCairoMenuHotKeyMod2.SelectedValue.ToString(), cboCairoMenuHotKeyKey.SelectedValue.ToString() };
-            Settings.Instance.CairoMenuHotKey = hotkey.ToArray();
-
-            showRestartButton();
+            string[] hotkey = { cboCairoMenuHotKeyMod1.SelectedValue.ToString(), cboCairoMenuHotKeyMod2.SelectedValue.ToString(), cboCairoMenuHotKeyKey.SelectedValue.ToString() };
+            Settings.Instance.CairoMenuHotKey = hotkey;
         }
 
-        private void cboDesktopOverlayHotKey_DropDownClosed(object sender, EventArgs e)
+        private void cboDesktopOverlayHotKey_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string[] hotkey = new string[] { cboDesktopOverlayHotKeyMod1.SelectedValue.ToString(), cboDesktopOverlayHotKeyMod2.SelectedValue.ToString(), cboDesktopOverlayHotKeyKey.SelectedValue.ToString() };
+            string[] hotkey = { cboDesktopOverlayHotKeyMod1.SelectedValue.ToString(), cboDesktopOverlayHotKeyMod2.SelectedValue.ToString(), cboDesktopOverlayHotKeyKey.SelectedValue.ToString() };
             Settings.Instance.DesktopOverlayHotKey = hotkey;
-
-            showRestartButton();
         }
 
         private void btnChangeShell_Click(object sender, RoutedEventArgs e)

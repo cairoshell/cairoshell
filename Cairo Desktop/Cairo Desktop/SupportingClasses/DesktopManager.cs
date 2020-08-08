@@ -14,7 +14,7 @@ using System.Windows.Threading;
 
 namespace CairoDesktop.SupportingClasses
 {
-    public class DesktopManager : SingletonObject<DesktopManager>, INotifyPropertyChanged
+    public class DesktopManager : SingletonObject<DesktopManager>, INotifyPropertyChanged, IDisposable
     {
         #region Windows
         public Desktop DesktopWindow { get; private set; }
@@ -24,11 +24,12 @@ namespace CairoDesktop.SupportingClasses
         #endregion
 
         #region Properties
-        private bool isShellWindow;
         private bool isOverlayOpen;
         private int renderOverlayFrames;
+        private HotKey overlayHotKey;
+        private WindowManager windowManager;
 
-        public bool SpicySauce; // set to true to enable experimental desktop as progman child
+        public bool SpicySauce; // set to true to enable experimental desktop as progman child - doesn't work in win7 due to layered child window restrictions
         public DesktopIcons DesktopIconsControl { get; private set; }
         public NavigationManager NavigationManager { get; private set; }
 
@@ -67,8 +68,11 @@ namespace CairoDesktop.SupportingClasses
         private DesktopManager()
         {
             // DesktopManager is always created on startup by WindowManager, regardless of desktop preferences
+            // this allows for dynamic creation and destruction of the desktop per user preference
 
             initDesktop();
+
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         }
 
         private void initDesktop()
@@ -89,11 +93,19 @@ namespace CairoDesktop.SupportingClasses
                 DesktopIconsControl = new DesktopIcons();
 
                 // create desktop window
-                DesktopWindow = new Desktop(this);
-                DesktopWindow.Show();
+                createDesktopWindow();
 
                 // register desktop overlay hotkey
-                registerHotkey();
+                registerHotKey();
+            }
+        }
+
+        private void createDesktopWindow()
+        {
+            if (DesktopWindow == null)
+            {
+                DesktopWindow = new Desktop(this);
+                DesktopWindow.Show();
             }
         }
 
@@ -110,12 +122,66 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        private void registerHotkey()
+        private void destroyDesktopWindow()
         {
-            if (Settings.Instance.EnableDesktopOverlayHotKey)
+            if (DesktopWindow != null)
             {
-                HotKeyManager.RegisterHotKey(Settings.Instance.DesktopOverlayHotKey, OnShowDesktop);
+                if (DesktopToolbar != null) DesktopToolbar.Owner = null;
+
+                DesktopWindow.grid.Children.Clear();
+                DesktopWindow.AllowClose = true;
+                DesktopWindow.Close();
+
+                DesktopWindow = null;
             }
+        }
+
+        private void destroyToolbar()
+        {
+            if (DesktopToolbar != null)
+            {
+                DesktopToolbar.AllowClose = true;
+                DesktopToolbar.Close();
+                DesktopToolbar = null;
+            }
+        }
+
+        private void teardownDesktop(bool isShutdown)
+        {
+            // close windows
+            DesktopOverlayWindow?.Close();
+            DesktopOverlayWindow = null;
+            destroyToolbar();
+            destroyDesktopWindow();
+
+            // show the windows desktop
+            Shell.ToggleDesktopIcons(true);
+
+            // destroy the native shell window
+            if (ShellWindow != null && isShutdown) NativeMethods.DestroyWindow(ShellWindow.Handle);
+
+            // destroy the navigation manager
+            NavigationManager = null;
+
+            // destroy icons control
+            DesktopIconsControl = null;
+
+            // unregister desktop overlay hotkey
+            unregisterHotKey();
+        }
+
+        private void registerHotKey()
+        {
+            if (Settings.Instance.EnableDesktopOverlayHotKey && overlayHotKey == null)
+            {
+                overlayHotKey = HotKeyManager.RegisterHotKey(Settings.Instance.DesktopOverlayHotKey, OnShowDesktop);
+            }
+        }
+
+        private void unregisterHotKey()
+        {
+            overlayHotKey?.Dispose();
+            overlayHotKey = null;
         }
 
         public void ConfigureDesktop()
@@ -149,19 +215,33 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public void ResetPosition(bool renderBackground = true)
+        public void ResetPosition(bool displayChanged)
         {
             setShellWindowSize();
 
             DesktopOverlayWindow?.ResetPosition();
-            DesktopWindow?.ResetPosition();
-            if (renderBackground && isShellWindow) DesktopWindow?.ReloadBackground();
+
+            if (displayChanged && DesktopWindow != null)
+            {
+                destroyDesktopWindow();
+                createDesktopWindow();
+            }
+            else
+            {
+                DesktopWindow?.ResetPosition();
+            }
+        }
+
+        public void SetWindowManager(WindowManager manager)
+        {
+            windowManager = manager;
+            windowManager.ScreensChanged += ScreensChanged;
         }
 
         #region Shell window
         private void createShellWindow()
         {
-            if (Shell.IsCairoRunningAsShell)
+            if (Shell.IsCairoRunningAsShell && ShellWindow == null)
             {
                 // create native window; we must pass a native window to SetShellWindow
                 ShellWindow = new NativeWindowEx();
@@ -180,7 +260,6 @@ namespace CairoDesktop.SupportingClasses
                 if (NativeMethods.SetShellWindow(ShellWindow.Handle) == 1)
                 {
                     // we did it
-                    isShellWindow = true;
                     CairoLogger.Instance.Debug("DesktopManager: Successfully set as shell window");
                 }
             }
@@ -199,15 +278,7 @@ namespace CairoDesktop.SupportingClasses
             // Window procedure for the native window
             // Because other desktop windows are children, we need to pass them some received events.
 
-            if (msg.Msg == (int)NativeMethods.WM.DISPLAYCHANGE)
-            {
-                OnDisplayChange(msg.LParam);
-            }
-            else if (msg.Msg == (int)NativeMethods.WM.DPICHANGED)
-            {
-                OnDpiChanged();
-            }
-            else if (msg.Msg == (int)NativeMethods.WM.SETTINGCHANGE &&
+            if (msg.Msg == (int)NativeMethods.WM.SETTINGCHANGE &&
                     msg.WParam.ToInt32() == (int)NativeMethods.SPI.SETWORKAREA)
             {
                 OnSetWorkArea();
@@ -345,24 +416,6 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.EndPaint(ShellWindow.Handle, ref ps);
         }
 
-        public void OnDisplayChange(IntPtr lParam)
-        {
-            ResetPosition();
-        }
-
-        public void OnDpiChanged()
-        {
-            // delay changing things when we are shell. it seems that AppBars do this automagically
-            // if we don't, the system moves things to bad places
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.1) };
-            timer.Start();
-            timer.Tick += (sender1, args) =>
-            {
-                ResetPosition();
-                timer.Stop();
-            };
-        }
-
         public void OnSetWorkArea()
         {
             ResetPosition(false);
@@ -392,6 +445,63 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+            {
+                switch (e.PropertyName)
+                {
+                    case "EnableDesktop":
+                        if (Settings.Instance.EnableDesktop)
+                        {
+                            initDesktop();
+                        }
+                        else
+                        {
+                            teardownDesktop(false);
+                        }
+
+                        break;
+                    case "EnableDynamicDesktop" when IsEnabled:
+                        if (Settings.Instance.EnableDynamicDesktop)
+                        {
+                            createToolbar();
+                        }
+                        else
+                        {
+                            destroyToolbar();
+                            NavigationManager?.NavigateHome();
+                        }
+
+                        break;
+                    case "EnableDesktopOverlayHotKey" when IsEnabled:
+                        if (Settings.Instance.EnableDesktopOverlayHotKey)
+                        {
+                            registerHotKey();
+                        }
+                        else
+                        {
+                            unregisterHotKey();
+                        }
+
+                        break;
+                    case "DesktopOverlayHotKey" when IsEnabled:
+                        if (Settings.Instance.EnableDesktopOverlayHotKey)
+                        {
+                            unregisterHotKey();
+                            registerHotKey();
+                        }
+
+                        break;
+                }
+            }
+        }
+
+        private void ScreensChanged(object sender, WindowManagerEventArgs e)
+        {
+            ResetPosition(e.DisplaysChanged);
+        }
+
         private void OnShowDesktop(HotKey hotKey)
         {
             ToggleOverlay();
@@ -405,5 +515,10 @@ namespace CairoDesktop.SupportingClasses
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+
+        public void Dispose()
+        {
+            teardownDesktop(true);
+        }
     }
 }
