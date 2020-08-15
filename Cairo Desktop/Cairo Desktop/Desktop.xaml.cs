@@ -306,6 +306,7 @@ namespace CairoDesktop
                         BackgroundBrush = GetCairoBackgroundBrush();
 
                     Background = BackgroundBrush;
+                    AllowsTransparency = false;
                 }
                 catch
                 {
