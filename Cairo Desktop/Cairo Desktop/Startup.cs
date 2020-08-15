@@ -149,20 +149,25 @@
         {
             IsShuttingDown = true;
 
-            // dispose notification area in case we started it earlier
             NotificationArea.Instance.Dispose();
 
-            // reset work area
-            if (Shell.IsCairoRunningAsShell) 
+            if (Shell.IsCairoRunningAsShell)
+            {
                 WindowManager.Instance.ResetWorkArea();
+                indicateGracefulShutdown();
+            }
 
-            // dispose of long-lived COM objects
             Shell.DisposeIml();
-
-            // dispose the window manager
             WindowManager.Instance.Dispose();
 
             Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
+        }
+
+        private static void indicateGracefulShutdown()
+        {
+            // winlogon will automatically launch the local machine shell if AutoRestartShell is enabled and the shell window process exits
+            // setting the exit status to 1 indicates that we are shutting down gracefully and do not want the local machine shell to restart
+            Environment.ExitCode = 1;
         }
 
         private static void setTheme(App app)
