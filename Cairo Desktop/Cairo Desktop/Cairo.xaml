@@ -1369,8 +1369,6 @@
                 Value="1,1,1,0" />
         <Setter Property="CornerRadius"
                 Value="8,8,0,0" />
-        <Setter Property="Padding"
-                Value="5,0,0,0" />
         <Setter Property="Background"
                 Value="{DynamicResource ResourceKey=TaskbarBottomBackground}" />
         <Setter Property="BorderBrush"

@@ -74,18 +74,7 @@ namespace CairoDesktop
             bdrMain.DataContext = Settings.Instance;
             quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
 
-            if (DesktopManager.Instance.IsEnabled)
-            {
-                btnDesktopOverlay.DataContext = DesktopManager.Instance;
-                bdrBackground.DataContext = DesktopManager.Instance;
-                bdrTaskbar.Padding = new Thickness(0);
-            }
-            else
-            {
-                btnDesktopOverlay.Visibility = Visibility.Collapsed;
-                btnDesktopOverlay.DataContext = null;
-                bdrBackground.DataContext = null;
-            }
+            setTaskbarDesktopOverlayButton();
 
             // register for settings changes
             Settings.Instance.PropertyChanged += Instance_PropertyChanged;
@@ -120,6 +109,24 @@ namespace CairoDesktop
             
             setTaskbarSize();
             setTaskbarBorderStyles();
+        }
+
+        private void setTaskbarDesktopOverlayButton()
+        {
+            if (DesktopManager.IsEnabled)
+            {
+                btnDesktopOverlay.Visibility = Visibility.Visible;
+                btnDesktopOverlay.DataContext = DesktopManager.Instance;
+                bdrBackground.DataContext = DesktopManager.Instance;
+                bdrTaskbar.Padding = new Thickness(0);
+            }
+            else
+            {
+                btnDesktopOverlay.Visibility = Visibility.Collapsed;
+                btnDesktopOverlay.DataContext = null;
+                bdrBackground.DataContext = null;
+                bdrTaskbar.Padding = new Thickness(5, 0, 0, 0);
+            }
         }
 
         private void setTaskbarSize()
@@ -243,6 +250,9 @@ namespace CairoDesktop
                         break;
                     case "FullWidthTaskBar":
                         setTaskbarBorderStyles();
+                        break;
+                    case "EnableDesktop":
+                        setTaskbarDesktopOverlayButton();
                         break;
                 }
             }

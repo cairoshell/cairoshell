@@ -204,7 +204,7 @@ namespace CairoDesktop
                             if (file.IsDirectory
                                 && Location == "Desktop"
                                 && Settings.Instance.EnableDynamicDesktop
-                                && DesktopManager.Instance.IsEnabled)
+                                && DesktopManager.IsEnabled)
                             {
                                 DesktopManager.Instance.NavigationManager.NavigateTo(file.FullName);
                                 return;

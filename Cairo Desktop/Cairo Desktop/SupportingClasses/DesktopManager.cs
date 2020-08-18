@@ -23,6 +23,8 @@ namespace CairoDesktop.SupportingClasses
         public NativeWindowEx ShellWindow { get; private set; }
         #endregion
 
+        public static bool IsEnabled => Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop;
+
         #region Properties
         private bool isOverlayOpen;
         private int renderOverlayFrames;
@@ -32,8 +34,6 @@ namespace CairoDesktop.SupportingClasses
         public bool SpicySauce; // set to true to enable experimental desktop as progman child - doesn't work in win7 due to layered child window restrictions
         public DesktopIcons DesktopIconsControl { get; private set; }
         public NavigationManager NavigationManager { get; private set; }
-
-        public bool IsEnabled => DesktopWindow != null;
 
         public bool IsOverlayOpen
         {
@@ -146,7 +146,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        private void teardownDesktop(bool isShutdown)
+        private void teardownDesktop()
         {
             // close windows
             DesktopOverlayWindow?.Close();
@@ -158,7 +158,7 @@ namespace CairoDesktop.SupportingClasses
             Shell.ToggleDesktopIcons(true);
 
             // destroy the native shell window
-            if (ShellWindow != null && isShutdown) NativeMethods.DestroyWindow(ShellWindow.Handle);
+            destroyShellWindow();
 
             // destroy the navigation manager
             NavigationManager = null;
@@ -273,6 +273,15 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
+        private void destroyShellWindow()
+        {
+            if (ShellWindow != null)
+            {
+                NativeMethods.DestroyWindow(ShellWindow.Handle);
+                ShellWindow = null;
+            }
+        }
+
         private void WndProc(Message msg)
         {
             // Window procedure for the native window
@@ -287,12 +296,6 @@ namespace CairoDesktop.SupportingClasses
                     msg.WParam.ToInt32() == (int)NativeMethods.SPI.SETDESKWALLPAPER)
             {
                 msg.Result = OnSetDeskWallpaper();
-            }
-            else if (msg.Msg == (int)NativeMethods.WM.ERASEBKGND)
-            {
-                OnEraseBackground();
-
-                msg.Result = IntPtr.Zero;
             }
         }
         #endregion
@@ -405,17 +408,6 @@ namespace CairoDesktop.SupportingClasses
         #endregion
 
         #region Event handling
-        private void OnEraseBackground()
-        {
-            NativeMethods.PAINTSTRUCT ps;
-            IntPtr hdc = NativeMethods.BeginPaint(ShellWindow.Handle, out ps);
-
-            // solid black fill
-            NativeMethods.FillRect(hdc, ref ps.rcPaint, NativeMethods.CreateSolidBrush(0x00000000));
-
-            NativeMethods.EndPaint(ShellWindow.Handle, ref ps);
-        }
-
         public void OnSetWorkArea()
         {
             ResetPosition(false);
@@ -458,7 +450,7 @@ namespace CairoDesktop.SupportingClasses
                         }
                         else
                         {
-                            teardownDesktop(false);
+                            teardownDesktop();
                         }
 
                         break;
@@ -518,7 +510,7 @@ namespace CairoDesktop.SupportingClasses
 
         public void Dispose()
         {
-            teardownDesktop(true);
+            teardownDesktop();
         }
     }
 }

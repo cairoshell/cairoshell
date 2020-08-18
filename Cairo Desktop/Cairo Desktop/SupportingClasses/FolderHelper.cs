@@ -8,7 +8,7 @@ namespace CairoDesktop.SupportingClasses
     {
         public static bool OpenLocation(string path)
         {
-            if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay && DesktopManager.Instance.IsEnabled && !path.StartsWith("::{"))
+            if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay && DesktopManager.IsEnabled && !path.StartsWith("::{"))
             {
                 try
                 {
