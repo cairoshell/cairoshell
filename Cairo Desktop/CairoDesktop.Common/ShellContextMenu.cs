@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Windows;
 using System.Windows.Forms;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Interop;
@@ -27,7 +26,7 @@ namespace CairoDesktop.Common
         }
         
         // Properties
-        public delegate void ItemSelectAction(string item, string path, FrameworkElement sender);
+        public delegate void ItemSelectAction(string item, string path);
         public delegate void FolderItemSelectAction(string item, string path);
         private ItemSelectAction itemSelected;
         private FolderItemSelectAction folderItemSelected;
@@ -48,9 +47,8 @@ namespace CairoDesktop.Common
         private int y;
         private string parent;
         private IShellFolder parentShellFolder;
-        private FrameworkElement sender;
 
-        public ShellContextMenu(SystemFile[] files, FrameworkElement sender, ItemSelectAction itemSelected)
+        public ShellContextMenu(SystemFile[] files, ItemSelectAction itemSelected)
         {
             lock (Shell.ComLock)
             {
@@ -64,7 +62,6 @@ namespace CairoDesktop.Common
                 y = Cursor.Position.Y;
 
                 this.itemSelected = itemSelected;
-                this.sender = sender;
 
                 ShowContextMenu();
             }
@@ -91,24 +88,6 @@ namespace CairoDesktop.Common
 
                     ShowFolderMenu();
                 }
-            }
-        }
-
-        // Helper method for common icon invocation code.
-        public static void OpenContextMenuFromIcon(System.Windows.Input.MouseButtonEventArgs e, ItemSelectAction action)
-        {
-            if (typeof(FrameworkElement).IsAssignableFrom(e.OriginalSource.GetType()))
-            {
-                FrameworkElement el = e.OriginalSource as FrameworkElement;
-                SystemFile file = el.DataContext as SystemFile;
-
-                ShellContextMenu cm = new ShellContextMenu(new SystemFile[] { file }, el, action);
-
-                e.Handled = true;
-            }
-            else
-            {
-                CairoLogger.Instance.Debug("Surface was right-clicked but it wasn't a recognized object.");
             }
         }
 
@@ -398,7 +377,7 @@ namespace CairoDesktop.Common
                                 break;
                         }
 
-                        itemSelected?.Invoke(command, paths[0].FullName, sender);
+                        itemSelected?.Invoke(command, paths[0].FullName);
                     }
                 }
                 else

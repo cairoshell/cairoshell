@@ -235,12 +235,12 @@ namespace CairoDesktop
             // not used for stacks, which use our own menu due to the shell menu causing stacks to close
             if (!currentlyRenaming)
             {
-                ShellContextMenu.OpenContextMenuFromIcon(e, executeFileAction);
+                ShellContextMenu cm = new ShellContextMenu(new SystemFile[] { file }, executeFileAction);
                 e.Handled = true;
             }
         }
 
-        private void executeFileAction(string action, string path, FrameworkElement sender)
+        private void executeFileAction(string action, string path)
         {
             if (action == "openFolder")
             {
