@@ -69,7 +69,7 @@ namespace CairoDesktop
         {
             if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
             {
-                if (desktopManager.ShellWindow == null && !desktopManager.SpicySauce)
+                if (desktopManager.ShellWindow == null && !desktopManager.AllowProgmanChild)
                 {
                     // Extract the WINDOWPOS structure corresponding to this message
                     NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
@@ -238,7 +238,7 @@ namespace CairoDesktop
         #region Size and positioning
         public void SendToBottom()
         {
-            if (desktopManager.ShellWindow == null && !desktopManager.SpicySauce)
+            if (desktopManager.ShellWindow == null && !desktopManager.AllowProgmanChild)
             {
                 Shell.ShowWindowDesktop(Handle);
             }
@@ -264,7 +264,7 @@ namespace CairoDesktop
             double top = System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.DpiScale;
             double left = System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.DpiScale;
 
-            if (desktopManager.ShellWindow != null || desktopManager.SpicySauce)
+            if (desktopManager.ShellWindow != null || desktopManager.AllowProgmanChild)
             {
                 top = (0 - System.Windows.Forms.SystemInformation.VirtualScreen.Top + System.Windows.Forms.SystemInformation.WorkingArea.Top) / Shell.DpiScale;
                 left = (0 - System.Windows.Forms.SystemInformation.VirtualScreen.Left + System.Windows.Forms.SystemInformation.WorkingArea.Left) / Shell.DpiScale;

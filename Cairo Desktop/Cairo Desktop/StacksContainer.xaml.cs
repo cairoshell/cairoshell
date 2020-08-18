@@ -236,7 +236,7 @@ namespace CairoDesktop {
             startPoint = null;
             ctxOpen = true;
 
-            if (!Settings.Instance.EnableDynamicDesktop || !Settings.Instance.EnableDesktop || GroupPolicyManager.Instance.NoDesktop)
+            if (!Settings.Instance.EnableDynamicDesktop || !DesktopManager.IsEnabled)
             {
                 ContextMenu menu = (sender as ContextMenu);
                 foreach (Control item in menu.Items)

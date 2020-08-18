@@ -75,9 +75,6 @@
                         Margin="5,0,5,2"
                         x:Name="txtFilename"
                         Foreground="{DynamicResource ResourceKey=StacksIconText}">
-                    <TextBlock.ToolTip>
-                        <ToolTip Content="{Binding Path=Name, Mode=OneWay}" />
-                    </TextBlock.ToolTip>
                     <TextBlock.Effect>
                         <DropShadowEffect Color="Black" 
                                           ShadowDepth="1"

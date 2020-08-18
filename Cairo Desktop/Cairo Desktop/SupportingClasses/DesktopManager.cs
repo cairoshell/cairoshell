@@ -31,7 +31,6 @@ namespace CairoDesktop.SupportingClasses
         private HotKey overlayHotKey;
         private WindowManager windowManager;
 
-        public bool SpicySauce; // set to true to enable experimental desktop as progman child - doesn't work in win7 due to layered child window restrictions
         public DesktopIcons DesktopIconsControl { get; private set; }
         public NavigationManager NavigationManager { get; private set; }
 
@@ -61,6 +60,8 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
+        public bool AllowProgmanChild => ShellWindow == null && Shell.IsWindows8OrBetter; // doesn't work in win7 due to layered child window restrictions
+
         public SystemDirectory DesktopLocation => DesktopIconsControl.Location;
 
         #endregion
@@ -77,7 +78,7 @@ namespace CairoDesktop.SupportingClasses
 
         private void initDesktop()
         {
-            if (Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop)
+            if (IsEnabled)
             {
                 // hide the windows desktop
                 Shell.ToggleDesktopIcons(false);
@@ -188,7 +189,7 @@ namespace CairoDesktop.SupportingClasses
         {
             if (DesktopWindow != null)
             {
-                if (ShellWindow != null || SpicySauce)
+                if (ShellWindow != null || AllowProgmanChild)
                 {
                     // set the desktop window as a child of the shell window
                     NativeMethods.SetWindowLong(DesktopWindow.Handle, NativeMethods.GWL_STYLE, (NativeMethods.GetWindowLong(DesktopWindow.Handle, NativeMethods.GWL_STYLE) | (int)NativeMethods.WindowStyles.WS_CHILD) & ~unchecked((int)NativeMethods.WindowStyles.WS_OVERLAPPED));
