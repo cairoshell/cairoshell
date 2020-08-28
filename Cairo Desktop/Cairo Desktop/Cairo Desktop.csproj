@@ -116,6 +116,7 @@
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
     <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
     <Compile Include="SupportingClasses\DesktopManager.cs" />
+    <Compile Include="SupportingClasses\PicSumWallpaperClient.cs" />
     <Compile Include="SupportingClasses\WindowManager.cs" />
     <Compile Include="SupportingClasses\FilePathValidationRule.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
