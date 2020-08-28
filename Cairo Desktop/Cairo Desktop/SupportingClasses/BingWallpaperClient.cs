@@ -20,17 +20,13 @@
         /// </remarks>
         public class BingWallPaperClient
         {
-            // TODO: This should be moved to a plugin at somepoint
+            // TODO: This should be moved to a plugin at some point
 
             private readonly string _feed;
             private readonly string _tempfilename;
             private readonly string _tempcoppyright;
             private bool _loadcalled;
 
-
-            /// <summary>
-            /// Creates a new instance of the Bing photo downloader
-            /// </summary>
             public BingWallPaperClient()
             {
                 var tempdir = Environment.ExpandEnvironmentVariables("%temp%");
@@ -38,12 +34,12 @@
                 _tempcoppyright = Path.Combine(tempdir, "bingphotooftheday.txt");
                 _loadcalled = false;
 
-                //photo of the day data in xml format
+                //photo of the day data in XML format
                 _feed = "http://www.bing.com/HPImageArchive.aspx?format=xml&idx=0&n=1&mkt=en-US";
             }
 
             /// <summary>
-            /// Downloades the photo of the day syncronously
+            /// Downloads the photo of the day synchronously
             /// </summary>
             public void DownLoad()
             {
@@ -59,15 +55,20 @@
 
                 if (File.Exists(_tempcoppyright))
                 {
-                    CoppyRightData = File.ReadAllText(_tempcoppyright);
+                    CopyRightData = File.ReadAllText(_tempcoppyright);
                     downloadneeded = false;
                 }
                 else
+                {
                     downloadneeded = true;
+                }
 
                 _loadcalled = true;
+
                 if (!downloadneeded)
+                {
                     return;
+                }
 
                 var document = XDocument.Load(_feed).Elements().Elements().FirstOrDefault();
 
@@ -80,12 +81,13 @@
                 var copyright = (from i in document.Elements()
                                  where i.Name == "copyright"
                                  select i.Value.ToString()).FirstOrDefault();
+
                 var cplink = (from i in document.Elements()
                               where i.Name == "copyrightlink"
                               select i.Value.ToString()).FirstOrDefault();
 
-                CoppyRightData = copyright + "\r\n" + cplink;
-                File.WriteAllText(_tempcoppyright, CoppyRightData);
+                CopyRightData = copyright + Environment.NewLine + cplink;
+                File.WriteAllText(_tempcoppyright, CopyRightData);
 
                 using (var client = new WebClient())
                 {
@@ -94,9 +96,9 @@
             }
 
             /// <summary>
-            /// Asyncronous & awaitable version of the download routine
+            /// Asynchronous & await-able version of the download routine
             /// </summary>
-            /// <returns>An awaitable task</returns>
+            /// <returns>An await-able task</returns>
             public Task DownloadAsync()
             {
                 return Task.Run(() =>
@@ -106,34 +108,40 @@
             }
 
             /// <summary>
-            /// Gets the Photo of the day in a WPF compiliant ImageSource
+            /// Gets the Photo of the day in a WPF compliant ImageSource
             /// </summary>
             public ImageSource WPFPhotoOfTheDay
             {
                 get
                 {
                     if (!_loadcalled)
-                        throw new InvalidOperationException("Call the DownLoad() methood first");
+                    {
+                        throw new InvalidOperationException("Call the DownLoad() method first");
+                    }
+
                     return new BitmapImage(new Uri(_tempfilename));
                 }
             }
             /// <summary>
-            /// Gets the Photo of the day in a Windows Forms compiliant ImageSource
+            /// Gets the Photo of the day in a Windows Forms compliant ImageSource
             /// </summary>
             public Bitmap WFPhotoOfTheDay
             {
                 get
                 {
                     if (!_loadcalled)
-                        throw new InvalidOperationException("Call the DownLoad() methood first");
+                    {
+                        throw new InvalidOperationException("Call the DownLoad() method first");
+                    }
+
                     return new Bitmap(_tempfilename);
                 }
             }
 
             /// <summary>
-            /// CoppyRight data information
+            /// CopyRight data information
             /// </summary>
-            public string CoppyRightData
+            public string CopyRightData
             {
                 get;
                 private set;

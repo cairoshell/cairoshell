@@ -44,9 +44,13 @@ namespace CairoDesktop
         {
             int hShellReadyEvent;
             if (Environment.OSVersion.Platform == PlatformID.Win32NT && Shell.IsWindows2kOrBetter)
+            {
                 hShellReadyEvent = NativeMethods.OpenEvent(NativeMethods.EVENT_MODIFY_STATE, true, @"Global\msgina: ShellReadyEvent");
+            }
             else
+            {
                 hShellReadyEvent = NativeMethods.OpenEvent(NativeMethods.EVENT_MODIFY_STATE, false, "msgina: ShellReadyEvent");
+            }
 
             if (hShellReadyEvent != 0)
             {
@@ -58,7 +62,9 @@ namespace CairoDesktop
         private static void SetupSettings()
         {
             if (Settings.Instance.IsFirstRun == true)
+            {
                 Settings.Instance.Upgrade();
+            }
         }
 
         private static void SetupLoggingSystem()
@@ -154,7 +160,10 @@ namespace CairoDesktop
             try
             {
                 if (Directory.Exists(logsFolder))
+                {
                     return false;
+                }
+
                 Directory.CreateDirectory(logsFolder);
             }
             catch (Exception ex)
@@ -172,20 +181,15 @@ namespace CairoDesktop
         {
             try
             {
-                // calc the current filename
                 string currentFilename = Path.Combine(logsFolder, DefaultLogName);
-
-                // look for it, if it exists, then back it up
                 if (File.Exists(currentFilename))
                 {
-                    // calc the backup name
                     string backupFilename = Path.Combine(logsFolder, DefaultBackupLogName);
-
-                    // if there was a previous backup, delete it
                     if (File.Exists(backupFilename))
+                    {
                         File.Delete(backupFilename);
+                    }
 
-                    // move the current file to the backup location
                     File.Move(currentFilename, backupFilename);
                 }
             }
@@ -214,7 +218,9 @@ namespace CairoDesktop
                 foreach (FileInfo file in files)
                 {
                     if (now.Subtract(file.LastWriteTime) > allowedDelta)
+                    {
                         file.Delete();
+                    }
                 }
             }
             catch (Exception ex)
@@ -247,8 +253,7 @@ namespace CairoDesktop
 
         internal static bool InternalCheckIsWow64()
         {
-            if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) ||
-                Environment.OSVersion.Version.Major >= 6)
+            if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major >= 6)
             {
                 using (Process p = Process.GetCurrentProcess())
                 {
@@ -257,7 +262,9 @@ namespace CairoDesktop
                     try
                     {
                         if (!NativeMethods.IsWow64Process(p.Handle, out retVal))
+                        {
                             return false;
+                        }
                     }
                     catch (Exception)
                     {

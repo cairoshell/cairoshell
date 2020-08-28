@@ -8,12 +8,12 @@ namespace CairoDesktop.SupportingClasses
     {
         internal static void RegisterSystemHotkeys()
         {
-            new HotKey(Key.R, KeyModifier.Win | KeyModifier.NoRepeat, OnWinRCommand);
-            new HotKey(Key.D, KeyModifier.Win | KeyModifier.NoRepeat, OnWinDCommand);
-            new HotKey(Key.OemComma, KeyModifier.Win | KeyModifier.NoRepeat, OnWinDCommand);
-            new HotKey(Key.E, KeyModifier.Win | KeyModifier.NoRepeat, OnWinECommand);
-            new HotKey(Key.I, KeyModifier.Win | KeyModifier.NoRepeat, OnWinICommand);
-            new HotKey(Key.Pause, KeyModifier.Win | KeyModifier.NoRepeat, OnWinPauseCommand);
+            new HotKey(Key.R, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnWinRCommand);
+            new HotKey(Key.D, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnWinDCommand);
+            new HotKey(Key.OemComma, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnWinDCommand);
+            new HotKey(Key.E, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnWinECommand);
+            new HotKey(Key.I, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnWinICommand);
+            new HotKey(Key.Pause, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnWinPauseCommand);
         }
 
         private static void OnWinDCommand(HotKey obj)
@@ -41,6 +41,10 @@ namespace CairoDesktop.SupportingClasses
             Shell.StartProcess("system.cpl");
         }
 
-        // TODO: Add window management related hotkeys
+        // TODO: Add window management related HotKeys
+        // Win + [up]
+        // Win + [down]
+        // Win + [left]
+        // Win + [right]
     }
 }

@@ -1,17 +1,20 @@
-﻿using CairoDesktop.ObjectModel;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using CairoDesktop.ObjectModel;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
     class ClockMenuExtra : MenuExtra
     {
-        public ClockMenuExtra() { }
+        private Clock _clock;
+
+        public ClockMenuExtra()
+        {
+        }
 
         public override UserControl StartControl(MenuBar menuBar)
         {
-            Clock clock = new Clock(menuBar);
-
-            return clock;
+            _clock = new Clock(menuBar);
+            return _clock;
         }
     }
 }

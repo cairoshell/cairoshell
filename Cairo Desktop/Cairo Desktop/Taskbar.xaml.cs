@@ -197,7 +197,7 @@ namespace CairoDesktop
             }
         }
 
-        protected override void customClosing()
+        protected override void CustomClosing()
         {
             if (Startup.IsShuttingDown && Screen.Primary)
             {
@@ -215,7 +215,7 @@ namespace CairoDesktop
             }
         }
 
-        protected override void postInit()
+        protected override void PostInit()
         {
             setTaskButtonSize();
 
@@ -240,12 +240,12 @@ namespace CairoDesktop
                 {
                     case "TaskbarIconSize":
                         setTaskbarSize();
-                        setScreenPosition();
+                        SetScreenPosition();
                         if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
                         break;
                     case "TaskbarPosition":
                         setupTaskbarAppearance();
-                        setScreenPosition();
+                        SetScreenPosition();
                         if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
                         break;
                     case "FullWidthTaskBar":
@@ -292,7 +292,7 @@ namespace CairoDesktop
             }
         }
 
-        internal override void setPosition()
+        internal override void SetPosition()
         {
             double screenWidth = Screen.Bounds.Width / dpiScale;
 
@@ -346,9 +346,9 @@ namespace CairoDesktop
             }
         }
 
-        internal override void afterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
+        internal override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
-            base.afterAppBarPos(isSameCoords, rect);
+            base.AfterAppBarPos(isSameCoords, rect);
 
             if (useFullWidthAppearance)
                 bdrTaskbar.Width = getDesiredWidth();
@@ -367,7 +367,7 @@ namespace CairoDesktop
         #endregion
 
         #region Window procedure
-        protected override IntPtr customWndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        protected override IntPtr CustomWndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (msg == (int)NativeMethods.WM.MOUSEACTIVATE)
             {

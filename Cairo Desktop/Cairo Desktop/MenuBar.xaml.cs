@@ -52,7 +52,7 @@ namespace CairoDesktop
             requiresScreenEdge = true;
             if (secretBottomMenuBar) appBarEdge = NativeMethods.ABEdge.ABE_BOTTOM;
 
-            setPosition();
+            SetPosition();
 
             setupChildren();
 
@@ -190,7 +190,6 @@ namespace CairoDesktop
 
         private void setupPlacesMenu()
         {
-            // Set username
             string username = Environment.UserName.Replace("_", "__");
             miUserName.Header = username;
 
@@ -224,7 +223,7 @@ namespace CairoDesktop
             }
         }
 
-        protected override void postInit()
+        protected override void PostInit()
         {
             setupMenuExtras();
 
@@ -239,9 +238,9 @@ namespace CairoDesktop
                 keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
                 keyboardListener.HookKeyboard();*/
 
-                programsMenuHotKeys.Add(new HotKey(Key.LWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu));
-                programsMenuHotKeys.Add(new HotKey(Key.RWin, KeyModifier.Win | KeyModifier.NoRepeat, OnShowProgramsMenu));
-                programsMenuHotKeys.Add(new HotKey(Key.Escape, KeyModifier.Ctrl | KeyModifier.NoRepeat, OnShowProgramsMenu));
+                programsMenuHotKeys.Add(new HotKey(Key.LWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
+                programsMenuHotKeys.Add(new HotKey(Key.RWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
+                programsMenuHotKeys.Add(new HotKey(Key.Escape, HotKeyModifier.Ctrl | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
             }
             else if (Shell.IsCairoRunningAsShell && Screen.Primary)
             {
@@ -336,9 +335,9 @@ namespace CairoDesktop
 
         #region Events
 
-        internal override void afterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
+        internal override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
-            base.afterAppBarPos(isSameCoords, rect);
+            base.AfterAppBarPos(isSameCoords, rect);
 
             if (!isSameCoords)
             {
@@ -346,7 +345,7 @@ namespace CairoDesktop
             }
         }
 
-        internal override void setPosition()
+        internal override void SetPosition()
         {
             Top = getDesiredTopPosition();
             Left = Screen.Bounds.X / dpiScale;
@@ -406,7 +405,7 @@ namespace CairoDesktop
             return new NativeMethods.MenuBarSizeData { edge = (int)appBarEdge, rc = new NativeMethods.Rect { Top = (int)(Top * dpiScale), Left = (int)(Left * dpiScale), Bottom = (int)((Top + Height) * dpiScale), Right = (int)((Left + Width) * dpiScale) } };
         }
 
-        protected override void customClosing()
+        protected override void CustomClosing()
         {
             if (Startup.IsShuttingDown && Screen.Primary)
             {

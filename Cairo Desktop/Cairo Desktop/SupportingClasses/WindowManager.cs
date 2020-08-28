@@ -10,17 +10,15 @@ using CairoDesktop.Interop;
 
 namespace CairoDesktop.SupportingClasses
 {
-    public class WindowManager : SingletonObject<WindowManager>, IDisposable
+    public sealed class WindowManager : SingletonObject<WindowManager>, IDisposable
     {
-        #region Properties
-
         private bool hasCompletedInitialDisplaySetup = false;
         private int pendingDisplayEvents = 0;
         private readonly static object displaySetupLock = new object();
-        private DesktopManager desktopManager;
+        private readonly DesktopManager desktopManager;
 
         public bool IsSettingDisplays { get; set; }
-        public Screen[] ScreenState = { };
+        public Screen[] ScreenState = Array.Empty<Screen>();
         public List<MenuBar> MenuBarWindows = new List<MenuBar>();
         public List<Taskbar> TaskbarWindows = new List<Taskbar>();
 
@@ -50,8 +48,6 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        #endregion
-
         private WindowManager()
         {
             // create and maintain reference to desktop manager
@@ -62,8 +58,11 @@ namespace CairoDesktop.SupportingClasses
             // start a timer to handle orphaned display events
             DispatcherTimer notificationCheckTimer = new DispatcherTimer();
 
-            notificationCheckTimer = new DispatcherTimer(DispatcherPriority.Background, System.Windows.Application.Current.Dispatcher);
-            notificationCheckTimer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            notificationCheckTimer = new DispatcherTimer(DispatcherPriority.Background, System.Windows.Application.Current.Dispatcher)
+            {
+                Interval = new TimeSpan(0, 0, 0, 0, 100)
+            };
+
             notificationCheckTimer.Tick += NotificationCheck_Tick;
             notificationCheckTimer.Start();
         }
@@ -73,7 +72,7 @@ namespace CairoDesktop.SupportingClasses
             if (!IsSettingDisplays && pendingDisplayEvents > 0)
             {
                 CairoLogger.Instance.Debug("WindowManager: Processing additional display events");
-                processDisplayChanges();
+                ProcessDisplayChanges();
             }
         }
 
@@ -81,7 +80,7 @@ namespace CairoDesktop.SupportingClasses
         {
             IsSettingDisplays = true;
 
-            displaySetup(true);
+            DisplaySetup(true);
 
             hasCompletedInitialDisplaySetup = true;
             IsSettingDisplays = false;
@@ -91,12 +90,15 @@ namespace CairoDesktop.SupportingClasses
         {
             pendingDisplayEvents++;
 
-            if (!IsSettingDisplays) processDisplayChanges();
+            if (!IsSettingDisplays)
+            {
+                ProcessDisplayChanges();
+            }
         }
 
-        private bool haveDisplaysChanged()
+        private bool HaveDisplaysChanged()
         {
-            resetScreenCache();
+            ResetScreenCache();
 
             if (ScreenState.Length == Screen.AllScreens.Length)
             {
@@ -121,7 +123,7 @@ namespace CairoDesktop.SupportingClasses
             return true;
         }
 
-        private void processDisplayChanges()
+        private void ProcessDisplayChanges()
         {
             lock (displaySetupLock)
             {
@@ -129,15 +131,15 @@ namespace CairoDesktop.SupportingClasses
 
                 while (pendingDisplayEvents > 0)
                 {
-                    if (haveDisplaysChanged())
+                    if (HaveDisplaysChanged())
                     {
-                        displaySetup();
+                        DisplaySetup();
                     }
                     else
                     {
                         // if this is only a DPI change, screens will be the same but we still need to reposition
-                        refreshWindows(false);
-                        setDisplayWorkAreas();
+                        RefreshWindows(false);
+                        SetDisplayWorkAreas();
                     }
 
                     pendingDisplayEvents--;
@@ -147,7 +149,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        private void resetScreenCache()
+        private void ResetScreenCache()
         {
             // use reflection to empty screens cache
             typeof(Screen).GetField("screens", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
@@ -157,7 +159,7 @@ namespace CairoDesktop.SupportingClasses
         /// Compares the system screen list to the screens associated with Cairo windows, then creates or destroys windows as necessary.
         /// Runs at startup and when a WM_DEVICECHANGE, WM_DISPLAYCHANGE, or WM_DPICHANGED message is received by the MenuBar window on the primary display.
         /// </summary>
-        private void displaySetup(bool firstRun = false)
+        private void DisplaySetup(bool firstRun = false)
         {
             if (!firstRun && !hasCompletedInitialDisplaySetup)
             {
@@ -178,22 +180,26 @@ namespace CairoDesktop.SupportingClasses
             if (!firstRun)
             {
                 // enumerate screens based on currently open windows
-                openScreens = getOpenScreens();
+                openScreens = GetOpenScreens();
 
-                sysScreens = getScreenDeviceNames();
+                sysScreens = GetScreenDeviceNames();
 
                 // figure out which screens have been added
                 foreach (string name in sysScreens)
                 {
                     if (!openScreens.Contains(name))
+                    {
                         addedScreens.Add(name);
+                    }
                 }
 
                 // figure out which screens have been removed
                 foreach (string name in openScreens)
                 {
                     if (!sysScreens.Contains(name))
+                    {
                         removedScreens.Add(name);
+                    }
                 }
 
                 // abort if we have no screens or if we are removing all screens without adding new ones
@@ -204,42 +210,46 @@ namespace CairoDesktop.SupportingClasses
                 }
 
                 // close windows associated with removed screens
-                processRemovedScreens(removedScreens);
+                ProcessRemovedScreens(removedScreens);
 
                 // refresh existing window screen properties with updated screen information
-                refreshWindows(true);
+                RefreshWindows(true);
             }
 
             // open windows on newly added screens
-            processAddedScreens(addedScreens, firstRun);
+            ProcessAddedScreens(addedScreens, firstRun);
 
             // update each display's work area if we are shell
-            setDisplayWorkAreas();
+            SetDisplayWorkAreas();
 
             CairoLogger.Instance.Debug("WindowManager: Completed display setup");
         }
 
         #region Display setup helpers
-        private List<string> getOpenScreens()
+        private List<string> GetOpenScreens()
         {
             List<string> openScreens = new List<string>();
 
             foreach (MenuBar bar in MenuBarWindows)
             {
                 if (bar.Screen != null && !openScreens.Contains(bar.Screen.DeviceName))
+                {
                     openScreens.Add(bar.Screen.DeviceName);
+                }
             }
 
             foreach (Taskbar bar in TaskbarWindows)
             {
                 if (bar.Screen != null && !openScreens.Contains(bar.Screen.DeviceName))
+                {
                     openScreens.Add(bar.Screen.DeviceName);
+                }
             }
 
             return openScreens;
         }
 
-        private List<string> getScreenDeviceNames()
+        private List<string> GetScreenDeviceNames()
         {
             List<string> sysScreens = new List<string>();
 
@@ -252,7 +262,7 @@ namespace CairoDesktop.SupportingClasses
             return sysScreens;
         }
 
-        private void processRemovedScreens(List<string> removedScreens)
+        private void ProcessRemovedScreens(List<string> removedScreens)
         {
             foreach (string name in removedScreens)
             {
@@ -260,13 +270,13 @@ namespace CairoDesktop.SupportingClasses
 
                 if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
                 {
-                    // close taskbars
+                    // close TaskBars
                     Taskbar taskbarToClose = null;
                     foreach (Taskbar bar in TaskbarWindows)
                     {
                         if (bar.Screen != null && bar.Screen.DeviceName == name)
                         {
-                            CairoLogger.Instance.DebugIf(bar.Screen.Primary, "WindowManager: Closing taskbar on primary display");
+                            CairoLogger.Instance.DebugIf(bar.Screen.Primary, "WindowManager: Closing TaskBar on primary display");
 
                             taskbarToClose = bar;
                             break;
@@ -275,7 +285,11 @@ namespace CairoDesktop.SupportingClasses
 
                     if (taskbarToClose != null)
                     {
-                        if (!taskbarToClose.IsClosing) taskbarToClose.Close();
+                        if (!taskbarToClose.IsClosing)
+                        {
+                            taskbarToClose.Close();
+                        }
+
                         TaskbarWindows.Remove(taskbarToClose);
                     }
                 }
@@ -297,14 +311,18 @@ namespace CairoDesktop.SupportingClasses
 
                     if (barToClose != null)
                     {
-                        if (!barToClose.IsClosing) barToClose.Close();
+                        if (!barToClose.IsClosing)
+                        {
+                            barToClose.Close();
+                        }
+
                         MenuBarWindows.Remove(barToClose);
                     }
                 }
             }
         }
 
-        private void refreshWindows(bool displaysChanged)
+        private void RefreshWindows(bool displaysChanged)
         {
             CairoLogger.Instance.Debug("WindowManager: Refreshing screen information for existing windows");
 
@@ -319,14 +337,14 @@ namespace CairoDesktop.SupportingClasses
                     if (bar != null)
                     {
                         bar.Screen = screen;
-                        bar.setScreenPosition();
+                        bar.SetScreenPosition();
                     }
                 }
             }
             else if (MenuBarWindows.Count > 0)
             {
                 MenuBarWindows[0].Screen = Screen.PrimaryScreen;
-                MenuBarWindows[0].setScreenPosition();
+                MenuBarWindows[0].SetScreenPosition();
             }
 
             if (Settings.Instance.EnableTaskbarMultiMon)
@@ -338,22 +356,22 @@ namespace CairoDesktop.SupportingClasses
                     if (bar != null)
                     {
                         bar.Screen = screen;
-                        bar.setScreenPosition();
+                        bar.SetScreenPosition();
                     }
                 }
             }
             else if (TaskbarWindows.Count > 0)
             {
                 TaskbarWindows[0].Screen = Screen.PrimaryScreen;
-                TaskbarWindows[0].setScreenPosition();
+                TaskbarWindows[0].SetScreenPosition();
             }
 
             // notify event subscribers
-            WindowManagerEventArgs args = new WindowManagerEventArgs {DisplaysChanged = displaysChanged};
+            WindowManagerEventArgs args = new WindowManagerEventArgs { DisplaysChanged = displaysChanged };
             ScreensChanged?.Invoke(this, args);
         }
 
-        private void processAddedScreens(List<string> addedScreens, bool firstRun)
+        private void ProcessAddedScreens(List<string> addedScreens, bool firstRun)
         {
             foreach (var screen in ScreenState)
             {
@@ -374,9 +392,9 @@ namespace CairoDesktop.SupportingClasses
 
                     if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
                     {
-                        CairoLogger.Instance.DebugIf(screen.Primary, "WindowManager: Opening taskbar on new primary display");
+                        CairoLogger.Instance.DebugIf(screen.Primary, "WindowManager: Opening TaskBar on new primary display");
 
-                        // taskbars
+                        // TaskBars
                         Taskbar newTaskbar = new Taskbar(screen);
                         newTaskbar.Show();
                         TaskbarWindows.Add(newTaskbar);
@@ -385,7 +403,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public T GetScreenWindow<T>(List<T> windowList, Screen screen) where T : AppBarWindow
+        public static T GetScreenWindow<T>(List<T> windowList, Screen screen) where T : AppBarWindow
         {
             foreach (AppBarWindow window in windowList)
             {
@@ -400,7 +418,7 @@ namespace CairoDesktop.SupportingClasses
         #endregion
 
         #region Work area
-        private void setDisplayWorkAreas()
+        private void SetDisplayWorkAreas()
         {
             // Set desktop work area for when Explorer isn't running
             if (Shell.IsCairoRunningAsShell)
@@ -441,7 +459,7 @@ namespace CairoDesktop.SupportingClasses
                 }
             }
 
-            // only allocate space for taskbar if enabled
+            // only allocate space for TaskBar if enabled
             if (Settings.Instance.EnableTaskbar && Settings.Instance.TaskbarMode == 0)
             {
                 if (Settings.Instance.TaskbarPosition == 1)
@@ -464,10 +482,10 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 0, ref rc, (uint)(NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
         }
 
-        public void ResetWorkArea()
+        public static void ResetWorkArea()
         {
             // TODO this is wrong for multi-display
-            // set work area back to full screen size. we can't assume what pieces of the old workarea may or may not be still used
+            // set work area back to full screen size. we can't assume what pieces of the old work area may or may not be still used
             NativeMethods.Rect oldWorkArea;
             oldWorkArea.Left = SystemInformation.VirtualScreen.Left;
             oldWorkArea.Top = SystemInformation.VirtualScreen.Top;
@@ -482,10 +500,5 @@ namespace CairoDesktop.SupportingClasses
         {
             desktopManager.Dispose();
         }
-    }
-
-    public class WindowManagerEventArgs : EventArgs
-    {
-        public bool DisplaysChanged;
     }
 }

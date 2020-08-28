@@ -1,7 +1,7 @@
-﻿using CairoDesktop.ObjectModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
+using CairoDesktop.Common.ExtensionMethods;
+using CairoDesktop.ObjectModel;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -17,21 +17,18 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 
         public override void Start()
         {
-            MenuExtras.AddRange(new MenuExtra[]
-            {
-                new SystemTrayMenuExtra(),
-                new VolumeMenuExtra(),
-                new ActionCenterMenuExtra(),
-                new ClockMenuExtra(),
-                new SearchMenuExtra()
-            });
+            MenuExtras.AddRange(new SystemTrayMenuExtra(),
+                                new VolumeMenuExtra(),
+                                new ActionCenterMenuExtra(),
+                                new ClockMenuExtra(),
+                                new SearchMenuExtra());
 
-            _CairoShell.Instance.MenuExtras.AddRange(MenuExtras);
+            MenuExtras.AddTo(_CairoShell.Instance.MenuExtras);
         }
 
         public override void Stop()
         {
-            MenuExtras.Select(_CairoShell.Instance.MenuExtras.Remove).ToList();
+            MenuExtras.RemoveFrom(_CairoShell.Instance.MenuExtras);
             MenuExtras.Clear();
             MenuExtras = null;
         }

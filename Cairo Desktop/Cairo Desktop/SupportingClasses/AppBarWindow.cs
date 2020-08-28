@@ -1,17 +1,16 @@
-﻿using CairoDesktop.Common.Logging;
-using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Threading;
+using CairoDesktop.Common.Logging;
+using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop.SupportingClasses
 {
     public class AppBarWindow : Window
     {
-        // Screen properties
         public System.Windows.Forms.Screen Screen;
         internal double dpiScale = 1.0;
         protected bool processScreenChanges = false;
@@ -69,16 +68,19 @@ namespace CairoDesktop.SupportingClasses
 
             dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
 
-            setPosition();
+            SetPosition();
 
             if (Shell.IsCairoRunningAsShell)
             {
                 // set position again, on a delay, in case one display has a different DPI. for some reason the system overrides us if we don't wait
-                delaySetPosition();
+                DelaySetPosition();
             }
 
-            // register appbar
-            if (!Shell.IsCairoRunningAsShell && enableAppBar) appbarMessageId = AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
+            // register AppBar
+            if (!Shell.IsCairoRunningAsShell && enableAppBar)
+            {
+                appbarMessageId = AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
+            }
 
             // hide from alt-tab etc
             Shell.HideWindowFromTasks(Handle);
@@ -86,20 +88,22 @@ namespace CairoDesktop.SupportingClasses
             // register for full-screen notifications
             FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
 
-            postInit();
+            PostInit();
         }
 
         private void OnClosing(object sender, CancelEventArgs e)
         {
             IsClosing = true;
 
-            customClosing();
+            CustomClosing();
 
             if (Startup.IsShuttingDown && Screen.Primary)
             {
-                // unregister appbar
+                // unregister AppBar
                 if (AppBarHelper.appBars.Contains(Handle))
+                {
                     AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale);
+                }
 
                 // unregister full-screen notifications
                 FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
@@ -109,9 +113,11 @@ namespace CairoDesktop.SupportingClasses
             }
             else if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
             {
-                // unregister appbar
+                // unregister AppBar
                 if (AppBarHelper.appBars.Contains(Handle))
+                {
                     AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale);
+                }
 
                 // unregister full-screen notifications
                 FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
@@ -206,26 +212,26 @@ namespace CairoDesktop.SupportingClasses
 
                 dpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
 
-                setScreenProperties(ScreenSetupReason.DpiChange);
+                SetScreenProperties(ScreenSetupReason.DpiChange);
             }
             else if (msg == (int)NativeMethods.WM.DISPLAYCHANGE)
             {
-                setScreenProperties(ScreenSetupReason.DisplayChange);
+                SetScreenProperties(ScreenSetupReason.DisplayChange);
                 handled = true;
             }
             else if (msg == (int)NativeMethods.WM.DEVICECHANGE && (int)wParam == 0x0007)
             {
-                setScreenProperties(ScreenSetupReason.DeviceChange);
+                SetScreenProperties(ScreenSetupReason.DeviceChange);
                 handled = true;
             }
 
             // call custom implementations' window procedure
-            return customWndProc(hwnd, msg, wParam, lParam, ref handled);
+            return CustomWndProc(hwnd, msg, wParam, lParam, ref handled);
         }
         #endregion
 
         #region Helpers
-        private void delaySetPosition()
+        private void DelaySetPosition()
         {
             // delay changing things when we are shell. it seems that explorer AppBars do this too.
             // if we don't, the system moves things to bad places
@@ -233,19 +239,25 @@ namespace CairoDesktop.SupportingClasses
             timer.Start();
             timer.Tick += (sender1, args) =>
             {
-                setPosition();
+                SetPosition();
                 timer.Stop();
             };
         }
 
-        internal void setScreenPosition()
+        internal void SetScreenPosition()
         {
             // set our position if running as shell, otherwise let AppBar do the work
-            if (Shell.IsCairoRunningAsShell || !enableAppBar) delaySetPosition();
-            else if (enableAppBar) AppBarHelper.ABSetPos(this, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
+            if (Shell.IsCairoRunningAsShell || !enableAppBar)
+            {
+                DelaySetPosition();
+            }
+            else if (enableAppBar)
+            {
+                AppBarHelper.ABSetPos(this, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
+            }
         }
 
-        internal void setAppBarPosition(NativeMethods.Rect rect)
+        internal void SetAppBarPosition(NativeMethods.Rect rect)
         {
             Top = rect.Top / dpiScale;
             Left = rect.Left / dpiScale;
@@ -253,7 +265,7 @@ namespace CairoDesktop.SupportingClasses
             Height = (rect.Bottom - rect.Top) / dpiScale;
         }
 
-        private void setScreenProperties(ScreenSetupReason reason)
+        private void SetScreenProperties(ScreenSetupReason reason)
         {
             // process screen changes if we are on the primary display (or any display in the case of a DPI change, since only the changed display receives that message)
             // and the designated window. suppress this if we are shutting down (which can trigger this method on multi-dpi setups due to window movements)
@@ -286,9 +298,9 @@ namespace CairoDesktop.SupportingClasses
         #endregion
 
         #region Virtual methods
-        internal virtual void afterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
+        internal virtual void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
-            // apparently the taskbars like to pop up when app bars change
+            // apparently the TaskBars like to pop up when AppBars change
             if (Settings.Instance.EnableTaskbar && !Startup.IsShuttingDown)
             {
                 AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
@@ -302,23 +314,23 @@ namespace CairoDesktop.SupportingClasses
                 timer.Tick += (sender1, args) =>
                 {
                     // set position again, since WPF may have overridden the original change from AppBarHelper
-                    setAppBarPosition(rect);
+                    SetAppBarPosition(rect);
 
                     timer.Stop();
                 };
             }
         }
 
-        protected virtual void postInit() { }
+        protected virtual void PostInit() { }
 
-        protected virtual void customClosing() { }
+        protected virtual void CustomClosing() { }
 
-        protected virtual IntPtr customWndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        protected virtual IntPtr CustomWndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             return IntPtr.Zero;
         }
 
-        internal virtual void setPosition() { }
+        internal virtual void SetPosition() { }
         #endregion
     }
 }

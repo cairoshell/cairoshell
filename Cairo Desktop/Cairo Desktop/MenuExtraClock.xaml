@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization">
     <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
-        <MenuItem x:Name="miClock"
+        <MenuItem x:Name="ClockMenuItem"
                   ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}"
-                  SubmenuOpened="miClock_SubmenuOpened">
+                  SubmenuOpened="ClockMenuItem_SubmenuOpened">
             <MenuItem.Header>
                 <TextBlock Name="dateText"
                            ToolTipService.Placement="Bottom" />

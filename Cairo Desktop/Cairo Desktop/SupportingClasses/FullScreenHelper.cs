@@ -1,15 +1,15 @@
-﻿using CairoDesktop.Common.Logging;
-using CairoDesktop.Interop;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Threading;
+using CairoDesktop.Common.Logging;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop.SupportingClasses
 {
-    public class FullScreenHelper: IDisposable
+    public sealed class FullScreenHelper : IDisposable
     {
         private static FullScreenHelper instance;
 
@@ -26,14 +26,17 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        private DispatcherTimer fullscreenCheck;
+        private readonly DispatcherTimer fullscreenCheck;
 
         public ObservableCollection<FullScreenApp> FullScreenApps = new ObservableCollection<FullScreenApp>();
 
         private FullScreenHelper()
         {
-            fullscreenCheck = new DispatcherTimer(DispatcherPriority.Background, System.Windows.Application.Current.Dispatcher);
-            fullscreenCheck.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            fullscreenCheck = new DispatcherTimer(DispatcherPriority.Background, System.Windows.Application.Current.Dispatcher)
+            {
+                Interval = new TimeSpan(0, 0, 0, 0, 100)
+            };
+
             fullscreenCheck.Tick += FullscreenCheck_Tick;
             fullscreenCheck.Start();
         }
@@ -90,20 +93,19 @@ namespace CairoDesktop.SupportingClasses
             NativeMethods.Rect rect;
             NativeMethods.GetWindowRect(hWnd, out rect);
 
-            // check if this is a full screen app
+            // check if this is a fullscreen app
             foreach (Screen screen in WindowManager.Instance.ScreenState)
             {
                 if (rect.Top == screen.Bounds.Top && rect.Left == screen.Bounds.Left && rect.Bottom == screen.Bounds.Bottom && rect.Right == screen.Bounds.Right)
                 {
                     // make sure this is not us
-                    uint hwndProcId;
-                    NativeMethods.GetWindowThreadProcessId(hWnd, out hwndProcId);
+                    NativeMethods.GetWindowThreadProcessId(hWnd, out uint hwndProcId);
                     if (hwndProcId == NativeMethods.GetCurrentProcessId())
                     {
                         return null;
                     }
 
-                    // make sure this is fullscreenable
+                    // make sure this is fullscreen-able
                     int style = NativeMethods.GetWindowLong(hWnd, NativeMethods.GWL_STYLE);
                     if (((int)NativeMethods.WindowStyles.WS_CAPTION & style) == (int)NativeMethods.WindowStyles.WS_CAPTION || ((int)NativeMethods.WindowStyles.WS_THICKFRAME & style) == (int)NativeMethods.WindowStyles.WS_THICKFRAME || !NativeMethods.IsWindow(hWnd) || !NativeMethods.IsWindowVisible(hWnd) || NativeMethods.IsIconic(hWnd))
                     {
@@ -121,10 +123,8 @@ namespace CairoDesktop.SupportingClasses
                     // make sure this is not a cloaked window
                     if (Shell.IsWindows8OrBetter)
                     {
-                        uint cloaked;
                         int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(uint));
-                        NativeMethods.DwmGetWindowAttribute(hWnd, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out cloaked, cbSize);
-
+                        NativeMethods.DwmGetWindowAttribute(hWnd, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, cbSize);
                         if (cloaked > 0)
                         {
                             return null;
@@ -142,13 +142,6 @@ namespace CairoDesktop.SupportingClasses
         public void Dispose()
         {
             fullscreenCheck.Stop();
-        }
-
-        public class FullScreenApp
-        {
-            public IntPtr hWnd;
-            public Screen screen;
-            public NativeMethods.Rect rect;
         }
     }
 }

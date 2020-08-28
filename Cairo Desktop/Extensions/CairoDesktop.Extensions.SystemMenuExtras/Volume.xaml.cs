@@ -1,53 +1,49 @@
-﻿using CairoDesktop.Common;
-using CairoDesktop.Interop;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using CairoDesktop.Common;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
-    /// <summary>
-    /// Interaction logic for Volume.xaml
-    /// </summary>
     public partial class Volume : UserControl
     {
         public Volume()
         {
             InitializeComponent();
 
-            initializeVolumeIcon();
+            InitializeVolumeIcon();
         }
 
-        private void initializeVolumeIcon()
+        private void InitializeVolumeIcon()
         {
-            volumeIcon_Tick();
+            VolumeIcon_Tick();
 
-            // update volume icon periodically
             DispatcherTimer volumeIconTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 2), DispatcherPriority.Background, delegate
             {
-                volumeIcon_Tick();
-            }, this.Dispatcher);
+                VolumeIcon_Tick();
+            }, Dispatcher);
         }
 
-        private void volumeIcon_Tick()
+        private void VolumeIcon_Tick()
         {
             if (VolumeUtilities.IsVolumeMuted())
             {
-                imgOpenVolume.Source = this.FindResource("VolumeMuteIcon") as ImageSource;
+                imgOpenVolume.Source = FindResource("VolumeMuteIcon") as ImageSource;
             }
             else if (VolumeUtilities.GetMasterVolume() <= 0)
             {
-                imgOpenVolume.Source = this.FindResource("VolumeOffIcon") as ImageSource;
+                imgOpenVolume.Source = FindResource("VolumeOffIcon") as ImageSource;
             }
             else if (VolumeUtilities.GetMasterVolume() < 0.5)
             {
-                imgOpenVolume.Source = this.FindResource("VolumeLowIcon") as ImageSource;
+                imgOpenVolume.Source = FindResource("VolumeLowIcon") as ImageSource;
             }
             else
             {
-                imgOpenVolume.Source = this.FindResource("VolumeIcon") as ImageSource;
+                imgOpenVolume.Source = FindResource("VolumeIcon") as ImageSource;
             }
         }
 

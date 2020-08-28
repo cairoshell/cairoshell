@@ -10,9 +10,9 @@ namespace CairoDesktop.SupportingClasses
         {
             try
             {
-                if (value is string)
+                if (value is string @string)
                 {
-                    var foo = DateTime.Now.ToString((string)value);
+                    var foo = DateTime.Now.ToString(@string);
                     return new ValidationResult(true, null);
                 }
                 else
