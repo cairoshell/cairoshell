@@ -275,16 +275,22 @@ namespace CairoDesktop
             if (Settings.Instance.TaskbarMode == 1 && WindowManager.Instance.TaskbarWindows.Count > 0)
             {
                 // special case, since work area is not reduced with this setting
-                // this keeps the desktop going beneath the taskbar
-                // get the taskbar's height
-                Taskbar taskbar = WindowManager.Instance.GetScreenWindow(WindowManager.Instance.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
+                // this keeps the desktop going beneath the TaskBar
+                // get the TaskBar's height
+                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
                 double taskbarHeight = 0;
 
-                if (taskbar != null) taskbarHeight = taskbar.ActualHeight;
+                if (taskbar != null)
+                {
+                    taskbarHeight = taskbar.ActualHeight;
+                }
 
                 grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / Shell.DpiScale) - taskbarHeight;
 
-                if (Settings.Instance.TaskbarPosition == 1) top += taskbarHeight;
+                if (Settings.Instance.TaskbarPosition == 1)
+                {
+                    top += taskbarHeight;
+                }
             }
             else
             {
@@ -303,7 +309,9 @@ namespace CairoDesktop
                 try
                 {
                     if (BackgroundBrush == null)
+                    {
                         BackgroundBrush = GetCairoBackgroundBrush();
+                    }
 
                     Background = BackgroundBrush;
                     AllowsTransparency = false;

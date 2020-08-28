@@ -133,7 +133,7 @@ namespace CairoDesktop.SupportingClasses
         {
             bool found = false;
 
-            foreach (FullScreenHelper.FullScreenApp app in FullScreenHelper.Instance.FullScreenApps)
+            foreach (FullScreenApp app in FullScreenHelper.Instance.FullScreenApps)
             {
                 if (app.screen.DeviceName == Screen.DeviceName)
                 {

@@ -32,15 +32,21 @@ namespace CairoDesktop
             if (Settings.Instance.TaskbarMode == 1 && WindowManager.Instance.TaskbarWindows.Count > 0)
             {
                 // special case, since work area is not reduced with this setting
-                // this keeps the desktop going beneath the taskbar
+                // this keeps the desktop going beneath the TaskBar
 
-                // get the taskbar's height
-                Taskbar taskbar = WindowManager.Instance.GetScreenWindow(WindowManager.Instance.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
+                // get the TaskBar's height
+                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
 
-                if (taskbar != null) taskbarHeight = taskbar.ActualHeight;
+                if (taskbar != null)
+                {
+                    taskbarHeight = taskbar.ActualHeight;
+                }
 
-                // top taskbar means we should push down
-                if (Settings.Instance.TaskbarPosition == 1) top += taskbarHeight;
+                // top TaskBar means we should push down
+                if (Settings.Instance.TaskbarPosition == 1)
+                {
+                    top += taskbarHeight;
+                }
             }
 
             Width = WindowManager.PrimaryMonitorWorkArea.Width / Shell.DpiScale;

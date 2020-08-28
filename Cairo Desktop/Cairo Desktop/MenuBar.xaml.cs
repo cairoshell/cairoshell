@@ -446,9 +446,12 @@ namespace CairoDesktop
         {
             if (Settings.Instance.TaskbarMode == 2)
             {
-                Taskbar taskbar = WindowManager.Instance.GetScreenWindow(WindowManager.Instance.TaskbarWindows, Screen);
+                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, Screen);
 
-                if (taskbar != null && taskbar.appBarEdge == appBarEdge) taskbar.CanAutoHide = false;
+                if (taskbar != null && taskbar.appBarEdge == appBarEdge)
+                {
+                    taskbar.CanAutoHide = false;
+                }
             }
         }
 
@@ -456,9 +459,12 @@ namespace CairoDesktop
         {
             if (Settings.Instance.TaskbarMode == 2)
             {
-                Taskbar taskbar = WindowManager.Instance.GetScreenWindow(WindowManager.Instance.TaskbarWindows, Screen);
+                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, Screen);
 
-                if (taskbar != null && taskbar.appBarEdge == appBarEdge) taskbar.CanAutoHide = true;
+                if (taskbar != null && taskbar.appBarEdge == appBarEdge)
+                {
+                    taskbar.CanAutoHide = true;
+                }
             }
         }
 
