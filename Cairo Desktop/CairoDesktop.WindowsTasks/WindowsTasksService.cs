@@ -92,16 +92,8 @@ namespace CairoDesktop.WindowsTasks
                     taskbarItemsView.LiveGroupingProperties.Add("Category");
                 }
 
-                // enumerate windows already opened
-                EnumWindows(new CallBackPtr((hwnd, lParam) =>
-                {
-                    ApplicationWindow win = new ApplicationWindow(hwnd, this);
-
-                    if (win.CanAddToTaskbar && win.ShowInTaskbar && !Windows.Contains(win))
-                        Windows.Add(win);
-
-                    return true;
-                }), 0);
+                // enumerate windows already opened and set active window
+                getInitialWindows();
 
                 // register for app grabber changes so that our app association is accurate
                 AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged += CategoryList_CategoryChanged;
@@ -109,6 +101,27 @@ namespace CairoDesktop.WindowsTasks
             catch (Exception ex)
             {
                 CairoLogger.Instance.Info("Unable to start WindowsTasksService: " + ex.Message);
+            }
+        }
+
+        private void getInitialWindows()
+        {
+            EnumWindows((hwnd, lParam) =>
+            {
+                ApplicationWindow win = new ApplicationWindow(hwnd, this);
+
+                if (win.CanAddToTaskbar && win.ShowInTaskbar && !Windows.Contains(win))
+                    Windows.Add(win);
+
+                return true;
+            }, 0);
+
+            IntPtr hWndForeground = GetForegroundWindow();
+            if (Windows.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
+            {
+                ApplicationWindow win = Windows.First(wnd => wnd.Handle == hWndForeground);
+                win.State = ApplicationWindow.WindowState.Active;
+                win.SetShowInTaskbar();
             }
         }
 
