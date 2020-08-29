@@ -864,30 +864,7 @@ namespace CairoDesktop.Interop
             }
         }
 
-        private static bool? isCairoRunningAsShell;
-
-        /// <summary>
-        /// Checks the currently running shell. If another shell is running or we are not configured to be shell, returns false.
-        /// This MUST be initialized prior to creating our own Shell_TrayWnd so that the value is accurate.
-        /// </summary>
-        public static bool IsCairoRunningAsShell
-        {
-            get
-            {
-                if (isCairoRunningAsShell == null)
-                {
-                    SetIsCairoRunningAsShell();
-                }
-
-                return (bool)isCairoRunningAsShell;
-            }
-        }
-
-        public static void SetIsCairoRunningAsShell()
-        {
-            // check if there is an existing shell window. If not, we will assume the role of shell.
-            isCairoRunningAsShell = GetShellWindow() == IntPtr.Zero;
-        }
+        public static bool IsCairoRunningAsShell;
 
         private static bool? isServerCore;
 

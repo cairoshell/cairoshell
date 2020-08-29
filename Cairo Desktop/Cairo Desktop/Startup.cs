@@ -24,6 +24,8 @@
         private static CommandLineParser commandLineParser;
         private static bool isRestart;
         private static bool isTour;
+        private static bool forceEnableShellMode;
+        private static bool forceDisableShellMode;
 
         public static bool IsShuttingDown { get; set; }
 
@@ -41,8 +43,8 @@
 
             SetupSettings(); // run this before logging setup so that preferences are always used
 
-            // Initialize current shell information here, since it won't be accurate if we wait until after we create our own Shell_TrayWnd
-            Shell.SetIsCairoRunningAsShell();
+            // Initialize current shell information here, since it won't be accurate if we wait until after we create our own windows
+            SetIsCairoRunningAsShell();
 
             SetupLoggingSystem();
             WriteApplicationDebugInfoToConsole();
