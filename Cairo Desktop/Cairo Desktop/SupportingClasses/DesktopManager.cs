@@ -108,7 +108,7 @@ namespace CairoDesktop.SupportingClasses
                 NavigationManager.PropertyChanged += NavigationManager_PropertyChanged;
 
                 // create icons control
-                DesktopIconsControl = new DesktopIcons();
+                DesktopIconsControl = new DesktopIcons(this);
 
                 // create desktop window
                 CreateDesktopWindow();
@@ -222,8 +222,6 @@ namespace CairoDesktop.SupportingClasses
                 {
                     DesktopWindow.grid.Children.Add(DesktopIconsControl);
                 }
-
-                NavigationManager.NavigateHome();
 
                 // set up the ToolBar
                 if (DesktopToolbar == null)
@@ -457,7 +455,7 @@ namespace CairoDesktop.SupportingClasses
                         DesktopIconsControl.Location.Dispose();
                     }
 
-                    DesktopIconsControl.Location = new SystemDirectory(NavigationManager.CurrentPath, Dispatcher.CurrentDispatcher);
+                    DesktopIconsControl.SetIconLocation();
                 }
             }
         }

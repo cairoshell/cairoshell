@@ -37,6 +37,8 @@ namespace CairoDesktop.Common
             currentIndex = 0;
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+
+            NavigateHome();
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
