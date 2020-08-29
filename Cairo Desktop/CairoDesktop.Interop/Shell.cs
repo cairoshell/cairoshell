@@ -605,31 +605,36 @@ namespace CairoDesktop.Interop
 
         public static void ToggleDesktopIcons(bool enable)
         {
-            var toggleDesktopCommand = new IntPtr(0x7402);
-            IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", "");
-
-            if (hWnd == IntPtr.Zero)
+            if (!IsCairoRunningAsShell)
             {
-                EnumWindows((hwnd, lParam) =>
+                var toggleDesktopCommand = new IntPtr(0x7402);
+                IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView",
+                    "");
+
+                if (hWnd == IntPtr.Zero)
                 {
-                    StringBuilder cName = new StringBuilder(256);
-                    GetClassName(hwnd, cName, cName.Capacity);
-                    if (cName.ToString() == "WorkerW")
+                    EnumWindows((hwnd, lParam) =>
                     {
-                        IntPtr child = FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
-                        if (child != IntPtr.Zero)
+                        StringBuilder cName = new StringBuilder(256);
+                        GetClassName(hwnd, cName, cName.Capacity);
+                        if (cName.ToString() == "WorkerW")
                         {
-                            hWnd = child;
-                            return true;
+                            IntPtr child = FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+                            if (child != IntPtr.Zero)
+                            {
+                                hWnd = child;
+                                return true;
+                            }
                         }
-                    }
-                    return true;
-                }, 0);
-            }
 
-            if (IsDesktopVisible() != enable)
-            {
-                SendMessageTimeout(hWnd, (uint)WM.COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
+                        return true;
+                    }, 0);
+                }
+
+                if (IsDesktopVisible() != enable)
+                {
+                    SendMessageTimeout(hWnd, (uint) WM.COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
+                }
             }
         }
 

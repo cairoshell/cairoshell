@@ -22,7 +22,7 @@ namespace CairoDesktop.SupportingClasses
 
         public DesktopNavigationToolbar DesktopToolbar { get; private set; }
 
-        public NativeWindowEx ShellWindow { get; private set; }
+        public ShellWindow ShellWindow { get; private set; }
 
         public static bool IsEnabled
         {
@@ -123,6 +123,7 @@ namespace CairoDesktop.SupportingClasses
             if (DesktopWindow == null)
             {
                 DesktopWindow = new Desktop(this);
+                DesktopWindow.WorkAreaChanged += WorkAreaChanged;
                 DesktopWindow.Show();
             }
         }
@@ -150,6 +151,8 @@ namespace CairoDesktop.SupportingClasses
                 }
 
                 DesktopWindow.grid.Children.Clear();
+                DesktopWindow.WorkAreaChanged -= WorkAreaChanged;
+
                 DesktopWindow.AllowClose = true;
                 DesktopWindow.Close();
 
@@ -241,7 +244,7 @@ namespace CairoDesktop.SupportingClasses
 
         public void ResetPosition(bool displayChanged)
         {
-            SetShellWindowSize();
+            ShellWindow?.SetSize();
 
             DesktopOverlayWindow?.ResetPosition();
 
@@ -267,21 +270,12 @@ namespace CairoDesktop.SupportingClasses
         {
             if (Shell.IsCairoRunningAsShell && ShellWindow == null)
             {
-                // create native window; we must pass a native window to SetShellWindow
-                ShellWindow = new NativeWindowEx();
-                CreateParams cp = new CreateParams();
-                cp.Style |= (int)NativeMethods.WindowStyles.WS_VISIBLE;
-                cp.Style |= unchecked((int)NativeMethods.WindowStyles.WS_POPUP);
-                cp.ExStyle |= (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW;
-                cp.Height = SystemInformation.VirtualScreen.Height;
-                cp.Width = SystemInformation.VirtualScreen.Width;
-                cp.X = SystemInformation.VirtualScreen.Left;
-                cp.Y = SystemInformation.VirtualScreen.Top;
+                // create native shell window; we must pass a native window's handle to SetShellWindow
+                ShellWindow = new ShellWindow();
+                ShellWindow.WallpaperChanged += WallpaperChanged;
+                ShellWindow.WorkAreaChanged += WorkAreaChanged;
 
-                ShellWindow.CreateHandle(cp);
-                ShellWindow.MessageReceived += WndProc;
-
-                if (NativeMethods.SetShellWindow(ShellWindow.Handle) == 1)
+                if (ShellWindow.IsShellWindow)
                 {
                     // we did it
                     CairoLogger.Instance.Debug("DesktopManager: Successfully set as shell window");
@@ -289,34 +283,14 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        private void SetShellWindowSize()
-        {
-            if (ShellWindow != null)
-            {
-                NativeMethods.SetWindowPos(ShellWindow.Handle, IntPtr.Zero, SystemInformation.VirtualScreen.Left, SystemInformation.VirtualScreen.Top, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height, (int)NativeMethods.SetWindowPosFlags.SWP_NOZORDER);
-            }
-        }
-
         private void DestroyShellWindow()
         {
             if (ShellWindow != null)
             {
-                NativeMethods.DestroyWindow(ShellWindow.Handle);
+                ShellWindow.WallpaperChanged -= WallpaperChanged;
+                ShellWindow.WorkAreaChanged -= WorkAreaChanged;
+                ShellWindow?.Dispose();
                 ShellWindow = null;
-            }
-        }
-
-        private void WndProc(Message msg)
-        {
-            // Window procedure for the native window
-            // Because other desktop windows are children, we need to pass them some received events.
-            if (msg.Msg == (int)NativeMethods.WM.SETTINGCHANGE && msg.WParam.ToInt32() == (int)NativeMethods.SPI.SETWORKAREA)
-            {
-                OnSetWorkArea();
-            }
-            else if (msg.Msg == (int)NativeMethods.WM.SETTINGCHANGE && msg.WParam.ToInt32() == (int)NativeMethods.SPI.SETDESKWALLPAPER)
-            {
-                msg.Result = OnSetDeskWallpaper();
             }
         }
         #endregion
@@ -431,16 +405,14 @@ namespace CairoDesktop.SupportingClasses
         #endregion
 
         #region Event handling
-        public void OnSetWorkArea()
-        {
-            ResetPosition(false);
-        }
-
-        public IntPtr OnSetDeskWallpaper()
+        private void WallpaperChanged(object sender, EventArgs e)
         {
             DesktopWindow?.ReloadBackground();
+        }
 
-            return new IntPtr(NativeMethods.MA_NOACTIVATE);
+        private void WorkAreaChanged(object sender, EventArgs e)
+        {
+            ResetPosition(false);
         }
 
         private void NavigationManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
