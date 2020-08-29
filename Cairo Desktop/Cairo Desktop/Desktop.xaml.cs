@@ -144,7 +144,7 @@ namespace CairoDesktop
 
         private void grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.OriginalSource.GetType() == typeof(ScrollViewer) && !desktopManager.DesktopToolbar.IsContextMenuOpen)
+            if (e.OriginalSource.GetType() == typeof(ScrollViewer) && (desktopManager.DesktopToolbar == null || !desktopManager.DesktopToolbar.IsContextMenuOpen))
             {
                 desktopManager.IsOverlayOpen = false;
             }
