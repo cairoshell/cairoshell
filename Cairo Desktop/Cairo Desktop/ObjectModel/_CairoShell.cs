@@ -21,6 +21,7 @@ namespace CairoDesktop.ObjectModel
             CairoMenu = new List<MenuItem>();
             PlacesMenu = new List<MenuItem>();
             MenuExtras = new List<MenuExtra>();
+            ShellExtensions = new List<ShellExtension>();
             ShellServices = new Dictionary<Type, ShellService>();
         }
 
