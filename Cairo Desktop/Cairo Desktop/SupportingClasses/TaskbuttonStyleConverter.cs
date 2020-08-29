@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Windows.Data;
 using System.Windows;
+using System.Windows.Data;
 using CairoDesktop.WindowsTasks;
 
 namespace CairoDesktop.SupportingClasses
@@ -8,12 +8,12 @@ namespace CairoDesktop.SupportingClasses
     [ValueConversion(typeof(bool), typeof(Style))]
     public class TaskButtonStyleConverter : IMultiValueConverter
     {
-        #region IMultiValueConverter Members
-
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            var fxElement = values[0] as FrameworkElement;
-            if (fxElement == null) return null;
+            if (!(values[0] is FrameworkElement fxElement))
+            {
+                return null;
+            }
 
             // Default style is Inactive...
             var fxStyle = fxElement.FindResource("CairoTaskbarButtonInactiveStyle");
@@ -23,9 +23,7 @@ namespace CairoDesktop.SupportingClasses
                 return fxStyle;
             }
 
-            ApplicationWindow.WindowState winState = ApplicationWindow.WindowState.Unknown;
-            EnumUtility.TryCast<ApplicationWindow.WindowState>(values[1], out winState, ApplicationWindow.WindowState.Inactive);
-            
+            EnumUtility.TryCast(values[1], out ApplicationWindow.WindowState winState, ApplicationWindow.WindowState.Inactive);
             switch (winState)
             {
                 case ApplicationWindow.WindowState.Active:
@@ -36,9 +34,9 @@ namespace CairoDesktop.SupportingClasses
                     fxStyle = fxElement.FindResource("CairoTaskbarButtonFlashingStyle");
                     break;
 
-                /*case ApplicationWindow.WindowState.Hidden:
-                    fxStyle = fxElement.FindResource("CairoTaskbarButtonHiddenStyle");
-                    break;*/
+                    // case ApplicationWindow.WindowState.Hidden:
+                    //     fxStyle = fxElement.FindResource("CairoTaskbarButtonHiddenStyle");
+                    //     break;
             }
 
             return fxStyle;
@@ -47,25 +45,6 @@ namespace CairoDesktop.SupportingClasses
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotImplementedException();
-        }
-
-        #endregion
-    }
-
-    public static class EnumUtility
-    {
-        public static bool TryCast<T>(object value, out T result, T defaultValue)
-           where T : struct // error CS0702: Constraint cannot be special class 'System.Enum'
-        {
-            result = defaultValue;
-            try
-            {
-                result = (T)value;
-                return true;
-            }
-            catch { }
-
-            return false;
         }
     }
 }

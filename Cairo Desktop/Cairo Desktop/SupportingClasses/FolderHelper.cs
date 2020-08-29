@@ -1,6 +1,6 @@
-﻿using CairoDesktop.Configuration;
+﻿using System;
+using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
-using System;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -14,6 +14,7 @@ namespace CairoDesktop.SupportingClasses
                 {
                     DesktopManager.Instance.NavigationManager.NavigateTo(path);
                     DesktopManager.Instance.IsOverlayOpen = true;
+
                     return true;
                 }
                 catch
@@ -21,7 +22,7 @@ namespace CairoDesktop.SupportingClasses
                     return false;
                 }
             }
-            else 
+            else
             {
                 return OpenWithShell(path);
             }
@@ -31,9 +32,10 @@ namespace CairoDesktop.SupportingClasses
         {
             DesktopManager.Instance.IsOverlayOpen = false;
 
-            path = Environment.ExpandEnvironmentVariables(path);
+            var args = Environment.ExpandEnvironmentVariables(path);
+            var filename = Environment.ExpandEnvironmentVariables(Settings.Instance.FileManager);
 
-            return Shell.StartProcess(Environment.ExpandEnvironmentVariables(Settings.Instance.FileManager), "\"" + path + "\"");
+            return Shell.StartProcess(filename, $@"""{args}""");
         }
     }
 }

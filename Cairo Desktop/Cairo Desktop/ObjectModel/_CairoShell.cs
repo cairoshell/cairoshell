@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace CairoDesktop.ObjectModel
@@ -65,11 +66,16 @@ namespace CairoDesktop.ObjectModel
         public static string LogsFolder { get { return Path.Combine(CairoApplicationDataFolder, "Logs"); } }
 
 
+        public List<ShellExtension> ShellExtensions { get; private set; }
+
+        public Dictionary<Type, ShellService> ShellServices { get; private set; }
+
+        public List<ICommand> Commands { get; private set; }
+
         public List<MenuItem> CairoMenu { get; private set; }
+
         public List<MenuItem> PlacesMenu { get; private set; }
 
         public List<MenuExtra> MenuExtras { get; private set; }
-
-        public Dictionary<Type, ShellService> ShellServices { get; private set; }
     }
 }

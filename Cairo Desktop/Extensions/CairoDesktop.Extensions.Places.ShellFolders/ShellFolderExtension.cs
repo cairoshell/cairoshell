@@ -1,7 +1,7 @@
-﻿using CairoDesktop.ObjectModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using CairoDesktop.ObjectModel;
 
 namespace CairoDesktop.Extensions.Places.ShellFolders
 {
@@ -25,6 +25,7 @@ namespace CairoDesktop.Extensions.Places.ShellFolders
 
             _CairoShell.Instance.PlacesMenu.AddRange(MenuItems);
         }
+
         public override void Stop()
         {
             MenuItems.Select(_CairoShell.Instance.PlacesMenu.Remove).ToList();

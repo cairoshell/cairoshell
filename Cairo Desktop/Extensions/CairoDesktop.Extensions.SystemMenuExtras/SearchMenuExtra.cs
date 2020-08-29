@@ -1,17 +1,20 @@
-﻿using CairoDesktop.ObjectModel;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using CairoDesktop.ObjectModel;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
     class SearchMenuExtra : MenuExtra
     {
-        public SearchMenuExtra() { }
+        private Search _search;
+
+        public SearchMenuExtra()
+        {
+        }
 
         public override UserControl StartControl(MenuBar menuBar)
         {
-            Search search = new Search(menuBar);
-
-            return search;
+            _search = new Search(menuBar);
+            return _search;
         }
     }
 }

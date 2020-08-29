@@ -37,11 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensions.Places.ShellFolders", "Extensions\CairoDesktop.Extensions.Places.ShellFolders\CairoDesktop.Extensions.Places.ShellFolders.csproj", "{F210BBD4-65BF-4EDA-B087-B601A259DA7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensions.ConsoleOutput", "Extensions\CairoDesktop.Extensions.ConsoleOutput\CairoDesktop.Extensions.ConsoleOutput.csproj", "{D515AC48-7613-445E-A192-D79A1CA638FE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensions.SystemMenuExtras", "Extensions\CairoDesktop.Extensions.SystemMenuExtras\CairoDesktop.Extensions.SystemMenuExtras.csproj", "{08652123-2F69-4E0A-916B-67B2F6C4DE9D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensions.VirtualDesktopSupport", "Extensions\CairoDesktop.Extensions.VirtualDesktopSupport\CairoDesktop.Extensions.VirtualDesktopSupport.csproj", "{3B0F196B-5D9E-474A-9909-B9F73E6E0796}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -139,27 +135,17 @@ Global
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D}.Release|x64.ActiveCfg = Release|x64
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D}.Release|x86.ActiveCfg = Release|Any CPU
-		{D515AC48-7613-445E-A192-D79A1CA638FE}.Debug|x64.ActiveCfg = Debug|x64
-		{D515AC48-7613-445E-A192-D79A1CA638FE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D515AC48-7613-445E-A192-D79A1CA638FE}.Release|x64.ActiveCfg = Release|x64
-		{D515AC48-7613-445E-A192-D79A1CA638FE}.Release|x86.ActiveCfg = Release|Any CPU
 		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Debug|x64.ActiveCfg = Debug|x64
 		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Release|x64.ActiveCfg = Release|x64
 		{08652123-2F69-4E0A-916B-67B2F6C4DE9D}.Release|x86.ActiveCfg = Release|Any CPU
-		{3B0F196B-5D9E-474A-9909-B9F73E6E0796}.Debug|x64.ActiveCfg = Debug|x64
-		{3B0F196B-5D9E-474A-9909-B9F73E6E0796}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3B0F196B-5D9E-474A-9909-B9F73E6E0796}.Release|x64.ActiveCfg = Release|x64
-		{3B0F196B-5D9E-474A-9909-B9F73E6E0796}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F210BBD4-65BF-4EDA-B087-B601A259DA7D} = {D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}
-		{D515AC48-7613-445E-A192-D79A1CA638FE} = {D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}
 		{08652123-2F69-4E0A-916B-67B2F6C4DE9D} = {D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}
-		{3B0F196B-5D9E-474A-9909-B9F73E6E0796} = {D1FA2E7F-4635-4AAE-B5C7-81B6C44C9F02}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7566EAA4-435C-4795-BB55-54BA364D0419}

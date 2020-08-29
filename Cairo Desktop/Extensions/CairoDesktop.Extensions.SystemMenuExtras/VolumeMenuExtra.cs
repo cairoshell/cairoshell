@@ -1,20 +1,21 @@
-﻿using CairoDesktop.Configuration;
+﻿using System.Windows.Controls;
+using CairoDesktop.Configuration;
 using CairoDesktop.ObjectModel;
-using System.Windows.Controls;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
     class VolumeMenuExtra : MenuExtra
     {
+        private Volume _volume;
+
         public VolumeMenuExtra() { }
 
         public override UserControl StartControl(MenuBar menuBar)
         {
             if (Settings.Instance.EnableSysTray)
             {
-                Volume volume = new Volume();
-
-                return volume;
+                _volume = new Volume();
+                return _volume;
             }
             else
             {

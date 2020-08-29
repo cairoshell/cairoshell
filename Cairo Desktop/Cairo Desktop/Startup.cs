@@ -153,7 +153,7 @@
 
             if (Shell.IsCairoRunningAsShell)
             {
-                WindowManager.Instance.ResetWorkArea();
+                WindowManager.ResetWorkArea();
                 indicateGracefulShutdown();
             }
 
@@ -165,7 +165,7 @@
 
         private static void indicateGracefulShutdown()
         {
-            // winlogon will automatically launch the local machine shell if AutoRestartShell is enabled and the shell window process exits
+            // WinLogon will automatically launch the local machine shell if AutoRestartShell is enabled and the shell window process exits
             // setting the exit status to 1 indicates that we are shutting down gracefully and do not want the local machine shell to restart
             Environment.ExitCode = 1;
         }

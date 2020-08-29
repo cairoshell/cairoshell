@@ -1,6 +1,6 @@
-﻿using CairoDesktop.Interop;
+﻿using System.Windows.Controls;
+using CairoDesktop.Interop;
 using CairoDesktop.ObjectModel;
-using System.Windows.Controls;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -12,9 +12,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
         {
             if (Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
             {
-                ActionCenter actionCenter = new ActionCenter(menuBar);
-
-                return actionCenter;
+                return new ActionCenter(menuBar);
             }
             else
             {

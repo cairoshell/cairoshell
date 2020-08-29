@@ -1,20 +1,17 @@
-﻿using CairoDesktop.Common;
-using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using CairoDesktop.Common;
+using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
-    /// <summary>
-    /// Interaction logic for Clock.xaml
-    /// </summary>
     public partial class Clock : UserControl
     {
-        private bool _isPrimaryScreen;
+        private readonly bool _isPrimaryScreen;
         private static bool isClockHotkeyRegistered;
 
         public Clock(MenuBar menuBar)
@@ -23,19 +20,15 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 
             _isPrimaryScreen = menuBar.Screen.Primary;
 
-            initializeClock();
+            InitializeClock();
         }
 
-        /// <summary>
-        /// Initializes the dispatcher timers to updates the time and date bindings
-        /// </summary>
-        private void initializeClock()
+        private void InitializeClock()
         {
-            // initial display
-            clock_Tick(null, null);
+            UpdateTextAndToolTip();
 
             // Create our timer for clock
-            DispatcherTimer clock = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 500), DispatcherPriority.Background, clock_Tick, Dispatcher);
+            DispatcherTimer clock = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 500), DispatcherPriority.Background, Clock_Tick, Dispatcher);
 
             if (_isPrimaryScreen)
             {
@@ -47,7 +40,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
                 {
                     if (!isClockHotkeyRegistered)
                     {
-                        new HotKey(Key.D, KeyModifier.Win | KeyModifier.Alt | KeyModifier.NoRepeat, OnShowClock);
+                        new HotKey(Key.D, HotKeyModifier.Win | HotKeyModifier.Alt | HotKeyModifier.NoRepeat, OnShowClock);
                         isClockHotkeyRegistered = true;
                     }
                 }
@@ -65,10 +58,25 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
             Microsoft.Win32.SystemEvents.TimeChanged -= new EventHandler(TimeChanged);
         }
 
-        private void clock_Tick(object sender, EventArgs args)
+        private void Clock_Tick(object sender, EventArgs args)
+        {
+            UpdateTextAndToolTip();
+        }
+
+        private void UpdateTextAndToolTip()
+        {
+            UpdateText();
+            UpdateToolTip();
+        }
+
+        private void UpdateToolTip()
+        {
+            dateText.ToolTip = DateTime.Now.ToString(Settings.Instance.DateFormat);
+        }
+
+        private void UpdateText()
         {
             dateText.Text = DateTime.Now.ToString(Settings.Instance.TimeFormat);
-            dateText.ToolTip = DateTime.Now.ToString(Settings.Instance.DateFormat);
         }
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
@@ -76,7 +84,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
             Shell.StartProcess("timedate.cpl");
         }
 
-        private void miClock_SubmenuOpened(object sender, RoutedEventArgs e)
+        private void ClockMenuItem_SubmenuOpened(object sender, RoutedEventArgs e)
         {
             monthCalendar.DisplayDate = DateTime.Now;
         }
@@ -88,7 +96,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 
         public void ToggleClockDisplay()
         {
-            miClock.IsSubmenuOpen = !miClock.IsSubmenuOpen;
+            ClockMenuItem.IsSubmenuOpen = !ClockMenuItem.IsSubmenuOpen;
         }
     }
 }

@@ -275,16 +275,22 @@ namespace CairoDesktop
             if (Settings.Instance.TaskbarMode == 1 && WindowManager.Instance.TaskbarWindows.Count > 0)
             {
                 // special case, since work area is not reduced with this setting
-                // this keeps the desktop going beneath the taskbar
-                // get the taskbar's height
-                Taskbar taskbar = WindowManager.Instance.GetScreenWindow(WindowManager.Instance.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
+                // this keeps the desktop going beneath the TaskBar
+                // get the TaskBar's height
+                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
                 double taskbarHeight = 0;
 
-                if (taskbar != null) taskbarHeight = taskbar.ActualHeight;
+                if (taskbar != null)
+                {
+                    taskbarHeight = taskbar.ActualHeight;
+                }
 
                 grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / Shell.DpiScale) - taskbarHeight;
 
-                if (Settings.Instance.TaskbarPosition == 1) top += taskbarHeight;
+                if (Settings.Instance.TaskbarPosition == 1)
+                {
+                    top += taskbarHeight;
+                }
             }
             else
             {
@@ -303,7 +309,9 @@ namespace CairoDesktop
                 try
                 {
                     if (BackgroundBrush == null)
+                    {
                         BackgroundBrush = GetCairoBackgroundBrush();
+                    }
 
                     Background = BackgroundBrush;
                     AllowsTransparency = false;
@@ -328,6 +336,7 @@ namespace CairoDesktop
                 case "cairoVideoWallpaper":
                     return GetCairoBackgroundBrush_Video();
                 case "bingWallpaper":
+                    // return GetCairoBackgroundBrush_Picsum();
                     return GetCairoBackgroundBrush_BingImageOfTheDay();
                 case "colorWallpaper":
                     return GetCairoBackgroundBrush_Color();
@@ -491,6 +500,67 @@ namespace CairoDesktop
                 client.DownLoad();
 
                 BitmapImage backgroundBitmapImage = client.WPFPhotoOfTheDay as BitmapImage;
+                backgroundBitmapImage.Freeze();
+                backgroundImageBrush = new ImageBrush(backgroundBitmapImage);
+
+                CairoWallpaperStyle wallpaperStyle = CairoWallpaperStyle.Stretch;
+                if (Enum.IsDefined(typeof(CairoWallpaperStyle), Settings.Instance.BingWallpaperStyle))
+                    wallpaperStyle = (CairoWallpaperStyle)Settings.Instance.BingWallpaperStyle;
+
+                switch (wallpaperStyle)
+                {
+                    case CairoWallpaperStyle.Tile:
+                        backgroundImageBrush.AlignmentX = AlignmentX.Left;
+                        backgroundImageBrush.AlignmentY = AlignmentY.Top;
+                        backgroundImageBrush.TileMode = TileMode.Tile;
+                        backgroundImageBrush.Stretch = Stretch.Fill; // stretch to fill viewport, which is pixel size of image, as WPF is DPI-aware
+                        backgroundImageBrush.Viewport = new Rect(0, 0, (backgroundImageBrush.ImageSource as BitmapSource).PixelWidth, (backgroundImageBrush.ImageSource as BitmapSource).PixelHeight);
+                        backgroundImageBrush.ViewportUnits = BrushMappingMode.Absolute;
+                        break;
+                    case CairoWallpaperStyle.Center:
+                        // need to find a way to ignore image DPI for this case
+                        backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                        backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                        backgroundImageBrush.TileMode = TileMode.None;
+                        backgroundImageBrush.Stretch = Stretch.None;
+                        break;
+                    case CairoWallpaperStyle.Fit:
+                        backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                        backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                        backgroundImageBrush.TileMode = TileMode.None;
+                        backgroundImageBrush.Stretch = Stretch.Uniform;
+                        break;
+                    case CairoWallpaperStyle.Fill:
+                    case CairoWallpaperStyle.Span: // TODO: Impliment multiple monitor backgrounds
+                        backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                        backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                        backgroundImageBrush.TileMode = TileMode.None;
+                        backgroundImageBrush.Stretch = Stretch.UniformToFill;
+                        break;
+                    case CairoWallpaperStyle.Stretch:
+                    default:
+                        backgroundImageBrush.AlignmentX = AlignmentX.Center;
+                        backgroundImageBrush.AlignmentY = AlignmentY.Center;
+                        backgroundImageBrush.TileMode = TileMode.None;
+                        backgroundImageBrush.Stretch = Stretch.Fill;
+                        break;
+                }
+            });
+
+            backgroundImageBrush.Freeze();
+
+            return backgroundImageBrush;
+        }
+
+        private Brush GetCairoBackgroundBrush_Picsum()
+        {
+            ImageBrush backgroundImageBrush = null;
+            TryAndEat(() =>
+            {
+
+                PicSumWallpaperClient client = new PicSumWallpaperClient(1920,1080, true, 8);
+
+                BitmapImage backgroundBitmapImage = client.Wallpaper as BitmapImage;
                 backgroundBitmapImage.Freeze();
                 backgroundImageBrush = new ImageBrush(backgroundBitmapImage);
 

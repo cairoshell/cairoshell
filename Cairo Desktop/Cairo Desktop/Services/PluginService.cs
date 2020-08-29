@@ -1,8 +1,8 @@
-﻿using CairoDesktop.ObjectModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
+using CairoDesktop.ObjectModel;
 
 namespace CairoDesktop.Services
 {
@@ -32,22 +32,34 @@ namespace CairoDesktop.Services
             catalog = new AggregateCatalog(new AssemblyCatalog(System.Reflection.Assembly.GetEntryAssembly()));
 
             if (Directory.Exists(systemExtensionsPath))
+            {
                 catalog.Catalogs.Add(new DirectoryCatalog(systemExtensionsPath));
+            }
 
             if (Directory.Exists(userExtensionsPath))
+            {
                 catalog.Catalogs.Add(new DirectoryCatalog(userExtensionsPath));
+            }
+
 
             container = new CompositionContainer(catalog);
             container.ComposeParts(this);
 
             foreach (ShellExtension shellExtension in ShellExtensions)
+            {
                 shellExtension.Start();
+                _CairoShell.Instance.ShellExtensions.Add(shellExtension);
+            }
+
         }
 
         public override void Stop()
         {
             foreach (ShellExtension shellExtension in ShellExtensions)
+            {
+                _CairoShell.Instance.ShellExtensions.Remove(shellExtension);
                 shellExtension.Stop();
+            }
         }
     }
 }

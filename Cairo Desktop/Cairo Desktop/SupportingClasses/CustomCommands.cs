@@ -11,22 +11,13 @@ namespace CairoDesktop
 {
     public static class CustomCommands
     {
-        private static Dispatcher _dispatcher;
-        private static RoutedUICommand openSearchResultCommand = new RoutedUICommand("OpenSearchResult", "OpenSearchResult", typeof(CustomCommands));
-
+        private static readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
 
         static CustomCommands()
-        {
-            _dispatcher = Dispatcher.CurrentDispatcher;
+        {            
         }
 
-        public static RoutedUICommand OpenSearchResult
-        {
-            get
-            {
-                return openSearchResultCommand;
-            }
-        }
+        public static RoutedUICommand OpenSearchResult { get; } = new RoutedUICommand("OpenSearchResult", "OpenSearchResult", typeof(CustomCommands));
 
         public static void PerformAction(string verb, string fileName)
         {

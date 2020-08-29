@@ -1,20 +1,21 @@
-﻿using CairoDesktop.Configuration;
+﻿using System.Windows.Controls;
+using CairoDesktop.Configuration;
 using CairoDesktop.ObjectModel;
-using System.Windows.Controls;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
     class SystemTrayMenuExtra : MenuExtra
     {
+        private SystemTray _systemTray;
+
         public SystemTrayMenuExtra() { }
 
         public override UserControl StartControl(MenuBar menuBar)
         {
             if (Settings.Instance.EnableSysTray)
             {
-                SystemTray systemTray = new SystemTray(menuBar);
-
-                return systemTray;
+                _systemTray = new SystemTray(menuBar);
+                return _systemTray;
             }
             else
             {

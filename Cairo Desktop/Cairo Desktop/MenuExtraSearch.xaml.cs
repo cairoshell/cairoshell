@@ -1,18 +1,15 @@
-﻿using CairoDesktop.Common;
-using CairoDesktop.Interop;
-using System;
+﻿using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using CairoDesktop.Common;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop
 {
-    /// <summary>
-    /// Interaction logic for MenuExtraSearch.xaml
-    /// </summary>
     public partial class MenuExtraSearch : UserControl
     {
         public bool _isPrimaryScreen;
@@ -24,23 +21,25 @@ namespace CairoDesktop
 
             _isPrimaryScreen = menuBar.Screen.Primary;
 
-            setupSearch();
+            SetupSearch();
         }
 
-        private void setupSearch()
+        private void SetupSearch()
         {
             CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
 
             // Show the search button only if the service is running
             if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
             {
-                setSearchProvider();
+                SetSearchProvider();
             }
             else
             {
                 CairoSearchMenu.Visibility = Visibility.Collapsed;
-                DispatcherTimer searchcheck = new DispatcherTimer(DispatcherPriority.Background, Dispatcher);
-                searchcheck.Interval = new TimeSpan(0, 0, 5);
+                DispatcherTimer searchcheck = new DispatcherTimer(DispatcherPriority.Background, Dispatcher)
+                {
+                    Interval = new TimeSpan(0, 0, 5)
+                };
                 searchcheck.Tick += searchcheck_Tick;
                 searchcheck.Start();
             }
@@ -55,7 +54,7 @@ namespace CairoDesktop
         {
             if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
             {
-                setSearchProvider();
+                SetSearchProvider();
                 CairoSearchMenu.Visibility = Visibility.Visible;
                 (sender as DispatcherTimer).Stop();
             }
@@ -65,7 +64,7 @@ namespace CairoDesktop
             }
         }
 
-        private void setSearchProvider()
+        private void SetSearchProvider()
         {
             var thread = new Thread(() =>
             {
@@ -74,24 +73,31 @@ namespace CairoDesktop
 
                 Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    ObjectDataProvider vistaSearchProvider = new ObjectDataProvider();
-                    vistaSearchProvider.ObjectType = provider;
-                    CairoSearchMenu.DataContext = vistaSearchProvider;
+                    CairoSearchMenu.DataContext =  new ObjectDataProvider
+                    {
+                        ObjectType = provider
+                    };
 
-                    Binding bSearchText = new Binding("SearchText");
-                    bSearchText.Mode = BindingMode.Default;
-                    bSearchText.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                    Binding bSearchText = new Binding("SearchText")
+                    {
+                        Mode = BindingMode.Default,
+                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                    };
 
-                    Binding bSearchResults = new Binding("Results");
-                    bSearchResults.Mode = BindingMode.Default;
-                    bSearchResults.IsAsync = true;
+                    Binding bSearchResults = new Binding("Results")
+                    {
+                        Mode = BindingMode.Default,
+                        IsAsync = true
+                    };
 
                     searchStr.SetBinding(TextBox.TextProperty, bSearchText);
-                    lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
+                    lstSearchResults.SetBinding(ItemsControl.ItemsSourceProperty, bSearchResults);
                 }));
-            });
+            })
+            {
+                IsBackground = true
+            };
 
-            thread.IsBackground = true;
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
 
@@ -99,11 +105,13 @@ namespace CairoDesktop
             {
                 if (_isPrimaryScreen && !isSearchHotkeyRegistered)
                 {
-                    new HotKey(Key.S, KeyModifier.Win | KeyModifier.NoRepeat, OnShowSearchHotkey);
+                    new HotKey(Key.S, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowSearchHotkey);
                     isSearchHotkeyRegistered = true;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+            }
         }
 
         private void btnViewResults_Click(object sender, RoutedEventArgs e)
@@ -129,29 +137,30 @@ namespace CairoDesktop
 
         private void btnClearSearch_Click(object sender, RoutedEventArgs e)
         {
-            searchStr.Text = "";
+            searchStr.Clear();
             FocusSearchBox(sender, e);
         }
 
         public void FocusSearchBox(object sender, RoutedEventArgs e)
         {
-            searchStr.Dispatcher.BeginInvoke(
-            new Action(delegate
-            {
-                searchStr.Focusable = true;
-                searchStr.Focus();
-                Keyboard.Focus(searchStr);
-            }),
-            DispatcherPriority.Render);
+            searchStr.Dispatcher.BeginInvoke(new Action(FocusSearchBox), DispatcherPriority.Render);
+        }
+
+        private void FocusSearchBox()
+        {
+            searchStr.Focusable = true;
+            searchStr.Focus();
+            Keyboard.Focus(searchStr);
         }
 
         public void ExecuteOpenSearchResult(object sender, ExecutedRoutedEventArgs e)
         {
-            var searchObj = (SearchResult)e.Parameter;
-
-            if (!Shell.StartProcess(searchObj.Path))
+            if (e.Parameter is SearchResult searchObj)
             {
-                CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                if (!Shell.StartProcess(searchObj.Path))
+                {
+                    CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 

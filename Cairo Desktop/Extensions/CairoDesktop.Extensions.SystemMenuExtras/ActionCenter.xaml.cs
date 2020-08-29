@@ -1,8 +1,8 @@
-﻿using CairoDesktop.Interop;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -27,14 +27,12 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 
         private void miOpenActionCenter_MouseEnter(object sender, MouseEventArgs e)
         {
-            NativeMethods.SetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE,
-                        NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
+            NativeMethods.SetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE, NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
         }
 
         private void miOpenActionCenter_MouseLeave(object sender, MouseEventArgs e)
         {
-            NativeMethods.SetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE,
-                        NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) & ~(int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
+            NativeMethods.SetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE, NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) & ~(int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
         }
     }
 }

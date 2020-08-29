@@ -18,10 +18,8 @@ namespace CairoDesktop.SupportingClasses
         {
             try
             {
-                if (value is string)
+                if (value is string stringValue)
                 {
-                    string stringValue = (string)value;
-
                     if (string.IsNullOrWhiteSpace(stringValue))
                     {
                         return new ValidationResult(false, "Path is Blank");
@@ -43,7 +41,7 @@ namespace CairoDesktop.SupportingClasses
                     // Check for Invalid Path Chars.
                     if (CheckInvalidPathChars)
                     {
-                        if (Path.GetDirectoryName(stringValue).Any(Path.GetInvalidPathChars().Contains) &&
+                        if (Path.GetDirectoryName(stringValue).Any(Path.GetInvalidPathChars().Contains) && // TODO: Should invalid chars in dir and filename be an OR?
                             Path.GetFileName(stringValue).Any(Path.GetInvalidPathChars().Contains))
                         {
                             return new ValidationResult(false, "Invalid Path Chars.");

@@ -73,6 +73,7 @@
     <Compile Include="CairoMessage.xaml.cs">
       <DependentUpon>CairoMessage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ExtensionMethods\IListExtensions.cs" />
     <Compile Include="CommandLineParser.cs" />
     <Compile Include="DesignPatterns\Provider.cs" />
     <Compile Include="DesignPatterns\ProviderCollection.cs" />
@@ -80,6 +81,8 @@
     <Compile Include="Dialogs.cs" />
     <Compile Include="DisposableCollection.cs" />
     <Compile Include="DisposableObject.cs" />
+    <Compile Include="HotKey.cs" />
+    <Compile Include="HotKeyModifier.cs" />
     <Compile Include="NavigationManager.cs" />
     <Compile Include="Helpers\GroupPolicyManager.cs" />
     <Compile Include="Helpers\RegistryChangeMonitor.cs" />
@@ -150,6 +153,7 @@
   <ItemGroup>
     <Resource Include="Resources\exitIcon.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
