@@ -112,6 +112,7 @@
     <Compile Include="Shell.Link.cs" />
     <Compile Include="Shell.Power.cs" />
     <Compile Include="ShellFolders.cs" />
+    <Compile Include="ShellWindow.cs" />
     <Compile Include="WindowsServices.cs" />
     <Compile Include="WinSparkle.cs" />
   </ItemGroup>

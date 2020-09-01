@@ -20,6 +20,14 @@ namespace CairoDesktop
 
             isRestart = commandLineParser.ToBoolean("restart");
             isTour = commandLineParser.ToBoolean("tour");
+            forceEnableShellMode = commandLineParser.ToBoolean("shell");
+            forceDisableShellMode = commandLineParser.ToBoolean("noshell");
+        }
+
+        public static void SetIsCairoRunningAsShell()
+        {
+            // check if there is an existing shell window. If not, we will assume the role of shell.
+            Shell.IsCairoRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !forceDisableShellMode) || forceEnableShellMode;
         }
 
         private static bool SingleInstanceCheck()

@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Interop;
 using System.Windows.Media;
+using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop
 {
@@ -15,19 +16,24 @@ namespace CairoDesktop
     /// </summary>
     public partial class DesktopIcons : UserControl
     {
+        private DesktopManager desktopManager;
+
         public static DependencyProperty locationProperty =
             DependencyProperty.Register("Location",
                 typeof(SystemDirectory),
                 typeof(DesktopIcons),
                 new PropertyMetadata(null));
 
-        public DesktopIcons()
+        public DesktopIcons(DesktopManager manager)
         {
             InitializeComponent();
+
+            desktopManager = manager;
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
 
             setPosition();
+            SetIconLocation();
         }
         
         public SystemDirectory Location
@@ -55,6 +61,12 @@ namespace CairoDesktop
             bmp.Freeze();
 
             return bmp;
+        }
+
+        public void SetIconLocation()
+        {
+            Location = new SystemDirectory(desktopManager.NavigationManager.CurrentPath,
+                Dispatcher.CurrentDispatcher);
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)

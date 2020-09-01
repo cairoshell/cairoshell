@@ -29,6 +29,7 @@ namespace CairoDesktop
 
         public bool AllowClose;
         public IntPtr Handle;
+        public EventHandler WorkAreaChanged;
 
         private Brush BackgroundBrush { get; set; }
         #endregion
@@ -97,7 +98,7 @@ namespace CairoDesktop
             else if (msg == (int)NativeMethods.WM.SETTINGCHANGE &&
                     wParam.ToInt32() == (int)NativeMethods.SPI.SETWORKAREA)
             {
-                desktopManager.OnSetWorkArea();
+                WorkAreaChanged?.Invoke(this, new EventArgs());
                 handled = true;
             }
 
@@ -144,7 +145,7 @@ namespace CairoDesktop
 
         private void grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.OriginalSource.GetType() == typeof(ScrollViewer) && !desktopManager.DesktopToolbar.IsContextMenuOpen)
+            if (e.OriginalSource.GetType() == typeof(ScrollViewer) && (desktopManager.DesktopToolbar == null || !desktopManager.DesktopToolbar.IsContextMenuOpen))
             {
                 desktopManager.IsOverlayOpen = false;
             }

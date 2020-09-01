@@ -605,31 +605,36 @@ namespace CairoDesktop.Interop
 
         public static void ToggleDesktopIcons(bool enable)
         {
-            var toggleDesktopCommand = new IntPtr(0x7402);
-            IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", "");
-
-            if (hWnd == IntPtr.Zero)
+            if (!IsCairoRunningAsShell)
             {
-                EnumWindows((hwnd, lParam) =>
+                var toggleDesktopCommand = new IntPtr(0x7402);
+                IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView",
+                    "");
+
+                if (hWnd == IntPtr.Zero)
                 {
-                    StringBuilder cName = new StringBuilder(256);
-                    GetClassName(hwnd, cName, cName.Capacity);
-                    if (cName.ToString() == "WorkerW")
+                    EnumWindows((hwnd, lParam) =>
                     {
-                        IntPtr child = FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
-                        if (child != IntPtr.Zero)
+                        StringBuilder cName = new StringBuilder(256);
+                        GetClassName(hwnd, cName, cName.Capacity);
+                        if (cName.ToString() == "WorkerW")
                         {
-                            hWnd = child;
-                            return true;
+                            IntPtr child = FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+                            if (child != IntPtr.Zero)
+                            {
+                                hWnd = child;
+                                return true;
+                            }
                         }
-                    }
-                    return true;
-                }, 0);
-            }
 
-            if (IsDesktopVisible() != enable)
-            {
-                SendMessageTimeout(hWnd, (uint)WM.COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
+                        return true;
+                    }, 0);
+                }
+
+                if (IsDesktopVisible() != enable)
+                {
+                    SendMessageTimeout(hWnd, (uint) WM.COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
+                }
             }
         }
 
@@ -864,30 +869,7 @@ namespace CairoDesktop.Interop
             }
         }
 
-        private static bool? isCairoRunningAsShell;
-
-        /// <summary>
-        /// Checks the currently running shell. If another shell is running or we are not configured to be shell, returns false.
-        /// This MUST be initialized prior to creating our own Shell_TrayWnd so that the value is accurate.
-        /// </summary>
-        public static bool IsCairoRunningAsShell
-        {
-            get
-            {
-                if (isCairoRunningAsShell == null)
-                {
-                    SetIsCairoRunningAsShell();
-                }
-
-                return (bool)isCairoRunningAsShell;
-            }
-        }
-
-        public static void SetIsCairoRunningAsShell()
-        {
-            // check if there is an existing shell window. If not, we will assume the role of shell.
-            isCairoRunningAsShell = GetShellWindow() == IntPtr.Zero;
-        }
+        public static bool IsCairoRunningAsShell;
 
         private static bool? isServerCore;
 
