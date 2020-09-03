@@ -79,7 +79,14 @@ namespace CairoDesktop.SupportingClasses
         {
             get
             {
-                return DesktopIconsControl.Location;
+                if (DesktopIconsControl != null)
+                {
+                    return DesktopIconsControl.Location;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -95,26 +102,35 @@ namespace CairoDesktop.SupportingClasses
 
         private void InitDesktop()
         {
-            if (IsEnabled)
+            if (IsEnabled || Shell.IsCairoRunningAsShell)
             {
                 // hide the windows desktop
                 Shell.ToggleDesktopIcons(false);
 
-                // create the native shell window
                 CreateShellWindow();
-
-                // create navigation manager
-                NavigationManager = new NavigationManager();
-                NavigationManager.PropertyChanged += NavigationManager_PropertyChanged;
-
-                // create icons control
-                DesktopIconsControl = new DesktopIcons(this);
-
-                // create desktop window
+                CreateDesktopBrowser();
                 CreateDesktopWindow();
+            }
+        }
 
-                // register desktop overlay HotKey
+        private void CreateDesktopBrowser()
+        {
+            if (IsEnabled)
+            {
+                if (NavigationManager == null)
+                {
+                    NavigationManager = new NavigationManager();
+                    NavigationManager.PropertyChanged += NavigationManager_PropertyChanged;
+                }
+
+                if (DesktopIconsControl == null)
+                {
+                    DesktopIconsControl = new DesktopIcons(this);
+                }
+
                 RegisterHotKey();
+
+                ConfigureDesktopBrowser();
             }
         }
 
@@ -135,10 +151,28 @@ namespace CairoDesktop.SupportingClasses
                 DesktopToolbar = new DesktopNavigationToolbar(this) { Owner = DesktopWindow, NavigationManager = NavigationManager };
                 DesktopToolbar.Show();
             }
-            else if (Settings.Instance.EnableDynamicDesktop)
+            else if (Settings.Instance.EnableDynamicDesktop && DesktopWindow == null) // NavigationManager can be expected null
             {
                 CairoLogger.Instance.Warning("DesktopManager: Attempted to create ToolBar with uninitialized properties");
             }
+        }
+
+        private void DestroyDesktopBrowser()
+        {
+            DesktopOverlayWindow?.Close();
+            DesktopOverlayWindow = null;
+            DestroyToolbar();
+            NavigationManager = null;
+
+            if (DesktopWindow != null)
+            {
+                // remove desktop icons control
+                DesktopWindow.grid.Children.Clear();
+            }
+
+            DesktopIconsControl = null;
+
+            UnregisterHotKey();
         }
 
         private void DestroyDesktopWindow()
@@ -172,31 +206,17 @@ namespace CairoDesktop.SupportingClasses
 
         private void TeardownDesktop()
         {
-            // close windows
-            DesktopOverlayWindow?.Close();
-            DesktopOverlayWindow = null;
-            DestroyToolbar();
+            DestroyDesktopBrowser();
             DestroyDesktopWindow();
+            DestroyShellWindow();
 
             // show the windows desktop
             Shell.ToggleDesktopIcons(true);
-
-            // destroy the native shell window
-            DestroyShellWindow();
-
-            // destroy the navigation manager
-            NavigationManager = null;
-
-            // destroy icons control
-            DesktopIconsControl = null;
-
-            // unregister desktop overlay HotKey
-            UnregisterHotKey();
         }
 
         private void RegisterHotKey()
         {
-            if (Settings.Instance.EnableDesktopOverlayHotKey && overlayHotKey == null)
+            if (IsEnabled && Settings.Instance.EnableDesktopOverlayHotKey && overlayHotKey == null)
             {
                 overlayHotKey = HotKeyManager.RegisterHotKey(Settings.Instance.DesktopOverlayHotKey, OnShowDesktop);
             }
@@ -220,13 +240,23 @@ namespace CairoDesktop.SupportingClasses
                     NativeMethods.SetParent(DesktopWindow.Handle, ShellWindow != null ? ShellWindow.Handle : Shell.GetLowestDesktopChildHwnd());
                 }
 
-                // add the icons to the desktop grid and set initial directory
+                ConfigureDesktopBrowser();
+            }
+            else
+            {
+                CairoLogger.Instance.Warning("DesktopManager: Attempted to configure desktop with uninitialized values");
+            }
+        }
+
+        private void ConfigureDesktopBrowser()
+        {
+            if (DesktopWindow != null)
+            {
                 if (DesktopIconsControl != null)
                 {
                     DesktopWindow.grid.Children.Add(DesktopIconsControl);
                 }
 
-                // set up the ToolBar
                 if (DesktopToolbar == null)
                 {
                     CreateToolbar();
@@ -235,10 +265,6 @@ namespace CairoDesktop.SupportingClasses
                 {
                     DesktopToolbar.Owner = DesktopWindow;
                 }
-            }
-            else
-            {
-                CairoLogger.Instance.Warning("DesktopManager: Attempted to configure desktop with uninitialized values");
             }
         }
 
@@ -439,13 +465,27 @@ namespace CairoDesktop.SupportingClasses
                 switch (e.PropertyName)
                 {
                     case "EnableDesktop":
-                        if (Settings.Instance.EnableDesktop)
+                        if (Shell.IsCairoRunningAsShell)
                         {
-                            InitDesktop();
+                            if (Settings.Instance.EnableDesktop)
+                            {
+                                CreateDesktopBrowser();
+                            }
+                            else
+                            {
+                                DestroyDesktopBrowser();
+                            }
                         }
                         else
                         {
-                            TeardownDesktop();
+                            if (Settings.Instance.EnableDesktop)
+                            {
+                                InitDesktop();
+                            }
+                            else
+                            {
+                                TeardownDesktop();
+                            }
                         }
 
                         break;

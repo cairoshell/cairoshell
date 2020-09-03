@@ -94,11 +94,13 @@ namespace CairoDesktop
                 miOpenUWPSettings.Visibility = Visibility.Visible;
             }
 
+#if !DEBUG
             // I didnt like the Exit Cairo option available when Cairo was set as Shell
             if (Shell.IsCairoRunningAsShell)
             {
                 miExitCairo.Visibility = Visibility.Collapsed;
             }
+#endif
 
             // Fix for concurrent seperators
             Type previousType = null;
@@ -284,7 +286,7 @@ namespace CairoDesktop
             }
         }
 
-        #region Programs menu
+#region Programs menu
         private void OnShowProgramsMenu(HotKey hotKey)
         {
             ToggleProgramsMenu();
@@ -331,9 +333,9 @@ namespace CairoDesktop
                 appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
             }
         }
-        #endregion
+#endregion
 
-        #region Events
+#region Events
 
         internal override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
@@ -497,9 +499,9 @@ namespace CairoDesktop
             }
         }
 
-        #endregion
+#endregion
 
-        #region Cairo menu items
+#region Cairo menu items
         private void AboutCairo(object sender, RoutedEventArgs e)
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
@@ -585,9 +587,9 @@ namespace CairoDesktop
         {
             appGrabber.ShowDialog();
         }
-        #endregion
+#endregion
 
-        #region Places menu items
+#region Places menu items
         private void OpenMyDocs(object sender, RoutedEventArgs e)
         {
             FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Documents));
@@ -632,6 +634,6 @@ namespace CairoDesktop
         {
             FolderHelper.OpenLocation("::{645FF040-5081-101B-9F08-00AA002F954E}");
         }
-        #endregion
+#endregion
     }
 }
