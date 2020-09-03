@@ -13,7 +13,7 @@ namespace CairoDesktop.SupportingClasses
     {
         public System.Windows.Forms.Screen Screen;
         internal double dpiScale = 1.0;
-        protected bool processScreenChanges = false;
+        protected bool processScreenChanges;
 
         private enum ScreenSetupReason
         {
@@ -26,14 +26,15 @@ namespace CairoDesktop.SupportingClasses
         private WindowInteropHelper helper;
         private bool isRaising;
         public IntPtr Handle;
-        public bool IsClosing = false;
-        protected double desiredHeight = 0;
+        public bool IsClosing;
+        protected double desiredHeight;
+        private bool enableBlur;
 
         // AppBar properties
         private int appbarMessageId = -1;
         internal NativeMethods.ABEdge appBarEdge = NativeMethods.ABEdge.ABE_TOP;
         protected bool enableAppBar = true;
-        internal bool requiresScreenEdge = false;
+        internal bool requiresScreenEdge;
 
         public AppBarWindow()
         {
@@ -293,6 +294,15 @@ namespace CairoDesktop.SupportingClasses
                 Topmost = true;
                 Shell.ShowWindowTopMost(Handle);
                 isRaising = false;
+            }
+        }
+
+        protected void SetBlur(bool enable)
+        {
+            if (enableBlur != enable)
+            {
+                enableBlur = enable;
+                Shell.SetWindowBlur(Handle, enable);
             }
         }
         #endregion

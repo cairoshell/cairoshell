@@ -108,7 +108,7 @@ namespace CairoDesktop
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);
             
             setTaskbarSize();
-            setTaskbarBorderStyles();
+            setTaskbarWidthMode();
         }
 
         private void setTaskbarDesktopOverlayButton()
@@ -159,7 +159,7 @@ namespace CairoDesktop
                 bdrTaskListPopup.Margin = new Thickness(5, 0, 5, (Screen.Bounds.Bottom / dpiScale) - Top - 1);
         }
 
-        private void setTaskbarBorderStyles()
+        private void setTaskbarWidthMode()
         {
             if (useFullWidthAppearance)
             {
@@ -195,6 +195,8 @@ namespace CairoDesktop
                     btnTaskList.Style = Application.Current.FindResource("CairoTaskbarButtonList") as Style;
                 }
             }
+
+            setTaskbarBlur();
         }
 
         protected override void CustomClosing()
@@ -249,10 +251,13 @@ namespace CairoDesktop
                         if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
                         break;
                     case "FullWidthTaskBar":
-                        setTaskbarBorderStyles();
+                        setTaskbarWidthMode();
                         break;
                     case "EnableDesktop":
                         setTaskbarDesktopOverlayButton();
+                        break;
+                    case "EnableMenuBarBlur":
+                        setTaskbarBlur();
                         break;
                 }
             }
@@ -260,6 +265,18 @@ namespace CairoDesktop
         #endregion
 
         #region Position and appearance
+        private void setTaskbarBlur()
+        {
+            if (Settings.Instance.EnableMenuBarBlur && useFullWidthAppearance)
+            {
+                SetBlur(true);
+            }
+            else
+            {
+                SetBlur(false);
+            }
+        }
+
         private void setTaskButtonSize()
         {
             if (TasksList.Items.Groups != null)
@@ -275,7 +292,7 @@ namespace CairoDesktop
                     {
                         // set back to non-condensed mode if appropriate
                         isCondensed = false;
-                        setTaskbarBorderStyles();
+                        setTaskbarWidthMode();
                     }
                 }
                 else
@@ -286,7 +303,7 @@ namespace CairoDesktop
                     {
                         // use condensed appearance if not already
                         isCondensed = true;
-                        setTaskbarBorderStyles();
+                        setTaskbarWidthMode();
                     }
                 }
             }
@@ -302,7 +319,7 @@ namespace CairoDesktop
 
             Left = Screen.Bounds.Left / dpiScale;
 
-            setTaskbarBorderStyles();
+            setTaskbarWidthMode();
 
             // set maxwidth always
             bdrTaskbar.MaxWidth = getDesiredWidth();

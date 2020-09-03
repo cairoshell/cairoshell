@@ -370,7 +370,6 @@
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
                                Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarBlur, UpdateSourceTrigger=PropertyChanged}"
-                              Click="CheckBox_Click"
                               Name="chkEnableMenuBarBlur">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarBlur)}" />
                     </CheckBox>

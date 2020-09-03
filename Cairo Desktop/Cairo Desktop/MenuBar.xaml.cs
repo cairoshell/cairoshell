@@ -252,10 +252,7 @@ namespace CairoDesktop
                 }
             }
 
-            if (Settings.Instance.EnableMenuBarBlur)
-            {
-                Shell.EnableWindowBlur(Handle);
-            }
+            SetBlur(Settings.Instance.EnableMenuBarBlur);
 
             setupShadow();
         }
@@ -494,6 +491,9 @@ namespace CairoDesktop
                             registerCairoMenuHotKey();
                         }
 
+                        break;
+                    case "EnableMenuBarBlur":
+                        SetBlur(Settings.Instance.EnableMenuBarBlur);
                         break;
                 }
             }
