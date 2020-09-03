@@ -160,7 +160,7 @@ namespace CairoDesktop
         {
             // handle desktop context menu
             // we check source here so that we don't override the rename textbox context menu
-            if (e.OriginalSource.GetType() == typeof(ScrollViewer) || e.Source.GetType() == typeof(Desktop) || e.Source.GetType() == typeof(Grid))
+            if (desktopManager.DesktopLocation != null && (e.OriginalSource.GetType() == typeof(ScrollViewer) || e.Source.GetType() == typeof(Desktop) || e.Source.GetType() == typeof(Grid)))
             {
                 ShellContextMenu cm = new ShellContextMenu(desktopManager.DesktopLocation, executeFolderAction);
                 e.Handled = true;
@@ -646,7 +646,7 @@ namespace CairoDesktop
         private bool isDropMove = false;
         private void CairoDesktopWindow_DragOver(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(SystemFile)))
+            if (desktopManager.DesktopLocation != null && (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(SystemFile))))
             {
                 if ((e.KeyStates & DragDropKeyStates.RightMouseButton) != 0)
                 {
@@ -685,7 +685,7 @@ namespace CairoDesktop
                 fileNames = new string[] { dropData.FullName };
             }
 
-            if (fileNames != null)
+            if (fileNames != null && desktopManager.DesktopLocation != null)
             {
                 if (!isDropMove) desktopManager.DesktopLocation.CopyInto(fileNames);
                 else if (isDropMove) desktopManager.DesktopLocation.MoveInto(fileNames);
