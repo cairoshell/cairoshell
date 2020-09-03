@@ -571,7 +571,7 @@ namespace CairoDesktop.Interop
             }
         }
 
-        public static void EnableWindowBlur(IntPtr hWnd)
+        public static void SetWindowBlur(IntPtr hWnd, bool enable)
         {
             if (IsWindows10OrBetter)
             {
@@ -579,14 +579,21 @@ namespace CairoDesktop.Interop
                 // License: MIT
                 var accent = new AccentPolicy();
                 var accentStructSize = Marshal.SizeOf(accent);
-                if (IsWindows10RS4OrBetter)
+                if (enable)
                 {
-                    accent.AccentState = AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND;
-                    accent.GradientColor = (0 << 24) | (0xFFFFFF /* BGR */ & 0xFFFFFF);
+                    if (IsWindows10RS4OrBetter)
+                    {
+                        accent.AccentState = AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND;
+                        accent.GradientColor = (0 << 24) | (0xFFFFFF /* BGR */ & 0xFFFFFF);
+                    }
+                    else
+                    {
+                        accent.AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND;
+                    }
                 }
                 else
                 {
-                    accent.AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND;
+                    accent.AccentState = AccentState.ACCENT_DISABLED;
                 }
 
                 var accentPtr = Marshal.AllocHGlobal(accentStructSize);
