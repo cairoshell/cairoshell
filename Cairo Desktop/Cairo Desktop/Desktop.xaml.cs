@@ -403,7 +403,26 @@ namespace CairoDesktop
 
         private Brush GetCairoBackgroundBrush_Color()
         {
-            return new SolidColorBrush(Colors.CornflowerBlue);
+            int[] regRgb = { 0, 0, 0 };
+
+            TryAndEat(() =>
+            {
+                string regColor = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Colors", "Background", "0 0 0") as string;
+                string[] regRgbStr = regColor.Split(' ');
+
+                if (regRgbStr.Length == 3)
+                {
+                    for (int i = 0; i < regRgbStr.Length; i++)
+                    {
+                        if (int.TryParse(regRgbStr[i], out int color))
+                        {
+                            regRgb[i] = color;
+                        }
+                    }
+                }
+            });
+
+            return new SolidColorBrush(Color.FromRgb((byte)regRgb[0], (byte)regRgb[1], (byte)regRgb[2]));
         }
 
         private Brush GetCairoBackgroundBrush_Video()
@@ -440,7 +459,7 @@ namespace CairoDesktop
             ImageBrush backgroundImageBrush = null;
             if (!string.IsNullOrWhiteSpace(wallpaper) && Shell.Exists(wallpaper))
             {
-                TryAndEat(() =>
+                try
                 {
                     Uri backgroundImageUri = new Uri(wallpaper, UriKind.Absolute);
                     BitmapImage backgroundBitmapImage = new BitmapImage(backgroundImageUri);
@@ -453,8 +472,12 @@ namespace CairoDesktop
                             backgroundImageBrush.AlignmentX = AlignmentX.Left;
                             backgroundImageBrush.AlignmentY = AlignmentY.Top;
                             backgroundImageBrush.TileMode = TileMode.Tile;
-                            backgroundImageBrush.Stretch = Stretch.Fill; // stretch to fill viewport, which is pixel size of image, as WPF is DPI-aware
-                            backgroundImageBrush.Viewport = new Rect(0, 0, (backgroundImageBrush.ImageSource as BitmapSource).PixelWidth, (backgroundImageBrush.ImageSource as BitmapSource).PixelHeight);
+                            backgroundImageBrush.Stretch =
+                                Stretch
+                                    .Fill; // stretch to fill viewport, which is pixel size of image, as WPF is DPI-aware
+                            backgroundImageBrush.Viewport = new Rect(0, 0,
+                                (backgroundImageBrush.ImageSource as BitmapSource).PixelWidth,
+                                (backgroundImageBrush.ImageSource as BitmapSource).PixelHeight);
                             backgroundImageBrush.ViewportUnits = BrushMappingMode.Absolute;
                             break;
                         case CairoWallpaperStyle.Center:
@@ -485,8 +508,13 @@ namespace CairoDesktop
                             backgroundImageBrush.Stretch = Stretch.Fill;
                             break;
                     }
-                });
-                backgroundImageBrush.Freeze();
+
+                    backgroundImageBrush.Freeze();
+                }
+                catch
+                {
+                    backgroundImageBrush = null;
+                }
             }
             return backgroundImageBrush;
         }
@@ -494,7 +522,7 @@ namespace CairoDesktop
         private Brush GetCairoBackgroundBrush_BingImageOfTheDay()
         {
             ImageBrush backgroundImageBrush = null;
-            TryAndEat(() =>
+            try
             {
 
                 SupportingClasses.BingPhotoOfDayClient.BingWallPaperClient client = new SupportingClasses.BingPhotoOfDayClient.BingWallPaperClient();
@@ -546,9 +574,13 @@ namespace CairoDesktop
                         backgroundImageBrush.Stretch = Stretch.Fill;
                         break;
                 }
-            });
 
-            backgroundImageBrush.Freeze();
+                backgroundImageBrush.Freeze();
+            }
+            catch
+            {
+                return GetCairoBackgroundBrush_Windows();
+            }
 
             return backgroundImageBrush;
         }
@@ -556,7 +588,7 @@ namespace CairoDesktop
         private Brush GetCairoBackgroundBrush_Picsum()
         {
             ImageBrush backgroundImageBrush = null;
-            TryAndEat(() =>
+            try
             {
 
                 PicSumWallpaperClient client = new PicSumWallpaperClient(1920,1080, true, 8);
@@ -607,9 +639,13 @@ namespace CairoDesktop
                         backgroundImageBrush.Stretch = Stretch.Fill;
                         break;
                 }
-            });
 
-            backgroundImageBrush.Freeze();
+                backgroundImageBrush.Freeze();
+            }
+            catch
+            {
+                return GetCairoBackgroundBrush_Windows();
+            }
 
             return backgroundImageBrush;
         }
