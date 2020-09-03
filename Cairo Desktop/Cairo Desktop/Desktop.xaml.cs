@@ -40,6 +40,11 @@ namespace CairoDesktop
 
             desktopManager = manager;
 
+            if (desktopManager.ShellWindow != null)
+            {
+                AllowsTransparency = false;
+            }
+
             setSize();
             setGridPosition();
             setBackground();
@@ -315,7 +320,6 @@ namespace CairoDesktop
                     }
 
                     Background = BackgroundBrush;
-                    AllowsTransparency = false;
                 }
                 catch
                 {
