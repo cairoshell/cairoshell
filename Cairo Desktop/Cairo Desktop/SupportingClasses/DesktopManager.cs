@@ -2,9 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Media;
-using System.Windows.Threading;
 using CairoDesktop.Common;
 using CairoDesktop.Common.DesignPatterns;
 using CairoDesktop.Common.Helpers;
@@ -288,6 +286,7 @@ namespace CairoDesktop.SupportingClasses
         public void SetWindowManager(WindowManager manager)
         {
             windowManager = manager;
+            windowManager.DwmChanged += DwmChanged;
             windowManager.ScreensChanged += ScreensChanged;
         }
 
@@ -529,6 +528,16 @@ namespace CairoDesktop.SupportingClasses
             ResetPosition(e.DisplaysChanged);
         }
 
+        private void DwmChanged(object sender, WindowManagerEventArgs e)
+        {
+            if (DesktopWindow != null && AllowProgmanChild)
+            {
+                // When we are a child of progman, we need to handle redrawing when DWM restarts
+                DestroyDesktopWindow();
+                CreateDesktopWindow();
+            }
+        }
+
         private void OnShowDesktop(HotKey hotKey)
         {
             ToggleOverlay();
@@ -545,6 +554,12 @@ namespace CairoDesktop.SupportingClasses
 
         public void Dispose()
         {
+            if (windowManager != null)
+            {
+                windowManager.DwmChanged -= DwmChanged;
+                windowManager.ScreensChanged -= ScreensChanged;
+            }
+
             TeardownDesktop();
         }
     }

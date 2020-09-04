@@ -19,7 +19,8 @@ namespace CairoDesktop.SupportingClasses
         {
             DeviceChange,
             DisplayChange,
-            DpiChange
+            DpiChange,
+            DwmChange
         }
 
         // Window properties
@@ -225,6 +226,11 @@ namespace CairoDesktop.SupportingClasses
                 SetScreenProperties(ScreenSetupReason.DeviceChange);
                 handled = true;
             }
+            else if (msg == (int)NativeMethods.WM.DWMCOMPOSITIONCHANGED)
+            {
+                SetScreenProperties(ScreenSetupReason.DwmChange);
+                handled = true;
+            }
 
             // call custom implementations' window procedure
             return CustomWndProc(hwnd, msg, wParam, lParam, ref handled);
@@ -273,7 +279,16 @@ namespace CairoDesktop.SupportingClasses
             if ((Screen.Primary || reason == ScreenSetupReason.DpiChange) && processScreenChanges && !Startup.IsShuttingDown)
             {
                 CairoLogger.Instance.Debug("AppBarWindow: Calling screen setup due to " + reason);
-                WindowManager.Instance.NotifyDisplayChange(); // update Cairo window list based on new screen setup
+
+                switch (reason)
+                {
+                    case ScreenSetupReason.DwmChange:
+                        WindowManager.Instance.NotifyDwmChange();
+                        break;
+                    default:
+                        WindowManager.Instance.NotifyDisplayChange(); // update Cairo window list based on new screen setup
+                        break;
+                }
             }
         }
 

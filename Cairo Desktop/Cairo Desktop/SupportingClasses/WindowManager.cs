@@ -12,8 +12,8 @@ namespace CairoDesktop.SupportingClasses
 {
     public sealed class WindowManager : SingletonObject<WindowManager>, IDisposable
     {
-        private bool hasCompletedInitialDisplaySetup = false;
-        private int pendingDisplayEvents = 0;
+        private bool hasCompletedInitialDisplaySetup;
+        private int pendingDisplayEvents;
         private readonly static object displaySetupLock = new object();
         private readonly DesktopManager desktopManager;
 
@@ -22,6 +22,7 @@ namespace CairoDesktop.SupportingClasses
         public List<MenuBar> MenuBarWindows = new List<MenuBar>();
         public List<Taskbar> TaskbarWindows = new List<Taskbar>();
 
+        public EventHandler<WindowManagerEventArgs> DwmChanged;
         public EventHandler<WindowManagerEventArgs> ScreensChanged;
 
         public static System.Drawing.Size PrimaryMonitorSize
@@ -93,6 +94,14 @@ namespace CairoDesktop.SupportingClasses
             if (!IsSettingDisplays)
             {
                 ProcessDisplayChanges();
+            }
+        }
+
+        public void NotifyDwmChange()
+        {
+            lock (displaySetupLock)
+            {
+                DwmChanged?.Invoke(this, new WindowManagerEventArgs());
             }
         }
 
