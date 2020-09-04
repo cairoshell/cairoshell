@@ -51,6 +51,11 @@ namespace CairoDesktop
 
             Screen = screen;
 
+            if (!Screen.Primary && !Settings.Instance.EnableMenuBarMultiMon)
+            {
+                processScreenChanges = true;
+            }
+
             setupTaskbar();
             setupTaskbarAppearance();
         }

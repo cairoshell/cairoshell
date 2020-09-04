@@ -12,8 +12,8 @@ namespace CairoDesktop.SupportingClasses
 {
     public sealed class WindowManager : SingletonObject<WindowManager>, IDisposable
     {
-        private bool hasCompletedInitialDisplaySetup = false;
-        private int pendingDisplayEvents = 0;
+        private bool hasCompletedInitialDisplaySetup;
+        private int pendingDisplayEvents;
         private readonly static object displaySetupLock = new object();
         private readonly DesktopManager desktopManager;
 
