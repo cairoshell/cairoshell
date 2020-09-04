@@ -1389,14 +1389,6 @@ namespace CairoDesktop.Localization
             }
         }
 
-        public static string sSettings_General_ShowSubDirectories
-        {
-            get
-            {
-                return getString();
-            }
-        }
-
         public static string sSettings_General_ShowFileExtensions
         {
             get

@@ -229,15 +229,12 @@ namespace CairoDesktop.Common {
 
         private void enumerateFiles()
         {
-            if (Settings.Instance.EnableSubDirs)
+            IEnumerable<string> dirs = Directory.EnumerateDirectories(DirectoryInfo.FullName);
+            foreach (string subDir in dirs)
             {
-                IEnumerable<string> dirs = Directory.EnumerateDirectories(DirectoryInfo.FullName);
-                foreach (string subDir in dirs)
+                if (isFileVisible(subDir))
                 {
-                    if (isFileVisible(subDir))
-                    {
-                        files.Add(new SystemFile(subDir, this));
-                    }
+                    files.Add(new SystemFile(subDir, this));
                 }
             }
 
