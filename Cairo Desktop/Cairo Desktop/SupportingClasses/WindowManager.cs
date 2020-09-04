@@ -22,6 +22,7 @@ namespace CairoDesktop.SupportingClasses
         public List<MenuBar> MenuBarWindows = new List<MenuBar>();
         public List<Taskbar> TaskbarWindows = new List<Taskbar>();
 
+        public EventHandler<WindowManagerEventArgs> DwmChanged;
         public EventHandler<WindowManagerEventArgs> ScreensChanged;
 
         public static System.Drawing.Size PrimaryMonitorSize
@@ -93,6 +94,14 @@ namespace CairoDesktop.SupportingClasses
             if (!IsSettingDisplays)
             {
                 ProcessDisplayChanges();
+            }
+        }
+
+        public void NotifyDwmChange()
+        {
+            lock (displaySetupLock)
+            {
+                DwmChanged?.Invoke(this, new WindowManagerEventArgs());
             }
         }
 
