@@ -1,7 +1,10 @@
-﻿using CairoDesktop.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using CairoDesktop.Common;
+using CairoDesktop.Configuration;
+using CairoDesktop.Localization;
+using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop
 {
@@ -11,13 +14,26 @@ namespace CairoDesktop
     public partial class Welcome : Window
     {
         const int maxSize = 780;
-        string language = "en_US";
+        string _language = "en_US";
 
         public Welcome()
         {
             InitializeComponent();
 
-            double size = SupportingClasses.WindowManager.PrimaryMonitorSize.Height - 100;
+            SetSizeAndLocation();
+
+            LoadLanguages();
+        }
+
+        private void SetSizeAndLocation()
+        {
+            SetSize();
+            SetLocation();
+        }
+
+        private void SetSize()
+        {
+            double size = WindowManager.PrimaryMonitorSize.Height - 100;
             if (size >= maxSize)
             {
                 Height = maxSize;
@@ -27,13 +43,21 @@ namespace CairoDesktop
                 Height = size;
             }
 
-            MaxHeight = SupportingClasses.WindowManager.PrimaryMonitorSize.Height;
-            loadLanguages();
+            MaxHeight = WindowManager.PrimaryMonitorSize.Height;
         }
 
-        private void loadLanguages()
+        private void SetLocation()
         {
-            language = Settings.Instance.Language;
+            Left = (SystemParameters.FullPrimaryScreenWidth - Width) / 2;
+            Top = (SystemParameters.FullPrimaryScreenHeight - Height) / 2;
+
+            WindowStartupLocation = WindowStartupLocation.Manual;
+        }
+
+        private void LoadLanguages()
+        {
+            _language = Settings.Instance.Language;
+
             cboLangSelect.DisplayMemberPath = "Key";
             cboLangSelect.SelectedValuePath = "Value";
 
@@ -72,9 +96,9 @@ namespace CairoDesktop
 
         private void cboLangSelect_DropDownClosed(object sender, EventArgs e)
         {
-            if (Settings.Instance.Language != language)
+            if (Settings.Instance.Language != _language)
             {
-                Common.CairoMessage.Show(Localization.DisplayString.sWelcome_ChangingLanguageText, Localization.DisplayString.sWelcome_ChangingLanguage, MessageBoxButton.OK, MessageBoxImage.Information);
+                CairoMessage.Show(DisplayString.sWelcome_ChangingLanguageText, DisplayString.sWelcome_ChangingLanguage, MessageBoxButton.OK, MessageBoxImage.Information);
                 Startup.Restart();
             }
         }
