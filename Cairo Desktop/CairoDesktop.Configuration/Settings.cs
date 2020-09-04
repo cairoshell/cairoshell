@@ -131,21 +131,6 @@ namespace CairoDesktop.Configuration
             }
         }
 
-        public bool EnableSubDirs
-        {
-            get
-            {
-                return cairoSettings.EnableSubDirs;
-            }
-            set
-            {
-                if (cairoSettings.EnableSubDirs != value)
-                {
-                    cairoSettings.EnableSubDirs = value;
-                }
-            }
-        }
-
         public bool FoldersOpenDesktopOverlay
         {
             get

@@ -32,9 +32,6 @@
     <Setting Name="CairoTheme" Type="System.String" Scope="User">
       <Value Profile="(Default)">Default</Value>
     </Setting>
-    <Setting Name="EnableSubDirs" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="DesktopDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

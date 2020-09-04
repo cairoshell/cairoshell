@@ -309,11 +309,6 @@
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FilesAndFolders)}"
                                Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableSubDirs, UpdateSourceTrigger=PropertyChanged}"
-                              Click="CheckBox_Click"
-                              Name="chkEnableSubDirs">
-                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_ShowSubDirectories)}" />
-                    </CheckBox>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=FoldersOpenDesktopOverlay, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkFoldersOpenDesktopOverlay">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_FoldersOpenDesktopOverlay)}" />
