@@ -250,7 +250,7 @@ namespace CairoDesktop.SupportingClasses
         {
             if (DesktopWindow != null)
             {
-                if (DesktopIconsControl != null)
+                if (DesktopIconsControl != null && DesktopOverlayWindow == null)
                 {
                     DesktopWindow.grid.Children.Add(DesktopIconsControl);
                 }
