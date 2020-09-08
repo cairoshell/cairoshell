@@ -102,6 +102,7 @@ namespace CairoDesktop
             if (this != null)
             {
                 NativeMethods.DwmQueryThumbnailSourceSize(_thumbHandle, out NativeMethods.PSIZE size);
+                double aspectRatio = (double)size.x / size.y;
 
                 var props = new NativeMethods.DWM_THUMBNAIL_PROPERTIES
                 {
@@ -112,12 +113,38 @@ namespace CairoDesktop
                 };
 
                 if (this != null)
-                    if (size.x < Rect.Width)
+                {
+                    if (size.x <= Rect.Width && size.y <= Rect.Height)
+                    {
+                        // do not scale
+                        props.rcDestination.Top += (Rect.Height - size.y) / 2;
+                        props.rcDestination.Left += (Rect.Width - size.x) / 2;
                         props.rcDestination.Right = props.rcDestination.Left + size.x;
-
-                if (this != null)
-                    if (size.y < Rect.Height)
                         props.rcDestination.Bottom = props.rcDestination.Top + size.y;
+                    }
+                    else
+                    {
+                        // scale, preserving aspect ratio and center
+                        double controlAspectRatio = (double) Rect.Width / Rect.Height;
+
+                        if (aspectRatio > controlAspectRatio)
+                        {
+                            // wide
+                            int height = (int) (Rect.Width / aspectRatio);
+
+                            props.rcDestination.Top += (Rect.Height - height) / 2;
+                            props.rcDestination.Bottom = props.rcDestination.Top + height;
+                        }
+                        else if (aspectRatio < controlAspectRatio)
+                        {
+                            // tall
+                            int width = (int) (Rect.Height * aspectRatio);
+
+                            props.rcDestination.Left += (Rect.Width - width) / 2;
+                            props.rcDestination.Right = props.rcDestination.Left + width;
+                        }
+                    }
+                }
 
                 if (this != null)
                     NativeMethods.DwmUpdateThumbnailProperties(_thumbHandle, ref props);

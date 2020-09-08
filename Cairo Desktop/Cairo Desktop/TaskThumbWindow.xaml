@@ -57,19 +57,12 @@
                                Height="16" />
                         <TextBlock Style="{StaticResource TaskThumbTitleStyle}"
                                    Text="{Binding Path=Title}"
-                                   Width="164" />
+                                   Width="138" />
                         <Button	Name="closeButton" 
-                                Height="10" 
-                                Width="10" 
-                                Margin="0,0,0,0" 
-                                HorizontalAlignment="Right" 
-                                VerticalAlignment="Top" 
-                                Opacity="0.5" 
+                                Style="{StaticResource TaskThumbCloseButton}"
                                 Visibility="Hidden"
                                 Click="Button_Click">
-                            <Path Width="6"
-                                  Height="6"	
-                                  Data="M 18,11 27,20 M 18,20 27,11"	
+                            <Path Data="M 18,11 27,20 M 18,20 27,11"	
                                   Stroke="{Binding Path=Foreground,	RelativeSource={RelativeSource AncestorType={x:Type Button}}}"		
                                   StrokeThickness="1" Stretch="Fill" />
                         </Button>
