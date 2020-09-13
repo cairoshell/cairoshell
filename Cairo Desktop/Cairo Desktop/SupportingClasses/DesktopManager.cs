@@ -274,6 +274,7 @@ namespace CairoDesktop.SupportingClasses
 
             if (displayChanged && DesktopWindow != null)
             {
+                DestroyToolbar();
                 DestroyDesktopWindow();
                 CreateDesktopWindow();
             }
