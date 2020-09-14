@@ -400,12 +400,6 @@ namespace CairoDesktop.WindowsTasks
 
         private bool getShowInTaskbar()
         {
-            // Don't show empty buttons.
-            if (string.IsNullOrEmpty(Title))
-            {
-                return false;
-            }
-
             // EnumWindows and ShellHook return UWP app windows that are 'cloaked', which should not be visible in the taskbar.
             if (Shell.IsWindows8OrBetter)
             {
@@ -432,7 +426,7 @@ namespace CairoDesktop.WindowsTasks
                 }
             }
 
-            return true;
+            return CanAddToTaskbar;
         }
 
         public void Uncloak()
