@@ -18,6 +18,7 @@ namespace CairoDesktop
     /// </summary>
     public partial class DesktopNavigationToolbar : Window, INotifyPropertyChanged
     {
+        private const int DEFAULT_Y = 150;
         private WindowInteropHelper helper;
         private System.Windows.Controls.ContextMenu browseContextMenu;
         private System.Windows.Controls.ContextMenu homeContextMenu;
@@ -123,7 +124,7 @@ namespace CairoDesktop
             }
             else
             {
-                Top = WindowManager.PrimaryMonitorSize.Height - Height - 150;
+                Top = WindowManager.PrimaryMonitorSize.Height - Height - DEFAULT_Y;
                 Left = (WindowManager.PrimaryMonitorSize.Width / 2) - (Width / 2);
             }
         }
@@ -141,11 +142,21 @@ namespace CairoDesktop
 
         private void SetPosition(uint x, uint y)
         {
-            // adjust size for dpi
-            Shell.TransformFromPixels(x, y, out int sWidth, out int sHeight);
+            if (Settings.Instance.DesktopNavigationToolbarLocation != default &&
+                PointExistsOnScreen(Settings.Instance.DesktopNavigationToolbarLocation))
+            {
+                // use custom size
+                Top = Settings.Instance.DesktopNavigationToolbarLocation.Y / Shell.DpiScale;
+                Left = Settings.Instance.DesktopNavigationToolbarLocation.X / Shell.DpiScale;
+            }
+            else
+            {
+                // use size from wndproc and adjust for dpi
+                Shell.TransformFromPixels(x, y, out int sWidth, out int sHeight);
 
-            Top = sHeight - Height - 150;
-            Left = (sWidth / 2) - (Width / 2);
+                Top = sHeight - Height - DEFAULT_Y;
+                Left = (sWidth / 2) - (Width / 2);
+            }
         }
 
         public void BringToFront()
@@ -310,6 +321,10 @@ namespace CairoDesktop
             {
                 SetPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;
+            }
+            else if (msg == (int)NativeMethods.WM.DPICHANGED || msg == (int)NativeMethods.WM.DISPLAYCHANGE)
+            {
+                SetPosition();
             }
 
             return IntPtr.Zero;
