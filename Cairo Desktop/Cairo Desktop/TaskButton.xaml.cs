@@ -122,6 +122,12 @@ namespace CairoDesktop
             thumbTimer.Tick += thumbTimer_Tick;
         }
 
+        private void TaskButton_OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            Window.PropertyChanged -= Window_PropertyChanged;
+            Settings.Instance.PropertyChanged -= Instance_PropertyChanged;
+        }
+
         private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))

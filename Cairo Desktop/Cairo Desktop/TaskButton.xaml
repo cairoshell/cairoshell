@@ -5,7 +5,8 @@
              x:Class="CairoDesktop.TaskButton"
              x:Name="UserControl"
              xmlns:support="clr-namespace:CairoDesktop.SupportingClasses" 
-             Loaded="UserControl_Loaded">
+             Loaded="UserControl_Loaded"
+             Unloaded="TaskButton_OnUnloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <support:TaskButtonStyleConverter x:Key="styleConverter" />
