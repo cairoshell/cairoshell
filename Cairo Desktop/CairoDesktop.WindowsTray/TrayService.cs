@@ -20,31 +20,23 @@ namespace CairoDesktop.WindowsTray
         #region Set callbacks
         public void SetSystrayCallback(SystrayDelegate theDelegate)
         {
-            //InteropCalls.SetSystrayCallback(theDelegate);
-
             trayDelegate = theDelegate;
         }
 
         public void SetIconDataCallback(IconDataDelegate theDelegate)
         {
-            //InteropCalls.SetIconDataCallback(theDelegate);
-
             iconDataDelegate = theDelegate;
         }
 
         public void SetMenuBarSizeCallback(MenuBarSizeDelegate theDelegate)
         {
-            //InteropCalls.SetMenuBarSizeCallback(theDelegate);
-
             menubarSizeDelegate = theDelegate;
         }
         #endregion
 
-        public IntPtr InitializeSystray()
+        public IntPtr Initialize()
         {
-            //return InteropCalls.InitializeSystray(Interop.NativeMethods.GetSystemMetrics(0), (float) Interop.Shell.DpiScale);
-
-            ShutdownSystray();
+            DestroyWindows();
 
             wndProcDelegate = WndProc;
 
@@ -59,8 +51,6 @@ namespace CairoDesktop.WindowsTray
         /// </summary>
         public void Run()
         {
-            //InteropCalls.Run();
-
             if (HwndTray != IntPtr.Zero)
             {
                 NativeMethods.SetWindowPos(HwndTray, IntPtr.Zero, 0, 0, 0, 0,
@@ -79,23 +69,9 @@ namespace CairoDesktop.WindowsTray
             }
         }
 
-        public void ShutdownSystray()
+        public void Dispose()
         {
-            //InteropCalls.ShutdownSystray();
-
-            if (HwndNotify != IntPtr.Zero)
-            {
-                NativeMethods.DestroyWindow(HwndNotify);
-                NativeMethods.UnregisterClass("TrayNotifyWnd", hInstance);
-                CairoLogger.Instance.Debug("TrayService: Unregistered TrayNotifyWnd");
-            }
-
-            if (HwndTray != IntPtr.Zero)
-            {
-                NativeMethods.DestroyWindow(HwndTray);
-                NativeMethods.UnregisterClass("Shell_TrayWnd", hInstance);
-                CairoLogger.Instance.Debug("TrayService: Unregistered Shell_TrayWnd");
-            }
+            DestroyWindows();
         }
 
         public IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
@@ -236,6 +212,23 @@ namespace CairoDesktop.WindowsTray
                     return true;
             }
             return false;
+        }
+
+        private void DestroyWindows()
+        {
+            if (HwndNotify != IntPtr.Zero)
+            {
+                NativeMethods.DestroyWindow(HwndNotify);
+                NativeMethods.UnregisterClass("TrayNotifyWnd", hInstance);
+                CairoLogger.Instance.Debug("TrayService: Unregistered TrayNotifyWnd");
+            }
+
+            if (HwndTray != IntPtr.Zero)
+            {
+                NativeMethods.DestroyWindow(HwndTray);
+                NativeMethods.UnregisterClass("Shell_TrayWnd", hInstance);
+                CairoLogger.Instance.Debug("TrayService: Unregistered Shell_TrayWnd");
+            }
         }
 
         #region Window creation helpers

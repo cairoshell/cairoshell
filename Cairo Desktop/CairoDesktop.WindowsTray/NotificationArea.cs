@@ -87,7 +87,7 @@ namespace CairoDesktop.WindowsTray
                 trayService.SetSystrayCallback(trayDelegate);
                 trayService.SetIconDataCallback(iconDataDelegate);
                 trayService.SetMenuBarSizeCallback(menuBarSizeDelegate);
-                Handle = trayService.InitializeSystray();
+                Handle = trayService.Initialize();
                 trayService.Run();
 
                 // load the shell system tray objects (network, power, etc)
@@ -393,7 +393,7 @@ namespace CairoDesktop.WindowsTray
             if (!IsFailed && trayDelegate != null)
             {
                 stopShellServiceObject();
-                trayService.ShutdownSystray();
+                trayService.Dispose();
             }
         }
     }

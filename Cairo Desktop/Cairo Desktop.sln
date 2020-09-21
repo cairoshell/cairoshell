@@ -6,7 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo Desktop", "Cairo Desktop\Cairo Desktop.csproj", "{F0383E91-6ADC-4016-9E21-D3DC0FFC55FF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8E50FC68-8BF3-44F2-9229-708500625757} = {8E50FC68-8BF3-44F2-9229-708500625757}
-		{0F1F5673-02B2-4E89-A61D-90F56D368C3F} = {0F1F5673-02B2-4E89-A61D-90F56D368C3F}
 		{52A795C9-3C28-487A-B7B8-AAB324DA7305} = {52A795C9-3C28-487A-B7B8-AAB324DA7305}
 	EndProjectSection
 EndProject
@@ -22,8 +21,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.WindowsTasks", "CairoDesktop.WindowsTasks\CairoDesktop.WindowsTasks.csproj", "{5FABAD0F-D28C-4EE6-A826-77968087864E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo Explorer", "Cairo Explorer\Cairo Explorer.csproj", "{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CairoDesktop.WindowsTrayHooks", "..\Dependencies\CairoDesktop.WindowsTrayHooks\CairoDesktop.WindowsTrayHooks.vcxproj", "{0F1F5673-02B2-4E89-A61D-90F56D368C3F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Configuration", "CairoDesktop.Configuration\CairoDesktop.Configuration.csproj", "{8E50FC68-8BF3-44F2-9229-708500625757}"
 EndProject
@@ -91,14 +88,6 @@ Global
 		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Release|x64.ActiveCfg = Release|x64
 		{68A28672-FF2F-4E6D-9FD6-B3DEE652851D}.Release|x86.ActiveCfg = Release|Any CPU
-		{0F1F5673-02B2-4E89-A61D-90F56D368C3F}.Debug|x64.ActiveCfg = Debug|x64
-		{0F1F5673-02B2-4E89-A61D-90F56D368C3F}.Debug|x64.Build.0 = Debug|x64
-		{0F1F5673-02B2-4E89-A61D-90F56D368C3F}.Debug|x86.ActiveCfg = Debug|Win32
-		{0F1F5673-02B2-4E89-A61D-90F56D368C3F}.Debug|x86.Build.0 = Debug|Win32
-		{0F1F5673-02B2-4E89-A61D-90F56D368C3F}.Release|x64.ActiveCfg = Release|x64
-		{0F1F5673-02B2-4E89-A61D-90F56D368C3F}.Release|x64.Build.0 = Release|x64
-		{0F1F5673-02B2-4E89-A61D-90F56D368C3F}.Release|x86.ActiveCfg = Release|Win32
-		{0F1F5673-02B2-4E89-A61D-90F56D368C3F}.Release|x86.Build.0 = Release|Win32
 		{8E50FC68-8BF3-44F2-9229-708500625757}.Debug|x64.ActiveCfg = Debug|x64
 		{8E50FC68-8BF3-44F2-9229-708500625757}.Debug|x64.Build.0 = Debug|x64
 		{8E50FC68-8BF3-44F2-9229-708500625757}.Debug|x86.ActiveCfg = Debug|Any CPU

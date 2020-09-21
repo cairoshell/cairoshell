@@ -6,7 +6,7 @@ namespace CairoDesktop.WindowsTray
     /// <summary>
     /// Contract interface for the TrayService implementations
     /// </summary>
-    public interface ITrayService
+    public interface ITrayService: IDisposable
     {
         /// <summary>
         /// Sets the delegate for the system tray callback.
@@ -29,16 +29,11 @@ namespace CairoDesktop.WindowsTray
         /// <summary>
         /// Initializes the system tray hooks.
         /// </summary>
-        IntPtr InitializeSystray();
+        IntPtr Initialize();
 
         /// <summary>
         /// Starts the system tray listener (send the TaskbarCreated message).
         /// </summary>
         void Run();
-
-        /// <summary>
-        /// Shuts down the system tray hooks.
-        /// </summary>
-        void ShutdownSystray();
     }
 }

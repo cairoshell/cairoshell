@@ -84,7 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Delegates.cs" />
-    <Compile Include="InteropCalls.cs" />
     <Compile Include="ITrayService.cs" />
     <Compile Include="NotificationArea.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
