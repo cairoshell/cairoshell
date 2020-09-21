@@ -4,9 +4,9 @@ namespace CairoDesktop.WindowsTray
     using System;
 
     /// <summary>
-    /// Contract interface for the WindowsHooksWrapper implementations
+    /// Contract interface for the TrayService implementations
     /// </summary>
-    public interface IWindowsHooksWrapper
+    public interface ITrayService
     {
         /// <summary>
         /// Sets the delegate for the system tray callback.
