@@ -526,7 +526,15 @@ namespace CairoDesktop.SupportingClasses
 
         private void ScreensChanged(object sender, WindowManagerEventArgs e)
         {
-            ResetPosition(e.DisplaysChanged);
+            if (e.Reason == ScreenSetupReason.DpiChange)
+            {
+                // treat dpi change as display change
+                ResetPosition(true);
+            }
+            else
+            {
+                ResetPosition(e.DisplaysChanged);
+            }
         }
 
         private void DwmChanged(object sender, WindowManagerEventArgs e)
