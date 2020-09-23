@@ -15,14 +15,6 @@ namespace CairoDesktop.SupportingClasses
         internal double dpiScale = 1.0;
         protected bool processScreenChanges;
 
-        private enum ScreenSetupReason
-        {
-            DeviceChange,
-            DisplayChange,
-            DpiChange,
-            DwmChange
-        }
-
         // Window properties
         private WindowInteropHelper helper;
         private bool isRaising;
@@ -59,8 +51,8 @@ namespace CairoDesktop.SupportingClasses
             Handle = helper.Handle;
 
             // set up window procedure
-            HwndSource source = HwndSource.FromHwnd(helper.Handle);
-            source.AddHook(new HwndSourceHook(WndProc));
+            HwndSource source = HwndSource.FromHwnd(Handle);
+            source.AddHook(WndProc);
 
             // set initial DPI. We do it here so that we get the correct value when DPI has changed since initial user logon to the system.
             if (Screen.Primary)
@@ -278,17 +270,7 @@ namespace CairoDesktop.SupportingClasses
             // and the designated window. suppress this if we are shutting down (which can trigger this method on multi-dpi setups due to window movements)
             if ((Screen.Primary || reason == ScreenSetupReason.DpiChange) && processScreenChanges && !Startup.IsShuttingDown)
             {
-                CairoLogger.Instance.Debug("AppBarWindow: Calling screen setup due to " + reason);
-
-                switch (reason)
-                {
-                    case ScreenSetupReason.DwmChange:
-                        WindowManager.Instance.NotifyDwmChange();
-                        break;
-                    default:
-                        WindowManager.Instance.NotifyDisplayChange(); // update Cairo window list based on new screen setup
-                        break;
-                }
+                WindowManager.Instance.NotifyDisplayChange(reason); // update Cairo window list based on new screen setup
             }
         }
 
@@ -296,14 +278,14 @@ namespace CairoDesktop.SupportingClasses
         {
             if (entering)
             {
-                CairoLogger.Instance.Debug(string.Format("{0} on {1} conceeding to full-screen app", Name, Screen.DeviceName));
+                CairoLogger.Instance.Debug($"AppBarWindow: {Name} on {Screen.DeviceName} conceding to full-screen app");
 
                 Topmost = false;
                 Shell.ShowWindowBottomMost(Handle);
             }
             else
             {
-                CairoLogger.Instance.Debug(string.Format("{0} on {1} returning to normal state", Name, Screen.DeviceName));
+                CairoLogger.Instance.Debug($"AppBarWindow: {Name} on {Screen.DeviceName} returning to normal state");
 
                 isRaising = true;
                 Topmost = true;

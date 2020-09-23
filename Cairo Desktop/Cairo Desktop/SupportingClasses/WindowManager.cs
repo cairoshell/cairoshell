@@ -73,7 +73,7 @@ namespace CairoDesktop.SupportingClasses
             if (!IsSettingDisplays && pendingDisplayEvents > 0)
             {
                 CairoLogger.Instance.Debug("WindowManager: Processing additional display events");
-                ProcessDisplayChanges();
+                ProcessDisplayChanges(ScreenSetupReason.Reconciliation);
             }
         }
 
@@ -81,27 +81,31 @@ namespace CairoDesktop.SupportingClasses
         {
             IsSettingDisplays = true;
 
-            DisplaySetup(true);
+            DisplaySetup(ScreenSetupReason.FirstRun);
 
             hasCompletedInitialDisplaySetup = true;
             IsSettingDisplays = false;
         }
 
-        public void NotifyDisplayChange()
+        public void NotifyDisplayChange(ScreenSetupReason reason)
         {
-            pendingDisplayEvents++;
+            CairoLogger.Instance.Debug($"WindowManager: Received {reason} notification");
 
-            if (!IsSettingDisplays)
+            if (reason == ScreenSetupReason.DwmChange)
             {
-                ProcessDisplayChanges();
+                lock (displaySetupLock)
+                {
+                    DwmChanged?.Invoke(this, new WindowManagerEventArgs());
+                }
             }
-        }
-
-        public void NotifyDwmChange()
-        {
-            lock (displaySetupLock)
+            else
             {
-                DwmChanged?.Invoke(this, new WindowManagerEventArgs());
+                pendingDisplayEvents++;
+
+                if (!IsSettingDisplays)
+                {
+                    ProcessDisplayChanges(reason);
+                }
             }
         }
 
@@ -132,7 +136,7 @@ namespace CairoDesktop.SupportingClasses
             return true;
         }
 
-        private void ProcessDisplayChanges()
+        private void ProcessDisplayChanges(ScreenSetupReason reason)
         {
             lock (displaySetupLock)
             {
@@ -142,12 +146,12 @@ namespace CairoDesktop.SupportingClasses
                 {
                     if (HaveDisplaysChanged())
                     {
-                        DisplaySetup();
+                        DisplaySetup(reason);
                     }
                     else
                     {
                         // if this is only a DPI change, screens will be the same but we still need to reposition
-                        RefreshWindows(false);
+                        RefreshWindows(reason, false);
                         SetDisplayWorkAreas();
                     }
 
@@ -168,9 +172,9 @@ namespace CairoDesktop.SupportingClasses
         /// Compares the system screen list to the screens associated with Cairo windows, then creates or destroys windows as necessary.
         /// Runs at startup and when a WM_DEVICECHANGE, WM_DISPLAYCHANGE, or WM_DPICHANGED message is received by the MenuBar window on the primary display.
         /// </summary>
-        private void DisplaySetup(bool firstRun = false)
+        private void DisplaySetup(ScreenSetupReason reason)
         {
-            if (!firstRun && !hasCompletedInitialDisplaySetup)
+            if (reason != ScreenSetupReason.FirstRun && !hasCompletedInitialDisplaySetup)
             {
                 CairoLogger.Instance.Debug("WindowManager: Display setup ran before startup completed, aborting");
                 return;
@@ -186,7 +190,7 @@ namespace CairoDesktop.SupportingClasses
             // update our knowledge of the displays present
             ScreenState = Screen.AllScreens;
 
-            if (!firstRun)
+            if (reason != ScreenSetupReason.FirstRun)
             {
                 // enumerate screens based on currently open windows
                 openScreens = GetOpenScreens();
@@ -222,11 +226,11 @@ namespace CairoDesktop.SupportingClasses
                 ProcessRemovedScreens(removedScreens);
 
                 // refresh existing window screen properties with updated screen information
-                RefreshWindows(true);
+                RefreshWindows(reason, true);
             }
 
             // open windows on newly added screens
-            ProcessAddedScreens(addedScreens, firstRun);
+            ProcessAddedScreens(addedScreens, reason == ScreenSetupReason.FirstRun);
 
             // update each display's work area if we are shell
             SetDisplayWorkAreas();
@@ -331,7 +335,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        private void RefreshWindows(bool displaysChanged)
+        private void RefreshWindows(ScreenSetupReason reason, bool displaysChanged)
         {
             CairoLogger.Instance.Debug("WindowManager: Refreshing screen information for existing windows");
 
@@ -376,7 +380,7 @@ namespace CairoDesktop.SupportingClasses
             }
 
             // notify event subscribers
-            WindowManagerEventArgs args = new WindowManagerEventArgs { DisplaysChanged = displaysChanged };
+            WindowManagerEventArgs args = new WindowManagerEventArgs { DisplaysChanged = displaysChanged, Reason = reason};
             ScreensChanged?.Invoke(this, args);
         }
 
