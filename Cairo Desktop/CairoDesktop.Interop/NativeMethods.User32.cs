@@ -159,6 +159,9 @@ namespace CairoDesktop.Interop
         [DllImport(User32_DllName)]
         public static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, uint wparam, uint lparam, uint timeoutFlags, uint timeout, ref IntPtr retval);
 
+        [DllImport(User32_DllName)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int messageId, IntPtr wparam, IntPtr lparam);
+
         [StructLayout(LayoutKind.Sequential)]
         public struct WINDOWINFO
         {
@@ -2683,6 +2686,7 @@ namespace CairoDesktop.Interop
             /// WM_DPICHANGED is sent whenever the DPI is changed of the display that the window resides on.
             /// </summary>
             DPICHANGED = 0x02E0,
+            GETDPISCALEDSIZE = 0x02E4,
 
             /// <summary>
             /// The WM_APP constant is used by applications to help define private messages, usually of the form WM_APP+X, where X is an integer value. 
