@@ -1,8 +1,10 @@
 ﻿using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 namespace CairoDesktop
 {
@@ -11,9 +13,11 @@ namespace CairoDesktop
     /// </summary>
     public partial class MenuBarShadow : Window
     {
-        public bool IsClosing = false;
+        private double dpiScale = 1;
+        public bool IsClosing;
 
         public MenuBar MenuBar;
+        private IntPtr Handle;
 
         public MenuBarShadow(MenuBar bar)
         {
@@ -28,12 +32,40 @@ namespace CairoDesktop
         {
             if (MenuBar != null)
             {
-                // reset properties so we actually reposition
-                Top = 0;
-                
-                Width = MenuBar.ActualWidth;
-                Top = MenuBar.Top + MenuBar.ActualHeight;
-                Left = MenuBar.Left;
+                dpiScale = VisualTreeHelper.GetDpi(this).DpiScaleX;
+
+                double desiredTop = MenuBar.Top + MenuBar.ActualHeight;
+                double desiredLeft = MenuBar.Left;
+                double desiredHeight = 14;
+                double desiredWidth = MenuBar.ActualWidth;
+
+                if (dpiScale != MenuBar.dpiScale)
+                {
+                    // we want to always match the menu bar DPI for correct positioning
+                    long newDpi = (int)(MenuBar.dpiScale * 96) & 0xFFFF | (int)(MenuBar.dpiScale * 96) << 16;
+
+                    NativeMethods.Rect newRect = new NativeMethods.Rect
+                    {
+                        Top = (int)(desiredTop * MenuBar.dpiScale),
+                        Left = (int)(desiredLeft * MenuBar.dpiScale),
+                        Bottom = (int)((desiredTop + desiredHeight) * MenuBar.dpiScale),
+                        Right = (int)((desiredLeft + desiredWidth) * MenuBar.dpiScale)
+                    };
+                    IntPtr newRectPtr = Marshal.AllocHGlobal(Marshal.SizeOf(newRect));
+                    Marshal.StructureToPtr(newRect, newRectPtr, false);
+                    NativeMethods.SendMessage(Handle, (int)NativeMethods.WM.DPICHANGED, (IntPtr)newDpi, newRectPtr);
+                    Marshal.FreeHGlobal(newRectPtr);
+                }
+                else
+                {
+                    // reset properties so we actually reposition
+                    Top = 0;
+
+                    Top = desiredTop;
+                    Left = desiredLeft;
+                    Height = desiredHeight;
+                    Width = desiredWidth;
+                }
             }
         }
 
@@ -55,9 +87,10 @@ namespace CairoDesktop
         private void MenuBarShadow_Loaded(object sender, RoutedEventArgs e)
         {
             WindowInteropHelper helper = new WindowInteropHelper(this);
-            HwndSource source = HwndSource.FromHwnd(helper.Handle);
+            Handle = helper.Handle;
+            HwndSource source = HwndSource.FromHwnd(Handle);
 
-            source.AddHook(new HwndSourceHook(WndProc));
+            source.AddHook(WndProc);
 
             // Makes click-through by adding transparent style
             // basically same as Shell.HideWindowFromTasks(helper.Handle);

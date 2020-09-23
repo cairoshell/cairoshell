@@ -2687,6 +2687,7 @@ namespace CairoDesktop.Interop
             /// WM_DPICHANGED is sent whenever the DPI is changed of the display that the window resides on.
             /// </summary>
             DPICHANGED = 0x02E0,
+            GETDPISCALEDSIZE = 0x02E4,
 
             /// <summary>
             /// The WM_APP constant is used by applications to help define private messages, usually of the form WM_APP+X, where X is an integer value. 
