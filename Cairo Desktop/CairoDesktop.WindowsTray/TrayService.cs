@@ -174,7 +174,6 @@ namespace CairoDesktop.WindowsTray
 
                         if (className.ToString() == "Shell_TrayWnd")
                         {
-                            CairoLogger.Instance.Debug($"TrayService: Forwarding message {msg} to other Shell_TrayWnd");
                             fwdResult = NativeMethods.SendMessage(enumHwnd, msg, wParam, lParam);
                         }
                     }
