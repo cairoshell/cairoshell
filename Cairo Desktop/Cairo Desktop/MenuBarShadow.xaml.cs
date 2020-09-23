@@ -77,6 +77,10 @@ namespace CairoDesktop
                 handled = true;
                 return (IntPtr)HTTRANSPARENT;
             }
+            else if (msg == (int)NativeMethods.WM.DPICHANGED)
+            {
+                dpiScale = (wparam.ToInt32() & 0xFFFF) / 96d;
+            }
             else
             {
                 handled = false;
