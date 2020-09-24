@@ -1,0 +1,75 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:cairoCalculator"
+        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="cairoCalculator.MainWindow"
+        mc:Ignorable="d"
+        Title="cairocalculator" Height="450" Width="900">
+    <Border Background="Aqua" BorderThickness="4" BorderBrush="Azure">
+    <Grid  x:Name="mainbord" Background="Black">
+        <Menu Margin="0,22,0.333,-0.333">
+                <MenuItem  x:Name="BtnExit" Click="BtnExit_Click" Height="19" RenderTransformOrigin="1.207,-0.725" Header="Exit">
+                </MenuItem>
+                <MenuItem  x:Name="BtnSwtich" Click="BtnSwtich_Click" Height="19" RenderTransformOrigin="1.207,-90.025" Header="switchThemme">
+                </MenuItem>
+            </Menu>
+
+        <Grid x:Name="header">
+            <GroupBox>
+                <StackPanel Width="100" Height="100" Margin="255,50,426.333,263.333">
+                    <Label Background="Gray" Foreground="Bisque" Height="40" Margin="0,0,-62,0" Content="cariocalcualkt" x:Name="lblTitle" HorizontalAlignment="Left" Width="162"/>
+                    <Label BorderBrush="SteelBlue" BorderThickness="2" Background="LightBlue" x:Name="lblresult" Height="62"/>
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+        <Grid x:Name="calculatorControls" Margin="0,0,0.333,-0.333">
+            <GroupBox>
+                <GroupBox.Header>controls</GroupBox.Header>
+                <StackPanel Width="100"  Margin="158,208,523.332,-201.667">
+                    <Button Click="BtnONe_Click" Content="1" x:Name="BtnONe1" Height="16" Margin="0,0,0.333,0"/>
+                    <Button Click="BtnTwo1_Click" Content="2" x:Name="BtnTwo1"/>
+                    <Button Click="BtnThre1_Click"  Content="3" x:Name="BtnThre1"/>
+                    <Button Click="BtnZero_Click" Content="0" x:Name="BtnZero"></Button>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox>
+                <StackPanel Width="100" Margin="284,223,397.333,-223.667">
+                    <Button Click="BtnFour_Click" Content="4" x:Name="BtnFour"/>
+                    <Button Click="BtnFive_Click" Content="5" x:Name="BtnFive"/>
+                    <Button Click="BtnSix_Click" Content="6" x:Name="BtnSix"/>
+                    <Button Click="BtnClear_Click" Content="c" x:Name="BtnClear"></Button>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox>
+                <StackPanel Margin="426,223,255.333,-100.667" Width="100">
+                    <Button Click="BtnSeven_Click" Content="7" x:Name="BtnSeven"/>
+                    <Button Click="BtnEight_Click" Content="8" x:Name="BtnEight"/>
+                    <Button Click="BtnNine_Click" Content="9" x:Name="BtnNine"/>
+                    <Button Click="BtnDecimal_Click" Content="." x:Name="BtnDecimal"></Button>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox>
+                <StackPanel Margin="606,220,167.333,103.333" Width="100">
+                    <Button Click="BtnPlus_Click" Content="+" x:Name="BtnPlus"/>
+                    <Button Click="BtnMinus_Click" Content="-" x:Name="BtnMinus"/>
+                    <Button Click="Btntimes_Click" Content="*" x:Name="Btntimes"/>
+                    <Button Click="BtnDivide_Click" Content="/" x:Name="BtnDivide"/>
+
+                </StackPanel>
+            </GroupBox>
+            <GroupBox>
+                <StackPanel Width="100" Margin="68,222,705.333,-222.667">
+                    <Button Click="BtntEquals_Click" KeyDown="BtntEquals_KeyDown_1" Keyboard.KeyDown="BtntEquals_KeyDown_2" Content="=" x:Name="BtntEquals"/>
+                    <Button Click="BtnLeftPartheses_Click" Content="(" x:Name="BtnLeftPartheses"/>
+                    <Button Click="BtnrightPartheses_Click" Content=")" x:Name="BtnrightPartheses"/>
+                    <Button Click="BtnExponent_Click" Content="x^2" x:Name="BtnExponent"/>
+                </StackPanel>
+            </GroupBox>
+            
+        </Grid>
+    </Grid>
+    </Border>
+</Window>
+
