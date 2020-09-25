@@ -457,7 +457,7 @@ namespace CairoDesktop
                 return GetCairoBackgroundBrush_Windows();
             }
         }
-        
+
         private Brush GetCairoBackgroundBrush_Image(string wallpaper, CairoWallpaperStyle wallpaperStyle)
         {
             ImageBrush backgroundImageBrush = null;
@@ -595,7 +595,7 @@ namespace CairoDesktop
             try
             {
 
-                PicSumWallpaperClient client = new PicSumWallpaperClient(1920,1080, true, 8);
+                PicSumWallpaperClient client = new PicSumWallpaperClient(1920, 1080, true, 8);
 
                 BitmapImage backgroundBitmapImage = client.Wallpaper as BitmapImage;
                 backgroundBitmapImage.Freeze();
@@ -664,20 +664,27 @@ namespace CairoDesktop
         #region Desktop context menu
         private void executeFolderAction(string action, string path)
         {
-            if (action == "paste" || action == "new")
+            switch (action)
             {
-                if (desktopManager.DesktopLocation != null) CustomCommands.PerformDirectoryAction(action, desktopManager.DesktopLocation, desktopManager.IsOverlayOpen ? (Window)desktopManager.DesktopOverlayWindow : this);
-            }
-            else if (action == "addStack" || action == "removeStack")
-            {
+                case CustomCommands.DirectoryActions.Paste:
+                case CustomCommands.DirectoryActions.New:
+                    if (desktopManager.DesktopLocation != null)
+                    {
+                        CustomCommands.PerformDirectoryAction(action, desktopManager.DesktopLocation, desktopManager.IsOverlayOpen ? (Window)desktopManager.DesktopOverlayWindow : this);
+                    }
+                    break;
                 // no need to dismiss overlay for these actions
-                CustomCommands.PerformAction(action, path);
-            }
-            else if (action != "")
-            {
-                CustomCommands.PerformAction(action, path);
-
-                desktopManager.IsOverlayOpen = false;
+                case CustomCommands.DirectoryActions.AddStack:
+                case CustomCommands.DirectoryActions.RemoveStack:
+                    CustomCommands.PerformAction(action, path);
+                    break;
+                default:
+                    if (action != "")
+                    {
+                        CustomCommands.PerformAction(action, path);
+                        desktopManager.IsOverlayOpen = false;
+                    }
+                    break;
             }
         }
         #endregion

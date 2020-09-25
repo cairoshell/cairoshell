@@ -1,9 +1,4 @@
-﻿using CairoDesktop.Common;
-using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
-using CairoDesktop.Localization;
-using CairoDesktop.SupportingClasses;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
@@ -13,6 +8,11 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using CairoDesktop.Common;
+using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
+using CairoDesktop.Localization;
+using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop
 {
@@ -49,7 +49,10 @@ namespace CairoDesktop
                 {
                     case "DesktopLabelPosition":
                     case "DesktopIconSize":
-                        if (Location == "Desktop") setDesktopIconAppearance();
+                        if (Location == "Desktop")
+                        {
+                            setDesktopIconAppearance();
+                        }
                         break;
                 }
             }
@@ -242,28 +245,33 @@ namespace CairoDesktop
 
         private void executeFileAction(string action, string path)
         {
-            if (action == "openFolder")
+            switch (action)
             {
-                if (Settings.Instance.EnableDynamicDesktop)
-                {
-                    DesktopManager.Instance.NavigationManager.NavigateTo(path);
-                }
-                else
-                {
-                    FolderHelper.OpenLocation(path);
-                }
-            }
-            else if (action == "rename")
-            {
-                file.RequestInteractiveRename(this);
-            }
-            else if (action == "addStack" || action == "removeStack" || action == "openWithShell")
-            {
-                CustomCommands.PerformAction(action, path);
-            }
-            else if (action != "cut" && action != "copy" && action != "link")
-            {
-                DesktopManager.Instance.IsOverlayOpen = false;
+                case CustomCommands.DirectoryActions.OpenFolder:
+                    if (Settings.Instance.EnableDynamicDesktop)
+                    {
+                        DesktopManager.Instance.NavigationManager.NavigateTo(path);
+                    }
+                    else
+                    {
+                        FolderHelper.OpenLocation(path);
+                    }
+                    break;
+                case CustomCommands.Actions.Rename:
+                    file.RequestInteractiveRename(this);
+                    break;
+                case CustomCommands.DirectoryActions.AddStack:
+                case CustomCommands.DirectoryActions.RemoveStack:
+                case CustomCommands.Actions.OpenWithShell:
+                    CustomCommands.PerformAction(action, path);
+                    break;
+                default:
+                    if (action != CustomCommands.Actions.Cut && action != CustomCommands.Actions.Copy && action != CustomCommands.Actions.Link)
+                    {
+                        DesktopManager.Instance.IsOverlayOpen = false;
+                    }
+
+                    break;
             }
         }
 
@@ -272,7 +280,7 @@ namespace CairoDesktop
             MenuItem item = sender as MenuItem;
             string verb = item.Tag as string;
 
-            if (verb == "rename")
+            if (verb == CustomCommands.Actions.Rename)
             {
                 enterRename();
             }
@@ -288,31 +296,37 @@ namespace CairoDesktop
         {
             ctxFile.Items.Clear();
 
-            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Open, Tag = "open" });
+            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Open, Tag = CustomCommands.Actions.Open });
 
             if (!file.IsDirectory)
-                ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_OpenWith, Tag = "openwith" });
+            {
+                ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_OpenWith, Tag = CustomCommands.Actions.OpenWith });
+            }
             else
-                ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_AddToStacks, Tag = "addStack" });
+            {
+                ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_AddToStacks, Tag = CustomCommands.DirectoryActions.AddStack });
+            }
 
             foreach (string verb in file.Verbs)
             {
-                if (verb.ToLower() != "open")
+                if (verb.ToLower() != CustomCommands.Actions.Open)
+                {
                     ctxFile.Items.Add(new MenuItem { Header = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(verb), Tag = verb });
+                }
             }
 
             ctxFile.Items.Add(new Separator());
 
-            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Copy, Tag = "copy" });
+            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Copy, Tag = CustomCommands.Actions.Copy });
 
             ctxFile.Items.Add(new Separator());
 
-            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Delete, Tag = "delete" });
-            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Rename, Tag = "rename" });
+            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Delete, Tag = CustomCommands.Actions.Delete });
+            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Rename, Tag = CustomCommands.Actions.Rename });
 
             ctxFile.Items.Add(new Separator());
 
-            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Properties, Tag = "properties" });
+            ctxFile.Items.Add(new MenuItem { Header = DisplayString.sInterface_Properties, Tag = CustomCommands.Actions.Properties });
         }
         #endregion
 
@@ -321,8 +335,16 @@ namespace CairoDesktop
         {
             txtRename.Visibility = Visibility.Visible;
             bdrFilename.Visibility = Visibility.Collapsed;
+
+            int selectionLength = txtFilename.Text.Length - 1;
+            if (txtFilename.Text.Contains("."))
+            {
+                selectionLength = txtFilename.Text.LastIndexOf('.');
+            }
+
             txtRename.Focus();
-            txtRename.SelectAll();
+            txtRename.Select(0, selectionLength);
+
             currentlyRenaming = true;
         }
 
@@ -331,21 +353,28 @@ namespace CairoDesktop
             TextBox box = sender as TextBox;
 
             if (!file.Rename(box.Text))
+            {
                 box.Text = Path.GetFileName(file.FullName);
+            }
 
             foreach (UIElement peer in (box.Parent as DockPanel).Children)
+            {
                 if (peer is Border)
+                {
                     peer.Visibility = Visibility.Visible;
+                }
+            }
 
             box.Visibility = Visibility.Collapsed;
-
             currentlyRenaming = false;
         }
 
         private void txtRename_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-                (sender as TextBox).MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            {
+                (sender as TextBox)?.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
         }
         #endregion
 
@@ -386,7 +415,7 @@ namespace CairoDesktop
                 if (e.Data.GetDataPresent(typeof(SystemFile)))
                 {
                     SystemFile dropData = e.Data.GetData(typeof(SystemFile)) as SystemFile;
-                    fileNames = new string[] {dropData.FullName};
+                    fileNames = new string[] { dropData.FullName };
                 }
 
                 if (fileNames != null)
@@ -394,13 +423,25 @@ namespace CairoDesktop
                     if (file.IsDirectory)
                     {
                         SystemDirectory destDirectory = new SystemDirectory(file.FullName, Dispatcher);
-                        if (isDropMove) destDirectory.MoveInto(fileNames);
-                        else destDirectory.CopyInto(fileNames);
+                        if (isDropMove)
+                        {
+                            destDirectory.MoveInto(fileNames);
+                        }
+                        else
+                        {
+                            destDirectory.CopyInto(fileNames);
+                        }
                     }
                     else
                     {
-                        if (isDropMove) file.ParentDirectory?.MoveInto(fileNames);
-                        else file.ParentDirectory?.CopyInto(fileNames);
+                        if (isDropMove)
+                        {
+                            file.ParentDirectory?.MoveInto(fileNames);
+                        }
+                        else
+                        {
+                            file.ParentDirectory?.CopyInto(fileNames);
+                        }
                     }
 
                     e.Handled = true;
@@ -415,7 +456,10 @@ namespace CairoDesktop
         private void btnFile_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Store the mouse position
-            if (!currentlyRenaming) startPoint = e.GetPosition(this);
+            if (!currentlyRenaming)
+            {
+                startPoint = e.GetPosition(this);
+            }
         }
 
         private void btnFile_PreviewMouseMove(object sender, MouseEventArgs e)
@@ -427,9 +471,9 @@ namespace CairoDesktop
                     inDrag = true;
 
                     Point mousePos = e.GetPosition(this);
-                    Vector diff = (Point) startPoint - mousePos;
+                    Vector diff = (Point)startPoint - mousePos;
 
-                    if (mousePos.Y <= this.ActualHeight && ((Point) startPoint).Y <= this.ActualHeight &&
+                    if (mousePos.Y <= ActualHeight && ((Point)startPoint).Y <= ActualHeight &&
                         (e.LeftButton == MouseButtonState.Pressed || e.RightButton == MouseButtonState.Pressed) &&
                         (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance ||
                             Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
@@ -437,7 +481,7 @@ namespace CairoDesktop
                         Button button = sender as Button;
                         DataObject dragObject = new DataObject();
                         dragObject.SetFileDropList(
-                            new System.Collections.Specialized.StringCollection() {file.FullName});
+                            new System.Collections.Specialized.StringCollection() { file.FullName });
 
                         try
                         {
@@ -472,6 +516,63 @@ namespace CairoDesktop
             // unregister settings changes
             Settings.Instance.PropertyChanged -= Instance_PropertyChanged;
             file.InteractiveRenameEvent -= InteractiveRenameEvent;
+        }
+
+        private void UserControl_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                // [Ctrl] + [C] => Copy
+                case Key.C when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
+                    CustomCommands.PerformAction(CustomCommands.Actions.Copy, file.FullName);
+                    break;
+
+                // [Ctrl] + [X] => Cut
+                case Key.X when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
+                    CustomCommands.PerformAction(CustomCommands.Actions.Cut, file.FullName);
+                    break;
+
+                // [Ctrl] + [V] => Paste
+                case Key.V when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
+                    if(file.IsDirectory)
+                    {
+                        // Paste item into folder?
+                    }
+                    break;
+
+                // [Ctrl] + [Z] => Undo an action
+                case Key.Z when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
+                    break;
+
+                // [Ctrl] + [Y] => Redo an action
+                case Key.Y when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
+                    break;
+
+                // [Shift] + [Delete]  => Delete an item permanently without placing it into the Recycle Bin
+                case Key.Delete when Keyboard.Modifiers.HasFlag(ModifierKeys.Shift):
+                    CustomCommands.PerformAction(CustomCommands.Actions.Delete, file.FullName);
+                    break;
+
+                // [Delete] => Delete an item and place it into the Recycle Bin
+                case Key.Delete:
+                    CustomCommands.PerformAction(CustomCommands.Actions.Delete, file.FullName);
+                    break;
+
+                // [Enter] => Open file properties
+                case Key.Enter when Keyboard.Modifiers.HasFlag(ModifierKeys.Alt):
+                    CustomCommands.PerformAction(CustomCommands.Actions.Properties, file.FullName);
+                    break;
+
+                // [Enter] => Open file
+                case Key.Enter:
+                    CustomCommands.PerformAction(CustomCommands.Actions.Open, file.FullName);
+                    break;
+
+                // [F2] => Rename Item. Select name excluding file extension
+                case Key.F2:
+                    CustomCommands.PerformAction(CustomCommands.Actions.Rename, file.FullName);
+                    break;
+            }
         }
     }
 }
