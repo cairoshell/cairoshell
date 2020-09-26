@@ -82,7 +82,6 @@ Section "$(SECT_cairo)" cairo
   ; Put file there
   File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.exe"
   File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.WindowsTray.dll"
-  File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.WindowsTrayHooks.dll"
   File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.Common.dll"
   File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.AppGrabber.dll"
   File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.Configuration.dll"

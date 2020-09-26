@@ -14,14 +14,14 @@ namespace CairoDesktop.WindowsTray
     {
         const string VOLUME_GUID = "7820ae73-23e3-4229-82c1-e41cb67d5b9c";
         NativeMethods.Rect defaultPlacement = new NativeMethods.Rect { Top = 0, Left = GetSystemMetrics(0) - 200, Bottom = 23, Right = 23 };
-        IWindowsHooksWrapper hooksWrapper = new WindowsHooksWrapper();
+        ITrayService trayService = new TrayService();
         private SystrayDelegate trayDelegate;
         private IconDataDelegate iconDataDelegate;
         private MenuBarSizeDelegate menuBarSizeDelegate;
         private object _lockObject = new object();
         public IntPtr Handle;
-        public bool IsFailed = false;
-        private IOleCommandTarget sysTrayObject = null;
+        public bool IsFailed;
+        private IOleCommandTarget sysTrayObject;
         private MenuBarSizeData menuBarSizeData = new MenuBarSizeData { edge = (int)ABEdge.ABE_TOP, rc = new NativeMethods.Rect { Top = 0, Left = 0, Bottom = 23, Right = GetSystemMetrics(0) } };
 
         private static NotificationArea _instance = new NotificationArea();
@@ -81,14 +81,14 @@ namespace CairoDesktop.WindowsTray
             {
                 setWindowsTaskbarBottommost();
                 prepareCollections();
-                trayDelegate = new SystrayDelegate(SysTrayCallback);
-                iconDataDelegate = new IconDataDelegate(IconDataCallback);
-                menuBarSizeDelegate = new MenuBarSizeDelegate(MenuBarSizeCallback);
-                hooksWrapper.SetSystrayCallback(trayDelegate);
-                hooksWrapper.SetIconDataCallback(iconDataDelegate);
-                hooksWrapper.SetMenuBarSizeCallback(menuBarSizeDelegate);
-                Handle = hooksWrapper.InitializeSystray();
-                hooksWrapper.Run();
+                trayDelegate = SysTrayCallback;
+                iconDataDelegate = IconDataCallback;
+                menuBarSizeDelegate = MenuBarSizeCallback;
+                trayService.SetSystrayCallback(trayDelegate);
+                trayService.SetIconDataCallback(iconDataDelegate);
+                trayService.SetMenuBarSizeCallback(menuBarSizeDelegate);
+                Handle = trayService.Initialize();
+                trayService.Run();
 
                 // load the shell system tray objects (network, power, etc)
                 startShellServiceObject();
@@ -397,7 +397,7 @@ namespace CairoDesktop.WindowsTray
             if (!IsFailed && trayDelegate != null)
             {
                 stopShellServiceObject();
-                hooksWrapper.ShutdownSystray();
+                trayService.Dispose();
             }
         }
     }
