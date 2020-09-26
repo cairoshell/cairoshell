@@ -269,9 +269,13 @@ namespace CairoDesktop.WindowsTray
                                     try
                                     {
                                         System.Windows.Media.Imaging.BitmapSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon((IntPtr)nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                                        DestroyIcon((IntPtr)nicData.hIcon);
 
                                         if (bs != null)
+                                        {
+                                            bs.Freeze();
                                             trayIcon.Icon = bs;
+                                        }
                                     }
                                     catch
                                     {
