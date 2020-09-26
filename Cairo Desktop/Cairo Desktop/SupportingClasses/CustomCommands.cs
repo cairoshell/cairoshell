@@ -14,7 +14,7 @@ namespace CairoDesktop
         private static readonly Dispatcher _dispatcher = Dispatcher.CurrentDispatcher;
 
         static CustomCommands()
-        {            
+        {
         }
 
         public static RoutedUICommand OpenSearchResult { get; } = new RoutedUICommand("OpenSearchResult", "OpenSearchResult", typeof(CustomCommands));
@@ -23,19 +23,15 @@ namespace CairoDesktop
         {
             switch (verb)
             {
-                case "open":
+                case Actions.Open:
                     DesktopManager.Instance.IsOverlayOpen = false;
-
                     Shell.StartProcess(fileName);
-
                     return;
-                case "openwith":
+                case Actions.OpenWith:
                     DesktopManager.Instance.IsOverlayOpen = false;
-
                     Shell.ShowOpenWithDialog(fileName);
-
                     return;
-                case "delete":
+                case Actions.Delete:
                     string displayName = Shell.GetDisplayName(fileName);
                     bool? deleteChoice = CairoMessage.ShowOkCancel(string.Format(Localization.DisplayString.sDesktop_DeleteInfo, displayName), Localization.DisplayString.sDesktop_DeleteTitle, "Resources/cairoIcon.png", Localization.DisplayString.sInterface_Delete, Localization.DisplayString.sInterface_Cancel);
                     if (deleteChoice.HasValue && deleteChoice.Value)
@@ -43,34 +39,33 @@ namespace CairoDesktop
                         Shell.SendToRecycleBin(fileName);
                     }
                     return;
-                case "properties":
+                case Actions.Properties:
                     Shell.ShowFileProperties(fileName);
                     DesktopManager.Instance.IsOverlayOpen = false;
-
                     return;
-                case "copy":
+                case Actions.Copy:
                     StringCollection scPath = new StringCollection();
                     scPath.Add(fileName);
                     System.Windows.Forms.Clipboard.SetFileDropList(scPath);
                     return;
-                case "addStack":
+                case DirectoryActions.AddStack:
                     StacksManager.Instance.AddLocation(fileName);
                     return;
-                case "removeStack":
+                case DirectoryActions.RemoveStack:
                     StacksManager.Instance.StackLocations.Remove(new SystemDirectory(fileName, _dispatcher));
                     return;
-                case "openWithShell":
+                case Actions.OpenWithShell:
                     FolderHelper.OpenWithShell(fileName);
                     break;
-                case "personalize" when Shell.IsCairoRunningAsShell:
+                case Actions.Personalize when Shell.IsCairoRunningAsShell:
                     CairoSettingsWindow.Instance.Show();
                     CairoSettingsWindow.Instance.Activate();
                     CairoSettingsWindow.Instance.TabDesktop.IsSelected = true;
                     break;
-                case "personalize":
+                case Actions.Personalize:
                     Shell.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,2");
                     break;
-                case "displaySettings":
+                case Actions.DisplaySettings:
                     Shell.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,3");
                     break;
                 default:
@@ -83,13 +78,12 @@ namespace CairoDesktop
         {
             switch (action)
             {
-                case "new":
+                case DirectoryActions.New:
                     window.Activate();
-
                     // watch for new file to be created so we can perform an action
                     directory.FileCreated += ShellNew_FileCreated;
                     break;
-                case "paste":
+                case DirectoryActions.Paste:
                     directory.PasteFromClipboard();
                     break;
             }
@@ -117,6 +111,48 @@ namespace CairoDesktop
                     }
                 }
             });
+        }
+
+        public sealed class Actions
+        {
+            private Actions() { }
+
+            public const string Open = "open";
+
+            public const string OpenWith = "openwith";
+
+            public const string Delete = "delete";
+
+            public const string Properties = "properties";
+
+            public const string Copy = "copy";
+
+            public const string Cut = "cut";
+
+            public const string Link = "link";
+
+            public const string OpenWithShell = "openWithShell";
+
+            public const string Personalize = "personalize";
+
+            public const string DisplaySettings = "displaySettings";
+
+            public const string Rename = "rename";
+        }
+
+        public sealed class DirectoryActions
+        {
+            private DirectoryActions() { }
+
+            public const string AddStack = "addStack";
+
+            public const string RemoveStack = "removeStack";
+
+            public const string OpenFolder = "openFolder";
+
+            public const string New = "new";
+
+            public const string Paste = "paste";
         }
     }
 }
