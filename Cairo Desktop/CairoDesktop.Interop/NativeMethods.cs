@@ -1327,7 +1327,7 @@ namespace CairoDesktop.Interop
             );
 
         /*
-         * These interfaces can be used to display a shell desktop with the correct zordering, kept for future reference
+         * These interfaces can be used to display a shell desktop with the correct zordering, kept for future reference*/
         [ComImport()]
         [Guid("213E2DF9-9A14-4328-99B1-6961F9143CE9")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -1373,10 +1373,6 @@ namespace CairoDesktop.Interop
 
         [DllImport("shell32.dll", EntryPoint = "#201")]
         public extern static IntPtr SHDesktopMessageLoop(IntPtr hDesktop);
-
-        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool DestroyWindow(IntPtr hwnd);*/
 
         [ComImport, Guid("b722bccb-4e68-101b-a2bc-00aa00404770"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         public interface IOleCommandTarget

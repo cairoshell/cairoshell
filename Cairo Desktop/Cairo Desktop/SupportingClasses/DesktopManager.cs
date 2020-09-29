@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using CairoDesktop.Common;
@@ -100,7 +102,7 @@ namespace CairoDesktop.SupportingClasses
 
         private void InitDesktop()
         {
-            if (IsEnabled || Shell.IsCairoRunningAsShell)
+            if (IsEnabled)
             {
                 // hide the windows desktop
                 Shell.ToggleDesktopIcons(false);
@@ -108,6 +110,10 @@ namespace CairoDesktop.SupportingClasses
                 CreateShellWindow();
                 CreateDesktopBrowser();
                 CreateDesktopWindow();
+            }
+            else if (!IsEnabled && Shell.IsCairoRunningAsShell)
+            {
+                CreateClassicDesktop();
             }
         }
 
@@ -562,6 +568,25 @@ namespace CairoDesktop.SupportingClasses
             }
 
             TeardownDesktop();
+        }
+
+        private void CreateClassicDesktop()
+        {
+            ComTaskScheduler desktopScheduler = new ComTaskScheduler();
+            IntPtr hDesktop = IntPtr.Zero;
+
+            Task.Factory.StartNew(() =>
+            {
+                NativeMethods.ShellDesktopTray sdt = new NativeMethods.ShellDesktopTray();
+                hDesktop = NativeMethods.SHCreateDesktop(sdt);
+
+                IntPtr progmanHwnd = NativeMethods.FindWindow("Progman", "Program Manager");
+                NativeMethods.ShowWindow(progmanHwnd, NativeMethods.WindowShowStyle.Show);
+
+                NativeMethods.SHDesktopMessageLoop(hDesktop);
+
+                NativeMethods.DestroyWindow(progmanHwnd);
+            }, CancellationToken.None, TaskCreationOptions.LongRunning, desktopScheduler);
         }
     }
 }
