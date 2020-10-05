@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace CairoDesktop
@@ -42,8 +43,8 @@ namespace CairoDesktop
         {
             if (Window != null)
             {
-                if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftShift) ||
-                    System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightShift))
+                if (Keyboard.IsKeyDown(Key.LeftShift) ||
+                    Keyboard.IsKeyDown(Key.RightShift))
                 {
                     Shell.StartProcess(Window.WinFileName);
                     return;
@@ -276,15 +277,18 @@ namespace CairoDesktop
             Shell.StartTaskManager();
         }
 
-        private void btn_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void btn_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == System.Windows.Input.MouseButton.Middle)
+            if (e.ChangedButton == MouseButton.Middle)
             {
                 if (Window != null)
                 {
                     switch (Settings.Instance.TaskbarMiddleClick)
                     {
-                        case 1:
+                        case 0 when Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift):
+                            Window.Close();
+                            break;
+                        case 1 when !Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift):
                             Window.Close();
                             break;
                         default:
@@ -295,13 +299,13 @@ namespace CairoDesktop
             }
         }
 
-        private void btn_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        private void btn_MouseEnter(object sender, MouseEventArgs e)
         {
             if (!ListMode)
                 thumbTimer.Start();
         }
 
-        private void btn_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        private void btn_MouseLeave(object sender, MouseEventArgs e)
         {
             if (!ListMode)
             {
