@@ -355,18 +355,7 @@ namespace CairoDesktop
 
         private void setShadowPosition()
         {
-            if (shadow != null)
-            {
-                shadow.SetPosition();
-                // running this on a short delay fixes changing dpi on multiple displays
-                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.1) };
-                timer.Start();
-                timer.Tick += (sender1, args) =>
-                {
-                    if (shadow != null) shadow.SetPosition();
-                    timer.Stop();
-                };
-            }
+            shadow?.SetPosition();
         }
 
         private void closeShadow()
@@ -499,9 +488,9 @@ namespace CairoDesktop
             }
         }
 
-#endregion
+        #endregion
 
-#region Cairo menu items
+        #region Cairo menu items
         private void AboutCairo(object sender, RoutedEventArgs e)
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
