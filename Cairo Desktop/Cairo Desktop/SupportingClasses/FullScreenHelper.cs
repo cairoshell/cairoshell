@@ -53,7 +53,7 @@ namespace CairoDesktop.SupportingClasses
             {
                 FullScreenApp appCurrentState = getFullScreenApp(app.hWnd);
 
-                if (app.hWnd == hWnd && appCurrentState != null)
+                if (app.hWnd == hWnd && appCurrentState != null && app.screen == appCurrentState.screen)
                 {
                     // this window, still same screen, do nothing
                     skipAdd = true;
