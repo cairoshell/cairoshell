@@ -266,9 +266,10 @@ namespace CairoDesktop.SupportingClasses
 
         private void SetScreenProperties(ScreenSetupReason reason)
         {
-            // process screen changes if we are on the primary display (or any display in the case of a DPI change, since only the changed display receives that message)
-            // and the designated window. suppress this if we are shutting down (which can trigger this method on multi-dpi setups due to window movements)
-            if ((Screen.Primary || reason == ScreenSetupReason.DpiChange) && processScreenChanges && !Startup.IsShuttingDown)
+            // process screen changes if we are on the primary display and the designated window
+            // (or any display in the case of a DPI change, since only the changed display receives that message and not all windows receive it reliably)
+            // suppress this if we are shutting down (which can trigger this method on multi-dpi setups due to window movements)
+            if (((Screen.Primary && processScreenChanges) || reason == ScreenSetupReason.DpiChange) && !Startup.IsShuttingDown)
             {
                 WindowManager.Instance.NotifyDisplayChange(reason); // update Cairo window list based on new screen setup
             }
