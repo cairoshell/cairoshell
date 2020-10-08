@@ -14,15 +14,14 @@ namespace CairoDesktop.WindowsTray
     {
         const string VOLUME_GUID = "7820ae73-23e3-4229-82c1-e41cb67d5b9c";
         NativeMethods.Rect defaultPlacement = new NativeMethods.Rect { Top = 0, Left = GetSystemMetrics(0) - 200, Bottom = 23, Right = 23 };
-        ITrayService trayService = new TrayService();
         private SystrayDelegate trayDelegate;
         private IconDataDelegate iconDataDelegate;
-        private MenuBarSizeDelegate menuBarSizeDelegate;
+        private TrayHostSizeDelegate trayHostSizeDelegate;
         private object _lockObject = new object();
         public IntPtr Handle;
         public bool IsFailed;
-        private IOleCommandTarget sysTrayObject;
-        private MenuBarSizeData menuBarSizeData = new MenuBarSizeData { edge = (int)ABEdge.ABE_TOP, rc = new NativeMethods.Rect { Top = 0, Left = 0, Bottom = 23, Right = GetSystemMetrics(0) } };
+        private ShellServiceObject shellServiceObject;
+        private TrayHostSizeData trayHostSizeData = new TrayHostSizeData { edge = (int)ABEdge.ABE_TOP, rc = new NativeMethods.Rect { Top = 0, Left = 0, Bottom = 23, Right = GetSystemMetrics(0) } };
 
         private static NotificationArea _instance = new NotificationArea();
         public static NotificationArea Instance
@@ -79,77 +78,25 @@ namespace CairoDesktop.WindowsTray
         {
             try
             {
-                setWindowsTaskbarBottommost();
                 prepareCollections();
                 trayDelegate = SysTrayCallback;
                 iconDataDelegate = IconDataCallback;
-                menuBarSizeDelegate = MenuBarSizeCallback;
-                trayService.SetSystrayCallback(trayDelegate);
-                trayService.SetIconDataCallback(iconDataDelegate);
-                trayService.SetMenuBarSizeCallback(menuBarSizeDelegate);
-                Handle = trayService.Initialize();
-                trayService.Run();
+                trayHostSizeDelegate = MenuBarSizeCallback;
+                TrayService.Instance.SetSystrayCallback(trayDelegate);
+                TrayService.Instance.SetIconDataCallback(iconDataDelegate);
+                TrayService.Instance.SetMenuBarSizeCallback(trayHostSizeDelegate);
+                Handle = TrayService.Instance.Initialize();
+                TrayService.Instance.Run();
 
                 // load the shell system tray objects (network, power, etc)
-                startShellServiceObject();
+                shellServiceObject = new ShellServiceObject();
+                shellServiceObject.Start();
             }
             catch
             {
                 IsFailed = true;
             }
         }
-
-        #region Shell Service Object
-        private void startShellServiceObject()
-        {
-            if (Shell.IsCairoRunningAsShell)
-            {
-                try
-                {
-                    sysTrayObject = (IOleCommandTarget)new SysTrayObject();
-                    Guid sso = new Guid(CGID_SHELLSERVICEOBJECT);
-                    sysTrayObject.Exec(ref sso, OLECMDID_NEW, OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
-                }
-                catch
-                {
-                    CairoLogger.Instance.Debug("Unable to start shell service object.");
-                }
-            }
-        }
-
-        private void stopShellServiceObject()
-        {
-            if (sysTrayObject != null)
-            {
-                try
-                {
-                    Guid sso = new Guid(CGID_SHELLSERVICEOBJECT);
-                    sysTrayObject.Exec(ref sso, OLECMDID_SAVE, OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
-                }
-                catch
-                {
-                    CairoLogger.Instance.Debug("Unable to stop shell service object.");
-                }
-            }
-        }
-        #endregion
-
-        #region Pause for AppBar interop
-        public void Suspend()
-        {
-            if (Handle != null && Handle != IntPtr.Zero)
-                SetWindowPos(Handle, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
-        }
-
-        public void MakeActive()
-        {
-            if (Handle != null && Handle != IntPtr.Zero)
-            {
-                SetWindowPos(Handle, (IntPtr)WindowZOrder.HWND_TOPMOST, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
-                setWindowsTaskbarBottommost();
-            }
-        }
-        #endregion
 
         #region Collections
         private void prepareCollections()
@@ -193,9 +140,9 @@ namespace CairoDesktop.WindowsTray
         #endregion
 
         #region Callbacks
-        private MenuBarSizeData MenuBarSizeCallback()
+        private TrayHostSizeData MenuBarSizeCallback()
         {
-            return menuBarSizeData;
+            return trayHostSizeData;
         }
 
         private IntPtr IconDataCallback(int dwMessage, uint hWnd, uint uID, Guid guidItem)
@@ -251,7 +198,7 @@ namespace CairoDesktop.WindowsTray
 
                             foreach (NotifyIcon ti in TrayIcons)
                             {
-                                if ((nicData.guidItem != Guid.Empty && nicData.guidItem == ti.GUID) || (ti.HWnd == (IntPtr)nicData.hWnd && ti.UID == nicData.uID))
+                                if (ti.Equals(nicData))
                                 {
                                     exists = true;
                                     trayIcon = ti;
@@ -268,7 +215,10 @@ namespace CairoDesktop.WindowsTray
                                 {
                                     try
                                     {
-                                        System.Windows.Media.Imaging.BitmapSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon((IntPtr)nicData.hIcon, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                                        System.Windows.Media.Imaging.BitmapSource bs =
+                                            System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
+                                                (IntPtr) nicData.hIcon, Int32Rect.Empty,
+                                                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
                                         DestroyIcon((IntPtr)nicData.hIcon);
 
                                         if (bs != null)
@@ -307,10 +257,10 @@ namespace CairoDesktop.WindowsTray
 
                             if (!exists)
                             {
-                                // default placement to a menu bar like rect
+                                // default placement to a menu bar-like rect
                                 trayIcon.Placement = defaultPlacement;
 
-                                // set pinned item properties
+                                // set properties used for pinning
                                 trayIcon.Path = Shell.GetPathForHandle(trayIcon.HWnd);
                                 trayIcon.SetPinValues();
 
@@ -318,7 +268,7 @@ namespace CairoDesktop.WindowsTray
                                     trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
 
                                 TrayIcons.Add(trayIcon);
-                                CairoLogger.Instance.Debug("Added tray icon: " + trayIcon.Title + " path: " + Shell.GetPathForHandle(trayIcon.HWnd) + " GUID: " + trayIcon.GUID + " UID: " + trayIcon.UID);
+                                CairoLogger.Instance.Debug($"NotificationArea: Added: {trayIcon.Title} Path: {trayIcon.Path} GUID: {trayIcon.GUID} UID: {trayIcon.UID}");
 
                                 if ((NIM)message == NIM.NIM_MODIFY)
                                 {
@@ -327,12 +277,12 @@ namespace CairoDesktop.WindowsTray
                                 }
                             }
                             else
-                                CairoLogger.Instance.Debug("Modified tray icon: " + trayIcon.Title);
+                                CairoLogger.Instance.Debug($"NotificationArea: Modified: {trayIcon.Title}");
                         }
                     }
                     catch (Exception ex)
                     {
-                        CairoLogger.Instance.Error("Unable to modify the icon in the collection.", ex);
+                        CairoLogger.Instance.Error("NotificationArea: Unable to modify the icon in the collection.", ex);
                     }
                 }
                 else if ((NIM)message == NIM.NIM_DELETE)
@@ -347,21 +297,21 @@ namespace CairoDesktop.WindowsTray
 
                         TrayIcons.Remove(trayIcon);
 
-                        CairoLogger.Instance.Debug("Removed tray icon: " + nicData.szTip);
+                        CairoLogger.Instance.Debug($"NotificationArea: Removed: {nicData.szTip}");
                     }
                     catch (Exception ex)
                     {
-                        CairoLogger.Instance.Error("Unable to remove the icon from the collection.", ex);
+                        CairoLogger.Instance.Error("NotificationArea: Unable to remove the icon from the collection.", ex);
                     }
                 }
                 else if ((NIM)message == NIM.NIM_SETVERSION)
                 {
                     foreach (NotifyIcon ti in TrayIcons)
                     {
-                        if ((nicData.guidItem != Guid.Empty && nicData.guidItem == ti.GUID) || (ti.HWnd == (IntPtr)nicData.hWnd && ti.UID == nicData.uID))
+                        if (ti.Equals(nicData))
                         {
                             ti.Version = nicData.uVersion;
-                            CairoLogger.Instance.Debug("Modified version to " + ti.Version + " on tray icon: " + ti.Title);
+                            CairoLogger.Instance.Debug($"NotificationArea: Modified version to {ti.Version} on: {ti.Title}");
                             break;
                         }
                     }
@@ -371,33 +321,18 @@ namespace CairoDesktop.WindowsTray
         }
         #endregion
 
-        // The notification area control calls this when an icon is clicked to set the placement of its menu bar for ABM_GETTASKBARPOS usage
-        public void SetMenuBarSizeData(MenuBarSizeData data)
+        // The notification area control calls this when an icon is clicked to set the placement of its host for ABM_GETTASKBARPOS usage
+        public void SetTrayHostSizeData(TrayHostSizeData data)
         {
-            menuBarSizeData = data;
-        }
-
-        private void setWindowsTaskbarBottommost()
-        {
-            IntPtr taskbarHwnd = FindWindow("Shell_TrayWnd", "");
-
-            if (Handle != null && Handle != IntPtr.Zero)
-            {
-                while (taskbarHwnd == Handle)
-                {
-                    taskbarHwnd = FindWindowEx(IntPtr.Zero, taskbarHwnd, "Shell_TrayWnd", "");
-                }
-            }
-
-            SetWindowPos(taskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+            trayHostSizeData = data;
         }
 
         public void Dispose()
         {
             if (!IsFailed && trayDelegate != null)
             {
-                stopShellServiceObject();
-                trayService.Dispose();
+                shellServiceObject?.Dispose();
+                TrayService.Instance.Dispose();
             }
         }
     }

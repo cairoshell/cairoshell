@@ -75,7 +75,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
                 if (MenuBar != null)
                 {
                     // set current menu bar to return placement for ABM_GETTASKBARPOS message
-                    NotificationArea.Instance.SetMenuBarSizeData(MenuBar.GetMenuBarSizeData());
+                    NotificationArea.Instance.SetTrayHostSizeData(MenuBar.GetMenuBarSizeData());
                 }
 
                 trayIcon.IconMouseClick(e.ChangedButton, GetMousePos(), System.Windows.Forms.SystemInformation.DoubleClickTime);
