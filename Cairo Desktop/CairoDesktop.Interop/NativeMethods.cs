@@ -732,7 +732,7 @@ namespace CairoDesktop.Interop
         /// AppBar message data structure type
         /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct MenuBarSizeData
+        public struct TrayHostSizeData
         {
             public Rect rc;
             public int edge;

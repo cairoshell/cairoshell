@@ -355,7 +355,14 @@ namespace CairoDesktop.WindowsTray
         /// <returns>Indication of equality.</returns>
         public bool Equals(NotifyIcon other)
         {
-            return HWnd.Equals(other.HWnd) && UID.Equals(other.UID);
+            if (other == null) return false;
+
+            return (HWnd.Equals(other.HWnd) && UID.Equals(other.UID)) || (other.GUID != Guid.Empty && GUID.Equals(other.GUID));
+        }
+
+        public bool Equals(NOTIFYICONDATA other)
+        {
+            return (HWnd.Equals((IntPtr)other.hWnd) && UID.Equals(other.uID)) || (other.guidItem != Guid.Empty && GUID.Equals(other.guidItem));
         }
 
         #endregion
