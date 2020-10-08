@@ -164,12 +164,12 @@ namespace CairoDesktop.WindowsTray
             if (msg == (int)NativeMethods.WM.COPYDATA || msg == (int)NativeMethods.WM.ACTIVATEAPP)
             {
                 IntPtr fwdResult = IntPtr.Zero;
+                StringBuilder className = new StringBuilder(256);
 
                 NativeMethods.EnumWindows((enumHwnd, enumLParam) =>
                 {
                     if (enumHwnd != HwndTray && enumHwnd != hWnd)
                     {
-                        StringBuilder className = new StringBuilder(256);
                         NativeMethods.GetClassName(enumHwnd, className, 256);
 
                         if (className.ToString() == "Shell_TrayWnd")
