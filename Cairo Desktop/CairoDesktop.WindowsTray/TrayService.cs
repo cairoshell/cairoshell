@@ -15,6 +15,7 @@ namespace CairoDesktop.WindowsTray
 
         private IntPtr HwndTray;
         private IntPtr HwndNotify;
+        private IntPtr HwndFwd;
         private IntPtr hInstance = Marshal.GetHINSTANCE(typeof(TrayService).Module);
 
         #region Set callbacks
@@ -164,22 +165,25 @@ namespace CairoDesktop.WindowsTray
             if (msg == (int)NativeMethods.WM.COPYDATA || msg == (int)NativeMethods.WM.ACTIVATEAPP)
             {
                 IntPtr fwdResult = IntPtr.Zero;
-                StringBuilder className = new StringBuilder(256);
 
-                NativeMethods.EnumWindows((enumHwnd, enumLParam) =>
+                if (HwndFwd == IntPtr.Zero || !NativeMethods.IsWindow(HwndFwd))
                 {
-                    if (enumHwnd != HwndTray && enumHwnd != hWnd)
-                    {
-                        NativeMethods.GetClassName(enumHwnd, className, 256);
+                    IntPtr taskbarHwnd = NativeMethods.FindWindow("Shell_TrayWnd", "");
 
-                        if (className.ToString() == "Shell_TrayWnd")
+                    if (HwndTray != null && HwndTray != IntPtr.Zero)
+                    {
+                        while (taskbarHwnd == HwndTray)
                         {
-                            fwdResult = NativeMethods.SendMessage(enumHwnd, msg, wParam, lParam);
+                            taskbarHwnd = NativeMethods.FindWindowEx(IntPtr.Zero, taskbarHwnd, "Shell_TrayWnd", "");
                         }
                     }
+                    HwndFwd = taskbarHwnd;
+                }
 
-                    return true;
-                }, 0);
+                if (HwndFwd != IntPtr.Zero)
+                {
+                    fwdResult = NativeMethods.SendMessage(HwndFwd, msg, wParam, lParam);
+                }
 
                 return fwdResult;
             }
