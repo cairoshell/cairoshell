@@ -5,7 +5,6 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Input;
-using CairoDesktop.Common.Helpers;
 
 namespace CairoDesktop {
     /// <summary>
@@ -36,12 +35,12 @@ namespace CairoDesktop {
         
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            openDir((sender as ICommandSource).CommandParameter.ToString(), true);
+            OpenDir((sender as ICommandSource).CommandParameter.ToString(), true);
         }
 
         private void OpenDesktop_Click(object sender, RoutedEventArgs e)
         {
-            openDir((sender as ICommandSource).CommandParameter.ToString(), false);
+            OpenDir((sender as ICommandSource).CommandParameter.ToString(), false);
         }
 
         private void NameLabel_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -62,7 +61,7 @@ namespace CairoDesktop {
                 ICommandSource cmdsrc = sender as ICommandSource;
                 if (cmdsrc?.CommandParameter is SystemDirectory cmdparam)
                 {
-                    openDir(cmdparam.FullName, false); 
+                    OpenDir(cmdparam.FullName, false); 
                     e.Handled = true;
                 }
             }
@@ -72,7 +71,7 @@ namespace CairoDesktop {
         /// Launches the FileManager specified in the application Settings object to the specified directory.
         /// </summary>
         /// <param name="directoryPath">Directory to open.</param>
-        private void openDir(string directoryPath, bool openWithShell) 
+        internal void OpenDir(string directoryPath, bool openWithShell) 
         {
             if ((!openWithShell && !FolderHelper.OpenLocation(directoryPath)) || (openWithShell && !FolderHelper.OpenWithShell(directoryPath)))
             {
@@ -257,19 +256,20 @@ namespace CairoDesktop {
 
         #endregion
 
-        private void Scroller_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void MenuItem_OnSubmenuOpened(object sender, RoutedEventArgs e)
         {
-            var scrollViewer = System.Windows.Media.VisualTreeHelper.GetChild(sender as ListView, 0) as ScrollViewer;
-
-            if (scrollViewer == null)
-                return;
-
-            if (e.Delta < 0)
-                scrollViewer.LineRight();
-            else
-                scrollViewer.LineLeft();
-
-            e.Handled = true;
+            if (sender is MenuItem menuItem)
+            {
+                if (menuItem.Items.Count > 0 && menuItem.Items[0] is MenuItem subMenuItem)
+                {
+                    StacksScroller scroller = new StacksScroller()
+                    {
+                        DataContext = menuItem.DataContext,
+                        ParentContainer = this
+                    };
+                    subMenuItem.Header = scroller;
+                }
+            }
         }
     }
 }

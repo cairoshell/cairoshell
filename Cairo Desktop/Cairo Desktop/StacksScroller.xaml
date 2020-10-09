@@ -1,0 +1,10 @@
+﻿<UserControl x:Class="CairoDesktop.StacksScroller"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+             Loaded="StacksScroller_OnLoaded">
+    <Grid>
+        <ListView x:Name="Scroller" FocusManager.IsFocusScope="True" Style="{StaticResource FolderViewStyle}" ItemsSource="{Binding Path=Files, IsAsync=True}" PreviewMouseWheel="Scroller_PreviewMouseWheel" />
+        <Button Style="{StaticResource StackTopButton}" Click="Open_Click" CommandParameter="{Binding Path=FullName}" Content="2" ToolTip="{Binding Path=(l10n:DisplayString.sStacks_OpenInNewWindow)}" />
+    </Grid>
+</UserControl>
