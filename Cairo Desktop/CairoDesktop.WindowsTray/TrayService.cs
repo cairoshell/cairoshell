@@ -38,7 +38,7 @@ namespace CairoDesktop.WindowsTray
             iconDataDelegate = theDelegate;
         }
 
-        public void SetMenuBarSizeCallback(TrayHostSizeDelegate theDelegate)
+        public void SetTrayHostSizeCallback(TrayHostSizeDelegate theDelegate)
         {
             trayHostSizeDelegate = theDelegate;
         }

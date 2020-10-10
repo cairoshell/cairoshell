@@ -84,7 +84,7 @@ namespace CairoDesktop.WindowsTray
                 trayHostSizeDelegate = MenuBarSizeCallback;
                 TrayService.Instance.SetSystrayCallback(trayDelegate);
                 TrayService.Instance.SetIconDataCallback(iconDataDelegate);
-                TrayService.Instance.SetMenuBarSizeCallback(trayHostSizeDelegate);
+                TrayService.Instance.SetTrayHostSizeCallback(trayHostSizeDelegate);
                 Handle = TrayService.Instance.Initialize();
                 TrayService.Instance.Run();
 
