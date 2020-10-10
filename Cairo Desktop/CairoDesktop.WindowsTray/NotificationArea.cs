@@ -81,7 +81,7 @@ namespace CairoDesktop.WindowsTray
                 prepareCollections();
                 trayDelegate = SysTrayCallback;
                 iconDataDelegate = IconDataCallback;
-                trayHostSizeDelegate = MenuBarSizeCallback;
+                trayHostSizeDelegate = TrayHostSizeCallback;
                 TrayService.Instance.SetSystrayCallback(trayDelegate);
                 TrayService.Instance.SetIconDataCallback(iconDataDelegate);
                 TrayService.Instance.SetTrayHostSizeCallback(trayHostSizeDelegate);
@@ -140,7 +140,7 @@ namespace CairoDesktop.WindowsTray
         #endregion
 
         #region Callbacks
-        private TrayHostSizeData MenuBarSizeCallback()
+        private TrayHostSizeData TrayHostSizeCallback()
         {
             return trayHostSizeData;
         }
