@@ -10,7 +10,6 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace CairoDesktop
 {
@@ -24,10 +23,6 @@ namespace CairoDesktop
 
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
-
-        // delegates for WinSparkle
-        private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
-        private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
 
         // menu extras
         private SystemTray systemTray;
@@ -62,22 +57,7 @@ namespace CairoDesktop
 
             setupPlacesMenu();
 
-            initSparkle();
-
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
-        }
-
-        private void initSparkle()
-        {
-            if (Screen.Primary)
-            {
-                WinSparkle.win_sparkle_set_appcast_url("https://cairoshell.github.io/appdescriptor.rss");
-                canShutdownDelegate = canShutdown;
-                shutdownDelegate = Startup.Shutdown;
-                WinSparkle.win_sparkle_set_can_shutdown_callback(canShutdownDelegate);
-                WinSparkle.win_sparkle_set_shutdown_request_callback(shutdownDelegate);
-                WinSparkle.win_sparkle_init();
-            }
         }
 
         private void setupChildren()
@@ -255,11 +235,6 @@ namespace CairoDesktop
             SetBlur(Settings.Instance.EnableMenuBarBlur);
 
             setupShadow();
-        }
-
-        private int canShutdown()
-        {
-            return 1;
         }
 
         private void registerCairoMenuHotKey()
@@ -504,7 +479,7 @@ namespace CairoDesktop
 
         private void CheckForUpdates(object sender, RoutedEventArgs e)
         {
-            WinSparkle.win_sparkle_check_update_with_ui();
+            UpdateManager.Instance.CheckForUpdates();
         }
 
         private void OpenLogoffBox(object sender, RoutedEventArgs e)

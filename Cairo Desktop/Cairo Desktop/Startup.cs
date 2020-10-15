@@ -1,20 +1,15 @@
-﻿namespace CairoDesktop
-{
-    using CairoDesktop.Common.Helpers;
-    using CairoDesktop.Common.Logging;
-    using CairoDesktop.Configuration;
-    using CairoDesktop.WindowsTray;
-    using Common;
-    using Interop;
-    using Microsoft.Win32;
-    using SupportingClasses;
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using System.Windows;
-    using System.Windows.Threading;
+﻿using CairoDesktop.Configuration;
+using CairoDesktop.WindowsTray;
+using CairoDesktop.Common;
+using CairoDesktop.Interop;
+using CairoDesktop.SupportingClasses;
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Threading;
 
+namespace CairoDesktop
+{
     /// <summary>
     /// Handles the startup of the application, including ensuring that only a single instance is running.
     /// </summary>
@@ -50,6 +45,8 @@
             WriteApplicationDebugInfoToConsole();
 
             SetSystemKeyboardShortcuts();
+
+            SetupUpdateManager();
 
             // Move to App??? app.SetupPluginSystem();
             SetupPluginSystem(); // This will Load the Core Plugin and all other, will either reference it as a dependency or dont need it to be started first
