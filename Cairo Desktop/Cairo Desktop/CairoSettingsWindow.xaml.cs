@@ -418,7 +418,7 @@ namespace CairoDesktop
         #region Startup checks
         private void checkUpdateConfig()
         {
-            chkEnableAutoUpdates.IsChecked = Convert.ToBoolean(WinSparkle.win_sparkle_get_automatic_check_for_updates());
+            chkEnableAutoUpdates.IsChecked = UpdateManager.Instance.AutoUpdatesEnabled;
         }
 
         private void checkTrayStatus()
@@ -470,7 +470,14 @@ namespace CairoDesktop
 
         private void EnableAutoUpdates_Click(object sender, RoutedEventArgs e)
         {
-            WinSparkle.win_sparkle_set_automatic_check_for_updates(Convert.ToInt32(chkEnableAutoUpdates.IsChecked));
+            if (chkEnableAutoUpdates.IsChecked != null)
+            {
+                UpdateManager.Instance.AutoUpdatesEnabled = (bool) chkEnableAutoUpdates.IsChecked;
+            }
+            else
+            {
+                UpdateManager.Instance.AutoUpdatesEnabled = false;
+            }
         }
 
         private void showRestartButton()

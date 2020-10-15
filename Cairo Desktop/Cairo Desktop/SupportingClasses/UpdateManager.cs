@@ -1,11 +1,18 @@
-﻿using CairoDesktop.Common.DesignPatterns;
+﻿using System;
+using CairoDesktop.Common.DesignPatterns;
 using CairoDesktop.Interop;
 
 namespace CairoDesktop.SupportingClasses
 {
-    public class UpdateManager : SingletonObject<UpdateManager>
+    public class UpdateManager : SingletonObject<UpdateManager>, IDisposable
     {
         private const string UpdateUrl = "https://cairoshell.github.io/appdescriptor.rss";
+
+        public bool AutoUpdatesEnabled
+        {
+            get => Convert.ToBoolean(WinSparkle.win_sparkle_get_automatic_check_for_updates());
+            set => WinSparkle.win_sparkle_set_automatic_check_for_updates(Convert.ToInt32(value));
+        }
 
         private bool isInitialized;
         private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
@@ -30,6 +37,11 @@ namespace CairoDesktop.SupportingClasses
         public void CheckForUpdates()
         {
             WinSparkle.win_sparkle_check_update_with_ui();
+        }
+
+        public void Dispose()
+        {
+            WinSparkle.win_sparkle_cleanup();
         }
 
         private int canShutdown()

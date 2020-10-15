@@ -158,6 +158,7 @@ namespace CairoDesktop
 
             Shell.DisposeIml();
             WindowManager.Instance.Dispose();
+            UpdateManager.Instance.Dispose();
 
             Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
         }

@@ -370,11 +370,6 @@ namespace CairoDesktop
 
         protected override void CustomClosing()
         {
-            if (Startup.IsShuttingDown && Screen.Primary)
-            {
-                WinSparkle.win_sparkle_cleanup();
-            }
-
             if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
             {
                 closeShadow();
