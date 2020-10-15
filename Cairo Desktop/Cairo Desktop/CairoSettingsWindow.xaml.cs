@@ -16,6 +16,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using CairoDesktop.Common.Logging;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
 namespace CairoDesktop
@@ -446,16 +447,26 @@ namespace CairoDesktop
                 chkRunAtLogOn.Visibility = Visibility.Collapsed;
             }
 
-            RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-            List<string> rKeyValueNames = rKey.GetValueNames().ToList();
+            try
+            {
+                RegistryKey rKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", false);
+                List<string> rKeyValueNames = rKey?.GetValueNames().ToList();
 
-            if (rKeyValueNames.Contains("CairoShell"))
-            {
-                chkRunAtLogOn.IsChecked = true;
+                if (rKeyValueNames != null)
+                {
+                    if (rKeyValueNames.Contains("CairoShell"))
+                    {
+                        chkRunAtLogOn.IsChecked = true;
+                    }
+                    else
+                    {
+                        chkRunAtLogOn.IsChecked = false;
+                    }
+                }
             }
-            else
+            catch (Exception e)
             {
-                chkRunAtLogOn.IsChecked = false;
+                CairoLogger.Instance.Error($"SettingsWindow: Unable to load autorun setting from registry: {e.Message}");
             }
         }
 
@@ -683,19 +694,26 @@ namespace CairoDesktop
 
         private void chkRunAtLogOn_Click(object sender, RoutedEventArgs e)
         {
-            RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-            var chkBox = (CheckBox)sender;
+            try
+            {
+                RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+                var chkBox = (CheckBox)sender;
 
-            if (chkBox.IsChecked.Equals(false))
-            {
-                //Delete SubKey
-                rKey.DeleteValue("CairoShell");
+                if (chkBox.IsChecked.Equals(false))
+                {
+                    //Delete SubKey
+                    rKey.DeleteValue("CairoShell");
+                }
+                else
+                {
+                    string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                    //Write SubKey
+                    rKey.SetValue("CairoShell", exePath);
+                }
             }
-            else
+            catch (Exception exception)
             {
-                string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                //Write SubKey
-                rKey.SetValue("CairoShell", exePath);
+                CairoLogger.Instance.Error($"SettingsWindow: Unable to update registry autorun setting: {exception.Message}");
             }
         }
 
