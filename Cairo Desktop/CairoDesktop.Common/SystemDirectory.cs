@@ -28,9 +28,6 @@ namespace CairoDesktop.Common {
             get { return dir; }
             set {
                 dir = value;
-                fileWatcher.Path = dir.FullName;
-                if (initAsync) initializeAsync();
-                else initializeSync();
             }
         }
 
@@ -41,7 +38,19 @@ namespace CairoDesktop.Common {
         /// Gets an ObservableCollection of files contained in this folder as FileSystemInfo objects.
         /// </summary>
         public InvokingObservableCollection<SystemFile> Files {
-            get { return files; }
+            get
+            {
+                if (files == null)
+                {
+                    files = new InvokingObservableCollection<SystemFile>(dispatcher);
+
+                    setupFileWatcher();
+
+                    if (initAsync) initializeAsync();
+                    else initializeSync();
+                }
+                return files;
+            }
         }
 
         private string name;
@@ -81,20 +90,7 @@ namespace CairoDesktop.Common {
             {
                 this.dispatcher = dispatcher;
                 initAsync = isAsync;
-                files = new InvokingObservableCollection<SystemFile>(this.dispatcher);
                 DirectoryInfo = new DirectoryInfo(pathToDirectory);
-                fileWatcher.IncludeSubdirectories = false;
-                fileWatcher.Filter = "";
-                fileWatcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName;
-
-                createdHandler = fileWatcher_Created;
-                deletedHandler = fileWatcher_Deleted;
-                renamedHandler = fileWatcher_Renamed;
-
-                fileWatcher.Created += createdHandler;
-                fileWatcher.Deleted += deletedHandler;
-                fileWatcher.Renamed += renamedHandler;
-                fileWatcher.EnableRaisingEvents = true;
 
                 fileOperationWorker.DoWork += fileOperationWorker_DoWork;
             }
@@ -102,6 +98,24 @@ namespace CairoDesktop.Common {
             {
                 CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        void setupFileWatcher()
+        {
+            fileWatcher.Path = dir.FullName;
+            fileWatcher.IncludeSubdirectories = false;
+            fileWatcher.Filter = "";
+            fileWatcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName;
+
+            createdHandler = fileWatcher_Created;
+            deletedHandler = fileWatcher_Deleted;
+            renamedHandler = fileWatcher_Renamed;
+
+            fileWatcher.Created += createdHandler;
+            fileWatcher.Deleted += deletedHandler;
+            fileWatcher.Renamed += renamedHandler;
+            fileWatcher.EnableRaisingEvents = true;
+
         }
 
         void fileWatcher_Renamed(object sender, RenamedEventArgs e) {

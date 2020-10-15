@@ -111,6 +111,9 @@
       <DependentUpon>ProgramsMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\PluginService.cs" />
+    <Compile Include="StacksScroller.xaml.cs">
+      <DependentUpon>StacksScroller.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Startup.InitializationRoutines.cs" />
     <Compile Include="SupportingClasses\AppBarWindow.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
@@ -175,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MenuExtraVolume.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StacksScroller.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
