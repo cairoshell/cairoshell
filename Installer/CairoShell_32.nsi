@@ -68,18 +68,10 @@ Section "$(SECT_cairo)" cairo
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
 
-  IfSilent 0 +2
-    Sleep 3000
-
-  System::Call 'kernel32::OpenMutex(i 0x100000, b 0, t "CairoShell") i .R1'
-  IntCmp $R1 0 notRunning
-    System::Call 'kernel32::CloseHandle(i $R1)'
-    MessageBox MB_OK|MB_ICONEXCLAMATION "$(DLOG_RunningText)" /SD IDOK
-    Quit
-  
-  notRunning:
+  Call AbortIfRunning
   
   ; Put file there
+  DetailPrint "Installing Cairo files"
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.exe"
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.WindowsTray.dll"
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.Common.dll"
@@ -138,6 +130,7 @@ SectionEnd
   LangString PAGE_Finish_RunText ${LANG_ENGLISH} "Start Cairo Desktop Environment"
   LangString PAGE_UnDir_TopText ${LANG_ENGLISH} "Please be sure that you have closed Cairo before uninstalling to ensure that all files are removed."
   LangString DLOG_RunningText ${LANG_ENGLISH} "Cairo is currently running. Please exit Cairo from the Cairo menu and run this installer again."
+  LangString DLOG_RunningText2 ${LANG_ENGLISH} "Cairo is currently running. Please exit Cairo from the Cairo menu."
   LangString DLOG_DotNetText ${LANG_ENGLISH} "Cairo requires Microsoft .NET Framework 4.7.1 or higher. Please install this from the Microsoft web site and install Cairo again."
   LangString SECT_cairo ${LANG_ENGLISH} "Cairo Desktop (required)"
   LangString SECT_startupCU ${LANG_ENGLISH} "Run at startup (current user)"
@@ -149,6 +142,7 @@ SectionEnd
   LangString PAGE_Finish_RunText ${LANG_FRENCH} "Démarrer l'environnement de bureau Cairo"
   LangString PAGE_UnDir_TopText ${LANG_FRENCH} "Veuillez vérifier que vous avez fermé Cairo avant de le désinstaller pour assurer que tous les fichiers soient supprimés."
   LangString DLOG_RunningText ${LANG_FRENCH} "Cairo est en cours de fonctionnement. Veuillez quitter Cairo depuis le menu Cairo et lancer de nouveau cet installateur."
+  LangString DLOG_RunningText2 ${LANG_FRENCH} "Cairo est en cours de fonctionnement. Veuillez quitter Cairo depuis le menu Cairo."
   LangString DLOG_DotNetText ${LANG_FRENCH} "Cairo nécessite le Microsoft .NET Framework 4.7.1 ou plus récent. Veuillez l'installer depuis le site web de Microsoft et installer de nouveau Cairo."
   LangString SECT_cairo ${LANG_FRENCH} "Bureau Cairo (requis)"
   LangString SECT_startupCU ${LANG_FRENCH} "Lancer au démarrage (utilisateur actuel)"
@@ -245,9 +239,40 @@ Function .onInstSuccess
     Call LaunchCairo
 FunctionEnd
 
+Function AbortIfRunning
+  DetailPrint "Checking if Cairo is currently running"
+  StrCpy $R0 "0" ; current retry count
+
+  IfSilent 0 +3
+    StrCpy $R2 "10" ; 10 retries when running silent
+    Goto check
+  StrCpy $R2 "2" ; 2 retries when running normally
+
+  check:
+    System::Call 'kernel32::OpenMutex(i 0x100000, b 0, t "CairoShell") i .R1 ?e'
+    IntCmp $R1 0 notRunning running running
+
+  retry:
+    MessageBox MB_OK|MB_ICONEXCLAMATION "$(DLOG_RunningText2)" /SD IDOK
+    IntOp $R0 $R0 + 1
+    Sleep 1000
+    Goto check
+
+  running:
+    System::Call 'kernel32::CloseHandle(i $R1)'
+    IntCmp $R0 $R2 abort retry abort
+
+  abort:
+    MessageBox MB_OK|MB_ICONEXCLAMATION "$(DLOG_RunningText)"
+    Quit
+
+  notRunning:
+FunctionEnd
+
 ; https://nsis.sourceforge.io/How_to_Detect_any_.NET_Framework
 ; Check .NET framework release version and quit if too old
 Function AbortIfBadFramework
+  DetailPrint "Checking currently installed .NET Framework version"
  
   ; Save the variables in case something else is using them
   Push $0
@@ -359,7 +384,7 @@ Function AbortIfBadFramework
   IntCmp $R9 ${MIN_FRA_RELEASE} end wrong_framework end
  
   wrong_framework:
-  MessageBox MB_OK|MB_ICONSTOP "$(DLOG_DotNetText)" /SD IDOK
+  MessageBox MB_OK|MB_ICONSTOP "$(DLOG_DotNetText)"
   Quit
  
   end:
