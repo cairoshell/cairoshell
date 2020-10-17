@@ -9,6 +9,7 @@ using Microsoft.VisualBasic.Devices;
 using System;
 using System.Diagnostics;
 using System.IO;
+using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop
 {
@@ -28,6 +29,11 @@ namespace CairoDesktop
         {
             // check if there is an existing shell window. If not, we will assume the role of shell.
             Shell.IsCairoRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !forceDisableShellMode) || forceEnableShellMode;
+        }
+
+        private static void SetupUpdateManager()
+        {
+            UpdateManager.Instance.Initialize();
         }
 
         private static bool SingleInstanceCheck()
