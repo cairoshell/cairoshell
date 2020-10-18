@@ -1,5 +1,6 @@
 ﻿using System;
 using CairoDesktop.Common.DesignPatterns;
+using CairoDesktop.Common.Logging;
 using CairoDesktop.Interop;
 
 namespace CairoDesktop.SupportingClasses
@@ -15,20 +16,26 @@ namespace CairoDesktop.SupportingClasses
         }
 
         private bool isInitialized;
-        private WinSparkle.win_sparkle_can_shutdown_callback_t canShutdownDelegate;
-        private WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate;
+        private WinSparkle.win_sparkle_can_shutdown_callback_t CanShutdownDelegate;
+        private WinSparkle.win_sparkle_shutdown_request_callback_t ShutdownDelegate;
 
         private UpdateManager() { }
 
-        public void Initialize()
+        public void Initialize(WinSparkle.win_sparkle_shutdown_request_callback_t shutdownDelegate)
         {
             if (!isInitialized)
             {
+                if (shutdownDelegate == null)
+                {
+                    CairoLogger.Instance.Error("UpdateManager: Unable to initialize; shutdownDelegate is null");
+                    return;
+                }
+
                 WinSparkle.win_sparkle_set_appcast_url(UpdateUrl);
-                canShutdownDelegate = canShutdown;
-                shutdownDelegate = Startup.Shutdown;
-                WinSparkle.win_sparkle_set_can_shutdown_callback(canShutdownDelegate);
-                WinSparkle.win_sparkle_set_shutdown_request_callback(shutdownDelegate);
+                CanShutdownDelegate = canShutdown;
+                ShutdownDelegate = shutdownDelegate;
+                WinSparkle.win_sparkle_set_can_shutdown_callback(CanShutdownDelegate);
+                WinSparkle.win_sparkle_set_shutdown_request_callback(ShutdownDelegate);
                 WinSparkle.win_sparkle_init();
                 isInitialized = true;
             }

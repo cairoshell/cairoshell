@@ -502,7 +502,7 @@ namespace CairoDesktop
             bool? CloseCairoChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title, "Resources/exitIcon.png", Localization.DisplayString.sExitCairo_ExitCairo, Localization.DisplayString.sInterface_Cancel);
             if (CloseCairoChoice.HasValue && CloseCairoChoice.Value)
             {
-                Startup.Shutdown();
+                Startup.ExitCairo();
             }
         }
 

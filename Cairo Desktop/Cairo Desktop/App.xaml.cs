@@ -1,9 +1,16 @@
 ﻿using CairoDesktop.Common.Logging;
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Threading;
+using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
+using CairoDesktop.SupportingClasses;
+using CairoDesktop.WindowsTasks;
+using CairoDesktop.WindowsTray;
 
 namespace CairoDesktop
 {
@@ -16,15 +23,47 @@ namespace CairoDesktop
         {
             base.OnStartup(e);
 
-            if (Configuration.Settings.Instance.ForceSoftwareRendering)
+            if (Settings.Instance.ForceSoftwareRendering)
                 RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
         }
 
-        private static bool errorVisible = false;
-
-        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        protected override void OnSessionEnding(SessionEndingCancelEventArgs e)
         {
-            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            base.OnSessionEnding(e);
+
+            GracefullyExit();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+
+            GracefullyExit();
+        }
+
+        private void GracefullyExit()
+        {
+            WindowManager.ResetWorkArea();
+            AppBarHelper.ShowWindowsTaskbar();
+
+            DisposeSingletons();
+        }
+
+        private void DisposeSingletons()
+        {
+            Shell.DisposeIml();
+            FullScreenHelper.Instance.Dispose();
+            NotificationArea.Instance.Dispose();
+            UpdateManager.Instance.Dispose();
+            WindowManager.Instance.Dispose();
+            WindowsTasksService.Instance.Dispose();
+        }
+
+        private static bool errorVisible;
+
+        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = fvi.FileVersion;
 
@@ -52,7 +91,7 @@ namespace CairoDesktop
                     // Automatically restart for known render thread failure messages.
                     if (e.Exception.Message.StartsWith("UCEERR_RENDERTHREADFAILURE"))
                     {
-                        CairoDesktop.Startup.Restart();
+                        CairoDesktop.Startup.RestartCairo();
                         Environment.FailFast("Automatically restarted Cairo due to a render thread failure.");
                     }
                     else
@@ -60,7 +99,7 @@ namespace CairoDesktop
                         if (MessageBox.Show(dMsg, "Cairo Desktop Error", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                         {
                             // it's like getting a morning coffee.
-                            CairoDesktop.Startup.Restart();
+                            CairoDesktop.Startup.RestartCairo();
                             Environment.FailFast("User restarted Cairo due to an exception.");
                         }
                     }
@@ -71,7 +110,7 @@ namespace CairoDesktop
             catch
             {
                 // If this fails we're probably up the creek. Abandon ship!
-                CairoDesktop.Startup.Shutdown();
+                CairoDesktop.Startup.ExitCairo();
             }
 
             e.Handled = true;

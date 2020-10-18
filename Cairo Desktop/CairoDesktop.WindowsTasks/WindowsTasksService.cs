@@ -19,6 +19,7 @@ namespace CairoDesktop.WindowsTasks
     {
         private NativeWindowEx _HookWin;
         private object _windowsLock = new object();
+        private bool isInitialized;
 
         private static int WM_SHELLHOOKMESSAGE = -1;
         private static int WM_TASKBARCREATEDMESSAGE = -1;
@@ -29,13 +30,15 @@ namespace CairoDesktop.WindowsTasks
 
         public static WindowsTasksService Instance { get; } = new WindowsTasksService();
 
-        private WindowsTasksService()
-        {
-            initialize();
-        }
+        private WindowsTasksService() { }
 
-        private void initialize()
+        public void Initialize()
         {
+            if (isInitialized)
+            {
+                return;
+            }
+
             try
             {
                 CairoLogger.Instance.Debug("Starting WindowsTasksService");
@@ -97,6 +100,8 @@ namespace CairoDesktop.WindowsTasks
 
                 // register for app grabber changes so that our app association is accurate
                 AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged += CategoryList_CategoryChanged;
+
+                isInitialized = true;
             }
             catch (Exception ex)
             {
@@ -142,13 +147,14 @@ namespace CairoDesktop.WindowsTasks
 
         public void Dispose()
         {
-            CairoLogger.Instance.Debug("Disposing of WindowsTasksService");
-            AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged -= CategoryList_CategoryChanged;
-            DeregisterShellHookWindow(_HookWin.Handle);
-            if (uncloakEventHook != IntPtr.Zero) UnhookWinEvent(uncloakEventHook);
-            // May be contributing to #95
-            //RegisterShellHook(_HookWin.Handle, 0);// 0 = RSH_UNREGISTER - this seems to be undocumented....
-            _HookWin.DestroyHandle();
+            if (isInitialized)
+            {
+                CairoLogger.Instance.Debug("TasksService: Deregistering hooks");
+                AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged -= CategoryList_CategoryChanged;
+                DeregisterShellHookWindow(_HookWin.Handle);
+                if (uncloakEventHook != IntPtr.Zero) UnhookWinEvent(uncloakEventHook);
+                _HookWin.DestroyHandle();
+            }
         }
 
         private void CategoryList_CategoryChanged(object sender, EventArgs e)

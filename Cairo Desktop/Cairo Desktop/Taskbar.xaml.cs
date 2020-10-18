@@ -71,6 +71,7 @@ namespace CairoDesktop
             CanAutoHide = true;
 
             // setup taskbar item source
+            WindowsTasks.WindowsTasksService.Instance.Initialize();
             TasksList.ItemsSource = WindowsTasks.WindowsTasksService.Instance.GroupedWindows;
             TasksList2.ItemsSource = WindowsTasks.WindowsTasksService.Instance.GroupedWindows;
             if (WindowsTasks.WindowsTasksService.Instance.GroupedWindows != null) WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged += GroupedWindows_Changed;
@@ -206,17 +207,7 @@ namespace CairoDesktop
 
         protected override void CustomClosing()
         {
-            if (Startup.IsShuttingDown && Screen.Primary)
-            {
-                // Manually call dispose on window close...
-                WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
-                WindowsTasks.WindowsTasksService.Instance.Dispose();
-
-                // show the windows taskbar again
-                AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.OnTop);
-                AppBarHelper.SetWinTaskbarVisibility((int)NativeMethods.SetWindowPosFlags.SWP_SHOWWINDOW);
-            }
-            else if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
+            if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
             {
                 WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
             }

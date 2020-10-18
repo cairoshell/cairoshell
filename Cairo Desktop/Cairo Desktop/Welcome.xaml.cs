@@ -99,7 +99,7 @@ namespace CairoDesktop
             if (Settings.Instance.Language != _language)
             {
                 CairoMessage.Show(DisplayString.sWelcome_ChangingLanguageText, DisplayString.sWelcome_ChangingLanguage, MessageBoxButton.OK, MessageBoxImage.Information);
-                Startup.Restart();
+                Startup.RestartCairo();
             }
         }
     }
