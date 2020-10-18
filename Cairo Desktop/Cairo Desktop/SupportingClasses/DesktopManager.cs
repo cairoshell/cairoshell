@@ -48,7 +48,7 @@ namespace CairoDesktop.SupportingClasses
             }
             set
             {
-                if (isOverlayOpen != value)
+                if (isOverlayOpen != value && !isOverlayClosing)
                 {
                     isOverlayOpen = value;
 
@@ -325,11 +325,6 @@ namespace CairoDesktop.SupportingClasses
         #region Overlay
         private void OpenOverlay()
         {
-            if (isOverlayClosing)
-            {
-                return;
-            }
-
             if (DesktopOverlayWindow == null && DesktopWindow != null && DesktopIconsControl != null)
             {
                 DesktopOverlayWindow = new DesktopOverlay(this);
@@ -371,11 +366,6 @@ namespace CairoDesktop.SupportingClasses
 
         private void CloseOverlay()
         {
-            if (isOverlayClosing)
-            {
-                return;
-            }
-
             if (DesktopOverlayWindow != null && DesktopWindow != null && DesktopIconsControl != null)
             {
                 isOverlayClosing = true;
@@ -439,7 +429,6 @@ namespace CairoDesktop.SupportingClasses
                 CompositionTarget.Rendering -= CloseOverlay_CompositionTarget_Rendering;
 
                 isOverlayClosing = false;
-                IsOverlayOpen = false;
             }
 
             renderOverlayFrames++;
