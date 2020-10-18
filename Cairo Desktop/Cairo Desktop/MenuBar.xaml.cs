@@ -363,9 +363,9 @@ namespace CairoDesktop
             return top;
         }
 
-        public NativeMethods.MenuBarSizeData GetMenuBarSizeData()
+        public NativeMethods.TrayHostSizeData GetMenuBarSizeData()
         {
-            return new NativeMethods.MenuBarSizeData { edge = (int)appBarEdge, rc = new NativeMethods.Rect { Top = (int)(Top * dpiScale), Left = (int)(Left * dpiScale), Bottom = (int)((Top + Height) * dpiScale), Right = (int)((Left + Width) * dpiScale) } };
+            return new NativeMethods.TrayHostSizeData { edge = (int)appBarEdge, rc = new NativeMethods.Rect { Top = (int)(Top * dpiScale), Left = (int)(Left * dpiScale), Bottom = (int)((Top + Height) * dpiScale), Right = (int)((Left + Width) * dpiScale) } };
         }
 
         protected override void CustomClosing()

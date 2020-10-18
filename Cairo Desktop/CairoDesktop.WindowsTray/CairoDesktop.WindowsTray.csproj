@@ -84,10 +84,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Delegates.cs" />
-    <Compile Include="ITrayService.cs" />
     <Compile Include="NotificationArea.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NotifyIcon.cs" />
+    <Compile Include="ShellServiceObject.cs" />
     <Compile Include="SysTrayObject.cs" />
     <Compile Include="TrayService.cs" />
   </ItemGroup>

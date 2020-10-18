@@ -66,7 +66,7 @@ namespace CairoDesktop.SupportingClasses
             // get shell window back so we can do appbar stuff
             if (Settings.Instance.EnableSysTray)
             {
-                NotificationArea.Instance.Suspend();
+                TrayService.Instance.Suspend();
             }
         }
 
@@ -75,7 +75,7 @@ namespace CairoDesktop.SupportingClasses
             // take back over
             if (Settings.Instance.EnableSysTray)
             {
-                NotificationArea.Instance.MakeActive();
+                TrayService.Instance.Resume();
             }
         }
 

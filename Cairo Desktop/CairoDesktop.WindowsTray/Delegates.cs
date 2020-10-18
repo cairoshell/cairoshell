@@ -22,8 +22,8 @@ namespace CairoDesktop.WindowsTray
     public delegate IntPtr IconDataDelegate(int dwMessage, uint hWnd, uint uID, Guid guidItem);
 
     /// <summary>
-    /// Delegate signature for the menu bar size callback.
+    /// Delegate signature for the tray host size callback.
     /// </summary>
     /// <returns>Indication of message outcome.</returns>
-    public delegate MenuBarSizeData MenuBarSizeDelegate();
+    public delegate TrayHostSizeData TrayHostSizeDelegate();
 }
