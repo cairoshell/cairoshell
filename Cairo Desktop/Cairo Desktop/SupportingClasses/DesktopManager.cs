@@ -31,6 +31,7 @@ namespace CairoDesktop.SupportingClasses
         }
 
         private bool isOverlayOpen;
+        private bool isOverlayClosing;
         private int renderOverlayFrames;
         private HotKey overlayHotKey;
         private WindowManager windowManager;
@@ -324,6 +325,11 @@ namespace CairoDesktop.SupportingClasses
         #region Overlay
         private void OpenOverlay()
         {
+            if (isOverlayClosing)
+            {
+                return;
+            }
+
             if (DesktopOverlayWindow == null && DesktopWindow != null && DesktopIconsControl != null)
             {
                 DesktopOverlayWindow = new DesktopOverlay(this);
@@ -365,8 +371,15 @@ namespace CairoDesktop.SupportingClasses
 
         private void CloseOverlay()
         {
+            if (isOverlayClosing)
+            {
+                return;
+            }
+
             if (DesktopOverlayWindow != null && DesktopWindow != null && DesktopIconsControl != null)
             {
+                isOverlayClosing = true;
+
                 // create mask image to show while the icons control is rendered on the desktop window
                 Image maskImage = new Image();
                 maskImage.Source = DesktopIconsControl?.GenerateBitmap(DesktopOverlayWindow.grid);
@@ -424,6 +437,9 @@ namespace CairoDesktop.SupportingClasses
 
                 // we're done here, stop this callback from executing again
                 CompositionTarget.Rendering -= CloseOverlay_CompositionTarget_Rendering;
+
+                isOverlayClosing = false;
+                IsOverlayOpen = false;
             }
 
             renderOverlayFrames++;
