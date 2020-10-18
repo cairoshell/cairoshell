@@ -510,7 +510,7 @@ namespace CairoDesktop
         {
             saveChanges();
 
-            Startup.Restart();
+            Startup.RestartCairo();
         }
 
         /// <summary>

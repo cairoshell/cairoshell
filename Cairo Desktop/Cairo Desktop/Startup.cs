@@ -58,14 +58,6 @@ namespace CairoDesktop
 
             setTheme(app);
 
-
-            // Future: This should be moved to whatever plugin is responsible for Taskbar stuff
-            if (Settings.Instance.EnableTaskbar)
-            {
-                AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
-                AppBarHelper.SetWinTaskbarVisibility((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
-            }
-
             // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
             MenuBar initialMenuBar = new MenuBar(System.Windows.Forms.Screen.PrimaryScreen);
             app.MainWindow = initialMenuBar;
@@ -75,6 +67,7 @@ namespace CairoDesktop
             // Future: This should be moved to whatever plugin is responsible for Taskbar stuff
             if (Settings.Instance.EnableTaskbar)
             {
+                AppBarHelper.HideWindowsTaskbar();
                 Taskbar initialTaskbar = new Taskbar(System.Windows.Forms.Screen.PrimaryScreen);
                 WindowManager.Instance.TaskbarWindows.Add(initialTaskbar);
                 initialTaskbar.Show();
@@ -127,7 +120,7 @@ namespace CairoDesktop
             }
         }
 
-        public static void Restart()
+        public static void RestartCairo()
         {
             try
             {
@@ -138,27 +131,20 @@ namespace CairoDesktop
                 current.Start();
 
                 // close this instance
-                Shutdown();
+                ExitCairo();
             }
             catch
             { }
         }
 
-        public static void Shutdown()
+        public static void ExitCairo()
         {
             IsShuttingDown = true;
 
-            NotificationArea.Instance.Dispose();
-
             if (Shell.IsCairoRunningAsShell)
             {
-                WindowManager.ResetWorkArea();
                 indicateGracefulShutdown();
             }
-
-            Shell.DisposeIml();
-            WindowManager.Instance.Dispose();
-            UpdateManager.Instance.Dispose();
 
             Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
         }

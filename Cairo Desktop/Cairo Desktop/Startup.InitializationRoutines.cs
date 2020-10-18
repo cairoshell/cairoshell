@@ -33,7 +33,7 @@ namespace CairoDesktop
 
         private static void SetupUpdateManager()
         {
-            UpdateManager.Instance.Initialize();
+            UpdateManager.Instance.Initialize(ExitCairo);
         }
 
         private static bool SingleInstanceCheck()

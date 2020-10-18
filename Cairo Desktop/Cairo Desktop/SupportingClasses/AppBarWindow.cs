@@ -91,21 +91,7 @@ namespace CairoDesktop.SupportingClasses
 
             CustomClosing();
 
-            if (Startup.IsShuttingDown && Screen.Primary)
-            {
-                // unregister AppBar
-                if (AppBarHelper.appBars.Contains(Handle))
-                {
-                    AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale);
-                }
-
-                // unregister full-screen notifications
-                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
-
-                // dispose the full screen helper since we are the primary instance
-                FullScreenHelper.Instance.Dispose();
-            }
-            else if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
+            if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
             {
                 // unregister AppBar
                 if (AppBarHelper.appBars.Contains(Handle))
@@ -311,8 +297,7 @@ namespace CairoDesktop.SupportingClasses
             // apparently the TaskBars like to pop up when AppBars change
             if (Settings.Instance.EnableTaskbar && !Startup.IsShuttingDown)
             {
-                AppBarHelper.SetWinTaskbarState(AppBarHelper.WinTaskbarState.AutoHide);
-                AppBarHelper.SetWinTaskbarVisibility((int)NativeMethods.SetWindowPosFlags.SWP_HIDEWINDOW);
+                AppBarHelper.HideWindowsTaskbar();
             }
 
             if (!isSameCoords)

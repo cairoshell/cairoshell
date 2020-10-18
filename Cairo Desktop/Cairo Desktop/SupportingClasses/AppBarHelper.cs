@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Windows.Interop;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
 using CairoDesktop.WindowsTray;
 using static CairoDesktop.Interop.NativeMethods;
 
@@ -21,6 +22,7 @@ namespace CairoDesktop.SupportingClasses
         private static object appBarLock = new object();
         public static List<IntPtr> appBars = new List<IntPtr>();
         private static int uCallBack = 0;
+        private static WinTaskbarState? startupTaskbarState;
 
         public static int RegisterBar(AppBarWindow abWindow, double width, double height, ABEdge edge = ABEdge.ABE_TOP)
         {
@@ -129,6 +131,21 @@ namespace CairoDesktop.SupportingClasses
             PrepareForInterop();
             SHAppBarMessage((int)ABMsg.ABM_SETSTATE, ref abd);
             InteropDone();
+        }
+
+        public static WinTaskbarState GetWinTaskbarState()
+        {
+            APPBARDATA abd = new APPBARDATA
+            {
+                cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
+                hWnd = FindTaskbarHwnd()
+            };
+
+            PrepareForInterop();
+            uint uState = SHAppBarMessage((int)ABMsg.ABM_GETSTATE, ref abd);
+            InteropDone();
+
+            return (WinTaskbarState) uState;
         }
 
         private static IntPtr FindTaskbarHwnd()
@@ -339,6 +356,32 @@ namespace CairoDesktop.SupportingClasses
             }
 
             return edgeHeight;
+        }
+
+        public static void HideWindowsTaskbar()
+        {
+            if (!Shell.IsCairoRunningAsShell)
+            {
+                if (startupTaskbarState == null)
+                {
+                    startupTaskbarState = GetWinTaskbarState();
+                }
+
+                if (Settings.Instance.EnableTaskbar)
+                {
+                    SetWinTaskbarState(WinTaskbarState.AutoHide);
+                    SetWinTaskbarVisibility((int) SetWindowPosFlags.SWP_HIDEWINDOW);
+                }
+            }
+        }
+
+        public static void ShowWindowsTaskbar()
+        {
+            if (!Shell.IsCairoRunningAsShell)
+            {
+                SetWinTaskbarState(startupTaskbarState ?? WinTaskbarState.OnTop);
+                SetWinTaskbarVisibility((int) SetWindowPosFlags.SWP_SHOWWINDOW);
+            }
         }
     }
 }

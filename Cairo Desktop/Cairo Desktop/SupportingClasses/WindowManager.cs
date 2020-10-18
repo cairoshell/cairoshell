@@ -497,15 +497,19 @@ namespace CairoDesktop.SupportingClasses
 
         public static void ResetWorkArea()
         {
-            // TODO this is wrong for multi-display
-            // set work area back to full screen size. we can't assume what pieces of the old work area may or may not be still used
-            NativeMethods.Rect oldWorkArea;
-            oldWorkArea.Left = SystemInformation.VirtualScreen.Left;
-            oldWorkArea.Top = SystemInformation.VirtualScreen.Top;
-            oldWorkArea.Right = SystemInformation.VirtualScreen.Right;
-            oldWorkArea.Bottom = SystemInformation.VirtualScreen.Bottom;
+            if (Shell.IsCairoRunningAsShell)
+            {
+                // TODO this is wrong for multi-display
+                // set work area back to full screen size. we can't assume what pieces of the old work area may or may not be still used
+                NativeMethods.Rect oldWorkArea;
+                oldWorkArea.Left = SystemInformation.VirtualScreen.Left;
+                oldWorkArea.Top = SystemInformation.VirtualScreen.Top;
+                oldWorkArea.Right = SystemInformation.VirtualScreen.Right;
+                oldWorkArea.Bottom = SystemInformation.VirtualScreen.Bottom;
 
-            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 1, ref oldWorkArea, (uint)(NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
+                NativeMethods.SystemParametersInfo((int) NativeMethods.SPI.SETWORKAREA, 1, ref oldWorkArea,
+                    (uint) (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
+            }
         }
         #endregion
 
