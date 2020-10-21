@@ -1395,5 +1395,96 @@ namespace CairoDesktop.Interop
 
         [DllImport("gdi32.dll")]
         public static extern IntPtr CreateSolidBrush(uint crColor);
+
+        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        public static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress,
+            uint dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
+
+        [Flags]
+        public enum AllocationType
+        {
+            Commit = 0x1000,
+            Reserve = 0x2000,
+            Decommit = 0x4000,
+            Release = 0x8000,
+            Reset = 0x80000,
+            Physical = 0x400000,
+            TopDown = 0x100000,
+            WriteWatch = 0x200000,
+            LargePages = 0x20000000
+        }
+
+        [Flags]
+        public enum MemoryProtection
+        {
+            Execute = 0x10,
+            ExecuteRead = 0x20,
+            ExecuteReadWrite = 0x40,
+            ExecuteWriteCopy = 0x80,
+            NoAccess = 0x01,
+            ReadOnly = 0x02,
+            ReadWrite = 0x04,
+            WriteCopy = 0x08,
+            GuardModifierflag = 0x100,
+            NoCacheModifierflag = 0x200,
+            WriteCombineModifierflag = 0x400
+        }
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool ReadProcessMemory(
+            IntPtr hProcess,
+            IntPtr lpBaseAddress,
+            IntPtr lpBuffer,
+            Int32 nSize,
+            out IntPtr lpNumberOfBytesRead);
+
+        [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        public static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress,
+            int dwSize, AllocationType dwFreeType);
+
+        public enum TB : uint
+        {
+            GETBUTTON = WM.USER + 23,
+            BUTTONCOUNT = WM.USER + 24
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct TrayItem
+        {
+            public IntPtr hWnd;
+            public uint uID;
+            public uint uCallbackMessage;
+            public uint dwState;
+            public uint uVersion;
+            public IntPtr hIcon;
+            public ulong uIconDemoteTimerID;
+            public uint dwUserPref;
+            public uint dwLastSoundTime;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szExeName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szIconText;
+            public uint uNumSeconds;
+            public Guid guidItem;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TBBUTTON
+        {
+            public int iBitmap;
+            public int idCommand;
+            [StructLayout(LayoutKind.Explicit)]
+            private struct TBBUTTON_U
+            {
+                [FieldOffset(0)] public byte fsState;
+                [FieldOffset(1)] public byte fsStyle;
+                [FieldOffset(0)] private IntPtr bReserved;
+            }
+            private TBBUTTON_U union;
+            public byte fsState { get { return union.fsState; } set { union.fsState = value; } }
+            public byte fsStyle { get { return union.fsStyle; } set { union.fsStyle = value; } }
+            public IntPtr dwData;
+            public IntPtr iString;
+        }
     }
 }
