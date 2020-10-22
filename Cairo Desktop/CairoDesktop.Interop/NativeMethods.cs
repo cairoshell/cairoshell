@@ -1438,6 +1438,14 @@ namespace CairoDesktop.Interop
             Int32 nSize,
             out IntPtr lpNumberOfBytesRead);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool ReadProcessMemory(
+            IntPtr hProcess,
+            UIntPtr lpBaseAddress,
+            IntPtr lpBuffer,
+            Int32 nSize,
+            out IntPtr lpNumberOfBytesRead);
+
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
         public static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress,
             int dwSize, AllocationType dwFreeType);
@@ -1457,7 +1465,7 @@ namespace CairoDesktop.Interop
             public uint dwState;
             public uint uVersion;
             public IntPtr hIcon;
-            public ulong uIconDemoteTimerID;
+            public IntPtr uIconDemoteTimerID;
             public uint dwUserPref;
             public uint dwLastSoundTime;
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
@@ -1483,7 +1491,7 @@ namespace CairoDesktop.Interop
             private TBBUTTON_U union;
             public byte fsState { get { return union.fsState; } set { union.fsState = value; } }
             public byte fsStyle { get { return union.fsStyle; } set { union.fsStyle = value; } }
-            public IntPtr dwData;
+            public UIntPtr dwData;
             public IntPtr iString;
         }
     }

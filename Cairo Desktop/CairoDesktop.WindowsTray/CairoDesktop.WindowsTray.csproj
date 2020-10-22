@@ -90,6 +90,7 @@
     <Compile Include="NotifyIcon.cs" />
     <Compile Include="ShellServiceObject.cs" />
     <Compile Include="SysTrayObject.cs" />
+    <Compile Include="TrayNotify.cs" />
     <Compile Include="TrayService.cs" />
   </ItemGroup>
   <ItemGroup>

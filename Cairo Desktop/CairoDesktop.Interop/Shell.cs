@@ -677,21 +677,25 @@ namespace CairoDesktop.Interop
 
         public static string GetPathForHandle(IntPtr hWnd)
         {
+            StringBuilder outFileName = new StringBuilder(1024);
+
             // get process id
             uint procId;
             GetWindowThreadProcessId(hWnd, out procId);
 
-            // open process
-            // QueryLimitedInformation flag allows us to access elevated applications as well
-            IntPtr hProc = OpenProcess(ProcessAccessFlags.QueryLimitedInformation, false, (int)procId);
+            if (procId != 0)
+            {
+                // open process
+                // QueryLimitedInformation flag allows us to access elevated applications as well
+                IntPtr hProc = OpenProcess(ProcessAccessFlags.QueryLimitedInformation, false, (int) procId);
 
-            // get filename
-            StringBuilder outFileName = new StringBuilder(1024);
-            int len = outFileName.Capacity;
-            QueryFullProcessImageName(hProc, 0, outFileName, ref len);
+                // get filename
+                int len = outFileName.Capacity;
+                QueryFullProcessImageName(hProc, 0, outFileName, ref len);
 
-            outFileName.Replace("Excluded,", "");
-            outFileName.Replace(",SFC protected", "");
+                outFileName.Replace("Excluded,", "");
+                outFileName.Replace(",SFC protected", "");
+            }
 
             return outFileName.ToString();
         }
