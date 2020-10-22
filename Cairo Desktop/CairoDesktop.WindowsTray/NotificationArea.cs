@@ -134,12 +134,12 @@ namespace CairoDesktop.WindowsTray
 
         private bool PinnedIcons_Filter(object item)
         {
-            return (item as NotifyIcon).IsPinned;
+            return (item as NotifyIcon).IsPinned && !(item as NotifyIcon).IsHidden;
         }
 
         private bool UnpinnedIcons_Filter(object item)
         {
-            return !(item as NotifyIcon).IsPinned;
+            return !(item as NotifyIcon).IsPinned && !(item as NotifyIcon).IsHidden;
         }
         #endregion
 
@@ -195,94 +195,94 @@ namespace CairoDesktop.WindowsTray
                     {
                         bool exists = false;
 
-                        if (nicData.dwState != 1)
+                        if (nicData.guidItem == new Guid(VOLUME_GUID))
+                            return false;
+
+                        foreach (NotifyIcon ti in TrayIcons)
                         {
-                            if (nicData.guidItem == new Guid(VOLUME_GUID))
-                                return false;
-
-                            foreach (NotifyIcon ti in TrayIcons)
+                            if (ti.Equals(nicData))
                             {
-                                if (ti.Equals(nicData))
-                                {
-                                    exists = true;
-                                    trayIcon = ti;
-                                    break;
-                                }
+                                exists = true;
+                                trayIcon = ti;
+                                break;
                             }
+                        }
 
-                            if ((NIF.TIP & nicData.uFlags) != 0 && !string.IsNullOrEmpty(nicData.szTip))
-                                trayIcon.Title = nicData.szTip;
+                        if ((NIF.STATE & nicData.uFlags) != 0)
+                            trayIcon.IsHidden = nicData.dwState == 1;
 
-                            if ((NIF.ICON & nicData.uFlags) != 0)
+                        if ((NIF.TIP & nicData.uFlags) != 0 && !string.IsNullOrEmpty(nicData.szTip))
+                            trayIcon.Title = nicData.szTip;
+
+                        if ((NIF.ICON & nicData.uFlags) != 0)
+                        {
+                            if ((IntPtr)nicData.hIcon != IntPtr.Zero)
                             {
-                                if ((IntPtr)nicData.hIcon != IntPtr.Zero)
+                                try
                                 {
-                                    try
-                                    {
-                                        System.Windows.Media.Imaging.BitmapSource bs =
-                                            System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
-                                                (IntPtr) nicData.hIcon, Int32Rect.Empty,
-                                                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-                                        DestroyIcon((IntPtr)nicData.hIcon);
+                                    System.Windows.Media.Imaging.BitmapSource bs =
+                                        System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
+                                            (IntPtr) nicData.hIcon, Int32Rect.Empty,
+                                            System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                                    DestroyIcon((IntPtr)nicData.hIcon);
 
-                                        if (bs != null)
-                                        {
-                                            bs.Freeze();
-                                            trayIcon.Icon = bs;
-                                        }
-                                    }
-                                    catch
+                                    if (bs != null)
                                     {
-                                        if (trayIcon.Icon == null)
-                                            trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
+                                        bs.Freeze();
+                                        trayIcon.Icon = bs;
                                     }
                                 }
-                                else
+                                catch
                                 {
-                                    trayIcon.Icon = null;
-                                }
-                            }
-
-                            trayIcon.HWnd = (IntPtr)nicData.hWnd;
-                            trayIcon.UID = nicData.uID;
-                            trayIcon.GUID = nicData.guidItem;
-
-                            // guess version in case we are receiving icons that aren't sending NIM_SETVERSION to new explorers
-                            if ((NIF.VISTA_MASK & nicData.uFlags) != 0)
-                                trayIcon.Version = 4;
-                            else if ((NIF.XP_MASK & nicData.uFlags) != 0)
-                                trayIcon.Version = 3;
-
-                            if (nicData.uVersion > 0 && nicData.uVersion <= 4)
-                                trayIcon.Version = nicData.uVersion;
-
-                            if ((NIF.MESSAGE & nicData.uFlags) != 0)
-                                trayIcon.CallbackMessage = nicData.uCallbackMessage;
-
-                            if (!exists)
-                            {
-                                // default placement to a menu bar-like rect
-                                trayIcon.Placement = defaultPlacement;
-
-                                // set properties used for pinning
-                                trayIcon.Path = Shell.GetPathForHandle(trayIcon.HWnd);
-                                trayIcon.SetPinValues();
-
-                                if (trayIcon.Icon == null)
-                                    trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
-
-                                TrayIcons.Add(trayIcon);
-                                CairoLogger.Instance.Debug($"NotificationArea: Added: {trayIcon.Title} Path: {trayIcon.Path} GUID: {trayIcon.GUID} UID: {trayIcon.UID}");
-
-                                if ((NIM)message == NIM.NIM_MODIFY)
-                                {
-                                    // return an error to the notifyicon as we received a modify for an icon we did not yet have
-                                    return false;
+                                    if (trayIcon.Icon == null)
+                                        trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
                                 }
                             }
                             else
-                                CairoLogger.Instance.Debug($"NotificationArea: Modified: {trayIcon.Title}");
+                            {
+                                trayIcon.Icon = null;
+                            }
                         }
+
+                        trayIcon.HWnd = (IntPtr)nicData.hWnd;
+                        trayIcon.UID = nicData.uID;
+                        trayIcon.GUID = nicData.guidItem;
+
+                        // guess version in case we are receiving icons that aren't sending NIM_SETVERSION to new explorers
+                        if ((NIF.VISTA_MASK & nicData.uFlags) != 0)
+                            trayIcon.Version = 4;
+                        else if ((NIF.XP_MASK & nicData.uFlags) != 0)
+                            trayIcon.Version = 3;
+
+                        if (nicData.uVersion > 0 && nicData.uVersion <= 4)
+                            trayIcon.Version = nicData.uVersion;
+
+                        if ((NIF.MESSAGE & nicData.uFlags) != 0)
+                            trayIcon.CallbackMessage = nicData.uCallbackMessage;
+
+                        if (!exists)
+                        {
+                            // default placement to a menu bar-like rect
+                            trayIcon.Placement = defaultPlacement;
+
+                            // set properties used for pinning
+                            trayIcon.Path = Shell.GetPathForHandle(trayIcon.HWnd);
+                            trayIcon.SetPinValues();
+
+                            if (trayIcon.Icon == null)
+                                trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
+
+                            TrayIcons.Add(trayIcon);
+                            CairoLogger.Instance.Debug($"NotificationArea: Added: {trayIcon.Title} Path: {trayIcon.Path} Hidden: {trayIcon.IsHidden} GUID: {trayIcon.GUID} UID: {trayIcon.UID}");
+
+                            if ((NIM)message == NIM.NIM_MODIFY)
+                            {
+                                // return an error to the notifyicon as we received a modify for an icon we did not yet have
+                                return false;
+                            }
+                        }
+                        else
+                            CairoLogger.Instance.Debug($"NotificationArea: Modified: {trayIcon.Title}");
                     }
                     catch (Exception ex)
                     {

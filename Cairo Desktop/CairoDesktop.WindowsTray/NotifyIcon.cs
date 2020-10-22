@@ -95,6 +95,24 @@ namespace CairoDesktop.WindowsTray
             }
         }
 
+        private bool _isHidden;
+
+        /// <summary>
+        /// Gets or sets whether or not the icon is hidden.
+        /// </summary>
+        public bool IsHidden
+        {
+            get
+            {
+                return _isHidden;
+            }
+            set
+            {
+                _isHidden = value;
+                OnPropertyChanged();
+            }
+        }
+
         private int _pinOrder;
 
         /// <summary>
