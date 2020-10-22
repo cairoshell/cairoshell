@@ -82,6 +82,10 @@ namespace CairoDesktop.WindowsTray
                 trayDelegate = SysTrayCallback;
                 iconDataDelegate = IconDataCallback;
                 trayHostSizeDelegate = TrayHostSizeCallback;
+
+                ExplorerTrayService.Instance.SetSystrayCallback(trayDelegate);
+                ExplorerTrayService.Instance.Run();
+
                 TrayService.Instance.SetSystrayCallback(trayDelegate);
                 TrayService.Instance.SetIconDataCallback(iconDataDelegate);
                 TrayService.Instance.SetTrayHostSizeCallback(trayHostSizeDelegate);
