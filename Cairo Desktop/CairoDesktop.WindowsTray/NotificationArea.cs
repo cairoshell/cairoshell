@@ -195,7 +195,8 @@ namespace CairoDesktop.WindowsTray
                     {
                         bool exists = false;
 
-                        if (nicData.guidItem == new Guid(VOLUME_GUID))
+                        // hide icons while we are shell which require UWP support & we have a separate implementation for
+                        if (nicData.guidItem == new Guid(VOLUME_GUID) && Shell.IsCairoRunningAsShell && Shell.IsWindows10OrBetter)
                             return false;
 
                         foreach (NotifyIcon ti in TrayIcons)

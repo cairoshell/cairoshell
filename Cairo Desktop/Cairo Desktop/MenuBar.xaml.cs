@@ -126,7 +126,7 @@ namespace CairoDesktop
                 MenuExtrasHost.Children.Add(systemTray);
             }
 
-            if (Settings.Instance.EnableMenuExtraVolume)
+            if (Settings.Instance.EnableMenuExtraVolume && Shell.IsWindows10OrBetter && Shell.IsCairoRunningAsShell)
             {
                 // add volume
                 menuExtraVolume = new MenuExtraVolume();

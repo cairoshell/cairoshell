@@ -322,6 +322,9 @@ namespace CairoDesktop.WindowsTray
         {
             CairoLogger.Instance.Debug(string.Format("{0} mouse button clicked icon: {1}", button.ToString(), Title));
 
+            // ensure our Shell_TrayWnd is topmost, which some icons require
+            TrayService.Instance.MakeTrayTopmost();
+
             uint wparam = UID;
 
             if (Version > 3)
