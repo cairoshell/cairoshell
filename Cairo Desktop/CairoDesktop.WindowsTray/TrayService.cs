@@ -97,9 +97,7 @@ namespace CairoDesktop.WindowsTray
             // if we are above another tray, we will receive messages
             if (HwndTray != IntPtr.Zero)
             {
-                SetWindowPos(HwndTray, (IntPtr) WindowZOrder.HWND_TOPMOST, 0, 0, 0, 0,
-                    (int) SetWindowPosFlags.SWP_NOMOVE | (int) SetWindowPosFlags.SWP_NOACTIVATE |
-                    (int) SetWindowPosFlags.SWP_NOSIZE);
+                MakeTrayTopmost();
                 SetWindowsTrayBottommost();
             }
         }
@@ -355,6 +353,16 @@ namespace CairoDesktop.WindowsTray
                 SetWindowPos(taskbarHwnd, (IntPtr) WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0,
                     (int) SetWindowPosFlags.SWP_NOMOVE | (int) SetWindowPosFlags.SWP_NOSIZE |
                     (int) SetWindowPosFlags.SWP_NOACTIVATE);
+            }
+        }
+
+        public void MakeTrayTopmost()
+        {
+            if (HwndTray != IntPtr.Zero)
+            {
+                SetWindowPos(HwndTray, (IntPtr)WindowZOrder.HWND_TOPMOST, 0, 0, 0, 0,
+                    (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE |
+                    (int)SetWindowPosFlags.SWP_NOSIZE);
             }
         }
         #endregion

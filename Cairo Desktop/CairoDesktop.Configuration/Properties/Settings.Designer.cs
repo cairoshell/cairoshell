@@ -494,7 +494,7 @@ namespace CairoDesktop.Configuration.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("7820ae76-23e3-4229-82c1-e41cb67d5b9c|7820ae75-23e3-4229-82c1-e41cb67d5b9c|7820ae7" +
-            "4-23e3-4229-82c1-e41cb67d5b9c")]
+            "4-23e3-4229-82c1-e41cb67d5b9c|7820ae73-23e3-4229-82c1-e41cb67d5b9c")]
         public string PinnedNotifyIcons {
             get {
                 return ((string)(this["PinnedNotifyIcons"]));
