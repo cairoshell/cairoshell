@@ -417,7 +417,7 @@ namespace CairoDesktop.WindowsTasks
                 // UWP shell windows that are not cloaked should be hidden from the taskbar, too.
                 StringBuilder cName = new StringBuilder(256);
                 NativeMethods.GetClassName(Handle, cName, cName.Capacity);
-                if (cName.ToString() == "ApplicationFrameWindow" || cName.ToString() == "Windows.UI.Core.CoreWindow")
+                if (cName.ToString() == "ApplicationFrameWindow" || cName.ToString() == "Windows.UI.Core.CoreWindow" || cName.ToString() == "Shell_CharmWindow" || cName.ToString() == "ImmersiveLauncher")
                 {
                     if ((ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) == 0)
                     {
