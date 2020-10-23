@@ -274,7 +274,7 @@ namespace CairoDesktop.WindowsTray
                                 trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
 
                             TrayIcons.Add(trayIcon);
-                            CairoLogger.Instance.Debug($"NotificationArea: Added: {trayIcon.Title} Path: {trayIcon.Path} Hidden: {trayIcon.IsHidden} GUID: {trayIcon.GUID} UID: {trayIcon.UID}");
+                            CairoLogger.Instance.Debug($"NotificationArea: Added: {trayIcon.Title} Path: {trayIcon.Path} Hidden: {trayIcon.IsHidden} GUID: {trayIcon.GUID} UID: {trayIcon.UID} Version: {trayIcon.Version}");
 
                             if ((NIM)message == NIM.NIM_MODIFY)
                             {

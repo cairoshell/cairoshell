@@ -120,12 +120,15 @@ namespace CairoDesktop.WindowsTray
             {
                 tbButton = (TBBUTTON)Marshal.PtrToStructure(hTBButton, typeof(TBBUTTON));
 
-                if (ReadProcessMemory(hProcess, tbButton.dwData, hTrayItem, Marshal.SizeOf(trayItem), out _))
+                if (tbButton.dwData != UIntPtr.Zero)
                 {
-                    trayItem = (TrayItem)Marshal.PtrToStructure(hTrayItem, typeof(TrayItem));
+                    if (ReadProcessMemory(hProcess, tbButton.dwData, hTrayItem, Marshal.SizeOf(trayItem), out _))
+                    {
+                        trayItem = (TrayItem) Marshal.PtrToStructure(hTrayItem, typeof(TrayItem));
 
-                    CairoLogger.Instance.Debug(
-                        $"ExplorerTrayService: Got tray item: {trayItem.szIconText}");
+                        CairoLogger.Instance.Debug(
+                            $"ExplorerTrayService: Got tray item: {trayItem.szIconText}");
+                    }
                 }
             }
 

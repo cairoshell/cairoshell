@@ -263,19 +263,22 @@ namespace CairoDesktop.WindowsTray
             if (!IsWindow(HWnd))
             {
                 NotificationArea.Instance.TrayIcons.Remove(this);
-                return;
             }
             else
             {
                 uint wparam = UID;
+                uint hiWord = 0;
 
                 if (Version > 3)
+                {
                     wparam = mouse;
+                    hiWord = UID;
+                }
 
-                PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSEHOVER);
+                SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSEHOVER | (hiWord << 16));
 
                 if (Version > 3)
-                    PostMessage(HWnd, CallbackMessage, wparam, NIN_POPUPOPEN);
+                    SendNotifyMessage(HWnd, CallbackMessage, wparam, NIN_POPUPOPEN | (hiWord << 16));
             }
         }
 
@@ -284,19 +287,22 @@ namespace CairoDesktop.WindowsTray
             if (!IsWindow(HWnd))
             {
                 NotificationArea.Instance.TrayIcons.Remove(this);
-                return;
             }
             else
             {
                 uint wparam = UID;
+                uint hiWord = 0;
 
                 if (Version > 3)
+                {
                     wparam = mouse;
+                    hiWord = UID;
+                }
 
-                PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSELEAVE);
+                SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSELEAVE | (hiWord << 16));
 
                 if (Version > 3)
-                    PostMessage(HWnd, CallbackMessage, wparam, NIN_POPUPCLOSE);
+                    SendNotifyMessage(HWnd, CallbackMessage, wparam, NIN_POPUPCLOSE | (hiWord << 16));
             }
         }
 
@@ -305,16 +311,19 @@ namespace CairoDesktop.WindowsTray
             if (!IsWindow(HWnd))
             {
                 NotificationArea.Instance.TrayIcons.Remove(this);
-                return;
             }
             else
             {
                 uint wparam = UID;
+                uint hiWord = 0;
 
                 if (Version > 3)
+                {
                     wparam = mouse;
+                    hiWord = UID;
+                }
 
-                PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSEMOVE);
+                SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSEMOVE | (hiWord << 16));
             }
         }
 
@@ -326,23 +335,27 @@ namespace CairoDesktop.WindowsTray
             TrayService.Instance.MakeTrayTopmost();
 
             uint wparam = UID;
+            uint hiWord = 0;
 
             if (Version > 3)
+            {
                 wparam = mouse;
+                hiWord = UID;
+            }
 
             if (button == MouseButton.Left)
             {
                 if (DateTime.Now.Subtract(_lastLClick).TotalMilliseconds <= doubleClickTime)
                 {
-                    PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.LBUTTONDBLCLK);
+                    SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.LBUTTONDBLCLK | (hiWord << 16));
                 }
                 else
                 {
-                    PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.LBUTTONDOWN);
+                    SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.LBUTTONDOWN | (hiWord << 16));
                 }
 
-                PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.LBUTTONUP);
-                if (Version >= 4) PostMessage(HWnd, CallbackMessage, mouse, (NIN_SELECT | (UID << 16)));
+                SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.LBUTTONUP | (hiWord << 16));
+                if (Version >= 4) SendNotifyMessage(HWnd, CallbackMessage, mouse, NIN_SELECT | (hiWord << 16));
 
                 _lastLClick = DateTime.Now;
             }
@@ -350,15 +363,15 @@ namespace CairoDesktop.WindowsTray
             {
                 if (DateTime.Now.Subtract(_lastRClick).TotalMilliseconds <= doubleClickTime)
                 {
-                    PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.RBUTTONDBLCLK);
+                    SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.RBUTTONDBLCLK | (hiWord << 16));
                 }
                 else
                 {
-                    PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.RBUTTONDOWN);
+                    SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.RBUTTONDOWN | (hiWord << 16));
                 }
 
-                PostMessage(HWnd, CallbackMessage, wparam, (uint)WM.RBUTTONUP);
-                if (Version >= 4) PostMessage(HWnd, CallbackMessage, mouse, ((uint)WM.CONTEXTMENU | (UID << 16)));
+                SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.RBUTTONUP | (hiWord << 16));
+                if (Version >= 4) SendNotifyMessage(HWnd, CallbackMessage, mouse, (uint)WM.CONTEXTMENU | (hiWord << 16));
 
                 _lastRClick = DateTime.Now;
             }

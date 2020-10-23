@@ -1776,6 +1776,9 @@ namespace CairoDesktop.Interop
         [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
         public static extern bool SendNotifyMessage(IntPtr hWnd, uint Msg, UIntPtr wParam, IntPtr lParam);
 
+        [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern bool SendNotifyMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
+
         public static IntPtr HWND_BROADCAST = new IntPtr(0xffff);
         public static int WINEVENT_OUTOFCONTEXT = 0;
         public static int WINEVENT_SKIPOWNPROCESS = 2;
