@@ -420,6 +420,29 @@ namespace CairoDesktop.Interop
             return desktopHwnd;
         }
 
+        public static int GetMenuDropAlignment()
+        {
+            int menuDropAlignment = 0;
+
+            try
+            {
+                RegistryKey windowsKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Windows", false);
+
+                if (windowsKey != null)
+                {
+                    var menuDropAlignmentValue = windowsKey.GetValue("MenuDropAlignment");
+
+                    if (menuDropAlignmentValue != null)
+                    {
+                        menuDropAlignment = Convert.ToInt32(menuDropAlignmentValue);
+                    }
+                }
+            }
+            catch { }
+
+            return menuDropAlignment;
+        }
+
         public static bool ShowFileProperties(string Filename)
         {
             SHELLEXECUTEINFO info = new SHELLEXECUTEINFO();
