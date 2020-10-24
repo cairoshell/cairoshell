@@ -380,6 +380,18 @@ namespace CairoDesktop
         {
             CanAutoHide = true;
         }
+
+        private void SetTaskListOffset()
+        {
+            if (Shell.GetMenuDropAlignment() == 1)
+            {
+                CairoTaskbarTaskList.HorizontalOffset = 26;
+            }
+            else
+            {
+                CairoTaskbarTaskList.HorizontalOffset = -426;
+            }
+        }
         #endregion
 
         #region Window procedure
@@ -415,6 +427,7 @@ namespace CairoDesktop
 
         private void btnTaskList_Click(object sender, RoutedEventArgs e)
         {
+            SetTaskListOffset();
             takeFocus();
 
             CanAutoHide = false;
