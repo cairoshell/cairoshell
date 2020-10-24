@@ -169,7 +169,7 @@ namespace CairoDesktop.WindowsTray
                                     typeof(SHELLTRAYDATA));
                             if (trayDelegate != null)
                             {
-                                if (trayDelegate(trayData.dwMessage, trayData.nid))
+                                if (trayDelegate(trayData.dwMessage, new SafeNotifyIconData(trayData.nid)))
                                 {
                                     return (IntPtr) 1;
                                 }

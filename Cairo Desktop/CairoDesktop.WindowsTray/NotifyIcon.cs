@@ -188,6 +188,7 @@ namespace CairoDesktop.WindowsTray
             }
         }
 
+        #region Pinning
         public void Pin(int position)
         {
             bool updated = false;
@@ -252,6 +253,7 @@ namespace CairoDesktop.WindowsTray
                 }
             }
         }
+        #endregion
 
         #region Mouse events
 
@@ -260,71 +262,38 @@ namespace CairoDesktop.WindowsTray
 
         public void IconMouseEnter(uint mouse)
         {
-            if (!IsWindow(HWnd))
-            {
-                NotificationArea.Instance.TrayIcons.Remove(this);
-            }
-            else
-            {
-                uint wparam = UID;
-                uint hiWord = 0;
+            if (RemoveIfInvalid()) return;
 
-                if (Version > 3)
-                {
-                    wparam = mouse;
-                    hiWord = UID;
-                }
+            uint wparam = GetMessageWParam(mouse);
+            uint hiWord = GetMessageHiWord();
 
-                SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSEHOVER | (hiWord << 16));
+            SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSEHOVER | (hiWord << 16));
 
-                if (Version > 3)
-                    SendNotifyMessage(HWnd, CallbackMessage, wparam, NIN_POPUPOPEN | (hiWord << 16));
-            }
+            if (Version > 3)
+                SendNotifyMessage(HWnd, CallbackMessage, wparam, NIN_POPUPOPEN | (hiWord << 16));
         }
 
         public void IconMouseLeave(uint mouse)
         {
-            if (!IsWindow(HWnd))
-            {
-                NotificationArea.Instance.TrayIcons.Remove(this);
-            }
-            else
-            {
-                uint wparam = UID;
-                uint hiWord = 0;
+            if (RemoveIfInvalid()) return;
 
-                if (Version > 3)
-                {
-                    wparam = mouse;
-                    hiWord = UID;
-                }
+            uint wparam = GetMessageWParam(mouse);
+            uint hiWord = GetMessageHiWord();
 
-                SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSELEAVE | (hiWord << 16));
+            SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSELEAVE | (hiWord << 16));
 
-                if (Version > 3)
-                    SendNotifyMessage(HWnd, CallbackMessage, wparam, NIN_POPUPCLOSE | (hiWord << 16));
-            }
+            if (Version > 3)
+                SendNotifyMessage(HWnd, CallbackMessage, wparam, NIN_POPUPCLOSE | (hiWord << 16));
         }
 
         public void IconMouseMove(uint mouse)
         {
-            if (!IsWindow(HWnd))
-            {
-                NotificationArea.Instance.TrayIcons.Remove(this);
-            }
-            else
-            {
-                uint wparam = UID;
-                uint hiWord = 0;
+            if (RemoveIfInvalid()) return;
 
-                if (Version > 3)
-                {
-                    wparam = mouse;
-                    hiWord = UID;
-                }
+            uint wparam = GetMessageWParam(mouse);
+            uint hiWord = GetMessageHiWord();
 
-                SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSEMOVE | (hiWord << 16));
-            }
+            SendNotifyMessage(HWnd, CallbackMessage, wparam, (uint)WM.MOUSEMOVE | (hiWord << 16));
         }
 
         public void IconMouseClick(MouseButton button, uint mouse, int doubleClickTime)
@@ -334,14 +303,8 @@ namespace CairoDesktop.WindowsTray
             // ensure our Shell_TrayWnd is topmost, which some icons require
             TrayService.Instance.MakeTrayTopmost();
 
-            uint wparam = UID;
-            uint hiWord = 0;
-
-            if (Version > 3)
-            {
-                wparam = mouse;
-                hiWord = UID;
-            }
+            uint wparam = GetMessageWParam(mouse);
+            uint hiWord = GetMessageHiWord();
 
             if (button == MouseButton.Left)
             {
@@ -378,6 +341,37 @@ namespace CairoDesktop.WindowsTray
 
             SetForegroundWindow(HWnd);
         }
+
+        private uint GetMessageHiWord()
+        {
+            if (Version > 3)
+            {
+                return UID;
+            }
+
+            return 0;
+        }
+
+        private uint GetMessageWParam(uint mouse)
+        {
+            if (Version > 3)
+            {
+                return mouse;
+            }
+
+            return UID;
+        }
+
+        private bool RemoveIfInvalid()
+        {
+            if (!IsWindow(HWnd))
+            {
+                NotificationArea.Instance.TrayIcons.Remove(this);
+                return true;
+            }
+
+            return false;
+        }
         #endregion
 
         #region IEquatable<NotifyIcon> Members
@@ -394,9 +388,9 @@ namespace CairoDesktop.WindowsTray
             return (HWnd.Equals(other.HWnd) && UID.Equals(other.UID)) || (other.GUID != Guid.Empty && GUID.Equals(other.GUID));
         }
 
-        public bool Equals(NOTIFYICONDATA other)
+        public bool Equals(SafeNotifyIconData other)
         {
-            return (HWnd.Equals((IntPtr)other.hWnd) && UID.Equals(other.uID)) || (other.guidItem != Guid.Empty && GUID.Equals(other.guidItem));
+            return (HWnd.Equals(other.hWnd) && UID.Equals(other.uID)) || (other.guidItem != Guid.Empty && GUID.Equals(other.guidItem));
         }
 
         #endregion

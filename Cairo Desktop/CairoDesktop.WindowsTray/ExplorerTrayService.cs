@@ -28,14 +28,31 @@ namespace CairoDesktop.WindowsTray
                 if (autoTrayEnabled)
                 {
                     // we can't get tray icons that are in the hidden area, so disable that temporarily if enabled
-                    SetAutoTrayEnabled(false);
+                    try
+                    {
+                        TrayNotify trayNotify = new TrayNotify();
+
+                        SetAutoTrayEnabled(trayNotify, false);
+                        GetTrayItems();
+                        SetAutoTrayEnabled(trayNotify, true);
+
+                        Marshal.ReleaseComObject(trayNotify);
+                    }
+                    catch (Exception e)
+                    {
+                        CairoLogger.Instance.Debug($"ExplorerTrayService: Unable to get items using ITrayNotify: {e.Message}");
+                    }
                 }
-
-                GetTrayItems();
-
-                if (autoTrayEnabled)
+                else
                 {
-                    SetAutoTrayEnabled(true);
+                    try
+                    {
+                        GetTrayItems();
+                    }
+                    catch (Exception e)
+                    {
+                        CairoLogger.Instance.Debug($"ExplorerTrayService: Unable to get items: {e.Message}");
+                    }
                 }
             }
         }
@@ -63,7 +80,15 @@ namespace CairoDesktop.WindowsTray
 
             for (int i = 0; i < count; i++)
             {
-                NOTIFYICONDATA nid = GetTrayItemNID(GetTrayItem(i, hBuffer, hProcess, toolbarHwnd));
+                TrayItem trayItem = GetTrayItem(i, hBuffer, hProcess, toolbarHwnd);
+
+                if (trayItem.hWnd == IntPtr.Zero || !IsWindow(trayItem.hWnd))
+                {
+                    CairoLogger.Instance.Debug($"ExplorerTrayService: Ignored notify icon {trayItem.szIconText} due to invalid handle");
+                    continue;
+                }
+
+                SafeNotifyIconData nid = GetTrayItemIconData(trayItem);
 
                 if (trayDelegate != null)
                 {
@@ -71,6 +96,10 @@ namespace CairoDesktop.WindowsTray
                     {
                         CairoLogger.Instance.Debug("ExplorerTrayService: Ignored notify icon message");
                     }
+                }
+                else
+                {
+                    CairoLogger.Instance.Debug("ExplorerTrayService: trayDelegate is null");
                 }
             }
 
@@ -135,31 +164,21 @@ namespace CairoDesktop.WindowsTray
             return trayItem;
         }
 
-        private NOTIFYICONDATA GetTrayItemNID(TrayItem trayItem)
+        private SafeNotifyIconData GetTrayItemIconData(TrayItem trayItem)
         {
-            NOTIFYICONDATA nid = new NOTIFYICONDATA();
-            bool iconSuccess = false;
+            SafeNotifyIconData nid = new SafeNotifyIconData();
 
-            nid.hWnd = (uint)trayItem.hWnd;
+            nid.hWnd = trayItem.hWnd;
             nid.uID = trayItem.uID;
             nid.uCallbackMessage = trayItem.uCallbackMessage;
             nid.szTip = trayItem.szIconText;
-            try
-            {
-                nid.hIcon = (uint) trayItem.hIcon;
-
-                if (nid.hIcon != 0u)
-                {
-                    iconSuccess = true;
-                }
-            }
-            catch { }
+            nid.hIcon = trayItem.hIcon;
             nid.uVersion = trayItem.uVersion;
             nid.guidItem = trayItem.guidItem;
             nid.dwState = 0;
             nid.uFlags = NIF.GUID | NIF.MESSAGE | NIF.TIP;
 
-            if (iconSuccess)
+            if (nid.hIcon != IntPtr.Zero)
             {
                 nid.uFlags |= NIF.ICON;
             }
@@ -197,10 +216,8 @@ namespace CairoDesktop.WindowsTray
             return enableAutoTray == 1;
         }
 
-        private void SetAutoTrayEnabled(bool enabled)
+        private void SetAutoTrayEnabled(TrayNotify trayNotify, bool enabled)
         {
-            TrayNotify trayNotify = new TrayNotify();
-
             try
             {
                 if (Shell.IsWindows8OrBetter)
@@ -214,9 +231,9 @@ namespace CairoDesktop.WindowsTray
                     trayNotifyInstance.EnableAutoTray(enabled);
                 }
             }
-            finally
+            catch (Exception e)
             {
-                Marshal.ReleaseComObject(trayNotify);
+                CairoLogger.Instance.Debug($"ExplorerTrayService: Unable to set EnableAutoTray setting: {e.Message}");
             }
         }
     }
