@@ -13,6 +13,7 @@
         Height="54"
         SourceInitialized="DesktopToolbar_SourceInitialized"
         MouseLeftButtonDown="DesktopToolbar_MouseLeftButtonDown"
+        MouseRightButtonDown="DesktopNavigationToolbar_OnMouseRightButtonDown"
         PreviewMouseUp="DesktopToolbar_PreviewMouseUp"
         LocationChanged="DesktopToolbar_LocationChanged"
         Closing="DesktopToolbar_Closing">

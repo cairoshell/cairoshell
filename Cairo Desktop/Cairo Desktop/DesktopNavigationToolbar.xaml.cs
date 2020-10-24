@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.IO;
-using System.Windows.Forms;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
 using CairoDesktop.Configuration;
@@ -10,6 +9,8 @@ using CairoDesktop.Common;
 using System.Linq;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace CairoDesktop
 {
@@ -20,8 +21,9 @@ namespace CairoDesktop
     {
         private const int DEFAULT_Y = 150;
         private WindowInteropHelper helper;
-        private System.Windows.Controls.ContextMenu browseContextMenu;
-        private System.Windows.Controls.ContextMenu homeContextMenu;
+        private ContextMenu browseContextMenu;
+        private ContextMenu homeContextMenu;
+        private ContextMenu toolbarContextMenu;
         private LowLevelKeyboardListener lowLevelKeyboardListener;
         private DesktopManager desktopManager;
 
@@ -73,13 +75,24 @@ namespace CairoDesktop
             SetPosition();
 
             // set up browse context menu (is dynamically constructed)
-            browseContextMenu = new System.Windows.Controls.ContextMenu();
+            browseContextMenu = new ContextMenu();
+
+            // set up toolbar context menu
+            toolbarContextMenu = new ContextMenu();
+            MenuItem resetPositionMenuItem = new MenuItem
+            {
+                Header = Localization.DisplayString.sDesktop_ResetPosition
+            };
+            resetPositionMenuItem.Click += ResetPositionMenuItem_OnClick;
+            toolbarContextMenu.Items.Add(resetPositionMenuItem);
 
             // set up home context menu
-            homeContextMenu = new System.Windows.Controls.ContextMenu();
-            System.Windows.Controls.MenuItem setHomeMenuItem = new System.Windows.Controls.MenuItem();
-            setHomeMenuItem.Header = Localization.DisplayString.sDesktop_SetHome;
-            setHomeMenuItem.Click += SetHomeMenuItem_Click; ;
+            homeContextMenu = new ContextMenu();
+            MenuItem setHomeMenuItem = new MenuItem
+            {
+                Header = Localization.DisplayString.sDesktop_SetHome
+            };
+            setHomeMenuItem.Click += SetHomeMenuItem_Click;
             homeContextMenu.Items.Add(setHomeMenuItem);
 
             // set up keyboard listener for shift key
@@ -94,7 +107,7 @@ namespace CairoDesktop
         {
             if (IsMouseOver)
             {
-                if (e.Key == System.Windows.Input.Key.LeftShift || e.Key == System.Windows.Input.Key.RightShift)
+                if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
                 {
                     isShiftKeyHeld = true;
                 }
@@ -105,7 +118,7 @@ namespace CairoDesktop
         {
             if (isShiftKeyHeld)
             {
-                if (e.Key == System.Windows.Input.Key.LeftShift || e.Key == System.Windows.Input.Key.RightShift)
+                if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
                 {
                     isShiftKeyHeld = false;
                 }
@@ -124,15 +137,14 @@ namespace CairoDesktop
             }
             else
             {
-                Top = WindowManager.PrimaryMonitorSize.Height - Height - DEFAULT_Y;
-                Left = (WindowManager.PrimaryMonitorSize.Width / 2) - (Width / 2);
+                SetPositionDefault(WindowManager.PrimaryMonitorSize.Width, WindowManager.PrimaryMonitorSize.Height);
             }
         }
 
         private bool PointExistsOnScreen(Point desktopNavigationToolbarLocation)
         {
             bool result = false;
-            if (Screen.AllScreens.Any(s => s.Bounds.Contains((int)desktopNavigationToolbarLocation.X, (int)desktopNavigationToolbarLocation.Y)))
+            if (System.Windows.Forms.Screen.AllScreens.Any(s => s.Bounds.Contains((int)desktopNavigationToolbarLocation.X, (int)desktopNavigationToolbarLocation.Y)))
             {
                 result = true;
             }
@@ -154,9 +166,14 @@ namespace CairoDesktop
                 // use size from wndproc and adjust for dpi
                 Shell.TransformFromPixels(x, y, out int sWidth, out int sHeight);
 
-                Top = sHeight - Height - DEFAULT_Y;
-                Left = (sWidth / 2) - (Width / 2);
+                SetPositionDefault(sWidth, sHeight);
             }
+        }
+
+        private void SetPositionDefault(int screenWidth, int screenHeight)
+        {
+            Top = screenHeight - Height - DEFAULT_Y;
+            Left = (screenWidth / 2) - (Width / 2);
         }
 
         public void BringToFront()
@@ -169,6 +186,11 @@ namespace CairoDesktop
             if (desktopManager.ShellWindow != null) NativeMethods.SetWindowPos(helper.Handle, NativeMethods.GetWindow(desktopManager.ShellWindow.Handle, NativeMethods.GetWindow_Cmd.GW_HWNDPREV), 0, 0, 0, 0, (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE);
             else if (desktopManager.DesktopWindow != null) NativeMethods.SetWindowPos(helper.Handle, NativeMethods.GetWindow(desktopManager.DesktopWindow.Handle, NativeMethods.GetWindow_Cmd.GW_HWNDPREV), 0, 0, 0, 0, (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE);
         }
+
+        private void ResetPositionMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            SetPositionDefault(WindowManager.PrimaryMonitorSize.Width, WindowManager.PrimaryMonitorSize.Height);
+        }
         #endregion
 
         #region Button clicks
@@ -177,9 +199,10 @@ namespace CairoDesktop
             NavigationManager.NavigateBackward();
         }
 
-        private void btnBack_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void btnBack_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             NavigationManager.NavigateToParent();
+            e.Handled = true;
         }
 
         private void btnUp_Click(object sender, RoutedEventArgs e)
@@ -194,7 +217,7 @@ namespace CairoDesktop
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
-            using (FolderBrowserDialog fbd = new FolderBrowserDialog
+            using (System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog
             {
                 Description = Localization.DisplayString.sDesktop_BrowseTitle,
                 ShowNewFolderButton = false,
@@ -208,14 +231,14 @@ namespace CairoDesktop
             }
         }
         
-        private void btnHome_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void btnHome_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             homeContextMenu.IsOpen = true;
 
             e.Handled = true;
         }
 
-        private void btnBrowse_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void btnBrowse_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (NavigationManager.PathHistory.Count > 0)
             {
@@ -223,7 +246,7 @@ namespace CairoDesktop
 
                 for (int i = 0; i < NavigationManager.PathHistory.Count; i++)
                 {
-                    System.Windows.Controls.MenuItem locationMenuItem = new System.Windows.Controls.MenuItem();
+                    MenuItem locationMenuItem = new MenuItem();
                     locationMenuItem.Header = GetCleanFolderName(NavigationManager.PathHistory[i]);
                     locationMenuItem.Tag = i;
                     locationMenuItem.Click += LocationMenuItem_Click;
@@ -231,9 +254,9 @@ namespace CairoDesktop
                     browseContextMenu.Items.Add(locationMenuItem);
                 }
 
-                browseContextMenu.Items.Add(new System.Windows.Controls.Separator());
+                browseContextMenu.Items.Add(new Separator());
 
-                System.Windows.Controls.MenuItem clearHistoryMenuItem = new System.Windows.Controls.MenuItem { Header = Localization.DisplayString.sDesktop_ClearHistory };
+                MenuItem clearHistoryMenuItem = new MenuItem { Header = Localization.DisplayString.sDesktop_ClearHistory };
                 clearHistoryMenuItem.Click += ClearHistoryMenuItem_Click;
 
                 browseContextMenu.Items.Add(clearHistoryMenuItem);
@@ -273,7 +296,7 @@ namespace CairoDesktop
 
         private void LocationMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is System.Windows.Controls.MenuItem menuItem)
+            if (sender is MenuItem menuItem)
                 if (menuItem.Tag is int index)
                     NavigationManager.NavigateToIndex(index);
         }
@@ -337,25 +360,32 @@ namespace CairoDesktop
             Shell.HideWindowFromTasks(helper.Handle);
         }
 
-        private void DesktopToolbar_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void DesktopToolbar_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             switch (e.ChangedButton)
             {
-                case System.Windows.Input.MouseButton.Left:
+                case MouseButton.Left:
                     break;
-                case System.Windows.Input.MouseButton.Middle:
+                case MouseButton.Middle:
                     // Maybe Navigate Home?
                     break;
-                case System.Windows.Input.MouseButton.Right:
+                case MouseButton.Right:
                     break;
 
-                case System.Windows.Input.MouseButton.XButton1:
+                case MouseButton.XButton1:
                     NavigationManager.NavigateBackward();
                     break;
-                case System.Windows.Input.MouseButton.XButton2:
+                case MouseButton.XButton2:
                     NavigationManager.NavigateForward();
                     break;
             }
+        }
+
+        private void DesktopNavigationToolbar_OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            toolbarContextMenu.IsOpen = true;
+
+            e.Handled = true;
         }
 
         private void DesktopToolbar_Closing(object sender, CancelEventArgs e)
@@ -376,7 +406,7 @@ namespace CairoDesktop
         #endregion
 
         #region Drag
-        private void DesktopToolbar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void DesktopToolbar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
         }
