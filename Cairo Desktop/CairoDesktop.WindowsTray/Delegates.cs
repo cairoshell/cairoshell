@@ -9,7 +9,7 @@ namespace CairoDesktop.WindowsTray
     /// <param name="msg">The system tray message number.</param>
     /// <param name="nicData">The NotifyIconData structure</param>
     /// <returns>Indication of message outcome.</returns>
-    public delegate bool SystrayDelegate(uint msg, NOTIFYICONDATA nicData);
+    public delegate bool SystrayDelegate(uint msg, SafeNotifyIconData nicData);
 
     /// <summary>
     /// Delegate signature for the icon data callback.

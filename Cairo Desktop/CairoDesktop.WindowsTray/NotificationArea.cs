@@ -179,12 +179,12 @@ namespace CairoDesktop.WindowsTray
             return IntPtr.Zero;
         }
 
-        private bool SysTrayCallback(uint message, NOTIFYICONDATA nicData)
+        private bool SysTrayCallback(uint message, SafeNotifyIconData nicData)
         {
-            if (nicData.hWnd == 0)
+            if (nicData.hWnd == IntPtr.Zero)
                 return false;
 
-            NotifyIcon trayIcon = new NotifyIcon((IntPtr)nicData.hWnd);
+            NotifyIcon trayIcon = new NotifyIcon(nicData.hWnd);
             trayIcon.UID = nicData.uID;
 
             lock (_lockObject)
@@ -217,15 +217,15 @@ namespace CairoDesktop.WindowsTray
 
                         if ((NIF.ICON & nicData.uFlags) != 0)
                         {
-                            if ((IntPtr)nicData.hIcon != IntPtr.Zero)
+                            if (nicData.hIcon != IntPtr.Zero)
                             {
                                 try
                                 {
                                     System.Windows.Media.Imaging.BitmapSource bs =
                                         System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(
-                                            (IntPtr) nicData.hIcon, Int32Rect.Empty,
+                                            nicData.hIcon, Int32Rect.Empty,
                                             System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-                                    DestroyIcon((IntPtr)nicData.hIcon);
+                                    DestroyIcon(nicData.hIcon);
 
                                     if (bs != null)
                                     {
@@ -245,7 +245,7 @@ namespace CairoDesktop.WindowsTray
                             }
                         }
 
-                        trayIcon.HWnd = (IntPtr)nicData.hWnd;
+                        trayIcon.HWnd = nicData.hWnd;
                         trayIcon.UID = nicData.uID;
                         trayIcon.GUID = nicData.guidItem;
 
