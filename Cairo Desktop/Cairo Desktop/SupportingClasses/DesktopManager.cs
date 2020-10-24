@@ -378,7 +378,7 @@ namespace CairoDesktop.SupportingClasses
                 DesktopWindow.grid.Children.Add(maskImage);
 
                 // change ToolBar owner
-                if (DesktopToolbar != null)
+                if (DesktopToolbar != null && NativeMethods.IsWindow(DesktopWindow.Handle))
                 {
                     DesktopToolbar.Owner = DesktopWindow;
                     DesktopToolbar.SendToBottom();

@@ -134,6 +134,7 @@ namespace CairoDesktop.Localization
             { "sDesktop_Up", "Up" },
             { "sDesktop_SetHome", "Set current directory as home" },
             { "sDesktop_ClearHistory", "Clear history" },
+            { "sDesktop_ResetPosition", "Reset position" },
             { "sTaskbar_Empty", "Open windows to see them listed here." },
             { "sTaskbar_Minimize", "Minimize" },
             { "sTaskbar_Restore", "Restore" },
