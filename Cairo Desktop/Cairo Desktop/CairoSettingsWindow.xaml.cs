@@ -666,13 +666,11 @@ namespace CairoDesktop
         private void radTrayMode0_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.SysTrayAlwaysExpanded = false;
-            showRestartButton();
         }
 
         private void radTrayMode1_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.SysTrayAlwaysExpanded = true;
-            showRestartButton();
         }
 
         private void cboCairoMenuHotKey_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
