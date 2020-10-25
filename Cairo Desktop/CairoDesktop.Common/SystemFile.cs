@@ -142,7 +142,7 @@ namespace CairoDesktop.Common
 
                     Task.Factory.StartNew(() =>
                     {
-                        Icon = GetDisplayIcon(0);
+                        Icon = GetDisplayIcon(IconSize.Large);
                         Icon.Freeze();
                         _iconLoading = false;
                     }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
@@ -171,7 +171,7 @@ namespace CairoDesktop.Common
 
                     Task.Factory.StartNew(() =>
                     {
-                        LargeIcon = GetDisplayIcon(2);
+                        LargeIcon = GetDisplayIcon(IconSize.ExtraLarge);
                         LargeIcon.Freeze();
                         _iconLargeLoading = false;
                     }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
@@ -322,7 +322,7 @@ namespace CairoDesktop.Common
         /// Retrieves the display icon of the file.
         /// If the file is an image then it will return the image its self (e.g. preview).
         /// </summary>
-        private ImageSource GetDisplayIcon(int size)
+        private ImageSource GetDisplayIcon(IconSize size)
         {
             if (Interop.Shell.Exists(FullName))
             {
@@ -338,7 +338,7 @@ namespace CairoDesktop.Common
                             img.UriSource = new Uri(FullName);
                             int dSize = 32;
 
-                            if (size == 2)
+                            if (size == IconSize.ExtraLarge)
                                 dSize = 48;
 
                             Interop.Shell.TransformToPixels(dSize, dSize, out dSize, out dSize);
@@ -370,7 +370,7 @@ namespace CairoDesktop.Common
             }
         }
 
-        private ImageSource handleThumbnailError(int size)
+        private ImageSource handleThumbnailError(IconSize size)
         {
             if (_imageReloadAttempts < MAX_IMAGE_RELOAD_ATTEMPTS)
             {
@@ -386,7 +386,7 @@ namespace CairoDesktop.Common
             else
             {
                 // get the default icon for the file
-                return IconImageConverter.GetImageFromAssociatedIcon(this.FullName, size);
+                return IconImageConverter.GetImageFromAssociatedIcon(FullName, size);
             }
         }
 

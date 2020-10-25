@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using CairoDesktop.Common;
 
 namespace CairoDesktop
 {
@@ -137,16 +138,12 @@ namespace CairoDesktop
 
         private void setTaskbarSize()
         {
-            // because these don't make sense:
-            // 1 = small
-            // 0 = large
-            // 10 = medium
-            switch (Settings.Instance.TaskbarIconSize)
+            switch ((IconSize)Settings.Instance.TaskbarIconSize)
             {
-                case 0:
+                case IconSize.Large:
                     addToSize = 16;
                     break;
-                case 10:
+                case IconSize.Medium:
                     addToSize = 8;
                     break;
                 default:

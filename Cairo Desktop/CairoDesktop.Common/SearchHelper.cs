@@ -174,7 +174,7 @@ namespace CairoDesktop.Common
                     Task.Factory.StartNew(() =>
                     {
                         string iconPath = Path.Substring(Path.IndexOf(':') + 1).Replace("/", "\\");
-                        Icon = IconImageConverter.GetImageFromAssociatedIcon(iconPath, 0);
+                        Icon = IconImageConverter.GetImageFromAssociatedIcon(iconPath, IconSize.Large);
                         _iconLoading = false;
                     }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
                 }

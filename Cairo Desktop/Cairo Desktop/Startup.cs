@@ -114,7 +114,7 @@ namespace CairoDesktop
             }
             catch (Exception ex)
             {
-                CairoMessage.ShowAlert(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex),
+                CairoMessage.Show(string.Format("Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{0}", ex),
                     "Unexpected error!",
                     CairoMessageImage.Error);
             }

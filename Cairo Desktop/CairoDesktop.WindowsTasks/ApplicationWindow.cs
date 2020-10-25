@@ -471,9 +471,9 @@ namespace CairoDesktop.WindowsTasks
                         uint WM_QUERYDRAGICON = (uint)NativeMethods.WM.QUERYDRAGICON;
                         int GCL_HICON = -14;
                         int GCL_HICONSM = -34;
-                        int sizeSetting = Configuration.Settings.Instance.TaskbarIconSize;
+                        IconSize sizeSetting = (IconSize)Configuration.Settings.Instance.TaskbarIconSize;
 
-                        if (sizeSetting == 1)
+                        if (sizeSetting == IconSize.Small)
                         {
                             NativeMethods.SendMessageTimeout(Handle, WM_GETICON, 2, 0, 2, 1000, ref hIco);
                             if (hIco == IntPtr.Zero)
@@ -484,7 +484,7 @@ namespace CairoDesktop.WindowsTasks
                             NativeMethods.SendMessageTimeout(Handle, WM_GETICON, 1, 0, 2, 1000, ref hIco);
                         }
 
-                        if (hIco == IntPtr.Zero && sizeSetting == 1)
+                        if (hIco == IntPtr.Zero && sizeSetting == IconSize.Small)
                         {
                             if (!Environment.Is64BitProcess)
                                 hIco = NativeMethods.GetClassLong(Handle, GCL_HICONSM);
@@ -511,7 +511,7 @@ namespace CairoDesktop.WindowsTasks
                             if (Shell.Exists(WinFileName))
                             {
                                 int size = 1;
-                                if (sizeSetting != 1)
+                                if (sizeSetting != IconSize.Small)
                                     size = 0;
 
                                 hIco = Shell.GetIconByFilename(WinFileName, size);

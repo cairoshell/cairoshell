@@ -17,11 +17,11 @@ namespace CairoDesktop.Common
         /// <param name="filename">The filename of the file to query the Icon for.</param>
         /// <param name="size">0 = 32px, 1 = 16px, 2 = 48px</param>
         /// <returns>The icon as an ImageSource, otherwise a default image.</returns>
-        public static ImageSource GetImageFromAssociatedIcon(string filename, int size) 
+        public static ImageSource GetImageFromAssociatedIcon(string filename, IconSize size) 
         {
             BitmapSource bs = null;
             
-            IntPtr hIcon = Shell.GetIconByFilename(filename, size);
+            IntPtr hIcon = Shell.GetIconByFilename(filename, (int)size);
                 
             if (hIcon == IntPtr.Zero || hIcon == null)
             {

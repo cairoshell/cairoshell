@@ -467,7 +467,7 @@ namespace CairoDesktop
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
             string version = fvi.FileVersion;
 
-            CairoMessage.ShowAlert(
+            CairoMessage.Show(
                 Localization.DisplayString.sAbout_Version + " " + version + " - " + Localization.DisplayString.sAbout_PreRelease
                 + "\n\n" + String.Format(Localization.DisplayString.sAbout_Copyright, DateTime.Now.Year.ToString()), "Cairo Desktop Environment", CairoMessageImage.Default);
         }
