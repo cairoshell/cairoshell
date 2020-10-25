@@ -107,7 +107,7 @@ namespace CairoDesktop.SupportingClasses
 
                     // make sure this is fullscreen-able
                     int style = NativeMethods.GetWindowLong(hWnd, NativeMethods.GWL_STYLE);
-                    if (((int)NativeMethods.WindowStyles.WS_CAPTION & style) == (int)NativeMethods.WindowStyles.WS_CAPTION || ((int)NativeMethods.WindowStyles.WS_THICKFRAME & style) == (int)NativeMethods.WindowStyles.WS_THICKFRAME || !NativeMethods.IsWindow(hWnd) || !NativeMethods.IsWindowVisible(hWnd) || NativeMethods.IsIconic(hWnd))
+                    if (((int)NativeMethods.WindowStyles.WS_CAPTION & style) == (int)NativeMethods.WindowStyles.WS_CAPTION || !NativeMethods.IsWindow(hWnd) || !NativeMethods.IsWindowVisible(hWnd) || NativeMethods.IsIconic(hWnd))
                     {
                         return null;
                     }
