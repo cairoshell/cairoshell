@@ -33,7 +33,7 @@ namespace CairoDesktop
                     return;
                 case Actions.Delete:
                     string displayName = Shell.GetDisplayName(fileName);
-                    bool? deleteChoice = CairoMessage.ShowOkCancel(string.Format(Localization.DisplayString.sDesktop_DeleteInfo, displayName), Localization.DisplayString.sDesktop_DeleteTitle, "Resources/cairoIcon.png", Localization.DisplayString.sInterface_Delete, Localization.DisplayString.sInterface_Cancel);
+                    bool? deleteChoice = CairoMessage.ShowOkCancel(string.Format(Localization.DisplayString.sDesktop_DeleteInfo, displayName), Localization.DisplayString.sDesktop_DeleteTitle, CairoMessageImage.Warning, Localization.DisplayString.sInterface_Delete, Localization.DisplayString.sInterface_Cancel);
                     if (deleteChoice.HasValue && deleteChoice.Value)
                     {
                         Shell.SendToRecycleBin(fileName);

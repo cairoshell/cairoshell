@@ -6,9 +6,9 @@ namespace CairoDesktop.Common
 {
     public class SystemPower
     {
-        private static void ShowActionConfirmation(string message, string title, string imageSource, string okButtonText, string cancelButtonText, Action systemAction)
+        private static void ShowActionConfirmation(string message, string title, CairoMessageImage image, string okButtonText, string cancelButtonText, Action systemAction)
         {
-            bool? actionChoice = CairoMessage.ShowOkCancel(message, title, imageSource, okButtonText, cancelButtonText);
+            bool? actionChoice = CairoMessage.ShowOkCancel(message, title, image, okButtonText, cancelButtonText);
             if (actionChoice.HasValue && actionChoice.Value)
                 systemAction();
         }
@@ -17,7 +17,7 @@ namespace CairoDesktop.Common
         {
             ShowActionConfirmation(DisplayString.sShutDown_Info
                 , DisplayString.sShutDown_Title
-                , "Resources/shutdownIcon.png"
+                , CairoMessageImage.ShutDown
                 , DisplayString.sShutDown_ShutDown
                 , DisplayString.sInterface_Cancel
                 , Shell.Shutdown);
@@ -27,7 +27,7 @@ namespace CairoDesktop.Common
         {
             ShowActionConfirmation(DisplayString.sRestart_Info
                 , DisplayString.sRestart_Title
-                , "Resources/restartIcon.png"
+                , CairoMessageImage.Restart
                 , DisplayString.sRestart_Restart
                 , DisplayString.sInterface_Cancel
                 , Shell.Reboot);
@@ -37,7 +37,7 @@ namespace CairoDesktop.Common
         {
             ShowActionConfirmation(DisplayString.sLogoff_Info
                 , DisplayString.sLogoff_Title
-                , "Resources/logoffIcon.png"
+                , CairoMessageImage.LogOff
                 , DisplayString.sLogoff_Logoff
                 , DisplayString.sInterface_Cancel
                 , Shell.Logoff);

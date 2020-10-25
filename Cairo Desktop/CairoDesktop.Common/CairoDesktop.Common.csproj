@@ -73,6 +73,7 @@
     <Compile Include="CairoMessage.xaml.cs">
       <DependentUpon>CairoMessage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CairoMessageImage.cs" />
     <Compile Include="ExtensionMethods\IListExtensions.cs" />
     <Compile Include="CommandLineParser.cs" />
     <Compile Include="DesignPatterns\Provider.cs" />
@@ -102,7 +103,7 @@
     <Compile Include="Logging\Observers\FileLog.cs" />
     <Compile Include="Logging\CairoLogger.cs" />
     <Compile Include="MessageBoxButtonConverter.cs" />
-    <Compile Include="MessageBoxImageConverter.cs" />
+    <Compile Include="CairoMessageImageConverter.cs" />
     <Compile Include="ObjectActions.cs" />
     <Compile Include="ObjectEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -139,21 +140,22 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\shutdownIcon.png" />
+    <Resource Include="Resources\dialogIconCairo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\restartIcon.png" />
+    <Resource Include="Resources\dialogIconError.png" />
+    <Resource Include="Resources\dialogIconInformation.png" />
+    <Resource Include="Resources\dialogIconWarning.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\logoffIcon.png" />
+    <Resource Include="Resources\dialogIconLogOff.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\cairoIcon.png" />
+    <Resource Include="Resources\dialogIconRestart.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\exitIcon.png" />
+    <Resource Include="Resources\dialogIconShutDown.png" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

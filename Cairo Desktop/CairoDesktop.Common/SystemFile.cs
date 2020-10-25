@@ -313,7 +313,7 @@ namespace CairoDesktop.Common
             }
             catch (Exception ex)
             {
-                CairoMessage.Show("The file was unable to be renamed because: " + ex.Message, "Unable to rename", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                CairoMessage.Show("The file was unable to be renamed because: " + ex.Message, "Unable to rename", MessageBoxButton.OK, CairoMessageImage.Error);
                 return false;
             }
         }

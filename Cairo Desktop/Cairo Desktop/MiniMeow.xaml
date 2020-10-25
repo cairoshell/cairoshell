@@ -67,12 +67,17 @@
     </LinearGradientBrush>
 
     <!-- Dialog resources -->
+    <SolidColorBrush Color="White" x:Key="DialogWindowForeground" />
+    <SolidColorBrush Color="DarkGray" x:Key="DialogMessageForeground" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="DialogWindowBackground" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="DialogButtonNormalBackground" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="DialogButtonNormalBorder" />
+    <SolidColorBrush Color="DarkGray" x:Key="DialogButtonNormalForeground" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="DialogButtonHoverBackground" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="DialogButtonHoverBorder" />
+    <SolidColorBrush Color="DarkGray" x:Key="DialogButtonHoverForeground" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="DialogButtonPressedBackground" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="DialogButtonPressedBorder" />
+    <SolidColorBrush Color="DarkGray" x:Key="DialogButtonPressedForeground" />
     <SolidColorBrush Color="DarkGray" x:Key="DialogButtonDisabledBackground" />
 </ResourceDictionary>

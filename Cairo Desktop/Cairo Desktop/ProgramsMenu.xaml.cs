@@ -53,7 +53,7 @@ namespace CairoDesktop
         private void btnUninstallApps_Click(object sender, RoutedEventArgs e)
         {
             if (!Interop.Shell.StartProcess("appwiz.cpl"))
-                CairoMessage.Show(DisplayString.sError_CantOpenAppWiz, DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                CairoMessage.Show(DisplayString.sError_CantOpenAppWiz, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
         }
         #endregion
 

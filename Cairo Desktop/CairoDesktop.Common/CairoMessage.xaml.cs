@@ -1,17 +1,17 @@
-﻿namespace CairoDesktop.Common
-{
-    using System;
-    using System.Reflection;
-    using System.Windows;
-    using System.Windows.Media.Imaging;
+﻿using System;
+using System.Reflection;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
+namespace CairoDesktop.Common
+{
     /// <summary>
     /// Provides a custom message dialog for the Cairo Desktop.
     /// </summary>
     public partial class CairoMessage : Window
     {
         private static DependencyProperty buttonsProperty = DependencyProperty.Register("Buttons", typeof(MessageBoxButton), typeof(CairoMessage));
-        private static DependencyProperty imageProperty = DependencyProperty.Register("Image", typeof(MessageBoxImage), typeof(CairoMessage));
+        private static DependencyProperty imageProperty = DependencyProperty.Register("Image", typeof(CairoMessageImage), typeof(CairoMessage));
         private static DependencyProperty messageProperty = DependencyProperty.Register("Message", typeof(string), typeof(CairoMessage));
 
         /// <summary>
@@ -44,11 +44,11 @@
         /// Gets or sets the type of image to display in the dialog.
         /// </summary>
         /// <value>The type of image to display.</value>
-        public MessageBoxImage Image
+        public CairoMessageImage Image
         {
             get
             {
-                return (MessageBoxImage)GetValue(imageProperty);
+                return (CairoMessageImage)GetValue(imageProperty);
             }
 
             set
@@ -84,11 +84,13 @@
         /// <returns>Nullable bool indicating user response.</returns>
         public static bool? Show(string message, string title)
         {
-            CairoMessage msgDialog = new CairoMessage();
-            msgDialog.Message = message;
-            msgDialog.Title = title;
-            msgDialog.Image = MessageBoxImage.None;
-            msgDialog.Buttons = MessageBoxButton.OKCancel;
+            CairoMessage msgDialog = new CairoMessage
+            {
+                Message = message,
+                Title = title,
+                Image = CairoMessageImage.Default,
+                Buttons = MessageBoxButton.OKCancel
+            };
 
             return msgDialog.ShowDialog();
         }
@@ -101,13 +103,15 @@
         /// <param name="buttons">The buttons configuration to use.</param>
         /// <param name="image">The image to display.</param>
         /// <returns>Nullable bool indicating user response.</returns>
-        public static bool? Show(string message, string title, MessageBoxButton buttons, MessageBoxImage image)
+        public static bool? Show(string message, string title, MessageBoxButton buttons, CairoMessageImage image)
         {
-            CairoMessage msgDialog = new CairoMessage();
-            msgDialog.Message = message;
-            msgDialog.Title = title;
-            msgDialog.Image = image;
-            msgDialog.Buttons = buttons;
+            CairoMessage msgDialog = new CairoMessage
+            {
+                Message = message,
+                Title = title,
+                Image = image,
+                Buttons = buttons
+            };
 
             return msgDialog.ShowDialog();
         }
@@ -120,13 +124,15 @@
         /// <param name="image">The image to display.</param>
         /// <returns>void</returns>
         [STAThread]
-        public static void ShowAlert(string message, string title, MessageBoxImage image)
+        public static void ShowAlert(string message, string title, CairoMessageImage image)
         {
-            CairoMessage msgDialog = new CairoMessage();
-            msgDialog.Message = message;
-            msgDialog.Title = title;
-            msgDialog.Image = image;
-            msgDialog.Buttons = MessageBoxButton.OK;
+            CairoMessage msgDialog = new CairoMessage
+            {
+                Message = message,
+                Title = title,
+                Image = image,
+                Buttons = MessageBoxButton.OK
+            };
 
             msgDialog.Show();
 
@@ -142,30 +148,25 @@
         /// <param name="OkButtonText">The text for the OK button.</param>
         /// <param name="CancelButtonText">The text for the cancel button.</param>
         /// <returns>Nullable bool indicating the user response.</returns>
-        public static bool? ShowOkCancel(string message, string title, string ImageSource, string OkButtonText, string CancelButtonText)
+        public static bool? ShowOkCancel(string message, string title, CairoMessageImage image, string OkButtonText, string CancelButtonText)
         {
             if (string.IsNullOrEmpty(CancelButtonText))
             {
-                CancelButtonText = CairoDesktop.Localization.DisplayString.sInterface_Cancel;
+                CancelButtonText = Localization.DisplayString.sInterface_Cancel;
             }
 
             if(string.IsNullOrEmpty(OkButtonText))
             {
-                OkButtonText = CairoDesktop.Localization.DisplayString.sInterface_OK;
-            }
-
-            if(string.IsNullOrEmpty(ImageSource))
-            {
-                ImageSource = "Resources/cairoIcon.png";
+                OkButtonText = Localization.DisplayString.sInterface_OK;
             }
 
             CairoMessage msgDialog = new CairoMessage();
             msgDialog.Message = message;
             msgDialog.Title = title;
             msgDialog.Buttons = MessageBoxButton.OKCancel;
+            msgDialog.Image = image;
             msgDialog.OkButton.Content = OkButtonText;
             msgDialog.CancelButton.Content = CancelButtonText;
-            msgDialog.MessageIconImage.Source = new BitmapImage(new System.Uri(ImageSource, System.UriKind.RelativeOrAbsolute));
             
             return msgDialog.ShowDialog();
         }
@@ -179,14 +180,14 @@
         private void OkButton_Click(object sender, RoutedEventArgs e)
         {
             if (IsModal())
-                this.DialogResult = true;
+                DialogResult = true;
             else
-                this.Close();
+                Close();
         }
 
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
+            DialogResult = false;
         }
 
         private void messageWindow_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

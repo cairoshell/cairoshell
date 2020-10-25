@@ -410,6 +410,8 @@
     </LinearGradientBrush>
     <SolidColorBrush Color="#402e2e2e"
                      x:Key="DialogButtonNormalBorder" />
+    <SolidColorBrush Color="Black"
+                     x:Key="DialogButtonNormalForeground" />
     <LinearGradientBrush x:Key="DialogButtonHoverBackground"
                          StartPoint="0,0"
                          EndPoint="0,1">
@@ -420,6 +422,8 @@
     </LinearGradientBrush>
     <SolidColorBrush Color="#4028292a"
                      x:Key="DialogButtonHoverBorder" />
+    <SolidColorBrush Color="Black"
+                     x:Key="DialogButtonHoverForeground" />
     <LinearGradientBrush x:Key="DialogButtonPressedBackground"
                          StartPoint="0,0"
                          EndPoint="0,1">
@@ -430,6 +434,8 @@
     </LinearGradientBrush>
     <SolidColorBrush Color="#40242525"
                      x:Key="DialogButtonPressedBorder" />
+    <SolidColorBrush Color="Black"
+                     x:Key="DialogButtonPressedForeground" />
     <LinearGradientBrush x:Key="DialogButtonDisabledBackground"
                          StartPoint="0,0"
                          EndPoint="0,1">
@@ -438,14 +444,14 @@
         <GradientStop Color="DarkGray"
                       Offset="1" />
     </LinearGradientBrush>
+    <SolidColorBrush Color="DimGray"
+                     x:Key="DialogButtonDisabledForeground" />
     <SolidColorBrush Color="#80242525"
                      x:Key="DialogButtonDefaultBorder" />
     <SolidColorBrush Color="Black"
                      x:Key="DialogWindowForeground" />
-
-    <!-- Welcome resources -->
     <SolidColorBrush Color="#FF555555"
-                     x:Key="WelcomeForeground" />
+                     x:Key="DialogMessageForeground" />
 
     <!-- Image resources -->
     <BitmapImage x:Key="MenuIcon"
@@ -2077,6 +2083,8 @@
                 Value="30" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource ResourceKey=DialogButtonNormalForeground}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -2096,6 +2104,8 @@
                             <Setter TargetName="Border"
                                     Property="Background"
                                     Value="{DynamicResource ResourceKey=DialogButtonDisabledBackground}" />
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource ResourceKey=DialogButtonDisabledForeground}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver"
                                  Value="true">
@@ -2105,6 +2115,8 @@
                             <Setter TargetName="Border"
                                     Property="BorderBrush"
                                     Value="{DynamicResource ResourceKey=DialogButtonHoverBorder}" />
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource ResourceKey=DialogButtonHoverForeground}" />
                         </Trigger>
                         <Trigger Property="IsPressed"
                                  Value="true">
@@ -2114,6 +2126,8 @@
                             <Setter TargetName="Border"
                                     Property="BorderBrush"
                                     Value="{DynamicResource ResourceKey=DialogButtonPressedBorder}" />
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource ResourceKey=DialogButtonPressedForeground}" />
                         </Trigger>
                         <Trigger Property="IsDefault"
                                  Value="true">
@@ -2125,6 +2139,52 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style x:Key="CairoMessageButton"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource CairoButtonStyle}">
+        <Setter Property="Margin"
+                Value="6,0,6,0" />
+    </Style>
+    <Style x:Key="CairoMessageTitle"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily"
+                Value="Corbel" />
+        <Setter Property="FontSize"
+                Value="20" />
+        <Setter Property="FontWeight"
+                Value="Bold" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource ResourceKey=DialogWindowForeground}" />
+        <Setter Property="TextWrapping"
+                Value="Wrap" />
+        <Setter Property="Padding"
+                Value="0,0,0,15" />
+    </Style>
+    <Style x:Key="CairoMessageText"
+           TargetType="{x:Type TextBox}">
+        <Setter Property="FontFamily"
+                Value="Corbel" />
+        <Setter Property="FontSize"
+                Value="14" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource ResourceKey=DialogMessageForeground}" />
+        <Setter Property="TextWrapping"
+                Value="Wrap" />
+        <Setter Property="BorderThickness"
+                Value="0" />
+        <Setter Property="IsReadOnly"
+                Value="True" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Setter Property="MaxHeight"
+                Value="450" />
+        <Setter Property="HorizontalScrollBarVisibility"
+                Value="Disabled" />
+        <Setter Property="VerticalScrollBarVisibility"
+                Value="Auto" />
     </Style>
 
     <!-- Wizards -->
@@ -2171,7 +2231,7 @@
            TargetType="{x:Type TextBlock}"
            BasedOn="{StaticResource WelcomeText}">
         <Setter Property="Foreground"
-                Value="{DynamicResource ResourceKey=WelcomeForeground}" />
+                Value="{DynamicResource ResourceKey=DialogMessageForeground}" />
     </Style>
 
     <!-- Stacks -->

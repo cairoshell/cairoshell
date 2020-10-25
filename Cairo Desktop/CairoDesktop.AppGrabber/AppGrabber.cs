@@ -311,12 +311,12 @@ namespace CairoDesktop.AppGrabber
                     // this opens My Computer
                     if (!Shell.StartProcess(app.Path, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"))
                     {
-                        CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                        CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                     }
                 }
                 else if (!Shell.StartProcess(app.Path))
                 {
-                    CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                    CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                 }
             }
         }
@@ -327,7 +327,7 @@ namespace CairoDesktop.AppGrabber
             {
                 if (!Shell.StartProcess(app.Path, "", verb))
                 {
-                    CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                    CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                 }
             }
         }
@@ -344,7 +344,7 @@ namespace CairoDesktop.AppGrabber
                         {
                             app.AskAlwaysAdmin = false;
 
-                            bool? always = CairoMessage.Show(String.Format(Localization.DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), Localization.DisplayString.sProgramsMenu_AlwaysAdminTitle, MessageBoxButton.YesNo, MessageBoxImage.Question);
+                            bool? always = CairoMessage.Show(String.Format(Localization.DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), Localization.DisplayString.sProgramsMenu_AlwaysAdminTitle, MessageBoxButton.YesNo, CairoMessageImage.Information);
 
                             if (always == true)
                                 app.AlwaysAdmin = true;
@@ -371,7 +371,7 @@ namespace CairoDesktop.AppGrabber
                     menu = Localization.DisplayString.sAppGrabber_QuickLaunch;
                 else
                     menu = Localization.DisplayString.sProgramsMenu;
-                bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name, menu), Localization.DisplayString.sProgramsMenu_RemoveTitle, "Resources/cairoIcon.png", Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel);
+                bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name, menu), Localization.DisplayString.sProgramsMenu_RemoveTitle, CairoMessageImage.Warning, Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel);
                 if (deleteChoice.HasValue && deleteChoice.Value)
                 {
                     app.Category.Remove(app);
@@ -397,7 +397,7 @@ namespace CairoDesktop.AppGrabber
             if (app != null)
             {
                 if (app.IsStoreApp)
-                    CairoMessage.ShowAlert(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, MessageBoxImage.None);
+                    CairoMessage.ShowAlert(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, CairoMessageImage.Information);
                 else
                     Shell.ShowFileProperties(app.Path);
             }

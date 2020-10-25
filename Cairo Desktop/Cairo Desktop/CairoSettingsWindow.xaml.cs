@@ -693,7 +693,7 @@ namespace CairoDesktop
 
             Shell.IsCairoConfiguredAsShell = !Shell.IsCairoConfiguredAsShell;
 
-            bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, Localization.DisplayString.sSettings_Advanced_ShellChanged, "Resources/logoffIcon.png", Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater);
+            bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, Localization.DisplayString.sSettings_Advanced_ShellChanged, CairoMessageImage.LogOff, Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater);
 
             if (LogoffChoice.HasValue && LogoffChoice.Value)
                 Shell.Logoff();

@@ -227,7 +227,7 @@ namespace CairoDesktop
                 }
 
                 CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                    CairoMessageImage.Error);
             }
         }
 

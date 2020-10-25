@@ -469,7 +469,7 @@ namespace CairoDesktop
 
             CairoMessage.ShowAlert(
                 Localization.DisplayString.sAbout_Version + " " + version + " - " + Localization.DisplayString.sAbout_PreRelease
-                + "\n\n" + String.Format(Localization.DisplayString.sAbout_Copyright, DateTime.Now.Year.ToString()), "Cairo Desktop Environment", MessageBoxImage.None);
+                + "\n\n" + String.Format(Localization.DisplayString.sAbout_Copyright, DateTime.Now.Year.ToString()), "Cairo Desktop Environment", CairoMessageImage.Default);
         }
 
         private void CheckForUpdates(object sender, RoutedEventArgs e)
@@ -499,7 +499,7 @@ namespace CairoDesktop
 
         private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
         {
-            bool? CloseCairoChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title, "Resources/exitIcon.png", Localization.DisplayString.sExitCairo_ExitCairo, Localization.DisplayString.sInterface_Cancel);
+            bool? CloseCairoChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title, CairoMessageImage.Default, Localization.DisplayString.sExitCairo_ExitCairo, Localization.DisplayString.sInterface_Cancel);
             if (CloseCairoChoice.HasValue && CloseCairoChoice.Value)
             {
                 Startup.ExitCairo();
