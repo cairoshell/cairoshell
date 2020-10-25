@@ -8,9 +8,12 @@ namespace CairoDesktop.Common
     {
         private static void ShowActionConfirmation(string message, string title, CairoMessageImage image, string okButtonText, string cancelButtonText, Action systemAction)
         {
-            bool? actionChoice = CairoMessage.ShowOkCancel(message, title, image, okButtonText, cancelButtonText);
-            if (actionChoice.HasValue && actionChoice.Value)
-                systemAction();
+            CairoMessage.ShowOkCancel(message, title, image, okButtonText, cancelButtonText,
+                result =>
+                {
+                    if (result == true)
+                        systemAction();
+                });
         }
 
         public static void ShowShutdownConfirmation()

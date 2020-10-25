@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace CairoDesktop.Common
 {
@@ -10,6 +9,8 @@ namespace CairoDesktop.Common
     /// </summary>
     public partial class CairoMessage : Window
     {
+        public delegate void DialogResultDelegate(bool? result);
+
         private static DependencyProperty buttonsProperty = DependencyProperty.Register("Buttons", typeof(MessageBoxButton), typeof(CairoMessage));
         private static DependencyProperty imageProperty = DependencyProperty.Register("Image", typeof(CairoMessageImage), typeof(CairoMessage));
         private static DependencyProperty messageProperty = DependencyProperty.Register("Message", typeof(string), typeof(CairoMessage));
@@ -73,6 +74,8 @@ namespace CairoDesktop.Common
                 SetValue(buttonsProperty, value);
             }
         }
+
+        public DialogResultDelegate ResultCallback;
         #endregion
 
         #region Static Methods
@@ -102,8 +105,8 @@ namespace CairoDesktop.Common
         /// <param name="title">The title of the dialog.</param>
         /// <param name="buttons">The buttons configuration to use.</param>
         /// <param name="image">The image to display.</param>
-        /// <returns>Nullable bool indicating user response.</returns>
-        public static bool? Show(string message, string title, MessageBoxButton buttons, CairoMessageImage image)
+        /// <returns>void</returns>
+        public static void Show(string message, string title, MessageBoxButton buttons, CairoMessageImage image)
         {
             CairoMessage msgDialog = new CairoMessage
             {
@@ -113,7 +116,30 @@ namespace CairoDesktop.Common
                 Buttons = buttons
             };
 
-            return msgDialog.ShowDialog();
+            msgDialog.Show();
+        }
+
+        /// <summary>
+        /// Displays the Cairo Message Dialog with implicit settings.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="title">The title of the dialog.</param>
+        /// <param name="buttons">The buttons configuration to use.</param>
+        /// <param name="image">The image to display.</param>
+        /// <param name="resultck">The delegate to execute upon user action.</param>
+        /// <returns>void</returns>
+        public static void Show(string message, string title, MessageBoxButton buttons, CairoMessageImage image, DialogResultDelegate result)
+        {
+            CairoMessage msgDialog = new CairoMessage
+            {
+                Message = message,
+                Title = title,
+                Image = image,
+                Buttons = buttons,
+                ResultCallback = result
+            };
+
+            msgDialog.Show();
         }
 
         /// <summary>
@@ -135,8 +161,6 @@ namespace CairoDesktop.Common
             };
 
             msgDialog.Show();
-
-            return;
         }
 
         /// <summary>
@@ -144,11 +168,12 @@ namespace CairoDesktop.Common
         /// </summary>
         /// <param name="message">The message to display.</param>
         /// <param name="title">The title of the dialog.</param>
-        /// <param name="ImageSource">The path to the image for the dialog.</param>
+        /// <param name="image">The path to the image for the dialog.</param>
         /// <param name="OkButtonText">The text for the OK button.</param>
         /// <param name="CancelButtonText">The text for the cancel button.</param>
-        /// <returns>Nullable bool indicating the user response.</returns>
-        public static bool? ShowOkCancel(string message, string title, CairoMessageImage image, string OkButtonText, string CancelButtonText)
+        /// <param name="resultck">The delegate to execute upon user action.</param>
+        /// <returns>void</returns>
+        public static void ShowOkCancel(string message, string title, CairoMessageImage image, string OkButtonText, string CancelButtonText, DialogResultDelegate result)
         {
             if (string.IsNullOrEmpty(CancelButtonText))
             {
@@ -165,10 +190,11 @@ namespace CairoDesktop.Common
             msgDialog.Title = title;
             msgDialog.Buttons = MessageBoxButton.OKCancel;
             msgDialog.Image = image;
+            msgDialog.ResultCallback = result;
             msgDialog.OkButton.Content = OkButtonText;
             msgDialog.CancelButton.Content = CancelButtonText;
             
-            return msgDialog.ShowDialog();
+            msgDialog.Show();
         }
         #endregion
 
@@ -183,11 +209,18 @@ namespace CairoDesktop.Common
                 DialogResult = true;
             else
                 Close();
+
+            ResultCallback?.Invoke(true);
         }
 
         private void NoButton_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false;
+            if (IsModal())
+                DialogResult = false;
+            else
+                Close();
+
+            ResultCallback?.Invoke(false);
         }
 
         private void messageWindow_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

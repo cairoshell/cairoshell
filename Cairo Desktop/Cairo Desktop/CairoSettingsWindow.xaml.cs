@@ -693,10 +693,14 @@ namespace CairoDesktop
 
             Shell.IsCairoConfiguredAsShell = !Shell.IsCairoConfiguredAsShell;
 
-            bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, Localization.DisplayString.sSettings_Advanced_ShellChanged, CairoMessageImage.LogOff, Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater);
-
-            if (LogoffChoice.HasValue && LogoffChoice.Value)
-                Shell.Logoff();
+            CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, 
+                Localization.DisplayString.sSettings_Advanced_ShellChanged, CairoMessageImage.LogOff, 
+                Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater,
+                result =>
+                {
+                    if (result == true)
+                        Shell.Logoff();
+                });
         }
 
         private void btnOpenLogsFolder_OnClick(object sender, RoutedEventArgs e)

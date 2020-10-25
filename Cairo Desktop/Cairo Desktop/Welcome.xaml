@@ -3,6 +3,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+        xmlns:settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration"
         Title="{Binding sWelcome_Welcome}"
         Width="774"
         AllowsTransparency="True"
@@ -33,7 +34,8 @@
                     <TextBlock Style="{StaticResource WelcomeHeading}" HorizontalAlignment="Center" Text="{Binding sWelcome_Welcome}" Margin="0,10,0,60" />
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <TextBlock Style="{StaticResource WelcomeText}" Text="{Binding Path=(l10n:DisplayString.sWelcome_SelectLanguage)}" VerticalAlignment="Center" Margin="0,0,10,0" />
-                        <ComboBox Name="cboLangSelect" DropDownClosed="cboLangSelect_DropDownClosed"  IsDropDownOpen="False" IsEditable="False" SelectedValue="{Binding Path=Language, Mode=OneTime}" />
+                        <ComboBox Name="cboLangSelect" DropDownClosed="cboLangSelect_DropDownClosed"  IsDropDownOpen="False" IsEditable="False" 
+                                  SelectedValue="{Binding Source={x:Static settings:Settings.Instance}, Path=Language, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                 </StackPanel>
             </DockPanel>

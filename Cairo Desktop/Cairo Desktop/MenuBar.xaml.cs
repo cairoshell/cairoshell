@@ -499,11 +499,15 @@ namespace CairoDesktop
 
         private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
         {
-            bool? CloseCairoChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title, CairoMessageImage.Default, Localization.DisplayString.sExitCairo_ExitCairo, Localization.DisplayString.sInterface_Cancel);
-            if (CloseCairoChoice.HasValue && CloseCairoChoice.Value)
-            {
-                Startup.ExitCairo();
-            }
+            CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title, 
+                CairoMessageImage.Default, Localization.DisplayString.sExitCairo_ExitCairo, Localization.DisplayString.sInterface_Cancel,
+                result =>
+                {
+                    if (result == true)
+                    {
+                        Startup.ExitCairo();
+                    }
+                });
         }
 
         private void OpenControlPanel(object sender, RoutedEventArgs e)

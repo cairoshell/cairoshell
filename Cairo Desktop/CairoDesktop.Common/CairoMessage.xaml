@@ -82,6 +82,7 @@
                             Content="{Binding Path=(l10n:DisplayString.sInterface_Cancel)}"
                             IsCancel="True"
                             Style="{StaticResource CairoMessageButton}"
+                            Click="NoButton_Click"
                             Visibility="{Binding ElementName=messageWindow, Path=Buttons, Converter={StaticResource MessageBoxButtonConverter}, ConverterParameter=Cancel}" />
                 </StackPanel>
             </Grid>

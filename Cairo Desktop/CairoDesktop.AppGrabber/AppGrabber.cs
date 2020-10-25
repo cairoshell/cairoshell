@@ -344,10 +344,14 @@ namespace CairoDesktop.AppGrabber
                         {
                             app.AskAlwaysAdmin = false;
 
-                            bool? always = CairoMessage.Show(String.Format(Localization.DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), Localization.DisplayString.sProgramsMenu_AlwaysAdminTitle, MessageBoxButton.YesNo, CairoMessageImage.Information);
-
-                            if (always == true)
-                                app.AlwaysAdmin = true;
+                            CairoMessage.Show(string.Format(Localization.DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), 
+                                Localization.DisplayString.sProgramsMenu_AlwaysAdminTitle, 
+                                MessageBoxButton.YesNo, CairoMessageImage.Information,
+                                result =>
+                                {
+                                    if (result == true)
+                                        app.AlwaysAdmin = true;
+                                });
                         }
                         else
                             app.AskAlwaysAdmin = true;
@@ -371,12 +375,18 @@ namespace CairoDesktop.AppGrabber
                     menu = Localization.DisplayString.sAppGrabber_QuickLaunch;
                 else
                     menu = Localization.DisplayString.sProgramsMenu;
-                bool? deleteChoice = CairoMessage.ShowOkCancel(String.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name, menu), Localization.DisplayString.sProgramsMenu_RemoveTitle, CairoMessageImage.Warning, Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel);
-                if (deleteChoice.HasValue && deleteChoice.Value)
-                {
-                    app.Category.Remove(app);
-                    Save();
-                }
+                
+                CairoMessage.ShowOkCancel(string.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name, menu), 
+                    Localization.DisplayString.sProgramsMenu_RemoveTitle, CairoMessageImage.Warning, 
+                    Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel,
+                    result =>
+                    {
+                        if (result == true)
+                        {
+                            app.Category.Remove(app);
+                            Save();
+                        }
+                    });
             }
         }
 
