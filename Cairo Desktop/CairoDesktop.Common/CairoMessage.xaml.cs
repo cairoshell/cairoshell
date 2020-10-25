@@ -126,9 +126,9 @@ namespace CairoDesktop.Common
         /// <param name="title">The title of the dialog.</param>
         /// <param name="buttons">The buttons configuration to use.</param>
         /// <param name="image">The image to display.</param>
-        /// <param name="resultck">The delegate to execute upon user action.</param>
+        /// <param name="resultCallback">The delegate to execute upon user action.</param>
         /// <returns>void</returns>
-        public static void Show(string message, string title, MessageBoxButton buttons, CairoMessageImage image, DialogResultDelegate result)
+        public static void Show(string message, string title, MessageBoxButton buttons, CairoMessageImage image, DialogResultDelegate resultCallback)
         {
             CairoMessage msgDialog = new CairoMessage
             {
@@ -136,7 +136,7 @@ namespace CairoDesktop.Common
                 Title = title,
                 Image = image,
                 Buttons = buttons,
-                ResultCallback = result
+                ResultCallback = resultCallback
             };
 
             msgDialog.Show();
@@ -171,9 +171,9 @@ namespace CairoDesktop.Common
         /// <param name="image">The path to the image for the dialog.</param>
         /// <param name="OkButtonText">The text for the OK button.</param>
         /// <param name="CancelButtonText">The text for the cancel button.</param>
-        /// <param name="resultck">The delegate to execute upon user action.</param>
+        /// <param name="resultCallback">The delegate to execute upon user action.</param>
         /// <returns>void</returns>
-        public static void ShowOkCancel(string message, string title, CairoMessageImage image, string OkButtonText, string CancelButtonText, DialogResultDelegate result)
+        public static void ShowOkCancel(string message, string title, CairoMessageImage image, string OkButtonText, string CancelButtonText, DialogResultDelegate resultCallback)
         {
             if (string.IsNullOrEmpty(CancelButtonText))
             {
@@ -190,7 +190,7 @@ namespace CairoDesktop.Common
             msgDialog.Title = title;
             msgDialog.Buttons = MessageBoxButton.OKCancel;
             msgDialog.Image = image;
-            msgDialog.ResultCallback = result;
+            msgDialog.ResultCallback = resultCallback;
             msgDialog.OkButton.Content = OkButtonText;
             msgDialog.CancelButton.Content = CancelButtonText;
             
