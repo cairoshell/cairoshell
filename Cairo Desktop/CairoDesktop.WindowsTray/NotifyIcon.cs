@@ -338,8 +338,6 @@ namespace CairoDesktop.WindowsTray
 
                 _lastRClick = DateTime.Now;
             }
-
-            SetForegroundWindow(HWnd);
         }
 
         private uint GetMessageHiWord()
