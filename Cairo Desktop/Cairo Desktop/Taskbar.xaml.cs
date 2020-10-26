@@ -83,7 +83,7 @@ namespace CairoDesktop
             setTaskbarDesktopOverlayButton();
 
             // register for settings changes
-            Settings.Instance.PropertyChanged += Instance_PropertyChanged;
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         }
 
         private void setupTaskbarAppearance()
@@ -205,6 +205,14 @@ namespace CairoDesktop
             setTaskbarBlur();
         }
 
+        private void SetDesktopPosition()
+        {
+            // if we are showing but not reserving space, tell the desktop to adjust here
+            // since we aren't changing the work area, it doesn't do this on its own
+            if (Settings.Instance.TaskbarMode == 1 && Screen.Primary)
+                DesktopManager.Instance.ResetPosition(false);
+        }
+
         protected override void CustomClosing()
         {
             if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
@@ -217,10 +225,7 @@ namespace CairoDesktop
         {
             setTaskButtonSize();
 
-            // if we are showing but not reserving space, tell the desktop to adjust here
-            // since we aren't changing the work area, it doesn't do this on its own
-            if (Settings.Instance.TaskbarMode == 1 && Screen.Primary)
-                DesktopManager.Instance.ResetPosition(false);
+            SetDesktopPosition();
         }
 
         private void TaskbarWindow_Loaded(object sender, RoutedEventArgs e)
@@ -230,7 +235,7 @@ namespace CairoDesktop
                 NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
         }
 
-        private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
             {
@@ -242,6 +247,18 @@ namespace CairoDesktop
                         if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
                         break;
                     case "TaskbarMode":
+                        if (Settings.Instance.TaskbarMode == 0)
+                        {
+                            enableAppBar = true;
+                            RegisterAppBar();
+                        }
+                        else
+                        {
+                            enableAppBar = false;
+                            UnregisterAppBar();
+                        }
+                        if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
+                        SetDesktopPosition();
                         setTaskbarBlur();
                         break;
                     case "TaskbarPosition":

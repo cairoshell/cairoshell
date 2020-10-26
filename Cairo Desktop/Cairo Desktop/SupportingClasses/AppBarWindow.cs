@@ -70,11 +70,7 @@ namespace CairoDesktop.SupportingClasses
                 DelaySetPosition();
             }
 
-            // register AppBar
-            if (!Shell.IsCairoRunningAsShell && enableAppBar)
-            {
-                appbarMessageId = AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
-            }
+            RegisterAppBar();
 
             // hide from alt-tab etc
             Shell.HideWindowFromTasks(Handle);
@@ -93,11 +89,7 @@ namespace CairoDesktop.SupportingClasses
 
             if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
             {
-                // unregister AppBar
-                if (AppBarHelper.appBars.Contains(Handle))
-                {
-                    AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale);
-                }
+                UnregisterAppBar();
 
                 // unregister full-screen notifications
                 FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
@@ -287,6 +279,22 @@ namespace CairoDesktop.SupportingClasses
             {
                 enableBlur = enable;
                 Shell.SetWindowBlur(Handle, enable);
+            }
+        }
+
+        protected void RegisterAppBar()
+        {
+            if (!Shell.IsCairoRunningAsShell && enableAppBar && !AppBarHelper.appBars.Contains(Handle))
+            {
+                appbarMessageId = AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale, appBarEdge);
+            }
+        }
+
+        protected void UnregisterAppBar()
+        {
+            if (AppBarHelper.appBars.Contains(Handle))
+            {
+                AppBarHelper.RegisterBar(this, ActualWidth * dpiScale, desiredHeight * dpiScale);
             }
         }
         #endregion

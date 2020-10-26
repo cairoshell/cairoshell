@@ -358,7 +358,6 @@
                                   SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ShowHibernate, UpdateSourceTrigger=PropertyChanged}"
-                              Click="CheckBox_Click"
                               Name="chkShowHibernate">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowHibernate)}" />
                     </CheckBox>
@@ -369,7 +368,6 @@
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarBlur)}" />
                     </CheckBox>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarShadow, UpdateSourceTrigger=PropertyChanged}"
-                              Click="CheckBox_Click"
                               Name="chkEnableMenuBarShadow">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarShadow)}" />
                     </CheckBox>

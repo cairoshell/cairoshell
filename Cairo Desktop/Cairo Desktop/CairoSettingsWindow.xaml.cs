@@ -581,31 +581,26 @@ namespace CairoDesktop
         private void radProgramsMenuLayout0_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.ProgramsMenuLayout = 0;
-            showRestartButton();
         }
 
         private void radProgramsMenuLayout1_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.ProgramsMenuLayout = 1;
-            showRestartButton();
         }
 
         private void radTaskbarMode0_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarMode = 0;
-            showRestartButton();
         }
 
         private void radTaskbarMode1_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarMode = 1;
-            showRestartButton();
         }
 
         private void radTaskbarMode2_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarMode = 2;
-            showRestartButton();
         }
 
         private void radTaskbarPos0_Click(object sender, RoutedEventArgs e)
