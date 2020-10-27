@@ -159,7 +159,7 @@ namespace CairoDesktop
             {
                 if (!Shell.StartProcess(searchObj.Path))
                 {
-                    CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, MessageBoxImage.Error);
+                    CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                 }
             }
         }

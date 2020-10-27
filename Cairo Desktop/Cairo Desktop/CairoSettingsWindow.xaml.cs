@@ -67,13 +67,13 @@ namespace CairoDesktop
                     break;
             }
 
-            switch (Settings.Instance.DesktopIconSize)
+            switch ((IconSize)Settings.Instance.DesktopIconSize)
             {
-                case 0:
+                case IconSize.Large:
                     radDesktopIconSize0.IsChecked = true;
                     radDesktopIconSize2.IsChecked = false;
                     break;
-                case 2:
+                case IconSize.ExtraLarge:
                     radDesktopIconSize0.IsChecked = false;
                     radDesktopIconSize2.IsChecked = true;
                     break;
@@ -130,19 +130,19 @@ namespace CairoDesktop
                     break;
             }
 
-            switch (Settings.Instance.TaskbarIconSize)
+            switch ((IconSize)Settings.Instance.TaskbarIconSize)
             {
-                case 0:
+                case IconSize.Large:
                     radTaskbarSize0.IsChecked = true;
                     radTaskbarSize10.IsChecked = false;
                     radTaskbarSize1.IsChecked = false;
                     break;
-                case 1:
+                case IconSize.Small:
                     radTaskbarSize0.IsChecked = false;
                     radTaskbarSize10.IsChecked = false;
                     radTaskbarSize1.IsChecked = true;
                     break;
-                case 10:
+                case IconSize.Medium:
                     radTaskbarSize0.IsChecked = false;
                     radTaskbarSize10.IsChecked = true;
                     radTaskbarSize1.IsChecked = false;
@@ -620,17 +620,17 @@ namespace CairoDesktop
 
         private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = 0;
+            Settings.Instance.TaskbarIconSize = (int)IconSize.Large;
         }
 
         private void radTaskbarSize1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = 1;
+            Settings.Instance.TaskbarIconSize = (int)IconSize.Small;
         }
 
         private void radTaskbarSize10_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = 10;
+            Settings.Instance.TaskbarIconSize = (int)IconSize.Medium;
         }
 
         private void radTaskbarMiddleClick0_Click(object sender, RoutedEventArgs e)
@@ -655,12 +655,12 @@ namespace CairoDesktop
 
         private void radDesktopIconSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopIconSize = 0;
+            Settings.Instance.DesktopIconSize = (int)IconSize.Large;
         }
 
         private void radDesktopIconSize2_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopIconSize = 2;
+            Settings.Instance.DesktopIconSize = (int)IconSize.ExtraLarge;
         }
 
         private void radTrayMode0_Click(object sender, RoutedEventArgs e)
@@ -693,10 +693,14 @@ namespace CairoDesktop
 
             Shell.IsCairoConfiguredAsShell = !Shell.IsCairoConfiguredAsShell;
 
-            bool? LogoffChoice = CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, Localization.DisplayString.sSettings_Advanced_ShellChanged, "Resources/logoffIcon.png", Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater);
-
-            if (LogoffChoice.HasValue && LogoffChoice.Value)
-                Shell.Logoff();
+            CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, 
+                Localization.DisplayString.sSettings_Advanced_ShellChanged, CairoMessageImage.LogOff, 
+                Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater,
+                result =>
+                {
+                    if (result == true)
+                        Shell.Logoff();
+                });
         }
 
         private void btnOpenLogsFolder_OnClick(object sender, RoutedEventArgs e)

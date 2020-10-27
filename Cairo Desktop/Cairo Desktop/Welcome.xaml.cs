@@ -14,7 +14,7 @@ namespace CairoDesktop
     public partial class Welcome : Window
     {
         const int maxSize = 780;
-        string _language = "en_US";
+        string _initialLanguage = "en_US";
 
         public Welcome()
         {
@@ -56,12 +56,12 @@ namespace CairoDesktop
 
         private void LoadLanguages()
         {
-            _language = Settings.Instance.Language;
+            _initialLanguage = Settings.Instance.Language;
 
             cboLangSelect.DisplayMemberPath = "Key";
             cboLangSelect.SelectedValuePath = "Value";
 
-            foreach (KeyValuePair<string, string> lang in Localization.DisplayString.Languages)
+            foreach (KeyValuePair<string, string> lang in DisplayString.Languages)
             {
                 cboLangSelect.Items.Add(lang);
             }
@@ -96,10 +96,16 @@ namespace CairoDesktop
 
         private void cboLangSelect_DropDownClosed(object sender, EventArgs e)
         {
-            if (Settings.Instance.Language != _language)
+            if (Settings.Instance.Language != _initialLanguage)
             {
-                CairoMessage.Show(DisplayString.sWelcome_ChangingLanguageText, DisplayString.sWelcome_ChangingLanguage, MessageBoxButton.OK, MessageBoxImage.Information);
-                Startup.RestartCairo();
+                CairoMessage.Show(DisplayString.sWelcome_ChangingLanguageText, DisplayString.sWelcome_ChangingLanguage, MessageBoxButton.OK, CairoMessageImage.Information,
+                    result =>
+                    {
+                        if (result == true)
+                        {
+                            Startup.RestartCairo();
+                        }
+                    });
             }
         }
     }

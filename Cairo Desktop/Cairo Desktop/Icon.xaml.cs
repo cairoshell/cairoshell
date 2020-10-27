@@ -141,9 +141,8 @@ namespace CairoDesktop
                 bdrFilename.SetValue(DockPanel.DockProperty, Dock.Bottom);
             }
 
-            if (Settings.Instance.DesktopIconSize == 2)
+            if (Settings.Instance.DesktopIconSize == (int)IconSize.ExtraLarge)
             {
-                // large icons
                 imgIcon.Width = 48;
                 imgIcon.Height = 48;
                 Binding iconBinding = new Binding("LargeIcon");
@@ -154,7 +153,6 @@ namespace CairoDesktop
             }
             else
             {
-                // small icons
                 imgIcon.Width = 32;
                 imgIcon.Height = 32;
                 Binding iconBinding = new Binding("Icon");
@@ -227,7 +225,7 @@ namespace CairoDesktop
                 }
 
                 CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                    CairoMessageImage.Error);
             }
         }
 
