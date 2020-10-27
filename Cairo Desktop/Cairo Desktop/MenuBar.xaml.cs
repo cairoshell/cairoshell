@@ -99,10 +99,7 @@ namespace CairoDesktop
             }
 
             // Show power options depending on system support
-            if (Settings.Instance.ShowHibernate && Shell.CanHibernate())
-            {
-                miHibernate.Visibility = Visibility.Visible;
-            }
+            SetHibernateVisibility();
 
             if (!Shell.CanSleep())
             {
@@ -258,7 +255,19 @@ namespace CairoDesktop
             }
         }
 
-#region Programs menu
+        private void SetHibernateVisibility()
+        {
+            if (Settings.Instance.ShowHibernate && Shell.CanHibernate())
+            {
+                miHibernate.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                miHibernate.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        #region Programs menu
         private void OnShowProgramsMenu(HotKey hotKey)
         {
             ToggleProgramsMenu();
@@ -307,7 +316,7 @@ namespace CairoDesktop
         }
 #endregion
 
-#region Events
+        #region Events
 
         internal override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
@@ -337,6 +346,7 @@ namespace CairoDesktop
         {
             if (shadow != null && !shadow.IsClosing)
             {
+                shadow.AllowClose = true;
                 shadow.Close();
                 shadow = null;
             }
@@ -454,6 +464,19 @@ namespace CairoDesktop
                     case "EnableMenuBarBlur":
                         SetBlur(Settings.Instance.EnableMenuBarBlur);
                         break;
+                    case "EnableMenuBarShadow":
+                        if (Settings.Instance.EnableMenuBarShadow)
+                        {
+                            setupShadow();
+                        }
+                        else
+                        {
+                            closeShadow();
+                        }
+                        break;
+                    case "ShowHibernate":
+                        SetHibernateVisibility();
+                        break;
                 }
             }
         }
@@ -552,7 +575,7 @@ namespace CairoDesktop
         }
 #endregion
 
-#region Places menu items
+        #region Places menu items
         private void OpenMyDocs(object sender, RoutedEventArgs e)
         {
             FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Documents));

@@ -15,6 +15,7 @@ namespace CairoDesktop
     {
         private double dpiScale = 1;
         public bool IsClosing;
+        public bool AllowClose;
 
         public MenuBar MenuBar;
         private IntPtr Handle;
@@ -106,7 +107,7 @@ namespace CairoDesktop
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             IsClosing = true;
-            if (!Startup.IsShuttingDown && !WindowManager.Instance.IsSettingDisplays)
+            if (!Startup.IsShuttingDown && !WindowManager.Instance.IsSettingDisplays && !AllowClose)
             {
                 IsClosing = false;
                 e.Cancel = true;
