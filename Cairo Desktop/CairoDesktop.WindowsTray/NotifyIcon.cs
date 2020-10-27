@@ -303,6 +303,8 @@ namespace CairoDesktop.WindowsTray
             // ensure our Shell_TrayWnd is topmost, which some icons require
             TrayService.Instance.MakeTrayTopmost();
 
+            SetForegroundWindow(HWnd);
+
             uint wparam = GetMessageWParam(mouse);
             uint hiWord = GetMessageHiWord();
 
