@@ -356,7 +356,7 @@ namespace CairoDesktop.WindowsTray
             }
         }
 
-        public void MakeTrayTopmost()
+        private void MakeTrayTopmost()
         {
             if (HwndTray != IntPtr.Zero)
             {
