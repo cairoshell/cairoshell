@@ -300,8 +300,9 @@ namespace CairoDesktop.WindowsTray
         {
             CairoLogger.Instance.Debug(string.Format("{0} mouse button clicked icon: {1}", button.ToString(), Title));
 
-            // ensure our Shell_TrayWnd is focused so that menus go away after clicking outside
+            // ensure focus so that menus go away after clicking outside
             SetForegroundWindow(NotificationArea.Instance.Handle);
+            SetForegroundWindow(HWnd);
 
             uint wparam = GetMessageWParam(mouse);
             uint hiWord = GetMessageHiWord();
