@@ -1554,6 +1554,12 @@ namespace CairoDesktop.Interop
         public static extern bool GetWindowRect(IntPtr hWnd, out Rect lpRect);
 
         [DllImport(User32_DllName)]
+        public static extern bool GetClientRect(IntPtr hWnd, out Rect lpRect);
+
+        [DllImport(User32_DllName, ExactSpelling = true, SetLastError = true)]
+        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref Rect rect, [MarshalAs(UnmanagedType.U4)] int cPoints);
+
+        [DllImport(User32_DllName)]
         public static extern IntPtr GetDesktopWindow();
 
         [DllImport(User32_DllName)]
