@@ -31,26 +31,6 @@ namespace CairoDesktop.Interop
         public static extern int SetShellWindow(IntPtr hWnd);
 
         [DllImport(User32_DllName)]
-        public static extern IntPtr BeginPaint(IntPtr hwnd, out PAINTSTRUCT lpPaint);
-
-        [DllImport(User32_DllName)]
-        public static extern int FillRect(IntPtr hDC, [In] ref Rect lprc, IntPtr hbr);
-
-        [DllImport(User32_DllName)]
-        public static extern bool EndPaint(IntPtr hWnd, [In] ref PAINTSTRUCT lpPaint);
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct PAINTSTRUCT
-        {
-            public IntPtr hdc;
-            public bool fErase;
-            public Rect rcPaint;
-            public bool fRestore;
-            public bool fIncUpdate;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)] public byte[] rgbReserved;
-        }
-
-        [DllImport(User32_DllName)]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
 
         public enum WindowZOrder
@@ -114,11 +94,32 @@ namespace CairoDesktop.Interop
             }
         }
 
-        [DllImport(User32_DllName)]
-        public static extern bool ExitWindowsEx(uint flags, uint reason);
+        public enum ExitWindows : uint
+        {
+            /// <summary>
+            /// Log the user off.
+            /// </summary>
+            Logoff = 0x00,
+
+            /// <summary>
+            /// Shutdown the machine.
+            /// </summary>
+            Shutdown = 0x08,
+
+            /// <summary>
+            /// Reboots the machine.
+            /// </summary>
+            Reboot = 0x02,
+
+            /// <summary>
+            /// Forces the machine to perform the operation if the apps are hung.
+            /// Use this in conjunction with one of the lower flags.
+            /// </summary>
+            ForceIfHung = 0x10
+        }
 
         [DllImport(User32_DllName)]
-        public static extern bool PostMessage(IntPtr hWnd, uint callback, uint wParam, uint lParam);
+        public static extern bool ExitWindowsEx(uint flags, uint reason);
 
         [DllImport(User32_DllName, SetLastError = true)]
         public static extern IntPtr FindWindow(string className, string windowName);
@@ -145,6 +146,122 @@ namespace CairoDesktop.Interop
             GW_CHILD = 5,
             GW_ENABLEDPOPUP = 6
         }
+
+        [Flags]
+        public enum ExtendedWindowStyles : uint
+        {
+            WS_EX_DLGMODALFRAME = 0x1,
+            WS_EX_NOPARENTNOTIFY = 0x4,
+            WS_EX_TOPMOST = unchecked(0x8),
+            WS_EX_ACCEPTFILES = 0x10,
+            WS_EX_TRANSPARENT = 0x20,
+            WS_EX_MDICHILD = 0x40,
+            WS_EX_TOOLWINDOW = 0x80,
+            WS_EX_WINDOWEDGE = 0x100,
+            WS_EX_CLIENTEDGE = 0x200,
+            WS_EX_CONTEXTHELP = 0x400,
+            WS_EX_RIGHT = 0x1000,
+            WS_EX_LEFT = 0x0,
+            WS_EX_RTLREADING = 0x2000,
+            WS_EX_LTRREADING = 0x0,
+            WS_EX_LEFTSCROLLBAR = 0x4000,
+            WS_EX_RIGHTSCROLLBAR = 0x0,
+            WS_EX_CONTROLPARENT = 0x10000,
+            WS_EX_STATICEDGE = 0x20000,
+            WS_EX_APPWINDOW = 0x40000,
+            WS_EX_OVERLAPPEDWINDOW = (WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE),
+            WS_EX_PALETTEWINDOW = (WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST),
+            WS_EX_LAYERED = 0x80000,
+            WS_EX_NOINHERITLAYOUT = 0x100000,
+            WS_EX_LAYOUTRTL = 0x400000,
+            WS_EX_COMPOSITED = 0x2000000,
+            WS_EX_NOACTIVATE = 0x8000000
+        }
+
+        [Flags]
+        public enum WindowStyles : uint
+        {
+            WS_OVERLAPPED = 0x0,
+            WS_POPUP = 0x80000000,
+            WS_CHILD = 0x40000000,
+            WS_MINIMIZE = 0x20000000,
+            WS_VISIBLE = 0x10000000,
+            WS_DISABLED = 0x8000000,
+            WS_CLIPSIBLINGS = 0x4000000,
+            WS_CLIPCHILDREN = 0x2000000,
+            WS_MAXIMIZE = 0x1000000,
+            WS_CAPTION = (WS_BORDER | WS_DLGFRAME),
+            WS_BORDER = 0x800000,
+            WS_DLGFRAME = 0x400000,
+            WS_VSCROLL = 0x200000,
+            WS_HSCROLL = 0x100000,
+            WS_SYSMENU = 0x80000,
+            WS_THICKFRAME = 0x40000,
+            WS_GROUP = 0x20000,
+            WS_TABSTOP = 0x10000,
+            WS_MINIMIZEBOX = 0x20000,
+            WS_MAXIMIZEBOX = 0x10000,
+            WS_TILED = WS_OVERLAPPED,
+            WS_ICONIC = WS_MINIMIZE,
+            WS_SIZEBOX = WS_THICKFRAME,
+            WS_TILEDWINDOW = WS_OVERLAPPEDWINDOW,
+            WS_OVERLAPPEDWINDOW = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX),
+            WS_POPUPWINDOW = (WS_POPUP | WS_BORDER | WS_SYSMENU),
+            WS_CHILDWINDOW = (WS_CHILD)
+        }
+
+        public const int MA_NOACTIVATE = 0x0003;
+        public const int GWL_STYLE = -16;
+        public const int GWL_EXSTYLE = -20;
+
+        public const int HSHELL_HIGHBIT = 0x8000;
+
+        public const int SC_MINIMIZE = 0xF020;
+        public const int SC_MOVE = 0xF010;
+        public const int SC_RESTORE = 0xF120;
+        public const int SC_SIZE = 0xF000;
+        public const int SC_CLOSE = 0xF060;
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct COPYDATASTRUCT
+        {
+            public IntPtr dwData;    // Any value the sender chooses.  Perhaps its main window handle?
+            public int cbData;       // The count of bytes in the message.
+            public IntPtr lpData;    // The address of the message.
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SHELLHOOKINFO
+        {
+            public IntPtr hwnd;
+            public Rect rc;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MinimizedMetrics
+        {
+            public uint cbSize;
+            public int iWidth;
+            public int iHorzGap;
+            public int iVertGap;
+            public MinimizedMetricsArrangement iArrange;
+        }
+
+        [Flags]
+        public enum MinimizedMetricsArrangement
+        {
+            BottomLeft = 0,
+            BottomRight = 1,
+            TopLeft = 2,
+            TopRight = 3,
+            Left = 0,
+            Right = 0,
+            Up = 4,
+            Down = 4,
+            Hide = 8
+        }
+
+        public delegate IntPtr WndProcDelegate(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport(User32_DllName, SetLastError = true)]
         public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
@@ -194,9 +311,6 @@ namespace CairoDesktop.Interop
 
         [DllImport(User32_DllName)]
         public static extern IntPtr GetParent(IntPtr handle);
-
-        [DllImport(User32_DllName)]
-        public static extern IntPtr GetWindow(IntPtr handle, int wCmd);
 
         public struct WINDOWPLACEMENT
         {
@@ -1558,9 +1672,6 @@ namespace CairoDesktop.Interop
 
         [DllImport(User32_DllName, ExactSpelling = true, SetLastError = true)]
         public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref Rect rect, [MarshalAs(UnmanagedType.U4)] int cPoints);
-
-        [DllImport(User32_DllName)]
-        public static extern IntPtr GetDesktopWindow();
 
         [DllImport(User32_DllName)]
         public static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, IntPtr pvParam, SPIF fWinIni);

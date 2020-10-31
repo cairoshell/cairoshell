@@ -103,8 +103,16 @@
   <ItemGroup>
     <Compile Include="ComTaskScheduler.cs" />
     <Compile Include="KnownFolders.cs" />
+    <Compile Include="NativeMethods.AdvApi32.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="NativeMethods.DocObj.cs" />
     <Compile Include="NativeMethods.DwmApi.cs" />
+    <Compile Include="NativeMethods.Kernel32.cs" />
+    <Compile Include="NativeMethods.Ole32.cs" />
+    <Compile Include="NativeMethods.PowrProf.cs" />
+    <Compile Include="NativeMethods.Shell32.cs" />
+    <Compile Include="NativeMethods.ShFolder.cs" />
+    <Compile Include="NativeMethods.ShlwApi.cs" />
     <Compile Include="NativeMethods.User32.cs" />
     <Compile Include="NativeWindowEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

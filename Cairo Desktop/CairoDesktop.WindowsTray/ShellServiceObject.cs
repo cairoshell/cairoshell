@@ -7,6 +7,7 @@ namespace CairoDesktop.WindowsTray
 {
     public class ShellServiceObject: IDisposable
     {
+        const string CGID_SHELLSERVICEOBJECT = "000214D2-0000-0000-C000-000000000046";
         private IOleCommandTarget sysTrayObject;
 
         public void Start()
