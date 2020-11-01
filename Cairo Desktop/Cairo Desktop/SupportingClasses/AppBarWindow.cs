@@ -12,7 +12,7 @@ namespace CairoDesktop.SupportingClasses
     public class AppBarWindow : Window
     {
         public System.Windows.Forms.Screen Screen;
-        internal double dpiScale = 1.0;
+        public double dpiScale = 1.0;
         protected bool processScreenChanges;
 
         // Window properties
@@ -25,7 +25,7 @@ namespace CairoDesktop.SupportingClasses
 
         // AppBar properties
         private int appbarMessageId = -1;
-        internal NativeMethods.ABEdge appBarEdge = NativeMethods.ABEdge.ABE_TOP;
+        public NativeMethods.ABEdge appBarEdge = NativeMethods.ABEdge.ABE_TOP;
         protected bool enableAppBar = true;
         internal bool requiresScreenEdge;
 

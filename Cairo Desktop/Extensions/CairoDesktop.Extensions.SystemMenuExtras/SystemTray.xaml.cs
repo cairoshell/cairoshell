@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
 using CairoDesktop.WindowsTray;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
@@ -75,6 +76,11 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
             return (((uint)System.Windows.Forms.Cursor.Position.Y << 16) | (uint)System.Windows.Forms.Cursor.Position.X);
         }
 
+        public TrayHostSizeData GetMenuBarSizeData()
+        {
+            return new TrayHostSizeData { edge = (int)MenuBar.appBarEdge, rc = new NativeMethods.Rect { Top = (int)(MenuBar.Top * MenuBar.dpiScale), Left = (int)(MenuBar.Left * MenuBar.dpiScale), Bottom = (int)((MenuBar.Top + MenuBar.Height) * MenuBar.dpiScale), Right = (int)((MenuBar.Left + MenuBar.Width) * MenuBar.dpiScale) } };
+        }
+
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (sender is Decorator sendingDecorator
@@ -83,7 +89,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
                 if (MenuBar != null)
                 {
                     // set current menu bar to return placement for ABM_GETTASKBARPOS message
-                    NotificationArea.Instance.SetTrayHostSizeData(MenuBar.GetMenuBarSizeData());
+                    NotificationArea.Instance.SetTrayHostSizeData(GetMenuBarSizeData());
                 }
 
                 trayIcon.IconMouseClick(e.ChangedButton, GetMousePos(), System.Windows.Forms.SystemInformation.DoubleClickTime);

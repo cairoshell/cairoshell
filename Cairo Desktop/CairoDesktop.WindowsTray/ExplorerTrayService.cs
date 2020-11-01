@@ -236,5 +236,50 @@ namespace CairoDesktop.WindowsTray
                 CairoLogger.Instance.Debug($"ExplorerTrayService: Unable to set EnableAutoTray setting: {e.Message}");
             }
         }
+
+        public enum TB : uint
+        {
+            GETBUTTON = WM.USER + 23,
+            BUTTONCOUNT = WM.USER + 24
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct TrayItem
+        {
+            public IntPtr hWnd;
+            public uint uID;
+            public uint uCallbackMessage;
+            public uint dwState;
+            public uint uVersion;
+            public IntPtr hIcon;
+            public IntPtr uIconDemoteTimerID;
+            public uint dwUserPref;
+            public uint dwLastSoundTime;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szExeName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szIconText;
+            public uint uNumSeconds;
+            public Guid guidItem;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct TBBUTTON
+        {
+            public int iBitmap;
+            public int idCommand;
+            [StructLayout(LayoutKind.Explicit)]
+            private struct TBBUTTON_U
+            {
+                [FieldOffset(0)] public byte fsState;
+                [FieldOffset(1)] public byte fsStyle;
+                [FieldOffset(0)] private IntPtr bReserved;
+            }
+            private TBBUTTON_U union;
+            public byte fsState { get { return union.fsState; } set { union.fsState = value; } }
+            public byte fsStyle { get { return union.fsStyle; } set { union.fsStyle = value; } }
+            public UIntPtr dwData;
+            public IntPtr iString;
+        }
     }
 }

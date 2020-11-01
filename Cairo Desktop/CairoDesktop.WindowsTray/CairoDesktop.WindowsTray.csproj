@@ -91,6 +91,7 @@
     <Compile Include="SafeNotifyIconData.cs" />
     <Compile Include="ShellServiceObject.cs" />
     <Compile Include="SysTrayObject.cs" />
+    <Compile Include="TrayHostSizeData.cs" />
     <Compile Include="TrayNotify.cs" />
     <Compile Include="TrayService.cs" />
   </ItemGroup>

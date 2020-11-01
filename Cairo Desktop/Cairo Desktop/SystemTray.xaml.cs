@@ -5,6 +5,7 @@ using CairoDesktop.WindowsTray;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
 
 namespace CairoDesktop
 {
@@ -75,6 +76,11 @@ namespace CairoDesktop
             return (((uint)System.Windows.Forms.Cursor.Position.Y << 16) | (uint)System.Windows.Forms.Cursor.Position.X);
         }
 
+        public TrayHostSizeData GetMenuBarSizeData()
+        {
+            return new TrayHostSizeData { edge = (int)MenuBar.appBarEdge, rc = new NativeMethods.Rect { Top = (int)(MenuBar.Top * MenuBar.dpiScale), Left = (int)(MenuBar.Left * MenuBar.dpiScale), Bottom = (int)((MenuBar.Top + MenuBar.Height) * MenuBar.dpiScale), Right = (int)((MenuBar.Left + MenuBar.Width) * MenuBar.dpiScale) } };
+        }
+
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
@@ -84,7 +90,7 @@ namespace CairoDesktop
                 if (MenuBar != null)
                 {
                     // set current menu bar to return placement for ABM_GETTASKBARPOS message
-                    NotificationArea.Instance.SetTrayHostSizeData(MenuBar.GetMenuBarSizeData());
+                    NotificationArea.Instance.SetTrayHostSizeData(GetMenuBarSizeData());
                 }
                 trayIcon.IconMouseClick(e.ChangedButton, getMousePos(), System.Windows.Forms.SystemInformation.DoubleClickTime);
             }
