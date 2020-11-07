@@ -70,14 +70,7 @@ namespace CairoDesktop.WindowsTray
                     (int) SetWindowPosFlags.SWP_NOACTIVATE |
                     (int) SetWindowPosFlags.SWP_NOSIZE);
 
-                int msg = RegisterWindowMessage("TaskbarCreated");
-
-                if (msg > 0)
-                {
-                    CairoLogger.Instance.Debug("TrayService: Sending TaskbarCreated message");
-                    SendNotifyMessage(HWND_BROADCAST,
-                        (uint) msg, UIntPtr.Zero, IntPtr.Zero);
-                }
+                SendTaskbarCreated();
             }
         }
 
@@ -102,6 +95,18 @@ namespace CairoDesktop.WindowsTray
             }
         }
 
+        private void SendTaskbarCreated()
+        {
+            int msg = RegisterWindowMessage("TaskbarCreated");
+
+            if (msg > 0)
+            {
+                CairoLogger.Instance.Debug("TrayService: Sending TaskbarCreated message");
+                SendNotifyMessage(HWND_BROADCAST,
+                    (uint)msg, UIntPtr.Zero, IntPtr.Zero);
+            }
+        }
+
         private void DestroyWindows()
         {
             if (HwndNotify != IntPtr.Zero)
@@ -122,6 +127,9 @@ namespace CairoDesktop.WindowsTray
         public void Dispose()
         {
             DestroyWindows();
+
+            if (!Shell.IsCairoRunningAsShell)
+                SendTaskbarCreated();
         }
 
         public IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
