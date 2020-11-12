@@ -247,7 +247,9 @@ namespace CairoDesktop.WindowsTray
 
                         trayIcon.HWnd = nicData.hWnd;
                         trayIcon.UID = nicData.uID;
-                        trayIcon.GUID = nicData.guidItem;
+
+                        if ((NIF.GUID & nicData.uFlags) != 0)
+                            trayIcon.GUID = nicData.guidItem;
 
                         // guess version in case we are receiving icons that aren't sending NIM_SETVERSION to new explorers
                         if ((NIF.VISTA_MASK & nicData.uFlags) != 0)
