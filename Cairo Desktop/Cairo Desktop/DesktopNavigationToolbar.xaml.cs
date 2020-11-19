@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Controls;
+using CairoDesktop.Common.Logging;
 
 namespace CairoDesktop
 {
@@ -217,17 +218,24 @@ namespace CairoDesktop
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
-            using (System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog
+            try
             {
-                Description = Localization.DisplayString.sDesktop_BrowseTitle,
-                ShowNewFolderButton = false,
-                SelectedPath = NavigationManager.CurrentPath
-            })
+                using (System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog
+                {
+                    Description = Localization.DisplayString.sDesktop_BrowseTitle,
+                    ShowNewFolderButton = false,
+                    SelectedPath = NavigationManager.CurrentPath
+                })
+                {
+                    NativeMethods.SetForegroundWindow(helper.Handle); // bring browse window to front
+                    if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        if (Directory.Exists(fbd.SelectedPath))
+                            NavigationManager.NavigateTo(fbd.SelectedPath);
+                }
+            }
+            catch (Exception exception)
             {
-                NativeMethods.SetForegroundWindow(helper.Handle); // bring browse window to front
-                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    if (Directory.Exists(fbd.SelectedPath))
-                        NavigationManager.NavigateTo(fbd.SelectedPath);
+                CairoLogger.Instance.Warning($"DesktopNavigationToolbar: Exception in FolderBrowserDialog: {exception.Message}");
             }
         }
         
