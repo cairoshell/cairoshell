@@ -275,7 +275,7 @@ namespace CairoDesktop.SupportingClasses
 
         protected void SetBlur(bool enable)
         {
-            if (enableBlur != enable)
+            if (enableBlur != enable && Handle != IntPtr.Zero)
             {
                 enableBlur = enable;
                 Shell.SetWindowBlur(Handle, enable);
