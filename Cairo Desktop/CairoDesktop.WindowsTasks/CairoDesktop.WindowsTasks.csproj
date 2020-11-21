@@ -95,8 +95,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ITaskCategoryProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApplicationWindow.cs" />
+    <Compile Include="TaskCategoryChangeDelegate.cs" />
     <Compile Include="WindowsTasksService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -107,10 +109,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj">
-      <Project>{de9674cc-507e-4049-9152-5c899b9f0939}</Project>
-      <Name>CairoDesktop.AppGrabber</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">
       <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
       <Name>CairoDesktop.Common</Name>

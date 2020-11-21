@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using CairoDesktop.AppGrabber;
 using CairoDesktop.Common;
 
 namespace CairoDesktop
@@ -72,7 +73,12 @@ namespace CairoDesktop
             CanAutoHide = true;
 
             // setup taskbar item source
-            WindowsTasks.WindowsTasksService.Instance.Initialize();
+            if (!WindowsTasks.WindowsTasksService.Instance.IsInitialized)
+            {
+                WindowsTasks.WindowsTasksService.Instance.SetTaskCategoryProvider(new TaskCategoryProvider());
+                WindowsTasks.WindowsTasksService.Instance.Initialize();
+            }
+
             TasksList.ItemsSource = WindowsTasks.WindowsTasksService.Instance.GroupedWindows;
             TasksList2.ItemsSource = WindowsTasks.WindowsTasksService.Instance.GroupedWindows;
             if (WindowsTasks.WindowsTasksService.Instance.GroupedWindows != null) WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged += GroupedWindows_Changed;

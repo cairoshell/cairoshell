@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows;
 using System.Windows.Data;
-
 using CairoDesktop.Common.Logging;
 using static CairoDesktop.Interop.NativeMethods;
 using CairoDesktop.Interop;
@@ -19,7 +18,7 @@ namespace CairoDesktop.WindowsTasks
     {
         private NativeWindowEx _HookWin;
         private object _windowsLock = new object();
-        private bool isInitialized;
+        public bool IsInitialized;
 
         private static int WM_SHELLHOOKMESSAGE = -1;
         private static int WM_TASKBARCREATEDMESSAGE = -1;
@@ -28,13 +27,16 @@ namespace CairoDesktop.WindowsTasks
         private static IntPtr uncloakEventHook = IntPtr.Zero;
         private WinEventProc uncloakEventProc;
 
+        private ITaskCategoryProvider TaskCategoryProvider;
+        private TaskCategoryChangeDelegate CategoryChangeDelegate;
+
         public static WindowsTasksService Instance { get; } = new WindowsTasksService();
 
         private WindowsTasksService() { }
 
         public void Initialize()
         {
-            if (isInitialized)
+            if (IsInitialized)
             {
                 return;
             }
@@ -57,7 +59,7 @@ namespace CairoDesktop.WindowsTasks
                 TASKBARBUTTONCREATEDMESSAGE = RegisterWindowMessage("TaskbarButtonCreated");
                 _HookWin.MessageReceived += ShellWinProc;
 
-                if (Interop.Shell.IsWindows8OrBetter)
+                if (Shell.IsWindows8OrBetter)
                 {
                     // set event hook for uncloak events
                     uncloakEventProc = UncloakEventCallback;
@@ -98,10 +100,7 @@ namespace CairoDesktop.WindowsTasks
                 // enumerate windows already opened and set active window
                 getInitialWindows();
 
-                // register for app grabber changes so that our app association is accurate
-                AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged += CategoryList_CategoryChanged;
-
-                isInitialized = true;
+                IsInitialized = true;
             }
             catch (Exception ex)
             {
@@ -109,11 +108,26 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
+        public void SetTaskCategoryProvider(ITaskCategoryProvider provider)
+        {
+            TaskCategoryProvider = provider;
+
+            if (CategoryChangeDelegate == null)
+            {
+                CategoryChangeDelegate = CategoriesChanged;
+            }
+
+            TaskCategoryProvider.SetCategoryChangeDelegate(CategoryChangeDelegate);
+        }
+
         private void getInitialWindows()
         {
             EnumWindows((hwnd, lParam) =>
             {
                 ApplicationWindow win = new ApplicationWindow(hwnd, this);
+
+                // set window category if provided by shell
+                win.Category = TaskCategoryProvider?.GetCategory(win);
 
                 if (win.CanAddToTaskbar && win.ShowInTaskbar && !Windows.Contains(win))
                     Windows.Add(win);
@@ -147,21 +161,22 @@ namespace CairoDesktop.WindowsTasks
 
         public void Dispose()
         {
-            if (isInitialized)
+            if (IsInitialized)
             {
                 CairoLogger.Instance.Debug("TasksService: Deregistering hooks");
-                AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged -= CategoryList_CategoryChanged;
                 DeregisterShellHookWindow(_HookWin.Handle);
                 if (uncloakEventHook != IntPtr.Zero) UnhookWinEvent(uncloakEventHook);
                 _HookWin.DestroyHandle();
             }
+
+            TaskCategoryProvider?.Dispose();
         }
 
-        private void CategoryList_CategoryChanged(object sender, EventArgs e)
+        private void CategoriesChanged()
         {
             foreach (ApplicationWindow window in Windows)
             {
-                window.SetCategory();
+                window.Category = TaskCategoryProvider?.GetCategory(window);
             }
         }
 
@@ -194,6 +209,9 @@ namespace CairoDesktop.WindowsTasks
         {
             ApplicationWindow win = new ApplicationWindow(hWnd, this);
 
+            // set window category if provided by shell
+            win.Category = TaskCategoryProvider?.GetCategory(win);
+
             // set window state if a non-default value is provided
             if (initialState != ApplicationWindow.WindowState.Inactive) win.State = initialState;
 
@@ -203,7 +221,7 @@ namespace CairoDesktop.WindowsTasks
             // Only send TaskbarButtonCreated if we are shell, and if OS is not Server Core
             // This is because if Explorer is running, it will send the message, so we don't need to
             // Server Core doesn't support ITaskbarList, so sending this message on that OS could cause some assuming apps to crash
-            if (Interop.Shell.IsCairoRunningAsShell && !Interop.Shell.IsServerCore) SendNotifyMessage(win.Handle, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
+            if (Shell.IsCairoRunningAsShell && !Shell.IsServerCore) SendNotifyMessage(win.Handle, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
 
             return win;
         }
@@ -328,7 +346,7 @@ namespace CairoDesktop.WindowsTasks
                             case HSHELL.GETMINRECT:
                                 CairoLogger.Instance.Debug("GetMinRect called: " + msg.LParam.ToString());
                                 SHELLHOOKINFO winHandle = (SHELLHOOKINFO)Marshal.PtrToStructure(msg.LParam, typeof(SHELLHOOKINFO));
-                                winHandle.rc = new Interop.NativeMethods.Rect { Bottom = 100, Left = 0, Right = 100, Top = 0 };
+                                winHandle.rc = new NativeMethods.Rect { Bottom = 100, Left = 0, Right = 100, Top = 0 };
                                 Marshal.StructureToPtr(winHandle, msg.LParam, true);
                                 msg.Result = winHandle.hwnd;
                                 return; // return here so the result isnt reset to DefWindowProc

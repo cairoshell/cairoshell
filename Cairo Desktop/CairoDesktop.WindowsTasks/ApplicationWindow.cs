@@ -3,7 +3,6 @@ using System.Text;
 using System.Diagnostics;
 using System.ComponentModel;
 using CairoDesktop.Interop;
-using CairoDesktop.AppGrabber;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using CairoDesktop.Common;
@@ -36,11 +35,7 @@ namespace CairoDesktop.WindowsTasks
 
         public void Dispose()
         {
-            if (_applicationInfo != null)
-            {
-                _applicationInfo.PropertyChanged -= AppInfo_PropertyChanged;
-                if (_applicationInfo?.Category != null) _applicationInfo.Category.PropertyChanged -= Category_PropertyChanged;
-            }
+            // no longer required
         }
 
         public IntPtr Handle
@@ -98,7 +93,7 @@ namespace CairoDesktop.WindowsTasks
 
         private bool? _isUWP = null;
 
-        private bool isUWP
+        public bool IsUWP
         {
             get
             {
@@ -132,92 +127,15 @@ namespace CairoDesktop.WindowsTasks
         {
             get
             {
-                if(_category == null)
-                {
-                    SetCategory();
-                }
                 return _category;
             }
-        }
-
-        public void SetCategory()
-        {
-            string category;
-
-            if (_applicationInfo != null && _applicationInfo.Category == null)
+            set
             {
-                // if app was removed, category is null, so stop using that app
-                _applicationInfo.PropertyChanged -= AppInfo_PropertyChanged;
-                _applicationInfo = null;
-            }
-            category = ApplicationInfo?.Category?.DisplayName;
-
-            if (category == null && WinFileName.ToLower().Contains("cairodesktop.exe"))
-                category = "Cairo";
-            else if (category == null && WinFileName.ToLower().Contains("\\windows\\") && !isUWP)
-                category = "Windows";
-            else if (category == null)
-                category = Localization.DisplayString.sAppGrabber_Uncategorized;
-
-            if (_category != category)
-            {
-                _category = category;
-                OnPropertyChanged("Category");
-            }
-        }
-
-        private ApplicationInfo _applicationInfo;
-
-        public ApplicationInfo ApplicationInfo
-        {
-            get
-            {
-                if (_applicationInfo == null)
+                if (value != _category)
                 {
-                    ApplicationInfo appInfo = null;
-                    foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.CategoryList.FlatList)
-                    {
-                        if ((ai.Target.ToLower() == WinFileName.ToLower() || (isUWP && ai.Target == AppUserModelID)) && ai.Category != null)
-                        {
-                            appInfo = ai;
-                            break;
-                        }
-                        else if (Title.ToLower().Contains(ai.Name.ToLower()) && ai.Category != null)
-                        {
-                            appInfo = ai;
-                        }
-                    }
-
-                    if (appInfo != null)
-                    {
-                        appInfo.PropertyChanged += AppInfo_PropertyChanged;
-                        if (appInfo.Category != null) appInfo.Category.PropertyChanged += Category_PropertyChanged;
-                    }
-                    _applicationInfo = appInfo;
+                    _category = value;
+                    OnPropertyChanged("Category");
                 }
-
-                return _applicationInfo;
-            }
-        }
-
-        public ApplicationInfo QuickLaunchAppInfo
-        {
-            get
-            {
-                // it would be nice to cache this, but need to handle case of user adding/removing app via various means after first access
-                foreach (ApplicationInfo ai in AppGrabber.AppGrabber.Instance.QuickLaunch)
-                {
-                    if (ai.Target.ToLower() == WinFileName.ToLower() || (isUWP && ai.Target == AppUserModelID))
-                    {
-                        return ai;
-                    }
-                    else if (Title.ToLower().Contains(ai.Name.ToLower()))
-                    {
-                        return ai;
-                    }
-                }
-
-                return null;
             }
         }
 
@@ -445,7 +363,7 @@ namespace CairoDesktop.WindowsTasks
 
                 Task.Factory.StartNew(() =>
                 {
-                    if (isUWP && !string.IsNullOrEmpty(AppUserModelID))
+                    if (IsUWP && !string.IsNullOrEmpty(AppUserModelID))
                     {
                         // UWP apps
                         try
@@ -550,22 +468,6 @@ namespace CairoDesktop.WindowsTasks
             setIcon();
         }
 
-        private void Category_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e?.PropertyName == "DisplayName")
-            {
-                SetCategory();
-            }
-        }
-
-        private void AppInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e?.PropertyName == "Category")
-            {
-                SetCategory();
-            }
-        }
-
         public void BringToFront()
         {
             // call restore if window is minimized
@@ -647,19 +549,6 @@ namespace CairoDesktop.WindowsTasks
             BringToFront();
             IntPtr retval = IntPtr.Zero;
             NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_SIZE, 0, 2, 200, ref retval);
-        }
-
-        public void PinToQuickLaunch()
-        {
-            if (isUWP)
-            {
-                // store app, do special stuff
-                AppGrabber.AppGrabber.Instance.AddStoreApp(AppUserModelID, AppCategoryType.QuickLaunch);
-            }
-            else
-            {
-                AppGrabber.AppGrabber.Instance.AddByPath(new string[] { WinFileName }, AppCategoryType.QuickLaunch);
-            }
         }
 
         /// <summary>
