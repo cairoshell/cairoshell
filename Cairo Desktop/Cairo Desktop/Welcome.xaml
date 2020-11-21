@@ -15,8 +15,8 @@
     </Window.DataContext>
     <Window.Resources>
         <Style TargetType="{x:Type ComboBox}">
-            <Setter Property="FontFamily" Value="Corbel" />
-            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontFamily" Value="{DynamicResource ResourceKey=DialogFontFamily}" />
+            <Setter Property="FontSize" Value="{DynamicResource ResourceKey=LargeFontSize}" />
             <Setter Property="Margin" Value="0" />
             <Setter Property="Padding" Value="5" />
             <Setter Property="Height" Value="27" />

@@ -3,8 +3,18 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     x:Class="CairoDesktop.Cairo"
                     xmlns:cairo="clr-namespace:CairoDesktop"
-                    xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization">
-    
+                    xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!-- Font resources -->
+    <FontFamily x:Key="DialogFontFamily">Corbel</FontFamily>
+    <FontFamily x:Key="GlobalFontFamily">Segoe UI</FontFamily>
+
+    <system:Double x:Key="LargeTitleFontSize">33</system:Double>
+    <system:Double x:Key="MediumTitleFontSize">20</system:Double>
+    <system:Double x:Key="LargeFontSize">14</system:Double>
+    <system:Double x:Key="MediumFontSize">12</system:Double>
+    <system:Double x:Key="SmallFontSize">10</system:Double>
+
     <!-- Menu resources -->
     <LinearGradientBrush StartPoint="0,0"
                          EndPoint="0,1"
@@ -85,6 +95,8 @@
                       Opacity="0.6"
                       BlurRadius="0" />
     <Thickness x:Key="MenuBarBorderThickness" Bottom="1" />
+    <SolidColorBrush Color="#FF9a9a9a"
+                     x:Key="NoItemsForeground" />
 
 
     <!-- Search resources -->
@@ -494,11 +506,11 @@
     <Style x:Key="NoItemsTextBlock"
            TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground"
-                Value="#FF9a9a9a" />
+                Value="{DynamicResource ResourceKey=NoItemsForeground}" />
         <Setter Property="FontWeight"
                 Value="Normal" />
         <Setter Property="FontSize"
-                Value="12" />
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="TextWrapping"
                 Value="Wrap" />
         <Setter Property="VerticalAlignment"
@@ -574,9 +586,9 @@
         <Setter Property="Foreground"
                 Value="{DynamicResource ResourceKey=MenuItemForeground}" />
         <Setter Property="FontFamily"
-                Value="Segoe UI" />
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
         <Setter Property="FontSize"
-                Value="12" />
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="FontWeight"
                 Value="Normal" />
         <Setter Property="HorizontalContentAlignment"
@@ -684,7 +696,7 @@
                             <Setter Property="Height"
                                     Value="22" />
                             <Setter Property="FontSize"
-                                    Value="14" />
+                                    Value="{DynamicResource ResourceKey=LargeFontSize}" />
                             <Setter Property="Visibility"
                                     Value="Collapsed"
                                     TargetName="Icon" />
@@ -752,9 +764,9 @@
                             <Setter Property="Foreground"
                                     Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                             <Setter Property="FontSize"
-                                    Value="12" />
+                                    Value="{DynamicResource ResourceKey=MediumFontSize}" />
                             <Setter Property="FontFamily"
-                                    Value="Segoe UI" />
+                                    Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -779,9 +791,9 @@
                             <Setter Property="Foreground"
                                     Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                             <Setter Property="FontSize"
-                                    Value="12" />
+                                    Value="{DynamicResource ResourceKey=MediumFontSize}" />
                             <Setter Property="FontFamily"
-                                    Value="Segoe UI" />
+                                    Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
                             <Setter Property="BorderThickness"
                                     TargetName="SubMenuBorderTop"
                                     Value="0" />
@@ -821,9 +833,9 @@
                             <Setter Property="Foreground"
                                     Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                             <Setter Property="FontSize"
-                                    Value="12" />
+                                    Value="{DynamicResource ResourceKey=MediumFontSize}" />
                             <Setter Property="FontFamily"
-                                    Value="Segoe UI" />
+                                    Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
                         </Trigger>
                         <!-- If no Icon is present the we collapse the Icon Content -->
                         <Trigger Property="Icon"
@@ -1161,9 +1173,9 @@
         <Setter Property="Width"
                 Value="185" />
         <Setter Property="FontSize"
-                Value="14" />
+                Value="{DynamicResource ResourceKey=LargeFontSize}" />
         <Setter Property="FontFamily"
-                Value="Segoe UI" />
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
         <Setter Property="Margin"
                 Value="0" />
         <Setter Property="Padding"
@@ -1180,7 +1192,7 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="True" />
         <Setter Property="FontSize"
-                Value="10" />
+                Value="{DynamicResource ResourceKey=SmallFontSize}" />
         <Setter Property="FontFamily"
                 Value="Marlett" />
         <Setter Property="Height"
@@ -1232,7 +1244,7 @@
         <Setter Property="Height"
                 Value="60" />
         <Setter Property="FontSize"
-                Value="12" />
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="Focusable"
                 Value="False" />
         <Setter Property="ToolTip"
@@ -1262,15 +1274,15 @@
                                         <StackPanel Orientation="Vertical"
                                                     VerticalAlignment="Center">
                                             <TextBlock Foreground="{DynamicResource ResourceKey=SearchResultText}"
-                                                       FontSize="14"
-                                                       FontFamily="Segoe UI"
+                                                       FontSize="{DynamicResource ResourceKey=LargeFontSize}"
+                                                       FontFamily="{DynamicResource ResourceKey=GlobalFontFamily}"
                                                        Text="{Binding Path=Name}"
                                                        TextTrimming="CharacterEllipsis"
                                                        HorizontalAlignment="Left"
                                                        Width="268" />
                                             <TextBlock Foreground="{DynamicResource ResourceKey=SearchResultSubtext}"
-                                                       FontSize="12"
-                                                       FontFamily="Segoe UI"
+                                                       FontSize="{DynamicResource ResourceKey=MediumFontSize}"
+                                                       FontFamily="{DynamicResource ResourceKey=GlobalFontFamily}"
                                                        Text="{Binding Path=DateModifiedDisplay}"
                                                        TextTrimming="CharacterEllipsis"
                                                        HorizontalAlignment="Left"
@@ -1330,10 +1342,12 @@
            TargetType="{x:Type Button}">
         <Setter Property="Foreground"
                 Value="{DynamicResource ResourceKey=SearchTitleText}" />
+        <Setter Property="FontFamily"
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
         <Setter Property="Height"
                 Value="26" />
         <Setter Property="FontSize"
-                Value="14" />
+                Value="{DynamicResource ResourceKey=LargeFontSize}" />
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
         <Setter Property="VerticalAlignment"
@@ -1546,9 +1560,9 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
         <Setter Property="FontFamily"
-                Value="Segoe UI" />
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
         <Setter Property="FontSize"
-                Value="12" />
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="Foreground"
                 Value="White" />
         <Setter Property="HorizontalAlignment"
@@ -1780,6 +1794,10 @@
            TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground"
                 Value="{DynamicResource ResourceKey=MenuItemForeground}" />
+        <Setter Property="FontFamily"
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
+        <Setter Property="FontSize"
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="Margin"
                 Value="5,0,5,0" />
         <Setter Property="HorizontalAlignment"
@@ -1885,9 +1903,9 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
         <Setter Property="FontFamily"
-                Value="Segoe UI" />
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
         <Setter Property="FontSize"
-                Value="12" />
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="Foreground"
                 Value="{DynamicResource ResourceKey=MenuItemForeground}" />
         <Setter Property="Width"
@@ -1931,9 +1949,9 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
         <Setter Property="FontFamily"
-                Value="Segoe UI" />
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
         <Setter Property="FontSize"
-                Value="12" />
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="Foreground"
                 Value="White" />
         <Setter Property="Width"
@@ -2074,9 +2092,9 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
         <Setter Property="FontFamily"
-                Value="Corbel" />
+                Value="{DynamicResource ResourceKey=DialogFontFamily}" />
         <Setter Property="FontSize"
-                Value="14" />
+                Value="{DynamicResource ResourceKey=LargeFontSize}" />
         <Setter Property="MinWidth"
                 Value="100" />
         <Setter Property="MinHeight"
@@ -2149,9 +2167,9 @@
     <Style x:Key="CairoMessageTitle"
            TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily"
-                Value="Corbel" />
+                Value="{DynamicResource ResourceKey=DialogFontFamily}" />
         <Setter Property="FontSize"
-                Value="20" />
+                Value="{DynamicResource ResourceKey=MediumTitleFontSize}" />
         <Setter Property="FontWeight"
                 Value="Bold" />
         <Setter Property="Foreground"
@@ -2164,9 +2182,9 @@
     <Style x:Key="CairoMessageText"
            TargetType="{x:Type TextBox}">
         <Setter Property="FontFamily"
-                Value="Corbel" />
+                Value="{DynamicResource ResourceKey=DialogFontFamily}" />
         <Setter Property="FontSize"
-                Value="14" />
+                Value="{DynamicResource ResourceKey=LargeFontSize}" />
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="Foreground"
@@ -2191,9 +2209,9 @@
     <Style x:Key="WizardText"
            TargetType="{x:Type TextBlock}">
         <Setter Property="FontFamily"
-                Value="Corbel" />
+                Value="{DynamicResource ResourceKey=DialogFontFamily}" />
         <Setter Property="FontSize"
-                Value="14" />
+                Value="{DynamicResource ResourceKey=LargeFontSize}" />
         <Setter Property="Foreground"
                 Value="{DynamicResource ResourceKey=DialogWindowForeground}" />
         <Setter Property="TextWrapping"
@@ -2215,7 +2233,7 @@
            TargetType="{x:Type TextBlock}"
            BasedOn="{StaticResource WelcomeText}">
         <Setter Property="FontSize"
-                Value="33" />
+                Value="{DynamicResource ResourceKey=LargeTitleFontSize}" />
         <Setter Property="FontWeight"
                 Value="Bold" />
     </Style>
@@ -2223,7 +2241,7 @@
            TargetType="{x:Type TextBlock}"
            BasedOn="{StaticResource WelcomeHeading}">
         <Setter Property="FontSize"
-                Value="20" />
+                Value="{DynamicResource ResourceKey=MediumTitleFontSize}" />
         <Setter Property="Margin"
                 Value="64,0,64,2" />
     </Style>
@@ -2237,6 +2255,8 @@
     <!-- Stacks -->
     <Style x:Key="CairoStacksStyle"
            TargetType="{x:Type MenuItem}">
+        <Setter Property="FontFamily"
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type MenuItem}">
@@ -2314,7 +2334,7 @@
                             <Setter Property="Height"
                                     Value="22" />
                             <Setter Property="FontSize"
-                                    Value="14" />
+                                    Value="{DynamicResource ResourceKey=LargeFontSize}" />
                             <Setter Property="Effect"
                                     Value="{DynamicResource ResourceKey=MenuHeaderShadow}" />
                             <Setter Property="Foreground"
@@ -2367,9 +2387,9 @@
                             <Setter Property="Foreground"
                                     Value="{DynamicResource ResourceKey=MenuItemForeground}" />
                             <Setter Property="FontSize"
-                                    Value="12" />
+                                    Value="{DynamicResource ResourceKey=MediumFontSize}" />
                             <Setter Property="FontFamily"
-                                    Value="Segoe UI" />
+                                    Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -2522,9 +2542,9 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
         <Setter Property="FontFamily"
-                Value="Segoe UI" />
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
         <Setter Property="FontSize"
-                Value="12" />
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="Height"
                 Value="85" />
         <Setter Property="MinWidth"
@@ -2891,11 +2911,11 @@
         <Setter Property="HorizontalAlignment"
                 Value="Stretch" />
         <Setter Property="FontFamily"
-                Value="Segoe UI" />
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
         <Setter Property="FontWeight"
                 Value="Normal" />
         <Setter Property="FontSize"
-                Value="12" />
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="Height"
                 Value="24" />
         <Setter Property="MinWidth"
@@ -2940,11 +2960,11 @@
         <Setter Property="HorizontalAlignment"
                 Value="Stretch" />
         <Setter Property="FontFamily"
-                Value="Segoe UI" />
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
         <Setter Property="FontWeight"
                 Value="Normal" />
         <Setter Property="FontSize"
-                Value="12" />
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="Height"
                 Value="24" />
         <Setter Property="MinWidth"
@@ -3051,7 +3071,7 @@
                         <DataTemplate x:Key="{x:Static CalendarItem.DayTitleTemplateResourceKey}">
                             <TextBlock Foreground="#FFFFFFFF"
                                        FontWeight="Normal"
-                                       FontSize="12"
+                                       FontSize="{DynamicResource ResourceKey=MediumFontSize}"
                                        HorizontalAlignment="Center"
                                        Margin="0,5,0,5"
                                        Text="{Binding}"
@@ -3202,7 +3222,7 @@
                                                                   ContentTemplate="{TemplateBinding ContentTemplate}"
                                                                   Content="{TemplateBinding Content}"
                                                                   TextElement.Foreground="White"
-                                                                  TextElement.FontFamily="Segoe UI"
+                                                                  TextElement.FontFamily="{DynamicResource ResourceKey=GlobalFontFamily}"
                                                                   Margin="1,3,1,9" />
                                             </Grid>
                                         </ControlTemplate>
@@ -3235,7 +3255,7 @@
                                                 Grid.Column="1"
                                                 FontWeight="Normal"
                                                 Focusable="False"
-                                                FontSize="12"
+                                                FontSize="{DynamicResource ResourceKey=MediumFontSize}"
                                                 HorizontalAlignment="Center"
                                                 Grid.Row="0"
                                                 Template="{StaticResource HeaderButtonTemplate}"
@@ -3346,7 +3366,7 @@
     <Style x:Key="CairoCalendarDayButtonStyle"
            TargetType="{x:Type CalendarDayButton}">
         <Setter Property="FontSize"
-                Value="12" />
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="HorizontalContentAlignment"
                 Value="Center" />
         <Setter Property="VerticalContentAlignment"
@@ -3550,7 +3570,7 @@
     <Style x:Key="CairoCalendarButtonStyle"
            TargetType="{x:Type CalendarButton}">
         <Setter Property="FontSize"
-                Value="12" />
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="HorizontalContentAlignment"
                 Value="Center" />
         <Setter Property="VerticalContentAlignment"
