@@ -47,6 +47,8 @@ namespace CairoDesktop
             AppBarHelper.ShowWindowsTaskbar();
 
             DisposeSingletons();
+
+            CairoLogger.Instance.Debug("App: Graceful exit complete");
         }
 
         private void DisposeSingletons()
@@ -56,7 +58,7 @@ namespace CairoDesktop
             NotificationArea.Instance.Dispose();
             UpdateManager.Instance.Dispose();
             WindowManager.Instance.Dispose();
-            WindowsTasksService.Instance.Dispose();
+            Tasks.Instance.Dispose();
         }
 
         private static bool errorVisible;

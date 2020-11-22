@@ -14,12 +14,12 @@ namespace CairoDesktop.WindowsTray
 
         private ExplorerTrayService() { }
 
-        public void SetSystrayCallback(SystrayDelegate theDelegate)
+        internal void SetSystrayCallback(SystrayDelegate theDelegate)
         {
             trayDelegate = theDelegate;
         }
 
-        public void Run()
+        internal void Run()
         {
             if (!Shell.IsCairoRunningAsShell && trayDelegate != null)
             {
@@ -237,7 +237,7 @@ namespace CairoDesktop.WindowsTray
             }
         }
 
-        public enum TB : uint
+        private enum TB : uint
         {
             GETBUTTON = WM.USER + 23,
             BUTTONCOUNT = WM.USER + 24

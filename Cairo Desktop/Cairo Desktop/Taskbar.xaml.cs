@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Common;
+using CairoDesktop.WindowsTasks;
 
 namespace CairoDesktop
 {
@@ -73,15 +74,11 @@ namespace CairoDesktop
             CanAutoHide = true;
 
             // setup taskbar item source
-            if (!WindowsTasks.WindowsTasksService.Instance.IsInitialized)
-            {
-                WindowsTasks.WindowsTasksService.Instance.SetTaskCategoryProvider(new TaskCategoryProvider());
-                WindowsTasks.WindowsTasksService.Instance.Initialize();
-            }
+            Tasks.Instance.Initialize(new TaskCategoryProvider());
 
-            TasksList.ItemsSource = WindowsTasks.WindowsTasksService.Instance.GroupedWindows;
-            TasksList2.ItemsSource = WindowsTasks.WindowsTasksService.Instance.GroupedWindows;
-            if (WindowsTasks.WindowsTasksService.Instance.GroupedWindows != null) WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged += GroupedWindows_Changed;
+            TasksList.ItemsSource = Tasks.Instance.GroupedWindows;
+            TasksList2.ItemsSource = Tasks.Instance.GroupedWindows;
+            if (Tasks.Instance.GroupedWindows != null) Tasks.Instance.GroupedWindows.CollectionChanged += GroupedWindows_Changed;
 
             // setup data contexts
             bdrMain.DataContext = Settings.Instance;
@@ -220,7 +217,7 @@ namespace CairoDesktop
         {
             if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
             {
-                WindowsTasks.WindowsTasksService.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
+                Tasks.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
             }
         }
 

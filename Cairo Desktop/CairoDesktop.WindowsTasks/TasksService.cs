@@ -1,24 +1,22 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows;
-using System.Windows.Data;
+using CairoDesktop.Common.DesignPatterns;
 using CairoDesktop.Common.Logging;
 using static CairoDesktop.Interop.NativeMethods;
 using CairoDesktop.Interop;
 
 namespace CairoDesktop.WindowsTasks
 {
-    public class WindowsTasksService : DependencyObject, IDisposable
+    public class TasksService : SingletonObject<TasksService>, IDisposable
     {
         private NativeWindowEx _HookWin;
         private object _windowsLock = new object();
-        public bool IsInitialized;
+        internal bool IsInitialized;
 
         private static int WM_SHELLHOOKMESSAGE = -1;
         private static int WM_TASKBARCREATEDMESSAGE = -1;
@@ -30,11 +28,9 @@ namespace CairoDesktop.WindowsTasks
         private ITaskCategoryProvider TaskCategoryProvider;
         private TaskCategoryChangeDelegate CategoryChangeDelegate;
 
-        public static WindowsTasksService Instance { get; } = new WindowsTasksService();
+        private TasksService() { }
 
-        private WindowsTasksService() { }
-
-        public void Initialize()
+        internal void Initialize()
         {
             if (IsInitialized)
             {
@@ -83,20 +79,6 @@ namespace CairoDesktop.WindowsTasks
                 // adjust minimize animation
                 SetMinimizedMetrics();
 
-                // prepare collections
-                groupedWindows = CollectionViewSource.GetDefaultView(Windows);
-                groupedWindows.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
-                groupedWindows.CollectionChanged += groupedWindows_Changed;
-                groupedWindows.Filter = groupedWindows_Filter;
-
-                if (groupedWindows is ICollectionViewLiveShaping taskbarItemsView)
-                {
-                    taskbarItemsView.IsLiveFiltering = true;
-                    taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
-                    taskbarItemsView.IsLiveGrouping = true;
-                    taskbarItemsView.LiveGroupingProperties.Add("Category");
-                }
-
                 // enumerate windows already opened and set active window
                 getInitialWindows();
 
@@ -108,7 +90,7 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        public void SetTaskCategoryProvider(ITaskCategoryProvider provider)
+        internal void SetTaskCategoryProvider(ITaskCategoryProvider provider)
         {
             TaskCategoryProvider = provider;
 
@@ -124,7 +106,7 @@ namespace CairoDesktop.WindowsTasks
         {
             EnumWindows((hwnd, lParam) =>
             {
-                ApplicationWindow win = new ApplicationWindow(hwnd, this);
+                ApplicationWindow win = new ApplicationWindow(hwnd);
 
                 // set window category if provided by shell
                 win.Category = TaskCategoryProvider?.GetCategory(win);
@@ -142,21 +124,6 @@ namespace CairoDesktop.WindowsTasks
                 win.State = ApplicationWindow.WindowState.Active;
                 win.SetShowInTaskbar();
             }
-        }
-
-        private void groupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            // yup, do nothing. helps prevent a NRE
-        }
-
-        private bool groupedWindows_Filter(object item)
-        {
-            ApplicationWindow window = item as ApplicationWindow;
-
-            if (window.ShowInTaskbar)
-                return true;
-            else
-                return false;
         }
 
         public void Dispose()
@@ -207,7 +174,7 @@ namespace CairoDesktop.WindowsTasks
 
         private ApplicationWindow addWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive, bool sanityCheck = false)
         {
-            ApplicationWindow win = new ApplicationWindow(hWnd, this);
+            ApplicationWindow win = new ApplicationWindow(hWnd);
 
             // set window category if provided by shell
             win.Category = TaskCategoryProvider?.GetCategory(win);
@@ -416,7 +383,7 @@ namespace CairoDesktop.WindowsTasks
                         // SetProgressValue
                         CairoLogger.Instance.Debug("ITaskbarList: SetProgressValue HWND:" + msg.WParam + " Progress: " + msg.LParam);
 
-                        win = new ApplicationWindow(msg.WParam, this);
+                        win = new ApplicationWindow(msg.WParam);
                         if (Windows.Contains(win))
                         {
                             win = Windows.First(wnd => wnd.Handle == msg.WParam);
@@ -429,7 +396,7 @@ namespace CairoDesktop.WindowsTasks
                         // SetProgressState
                         CairoLogger.Instance.Debug("ITaskbarList: SetProgressState HWND:" + msg.WParam + " Flags: " + msg.LParam);
 
-                        win = new ApplicationWindow(msg.WParam, this);
+                        win = new ApplicationWindow(msg.WParam);
                         if (Windows.Contains(win))
                         {
                             win = Windows.First(wnd => wnd.Handle == msg.WParam);
@@ -531,7 +498,7 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        public ObservableCollection<ApplicationWindow> Windows
+        internal ObservableCollection<ApplicationWindow> Windows
         {
             get
             {
@@ -543,15 +510,8 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        private DependencyProperty windowsProperty = DependencyProperty.Register("Windows", typeof(ObservableCollection<ApplicationWindow>), typeof(WindowsTasksService), new PropertyMetadata(new ObservableCollection<ApplicationWindow>()));
-
-        private ICollectionView groupedWindows;
-        public ICollectionView GroupedWindows
-        {
-            get
-            {
-                return groupedWindows;
-            }
-        }
+        private DependencyProperty windowsProperty = DependencyProperty.Register("Windows",
+            typeof(ObservableCollection<ApplicationWindow>), typeof(TasksService),
+            new PropertyMetadata(new ObservableCollection<ApplicationWindow>()));
     }
 }

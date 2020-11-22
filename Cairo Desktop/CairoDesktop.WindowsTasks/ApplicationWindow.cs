@@ -18,19 +18,10 @@ namespace CairoDesktop.WindowsTasks
         const int TITLE_LENGTH = 1024;
         StringBuilder titleBuilder = new StringBuilder(TITLE_LENGTH);
 
-        public ApplicationWindow(IntPtr handle, WindowsTasksService sourceService)
+        public ApplicationWindow(IntPtr handle)
         {
             Handle = handle;
             State = WindowState.Inactive;
-
-            if (sourceService != null)
-            {
-                TasksService = sourceService;
-            }
-        }
-
-        public ApplicationWindow(IntPtr handle) : this(handle, null)
-        {
         }
 
         public void Dispose()
@@ -39,12 +30,6 @@ namespace CairoDesktop.WindowsTasks
         }
 
         public IntPtr Handle
-        {
-            get;
-            set;
-        }
-
-        public WindowsTasksService TasksService
         {
             get;
             set;
@@ -522,17 +507,12 @@ namespace CairoDesktop.WindowsTasks
             NativeMethods.SetForegroundWindow(Handle);
         }
 
-        public void Close()
+        internal IntPtr Close()
         {
             IntPtr retval = IntPtr.Zero;
             NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_CLOSE, 0, 2, 200, ref retval);
 
-            if (retval != IntPtr.Zero)
-            {
-                CairoLogger.Instance.Debug(string.Format("Removing window {0} from collection due to no response", Title));
-                Dispose();
-                TasksService.Windows.Remove(this);
-            }
+            return retval;
         }
 
         public void Move()

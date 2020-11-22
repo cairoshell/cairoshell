@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using CairoDesktop.Interop;
+using CairoDesktop.WindowsTasks;
 
 namespace CairoDesktop
 {
@@ -147,7 +148,7 @@ namespace CairoDesktop
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            taskButton.Window.Close();
+            Tasks.Instance.CloseWindow(taskButton.Window);
             Close();
         }
 

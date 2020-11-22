@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using CairoDesktop.Common;
+using CairoDesktop.WindowsTasks;
 
 namespace CairoDesktop
 {
@@ -27,7 +28,7 @@ namespace CairoDesktop
             set { SetValue(ParentTaskbarProperty, value); }
         }
 
-        public WindowsTasks.ApplicationWindow Window;
+        public ApplicationWindow Window;
         private DispatcherTimer dragTimer;
         private DispatcherTimer thumbTimer;
         public TaskThumbWindow ThumbWindow;
@@ -51,7 +52,7 @@ namespace CairoDesktop
                     return;
                 }
 
-                if (Window.State == WindowsTasks.ApplicationWindow.WindowState.Active)
+                if (Window.State == ApplicationWindow.WindowState.Active)
                 {
                     Window.Minimize();
                 }
@@ -96,7 +97,7 @@ namespace CairoDesktop
         #region Events
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Window = DataContext as WindowsTasks.ApplicationWindow;
+            Window = DataContext as ApplicationWindow;
 
             Window.PropertyChanged += Window_PropertyChanged;
 
@@ -245,7 +246,7 @@ namespace CairoDesktop
         {
             if (Window != null)
             {
-                Window.Close();
+                Tasks.Instance.CloseWindow(Window);
             }
         }
 
@@ -287,10 +288,10 @@ namespace CairoDesktop
                     switch (Settings.Instance.TaskbarMiddleClick)
                     {
                         case 0 when Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift):
-                            Window.Close();
+                            Tasks.Instance.CloseWindow(Window);
                             break;
                         case 1 when !Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift):
-                            Window.Close();
+                            Tasks.Instance.CloseWindow(Window);
                             break;
                         default:
                             Shell.StartProcess(Window.WinFileName);
