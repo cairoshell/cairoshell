@@ -112,6 +112,8 @@
     <Compile Include="Category.cs" />
     <Compile Include="CategoryList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuickLaunchManager.cs" />
+    <Compile Include="TaskCategoryProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="AppGrabberUI.xaml">
@@ -143,6 +145,10 @@
     <ProjectReference Include="..\CairoDesktop.UWPInterop\CairoDesktop.UWPInterop.csproj">
       <Project>{52a795c9-3c28-487a-b7b8-aab324da7305}</Project>
       <Name>CairoDesktop.UWPInterop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.WindowsTasks\CairoDesktop.WindowsTasks.csproj">
+      <Project>{5fabad0f-d28c-4ee6-a826-77968087864e}</Project>
+      <Name>CairoDesktop.WindowsTasks</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

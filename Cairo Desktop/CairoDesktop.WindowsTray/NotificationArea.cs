@@ -6,12 +6,13 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
+using CairoDesktop.Common.DesignPatterns;
 using CairoDesktop.Common.Helpers;
 using static CairoDesktop.Interop.NativeMethods;
 
 namespace CairoDesktop.WindowsTray
 {
-    public class NotificationArea : DependencyObject, IDisposable
+    public class NotificationArea : SingletonObject<NotificationArea>, IDisposable
     {
         const string VOLUME_GUID = "7820ae73-23e3-4229-82c1-e41cb67d5b9c";
         NativeMethods.Rect defaultPlacement = new NativeMethods.Rect { Top = 0, Left = GetSystemMetrics(0) - 200, Bottom = 23, Right = 23 };
@@ -23,12 +24,6 @@ namespace CairoDesktop.WindowsTray
         public bool IsFailed;
         private ShellServiceObject shellServiceObject;
         private TrayHostSizeData trayHostSizeData = new TrayHostSizeData { edge = (int)ABEdge.ABE_TOP, rc = new NativeMethods.Rect { Top = 0, Left = 0, Bottom = 23, Right = GetSystemMetrics(0) } };
-
-        private static NotificationArea _instance = new NotificationArea();
-        public static NotificationArea Instance
-        {
-            get { return _instance; }
-        }
 
         public ObservableCollection<NotifyIcon> TrayIcons
         {

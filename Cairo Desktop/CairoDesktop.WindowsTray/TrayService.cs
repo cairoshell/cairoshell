@@ -44,7 +44,7 @@ namespace CairoDesktop.WindowsTray
         }
         #endregion
 
-        public IntPtr Initialize()
+        internal IntPtr Initialize()
         {
             DestroyWindows();
 
@@ -59,7 +59,7 @@ namespace CairoDesktop.WindowsTray
         /// <summary>
         /// Starts the system tray listener (send the TaskbarCreated message).
         /// </summary>
-        public void Run()
+        internal void Run()
         {
             if (HwndTray != IntPtr.Zero)
             {
@@ -132,7 +132,7 @@ namespace CairoDesktop.WindowsTray
                 SendTaskbarCreated();
         }
 
-        public IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
+        private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
         {
             switch ((WM)msg)
             {

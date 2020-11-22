@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows;
-using System.Windows.Data;
-
+using CairoDesktop.Common.DesignPatterns;
 using CairoDesktop.Common.Logging;
 using static CairoDesktop.Interop.NativeMethods;
 using CairoDesktop.Interop;
 
 namespace CairoDesktop.WindowsTasks
 {
-    public class WindowsTasksService : DependencyObject, IDisposable
+    public class TasksService : SingletonObject<TasksService>, IDisposable
     {
         private NativeWindowEx _HookWin;
         private object _windowsLock = new object();
-        private bool isInitialized;
+        internal bool IsInitialized;
 
         private static int WM_SHELLHOOKMESSAGE = -1;
         private static int WM_TASKBARCREATEDMESSAGE = -1;
@@ -28,13 +25,14 @@ namespace CairoDesktop.WindowsTasks
         private static IntPtr uncloakEventHook = IntPtr.Zero;
         private WinEventProc uncloakEventProc;
 
-        public static WindowsTasksService Instance { get; } = new WindowsTasksService();
+        private ITaskCategoryProvider TaskCategoryProvider;
+        private TaskCategoryChangeDelegate CategoryChangeDelegate;
 
-        private WindowsTasksService() { }
+        private TasksService() { }
 
-        public void Initialize()
+        internal void Initialize()
         {
-            if (isInitialized)
+            if (IsInitialized)
             {
                 return;
             }
@@ -57,7 +55,7 @@ namespace CairoDesktop.WindowsTasks
                 TASKBARBUTTONCREATEDMESSAGE = RegisterWindowMessage("TaskbarButtonCreated");
                 _HookWin.MessageReceived += ShellWinProc;
 
-                if (Interop.Shell.IsWindows8OrBetter)
+                if (Shell.IsWindows8OrBetter)
                 {
                     // set event hook for uncloak events
                     uncloakEventProc = UncloakEventCallback;
@@ -81,27 +79,10 @@ namespace CairoDesktop.WindowsTasks
                 // adjust minimize animation
                 SetMinimizedMetrics();
 
-                // prepare collections
-                groupedWindows = CollectionViewSource.GetDefaultView(Windows);
-                groupedWindows.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
-                groupedWindows.CollectionChanged += groupedWindows_Changed;
-                groupedWindows.Filter = groupedWindows_Filter;
-
-                if (groupedWindows is ICollectionViewLiveShaping taskbarItemsView)
-                {
-                    taskbarItemsView.IsLiveFiltering = true;
-                    taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
-                    taskbarItemsView.IsLiveGrouping = true;
-                    taskbarItemsView.LiveGroupingProperties.Add("Category");
-                }
-
                 // enumerate windows already opened and set active window
                 getInitialWindows();
 
-                // register for app grabber changes so that our app association is accurate
-                AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged += CategoryList_CategoryChanged;
-
-                isInitialized = true;
+                IsInitialized = true;
             }
             catch (Exception ex)
             {
@@ -109,11 +90,26 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
+        internal void SetTaskCategoryProvider(ITaskCategoryProvider provider)
+        {
+            TaskCategoryProvider = provider;
+
+            if (CategoryChangeDelegate == null)
+            {
+                CategoryChangeDelegate = CategoriesChanged;
+            }
+
+            TaskCategoryProvider.SetCategoryChangeDelegate(CategoryChangeDelegate);
+        }
+
         private void getInitialWindows()
         {
             EnumWindows((hwnd, lParam) =>
             {
-                ApplicationWindow win = new ApplicationWindow(hwnd, this);
+                ApplicationWindow win = new ApplicationWindow(hwnd);
+
+                // set window category if provided by shell
+                win.Category = TaskCategoryProvider?.GetCategory(win);
 
                 if (win.CanAddToTaskbar && win.ShowInTaskbar && !Windows.Contains(win))
                     Windows.Add(win);
@@ -130,38 +126,24 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        private void groupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            // yup, do nothing. helps prevent a NRE
-        }
-
-        private bool groupedWindows_Filter(object item)
-        {
-            ApplicationWindow window = item as ApplicationWindow;
-
-            if (window.ShowInTaskbar)
-                return true;
-            else
-                return false;
-        }
-
         public void Dispose()
         {
-            if (isInitialized)
+            if (IsInitialized)
             {
                 CairoLogger.Instance.Debug("TasksService: Deregistering hooks");
-                AppGrabber.AppGrabber.Instance.CategoryList.CategoryChanged -= CategoryList_CategoryChanged;
                 DeregisterShellHookWindow(_HookWin.Handle);
                 if (uncloakEventHook != IntPtr.Zero) UnhookWinEvent(uncloakEventHook);
                 _HookWin.DestroyHandle();
             }
+
+            TaskCategoryProvider?.Dispose();
         }
 
-        private void CategoryList_CategoryChanged(object sender, EventArgs e)
+        private void CategoriesChanged()
         {
             foreach (ApplicationWindow window in Windows)
             {
-                window.SetCategory();
+                window.Category = TaskCategoryProvider?.GetCategory(window);
             }
         }
 
@@ -192,7 +174,10 @@ namespace CairoDesktop.WindowsTasks
 
         private ApplicationWindow addWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive, bool sanityCheck = false)
         {
-            ApplicationWindow win = new ApplicationWindow(hWnd, this);
+            ApplicationWindow win = new ApplicationWindow(hWnd);
+
+            // set window category if provided by shell
+            win.Category = TaskCategoryProvider?.GetCategory(win);
 
             // set window state if a non-default value is provided
             if (initialState != ApplicationWindow.WindowState.Inactive) win.State = initialState;
@@ -203,7 +188,7 @@ namespace CairoDesktop.WindowsTasks
             // Only send TaskbarButtonCreated if we are shell, and if OS is not Server Core
             // This is because if Explorer is running, it will send the message, so we don't need to
             // Server Core doesn't support ITaskbarList, so sending this message on that OS could cause some assuming apps to crash
-            if (Interop.Shell.IsCairoRunningAsShell && !Interop.Shell.IsServerCore) SendNotifyMessage(win.Handle, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
+            if (Shell.IsCairoRunningAsShell && !Shell.IsServerCore) SendNotifyMessage(win.Handle, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
 
             return win;
         }
@@ -328,7 +313,7 @@ namespace CairoDesktop.WindowsTasks
                             case HSHELL.GETMINRECT:
                                 CairoLogger.Instance.Debug("GetMinRect called: " + msg.LParam.ToString());
                                 SHELLHOOKINFO winHandle = (SHELLHOOKINFO)Marshal.PtrToStructure(msg.LParam, typeof(SHELLHOOKINFO));
-                                winHandle.rc = new Interop.NativeMethods.Rect { Bottom = 100, Left = 0, Right = 100, Top = 0 };
+                                winHandle.rc = new NativeMethods.Rect { Bottom = 100, Left = 0, Right = 100, Top = 0 };
                                 Marshal.StructureToPtr(winHandle, msg.LParam, true);
                                 msg.Result = winHandle.hwnd;
                                 return; // return here so the result isnt reset to DefWindowProc
@@ -398,7 +383,7 @@ namespace CairoDesktop.WindowsTasks
                         // SetProgressValue
                         CairoLogger.Instance.Debug("ITaskbarList: SetProgressValue HWND:" + msg.WParam + " Progress: " + msg.LParam);
 
-                        win = new ApplicationWindow(msg.WParam, this);
+                        win = new ApplicationWindow(msg.WParam);
                         if (Windows.Contains(win))
                         {
                             win = Windows.First(wnd => wnd.Handle == msg.WParam);
@@ -411,7 +396,7 @@ namespace CairoDesktop.WindowsTasks
                         // SetProgressState
                         CairoLogger.Instance.Debug("ITaskbarList: SetProgressState HWND:" + msg.WParam + " Flags: " + msg.LParam);
 
-                        win = new ApplicationWindow(msg.WParam, this);
+                        win = new ApplicationWindow(msg.WParam);
                         if (Windows.Contains(win))
                         {
                             win = Windows.First(wnd => wnd.Handle == msg.WParam);
@@ -513,7 +498,7 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        public ObservableCollection<ApplicationWindow> Windows
+        internal ObservableCollection<ApplicationWindow> Windows
         {
             get
             {
@@ -525,15 +510,8 @@ namespace CairoDesktop.WindowsTasks
             }
         }
 
-        private DependencyProperty windowsProperty = DependencyProperty.Register("Windows", typeof(ObservableCollection<ApplicationWindow>), typeof(WindowsTasksService), new PropertyMetadata(new ObservableCollection<ApplicationWindow>()));
-
-        private ICollectionView groupedWindows;
-        public ICollectionView GroupedWindows
-        {
-            get
-            {
-                return groupedWindows;
-            }
-        }
+        private DependencyProperty windowsProperty = DependencyProperty.Register("Windows",
+            typeof(ObservableCollection<ApplicationWindow>), typeof(TasksService),
+            new PropertyMetadata(new ObservableCollection<ApplicationWindow>()));
     }
 }

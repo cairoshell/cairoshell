@@ -85,9 +85,6 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase">
@@ -95,9 +92,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ITaskCategoryProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApplicationWindow.cs" />
-    <Compile Include="WindowsTasksService.cs" />
+    <Compile Include="TaskCategoryChangeDelegate.cs" />
+    <Compile Include="Tasks.cs" />
+    <Compile Include="TasksService.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -107,10 +107,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj">
-      <Project>{de9674cc-507e-4049-9152-5c899b9f0939}</Project>
-      <Name>CairoDesktop.AppGrabber</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">
       <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
       <Name>CairoDesktop.Common</Name>
@@ -122,10 +118,6 @@
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
       <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
       <Name>CairoDesktop.Interop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj">
-      <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>
-      <Name>CairoDesktop.Localization</Name>
     </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.UWPInterop\CairoDesktop.UWPInterop.csproj">
       <Project>{52a795c9-3c28-487a-b7b8-aab324da7305}</Project>

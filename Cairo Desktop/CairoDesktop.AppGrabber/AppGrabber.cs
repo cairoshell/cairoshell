@@ -75,6 +75,8 @@ namespace CairoDesktop.AppGrabber
 
         public string ConfigFile { get; set; }
 
+        public QuickLaunchManager QuickLaunchManager = new QuickLaunchManager();
+
         private AppGrabber()
             : this(null) { }
 

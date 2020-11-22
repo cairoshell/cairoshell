@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Windows;
 
 namespace CairoDesktop.Common.DesignPatterns
 {
@@ -8,7 +9,7 @@ namespace CairoDesktop.Common.DesignPatterns
     // http://weblogs.asp.net/cumpsd/archive/2008/07/15/6401804.aspx
     // ALT: use the new() constraint
     [DebuggerStepThrough]
-    public class SingletonObject<T> where T : class
+    public class SingletonObject<T> : DependencyObject where T : class
     {
         public static T Instance
         {
