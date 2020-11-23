@@ -21,8 +21,8 @@
                                 Orientation="Horizontal">
                         <TextBlock MinWidth="100"
                                    Foreground="{DynamicResource ResourceKey=SearchTitleText}"
-                                   FontSize="14"
-                                   FontFamily="Segoe UI"
+                                   FontSize="{DynamicResource ResourceKey=LargeFontSize}"
+                                   FontFamily="{DynamicResource ResourceKey=GlobalFontFamily}"
                                    Margin="0,1,0,0"
                                    Text="{Binding Path=(l10n:DisplayString.sSearch_Title)}" />
                         <Border Background="{DynamicResource ResourceKey=SearchResultBackground1}"

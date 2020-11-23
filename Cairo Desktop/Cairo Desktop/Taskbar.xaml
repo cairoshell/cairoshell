@@ -19,10 +19,10 @@
     <Border Name="bdrBackground">
         <Border.Style>
             <Style TargetType="{x:Type Border}">
-                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Background" Value="Transparent" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Path=IsOverlayOpen}" Value="True">
-                        <Setter Property="Background" Value="#88000000"/>
+                        <Setter Property="Background" Value="#88000000" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -39,7 +39,8 @@
                     <Style.Triggers>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}" Value="False" />
+                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}"
+                                           Value="False" />
                                 <Condition Binding="{Binding TaskbarMode}" Value="2" />
                                 <Condition Binding="{Binding TaskbarPosition}" Value="0" />
                                 <Condition Binding="{Binding TaskbarIconSize}" Value="1" />
@@ -48,26 +49,29 @@
                             <MultiDataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="27"
-                                                         BeginTime="0:0:0.5"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="27"
+                                            BeginTime="0:0:0.5"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.EnterActions>
                             <MultiDataTrigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="0"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="0"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.ExitActions>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}" Value="False" />
+                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}"
+                                           Value="False" />
                                 <Condition Binding="{Binding TaskbarMode}" Value="2" />
                                 <Condition Binding="{Binding TaskbarPosition}" Value="0" />
                                 <Condition Binding="{Binding TaskbarIconSize}" Value="10" />
@@ -76,26 +80,29 @@
                             <MultiDataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="35"
-                                                         BeginTime="0:0:0.5"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="35"
+                                            BeginTime="0:0:0.5"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.EnterActions>
                             <MultiDataTrigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="0"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="0"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.ExitActions>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}" Value="False" />
+                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}"
+                                           Value="False" />
                                 <Condition Binding="{Binding TaskbarMode}" Value="2" />
                                 <Condition Binding="{Binding TaskbarPosition}" Value="0" />
                                 <Condition Binding="{Binding TaskbarIconSize}" Value="0" />
@@ -104,26 +111,29 @@
                             <MultiDataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="43"
-                                                         BeginTime="0:0:0.5"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="43"
+                                            BeginTime="0:0:0.5"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.EnterActions>
                             <MultiDataTrigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="0"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="0"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.ExitActions>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}" Value="False" />
+                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}"
+                                           Value="False" />
                                 <Condition Binding="{Binding TaskbarMode}" Value="2" />
                                 <Condition Binding="{Binding TaskbarPosition}" Value="1" />
                                 <Condition Binding="{Binding TaskbarIconSize}" Value="1" />
@@ -132,26 +142,29 @@
                             <MultiDataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="-27"
-                                                         BeginTime="0:0:0.5"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="-27"
+                                            BeginTime="0:0:0.5"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.EnterActions>
                             <MultiDataTrigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="0"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="0"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.ExitActions>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}" Value="False" />
+                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}"
+                                           Value="False" />
                                 <Condition Binding="{Binding TaskbarMode}" Value="2" />
                                 <Condition Binding="{Binding TaskbarPosition}" Value="1" />
                                 <Condition Binding="{Binding TaskbarIconSize}" Value="10" />
@@ -160,26 +173,29 @@
                             <MultiDataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="-35"
-                                                         BeginTime="0:0:0.5"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="-35"
+                                            BeginTime="0:0:0.5"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.EnterActions>
                             <MultiDataTrigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="0"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="0"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.ExitActions>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}" Value="False" />
+                                <Condition Binding="{Binding Path=IsMouseOver, ElementName=TaskbarWindow}"
+                                           Value="False" />
                                 <Condition Binding="{Binding TaskbarMode}" Value="2" />
                                 <Condition Binding="{Binding TaskbarPosition}" Value="1" />
                                 <Condition Binding="{Binding TaskbarIconSize}" Value="0" />
@@ -188,19 +204,21 @@
                             <MultiDataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="-43"
-                                                         BeginTime="0:0:0.5"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="-43"
+                                            BeginTime="0:0:0.5"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.EnterActions>
                             <MultiDataTrigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
-                                                         To="0"
-                                                         Duration="0:0:0.15"/>
+                                        <DoubleAnimation
+                                            Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)"
+                                            To="0"
+                                            Duration="0:0:0.15" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </MultiDataTrigger.ExitActions>
@@ -208,22 +226,26 @@
                     </Style.Triggers>
                 </Style>
             </Border.Style>
-            <StackPanel Orientation="Horizontal" x:Name="grdTaskbar" HorizontalAlignment="Center" VerticalAlignment="Stretch" ContextMenuOpening="grdTaskbar_ContextMenuOpening">
+            <StackPanel Orientation="Horizontal" x:Name="grdTaskbar" HorizontalAlignment="Center"
+                        VerticalAlignment="Stretch" ContextMenuOpening="grdTaskbar_ContextMenuOpening">
                 <StackPanel.ContextMenu>
                     <ContextMenu Closed="ContextMenu_Closed">
                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Run)}"
-                              Click="OpenRunWindow" />
+                                  Click="OpenRunWindow" />
                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_TaskManager)}"
-                              Click="OpenTaskManager" />
+                                  Click="OpenTaskManager" />
                     </ContextMenu>
                 </StackPanel.ContextMenu>
                 <Border HorizontalAlignment="Center" Name="bdrTaskbar">
                     <DockPanel>
-                        <ToggleButton x:Name="btnDesktopOverlay" Click="btnDesktopOverlay_Click" DockPanel.Dock="Left" IsChecked="{Binding Path=IsOverlayOpen, Mode=OneWay}" ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_DesktopOverlayToolTip)}" ToolTipService.Placement="Top">
+                        <ToggleButton x:Name="btnDesktopOverlay" Click="btnDesktopOverlay_Click" DockPanel.Dock="Left"
+                                      IsChecked="{Binding Path=IsOverlayOpen, Mode=OneWay}"
+                                      ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_DesktopOverlayToolTip)}"
+                                      ToolTipService.Placement="Top">
                             <Image Source="Resources\desktopOverlayIcon.png"
                                    Width="15"
                                    Height="14"
-                                   Margin="0"></Image>
+                                   Margin="0" />
                         </ToggleButton>
                         <ListView HorizontalAlignment="Stretch"
                                   Name="quickLaunchList"
@@ -234,7 +256,7 @@
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Horizontal"
-                            Margin="0"></StackPanel>
+                                                Margin="0" />
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
                             <ListView.ItemContainerStyle>
@@ -243,30 +265,37 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                <self:QuickLaunchButton MouseRightButtonUp="TaskButton_MouseRightButtonUp" ParentTaskbar="{Binding ElementName=TaskbarWindow}" />
+                                                <self:QuickLaunchButton
+                                                    MouseRightButtonUp="TaskButton_MouseRightButtonUp"
+                                                    ParentTaskbar="{Binding ElementName=TaskbarWindow}" />
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
-                        <ToggleButton x:Name="btnTaskList" Click="btnTaskList_Click" DockPanel.Dock="Right" ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_TaskListToolTip)}" ToolTipService.Placement="Top">
+                        <ToggleButton x:Name="btnTaskList" Click="btnTaskList_Click" DockPanel.Dock="Right"
+                                      ToolTip="{Binding Path=(l10n:DisplayString.sTaskbar_TaskListToolTip)}"
+                                      ToolTipService.Placement="Top">
                             <Image Source="Resources\taskListIcon.png"
-                           Width="14"
-                           Height="12"
-                           Margin="0"></Image>
+                                   Width="14"
+                                   Height="12"
+                                   Margin="0" />
                         </ToggleButton>
-                        <Popup Placement="Relative" PlacementTarget="{Binding ElementName=btnTaskList}" Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{Binding ElementName=btnTaskList, Path=IsChecked}" StaysOpen="False" Closed="CairoTaskbarTaskList_Closed">
+                        <Popup Placement="Relative" PlacementTarget="{Binding ElementName=btnTaskList}"
+                               Name="CairoTaskbarTaskList" AllowsTransparency="True" PopupAnimation="Fade"
+                               IsOpen="{Binding ElementName=btnTaskList, Path=IsChecked}" StaysOpen="False"
+                               Closed="CairoTaskbarTaskList_Closed">
                             <Border Name="bdrTaskListPopup" Style="{StaticResource CairoTaskListPopupStyle}">
                                 <StackPanel Orientation="Vertical">
                                     <ListView HorizontalAlignment="Stretch"
-                            Style="{StaticResource TaskListStyle}"
-                            Margin="0,-3,0,3"
-                            x:Name="TasksList2">
+                                              Style="{StaticResource TaskListStyle}"
+                                              Margin="0,-3,0,3"
+                                              x:Name="TasksList2">
                                         <ListView.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel Orientation="Vertical"
-                                Margin="0"></StackPanel>
+                                                            Margin="0" />
                                             </ItemsPanelTemplate>
                                         </ListView.ItemsPanel>
                                         <ListView.GroupStyle>
@@ -277,8 +306,16 @@
                                                             <Setter.Value>
                                                                 <ControlTemplate>
                                                                     <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                                        <Border BorderThickness="0,0,1,0" BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}" Width="100" Margin="0,-3">
-                                                                            <TextBlock Text="{Binding Path=Name}" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6,7,6,0" TextTrimming="CharacterEllipsis" />
+                                                                        <Border BorderThickness="0,0,1,0"
+                                                                                BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}"
+                                                                                Width="100" Margin="0,-3">
+                                                                            <TextBlock Text="{Binding Path=Name}"
+                                                                                       HorizontalAlignment="Right"
+                                                                                       VerticalAlignment="Top"
+                                                                                       Padding="6,7,6,0"
+                                                                                       TextTrimming="CharacterEllipsis"
+                                                                                       FontFamily="{DynamicResource ResourceKey=GlobalFontFamily}"
+                                                                                       FontSize="{DynamicResource ResourceKey=MediumFontSize}" />
                                                                         </Border>
                                                                         <ItemsPresenter />
                                                                     </StackPanel>
@@ -299,10 +336,14 @@
                                                                 <self:TaskButton ListMode="True">
                                                                     <self:TaskButton.Style>
                                                                         <Style TargetType="self:TaskButton">
-                                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                                            <Setter Property="Visibility"
+                                                                                    Value="Collapsed" />
                                                                             <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding Path=ShowInTaskbar}" Value="True">
-                                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                                <DataTrigger
+                                                                                    Binding="{Binding Path=ShowInTaskbar}"
+                                                                                    Value="True">
+                                                                                    <Setter Property="Visibility"
+                                                                                            Value="Visible" />
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
                                                                         </Style>
@@ -315,13 +356,16 @@
                                             </Style>
                                         </ListView.ItemContainerStyle>
                                     </ListView>
-                                    <Border Margin="99,-3,0,-3" Padding="0,3" Width="351" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}" Visibility="Collapsed" Name="bdrTaskView">
-                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_TaskView)}" Click="TaskView_Click">
+                                    <Border Margin="99,-3,0,-3" Padding="0,3" Width="351" BorderThickness="1,0,0,0"
+                                            BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}"
+                                            Visibility="Collapsed" Name="bdrTaskView">
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_TaskView)}"
+                                                  Click="TaskView_Click">
                                             <MenuItem.Icon>
                                                 <Image Source="Resources\taskViewIcon.png"
-                                        Width="16"
-                                        Height="16"
-                                        Margin="0,-1,0,0" />
+                                                       Width="16"
+                                                       Height="16"
+                                                       Margin="0,-1,0,0" />
                                             </MenuItem.Icon>
                                         </MenuItem>
                                     </Border>
@@ -334,14 +378,14 @@
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Horizontal"
-                                                Margin="0"></StackPanel>
+                                                Margin="0" />
                                 </ItemsPanelTemplate>
                             </ListView.ItemsPanel>
                             <ListView.GroupStyle>
                                 <GroupStyle x:Name="TaskbarGroupStyle">
                                     <GroupStyle.Panel>
                                         <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"></StackPanel>
+                                            <StackPanel Orientation="Horizontal" />
                                         </ItemsPanelTemplate>
                                     </GroupStyle.Panel>
                                 </GroupStyle>
@@ -352,13 +396,17 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                <Border BorderThickness="0" Margin="0,0,-1,0" BorderBrush="Transparent" Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}">
-                                                    <self:TaskButton ListMode="False" MouseRightButtonUp="TaskButton_MouseRightButtonUp" ParentTaskbar="{Binding ElementName=TaskbarWindow}" />
+                                                <Border BorderThickness="0" Margin="0,0,-1,0" BorderBrush="Transparent"
+                                                        Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}">
+                                                    <self:TaskButton ListMode="False"
+                                                                     MouseRightButtonUp="TaskButton_MouseRightButtonUp"
+                                                                     ParentTaskbar="{Binding ElementName=TaskbarWindow}" />
                                                     <Border.Style>
                                                         <Style TargetType="{x:Type Border}">
                                                             <Setter Property="Visibility" Value="Collapsed" />
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Path=ShowInTaskbar}" Value="True">
+                                                                <DataTrigger Binding="{Binding Path=ShowInTaskbar}"
+                                                                             Value="True">
                                                                     <Setter Property="Visibility" Value="Visible" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
@@ -368,7 +416,11 @@
                                                         <EventTrigger RoutedEvent="Loaded">
                                                             <BeginStoryboard>
                                                                 <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetProperty="Width" From="0" To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}" Duration="0:0:0.2" FillBehavior="Stop" />
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Width"
+                                                                                     From="0"
+                                                                                     To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}"
+                                                                                     Duration="0:0:0.2"
+                                                                                     FillBehavior="Stop" />
                                                                 </Storyboard>
                                                             </BeginStoryboard>
                                                         </EventTrigger>
