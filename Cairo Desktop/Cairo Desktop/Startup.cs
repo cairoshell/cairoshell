@@ -3,8 +3,11 @@ using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure;
 using CairoDesktop.Interop;
+using CairoDesktop.ObjectModel;
+using CairoDesktop.Services;
 using CairoDesktop.SupportingClasses;
 using CairoDesktop.WindowsTray;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics;
@@ -37,6 +40,8 @@ namespace CairoDesktop
             _host = new HostBuilder()
                 .ConfigureServices((context, services) =>
                 {
+                    services.AddSingleton<_CairoShell>();
+                    services.AddSingleton<PluginService>();
                     services.AddInfrastructureServices(context.Configuration);
                 })
                 .ConfigureLogging((context, logging) =>
@@ -44,6 +49,7 @@ namespace CairoDesktop
                     logging.AddInfrastructureLogging();
                 })
                 .Build();
+            _host.Start();
 
             #region Initialization Routines
 
@@ -78,7 +84,10 @@ namespace CairoDesktop
             setTheme(app);
 
             // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-            MenuBar initialMenuBar = new MenuBar((IApplicationUpdateService)_host.Services.GetService(typeof(IApplicationUpdateService)), System.Windows.Forms.Screen.PrimaryScreen);
+            var cairoShell = (_CairoShell)_host.Services.GetService(typeof(_CairoShell));
+            var applicationUpdateService = (IApplicationUpdateService)_host.Services.GetService(typeof(IApplicationUpdateService));
+
+            MenuBar initialMenuBar = new MenuBar(cairoShell, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen);
             app.MainWindow = initialMenuBar;
             WindowManager.Instance.MenuBarWindows.Add(initialMenuBar);
             initialMenuBar.Show();
@@ -116,6 +125,8 @@ namespace CairoDesktop
 #endif
 
             app.Run();
+
+            _host.StopAsync().Wait(3000);
         }
 
         /// <summary>

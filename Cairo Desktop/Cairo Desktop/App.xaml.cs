@@ -6,6 +6,7 @@ using CairoDesktop.WindowsTasks;
 using CairoDesktop.WindowsTray;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Interop;
@@ -19,6 +20,14 @@ namespace CairoDesktop
     /// </summary>
     public partial class App : System.Windows.Application
     {
+        public static new App Current
+        {
+            get
+            {
+                return System.Windows.Application.Current as App;
+            }
+        }
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -117,5 +126,36 @@ namespace CairoDesktop
 
             e.Handled = true;
         }
+
+
+        /// <summary>
+        /// Compatibility System.Windows.Forms.Application.DoEvents
+        /// </summary>
+        public static void DoEvents()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background,
+                new DispatcherOperationCallback(ExitFrame), frame);
+            Dispatcher.PushFrame(frame);
+        }
+
+        private static object ExitFrame(object f)
+        {
+            ((DispatcherFrame)f).Continue = false;
+            return null;
+        }
+
+        /// <summary>
+        /// Compatibility System.Windows.Forms.Application
+        /// </summary>
+        public static string StartupPath { get { return Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).Location); } }
+
+        public static string ProductName { get { return (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Name; } }
+
+        public static Version ProductVersion { get { return (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Version; } }
+
+        public static string CairoApplicationDataFolder { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team"); } }
+
+        public static string LogsFolder { get { return Path.Combine(CairoApplicationDataFolder, "Logs"); } }
     }
 }

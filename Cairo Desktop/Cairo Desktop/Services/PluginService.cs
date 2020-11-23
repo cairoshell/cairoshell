@@ -8,6 +8,8 @@ namespace CairoDesktop.Services
 {
     public sealed class PluginService : ShellService
     {
+        private readonly _CairoShell _cairoShell;
+
         [ImportMany(typeof(ShellExtension))]
         private IEnumerable<ShellExtension> _shellExtensions;
 
@@ -17,12 +19,13 @@ namespace CairoDesktop.Services
         private AggregateCatalog catalog;
         private CompositionContainer container;
 
-        public PluginService()
+        public PluginService(_CairoShell cairoShell)
         {
-            systemExtensionsPath = Path.Combine(_CairoShell.StartupPath, "Extensions");
-            userExtensionsPath = Path.Combine(_CairoShell.CairoApplicationDataFolder, "Extensions");
+            systemExtensionsPath = Path.Combine(App.StartupPath, "Extensions");
+            userExtensionsPath = Path.Combine(App.CairoApplicationDataFolder, "Extensions");
 
-            _CairoShell.Instance.ShellServices.Add(GetType(), this);
+            cairoShell.ShellServices.Add(GetType(), this);
+            _cairoShell = cairoShell;
         }
 
         public IEnumerable<ShellExtension> ShellExtensions { get => _shellExtensions; private set => _shellExtensions = value; }
@@ -48,7 +51,7 @@ namespace CairoDesktop.Services
             foreach (ShellExtension shellExtension in ShellExtensions)
             {
                 shellExtension.Start();
-                _CairoShell.Instance.ShellExtensions.Add(shellExtension);
+                _cairoShell.ShellExtensions.Add(shellExtension);
             }
 
         }
@@ -57,7 +60,7 @@ namespace CairoDesktop.Services
         {
             foreach (ShellExtension shellExtension in ShellExtensions)
             {
-                _CairoShell.Instance.ShellExtensions.Remove(shellExtension);
+                _cairoShell.ShellExtensions.Remove(shellExtension);
                 shellExtension.Stop();
             }
         }
