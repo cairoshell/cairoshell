@@ -1,4 +1,9 @@
 ﻿using CairoDesktop.Common.Logging;
+using CairoDesktop.Configuration;
+using CairoDesktop.Interop;
+using CairoDesktop.SupportingClasses;
+using CairoDesktop.WindowsTasks;
+using CairoDesktop.WindowsTray;
 using System;
 using System.Diagnostics;
 using System.Reflection;
@@ -6,18 +11,13 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
-using CairoDesktop.SupportingClasses;
-using CairoDesktop.WindowsTasks;
-using CairoDesktop.WindowsTray;
 
 namespace CairoDesktop
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -56,7 +56,7 @@ namespace CairoDesktop
             Shell.DisposeIml();
             FullScreenHelper.Instance.Dispose();
             NotificationArea.Instance.Dispose();
-            UpdateManager.Instance.Dispose();
+            // UpdateManager.Instance.Dispose();
             WindowManager.Instance.Dispose();
             Tasks.Instance.Dispose();
         }

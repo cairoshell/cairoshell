@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common.DesignPatterns;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
@@ -398,7 +399,7 @@ namespace CairoDesktop.SupportingClasses
                         CairoLogger.Instance.DebugIf(screen.Primary, "WindowManager: Opening menu bar on new primary display");
 
                         // menu bars
-                        MenuBar newMenuBar = new MenuBar(screen);
+                        MenuBar newMenuBar = new MenuBar((IApplicationUpdateService)Startup._host.Services.GetService(typeof(IApplicationUpdateService)),screen);
                         newMenuBar.Show();
                         MenuBarWindows.Add(newMenuBar);
                     }

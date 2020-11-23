@@ -1,5 +1,7 @@
 ﻿using CairoDesktop.AppGrabber;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
+using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
@@ -16,12 +18,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using CairoDesktop.Common.Logging;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
 namespace CairoDesktop
 {
-
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
     /// </summary>
@@ -29,11 +29,16 @@ namespace CairoDesktop
     {
         private static CairoSettingsWindow _instance = null;
 
+        private readonly IApplicationUpdateService _applicationUpdateService;
+
+
         static CairoSettingsWindow() { }
 
-        private CairoSettingsWindow()
+        private CairoSettingsWindow(IApplicationUpdateService applicationUpdateService)
         {
             InitializeComponent();
+
+            _applicationUpdateService = applicationUpdateService;
 
             loadThemes();
             loadLanguages();
@@ -424,7 +429,7 @@ namespace CairoDesktop
         #region Startup checks
         private void checkUpdateConfig()
         {
-            chkEnableAutoUpdates.IsChecked = UpdateManager.Instance.AutoUpdatesEnabled;
+            chkEnableAutoUpdates.IsChecked = _applicationUpdateService.AutomaticUpdatesEnabled;
         }
 
         private void checkTrayStatus()
@@ -488,11 +493,11 @@ namespace CairoDesktop
         {
             if (chkEnableAutoUpdates.IsChecked != null)
             {
-                UpdateManager.Instance.AutoUpdatesEnabled = (bool) chkEnableAutoUpdates.IsChecked;
+                _applicationUpdateService.AutomaticUpdatesEnabled = (bool)chkEnableAutoUpdates.IsChecked;
             }
             else
             {
-                UpdateManager.Instance.AutoUpdatesEnabled = false;
+                _applicationUpdateService.AutomaticUpdatesEnabled = false;
             }
         }
 
@@ -686,8 +691,8 @@ namespace CairoDesktop
 
             Shell.IsCairoConfiguredAsShell = !Shell.IsCairoConfiguredAsShell;
 
-            CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, 
-                Localization.DisplayString.sSettings_Advanced_ShellChanged, CairoMessageImage.LogOff, 
+            CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText,
+                Localization.DisplayString.sSettings_Advanced_ShellChanged, CairoMessageImage.LogOff,
                 Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater,
                 result =>
                 {
@@ -732,7 +737,7 @@ namespace CairoDesktop
             {
                 if (_instance == null)
                 {
-                    _instance = new CairoSettingsWindow();
+                    _instance = new CairoSettingsWindow((IApplicationUpdateService)Startup._host.Services.GetService(typeof(IApplicationUpdateService)));
                 }
 
                 return _instance;
@@ -932,7 +937,7 @@ namespace CairoDesktop
                 }
             }
         }
-        
+
         private void btnCairoVideoFileBrowse_Click(object sender, RoutedEventArgs e)
         {
             using (OpenFileDialog dlg = new OpenFileDialog

@@ -57,7 +57,7 @@ namespace CairoDesktop.SupportingClasses
             // set initial DPI. We do it here so that we get the correct value when DPI has changed since initial user logon to the system.
             if (Screen.Primary)
             {
-                Shell.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
+                Shell.DpiScale = PresentationSource.FromVisual(App.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
             }
 
             dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;

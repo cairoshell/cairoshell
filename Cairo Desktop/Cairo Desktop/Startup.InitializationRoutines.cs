@@ -10,6 +10,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using CairoDesktop.SupportingClasses;
+using CairoDesktop.Application.Interfaces;
 
 namespace CairoDesktop
 {
@@ -33,7 +34,12 @@ namespace CairoDesktop
 
         private static void SetupUpdateManager()
         {
-            UpdateManager.Instance.Initialize(ExitCairo);
+            // This is bad practice and should get refactoredB
+            var service = _host.Services.GetService(typeof(IApplicationUpdateService)) as Infrastructure.Services.WinSparkleApplicationUpdateService;
+            if (service != null)
+            {
+                service.Initialize(ExitCairo);
+            }
         }
 
         private static bool SingleInstanceCheck()

@@ -97,7 +97,7 @@ namespace CairoDesktop
         private static void ShellNew_FileCreated(object sender, FileSystemEventArgs e)
         {
             // file was created due to usage of the shell new menu
-            Application.Current.Dispatcher.Invoke(() =>
+            App.Current.Dispatcher.Invoke(() =>
             {
                 if (sender is SystemFile file)
                 {

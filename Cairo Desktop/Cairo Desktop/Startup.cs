@@ -1,8 +1,11 @@
-﻿using CairoDesktop.Configuration;
-using CairoDesktop.WindowsTray;
+﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
+using CairoDesktop.Configuration;
+using CairoDesktop.Infrastructure;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
+using CairoDesktop.WindowsTray;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -21,6 +24,7 @@ namespace CairoDesktop
         private static bool isTour;
         private static bool forceEnableShellMode;
         private static bool forceDisableShellMode;
+        internal static IHost _host;
 
         public static bool IsShuttingDown { get; set; }
 
@@ -30,10 +34,24 @@ namespace CairoDesktop
         [STAThread]
         public static void Main(string[] args)
         {
+            _host = new HostBuilder()
+                .ConfigureServices((context, services) =>
+                {
+                    services.AddInfrastructureServices(context.Configuration);
+                })
+                .ConfigureLogging((context, logging) =>
+                {
+                    logging.AddInfrastructureLogging();
+                })
+                .Build();
+
             #region Initialization Routines
 
             ProcessCommandLineArgs(args);
-            if(!SingleInstanceCheck()) return;
+
+            if (!SingleInstanceCheck())
+                return;
+
             SetShellReadyEvent();
 
             SetupSettings(); // run this before logging setup so that preferences are always used
@@ -42,6 +60,7 @@ namespace CairoDesktop
             SetIsCairoRunningAsShell();
 
             SetupLoggingSystem();
+
             WriteApplicationDebugInfoToConsole();
 
             SetSystemKeyboardShortcuts();
@@ -59,7 +78,7 @@ namespace CairoDesktop
             setTheme(app);
 
             // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-            MenuBar initialMenuBar = new MenuBar(System.Windows.Forms.Screen.PrimaryScreen);
+            MenuBar initialMenuBar = new MenuBar((IApplicationUpdateService)_host.Services.GetService(typeof(IApplicationUpdateService)), System.Windows.Forms.Screen.PrimaryScreen);
             app.MainWindow = initialMenuBar;
             WindowManager.Instance.MenuBarWindows.Add(initialMenuBar);
             initialMenuBar.Show();
@@ -146,7 +165,7 @@ namespace CairoDesktop
                 indicateGracefulShutdown();
             }
 
-            Application.Current?.Dispatcher.Invoke(() => Application.Current?.Shutdown(), DispatcherPriority.Normal);
+            App.Current?.Dispatcher.Invoke(() => App.Current?.Shutdown(), DispatcherPriority.Normal);
         }
 
         private static void indicateGracefulShutdown()
