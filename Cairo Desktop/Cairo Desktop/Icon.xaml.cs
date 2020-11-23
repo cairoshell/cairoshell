@@ -70,12 +70,12 @@ namespace CairoDesktop
                 // adjust appearance based on settings and usage
                 if (Location == "Desktop")
                 {
-                    btnFile.Style = Application.Current.FindResource("CairoDesktopButtonStyle") as Style;
+                    btnFile.Style = App.Current.FindResource("CairoDesktopButtonStyle") as Style;
                     btnFile.ContextMenu = null;
                     btnFile.Click -= btnFile_Click;
                     btnFile.MouseDoubleClick += btnFile_MouseDoubleClick;
                     btnFile.MouseRightButtonUp += btnFile_MouseRightButtonUp;
-                    txtFilename.Foreground = Application.Current.FindResource("DesktopIconText") as SolidColorBrush;
+                    txtFilename.Foreground = App.Current.FindResource("DesktopIconText") as SolidColorBrush;
 
                     setDesktopIconAppearance();
                 }
@@ -95,8 +95,8 @@ namespace CairoDesktop
                     // bind icon
                     Binding iconBinding = new Binding("Icon");
                     iconBinding.Mode = BindingMode.OneWay;
-                    iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                    iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
+                    iconBinding.FallbackValue = App.Current.FindResource("NullIcon") as BitmapImage;
+                    iconBinding.TargetNullValue = App.Current.FindResource("NullIcon") as BitmapImage;
                     imgIcon.SetBinding(Image.SourceProperty, iconBinding);
                 }
 
@@ -147,8 +147,8 @@ namespace CairoDesktop
                 imgIcon.Height = 48;
                 Binding iconBinding = new Binding("LargeIcon");
                 iconBinding.Mode = BindingMode.OneWay;
-                iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
+                iconBinding.FallbackValue = App.Current.FindResource("NullIcon") as BitmapImage;
+                iconBinding.TargetNullValue = App.Current.FindResource("NullIcon") as BitmapImage;
                 imgIcon.SetBinding(Image.SourceProperty, iconBinding);
             }
             else
@@ -157,8 +157,8 @@ namespace CairoDesktop
                 imgIcon.Height = 32;
                 Binding iconBinding = new Binding("Icon");
                 iconBinding.Mode = BindingMode.OneWay;
-                iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
+                iconBinding.FallbackValue = App.Current.FindResource("NullIcon") as BitmapImage;
+                iconBinding.TargetNullValue = App.Current.FindResource("NullIcon") as BitmapImage;
                 imgIcon.SetBinding(Image.SourceProperty, iconBinding);
             }
 

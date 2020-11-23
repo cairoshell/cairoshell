@@ -101,13 +101,13 @@ namespace CairoDesktop
             if (Settings.Instance.TaskbarPosition == 1)
             {
                 appBarEdge = NativeMethods.ABEdge.ABE_TOP;
-                TaskbarGroupStyle.ContainerStyle = Application.Current.FindResource("CairoTaskbarTopGroupStyle") as Style;
+                TaskbarGroupStyle.ContainerStyle = App.Current.FindResource("CairoTaskbarTopGroupStyle") as Style;
                 TasksList.Margin = new Thickness(0);
             }
             else
             {
                 appBarEdge = NativeMethods.ABEdge.ABE_BOTTOM;
-                TaskbarGroupStyle.ContainerStyle = Application.Current.FindResource("CairoTaskbarGroupStyle") as Style;
+                TaskbarGroupStyle.ContainerStyle = App.Current.FindResource("CairoTaskbarGroupStyle") as Style;
                 TasksList.Margin = new Thickness(-3, -1, 0, 0);
             }
 
@@ -173,15 +173,15 @@ namespace CairoDesktop
 
                 if (Settings.Instance.TaskbarPosition == 1)
                 {
-                    bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarTopFullBorderStyle") as Style;
-                    btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarTopFullButtonDesktopOverlay") as Style;
-                    btnTaskList.Style = Application.Current.FindResource("CairoTaskbarTopFullButtonList") as Style;
+                    bdrTaskbar.Style = App.Current.FindResource("CairoTaskbarTopFullBorderStyle") as Style;
+                    btnDesktopOverlay.Style = App.Current.FindResource("CairoTaskbarTopFullButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = App.Current.FindResource("CairoTaskbarTopFullButtonList") as Style;
                 }
                 else
                 {
-                    bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarFullBorderStyle") as Style;
-                    btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarFullButtonDesktopOverlay") as Style;
-                    btnTaskList.Style = Application.Current.FindResource("CairoTaskbarFullButtonList") as Style;
+                    bdrTaskbar.Style = App.Current.FindResource("CairoTaskbarFullBorderStyle") as Style;
+                    btnDesktopOverlay.Style = App.Current.FindResource("CairoTaskbarFullButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = App.Current.FindResource("CairoTaskbarFullButtonList") as Style;
                 }
             }
             else
@@ -190,15 +190,15 @@ namespace CairoDesktop
 
                 if (Settings.Instance.TaskbarPosition == 1)
                 {
-                    bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarTopBorderStyle") as Style;
-                    btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarTopButtonDesktopOverlay") as Style;
-                    btnTaskList.Style = Application.Current.FindResource("CairoTaskbarTopButtonList") as Style;
+                    bdrTaskbar.Style = App.Current.FindResource("CairoTaskbarTopBorderStyle") as Style;
+                    btnDesktopOverlay.Style = App.Current.FindResource("CairoTaskbarTopButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = App.Current.FindResource("CairoTaskbarTopButtonList") as Style;
                 }
                 else
                 {
-                    bdrTaskbar.Style = Application.Current.FindResource("CairoTaskbarBorderStyle") as Style;
-                    btnDesktopOverlay.Style = Application.Current.FindResource("CairoTaskbarButtonDesktopOverlay") as Style;
-                    btnTaskList.Style = Application.Current.FindResource("CairoTaskbarButtonList") as Style;
+                    bdrTaskbar.Style = App.Current.FindResource("CairoTaskbarBorderStyle") as Style;
+                    btnDesktopOverlay.Style = App.Current.FindResource("CairoTaskbarButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = App.Current.FindResource("CairoTaskbarButtonList") as Style;
                 }
             }
 

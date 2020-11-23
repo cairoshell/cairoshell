@@ -1,4 +1,5 @@
 using CairoDesktop.AppGrabber;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
@@ -15,6 +16,8 @@ namespace CairoDesktop
 {
     public partial class MenuBar : AppBarWindow
     {
+        private readonly IApplicationUpdateService _applicationUpdateService;
+
         private MenuBarShadow shadow;
         private static HotKey cairoMenuHotKey;
         private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
@@ -32,13 +35,14 @@ namespace CairoDesktop
         private MenuExtraSearch menuExtraSearch;
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        public MenuBar() : this(System.Windows.Forms.Screen.PrimaryScreen)
+        public MenuBar(IApplicationUpdateService applicationUpdateService) : this(applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
         {
-
         }
 
-        public MenuBar(System.Windows.Forms.Screen screen)
+        public MenuBar(IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen)
         {
+            _applicationUpdateService = applicationUpdateService;
+
             InitializeComponent();
 
             Screen = screen;
@@ -314,7 +318,7 @@ namespace CairoDesktop
                 appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
             }
         }
-#endregion
+        #endregion
 
         #region Events
 
@@ -492,7 +496,7 @@ namespace CairoDesktop
 
         private void CheckForUpdates(object sender, RoutedEventArgs e)
         {
-            UpdateManager.Instance.CheckForUpdates();
+            _applicationUpdateService?.CheckForUpdates();
         }
 
         private void OpenLogoffBox(object sender, RoutedEventArgs e)
@@ -517,7 +521,7 @@ namespace CairoDesktop
 
         private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
         {
-            CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title, 
+            CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title,
                 CairoMessageImage.Default, Localization.DisplayString.sExitCairo_ExitCairo, Localization.DisplayString.sInterface_Cancel,
                 result =>
                 {
@@ -568,7 +572,7 @@ namespace CairoDesktop
         {
             appGrabber.ShowDialog();
         }
-#endregion
+        #endregion
 
         #region Places menu items
         private void OpenMyDocs(object sender, RoutedEventArgs e)
@@ -615,6 +619,6 @@ namespace CairoDesktop
         {
             FolderHelper.OpenLocation("::{645FF040-5081-101B-9F08-00AA002F954E}");
         }
-#endregion
+        #endregion
     }
 }

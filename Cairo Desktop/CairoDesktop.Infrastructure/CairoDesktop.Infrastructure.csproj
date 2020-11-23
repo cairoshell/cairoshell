@@ -56,5 +56,34 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DependencyInjection.cs" />
+    <Compile Include="Services\WinSparkleUpdateService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CairoDesktop.Application\CairoDesktop.Application.csproj">
+      <Project>{3ff023f4-7ce3-4171-95b7-b5af10332658}</Project>
+      <Name>CairoDesktop.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">
+      <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
+      <Name>CairoDesktop.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
+      <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
+      <Name>CairoDesktop.Interop</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions">
+      <Version>5.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

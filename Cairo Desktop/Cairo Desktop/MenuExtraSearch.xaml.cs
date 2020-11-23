@@ -71,7 +71,7 @@ namespace CairoDesktop
                 // this sometimes takes a while
                 Type provider = typeof(SearchHelper);
 
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                App.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     CairoSearchMenu.DataContext =  new ObjectDataProvider
                     {
