@@ -8,6 +8,7 @@ using CairoDesktop.Common.DesignPatterns;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
+using CairoDesktop.ObjectModel;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -381,7 +382,7 @@ namespace CairoDesktop.SupportingClasses
             }
 
             // notify event subscribers
-            WindowManagerEventArgs args = new WindowManagerEventArgs { DisplaysChanged = displaysChanged, Reason = reason};
+            WindowManagerEventArgs args = new WindowManagerEventArgs { DisplaysChanged = displaysChanged, Reason = reason };
             ScreensChanged?.Invoke(this, args);
         }
 
@@ -399,7 +400,10 @@ namespace CairoDesktop.SupportingClasses
                         CairoLogger.Instance.DebugIf(screen.Primary, "WindowManager: Opening menu bar on new primary display");
 
                         // menu bars
-                        MenuBar newMenuBar = new MenuBar((IApplicationUpdateService)Startup._host.Services.GetService(typeof(IApplicationUpdateService)),screen);
+                        var cairoShell = (_CairoShell)Startup._host.Services.GetService(typeof(_CairoShell));
+                        var applicationUpdateService = (IApplicationUpdateService)Startup._host.Services.GetService(typeof(IApplicationUpdateService));
+
+                        MenuBar newMenuBar = new MenuBar(cairoShell, applicationUpdateService, screen);
                         newMenuBar.Show();
                         MenuBarWindows.Add(newMenuBar);
                     }
@@ -508,8 +512,8 @@ namespace CairoDesktop.SupportingClasses
                 oldWorkArea.Right = SystemInformation.VirtualScreen.Right;
                 oldWorkArea.Bottom = SystemInformation.VirtualScreen.Bottom;
 
-                NativeMethods.SystemParametersInfo((int) NativeMethods.SPI.SETWORKAREA, 1, ref oldWorkArea,
-                    (uint) (NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
+                NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 1, ref oldWorkArea,
+                    (uint)(NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
             }
         }
         #endregion

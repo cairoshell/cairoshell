@@ -8,15 +8,9 @@ using System.Windows.Threading;
 
 namespace CairoDesktop.ObjectModel
 {
-    public sealed class _CairoShell : SingletonObject<_CairoShell>
+    public sealed class _CairoShell // : SingletonObject<_CairoShell>
     {
-        static _CairoShell()
-        {
-            OnStart += (a) => { };
-            OnQuit += (a) => { };
-        }
-
-        private _CairoShell()
+        public _CairoShell()
         {
             CairoMenu = new List<MenuItem>();
             PlacesMenu = new List<MenuItem>();
@@ -29,43 +23,15 @@ namespace CairoDesktop.ObjectModel
 
         public static event Action<_CairoShell> OnQuit;
 
-        public static void Start()
+        public void Start()
         {
-            OnStart(Instance);
+            OnStart?.Invoke(this);
         }
 
-        public static void Quit()
+        public void Quit()
         {
-            OnQuit(Instance);
+            OnQuit?.Invoke(this);
         }
-
-        /// <summary>
-        /// Compatibility System.Windows.Forms.Application.DoEvents
-        /// </summary>
-        public static void DoEvents()
-        {
-            DispatcherFrame frame = new DispatcherFrame();
-            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background,
-                new DispatcherOperationCallback(ExitFrame), frame);
-            Dispatcher.PushFrame(frame);
-        }
-
-        private static object ExitFrame(object f)
-        {
-            ((DispatcherFrame)f).Continue = false;
-            return null;
-        }
-
-        /// <summary>
-        /// Compatibility System.Windows.Forms.Application
-        /// </summary>
-        public static string StartupPath { get { return Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).Location); } }
-        public static string ProductName { get { return (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Name; } }
-        public static Version ProductVersion { get { return (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Version; } }
-
-        public static string CairoApplicationDataFolder { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team"); } }
-        public static string LogsFolder { get { return Path.Combine(CairoApplicationDataFolder, "Logs"); } }
-
 
         public List<ShellExtension> ShellExtensions { get; private set; }
 
