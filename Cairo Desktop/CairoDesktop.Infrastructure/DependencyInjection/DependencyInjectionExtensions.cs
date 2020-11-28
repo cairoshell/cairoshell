@@ -5,14 +5,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace CairoDesktop.Infrastructure
+namespace CairoDesktop.Infrastructure.DependencyInjection
 {
-    public static class DependencyInjection
+    public static class DependencyInjectionExtensions
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
+
             services.AddSingleton<IApplicationUpdateService, WinSparkleApplicationUpdateService>();
 
+            return services;
+        }
+
+        public static IServiceCollection AddDependencyLoadingServices(this IServiceCollection services, IConfiguration configuration, string path, string pattern = null)
+        {
+            services.LoadDependencies(path, pattern);
 
             return services;
         }
