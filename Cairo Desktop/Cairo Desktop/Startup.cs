@@ -1,7 +1,7 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
-using CairoDesktop.Infrastructure;
+using CairoDesktop.Infrastructure.DependencyInjection;
 using CairoDesktop.Interop;
 using CairoDesktop.ObjectModel;
 using CairoDesktop.Services;
@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -43,6 +44,9 @@ namespace CairoDesktop
                     services.AddSingleton<_CairoShell>();
                     services.AddSingleton<PluginService>();
                     services.AddInfrastructureServices(context.Configuration);
+
+                    services.AddDependencyLoadingServices(context.Configuration, Path.Combine(App.StartupPath, "Extensions"));
+                    services.AddDependencyLoadingServices(context.Configuration, Path.Combine(App.CairoApplicationDataFolder, "Extensions"));
                 })
                 .ConfigureLogging((context, logging) =>
                 {

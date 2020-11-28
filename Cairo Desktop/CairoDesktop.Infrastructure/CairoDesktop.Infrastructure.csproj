@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,7 +58,9 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DependencyInjection.cs" />
+    <Compile Include="DependencyInjection\DependancyLoader.cs" />
+    <Compile Include="DependencyInjection\DependencyInjectionExtensions.cs" />
+    <Compile Include="DependencyInjection\DependencyResolver.cs" />
     <Compile Include="Services\WinSparkleUpdateService.cs" />
   </ItemGroup>
   <ItemGroup>
