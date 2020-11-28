@@ -41,12 +41,10 @@ namespace CairoDesktop
             _host = new HostBuilder()
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddSingleton<_CairoShell>();
                     services.AddSingleton<PluginService>();
                     services.AddInfrastructureServices(context.Configuration);
-
-                    services.AddDependencyLoadingServices(context.Configuration, Path.Combine(App.StartupPath, "Extensions"));
-                    services.AddDependencyLoadingServices(context.Configuration, Path.Combine(App.CairoApplicationDataFolder, "Extensions"));
+                    services.AddDependencyLoadingServices(context.Configuration, Path.Combine(CairoApplication.StartupPath, "Extensions"));
+                    services.AddDependencyLoadingServices(context.Configuration, Path.Combine(CairoApplication.CairoApplicationDataFolder, "Extensions"));
                 })
                 .ConfigureLogging((context, logging) =>
                 {
@@ -82,16 +80,15 @@ namespace CairoDesktop
 
             #endregion
 
-            App app = new App();
+            CairoApplication app = new CairoApplication();
             app.InitializeComponent();  // This sets up the Unhandled Exception stuff... 
 
             setTheme(app);
 
             // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-            var cairoShell = (_CairoShell)_host.Services.GetService(typeof(_CairoShell));
             var applicationUpdateService = (IApplicationUpdateService)_host.Services.GetService(typeof(IApplicationUpdateService));
 
-            MenuBar initialMenuBar = new MenuBar(cairoShell, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen);
+            MenuBar initialMenuBar = new MenuBar(applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen);
             app.MainWindow = initialMenuBar;
             WindowManager.Instance.MenuBarWindows.Add(initialMenuBar);
             initialMenuBar.Show();
@@ -180,7 +177,7 @@ namespace CairoDesktop
                 indicateGracefulShutdown();
             }
 
-            App.Current?.Dispatcher.Invoke(() => App.Current?.Shutdown(), DispatcherPriority.Normal);
+            CairoApplication.Current?.Dispatcher.Invoke(() => CairoApplication.Current?.Shutdown(), DispatcherPriority.Normal);
         }
 
         private static void indicateGracefulShutdown()
@@ -190,7 +187,7 @@ namespace CairoDesktop
             Environment.ExitCode = 1;
         }
 
-        private static void setTheme(App app)
+        private static void setTheme(CairoApplication app)
         {
             // Themes are very UI centric. We should devise a way of having Plugins/Extensions contribute to this.
             string theme = Settings.Instance.CairoTheme;
@@ -209,12 +206,12 @@ namespace CairoDesktop
             {
                 if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName) && e.PropertyName == "CairoTheme")
                 {
-                    App.Current.Resources.MergedDictionaries.Clear();
+                    CairoApplication.Current.Resources.MergedDictionaries.Clear();
                     ResourceDictionary cairoResource = new ResourceDictionary();
 
                     // Put our base theme back
-                    cairoResource.Source = new Uri("Cairo.xaml", UriKind.RelativeOrAbsolute);
-                    App.Current.Resources.MergedDictionaries.Add(cairoResource);
+                    cairoResource.Source = new Uri("Cairo.xaml", UriKind.RelativeOrAbsolute); 
+                    CairoApplication.Current.Resources.MergedDictionaries.Add(cairoResource);
 
                     string newTheme = Settings.Instance.CairoTheme;
                     if (newTheme != "Default")

@@ -400,10 +400,9 @@ namespace CairoDesktop.SupportingClasses
                         CairoLogger.Instance.DebugIf(screen.Primary, "WindowManager: Opening menu bar on new primary display");
 
                         // menu bars
-                        var cairoShell = (_CairoShell)Startup._host.Services.GetService(typeof(_CairoShell));
                         var applicationUpdateService = (IApplicationUpdateService)Startup._host.Services.GetService(typeof(IApplicationUpdateService));
 
-                        MenuBar newMenuBar = new MenuBar(cairoShell, applicationUpdateService, screen);
+                        MenuBar newMenuBar = new MenuBar(applicationUpdateService, screen);
                         newMenuBar.Show();
                         MenuBarWindows.Add(newMenuBar);
                     }

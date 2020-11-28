@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using CairoDesktop.ObjectModel;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
-using CairoDesktop.ObjectModel;
 
 namespace CairoDesktop.Services
 {
     public sealed class PluginService : ShellService
     {
-        private readonly _CairoShell _cairoShell;
-
         [ImportMany(typeof(ShellExtension))]
         private IEnumerable<ShellExtension> _shellExtensions;
 
@@ -19,13 +17,12 @@ namespace CairoDesktop.Services
         private AggregateCatalog catalog;
         private CompositionContainer container;
 
-        public PluginService(_CairoShell cairoShell)
+        public PluginService()
         {
-            systemExtensionsPath = Path.Combine(App.StartupPath, "Extensions");
-            userExtensionsPath = Path.Combine(App.CairoApplicationDataFolder, "Extensions");
+            systemExtensionsPath = Path.Combine(CairoApplication.StartupPath, "Extensions");
+            userExtensionsPath = Path.Combine(CairoApplication.CairoApplicationDataFolder, "Extensions");
 
-            cairoShell.ShellServices.Add(GetType(), this);
-            _cairoShell = cairoShell;
+            CairoApplication.Current.ShellServices.Add(GetType(), this);
         }
 
         public IEnumerable<ShellExtension> ShellExtensions { get => _shellExtensions; private set => _shellExtensions = value; }
@@ -51,7 +48,7 @@ namespace CairoDesktop.Services
             foreach (ShellExtension shellExtension in ShellExtensions)
             {
                 shellExtension.Start();
-                _cairoShell.ShellExtensions.Add(shellExtension);
+                CairoApplication.Current.ShellExtensions.Add(shellExtension);
             }
 
         }
@@ -60,7 +57,7 @@ namespace CairoDesktop.Services
         {
             foreach (ShellExtension shellExtension in ShellExtensions)
             {
-                _cairoShell.ShellExtensions.Remove(shellExtension);
+                CairoApplication.Current.ShellExtensions.Remove(shellExtension);
                 shellExtension.Stop();
             }
         }

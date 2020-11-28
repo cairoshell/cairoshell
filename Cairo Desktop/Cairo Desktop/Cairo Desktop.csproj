@@ -109,7 +109,6 @@
     <Compile Include="ObjectModel\MenuItem.cs" />
     <Compile Include="ObjectModel\ShellExtension.cs" />
     <Compile Include="ObjectModel\ShellService.cs" />
-    <Compile Include="ObjectModel\_CairoShell.cs" />
     <Compile Include="ProgramsMenu.xaml.cs">
       <DependentUpon>ProgramsMenu.xaml</DependentUpon>
     </Compile>

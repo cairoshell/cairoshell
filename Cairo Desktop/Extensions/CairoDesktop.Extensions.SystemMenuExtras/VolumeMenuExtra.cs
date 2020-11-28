@@ -1,15 +1,13 @@
-﻿using System.Windows.Controls;
-using CairoDesktop.Configuration;
+﻿using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.ObjectModel;
+using System.Windows.Controls;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
     class VolumeMenuExtra : MenuExtra
     {
         private Volume _volume;
-
-        public VolumeMenuExtra() { }
 
         public override UserControl StartControl(MenuBar menuBar)
         {
@@ -18,10 +16,8 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
                 _volume = new Volume();
                 return _volume;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
     }
 }

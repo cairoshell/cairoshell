@@ -7,10 +7,6 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
     {
         private Clock _clock;
 
-        public ClockMenuExtra()
-        {
-        }
-
         public override UserControl StartControl(MenuBar menuBar)
         {
             _clock = new Clock(menuBar);
