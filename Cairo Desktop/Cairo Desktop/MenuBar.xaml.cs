@@ -17,7 +17,6 @@ namespace CairoDesktop
 {
     public partial class MenuBar : AppBarWindow
     {
-        private readonly _CairoShell _cairoShell;
         private readonly IApplicationUpdateService _applicationUpdateService;
 
         private MenuBarShadow shadow;
@@ -37,13 +36,12 @@ namespace CairoDesktop
         private MenuExtraSearch menuExtraSearch;
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        public MenuBar(_CairoShell cairoShell, IApplicationUpdateService applicationUpdateService) : this(cairoShell, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
+        public MenuBar(IApplicationUpdateService applicationUpdateService) : this(applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
         {
         }
 
-        public MenuBar(_CairoShell cairoShell, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen)
+        public MenuBar(IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen)
         {
-            _cairoShell = cairoShell;
             _applicationUpdateService = applicationUpdateService;
 
             InitializeComponent();
@@ -117,7 +115,7 @@ namespace CairoDesktop
         private void setupMenuExtras()
         {
             // set up menu extras
-            foreach (var extra in _cairoShell.MenuExtras)
+            foreach (var extra in CairoApplication.Current.MenuExtras)
             {
                 UserControl menuExtra = extra.StartControl(this);
                 if (menuExtra != null) MenuExtrasHost.Children.Add(menuExtra);
@@ -161,11 +159,11 @@ namespace CairoDesktop
 
         private void setupCairoMenu()
         {
-            // Add _Application CairoMenu MenuItems
-            if (_cairoShell.CairoMenu.Count > 0)
+            // Add CairoMenu MenuItems
+            if (CairoApplication.Current.CairoMenu.Count > 0)
             {
                 CairoMenu.Items.Insert(7, new Separator());
-                foreach (var cairoMenuItem in _cairoShell.CairoMenu)
+                foreach (var cairoMenuItem in CairoApplication.Current.CairoMenu)
                 {
                     var menuItem = new System.Windows.Controls.MenuItem { Header = cairoMenuItem.Header };
                     menuItem.Click += cairoMenuItem.MenuItem_Click;
@@ -186,11 +184,11 @@ namespace CairoDesktop
                 PlacesVideosItem.Visibility = Visibility.Collapsed;
             }
 
-            // Add _Application PlacesMenu MenuItems
-            if (_cairoShell.PlacesMenu.Count > 0)
+            // Add PlacesMenu MenuItems
+            if (CairoApplication.Current.PlacesMenu.Count > 0)
             {
                 PlacesMenu.Items.Add(new Separator());
-                foreach (var placesMenuItem in _cairoShell.PlacesMenu)
+                foreach (var placesMenuItem in CairoApplication.Current.PlacesMenu)
                 {
                     var menuItem = new System.Windows.Controls.MenuItem { Header = placesMenuItem.Header };
                     menuItem.Click += placesMenuItem.MenuItem_Click;

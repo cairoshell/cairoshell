@@ -5,27 +5,31 @@ using CairoDesktop.SupportingClasses;
 using CairoDesktop.WindowsTasks;
 using CairoDesktop.WindowsTray;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using CairoDesktop.ObjectModel;
 
 namespace CairoDesktop
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : System.Windows.Application
+    public partial class CairoApplication : System.Windows.Application
     {
-        public static new App Current
+        public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
+
+        public CairoApplication()
         {
-            get
-            {
-                return System.Windows.Application.Current as App;
-            }
+            Commands = new List<ICommand>();
+            CairoMenu = new List<MenuItem>();
+            PlacesMenu = new List<MenuItem>();
+            MenuExtras = new List<MenuExtra>();
+            ShellExtensions = new List<ShellExtension>();
+            ShellServices = new Dictionary<Type, ShellService>();
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -148,14 +152,26 @@ namespace CairoDesktop
         /// <summary>
         /// Compatibility System.Windows.Forms.Application
         /// </summary>
-        public static string StartupPath { get { return Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).Location); } }
+        public static string StartupPath => Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).Location);
 
-        public static string ProductName { get { return (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Name; } }
+        public static string ProductName => (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Name;
 
-        public static Version ProductVersion { get { return (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Version; } }
+        public static Version ProductVersion => (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Version;
 
-        public static string CairoApplicationDataFolder { get { return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team"); } }
+        public static string CairoApplicationDataFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team");
 
-        public static string LogsFolder { get { return Path.Combine(CairoApplicationDataFolder, "Logs"); } }
+        public static string LogsFolder => Path.Combine(CairoApplicationDataFolder, "Logs");
+
+        public List<ShellExtension> ShellExtensions { get; }
+
+        public Dictionary<Type, ShellService> ShellServices { get; }
+
+        public List<ICommand> Commands { get; }
+
+        public List<MenuItem> CairoMenu { get; }
+
+        public List<MenuItem> PlacesMenu { get; }
+
+        public List<MenuExtra> MenuExtras { get; }
     }
 }

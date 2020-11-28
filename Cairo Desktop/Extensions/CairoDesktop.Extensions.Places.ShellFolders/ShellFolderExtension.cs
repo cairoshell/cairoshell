@@ -23,12 +23,12 @@ namespace CairoDesktop.Extensions.Places.ShellFolders
                 new ShellLocationMenuItem("OneDrive", "shell:::{018D5C66-4533-4307-9B53-224DE2ED1FE6}")
             });
 
-            _CairoShell.Instance.PlacesMenu.AddRange(MenuItems);
+            CairoApplication.Current.PlacesMenu.AddRange(MenuItems);
         }
 
         public override void Stop()
         {
-            MenuItems.Select(_CairoShell.Instance.PlacesMenu.Remove).ToList();
+            MenuItems.Select(CairoApplication.Current.PlacesMenu.Remove).ToList();
             MenuItems.Clear();
             MenuItems = null;
         }

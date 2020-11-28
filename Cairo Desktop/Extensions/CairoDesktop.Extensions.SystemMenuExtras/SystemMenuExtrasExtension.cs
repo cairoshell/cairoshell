@@ -23,12 +23,12 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
                                 new ClockMenuExtra(),
                                 new SearchMenuExtra());
 
-            MenuExtras.AddTo(_CairoShell.Instance.MenuExtras);
+            MenuExtras.AddTo(CairoApplication.Current.MenuExtras);
         }
 
         public override void Stop()
         {
-            MenuExtras.RemoveFrom(_CairoShell.Instance.MenuExtras);
+            MenuExtras.RemoveFrom(CairoApplication.Current.MenuExtras);
             MenuExtras.Clear();
             MenuExtras = null;
         }

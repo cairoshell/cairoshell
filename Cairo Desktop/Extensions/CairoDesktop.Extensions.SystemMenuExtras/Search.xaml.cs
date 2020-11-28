@@ -1,12 +1,12 @@
-﻿using System;
+﻿using CairoDesktop.Common;
+using CairoDesktop.Interop;
+using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
-using CairoDesktop.Common;
-using CairoDesktop.Interop;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {

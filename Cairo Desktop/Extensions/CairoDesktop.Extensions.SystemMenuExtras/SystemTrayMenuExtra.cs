@@ -1,6 +1,6 @@
-﻿using System.Windows.Controls;
-using CairoDesktop.Configuration;
+﻿using CairoDesktop.Configuration;
 using CairoDesktop.ObjectModel;
+using System.Windows.Controls;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -8,19 +8,15 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
     {
         private SystemTray _systemTray;
 
-        public SystemTrayMenuExtra() { }
-
         public override UserControl StartControl(MenuBar menuBar)
         {
-            if (Settings.Instance.EnableSysTray)
-            {
-                _systemTray = new SystemTray(menuBar);
-                return _systemTray;
-            }
-            else
+            if (!Settings.Instance.EnableSysTray)
             {
                 return null;
             }
+
+            _systemTray = new SystemTray(menuBar);
+            return _systemTray;
         }
     }
 }

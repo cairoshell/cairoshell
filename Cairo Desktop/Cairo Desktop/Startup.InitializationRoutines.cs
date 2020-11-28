@@ -89,7 +89,7 @@ namespace CairoDesktop
         private static void SetupLoggingSystem()
         {
             // use the default logs folder
-            string logsFolder = App.LogsFolder;
+            string logsFolder = CairoApplication.LogsFolder;
 
             // create the filename that will power the current log file listener
             string filename = Path.Combine(logsFolder, DefaultLogName);
@@ -260,14 +260,15 @@ namespace CairoDesktop
             const string @break = @"#############################################";
 
             CairoLogger.Instance.Info(@break);
-            CairoLogger.Instance.Info(string.Format(@"{0}", App.ProductName));
-            CairoLogger.Instance.Info(string.Format(@"Version: {0}", App.ProductVersion));
-            CairoLogger.Instance.Info(string.Format(@"Operating System: {0}", new ComputerInfo().OSFullName)); //outputs the OS type based on version
-            CairoLogger.Instance.Info(string.Format(@"OS Build: {0}", new ComputerInfo().OSVersion));
-            CairoLogger.Instance.Info(string.Format(@"Processor Type: {0}", string.Format(@"{0}-bit", IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)));
-            CairoLogger.Instance.Info(string.Format(@"Startup Path: {0}", App.StartupPath));
-            CairoLogger.Instance.Info(string.Format(@"Running As: {0}-bit Process", IntPtr.Size * 8));
-            CairoLogger.Instance.Info(string.Format("Configured as shell: {0}; Running as shell: {1}", Shell.IsCairoConfiguredAsShell, Shell.IsCairoRunningAsShell));
+            CairoLogger.Instance.Info($"{CairoApplication.ProductName}");
+            CairoLogger.Instance.Info($"Version: {CairoApplication.ProductVersion}");
+            CairoLogger.Instance.Info($"Operating System: {new ComputerInfo().OSFullName}");
+            CairoLogger.Instance.Info($"OS Build: {new ComputerInfo().OSVersion}");
+            CairoLogger.Instance.Info($"Processor Type: {(IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)}-bit");
+            CairoLogger.Instance.Info($"Startup Path: {CairoApplication.StartupPath}");
+            CairoLogger.Instance.Info($"Running As: {IntPtr.Size * 8}-bit Process");
+            CairoLogger.Instance.Info($"Configured as shell: {Shell.IsCairoConfiguredAsShell}");
+            CairoLogger.Instance.Info($"Running as shell: {Shell.IsCairoRunningAsShell}");
             CairoLogger.Instance.Info(@break);
         }
 
