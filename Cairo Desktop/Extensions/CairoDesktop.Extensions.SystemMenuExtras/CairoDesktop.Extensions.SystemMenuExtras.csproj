@@ -76,6 +76,7 @@
       <DependentUpon>Clock.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClockMenuExtra.cs" />
+    <Compile Include="DependencyRegistrant.cs" />
     <Compile Include="Search.xaml.cs">
       <DependentUpon>Search.xaml</DependentUpon>
     </Compile>
@@ -118,6 +119,10 @@
       <Project>{F0383E91-6ADC-4016-9E21-D3DC0FFC55FF}</Project>
       <Name>Cairo Desktop</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CairoDesktop.Application\CairoDesktop.Application.csproj">
+      <Project>{3FF023F4-7CE3-4171-95B7-B5AF10332658}</Project>
+      <Name>CairoDesktop.Application</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\CairoDesktop.Common\CairoDesktop.Common.csproj">
       <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>

@@ -361,30 +361,37 @@ namespace CairoDesktop
         {
             double top = getDesiredTopPosition();
 
-            if (Top != top)
+            if (Top == top)
             {
-                Top = top;
-                setShadowPosition();
+                return;
             }
+
+            Top = top;
+
+            setShadowPosition();
         }
 
         private double getDesiredTopPosition()
         {
             double top;
 
-            if (secretBottomMenuBar) top = (Screen.Bounds.Bottom / dpiScale) - desiredHeight;
-            else top = Screen.Bounds.Y / dpiScale;
+            if (secretBottomMenuBar) 
+                top = (Screen.Bounds.Bottom / dpiScale) - desiredHeight;
+            else
+                top = Screen.Bounds.Y / dpiScale;
 
             return top;
         }
 
         protected override void CustomClosing()
         {
-            if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
+            if (!WindowManager.Instance.IsSettingDisplays && !CairoApplication.IsShuttingDown)
             {
-                closeShadow();
-                Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+                return;
             }
+
+            closeShadow();
+            Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
         }
 
         private void OnShowCairoMenu(HotKey hotKey)
@@ -528,7 +535,7 @@ namespace CairoDesktop
                 {
                     if (result == true)
                     {
-                        Startup.ExitCairo();
+                        CairoApplication.Current.ExitCairo();
                     }
                 });
         }

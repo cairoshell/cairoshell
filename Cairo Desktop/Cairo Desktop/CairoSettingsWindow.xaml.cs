@@ -505,26 +505,26 @@ namespace CairoDesktop
             }
         }
 
-        private void showRestartButton()
+        private void ShowRestartButton()
         {
             btnRestart.Visibility = Visibility.Visible;
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            showRestartButton();
+            ShowRestartButton();
         }
 
         private void DropDown_Changed(object sender, EventArgs e)
         {
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void restartCairo(object sender, RoutedEventArgs e)
+        private void RestartCairo(object sender, RoutedEventArgs e)
         {
             saveChanges();
 
-            Startup.RestartCairo();
+            CairoApplication.Current.RestartCairo();
         }
 
         /// <summary>
@@ -739,12 +739,9 @@ namespace CairoDesktop
         {
             get
             {
-                if (_instance == null)
-                {
-                    _instance = new CairoSettingsWindow((IApplicationUpdateService)Startup._host.Services.GetService(typeof(IApplicationUpdateService)));
-                }
-
-                return _instance;
+                return _instance ?? (_instance = new CairoSettingsWindow(
+                    (IApplicationUpdateService) CairoApplication.Current.Host.Services.GetService(
+                        typeof(IApplicationUpdateService))));
             }
         }
 
