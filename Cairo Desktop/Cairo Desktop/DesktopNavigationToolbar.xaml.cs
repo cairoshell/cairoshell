@@ -399,7 +399,7 @@ namespace CairoDesktop
         private void DesktopToolbar_Closing(object sender, CancelEventArgs e)
         {
 
-            if (!Startup.IsShuttingDown && !AllowClose)
+            if (!CairoApplication.IsShuttingDown && !AllowClose)
             {
                 e.Cancel = true;
             }

@@ -103,7 +103,7 @@ namespace CairoDesktop
                     {
                         if (result == true)
                         {
-                            Startup.RestartCairo();
+                            CairoApplication.Current.RestartCairo();
                         }
                     });
             }

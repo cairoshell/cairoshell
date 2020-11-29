@@ -2,6 +2,6 @@
 {
     public interface IDependencyRegistrant
     {
-        void Register(IDependencyRegistrar dependencyAdder);
+        void Register(IDependencyRegistrar registrar);
     }
 }

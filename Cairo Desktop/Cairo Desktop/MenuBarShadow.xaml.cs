@@ -107,7 +107,7 @@ namespace CairoDesktop
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             IsClosing = true;
-            if (!Startup.IsShuttingDown && !WindowManager.Instance.IsSettingDisplays && !AllowClose)
+            if (!CairoApplication.IsShuttingDown && !WindowManager.Instance.IsSettingDisplays && !AllowClose)
             {
                 IsClosing = false;
                 e.Cancel = true;

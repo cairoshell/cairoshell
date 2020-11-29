@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using CairoDesktop.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
-using CairoDesktop.ObjectModel;
 
 namespace CairoDesktop.Extensions.Places.ShellFolders
 {
-    [Export(typeof(ShellExtension))]
     public sealed class ShellFolderExtension : ShellExtension
     {
+        private readonly CairoApplication _app;
         public List<MenuItem> MenuItems { get; private set; }
 
-        public ShellFolderExtension()
+        public ShellFolderExtension(CairoApplication app)
         {
+            _app = app;
             MenuItems = new List<MenuItem>();
         }
 
@@ -23,12 +23,12 @@ namespace CairoDesktop.Extensions.Places.ShellFolders
                 new ShellLocationMenuItem("OneDrive", "shell:::{018D5C66-4533-4307-9B53-224DE2ED1FE6}")
             });
 
-            CairoApplication.Current.PlacesMenu.AddRange(MenuItems);
+            _app.PlacesMenu.AddRange(MenuItems);
         }
 
         public override void Stop()
         {
-            MenuItems.Select(CairoApplication.Current.PlacesMenu.Remove).ToList();
+            MenuItems.Select(_app.PlacesMenu.Remove).ToList();
             MenuItems.Clear();
             MenuItems = null;
         }

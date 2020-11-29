@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -12,8 +13,18 @@ namespace CairoDesktop.Infrastructure.DependencyInjection
 {
     public static class DependencyLoader
     {
-        public static void LoadDependencies(this IServiceCollection serviceCollection, string path, string pattern = null)
+        public static IServiceCollection LoadDependencies(this IServiceCollection serviceCollection, string path, string pattern = null)
         {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return serviceCollection;
+            }
+
+            if (!Directory.Exists(path))
+            {
+                return serviceCollection;
+            }
+
             var directoryCatalog = string.IsNullOrWhiteSpace(pattern)
                 ? new DirectoryCatalog(path)
                 : new DirectoryCatalog(path, pattern);
@@ -46,6 +57,8 @@ namespace CairoDesktop.Infrastructure.DependencyInjection
 
                 throw new TypeLoadException(builder.ToString(), typeLoadException);
             }
+
+            return serviceCollection;
         }
 
         private static ImportDefinition BuildImportDefinition()

@@ -16,7 +16,7 @@
     <WarningLevel>4</WarningLevel>
     <ApplicationIcon>Application.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <StartupObject>CairoDesktop.Startup</StartupObject>
+    <StartupObject>CairoDesktop.CairoApplication</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -86,6 +86,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CairoApplication.InitializationRoutines.cs" />
     <Compile Include="CairoWallpaperStyle.cs" />
     <Compile Include="DesktopOverlay.xaml.cs">
       <DependentUpon>DesktopOverlay.xaml</DependentUpon>
@@ -116,7 +117,6 @@
     <Compile Include="StacksScroller.xaml.cs">
       <DependentUpon>StacksScroller.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Startup.InitializationRoutines.cs" />
     <Compile Include="SupportingClasses\AppBarWindow.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
     <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
@@ -270,7 +270,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="CairoApplication.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
@@ -311,8 +311,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
+    <Compile Include="CairoApplication.xaml.cs">
+      <DependentUpon>CairoApplication.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MenuBar.xaml.cs">
@@ -342,7 +342,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Startup.cs" />
     <Compile Include="SupportingClasses\TaskButtonStyleConverter.cs" />
     <Compile Include="Taskbar.xaml.cs">
       <DependentUpon>Taskbar.xaml</DependentUpon>

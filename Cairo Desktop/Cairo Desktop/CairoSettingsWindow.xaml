@@ -896,7 +896,7 @@
 
             <TabItem Style="{StaticResource CairoSettingsBarRestartStyle}"
                      Name="btnRestart"
-                     MouseLeftButtonUp="restartCairo"
+                     MouseLeftButtonUp="RestartCairo"
                      Visibility="Hidden">
                 <TabItem.Header>
                     <StackPanel>

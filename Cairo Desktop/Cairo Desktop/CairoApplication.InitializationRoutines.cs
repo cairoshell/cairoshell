@@ -1,56 +1,55 @@
-﻿using CairoDesktop.Application.Interfaces;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Common.Logging.Observers;
 using CairoDesktop.Configuration;
+using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Interop;
-using CairoDesktop.ObjectModel;
 using CairoDesktop.Services;
 using Microsoft.VisualBasic.Devices;
-using System;
-using System.Diagnostics;
-using System.IO;
 
 namespace CairoDesktop
 {
-    public partial class Startup
+    public partial class CairoApplication
     {
-        private static void ProcessCommandLineArgs(string[] args)
+        private void ProcessCommandLineArgs(string[] args)
         {
-            commandLineParser = new CommandLineParser(args);
+            _commandLineParser = new CommandLineParser(args);
 
-            isRestart = commandLineParser.ToBoolean("restart");
-            isTour = commandLineParser.ToBoolean("tour");
-            forceEnableShellMode = commandLineParser.ToBoolean("shell");
-            forceDisableShellMode = commandLineParser.ToBoolean("noshell");
+            _isRestart = _commandLineParser.ToBoolean("restart");
+            _isTour = _commandLineParser.ToBoolean("tour");
+            _forceEnableShellMode = _commandLineParser.ToBoolean("shell");
+            _forceDisableShellMode = _commandLineParser.ToBoolean("noshell");
         }
 
-        public static void SetIsCairoRunningAsShell()
+        public void SetIsCairoRunningAsShell()
         {
             // check if there is an existing shell window. If not, we will assume the role of shell.
-            Shell.IsCairoRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !forceDisableShellMode) || forceEnableShellMode;
+            Shell.IsCairoRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !_forceDisableShellMode) || _forceEnableShellMode;
         }
 
-        private static void SetupUpdateManager()
+        private void SetupUpdateManager()
         {
-            // This is bad practice and should get refactoredB
-            var service = _host.Services.GetService(typeof(IApplicationUpdateService)) as Infrastructure.Services.WinSparkleApplicationUpdateService;
-            if (service != null)
+            // This is bad practice and should get refactored
+            if (Host.Services.GetService(typeof(IApplicationUpdateService)) is WinSparkleApplicationUpdateService service)
             {
                 service.Initialize(ExitCairo);
             }
         }
 
-        private static bool SingleInstanceCheck()
+        private bool SingleInstanceCheck()
         {
-            cairoMutex = new System.Threading.Mutex(true, "CairoShell", out bool ok);
+            _cairoMutex = new System.Threading.Mutex(true, "CairoShell", out bool ok);
 
-            if (!ok && !isRestart)
+            if (!ok && !_isRestart)
             {
                 // Another instance is already running.
                 return false;
             }
-            else if (!ok && isRestart)
+            else if (!ok && _isRestart)
             {
                 // this is a restart so let's wait for the old instance to end
                 System.Threading.Thread.Sleep(2000);
@@ -59,7 +58,7 @@ namespace CairoDesktop
             return true;
         }
 
-        private static void SetShellReadyEvent()
+        private void SetShellReadyEvent()
         {
             int hShellReadyEvent;
             if (Environment.OSVersion.Platform == PlatformID.Win32NT && Shell.IsWindows2kOrBetter)
@@ -78,7 +77,7 @@ namespace CairoDesktop
             }
         }
 
-        private static void SetupSettings()
+        private void SetupSettings()
         {
             if (Settings.Instance.IsFirstRun == true)
             {
@@ -86,7 +85,7 @@ namespace CairoDesktop
             }
         }
 
-        private static void SetupLoggingSystem()
+        private void SetupLoggingSystem()
         {
             // use the default logs folder
             string logsFolder = CairoApplication.LogsFolder;
@@ -112,7 +111,7 @@ namespace CairoDesktop
             CairoLogger.Instance.Attach(new ConsoleLog());
         }
 
-        private static LogSeverity GetLogSeveritySetting(LogSeverity defaultValue)
+        private LogSeverity GetLogSeveritySetting(LogSeverity defaultValue)
         {
             if (!Enum.TryParse(Settings.Instance.LogSeverity, out LogSeverity result))
             {
@@ -128,7 +127,7 @@ namespace CairoDesktop
         /// <summary>
         /// Returns the default date format used to name log files.
         /// </summary>
-        private static string DefaultDateFormat
+        private string DefaultDateFormat
         {
             get
             {
@@ -139,7 +138,7 @@ namespace CairoDesktop
         /// <summary>
         /// Returns the default file extension used to name log files.
         /// </summary>
-        private static string DefaultLogFileExtension
+        private string DefaultLogFileExtension
         {
             get
             {
@@ -150,7 +149,7 @@ namespace CairoDesktop
         /// <summary>
         /// Returns the default name of the log file.
         /// </summary>
-        private static string DefaultLogName
+        private string DefaultLogName
         {
             get
             {
@@ -161,7 +160,7 @@ namespace CairoDesktop
         /// <summary>
         /// Returns the default name of the backup log file.
         /// </summary>
-        private static string DefaultBackupLogName
+        private string DefaultBackupLogName
         {
             get
             {
@@ -174,7 +173,7 @@ namespace CairoDesktop
         /// </summary>
         /// <param name="logsFolder">The directory to create.</param>
         /// <returns></returns>
-        private static bool CreateLogsFolder(string logsFolder)
+        private bool CreateLogsFolder(string logsFolder)
         {
             try
             {
@@ -196,7 +195,7 @@ namespace CairoDesktop
         /// Backs up the existing log file, as the last run backup.
         /// </summary>
         /// <param name="logsFolder"></param>
-        private static void BackupExistingLogFiles(string logsFolder)
+        private void BackupExistingLogFiles(string logsFolder)
         {
             try
             {
@@ -222,7 +221,7 @@ namespace CairoDesktop
         /// Deletes any log files older than a week.
         /// </summary>
         /// <param name="logsFolder"></param>
-        private static void DeleteOldLogFiles(string logsFolder)
+        private void DeleteOldLogFiles(string logsFolder)
         {
             try
             {
@@ -249,13 +248,12 @@ namespace CairoDesktop
         }
         #endregion
 
-        internal static void SetupPluginSystem()
+        internal void SetupPluginSystem()
         {
-            var pluginService = (PluginService)_host.Services.GetService(typeof(PluginService));
-
+            var pluginService = (PluginService)Host.Services.GetService(typeof(PluginService));
             pluginService.Start();
         }
-        internal static void WriteApplicationDebugInfoToConsole()
+        internal void WriteApplicationDebugInfoToConsole()
         {
             const string @break = @"#############################################";
 
@@ -272,7 +270,7 @@ namespace CairoDesktop
             CairoLogger.Instance.Info(@break);
         }
 
-        internal static bool InternalCheckIsWow64()
+        internal bool InternalCheckIsWow64()
         {
             if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major >= 6)
             {
@@ -298,7 +296,7 @@ namespace CairoDesktop
             return false;
         }
 
-        internal static void SetSystemKeyboardShortcuts()
+        internal void SetSystemKeyboardShortcuts()
         {
             if (Shell.IsCairoRunningAsShell)
             {

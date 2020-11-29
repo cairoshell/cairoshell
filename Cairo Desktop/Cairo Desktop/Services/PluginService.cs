@@ -1,63 +1,34 @@
 ﻿using CairoDesktop.ObjectModel;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.IO;
 
 namespace CairoDesktop.Services
 {
-    public sealed class PluginService : ShellService
+    public sealed class ExtensionService : ShellService
     {
-        [ImportMany(typeof(ShellExtension))]
-        private IEnumerable<ShellExtension> _shellExtensions;
+        private readonly CairoApplication _app;
+        private readonly IEnumerable<ShellExtension> _extensions;
 
-        private string userExtensionsPath;
-        private string systemExtensionsPath;
-
-        private AggregateCatalog catalog;
-        private CompositionContainer container;
-
-        public PluginService()
+        public ExtensionService(CairoApplication app, IEnumerable<ShellExtension> extensions)
         {
-            systemExtensionsPath = Path.Combine(CairoApplication.StartupPath, "Extensions");
-            userExtensionsPath = Path.Combine(CairoApplication.CairoApplicationDataFolder, "Extensions");
-
-            CairoApplication.Current.ShellServices.Add(GetType(), this);
+            _app = app;
+            _extensions = extensions;
         }
-
-        public IEnumerable<ShellExtension> ShellExtensions { get => _shellExtensions; private set => _shellExtensions = value; }
 
         public override void Start()
         {
-            catalog = new AggregateCatalog(new AssemblyCatalog(System.Reflection.Assembly.GetEntryAssembly()));
-
-            if (Directory.Exists(systemExtensionsPath))
-            {
-                catalog.Catalogs.Add(new DirectoryCatalog(systemExtensionsPath));
-            }
-
-            if (Directory.Exists(userExtensionsPath))
-            {
-                catalog.Catalogs.Add(new DirectoryCatalog(userExtensionsPath));
-            }
-
-
-            container = new CompositionContainer(catalog);
-            container.ComposeParts(this);
-
-            foreach (ShellExtension shellExtension in ShellExtensions)
+            foreach (var shellExtension in _extensions)
             {
                 shellExtension.Start();
-                CairoApplication.Current.ShellExtensions.Add(shellExtension);
+                _app.Extensions.Add(shellExtension);
             }
 
         }
 
         public override void Stop()
         {
-            foreach (ShellExtension shellExtension in ShellExtensions)
+            foreach (var shellExtension in _extensions)
             {
-                CairoApplication.Current.ShellExtensions.Remove(shellExtension);
+                _app.Extensions.Remove(shellExtension);
                 shellExtension.Stop();
             }
         }
