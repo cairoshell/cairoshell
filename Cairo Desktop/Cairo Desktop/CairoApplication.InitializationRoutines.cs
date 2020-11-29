@@ -5,7 +5,6 @@ using CairoDesktop.Common.Logging.Observers;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Interop;
-using CairoDesktop.Services;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Diagnostics;
