@@ -1,4 +1,4 @@
-﻿namespace CairoDesktop.ObjectModel
+﻿namespace CairoDesktop.Core.Objects
 {
     public abstract class ShellExtension
     {

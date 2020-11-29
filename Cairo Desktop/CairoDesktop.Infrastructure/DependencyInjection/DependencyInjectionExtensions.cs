@@ -11,7 +11,7 @@ namespace CairoDesktop.Infrastructure.DependencyInjection
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-
+            services.AddSingleton<IExtensionService, ExtensionService>();
             services.AddSingleton<IApplicationUpdateService, WinSparkleApplicationUpdateService>();
 
             return services;

@@ -5,7 +5,6 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.DependencyInjection;
 using CairoDesktop.Interop;
 using CairoDesktop.ObjectModel;
-using CairoDesktop.Services;
 using CairoDesktop.SupportingClasses;
 using CairoDesktop.WindowsTasks;
 using CairoDesktop.WindowsTray;
@@ -22,14 +21,13 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using CairoDesktop.Core.Objects;
 
 namespace CairoDesktop
 {
-    public partial class CairoApplication : System.Windows.Application
+    public partial class CairoApplication : System.Windows.Application, ICairoApplication
     {
         public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
-
-        private readonly string[] _args;
 
         private System.Threading.Mutex _cairoMutex;
         private CommandLineParser _commandLineParser;
@@ -40,26 +38,24 @@ namespace CairoDesktop
 
         public CairoApplication()
         {
-            _args = Environment.GetCommandLineArgs();
-
-            ProcessCommandLineArgs(_args);
+            ProcessCommandLineArgs(Environment.GetCommandLineArgs());
 
             if (!SingleInstanceCheck())
             {
                 GracefullyExit().Wait();
             }
 
+            Extensions = new List<ShellExtension>();
+
             Commands = new List<ICommand>();
             CairoMenu = new List<MenuItem>();
             PlacesMenu = new List<MenuItem>();
             MenuExtras = new List<MenuExtra>();
-            Extensions = new List<ShellExtension>();
 
             Host = new HostBuilder()
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton(this);
-                    services.AddSingleton<ExtensionService>();
 
                     services.AddInfrastructureServices(context.Configuration);
 
@@ -137,7 +133,9 @@ namespace CairoDesktop
 #endif
 
             if (Settings.Instance.ForceSoftwareRendering)
+            {
                 RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+            }
 
             base.OnStartup(e);
         }

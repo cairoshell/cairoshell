@@ -108,12 +108,9 @@
     </Compile>
     <Compile Include="ObjectModel\MenuExtra.cs" />
     <Compile Include="ObjectModel\MenuItem.cs" />
-    <Compile Include="ObjectModel\ShellExtension.cs" />
-    <Compile Include="ObjectModel\ShellService.cs" />
     <Compile Include="ProgramsMenu.xaml.cs">
       <DependentUpon>ProgramsMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\PluginService.cs" />
     <Compile Include="StacksScroller.xaml.cs">
       <DependentUpon>StacksScroller.xaml</DependentUpon>
     </Compile>
@@ -469,6 +466,10 @@
       <Project>{8E50FC68-8BF3-44F2-9229-708500625757}</Project>
       <Name>CairoDesktop.Configuration</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.Core\CairoDesktop.Core.csproj">
+      <Project>{03D7755E-57CB-4093-8E33-CF95BB038689}</Project>
+      <Name>CairoDesktop.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj">
       <Project>{583ac66f-5b77-4ee2-aba1-ed2cdc64b5f2}</Project>
       <Name>CairoDesktop.Infrastructure</Name>
@@ -490,9 +491,7 @@
       <Name>CairoDesktop.WindowsTray</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine">
       <Version>5.0.0</Version>
