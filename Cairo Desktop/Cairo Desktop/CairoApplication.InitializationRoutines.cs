@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using CairoDesktop.Application.Interfaces;
+﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Common.Logging.Observers;
@@ -10,6 +7,9 @@ using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Interop;
 using CairoDesktop.Services;
 using Microsoft.VisualBasic.Devices;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace CairoDesktop
 {
@@ -250,7 +250,7 @@ namespace CairoDesktop
 
         internal void SetupPluginSystem()
         {
-            var pluginService = (PluginService)Host.Services.GetService(typeof(PluginService));
+            var pluginService = (ExtensionService)Host.Services.GetService(typeof(ExtensionService));
             pluginService.Start();
         }
         internal void WriteApplicationDebugInfoToConsole()

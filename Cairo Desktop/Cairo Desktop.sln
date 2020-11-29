@@ -38,7 +38,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Extensions.Sys
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{26E388A8-20C6-46E2-964B-2DF4BB42AD60}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{3B76D43E-0699-4F7E-8FC9-20DE83A05543}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3B76D43E-0699-4F7E-8FC9-20DE83A05543}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{F8295199-9875-47A4-BF60-6914ED134A5F}"
 EndProject
@@ -47,6 +47,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CairoDesktop.Core", "CairoDesktop.Core\CairoDesktop.Core.csproj", "{03D7755E-57CB-4093-8E33-CF95BB038689}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CairoDesktop.Infrastructure", "CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj", "{583AC66F-5B77-4EE2-ABA1-ED2CDC64B5F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cairo Desktop.Tests", "Tests\Cairo Desktop.Tests\Cairo Desktop.Tests.csproj", "{90BF43F9-B307-4A9B-87A2-EF14985A06E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -226,6 +228,18 @@ Global
 		{583AC66F-5B77-4EE2-ABA1-ED2CDC64B5F2}.Release|x64.Build.0 = Release|Any CPU
 		{583AC66F-5B77-4EE2-ABA1-ED2CDC64B5F2}.Release|x86.ActiveCfg = Release|Any CPU
 		{583AC66F-5B77-4EE2-ABA1-ED2CDC64B5F2}.Release|x86.Build.0 = Release|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Debug|x64.Build.0 = Debug|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Debug|x86.Build.0 = Debug|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Release|x64.ActiveCfg = Release|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Release|x64.Build.0 = Release|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Release|x86.ActiveCfg = Release|Any CPU
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -246,6 +260,7 @@ Global
 		{3FF023F4-7CE3-4171-95B7-B5AF10332658} = {26E388A8-20C6-46E2-964B-2DF4BB42AD60}
 		{03D7755E-57CB-4093-8E33-CF95BB038689} = {26E388A8-20C6-46E2-964B-2DF4BB42AD60}
 		{583AC66F-5B77-4EE2-ABA1-ED2CDC64B5F2} = {26E388A8-20C6-46E2-964B-2DF4BB42AD60}
+		{90BF43F9-B307-4A9B-87A2-EF14985A06E7} = {3B76D43E-0699-4F7E-8FC9-20DE83A05543}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7566EAA4-435C-4795-BB55-54BA364D0419}
