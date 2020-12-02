@@ -24,7 +24,7 @@ using System.Windows.Threading;
 
 namespace CairoDesktop
 {
-    public partial class CairoApplication : System.Windows.Application, ICairoApplication<RoutedEventArgs>
+    public partial class CairoApplication : System.Windows.Application, ICairoApplication
     {
         public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
 
@@ -50,14 +50,14 @@ namespace CairoDesktop
             Extensions = new List<IShellExtension>();
 
             Commands = new List<ICommand>();
-            CairoMenu = new List<IMenuItem<RoutedEventArgs>>();
-            Places = new List<IMenuItem<RoutedEventArgs>>();
+            CairoMenu = new List<IMenuItem>();
+            Places = new List<IMenuItem>();
             MenuExtras = new List<MenuExtra>();
 
             Host = new HostBuilder()
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddSingleton<ICairoApplication<RoutedEventArgs>>(this);
+                    services.AddSingleton<ICairoApplication>(this);
 
                     services.AddSingleton<DesktopManager>();
                     services.AddSingleton<WindowManager>();
@@ -93,7 +93,7 @@ namespace CairoDesktop
 
             SetupUpdateManager();
 
-            SetupPluginSystem();
+            LoadExtensions();
 
             SetTheme();
 
@@ -380,9 +380,9 @@ namespace CairoDesktop
 
         public List<ICommand> Commands { get; }
 
-        public List<IMenuItem<RoutedEventArgs>> CairoMenu { get; }
+        public List<IMenuItem> CairoMenu { get; }
 
-        public List<IMenuItem<RoutedEventArgs>> Places { get; }
+        public List<IMenuItem> Places { get; }
 
         public List<MenuExtra> MenuExtras { get; }
     }

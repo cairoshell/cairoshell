@@ -1,10 +1,10 @@
 ﻿using CairoDesktop.Application.Interfaces;
+using System;
 using System.Diagnostics;
-using System.Windows;
 
 namespace CairoDesktop.Extensions.Places.ShellFolders
 {
-    public class ShellLocationMenuItem : IMenuItem<RoutedEventArgs>
+    public class ShellLocationMenuItem : IMenuItem
     {
         private readonly string _command;
 
@@ -16,7 +16,7 @@ namespace CairoDesktop.Extensions.Places.ShellFolders
 
         public string Header { get; }
 
-        public void MenuItem_Click(object sender, RoutedEventArgs e)
+        public void MenuItem_Click<TEventArgs>(object sender, TEventArgs e) where TEventArgs : EventArgs
         {
             Process.Start(_command);
         }

@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Application.Interfaces;
-using CairoDesktop.ObjectModel;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -7,7 +6,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
     {
         public void Register(IDependencyRegistrar registrar)
         {
-            registrar.AddSingleton<ShellExtension, SystemMenuExtrasExtension>();
+            registrar.AddSingleton<IShellExtension, SystemMenuExtrasExtension>();
         }
     }
 }

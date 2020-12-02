@@ -1,19 +1,18 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 
 namespace CairoDesktop.Extensions.Places.ShellFolders
 {
     public sealed class ShellFolderExtension : IShellExtension
     {
-        private readonly ICairoApplication<RoutedEventArgs> _app;
-        public List<IMenuItem<RoutedEventArgs>> MenuItems { get; private set; }
+        private readonly ICairoApplication _app;
+        public List<IMenuItem> MenuItems { get; private set; }
 
-        public ShellFolderExtension(ICairoApplication<RoutedEventArgs> app)
+        public ShellFolderExtension(ICairoApplication app)
         {
             _app = app;
-            MenuItems = new List<IMenuItem<RoutedEventArgs>>();
+            MenuItems = new List<IMenuItem>();
         }
 
         public void Start()

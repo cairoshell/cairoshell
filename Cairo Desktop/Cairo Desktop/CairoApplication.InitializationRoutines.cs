@@ -244,10 +244,10 @@ namespace CairoDesktop
         }
         #endregion
 
-        internal void SetupPluginSystem()
+        internal void LoadExtensions()
         {
-            var pluginService = Host.Services.GetRequiredService<IExtensionService>();
-            pluginService.Start();
+            var pluginService = Host.Services.GetService<IExtensionService>();
+            pluginService?.Start();
         }
         internal void WriteApplicationDebugInfoToConsole()
         {
