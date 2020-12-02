@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common.ExtensionMethods;
 using CairoDesktop.ObjectModel;
+using System.Collections.Generic;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
-    [Export(typeof(ShellExtension))]
-    public sealed class SystemMenuExtrasExtension : ShellExtension
+    public sealed class SystemMenuExtrasExtension : IShellExtension
     {
         public List<MenuExtra> MenuExtras { get; private set; }
 
@@ -15,7 +14,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
             MenuExtras = new List<MenuExtra>();
         }
 
-        public override void Start()
+        public void Start()
         {
             MenuExtras.AddRange(new SystemTrayMenuExtra(),
                                 new VolumeMenuExtra(),
@@ -26,7 +25,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
             MenuExtras.AddTo(CairoApplication.Current.MenuExtras);
         }
 
-        public override void Stop()
+        public void Stop()
         {
             MenuExtras.RemoveFrom(CairoApplication.Current.MenuExtras);
             MenuExtras.Clear();

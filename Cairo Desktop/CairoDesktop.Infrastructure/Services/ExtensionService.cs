@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-using CairoDesktop.Application.Interfaces;
+﻿using CairoDesktop.Application.Interfaces;
+using System.Collections.Generic;
 
 namespace CairoDesktop.Infrastructure.Services
 {
-    public sealed class ExtensionService: IExtensionService
+    public sealed class ExtensionService : IExtensionService
     {
-        private readonly ICairoApplication<RoutedEventArgs> _app;
+        private readonly ICairoApplication _app;
         private readonly IEnumerable<IShellExtension> _extensions;
 
-        public ExtensionService(ICairoApplication<RoutedEventArgs> app, IEnumerable<IShellExtension> extensions)
+        public ExtensionService(ICairoApplication app, IEnumerable<IShellExtension> extensions)
         {
             _app = app;
             _extensions = extensions;

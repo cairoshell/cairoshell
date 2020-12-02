@@ -2,10 +2,10 @@
 
 namespace CairoDesktop.Application.Interfaces
 {
-    public interface IMenuItem<in TEventArgs> where TEventArgs : EventArgs
+    public interface IMenuItem
     {
         string Header { get; }
 
-        void MenuItem_Click(object sender, TEventArgs e);
+        void MenuItem_Click<TEventArgs>(object sender, TEventArgs e) where TEventArgs : EventArgs;
     }
 }
