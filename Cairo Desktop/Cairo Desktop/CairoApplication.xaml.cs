@@ -20,7 +20,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace CairoDesktop
@@ -38,11 +37,14 @@ namespace CairoDesktop
 
         public CairoApplication()
         {
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
             ProcessCommandLineArgs(Environment.GetCommandLineArgs());
 
             if (!SingleInstanceCheck())
             {
-                GracefullyExit().Wait();
+                Shutdown(0);
+                return;
             }
 
             Extensions = new List<IShellExtension>();
@@ -56,7 +58,7 @@ namespace CairoDesktop
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton<ICairoApplication<RoutedEventArgs>>(this);
-                    
+
                     services.AddSingleton<DesktopManager>();
                     services.AddSingleton<WindowManager>();
 
@@ -235,7 +237,8 @@ namespace CairoDesktop
 
             DisposeSingletons();
 
-            await Host.StopAsync();
+            if (Host != null)
+                await Host.StopAsync();
         }
 
         private void DisposeSingletons()
