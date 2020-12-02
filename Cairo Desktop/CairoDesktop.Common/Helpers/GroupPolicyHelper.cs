@@ -1,15 +1,11 @@
-﻿using CairoDesktop.Common.DesignPatterns;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 
 namespace CairoDesktop.Common.Helpers
 {
-    public sealed class GroupPolicyManager : SingletonObject<GroupPolicyManager>
+    public static class GroupPolicyHelper
     {
         const string ExplorerPolicyKey = @"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer";
 
-        private GroupPolicyManager()
-        {
-        }
 
         /// <summary>
         /// Removes icons, shortcuts, and other default and user-defined items from the desktop, including 
@@ -31,8 +27,7 @@ namespace CairoDesktop.Common.Helpers
         /// Admx: Desktop.admx
         /// Documentation: https://gpsearch.azurewebsites.net/#146
         /// </remarks>
-        public bool NoDesktop =>
-            GetRegistryValue<int>(Registry.CurrentUser, ExplorerPolicyKey, "NoDesktop") == 1;
+        public static bool NoDesktop => GetRegistryValue<int>(Registry.CurrentUser, ExplorerPolicyKey, "NoDesktop") == 1;
 
         /// <summary>
         /// This policy setting allows you to remove the volume control icon from the system control area.
@@ -50,17 +45,18 @@ namespace CairoDesktop.Common.Helpers
         /// Admx: Taskbar.admx
         /// Documentation: https://gpsearch.azurewebsites.net/#4677
         /// </remarks>
-        public bool HideScaVolume =>
-            GetRegistryValue<int>(Registry.CurrentUser, ExplorerPolicyKey, "HideSCAVolume") == 1;
+        public static bool HideScaVolume => GetRegistryValue<int>(Registry.CurrentUser, ExplorerPolicyKey, "HideSCAVolume") == 1;
 
-        private static T GetRegistryValue<T>(RegistryKey key, string subKey, string valueName)
+        private static T GetRegistryValue<T>(RegistryKey key, string subKey, string valueName, T defaultValue = default)
         {
             var reg = key?.OpenSubKey(subKey);
             object val = reg?.GetValue(valueName, default);
             if (val is T value)
+            {
                 return value;
-            
-            return default;
+            }
+
+            return defaultValue;
         }
     }
 }
