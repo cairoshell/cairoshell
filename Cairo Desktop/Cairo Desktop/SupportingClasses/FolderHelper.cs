@@ -1,6 +1,7 @@
 ﻿using System;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -12,8 +13,10 @@ namespace CairoDesktop.SupportingClasses
             {
                 try
                 {
-                    DesktopManager.Instance.NavigationManager.NavigateTo(path);
-                    DesktopManager.Instance.IsOverlayOpen = true;
+                    var desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();
+
+                    desktopManager.NavigationManager.NavigateTo(path);
+                    desktopManager.IsOverlayOpen = true;
 
                     return true;
                 }
@@ -29,8 +32,10 @@ namespace CairoDesktop.SupportingClasses
         }
 
         public static bool OpenWithShell(string path)
-        {
-            DesktopManager.Instance.IsOverlayOpen = false;
+        {                    
+            var desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();
+
+            desktopManager.IsOverlayOpen = false;
 
             var args = Environment.ExpandEnvironmentVariables(path);
             var filename = Environment.ExpandEnvironmentVariables(Settings.Instance.FileManager);

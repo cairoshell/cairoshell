@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Windows.Threading;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Interop;
+using Microsoft.Extensions.DependencyInjection;
 using static CairoDesktop.Interop.NativeMethods;
 
 namespace CairoDesktop.SupportingClasses
@@ -105,7 +106,9 @@ namespace CairoDesktop.SupportingClasses
             }
 
             // check if this is a fullscreen app
-            foreach (Screen screen in WindowManager.Instance.ScreenState)
+            var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
+
+            foreach (Screen screen in windowManager.ScreenState)
             {
                 if (rect.Top == screen.Bounds.Top && rect.Left == screen.Bounds.Left && rect.Bottom == screen.Bounds.Bottom && rect.Right == screen.Bounds.Right)
                 {

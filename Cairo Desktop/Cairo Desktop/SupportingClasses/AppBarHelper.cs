@@ -7,6 +7,7 @@ using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.WindowsTray;
+using Microsoft.Extensions.DependencyInjection;
 using static CairoDesktop.Interop.NativeMethods;
 
 namespace CairoDesktop.SupportingClasses
@@ -334,8 +335,9 @@ namespace CairoDesktop.SupportingClasses
         public static double GetAppBarEdgeWindowsHeight(ABEdge edge, Screen screen)
         {
             double edgeHeight = 0;
+            var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
 
-            foreach (MenuBar menuBar in WindowManager.Instance.MenuBarWindows)
+            foreach (MenuBar menuBar in windowManager.MenuBarWindows)
             {
                 if (menuBar.requiresScreenEdge 
                     && menuBar.appBarEdge == edge 
@@ -345,7 +347,7 @@ namespace CairoDesktop.SupportingClasses
                 }
             }
 
-            foreach (Taskbar taskbar in WindowManager.Instance.TaskbarWindows)
+            foreach (Taskbar taskbar in windowManager.TaskbarWindows)
             {
                 if (taskbar.requiresScreenEdge 
                     && taskbar.appBarEdge == edge 

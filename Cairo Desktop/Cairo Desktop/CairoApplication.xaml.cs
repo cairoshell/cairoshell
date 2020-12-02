@@ -20,6 +20,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace CairoDesktop
@@ -55,6 +56,9 @@ namespace CairoDesktop
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton<ICairoApplication<RoutedEventArgs>>(this);
+                    
+                    services.AddSingleton<DesktopManager>();
+                    services.AddSingleton<WindowManager>();
 
                     services.AddInfrastructureServices(context.Configuration);
 
@@ -70,8 +74,6 @@ namespace CairoDesktop
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
-
             Host.Start();
 
             SetShellReadyEvent();
@@ -93,12 +95,20 @@ namespace CairoDesktop
 
             SetTheme();
 
+            if (Settings.Instance.ForceSoftwareRendering)
+            {
+                RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+            }
+
+            base.OnStartup(e);
+
             // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
             var applicationUpdateService = (IApplicationUpdateService)Host.Services.GetService(typeof(IApplicationUpdateService));
+            var windowManager = Host.Services.GetService<WindowManager>();
 
             MenuBar initialMenuBar = new MenuBar(applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen);
             MainWindow = initialMenuBar;
-            WindowManager.Instance.MenuBarWindows.Add(initialMenuBar);
+            windowManager.MenuBarWindows.Add(initialMenuBar);
             initialMenuBar.Show();
 
             // Future: This should be moved to whatever plugin is responsible for TaskBar stuff
@@ -106,12 +116,12 @@ namespace CairoDesktop
             {
                 AppBarHelper.HideWindowsTaskbar();
                 Taskbar initialTaskbar = new Taskbar(System.Windows.Forms.Screen.PrimaryScreen);
-                WindowManager.Instance.TaskbarWindows.Add(initialTaskbar);
+                windowManager.TaskbarWindows.Add(initialTaskbar);
                 initialTaskbar.Show();
             }
 
             // Open windows on secondary displays and set work area
-            WindowManager.Instance.InitialSetup();
+            windowManager.InitialSetup();
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
             // Don't allow showing both the Windows TaskBar and the Cairo tray
@@ -132,13 +142,7 @@ namespace CairoDesktop
                 runner.Run();
             }
 #endif
-
-            if (Settings.Instance.ForceSoftwareRendering)
-            {
-                RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
-            }
         }
-
 
         private void FirstRun()
         {
@@ -240,7 +244,7 @@ namespace CairoDesktop
             FullScreenHelper.Instance.Dispose();
             NotificationArea.Instance.Dispose();
             // UpdateManager.Instance.Dispose();
-            WindowManager.Instance.Dispose();
+            // WindowManager.Instance.Dispose();
             WindowsTasksService.Instance.Dispose();
         }
 

@@ -4,15 +4,13 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Common.DesignPatterns;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
-using CairoDesktop.ObjectModel;
 
 namespace CairoDesktop.SupportingClasses
 {
-    public sealed class WindowManager : SingletonObject<WindowManager>, IDisposable
+    public sealed class WindowManager : IDisposable
     {
         private bool hasCompletedInitialDisplaySetup;
         private int pendingDisplayEvents;
@@ -51,13 +49,8 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        private WindowManager()
+        public WindowManager()
         {
-            // create and maintain reference to desktop manager
-            // this will create and manage desktop windows and controls
-            desktopManager = DesktopManager.Instance;
-            desktopManager.SetWindowManager(this);
-
             // start a timer to handle orphaned display events
             DispatcherTimer notificationCheckTimer = new DispatcherTimer();
 

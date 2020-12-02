@@ -13,14 +13,17 @@ namespace CairoDesktop
     /// </summary>
     public partial class DesktopOverlay : Window
     {
-        private DesktopManager desktopManager;
+        private readonly WindowManager _windowManager;
+        private readonly DesktopManager _desktopManager;
         public IntPtr Handle;
 
-        public DesktopOverlay(DesktopManager manager)
+        public DesktopOverlay(WindowManager windowManager, DesktopManager manager)
         {
             InitializeComponent();
 
-            desktopManager = manager;
+            _windowManager = windowManager;
+            _desktopManager = manager;
+
             ResetPosition();
         }
 
@@ -29,13 +32,13 @@ namespace CairoDesktop
             double top = System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.DpiScale;
             double taskbarHeight = 0;
 
-            if (Settings.Instance.TaskbarMode == 1 && WindowManager.Instance.TaskbarWindows.Count > 0)
+            if (Settings.Instance.TaskbarMode == 1 && _windowManager.TaskbarWindows.Count > 0)
             {
                 // special case, since work area is not reduced with this setting
                 // this keeps the desktop going beneath the TaskBar
 
                 // get the TaskBar's height
-                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
+                Taskbar taskbar = WindowManager.GetScreenWindow(_windowManager.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
 
                 if (taskbar != null)
                 {
@@ -66,7 +69,7 @@ namespace CairoDesktop
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            desktopManager.IsOverlayOpen = false;
+            _desktopManager.IsOverlayOpen = false;
         }
 
         private void DesktopOverlayWindow_SourceInitialized(object sender, EventArgs e)
@@ -84,32 +87,32 @@ namespace CairoDesktop
 
         private void DesktopOverlayWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            desktopManager.DesktopWindow?.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
         private void DesktopOverlayWindow_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            desktopManager.DesktopWindow?.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
         private void DesktopOverlayWindow_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            desktopManager.DesktopWindow?.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
         private void DesktopOverlayWindow_DragOver(object sender, DragEventArgs e)
         {
-            desktopManager.DesktopWindow?.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
         private void DesktopOverlayWindow_Drop(object sender, DragEventArgs e)
         {
-            desktopManager.DesktopWindow?.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
         private void grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            desktopManager.DesktopWindow?.grid.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.grid.RaiseEvent(e);
         }
     }
 }
