@@ -3,6 +3,7 @@
    public interface IExtensionService
    {
        void Start();
+
        void Stop();
    }
 }
