@@ -77,6 +77,10 @@
       <Name>CairoDesktop.Common</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\CairoDesktop.Core\CairoDesktop.Core.csproj">
+      <Project>{03D7755E-57CB-4093-8E33-CF95BB038689}</Project>
+      <Name>CairoDesktop.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj">
       <Project>{583ac66f-5b77-4ee2-aba1-ed2cdc64b5f2}</Project>
       <Name>CairoDesktop.Infrastructure</Name>

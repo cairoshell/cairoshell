@@ -185,10 +185,10 @@ namespace CairoDesktop
             }
 
             // Add PlacesMenu MenuItems
-            if (CairoApplication.Current.PlacesMenu.Count > 0)
+            if (CairoApplication.Current.Places.Count > 0)
             {
                 PlacesMenu.Items.Add(new Separator());
-                foreach (var placesMenuItem in CairoApplication.Current.PlacesMenu)
+                foreach (var placesMenuItem in CairoApplication.Current.Places)
                 {
                     var menuItem = new System.Windows.Controls.MenuItem { Header = placesMenuItem.Header };
                     menuItem.Click += placesMenuItem.MenuItem_Click;

@@ -9,6 +9,7 @@ using Microsoft.VisualBasic.Devices;
 using System;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -78,7 +79,7 @@ namespace CairoDesktop
 
         private void SetupSettings()
         {
-            if (Settings.Instance.IsFirstRun == true)
+            if (Settings.Instance.IsFirstRun)
             {
                 Settings.Instance.Upgrade();
             }
@@ -249,7 +250,7 @@ namespace CairoDesktop
 
         internal void SetupPluginSystem()
         {
-            var pluginService = (ExtensionService)Host.Services.GetService(typeof(ExtensionService));
+            var pluginService = Host.Services.GetRequiredService<IExtensionService>();
             pluginService.Start();
         }
         internal void WriteApplicationDebugInfoToConsole()
