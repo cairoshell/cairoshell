@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -278,12 +279,14 @@ namespace CairoDesktop
 
             grid.Width = WindowManager.PrimaryMonitorWorkArea.Width / Shell.DpiScale;
 
-            if (Settings.Instance.TaskbarMode == 1 && WindowManager.Instance.TaskbarWindows.Count > 0)
+            var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
+
+            if (Settings.Instance.TaskbarMode == 1 && windowManager.TaskbarWindows.Count > 0)
             {
                 // special case, since work area is not reduced with this setting
                 // this keeps the desktop going beneath the TaskBar
                 // get the TaskBar's height
-                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
+                Taskbar taskbar = WindowManager.GetScreenWindow(windowManager.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
                 double taskbarHeight = 0;
 
                 if (taskbar != null)

@@ -6,6 +6,7 @@ using System.Windows;
 using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
 using CairoDesktop.Interop;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -21,14 +22,16 @@ namespace CairoDesktop
 
         public static void PerformAction(string verb, string fileName)
         {
+             var desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();
+
             switch (verb)
             {
                 case Actions.Open:
-                    DesktopManager.Instance.IsOverlayOpen = false;
+                    desktopManager.IsOverlayOpen = false;
                     Shell.StartProcess(fileName);
                     return;
                 case Actions.OpenWith:
-                    DesktopManager.Instance.IsOverlayOpen = false;
+                    desktopManager.IsOverlayOpen = false;
                     Shell.ShowOpenWithDialog(fileName);
                     return;
                 case Actions.Delete:
@@ -46,7 +49,7 @@ namespace CairoDesktop
                     return;
                 case Actions.Properties:
                     Shell.ShowFileProperties(fileName);
-                    DesktopManager.Instance.IsOverlayOpen = false;
+                    desktopManager.IsOverlayOpen = false;
                     return;
                 case Actions.Copy:
                     StringCollection scPath = new StringCollection();

@@ -1,6 +1,7 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Interop;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -18,7 +19,8 @@ namespace CairoDesktop.SupportingClasses
 
         private static void OnWinDCommand(HotKey obj)
         {
-            DesktopManager.Instance.ToggleOverlay();
+            var desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();
+            desktopManager.ToggleOverlay();
         }
         
         private static void OnWinRCommand(HotKey cmd)

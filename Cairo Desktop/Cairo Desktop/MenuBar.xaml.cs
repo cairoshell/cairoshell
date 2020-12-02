@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -34,6 +35,7 @@ namespace CairoDesktop
         private MenuExtraActionCenter menuExtraActionCenter;
         private MenuExtraClock menuExtraClock;
         private MenuExtraSearch menuExtraSearch;
+        private WindowManager _windowManager;
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         public MenuBar(IApplicationUpdateService applicationUpdateService) : this(applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
@@ -45,6 +47,8 @@ namespace CairoDesktop
             _applicationUpdateService = applicationUpdateService;
 
             InitializeComponent();
+
+            _windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
 
             Screen = screen;
             desiredHeight = 23;
@@ -385,7 +389,7 @@ namespace CairoDesktop
 
         protected override void CustomClosing()
         {
-            if (!WindowManager.Instance.IsSettingDisplays && !CairoApplication.IsShuttingDown)
+            if (!_windowManager.IsSettingDisplays && !CairoApplication.IsShuttingDown)
             {
                 return;
             }
@@ -421,7 +425,7 @@ namespace CairoDesktop
         {
             if (Settings.Instance.TaskbarMode == 2)
             {
-                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, Screen);
+                Taskbar taskbar = WindowManager.GetScreenWindow(_windowManager.TaskbarWindows, Screen);
 
                 if (taskbar != null && taskbar.appBarEdge == appBarEdge)
                 {
@@ -434,7 +438,7 @@ namespace CairoDesktop
         {
             if (Settings.Instance.TaskbarMode == 2)
             {
-                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, Screen);
+                Taskbar taskbar = WindowManager.GetScreenWindow(_windowManager.TaskbarWindows, Screen);
 
                 if (taskbar != null && taskbar.appBarEdge == appBarEdge)
                 {

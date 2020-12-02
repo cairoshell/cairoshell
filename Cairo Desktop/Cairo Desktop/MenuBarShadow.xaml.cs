@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -107,7 +108,9 @@ namespace CairoDesktop
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             IsClosing = true;
-            if (!CairoApplication.IsShuttingDown && !WindowManager.Instance.IsSettingDisplays && !AllowClose)
+            var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
+
+            if (!CairoApplication.IsShuttingDown && !windowManager.IsSettingDisplays && !AllowClose)
             {
                 IsClosing = false;
                 e.Cancel = true;

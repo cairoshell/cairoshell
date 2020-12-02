@@ -9,6 +9,7 @@ using System.Windows.Controls.Primitives;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Common;
 using CairoDesktop.WindowsTasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -36,6 +37,8 @@ namespace CairoDesktop
         }
 
         public static DependencyProperty CanAutoHideProperty = DependencyProperty.Register("CanAutoHide", typeof(bool), typeof(Taskbar), new PropertyMetadata(new bool()));
+        private DesktopManager _desktopManager;
+
         public bool CanAutoHide
         {
             get { return (bool)GetValue(CanAutoHideProperty); }
@@ -51,6 +54,7 @@ namespace CairoDesktop
         public Taskbar(System.Windows.Forms.Screen screen)
         {
             InitializeComponent();
+            _desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();
 
             Screen = screen;
 
@@ -116,7 +120,7 @@ namespace CairoDesktop
                 bdrTaskView.Visibility = Visibility.Visible;
             else
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);
-            
+
             setTaskbarSize();
             setTaskbarWidthMode();
         }
@@ -126,8 +130,8 @@ namespace CairoDesktop
             if (DesktopManager.IsEnabled)
             {
                 btnDesktopOverlay.Visibility = Visibility.Visible;
-                btnDesktopOverlay.DataContext = DesktopManager.Instance;
-                bdrBackground.DataContext = DesktopManager.Instance;
+                btnDesktopOverlay.DataContext = _desktopManager;
+                bdrBackground.DataContext = _desktopManager;
                 bdrTaskbar.Padding = new Thickness(0);
             }
             else
@@ -210,12 +214,15 @@ namespace CairoDesktop
             // if we are showing but not reserving space, tell the desktop to adjust here
             // since we aren't changing the work area, it doesn't do this on its own
             if (Settings.Instance.TaskbarMode == 1 && Screen.Primary)
-                DesktopManager.Instance.ResetPosition(false);
+                _desktopManager.ResetPosition(false);
         }
 
         protected override void CustomClosing()
         {
-            if (WindowManager.Instance.IsSettingDisplays || CairoApplication.IsShuttingDown)
+            var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
+
+
+            if (windowManager.IsSettingDisplays || CairoApplication.IsShuttingDown)
             {
                 Tasks.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
             }
@@ -237,45 +244,46 @@ namespace CairoDesktop
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+            if (e == null || string.IsNullOrWhiteSpace(e.PropertyName)) 
+                return;
+
+            var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
+            switch (e.PropertyName)
             {
-                switch (e.PropertyName)
-                {
-                    case "TaskbarIconSize":
-                        setTaskbarSize();
-                        SetScreenPosition();
-                        if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
-                        break;
-                    case "TaskbarMode":
-                        if (Settings.Instance.TaskbarMode == 0)
-                        {
-                            enableAppBar = true;
-                            RegisterAppBar();
-                        }
-                        else
-                        {
-                            enableAppBar = false;
-                            UnregisterAppBar();
-                        }
-                        if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
-                        SetDesktopPosition();
-                        setTaskbarBlur();
-                        break;
-                    case "TaskbarPosition":
-                        setupTaskbarAppearance();
-                        SetScreenPosition();
-                        if (Shell.IsCairoRunningAsShell) WindowManager.Instance.SetWorkArea(Screen);
-                        break;
-                    case "FullWidthTaskBar":
-                        setTaskbarWidthMode();
-                        break;
-                    case "EnableDesktop":
-                        setTaskbarDesktopOverlayButton();
-                        break;
-                    case "EnableMenuBarBlur":
-                        setTaskbarBlur();
-                        break;
-                }
+                case "TaskbarIconSize":
+                    setTaskbarSize();
+                    SetScreenPosition();
+                    if (Shell.IsCairoRunningAsShell) windowManager.SetWorkArea(Screen);
+                    break;
+                case "TaskbarMode":
+                    if (Settings.Instance.TaskbarMode == 0)
+                    {
+                        enableAppBar = true;
+                        RegisterAppBar();
+                    }
+                    else
+                    {
+                        enableAppBar = false;
+                        UnregisterAppBar();
+                    }
+                    if (Shell.IsCairoRunningAsShell) windowManager.SetWorkArea(Screen);
+                    SetDesktopPosition();
+                    setTaskbarBlur();
+                    break;
+                case "TaskbarPosition":
+                    setupTaskbarAppearance();
+                    SetScreenPosition();
+                    if (Shell.IsCairoRunningAsShell) windowManager.SetWorkArea(Screen);
+                    break;
+                case "FullWidthTaskBar":
+                    setTaskbarWidthMode();
+                    break;
+                case "EnableDesktop":
+                    setTaskbarDesktopOverlayButton();
+                    break;
+                case "EnableMenuBarBlur":
+                    setTaskbarBlur();
+                    break;
             }
         }
         #endregion
@@ -439,7 +447,7 @@ namespace CairoDesktop
 
         private void btnDesktopOverlay_Click(object sender, RoutedEventArgs e)
         {
-            DesktopManager.Instance.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
+            _desktopManager.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
         }
 
         private void btnTaskList_Click(object sender, RoutedEventArgs e)
@@ -501,7 +509,7 @@ namespace CairoDesktop
         {
             Shell.ShowRunDialog();
         }
-        
+
         private void OpenTaskManager(object sender, RoutedEventArgs e)
         {
             Shell.StartTaskManager();
