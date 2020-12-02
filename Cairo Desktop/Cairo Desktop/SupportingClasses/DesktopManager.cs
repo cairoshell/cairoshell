@@ -21,7 +21,7 @@ namespace CairoDesktop.SupportingClasses
 
         public ShellWindow ShellWindow { get; private set; }
 
-        public static bool IsEnabled => Settings.Instance.EnableDesktop && !GroupPolicyManager.Instance.NoDesktop;
+        public static bool IsEnabled => Settings.Instance.EnableDesktop && !GroupPolicyHelper.NoDesktop;
 
         private bool _isOverlayOpen;
         private bool _isOverlayClosing;
