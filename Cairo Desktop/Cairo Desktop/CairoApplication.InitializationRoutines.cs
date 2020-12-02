@@ -3,13 +3,12 @@ using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Common.Logging.Observers;
 using CairoDesktop.Configuration;
-using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Interop;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -33,11 +32,8 @@ namespace CairoDesktop
 
         private void SetupUpdateManager()
         {
-            // This is bad practice and should get refactored
-            if (Host.Services.GetService(typeof(IApplicationUpdateService)) is WinSparkleApplicationUpdateService service)
-            {
-                service.Initialize(ExitCairo);
-            }
+            var service = Host.Services.GetService<IApplicationUpdateService>();
+            service?.Initialize(ExitCairo);
         }
 
         private bool SingleInstanceCheck()
