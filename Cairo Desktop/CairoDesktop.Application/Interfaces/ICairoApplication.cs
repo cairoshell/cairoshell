@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
-using CairoDesktop.Core.Objects;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CairoDesktop.Application.Interfaces
 {
-    public interface ICairoApplication
+    public interface ICairoApplication<TMenuIemEventArgs> where TMenuIemEventArgs : EventArgs
     {
-        List<ShellExtension> Extensions { get; }
+        List<IShellExtension> Extensions { get; }
+
+        List<IMenuItem<TMenuIemEventArgs>> Places { get; }
     }
 }

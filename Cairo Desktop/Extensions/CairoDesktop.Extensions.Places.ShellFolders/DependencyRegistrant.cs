@@ -1,6 +1,5 @@
-﻿using System.ComponentModel.Composition;
-using CairoDesktop.Application.Interfaces;
-using CairoDesktop.ObjectModel;
+﻿using CairoDesktop.Application.Interfaces;
+using System.ComponentModel.Composition;
 
 namespace CairoDesktop.Extensions.Places.ShellFolders
 {
@@ -9,7 +8,7 @@ namespace CairoDesktop.Extensions.Places.ShellFolders
     {
         public void Register(IDependencyRegistrar registrar)
         {
-           registrar.AddSingleton<ShellExtension, ShellFolderExtension>();
+            registrar.AddScoped<IShellExtension, ShellFolderExtension>();
         }
     }
 }

@@ -21,11 +21,10 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-using CairoDesktop.Core.Objects;
 
 namespace CairoDesktop
 {
-    public partial class CairoApplication : System.Windows.Application, ICairoApplication
+    public partial class CairoApplication : System.Windows.Application, ICairoApplication<RoutedEventArgs>
     {
         public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
 
@@ -45,17 +44,17 @@ namespace CairoDesktop
                 GracefullyExit().Wait();
             }
 
-            Extensions = new List<ShellExtension>();
+            Extensions = new List<IShellExtension>();
 
             Commands = new List<ICommand>();
-            CairoMenu = new List<MenuItem>();
-            PlacesMenu = new List<MenuItem>();
+            CairoMenu = new List<IMenuItem<RoutedEventArgs>>();
+            Places = new List<IMenuItem<RoutedEventArgs>>();
             MenuExtras = new List<MenuExtra>();
 
             Host = new HostBuilder()
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddSingleton(this);
+                    services.AddSingleton<ICairoApplication<RoutedEventArgs>>(this);
 
                     services.AddInfrastructureServices(context.Configuration);
 
@@ -71,6 +70,8 @@ namespace CairoDesktop
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
+
             Host.Start();
 
             SetShellReadyEvent();
@@ -136,8 +137,6 @@ namespace CairoDesktop
             {
                 RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
             }
-
-            base.OnStartup(e);
         }
 
 
@@ -370,13 +369,13 @@ namespace CairoDesktop
 
         public IHost Host { get; }
 
-        public List<ShellExtension> Extensions { get; }
+        public List<IShellExtension> Extensions { get; }
 
         public List<ICommand> Commands { get; }
 
-        public List<MenuItem> CairoMenu { get; }
+        public List<IMenuItem<RoutedEventArgs>> CairoMenu { get; }
 
-        public List<MenuItem> PlacesMenu { get; }
+        public List<IMenuItem<RoutedEventArgs>> Places { get; }
 
         public List<MenuExtra> MenuExtras { get; }
     }

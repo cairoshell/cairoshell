@@ -1,27 +1,24 @@
-﻿using CairoDesktop.ObjectModel;
+﻿using CairoDesktop.Application.Interfaces;
 using System.Diagnostics;
 using System.Windows;
 
 namespace CairoDesktop.Extensions.Places.ShellFolders
 {
-    public class ShellLocationMenuItem : MenuItem
+    public class ShellLocationMenuItem : IMenuItem<RoutedEventArgs>
     {
-        private string header;
-        private string command;
+        private readonly string _command;
 
         public ShellLocationMenuItem(string header, string command)
         {
-            this.header = header;
-            this.command = command;
-        }
-        public override string Header
-        {
-            get { return header; }
+            Header = header;
+            _command = command;
         }
 
-        public override void MenuItem_Click(object sender, RoutedEventArgs e)
+        public string Header { get; }
+
+        public void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(command);
+            Process.Start(_command);
         }
     }
 }
