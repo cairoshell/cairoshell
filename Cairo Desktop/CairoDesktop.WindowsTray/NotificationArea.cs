@@ -1,4 +1,5 @@
-﻿using CairoDesktop.Common.Logging;
+﻿using CairoDesktop.Common.Helpers;
+using CairoDesktop.Common.Logging;
 using CairoDesktop.Interop;
 using System;
 using System.Collections.ObjectModel;
@@ -192,7 +193,7 @@ namespace CairoDesktop.WindowsTray
                         bool exists = false;
 
                         // hide icons while we are shell which require UWP support & we have a separate implementation for
-                        if (nicData.guidItem == new Guid(VOLUME_GUID) && ((Shell.IsCairoRunningAsShell && Shell.IsWindows10OrBetter) || GroupPolicyManager.Instance.HideScaVolume))
+                        if (nicData.guidItem == new Guid(VOLUME_GUID) && ((Shell.IsCairoRunningAsShell && Shell.IsWindows10OrBetter) || GroupPolicyHelper.HideScaVolume))
                             return false;
 
                         foreach (NotifyIcon ti in TrayIcons)
