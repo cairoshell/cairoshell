@@ -5,10 +5,18 @@
              x:Name="CairoDesktopIcons" 
              UseLayoutRounding="True">
     <DockPanel Name="panel" Margin="0">
-        <ItemsControl Name="IconsControl" 
+        <ListBox  Name="IconsControl"  
                       DataContext="{Binding ElementName=CairoDesktopIcons, Path=Location}" 
                       Style="{StaticResource DesktopFolderViewStyle}" 
                       ItemsSource="{Binding Path=Files, IsAsync=True}"
-                      PreviewMouseWheel="IconsControl_PreviewMouseWheel" />
+                      PreviewMouseWheel="IconsControl_PreviewMouseWheel" SelectedIndex="0">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Height" Value="400" />
+                    <Setter Property="Width" Value="400" />
+                    <Setter Property="IsSelected" Value="True" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
     </DockPanel>
 </UserControl>

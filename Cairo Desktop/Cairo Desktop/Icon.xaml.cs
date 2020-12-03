@@ -143,8 +143,8 @@ namespace CairoDesktop
 
             if (Settings.Instance.DesktopIconSize == (int)IconSize.ExtraLarge)
             {
-                imgIcon.Width = 48;
-                imgIcon.Height = 48;
+                //imgIcon.Width = 400;
+                //imgIcon.Height = 600;
                 Binding iconBinding = new Binding("LargeIcon");
                 iconBinding.Mode = BindingMode.OneWay;
                 iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
@@ -168,10 +168,10 @@ namespace CairoDesktop
                     btnFile.Height = 48;
                     break;
                 case "02": // horizontal large
-                    btnFile.Height = 64;
+                    btnFile.Height = 400;
                     break;
                 case "12": // vertical large
-                    btnFile.Height = 97;
+                    btnFile.Height = 400;
                     break;
                 default: // vertical small
                     btnFile.Height = 85;

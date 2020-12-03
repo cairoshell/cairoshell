@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Threading;
 using System.Windows;
 using System.Threading.Tasks;
+using GamesShell.Services;
 
 namespace CairoDesktop.Common
 {
@@ -360,8 +361,7 @@ namespace CairoDesktop.Common
                 }
                 else
                 {
-                    // This will attempt to get the icon - if it fails the default icon will be returned.
-                    return IconImageConverter.GetImageFromAssociatedIcon(FullName, size);
+                    return GameLibraryService.ReadLibraryAsync(FriendlyName).GetAwaiter().GetResult();
                 }
             }
             else

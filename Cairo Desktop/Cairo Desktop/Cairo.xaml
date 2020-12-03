@@ -2544,8 +2544,7 @@
                 Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
         <Setter Property="FontSize"
                 Value="{DynamicResource ResourceKey=MediumFontSize}" />
-        <Setter Property="Height"
-                Value="85" />
+    
         <Setter Property="MinWidth"
                 Value="100" />
         <Setter Property="VerticalAlignment"
@@ -2614,7 +2613,7 @@
     </Style>
     <!-- Folder Views -->
     <Style x:Key="DesktopFolderViewStyle"
-           TargetType="ItemsControl">
+           TargetType="ListBox">
         <Setter Property="FocusVisualStyle"
                 Value="{x:Null}" />
         <Setter Property="Template">
@@ -2689,7 +2688,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!-- Desktop navigation toolbar -->
     <Style x:Key="DesktopNavToolbar"
            TargetType="{x:Type Border}">
