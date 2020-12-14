@@ -7,7 +7,5 @@ namespace CairoDesktop.Application.Interfaces
         bool AutomaticUpdatesEnabled { get; set; }
 
         void CheckForUpdates();
-
-        void Initialize(Action shutdownAction);
     }
 }
