@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Windows.Forms;
 
 // TODO: This should be moved to the Application project, but AppBarWindow needs TLC first

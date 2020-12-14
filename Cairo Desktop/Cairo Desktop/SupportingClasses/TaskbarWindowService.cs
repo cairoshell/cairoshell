@@ -13,7 +13,49 @@ namespace CairoDesktop.SupportingClasses
 
             EnableMultiMon = Settings.Instance.EnableTaskbarMultiMon;
             EnableService = Settings.Instance.EnableTaskbar;
-            AppBarHelper.HideWindowsTaskbar();
+
+            if (EnableService)
+            {
+                AppBarHelper.HideWindowsTaskbar();
+            }
+        }
+
+        public override void PostInit()
+        {
+            if (EnableService)
+            {
+                _windowManager.AppBarEvent += AppBarEvent;
+            }
+        }
+
+        private void AppBarEvent(object sender, AppBarEventArgs e)
+        {
+            if (Settings.Instance.TaskbarMode == 2)
+            {
+                if (sender is MenuBar menuBar)
+                {
+                    var taskbar = (Taskbar) WindowManager.GetScreenWindow(Windows, menuBar.Screen);
+
+                    if (taskbar == null)
+                    {
+                        return;
+                    }
+
+                    if (taskbar.appBarEdge != menuBar.appBarEdge)
+                    {
+                        return;
+                    }
+
+                    if (e.Reason == AppBarEventReason.MouseEnter)
+                    {
+                        taskbar.CanAutoHide = false;
+                    }
+                    else if (e.Reason == AppBarEventReason.MouseLeave)
+                    {
+                        taskbar.CanAutoHide = true;
+                    }
+                }
+            }
         }
 
         protected override void OpenWindow(Screen screen)
@@ -25,7 +67,11 @@ namespace CairoDesktop.SupportingClasses
 
         public override void Dispose()
         {
-            AppBarHelper.ShowWindowsTaskbar();
+            if (EnableService)
+            {
+                _windowManager.AppBarEvent -= AppBarEvent;
+                AppBarHelper.ShowWindowsTaskbar();
+            }
         }
     }
 }

@@ -4,7 +4,6 @@ using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
-using CairoDesktop.ObjectModel;
 using CairoDesktop.SupportingClasses;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,6 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -37,11 +35,11 @@ namespace CairoDesktop
         private MenuExtraSearch menuExtraSearch;
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        public MenuBar(MenuBarWindowService windowService, WindowManager windowManager, IApplicationUpdateService applicationUpdateService) : this(windowService, windowManager, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
+        public MenuBar(WindowManager windowManager, IApplicationUpdateService applicationUpdateService) : this(windowManager, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
         {
         }
 
-        public MenuBar(MenuBarWindowService windowService, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen) : base(windowManager)
+        public MenuBar(WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen) : base(windowManager)
         {
             _applicationUpdateService = applicationUpdateService;
 
@@ -420,30 +418,12 @@ namespace CairoDesktop
 
         private void MenuBar_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            if (Settings.Instance.TaskbarMode == 2)
-            {
-                // TODO: Figure out how this should work
-                /*Taskbar taskbar = (Taskbar)WindowManager.GetScreenWindow(_taskbarWindowService.Windows, Screen);
-
-                if (taskbar != null && taskbar.appBarEdge == appBarEdge)
-                {
-                    taskbar.CanAutoHide = false;
-                }*/
-            }
+            _windowManager.NotifyAppBarEvent(this, AppBarEventReason.MouseEnter);
         }
 
         private void MenuBar_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            if (Settings.Instance.TaskbarMode == 2)
-            {
-                // TODO: Figure out how this should work
-                /*Taskbar taskbar = (Taskbar)WindowManager.GetScreenWindow(_taskbarWindowService.Windows, Screen);
-
-                if (taskbar != null && taskbar.appBarEdge == appBarEdge)
-                {
-                    taskbar.CanAutoHide = true;
-                }*/
-            }
+            _windowManager.NotifyAppBarEvent(this, AppBarEventReason.MouseLeave);
         }
 
         private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
