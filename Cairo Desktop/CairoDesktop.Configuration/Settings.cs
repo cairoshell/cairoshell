@@ -483,6 +483,21 @@ namespace CairoDesktop.Configuration
             }
         }
 
+        public bool EnableMenuBar
+        {
+            get
+            {
+                return cairoSettings.EnableMenuBar;
+            }
+            set
+            {
+                if (cairoSettings.EnableMenuBar != value)
+                {
+                    cairoSettings.EnableMenuBar = value;
+                }
+            }
+        }
+
         public bool EnableMenuBarShadow
         {
             get
