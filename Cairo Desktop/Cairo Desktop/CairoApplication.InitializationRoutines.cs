@@ -30,12 +30,6 @@ namespace CairoDesktop
             Shell.IsCairoRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !_forceDisableShellMode) || _forceEnableShellMode;
         }
 
-        private void SetupUpdateManager()
-        {
-            var service = Host.Services.GetService<IApplicationUpdateService>();
-            service?.Initialize(ExitCairo);
-        }
-
         private bool SingleInstanceCheck()
         {
             _cairoMutex = new System.Threading.Mutex(true, "CairoShell", out bool ok);

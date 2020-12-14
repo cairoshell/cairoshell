@@ -91,8 +91,6 @@ namespace CairoDesktop
 
             SetSystemKeyboardShortcuts();
 
-            SetupUpdateManager();
-
             LoadExtensions();
 
             SetTheme();

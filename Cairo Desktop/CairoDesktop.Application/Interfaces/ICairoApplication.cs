@@ -8,5 +8,7 @@ namespace CairoDesktop.Application.Interfaces
         List<IShellExtension> Extensions { get; }
 
         List<IMenuItem> Places { get; }
+
+        void ExitCairo();
     }
 }
