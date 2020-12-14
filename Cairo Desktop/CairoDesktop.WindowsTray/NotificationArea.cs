@@ -8,7 +8,6 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
 using CairoDesktop.Common.DesignPatterns;
-using CairoDesktop.Common.Helpers;
 using static CairoDesktop.Interop.NativeMethods;
 
 namespace CairoDesktop.WindowsTray

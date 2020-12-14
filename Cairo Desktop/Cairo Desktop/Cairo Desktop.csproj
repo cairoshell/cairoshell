@@ -86,9 +86,6 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Cairo.xaml.cs">
-      <DependentUpon>Cairo.xaml</DependentUpon>
-    </Compile>
     <Compile Include="CairoApplication.InitializationRoutines.cs" />
     <Compile Include="CairoWallpaperStyle.cs" />
     <Compile Include="DesktopOverlay.xaml.cs">
