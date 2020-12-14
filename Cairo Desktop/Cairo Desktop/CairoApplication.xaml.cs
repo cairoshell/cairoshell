@@ -238,7 +238,10 @@ namespace CairoDesktop
             DisposeSingletons();
 
             if (Host != null)
+            {
                 await Host.StopAsync();
+                Host.Dispose();
+            }
         }
 
         private void DisposeSingletons()
