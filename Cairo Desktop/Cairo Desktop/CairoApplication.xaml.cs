@@ -138,7 +138,7 @@ namespace CairoDesktop
 
 #if !DEBUG
             // login items only necessary if Explorer didn't start them
-            if (Shell.IsCairoRunningAsShell && !isRestart)
+            if (Shell.IsCairoRunningAsShell && !_isRestart)
             {
                 StartupRunner runner = new StartupRunner();
                 runner.Run();
