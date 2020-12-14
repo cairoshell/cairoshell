@@ -15,7 +15,6 @@ namespace CairoDesktop.SupportingClasses
         private bool hasCompletedInitialDisplaySetup;
         private int pendingDisplayEvents;
         private readonly static object displaySetupLock = new object();
-        private readonly DesktopManager desktopManager;
 
         public bool IsSettingDisplays { get; set; }
         public Screen[] ScreenState = Array.Empty<Screen>();
@@ -512,7 +511,6 @@ namespace CairoDesktop.SupportingClasses
 
         public void Dispose()
         {
-            desktopManager.Dispose();
         }
     }
 }
