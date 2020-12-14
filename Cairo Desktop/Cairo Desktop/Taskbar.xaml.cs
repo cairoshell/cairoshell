@@ -9,7 +9,6 @@ using System.Windows.Controls.Primitives;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Common;
 using CairoDesktop.WindowsTasks;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -46,15 +45,15 @@ namespace CairoDesktop
         }
         #endregion
 
-        public Taskbar() : this(System.Windows.Forms.Screen.PrimaryScreen)
+        public Taskbar(WindowManager windowManager, DesktopManager desktopManager) : this(windowManager, desktopManager, System.Windows.Forms.Screen.PrimaryScreen)
         {
 
         }
 
-        public Taskbar(System.Windows.Forms.Screen screen)
+        public Taskbar(WindowManager windowManager, DesktopManager desktopManager, System.Windows.Forms.Screen screen) : base(windowManager)
         {
             InitializeComponent();
-            _desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();
+            _desktopManager = desktopManager;
 
             Screen = screen;
 
@@ -219,10 +218,7 @@ namespace CairoDesktop
 
         protected override void CustomClosing()
         {
-            var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
-
-
-            if (windowManager.IsSettingDisplays || CairoApplication.IsShuttingDown)
+            if (_windowManager.IsSettingDisplays || CairoApplication.IsShuttingDown)
             {
                 Tasks.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
             }
@@ -247,13 +243,12 @@ namespace CairoDesktop
             if (e == null || string.IsNullOrWhiteSpace(e.PropertyName)) 
                 return;
 
-            var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
             switch (e.PropertyName)
             {
                 case "TaskbarIconSize":
                     setTaskbarSize();
                     SetScreenPosition();
-                    if (Shell.IsCairoRunningAsShell) windowManager.SetWorkArea(Screen);
+                    if (Shell.IsCairoRunningAsShell) _windowManager.SetWorkArea(Screen);
                     break;
                 case "TaskbarMode":
                     if (Settings.Instance.TaskbarMode == 0)
@@ -266,14 +261,14 @@ namespace CairoDesktop
                         enableAppBar = false;
                         UnregisterAppBar();
                     }
-                    if (Shell.IsCairoRunningAsShell) windowManager.SetWorkArea(Screen);
+                    if (Shell.IsCairoRunningAsShell) _windowManager.SetWorkArea(Screen);
                     SetDesktopPosition();
                     setTaskbarBlur();
                     break;
                 case "TaskbarPosition":
                     setupTaskbarAppearance();
                     SetScreenPosition();
-                    if (Shell.IsCairoRunningAsShell) windowManager.SetWorkArea(Screen);
+                    if (Shell.IsCairoRunningAsShell) _windowManager.SetWorkArea(Screen);
                     break;
                 case "FullWidthTaskBar":
                     setTaskbarWidthMode();

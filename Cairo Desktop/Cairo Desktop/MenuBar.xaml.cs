@@ -35,20 +35,17 @@ namespace CairoDesktop
         private MenuExtraActionCenter menuExtraActionCenter;
         private MenuExtraClock menuExtraClock;
         private MenuExtraSearch menuExtraSearch;
-        private WindowManager _windowManager;
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        public MenuBar(IApplicationUpdateService applicationUpdateService) : this(applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
+        public MenuBar(MenuBarWindowService windowService, WindowManager windowManager, IApplicationUpdateService applicationUpdateService) : this(windowService, windowManager, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
         {
         }
 
-        public MenuBar(IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen)
+        public MenuBar(MenuBarWindowService windowService, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen) : base(windowManager)
         {
             _applicationUpdateService = applicationUpdateService;
 
             InitializeComponent();
-
-            _windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
 
             Screen = screen;
             desiredHeight = 23;
@@ -425,12 +422,13 @@ namespace CairoDesktop
         {
             if (Settings.Instance.TaskbarMode == 2)
             {
-                Taskbar taskbar = WindowManager.GetScreenWindow(_windowManager.TaskbarWindows, Screen);
+                // TODO: Figure out how this should work
+                /*Taskbar taskbar = (Taskbar)WindowManager.GetScreenWindow(_taskbarWindowService.Windows, Screen);
 
                 if (taskbar != null && taskbar.appBarEdge == appBarEdge)
                 {
                     taskbar.CanAutoHide = false;
-                }
+                }*/
             }
         }
 
@@ -438,12 +436,13 @@ namespace CairoDesktop
         {
             if (Settings.Instance.TaskbarMode == 2)
             {
-                Taskbar taskbar = WindowManager.GetScreenWindow(_windowManager.TaskbarWindows, Screen);
+                // TODO: Figure out how this should work
+                /*Taskbar taskbar = (Taskbar)WindowManager.GetScreenWindow(_taskbarWindowService.Windows, Screen);
 
                 if (taskbar != null && taskbar.appBarEdge == appBarEdge)
                 {
                     taskbar.CanAutoHide = true;
-                }
+                }*/
             }
         }
 

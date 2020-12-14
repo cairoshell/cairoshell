@@ -114,13 +114,17 @@
       <DependentUpon>StacksScroller.xaml</DependentUpon>
     </Compile>
     <Compile Include="SupportingClasses\AppBarWindow.cs" />
+    <Compile Include="SupportingClasses\AppBarWindowService.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
     <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
     <Compile Include="SupportingClasses\DesktopManager.cs" />
     <Compile Include="SupportingClasses\EnumUtility.cs" />
     <Compile Include="SupportingClasses\FullScreenApp.cs" />
+    <Compile Include="SupportingClasses\IWindowService.cs" />
+    <Compile Include="SupportingClasses\MenuBarWindowService.cs" />
     <Compile Include="SupportingClasses\PicSumWallpaperClient.cs" />
     <Compile Include="SupportingClasses\ScreenSetupReason.cs" />
+    <Compile Include="SupportingClasses\TaskbarWindowService.cs" />
     <Compile Include="SupportingClasses\UpdateManager.cs" />
     <Compile Include="SupportingClasses\WindowManager.cs" />
     <Compile Include="SupportingClasses\FilePathValidationRule.cs" />

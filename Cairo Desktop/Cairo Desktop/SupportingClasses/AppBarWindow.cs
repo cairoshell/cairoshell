@@ -6,12 +6,12 @@ using System.Windows.Threading;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop.SupportingClasses
 {
     public class AppBarWindow : Window
     {
+        protected readonly WindowManager _windowManager;
         public System.Windows.Forms.Screen Screen;
         public double dpiScale = 1.0;
         protected bool processScreenChanges;
@@ -27,11 +27,16 @@ namespace CairoDesktop.SupportingClasses
         // AppBar properties
         private int appbarMessageId = -1;
         public NativeMethods.ABEdge appBarEdge = NativeMethods.ABEdge.ABE_TOP;
-        protected bool enableAppBar = true;
+        internal bool enableAppBar = true;
         internal bool requiresScreenEdge;
 
-        public AppBarWindow()
+        public AppBarWindow() : this(null)
+        { }
+
+        public AppBarWindow(WindowManager windowManager)
         {
+            _windowManager = windowManager;
+
             Closing += OnClosing;
             SourceInitialized += OnSourceInitialized;
 
@@ -88,9 +93,7 @@ namespace CairoDesktop.SupportingClasses
 
             CustomClosing();
 
-            var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
-
-            if (windowManager.IsSettingDisplays || CairoApplication.IsShuttingDown)
+            if (_windowManager.IsSettingDisplays || CairoApplication.IsShuttingDown)
             {
                 UnregisterAppBar();
 
@@ -247,14 +250,12 @@ namespace CairoDesktop.SupportingClasses
 
         private void SetScreenProperties(ScreenSetupReason reason)
         {
-            var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
-
             // process screen changes if we are on the primary display and the designated window
             // (or any display in the case of a DPI change, since only the changed display receives that message and not all windows receive it reliably)
             // suppress this if we are shutting down (which can trigger this method on multi-dpi setups due to window movements)
             if (((Screen.Primary && processScreenChanges) || reason == ScreenSetupReason.DpiChange) && !CairoApplication.IsShuttingDown)
             {
-                windowManager.NotifyDisplayChange(reason); // update Cairo window list based on new screen setup
+                _windowManager.NotifyDisplayChange(reason); // update Cairo window list based on new screen setup
             }
         }
 
