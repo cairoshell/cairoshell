@@ -262,14 +262,14 @@ namespace CairoDesktop.SupportingClasses
         {
             if (entering)
             {
-                CairoLogger.Instance.Debug($"AppBarWindow: {Name} on {Screen.DeviceName} conceding to full-screen app");
+                CairoLogger.Debug($"AppBarWindow: {Name} on {Screen.DeviceName} conceding to full-screen app");
 
                 Topmost = false;
                 Shell.ShowWindowBottomMost(Handle);
             }
             else
             {
-                CairoLogger.Instance.Debug($"AppBarWindow: {Name} on {Screen.DeviceName} returning to normal state");
+                CairoLogger.Debug($"AppBarWindow: {Name} on {Screen.DeviceName} returning to normal state");
 
                 isRaising = true;
                 Topmost = true;

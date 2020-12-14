@@ -102,9 +102,9 @@ namespace CairoDesktop
             var fileLog = new FileLog(filename);
             fileLog.Open();
 
-            CairoLogger.Instance.Severity = GetLogSeveritySetting(defaultValue: LogSeverity.Info);
-            CairoLogger.Instance.Attach(fileLog);
-            CairoLogger.Instance.Attach(new ConsoleLog());
+            CairoLogger.Severity = GetLogSeveritySetting(defaultValue: LogSeverity.Info);
+            CairoLogger.Attach(fileLog);
+            CairoLogger.Attach(new ConsoleLog());
         }
 
         private LogSeverity GetLogSeveritySetting(LogSeverity defaultValue)
@@ -253,17 +253,17 @@ namespace CairoDesktop
         {
             const string @break = @"#############################################";
 
-            CairoLogger.Instance.Info(@break);
-            CairoLogger.Instance.Info($"{CairoApplication.ProductName}");
-            CairoLogger.Instance.Info($"Version: {CairoApplication.ProductVersion}");
-            CairoLogger.Instance.Info($"Operating System: {new ComputerInfo().OSFullName}");
-            CairoLogger.Instance.Info($"OS Build: {new ComputerInfo().OSVersion}");
-            CairoLogger.Instance.Info($"Processor Type: {(IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)}-bit");
-            CairoLogger.Instance.Info($"Startup Path: {CairoApplication.StartupPath}");
-            CairoLogger.Instance.Info($"Running As: {IntPtr.Size * 8}-bit Process");
-            CairoLogger.Instance.Info($"Configured as shell: {Shell.IsCairoConfiguredAsShell}");
-            CairoLogger.Instance.Info($"Running as shell: {Shell.IsCairoRunningAsShell}");
-            CairoLogger.Instance.Info(@break);
+            CairoLogger.Info(@break);
+            CairoLogger.Info($"{CairoApplication.ProductName}");
+            CairoLogger.Info($"Version: {CairoApplication.ProductVersion}");
+            CairoLogger.Info($"Operating System: {new ComputerInfo().OSFullName}");
+            CairoLogger.Info($"OS Build: {new ComputerInfo().OSVersion}");
+            CairoLogger.Info($"Processor Type: {(IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)}-bit");
+            CairoLogger.Info($"Startup Path: {CairoApplication.StartupPath}");
+            CairoLogger.Info($"Running As: {IntPtr.Size * 8}-bit Process");
+            CairoLogger.Info($"Configured as shell: {Shell.IsCairoConfiguredAsShell}");
+            CairoLogger.Info($"Running as shell: {Shell.IsCairoRunningAsShell}");
+            CairoLogger.Info(@break);
         }
 
         internal bool InternalCheckIsWow64()

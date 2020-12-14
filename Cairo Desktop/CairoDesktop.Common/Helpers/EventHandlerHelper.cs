@@ -21,7 +21,7 @@ namespace CairoDesktop.Common.Helpers
             }
             catch (Exception ex)
             {
-                CairoLogger.Instance.Error("Error raising event.", ex);
+                CairoLogger.Error("Error raising event.", ex);
             }
         }
 
@@ -33,7 +33,7 @@ namespace CairoDesktop.Common.Helpers
             }
             catch (Exception ex)
             {
-                CairoLogger.Instance.Error("Error raising event.", ex);
+                CairoLogger.Error("Error raising event.", ex);
             }
         }
     }

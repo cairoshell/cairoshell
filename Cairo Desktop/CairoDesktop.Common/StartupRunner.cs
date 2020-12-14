@@ -67,7 +67,7 @@ namespace CairoDesktop.Common
                 startInfo.FileName = procInfo[0];
                 startInfo.Arguments = procInfo[1];
 
-                CairoLogger.Instance.Debug($"StartupRunner: Starting program: {startInfo.FileName}");
+                CairoLogger.Debug($"StartupRunner: Starting program: {startInfo.FileName}");
 
                 try
                 {
@@ -75,7 +75,7 @@ namespace CairoDesktop.Common
                 }
                 catch
                 {
-                    CairoLogger.Instance.Info($"StartupRunner: Failed to start program: {startInfo.FileName}");
+                    CairoLogger.Info($"StartupRunner: Failed to start program: {startInfo.FileName}");
                 }
             }
         }
@@ -115,7 +115,7 @@ namespace CairoDesktop.Common
                                 if (((byte[])registryKey.GetValue(valueName))[0] % 2 != 0) // if value is odd number, item is disabled
                                 {
                                     disallowedApps.Add(valueName);
-                                    CairoLogger.Instance.Debug($"StartupRunner: Skipping disabled entry: {valueName}");
+                                    CairoLogger.Debug($"StartupRunner: Skipping disabled entry: {valueName}");
                                 }
                             }
                         }
@@ -125,7 +125,7 @@ namespace CairoDesktop.Common
                     }
                     catch
                     {
-                        CairoLogger.Instance.Warning($"StartupRunner: Unable to load allowed startup items list from registry key {location.ApprovedLocation}");
+                        CairoLogger.Warning($"StartupRunner: Unable to load allowed startup items list from registry key {location.ApprovedLocation}");
                     }
                 }
             }
@@ -142,7 +142,7 @@ namespace CairoDesktop.Common
                 case StartupEntryType.RegistryKey:
                     return GetAppsFromRegistryKey(location);
                 default:
-                    CairoLogger.Instance.Debug("StartupRunner: Unknown startup location type");
+                    CairoLogger.Debug("StartupRunner: Unknown startup location type");
                     break;
             }
 
@@ -179,7 +179,7 @@ namespace CairoDesktop.Common
             }
             catch
             {
-                CairoLogger.Instance.Warning($"StartupRunner: Unable to load startup items from directory {location}");
+                CairoLogger.Warning($"StartupRunner: Unable to load startup items from directory {location}");
             }
 
             return startupApps;
@@ -229,7 +229,7 @@ namespace CairoDesktop.Common
                                     }
                                     catch
                                     {
-                                        CairoLogger.Instance.Warning($"StartupRunner: Unable to delete RunOnce startup item {valueName}");
+                                        CairoLogger.Warning($"StartupRunner: Unable to delete RunOnce startup item {valueName}");
                                     }
                                 }
                             }
@@ -241,7 +241,7 @@ namespace CairoDesktop.Common
                 }
                 catch
                 {
-                    CairoLogger.Instance.Warning($"StartupRunner: Unable to load startup items from registry key {location.Location}");
+                    CairoLogger.Warning($"StartupRunner: Unable to load startup items from registry key {location.Location}");
                 }
             }
 

@@ -272,7 +272,7 @@ namespace CairoDesktop.WindowsTray
                                 trayIcon.Icon = Common.IconImageConverter.GetDefaultIcon();
 
                             TrayIcons.Add(trayIcon);
-                            CairoLogger.Instance.Debug($"NotificationArea: Added: {trayIcon.Title} Path: {trayIcon.Path} Hidden: {trayIcon.IsHidden} GUID: {trayIcon.GUID} UID: {trayIcon.UID} Version: {trayIcon.Version}");
+                            CairoLogger.Debug($"NotificationArea: Added: {trayIcon.Title} Path: {trayIcon.Path} Hidden: {trayIcon.IsHidden} GUID: {trayIcon.GUID} UID: {trayIcon.UID} Version: {trayIcon.Version}");
 
                             if ((NIM)message == NIM.NIM_MODIFY)
                             {
@@ -281,11 +281,11 @@ namespace CairoDesktop.WindowsTray
                             }
                         }
                         else
-                            CairoLogger.Instance.Debug($"NotificationArea: Modified: {trayIcon.Title}");
+                            CairoLogger.Debug($"NotificationArea: Modified: {trayIcon.Title}");
                     }
                     catch (Exception ex)
                     {
-                        CairoLogger.Instance.Error("NotificationArea: Unable to modify the icon in the collection.", ex);
+                        CairoLogger.Error("NotificationArea: Unable to modify the icon in the collection.", ex);
                     }
                 }
                 else if ((NIM)message == NIM.NIM_DELETE)
@@ -300,11 +300,11 @@ namespace CairoDesktop.WindowsTray
 
                         TrayIcons.Remove(trayIcon);
 
-                        CairoLogger.Instance.Debug($"NotificationArea: Removed: {nicData.szTip}");
+                        CairoLogger.Debug($"NotificationArea: Removed: {nicData.szTip}");
                     }
                     catch (Exception ex)
                     {
-                        CairoLogger.Instance.Error("NotificationArea: Unable to remove the icon from the collection.", ex);
+                        CairoLogger.Error("NotificationArea: Unable to remove the icon from the collection.", ex);
                     }
                 }
                 else if ((NIM)message == NIM.NIM_SETVERSION)
@@ -314,7 +314,7 @@ namespace CairoDesktop.WindowsTray
                         if (ti.Equals(nicData))
                         {
                             ti.Version = nicData.uVersion;
-                            CairoLogger.Instance.Debug($"NotificationArea: Modified version to {ti.Version} on: {ti.Title}");
+                            CairoLogger.Debug($"NotificationArea: Modified version to {ti.Version} on: {ti.Title}");
                             break;
                         }
                     }

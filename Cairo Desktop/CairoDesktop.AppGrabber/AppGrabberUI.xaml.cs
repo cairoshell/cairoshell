@@ -105,7 +105,7 @@ namespace CairoDesktop.AppGrabber
                         else
                         {
                             // disallow adding a duplicate
-                            CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                            CairoLogger.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
                         }
                     }
                 }

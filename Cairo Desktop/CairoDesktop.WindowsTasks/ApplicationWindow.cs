@@ -313,7 +313,7 @@ namespace CairoDesktop.WindowsTasks
 
                 if (cloaked > 0)
                 {
-                    CairoLogger.Instance.Debug(string.Format("Cloaked ({0}) window ({1}) hidden from taskbar", cloaked, Title));
+                    CairoLogger.Debug(string.Format("Cloaked ({0}) window ({1}) hidden from taskbar", cloaked, Title));
                     return false;
                 }
 
@@ -324,7 +324,7 @@ namespace CairoDesktop.WindowsTasks
                 {
                     if ((ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) == 0)
                     {
-                        CairoLogger.Instance.Debug($"Hiding UWP non-window {Title}");
+                        CairoLogger.Debug($"Hiding UWP non-window {Title}");
                         return false;
                     }
                 }
@@ -335,7 +335,7 @@ namespace CairoDesktop.WindowsTasks
 
         public void Uncloak()
         {
-            CairoLogger.Instance.Debug($"Uncloak event received for {Title}");
+            CairoLogger.Debug($"Uncloak event received for {Title}");
 
             SetShowInTaskbar();
         }

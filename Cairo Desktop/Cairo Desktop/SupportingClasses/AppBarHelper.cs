@@ -43,7 +43,7 @@ namespace CairoDesktop.SupportingClasses
                     uint ret = SHAppBarMessage((int)ABMsg.ABM_NEW, ref abd);
                     InteropDone();
                     appBars.Add(handle);
-                    CairoLogger.Instance.Debug("AppBarHelper: Created AppBar for handle " + handle.ToString());
+                    CairoLogger.Debug("AppBarHelper: Created AppBar for handle " + handle.ToString());
 
                     ABSetPos(abWindow, width, height, edge, true);
                 }
@@ -53,7 +53,7 @@ namespace CairoDesktop.SupportingClasses
                     SHAppBarMessage((int)ABMsg.ABM_REMOVE, ref abd);
                     InteropDone();
                     appBars.Remove(handle);
-                    CairoLogger.Instance.Debug("AppBarHelper: Removed AppBar for handle " + handle.ToString());
+                    CairoLogger.Debug("AppBarHelper: Removed AppBar for handle " + handle.ToString());
 
                     return 0;
                 }
@@ -319,7 +319,7 @@ namespace CairoDesktop.SupportingClasses
 
                 if (!isSameCoords)
                 {
-                    CairoLogger.Instance.Debug($"AppBarHelper: {abWindow.Name} changing position (TxLxBxR) to {abd.rc.Top}x{abd.rc.Left}x{abd.rc.Bottom}x{ abd.rc.Right} from {abWindow.Top * abWindow.dpiScale}x{abWindow.Left * abWindow.dpiScale}x{(abWindow.Top * abWindow.dpiScale) + sHeight}x{ (abWindow.Left * abWindow.dpiScale) + sWidth}");
+                    CairoLogger.Debug($"AppBarHelper: {abWindow.Name} changing position (TxLxBxR) to {abd.rc.Top}x{abd.rc.Left}x{abd.rc.Bottom}x{ abd.rc.Right} from {abWindow.Top * abWindow.dpiScale}x{abWindow.Left * abWindow.dpiScale}x{(abWindow.Top * abWindow.dpiScale) + sHeight}x{ (abWindow.Left * abWindow.dpiScale) + sWidth}");
                     abWindow.SetAppBarPosition(abd.rc);
                 }
 

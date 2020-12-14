@@ -326,7 +326,7 @@ namespace CairoDesktop
                 }
                 catch
                 {
-                    CairoLogger.Instance.Error("Failed setting desktop background.");
+                    CairoLogger.Error("Failed setting desktop background.");
                 }
             }
             else
@@ -391,7 +391,7 @@ namespace CairoDesktop
             }
             catch (Exception ex)
             {
-                CairoLogger.Instance.Debug("Problem loading Windows background", ex);
+                CairoLogger.Debug("Problem loading Windows background", ex);
             }
 
             return GetCairoBackgroundBrush_Image(wallpaper, style) ?? GetCairoBackgroundBrush_Color();

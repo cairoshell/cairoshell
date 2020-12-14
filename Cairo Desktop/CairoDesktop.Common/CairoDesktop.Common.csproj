@@ -84,6 +84,11 @@
     <Compile Include="HotKey.cs" />
     <Compile Include="HotKeyModifier.cs" />
     <Compile Include="IconSize.cs" />
+    <Compile Include="Logging\CairoLogger.Debug.cs" />
+    <Compile Include="Logging\CairoLogger.Error.cs" />
+    <Compile Include="Logging\CairoLogger.Fatal.cs" />
+    <Compile Include="Logging\CairoLogger.Info.cs" />
+    <Compile Include="Logging\CairoLogger.Warning.cs" />
     <Compile Include="Logging\Loggers\CairoLogger.cs" />
     <Compile Include="Logging\Providers\CairoLoggerProvider.cs" />
     <Compile Include="NavigationManager.cs" />

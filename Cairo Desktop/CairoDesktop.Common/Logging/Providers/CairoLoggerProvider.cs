@@ -6,7 +6,7 @@ namespace CairoDesktop.Common.Logging.Providers
     {
         public ILogger CreateLogger(string categoryName)
         {
-            return new Loggers.CairoLogger(CairoLogger.Instance);
+            return new Loggers.CairoLogger();
         }
     }
 }

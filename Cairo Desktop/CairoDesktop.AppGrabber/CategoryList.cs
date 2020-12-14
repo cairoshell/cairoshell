@@ -215,7 +215,7 @@ namespace CairoDesktop.AppGrabber {
                         app.Target = appElement.ChildNodes[2].InnerText;
 
                     if (!app.IsStoreApp && !Interop.Shell.Exists(app.Path)) {
-                        CairoLogger.Instance.Debug(app.Path + " does not exist");
+                        CairoLogger.Debug(app.Path + " does not exist");
                         continue;
                     }
                     

@@ -215,7 +215,7 @@ namespace CairoDesktop.AppGrabber
                     {
                         if (!string.IsNullOrEmpty(target) && !ExecutableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
                         {
-                            CairoLogger.Instance.Debug("Not an app: " + file + ": " + target);
+                            CairoLogger.Debug("Not an app: " + file + ": " + target);
                             return null;
                         }
 
@@ -226,7 +226,7 @@ namespace CairoDesktop.AppGrabber
                             {
                                 if (ai.Name.ToLower().Contains(word))
                                 {
-                                    CairoLogger.Instance.Debug("Excluded item: " + file + ": " + target);
+                                    CairoLogger.Debug("Excluded item: " + file + ": " + target);
                                     return null;
                                 }
                             }
@@ -237,7 +237,7 @@ namespace CairoDesktop.AppGrabber
                 }
                 catch (Exception ex)
                 {
-                    CairoLogger.Instance.Error("Error creating ApplicationInfo object in appgrabber. " + ex.Message, ex);
+                    CairoLogger.Error("Error creating ApplicationInfo object in appgrabber. " + ex.Message, ex);
                     return null;
                 }
             }
@@ -434,7 +434,7 @@ namespace CairoDesktop.AppGrabber
                             if (CategoryList.FlatList.Contains(customApp))
                             {
                                 // disallow duplicates within all programs menu categories
-                                CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                                CairoLogger.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
                                 continue;
                             }
                         }
@@ -444,7 +444,7 @@ namespace CairoDesktop.AppGrabber
                             if (category.Contains(customApp))
                             {
                                 // disallow duplicates within the category
-                                CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                                CairoLogger.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
                                 continue;
                             }
                         }

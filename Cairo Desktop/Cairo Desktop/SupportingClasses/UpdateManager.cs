@@ -29,7 +29,7 @@
 //            {
 //                if (shutdownDelegate == null)
 //                {
-//                    CairoLogger.Instance.Error("UpdateManager: Unable to initialize; shutdownDelegate is null");
+//                    CairoLogger.Error("UpdateManager: Unable to initialize; shutdownDelegate is null");
 //                    return;
 //                }
 
