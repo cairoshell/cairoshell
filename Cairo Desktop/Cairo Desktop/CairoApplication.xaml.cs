@@ -248,7 +248,7 @@ namespace CairoDesktop
             NotificationArea.Instance.Dispose();
             // UpdateManager.Instance.Dispose();
             // WindowManager.Instance.Dispose();
-            WindowsTasksService.Instance.Dispose();
+            Tasks.Instance.Dispose();
         }
 
         private bool _errorVisible;
