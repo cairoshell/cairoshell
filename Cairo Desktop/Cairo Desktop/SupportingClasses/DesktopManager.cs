@@ -60,19 +60,21 @@ namespace CairoDesktop.SupportingClasses
 
         public SystemDirectory DesktopLocation => DesktopIconsControl?.Location;
 
-        public DesktopManager(WindowManager windowManager)
+        public DesktopManager()
         {
             // DesktopManager is always created on startup by WindowManager, regardless of desktop preferences
             // this allows for dynamic creation and destruction of the desktop per user preference
 
-            InitDesktop();
-
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+        }
 
-            // create and maintain reference to desktop manager
-            // this will create and manage desktop windows and controls
+        public void Initialize(WindowManager manager)
+        {
+            _windowManager = manager;
+            _windowManager.DwmChanged += DwmChanged;
+            _windowManager.ScreensChanged += ScreensChanged;
 
-            SetWindowManager(windowManager);
+            InitDesktop();
         }
 
         private void InitDesktop()
@@ -114,7 +116,7 @@ namespace CairoDesktop.SupportingClasses
             if (DesktopWindow != null)
                 return;
 
-            DesktopWindow = new Desktop(this);
+            DesktopWindow = new Desktop(_windowManager, this);
             DesktopWindow.WorkAreaChanged += WorkAreaChanged;
             DesktopWindow.Show();
         }
@@ -256,13 +258,6 @@ namespace CairoDesktop.SupportingClasses
             {
                 DesktopWindow?.ResetPosition();
             }
-        }
-
-        public void SetWindowManager(WindowManager manager)
-        {
-            _windowManager = manager;
-            _windowManager.DwmChanged += DwmChanged;
-            _windowManager.ScreensChanged += ScreensChanged;
         }
 
         #region Shell window

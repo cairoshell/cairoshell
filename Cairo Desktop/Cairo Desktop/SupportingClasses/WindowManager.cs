@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
-using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common.Logging;
-using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 
 namespace CairoDesktop.SupportingClasses
@@ -15,11 +13,10 @@ namespace CairoDesktop.SupportingClasses
         private bool hasCompletedInitialDisplaySetup;
         private int pendingDisplayEvents;
         private readonly static object displaySetupLock = new object();
+        private readonly IEnumerable<IWindowService> _windowServices;
 
         public bool IsSettingDisplays { get; set; }
         public Screen[] ScreenState = Array.Empty<Screen>();
-        public List<MenuBar> MenuBarWindows = new List<MenuBar>();
-        public List<Taskbar> TaskbarWindows = new List<Taskbar>();
 
         public EventHandler<WindowManagerEventArgs> DwmChanged;
         public EventHandler<WindowManagerEventArgs> ScreensChanged;
@@ -48,8 +45,12 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public WindowManager()
+        public WindowManager(IEnumerable<IWindowService> windowServices, DesktopManager desktopManager)
         {
+            _windowServices = windowServices;
+
+            desktopManager.Initialize(this);
+
             // start a timer to handle orphaned display events
             DispatcherTimer notificationCheckTimer = new DispatcherTimer();
 
@@ -74,6 +75,11 @@ namespace CairoDesktop.SupportingClasses
         public void InitialSetup()
         {
             IsSettingDisplays = true;
+
+            foreach (var windowService in _windowServices)
+            {
+                windowService.Initialize(this);
+            }
 
             DisplaySetup(ScreenSetupReason.FirstRun);
 
@@ -184,22 +190,22 @@ namespace CairoDesktop.SupportingClasses
             // update our knowledge of the displays present
             ScreenState = Screen.AllScreens;
 
+            // enumerate screens based on currently open windows
+            openScreens = GetOpenScreens();
+
+            sysScreens = GetScreenDeviceNames();
+
+            // figure out which screens have been added
+            foreach (string name in sysScreens)
+            {
+                if (!openScreens.Contains(name))
+                {
+                    addedScreens.Add(name);
+                }
+            }
+
             if (reason != ScreenSetupReason.FirstRun)
             {
-                // enumerate screens based on currently open windows
-                openScreens = GetOpenScreens();
-
-                sysScreens = GetScreenDeviceNames();
-
-                // figure out which screens have been added
-                foreach (string name in sysScreens)
-                {
-                    if (!openScreens.Contains(name))
-                    {
-                        addedScreens.Add(name);
-                    }
-                }
-
                 // figure out which screens have been removed
                 foreach (string name in openScreens)
                 {
@@ -224,7 +230,7 @@ namespace CairoDesktop.SupportingClasses
             }
 
             // open windows on newly added screens
-            ProcessAddedScreens(addedScreens, reason == ScreenSetupReason.FirstRun);
+            ProcessAddedScreens(addedScreens);
 
             // update each display's work area if we are shell
             SetDisplayWorkAreas();
@@ -237,19 +243,14 @@ namespace CairoDesktop.SupportingClasses
         {
             List<string> openScreens = new List<string>();
 
-            foreach (MenuBar bar in MenuBarWindows)
+            foreach (var windowService in _windowServices)
             {
-                if (bar.Screen != null && !openScreens.Contains(bar.Screen.DeviceName))
+                foreach (var window in windowService.Windows)
                 {
-                    openScreens.Add(bar.Screen.DeviceName);
-                }
-            }
-
-            foreach (Taskbar bar in TaskbarWindows)
-            {
-                if (bar.Screen != null && !openScreens.Contains(bar.Screen.DeviceName))
-                {
-                    openScreens.Add(bar.Screen.DeviceName);
+                    if (window.Screen != null && !openScreens.Contains(window.Screen.DeviceName))
+                    {
+                        openScreens.Add(window.Screen.DeviceName);
+                    }
                 }
             }
 
@@ -273,58 +274,11 @@ namespace CairoDesktop.SupportingClasses
         {
             foreach (string name in removedScreens)
             {
-                CairoLogger.DebugIf(Settings.Instance.EnableMenuBarMultiMon || Settings.Instance.EnableTaskbarMultiMon, "WindowManager: Removing windows associated with screen " + name);
+                CairoLogger.Instance.Debug("WindowManager: Removing windows associated with screen " + name);
 
-                if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
+                foreach (var windowService in _windowServices)
                 {
-                    // close TaskBars
-                    Taskbar taskbarToClose = null;
-                    foreach (Taskbar bar in TaskbarWindows)
-                    {
-                        if (bar.Screen != null && bar.Screen.DeviceName == name)
-                        {
-                            CairoLogger.DebugIf(bar.Screen.Primary, "WindowManager: Closing TaskBar on primary display");
-
-                            taskbarToClose = bar;
-                            break;
-                        }
-                    }
-
-                    if (taskbarToClose != null)
-                    {
-                        if (!taskbarToClose.IsClosing)
-                        {
-                            taskbarToClose.Close();
-                        }
-
-                        TaskbarWindows.Remove(taskbarToClose);
-                    }
-                }
-
-                if (Settings.Instance.EnableMenuBarMultiMon)
-                {
-                    // close menu bars
-                    MenuBar barToClose = null;
-                    foreach (MenuBar bar in MenuBarWindows)
-                    {
-                        if (bar.Screen != null && bar.Screen.DeviceName == name)
-                        {
-                            CairoLogger.DebugIf(bar.Screen.Primary, "WindowManager: Closing menu bar on primary display");
-
-                            barToClose = bar;
-                            break;
-                        }
-                    }
-
-                    if (barToClose != null)
-                    {
-                        if (!barToClose.IsClosing)
-                        {
-                            barToClose.Close();
-                        }
-
-                        MenuBarWindows.Remove(barToClose);
-                    }
+                    windowService.HandleScreenRemoved(name);
                 }
             }
         }
@@ -333,80 +287,27 @@ namespace CairoDesktop.SupportingClasses
         {
             CairoLogger.Debug("WindowManager: Refreshing screen information for existing windows");
 
-            // TODO: Handle these as events in respective classes
-            // update screens of stale windows
-            if (Settings.Instance.EnableMenuBarMultiMon)
-            {
-                foreach (Screen screen in ScreenState)
-                {
-                    MenuBar bar = GetScreenWindow(MenuBarWindows, screen);
-
-                    if (bar != null)
-                    {
-                        bar.Screen = screen;
-                        bar.SetScreenPosition();
-                    }
-                }
-            }
-            else if (MenuBarWindows.Count > 0)
-            {
-                MenuBarWindows[0].Screen = Screen.PrimaryScreen;
-                MenuBarWindows[0].SetScreenPosition();
-            }
-
-            if (Settings.Instance.EnableTaskbarMultiMon)
-            {
-                foreach (Screen screen in ScreenState)
-                {
-                    Taskbar bar = GetScreenWindow(TaskbarWindows, screen);
-
-                    if (bar != null)
-                    {
-                        bar.Screen = screen;
-                        bar.SetScreenPosition();
-                    }
-                }
-            }
-            else if (TaskbarWindows.Count > 0)
-            {
-                TaskbarWindows[0].Screen = Screen.PrimaryScreen;
-                TaskbarWindows[0].SetScreenPosition();
-            }
-
-            // notify event subscribers
             WindowManagerEventArgs args = new WindowManagerEventArgs { DisplaysChanged = displaysChanged, Reason = reason };
+
+            foreach (var windowService in _windowServices)
+            {
+                windowService.RefreshWindows(args);
+            }
+
             ScreensChanged?.Invoke(this, args);
         }
 
-        private void ProcessAddedScreens(List<string> addedScreens, bool firstRun)
+        private void ProcessAddedScreens(List<string> addedScreens)
         {
             foreach (var screen in ScreenState)
             {
-                // if firstRun, that means this is initial startup and primary display windows have already opened, so skip them. addedScreens will
-                if ((firstRun && !screen.Primary) || addedScreens.Contains(screen.DeviceName))
+                if (addedScreens.Contains(screen.DeviceName))
                 {
-                    CairoLogger.DebugIf(Settings.Instance.EnableMenuBarMultiMon || Settings.Instance.EnableTaskbarMultiMon, "WindowManager: Opening windows on screen " + screen.DeviceName);
+                    CairoLogger.Instance.Debug("WindowManager: Opening windows on screen " + screen.DeviceName);
 
-                    if (Settings.Instance.EnableMenuBarMultiMon)
+                    foreach (var windowService in _windowServices)
                     {
-                        CairoLogger.DebugIf(screen.Primary, "WindowManager: Opening menu bar on new primary display");
-
-                        // menu bars
-                        var applicationUpdateService = (IApplicationUpdateService)CairoApplication.Current.Host.Services.GetService(typeof(IApplicationUpdateService));
-
-                        MenuBar newMenuBar = new MenuBar(applicationUpdateService, screen);
-                        newMenuBar.Show();
-                        MenuBarWindows.Add(newMenuBar);
-                    }
-
-                    if (Settings.Instance.EnableTaskbarMultiMon && Settings.Instance.EnableTaskbar)
-                    {
-                        CairoLogger.DebugIf(screen.Primary, "WindowManager: Opening TaskBar on new primary display");
-
-                        // TaskBars
-                        Taskbar newTaskbar = new Taskbar(screen);
-                        newTaskbar.Show();
-                        TaskbarWindows.Add(newTaskbar);
+                        windowService.HandleScreenAdded(screen);
                     }
                 }
             }
@@ -439,54 +340,49 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public void SetWorkArea(Screen screen)
+        public NativeMethods.Rect GetWorkArea(ref double dpiScale, Screen screen, bool edgeBarsOnly, bool enabledBarsOnly)
         {
-            double dpiScale = 1;
-            double menuBarHeight = 0;
-            double taskbarHeight = 0;
+            double topEdgeWindowHeight = 0;
+            double bottomEdgeWindowHeight = 0;
             NativeMethods.Rect rc;
             rc.Left = screen.Bounds.Left;
             rc.Right = screen.Bounds.Right;
 
             // get appropriate windows for this display
-            foreach (MenuBar bar in MenuBarWindows)
+            foreach (var windowService in _windowServices)
             {
-                if (bar.Screen.DeviceName == screen.DeviceName)
+                foreach (var window in windowService.Windows)
                 {
-                    menuBarHeight = bar.ActualHeight;
-                    dpiScale = bar.dpiScale;
-                    break;
+                    if (window.Screen.DeviceName == screen.DeviceName)
+                    {
+                        if ((window.enableAppBar || !enabledBarsOnly) && (window.requiresScreenEdge || !edgeBarsOnly))
+                        {
+                            if (window.appBarEdge == NativeMethods.ABEdge.ABE_TOP)
+                            {
+                                topEdgeWindowHeight += window.ActualHeight;
+                            }
+                            else if (window.appBarEdge == NativeMethods.ABEdge.ABE_BOTTOM)
+                            {
+                                bottomEdgeWindowHeight += window.ActualHeight;
+                            }
+                        }
+
+                        dpiScale = window.dpiScale;
+                        break;
+                    }
                 }
             }
 
-            foreach (Taskbar bar in TaskbarWindows)
-            {
-                if (bar.Screen.DeviceName == screen.DeviceName)
-                {
-                    taskbarHeight = bar.ActualHeight;
-                    break;
-                }
-            }
+            rc.Top = screen.Bounds.Top + (int)(topEdgeWindowHeight * dpiScale);
+            rc.Bottom = screen.Bounds.Bottom - (int)(bottomEdgeWindowHeight * dpiScale);
 
-            // only allocate space for TaskBar if enabled
-            if (Settings.Instance.EnableTaskbar && Settings.Instance.TaskbarMode == 0)
-            {
-                if (Settings.Instance.TaskbarPosition == 1)
-                {
-                    rc.Top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale) + (int)(taskbarHeight * dpiScale);
-                    rc.Bottom = screen.Bounds.Bottom;
-                }
-                else
-                {
-                    rc.Top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale);
-                    rc.Bottom = screen.Bounds.Bottom - (int)(taskbarHeight * dpiScale);
-                }
-            }
-            else
-            {
-                rc.Top = screen.Bounds.Top + (int)(menuBarHeight * dpiScale);
-                rc.Bottom = screen.Bounds.Bottom;
-            }
+            return rc;
+        }
+
+        public void SetWorkArea(Screen screen)
+        {
+            double dpiScale = 1;
+            NativeMethods.Rect rc = GetWorkArea(ref dpiScale, screen, false, true);
 
             NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 1, ref rc, (uint)(NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
         }
