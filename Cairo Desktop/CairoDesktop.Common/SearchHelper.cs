@@ -135,7 +135,7 @@ namespace CairoDesktop.Common
             }
             catch (Exception ex)
             {
-                CairoLogger.Instance.Error("Error in doSearch.",ex);
+                CairoLogger.Error("Error in doSearch.",ex);
             }
 
             sos.Reset.Set();

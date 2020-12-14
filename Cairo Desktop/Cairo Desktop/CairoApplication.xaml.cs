@@ -268,7 +268,7 @@ namespace CairoDesktop
 
             string msg = "Would you like to restart Cairo?\r\n\r\nPlease submit a bug report with a screenshot of this error. Thanks! \r\nMessage: " + e.Exception.Message + "\r\nTarget Site: " + e.Exception.TargetSite + "\r\nVersion: " + version + "\r\n\r\n" + e.Exception.StackTrace + inner;
 
-            CairoLogger.Instance.Error(msg, e.Exception);
+            CairoLogger.Error(msg, e.Exception);
 
             string dMsg;
 

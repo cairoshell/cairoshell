@@ -40,7 +40,7 @@ namespace CairoDesktop.WindowsTray
                     }
                     catch (Exception e)
                     {
-                        CairoLogger.Instance.Debug($"ExplorerTrayService: Unable to get items using ITrayNotify: {e.Message}");
+                        CairoLogger.Debug($"ExplorerTrayService: Unable to get items using ITrayNotify: {e.Message}");
                     }
                 }
                 else
@@ -51,7 +51,7 @@ namespace CairoDesktop.WindowsTray
                     }
                     catch (Exception e)
                     {
-                        CairoLogger.Instance.Debug($"ExplorerTrayService: Unable to get items: {e.Message}");
+                        CairoLogger.Debug($"ExplorerTrayService: Unable to get items: {e.Message}");
                     }
                 }
             }
@@ -84,7 +84,7 @@ namespace CairoDesktop.WindowsTray
 
                 if (trayItem.hWnd == IntPtr.Zero || !IsWindow(trayItem.hWnd))
                 {
-                    CairoLogger.Instance.Debug($"ExplorerTrayService: Ignored notify icon {trayItem.szIconText} due to invalid handle");
+                    CairoLogger.Debug($"ExplorerTrayService: Ignored notify icon {trayItem.szIconText} due to invalid handle");
                     continue;
                 }
 
@@ -94,12 +94,12 @@ namespace CairoDesktop.WindowsTray
                 {
                     if (!trayDelegate((uint)NIM.NIM_ADD, nid))
                     {
-                        CairoLogger.Instance.Debug("ExplorerTrayService: Ignored notify icon message");
+                        CairoLogger.Debug("ExplorerTrayService: Ignored notify icon message");
                     }
                 }
                 else
                 {
-                    CairoLogger.Instance.Debug("ExplorerTrayService: trayDelegate is null");
+                    CairoLogger.Debug("ExplorerTrayService: trayDelegate is null");
                 }
             }
 
@@ -155,7 +155,7 @@ namespace CairoDesktop.WindowsTray
                     {
                         trayItem = (TrayItem) Marshal.PtrToStructure(hTrayItem, typeof(TrayItem));
 
-                        CairoLogger.Instance.Debug(
+                        CairoLogger.Debug(
                             $"ExplorerTrayService: Got tray item: {trayItem.szIconText}");
                     }
                 }
@@ -184,7 +184,7 @@ namespace CairoDesktop.WindowsTray
             }
             else
             {
-                CairoLogger.Instance.Warning($"ExplorerTrayService: Unable to use {trayItem.szIconText} icon handle for NOTIFYICONDATA struct");
+                CairoLogger.Warning($"ExplorerTrayService: Unable to use {trayItem.szIconText} icon handle for NOTIFYICONDATA struct");
             }
 
             return nid;
@@ -210,7 +210,7 @@ namespace CairoDesktop.WindowsTray
             }
             catch (Exception e)
             {
-                CairoLogger.Instance.Debug($"ExplorerTrayService: Unable to get EnableAutoTray setting: {e.Message}");
+                CairoLogger.Debug($"ExplorerTrayService: Unable to get EnableAutoTray setting: {e.Message}");
             }
 
             return enableAutoTray == 1;
@@ -233,7 +233,7 @@ namespace CairoDesktop.WindowsTray
             }
             catch (Exception e)
             {
-                CairoLogger.Instance.Debug($"ExplorerTrayService: Unable to set EnableAutoTray setting: {e.Message}");
+                CairoLogger.Debug($"ExplorerTrayService: Unable to set EnableAutoTray setting: {e.Message}");
             }
         }
 

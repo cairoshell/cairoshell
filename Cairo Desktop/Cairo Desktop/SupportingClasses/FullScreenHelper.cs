@@ -71,7 +71,7 @@ namespace CairoDesktop.SupportingClasses
             // remove any changed windows we found
             if (removeApps.Count > 0)
             {
-                CairoLogger.Instance.Debug("Removing full screen app(s)");
+                CairoLogger.Debug("Removing full screen app(s)");
                 foreach (FullScreenApp existingApp in removeApps)
                 {
                     FullScreenApps.Remove(existingApp);
@@ -84,7 +84,7 @@ namespace CairoDesktop.SupportingClasses
                 FullScreenApp appNew = getFullScreenApp(hWnd);
                 if (appNew != null)
                 {
-                    CairoLogger.Instance.Debug("Adding full screen app");
+                    CairoLogger.Debug("Adding full screen app");
                     FullScreenApps.Add(appNew);
                 }
             }

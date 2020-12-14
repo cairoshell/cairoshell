@@ -26,7 +26,7 @@ namespace CairoDesktop.Common
                     {
                         if (hotKey.Action != null)
                         {
-                            CairoLogger.Instance.Debug(string.Format("HotKey {0} pressed", hotKey.Key.ToString()));
+                            CairoLogger.Debug(string.Format("HotKey {0} pressed", hotKey.Key.ToString()));
                             hotKey.Action.Invoke(hotKey);
                         }
 

@@ -415,7 +415,7 @@ namespace CairoDesktop
         {
             if (e.Key == Key.LWin || e.Key == Key.RWin)
             {
-                CairoLogger.Instance.Debug(e.Key.ToString() + " Key Pressed");
+                CairoLogger.Debug(e.Key.ToString() + " Key Pressed");
                 ToggleProgramsMenu();
                 e.Handled = true;
             }

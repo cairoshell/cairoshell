@@ -476,7 +476,7 @@ namespace CairoDesktop
             }
             catch (Exception e)
             {
-                CairoLogger.Instance.Error($"SettingsWindow: Unable to load autorun setting from registry: {e.Message}");
+                CairoLogger.Error($"SettingsWindow: Unable to load autorun setting from registry: {e.Message}");
             }
         }
 
@@ -727,7 +727,7 @@ namespace CairoDesktop
             }
             catch (Exception exception)
             {
-                CairoLogger.Instance.Error($"SettingsWindow: Unable to update registry autorun setting: {exception.Message}");
+                CairoLogger.Error($"SettingsWindow: Unable to update registry autorun setting: {exception.Message}");
             }
         }
 

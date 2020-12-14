@@ -5,13 +5,6 @@ namespace CairoDesktop.Common.Logging.Loggers
 {
     public class CairoLogger : ILogger
     {
-        private Logging.CairoLogger _legacyCairoLogger;
-
-        public CairoLogger(Logging.CairoLogger legacyCairoLogger)
-        {
-            _legacyCairoLogger = legacyCairoLogger;
-        }
-
         public IDisposable BeginScope<TState>(TState state)
         {
             return null;
@@ -33,19 +26,19 @@ namespace CairoDesktop.Common.Logging.Loggers
             {
                 case LogLevel.Trace:
                 case LogLevel.Debug:
-                    _legacyCairoLogger.Debug(formatter(state, exception));
+                    Logging.CairoLogger.Debug(formatter(state, exception));
                     break;
                 case LogLevel.Information:
-                    _legacyCairoLogger.Info(formatter(state, exception));
+                    Logging.CairoLogger.Info(formatter(state, exception));
                     break;
                 case LogLevel.Warning:
-                    _legacyCairoLogger.Warning(formatter(state, exception));
+                    Logging.CairoLogger.Warning(formatter(state, exception));
                     break;
                 case LogLevel.Error:
-                    _legacyCairoLogger.Error(formatter(state, exception));
+                    Logging.CairoLogger.Error(formatter(state, exception));
                     break;
                 case LogLevel.Critical:
-                    _legacyCairoLogger.Fatal(formatter(state, exception));
+                    Logging.CairoLogger.Fatal(formatter(state, exception));
                     break;
                 case LogLevel.None:
                 default:

@@ -298,7 +298,7 @@ namespace CairoDesktop.WindowsTray
 
         public void IconMouseClick(MouseButton button, uint mouse, int doubleClickTime)
         {
-            CairoLogger.Instance.Debug(string.Format("{0} mouse button clicked icon: {1}", button.ToString(), Title));
+            CairoLogger.Debug(string.Format("{0} mouse button clicked icon: {1}", button.ToString(), Title));
 
             // ensure focus so that menus go away after clicking outside
             SetForegroundWindow(NotificationArea.Instance.Handle);

@@ -39,7 +39,7 @@ namespace CairoDesktop.WindowsTasks
 
             try
             {
-                CairoLogger.Instance.Debug("Starting WindowsTasksService");
+                CairoLogger.Debug("Starting WindowsTasksService");
 
                 // create window to receive task events
                 _HookWin = new NativeWindowEx();
@@ -86,7 +86,7 @@ namespace CairoDesktop.WindowsTasks
             }
             catch (Exception ex)
             {
-                CairoLogger.Instance.Info("Unable to start WindowsTasksService: " + ex.Message);
+                CairoLogger.Info("Unable to start WindowsTasksService: " + ex.Message);
             }
         }
 
@@ -130,7 +130,7 @@ namespace CairoDesktop.WindowsTasks
         {
             if (IsInitialized)
             {
-                CairoLogger.Instance.Debug("TasksService: Deregistering hooks");
+                CairoLogger.Debug("TasksService: Deregistering hooks");
                 DeregisterShellHookWindow(_HookWin.Handle);
                 if (uncloakEventHook != IntPtr.Zero) UnhookWinEvent(uncloakEventHook);
                 _HookWin.DestroyHandle();
@@ -218,7 +218,7 @@ namespace CairoDesktop.WindowsTasks
                         switch ((HSHELL)msg.WParam.ToInt32())
                         {
                             case HSHELL.WINDOWCREATED:
-                                CairoLogger.Instance.Debug("Created: " + msg.LParam.ToString());
+                                CairoLogger.Debug("Created: " + msg.LParam.ToString());
                                 if (!Windows.Any(i => i.Handle == msg.LParam))
                                 {
                                     addWindow(msg.LParam);
@@ -231,12 +231,12 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL.WINDOWDESTROYED:
-                                CairoLogger.Instance.Debug("Destroyed: " + msg.LParam.ToString());
+                                CairoLogger.Debug("Destroyed: " + msg.LParam.ToString());
                                 removeWindow(msg.LParam);
                                 break;
 
                             case HSHELL.WINDOWREPLACING:
-                                CairoLogger.Instance.Debug("Replacing: " + msg.LParam.ToString());
+                                CairoLogger.Debug("Replacing: " + msg.LParam.ToString());
                                 if (Windows.Any(i => i.Handle == msg.LParam))
                                 {
                                     ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
@@ -249,13 +249,13 @@ namespace CairoDesktop.WindowsTasks
                                 }
                                 break;
                             case HSHELL.WINDOWREPLACED:
-                                CairoLogger.Instance.Debug("Replaced: " + msg.LParam.ToString());
+                                CairoLogger.Debug("Replaced: " + msg.LParam.ToString());
                                 removeWindow(msg.LParam);
                                 break;
 
                             case HSHELL.WINDOWACTIVATED:
                             case HSHELL.RUDEAPPACTIVATED:
-                                CairoLogger.Instance.Debug("Activated: " + msg.LParam.ToString());
+                                CairoLogger.Debug("Activated: " + msg.LParam.ToString());
 
                                 foreach (var aWin in Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
                                 {
@@ -289,7 +289,7 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL.FLASH:
-                                CairoLogger.Instance.Debug("Flashing window: " + msg.LParam.ToString());
+                                CairoLogger.Debug("Flashing window: " + msg.LParam.ToString());
                                 if (Windows.Any(i => i.Handle == msg.LParam))
                                 {
                                     ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
@@ -302,16 +302,16 @@ namespace CairoDesktop.WindowsTasks
                                 break;
 
                             case HSHELL.ACTIVATESHELLWINDOW:
-                                CairoLogger.Instance.Debug("Activate shell window called.");
+                                CairoLogger.Debug("Activate shell window called.");
                                 break;
 
                             case HSHELL.ENDTASK:
-                                CairoLogger.Instance.Debug("EndTask called: " + msg.LParam.ToString());
+                                CairoLogger.Debug("EndTask called: " + msg.LParam.ToString());
                                 removeWindow(msg.LParam);
                                 break;
 
                             case HSHELL.GETMINRECT:
-                                CairoLogger.Instance.Debug("GetMinRect called: " + msg.LParam.ToString());
+                                CairoLogger.Debug("GetMinRect called: " + msg.LParam.ToString());
                                 SHELLHOOKINFO winHandle = (SHELLHOOKINFO)Marshal.PtrToStructure(msg.LParam, typeof(SHELLHOOKINFO));
                                 winHandle.rc = new NativeMethods.Rect { Bottom = 100, Left = 0, Right = 100, Top = 0 };
                                 Marshal.StructureToPtr(winHandle, msg.LParam, true);
@@ -319,7 +319,7 @@ namespace CairoDesktop.WindowsTasks
                                 return; // return here so the result isnt reset to DefWindowProc
 
                             case HSHELL.REDRAW:
-                                CairoLogger.Instance.Debug("Redraw called: " + msg.LParam.ToString());
+                                CairoLogger.Debug("Redraw called: " + msg.LParam.ToString());
                                 if (Windows.Any(i => i.Handle == msg.LParam))
                                 {
                                     ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
@@ -351,13 +351,13 @@ namespace CairoDesktop.WindowsTasks
                 }
                 catch (Exception ex)
                 {
-                    CairoLogger.Instance.Error("Error in ShellWinProc. ", ex);
+                    CairoLogger.Error("Error in ShellWinProc. ", ex);
                     Debugger.Break();
                 }
             }
             else if (msg.Msg == WM_TASKBARCREATEDMESSAGE)
             {
-                CairoLogger.Instance.Debug("TaskbarCreated received, setting ITaskbarList window");
+                CairoLogger.Debug("TaskbarCreated received, setting ITaskbarList window");
                 setTaskbarListHwnd();
             }
             else
@@ -371,17 +371,17 @@ namespace CairoDesktop.WindowsTasks
                     case (int)WM.USER + 50:
                         // ActivateTab
                         // Also sends WM_SHELLHOOK message
-                        CairoLogger.Instance.Debug("ITaskbarList: ActivateTab HWND:" + msg.LParam);
+                        CairoLogger.Debug("ITaskbarList: ActivateTab HWND:" + msg.LParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 60:
                         // MarkFullscreenWindow
-                        CairoLogger.Instance.Debug("ITaskbarList: MarkFullscreenWindow HWND:" + msg.LParam + " Entering? " + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: MarkFullscreenWindow HWND:" + msg.LParam + " Entering? " + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 64:
                         // SetProgressValue
-                        CairoLogger.Instance.Debug("ITaskbarList: SetProgressValue HWND:" + msg.WParam + " Progress: " + msg.LParam);
+                        CairoLogger.Debug("ITaskbarList: SetProgressValue HWND:" + msg.WParam + " Progress: " + msg.LParam);
 
                         win = new ApplicationWindow(msg.WParam);
                         if (Windows.Contains(win))
@@ -394,7 +394,7 @@ namespace CairoDesktop.WindowsTasks
                         return;
                     case (int)WM.USER + 65:
                         // SetProgressState
-                        CairoLogger.Instance.Debug("ITaskbarList: SetProgressState HWND:" + msg.WParam + " Flags: " + msg.LParam);
+                        CairoLogger.Debug("ITaskbarList: SetProgressState HWND:" + msg.WParam + " Flags: " + msg.LParam);
 
                         win = new ApplicationWindow(msg.WParam);
                         if (Windows.Contains(win))
@@ -407,67 +407,67 @@ namespace CairoDesktop.WindowsTasks
                         return;
                     case (int)WM.USER + 67:
                         // RegisterTab
-                        CairoLogger.Instance.Debug("ITaskbarList: RegisterTab MDI HWND:" + msg.LParam + " Tab HWND: " + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: RegisterTab MDI HWND:" + msg.LParam + " Tab HWND: " + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 68:
                         // UnregisterTab
-                        CairoLogger.Instance.Debug("ITaskbarList: UnregisterTab Tab HWND: " + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: UnregisterTab Tab HWND: " + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 71:
                         // SetTabOrder
-                        CairoLogger.Instance.Debug("ITaskbarList: SetTabOrder HWND:" + msg.WParam + " Before HWND: " + msg.LParam);
+                        CairoLogger.Debug("ITaskbarList: SetTabOrder HWND:" + msg.WParam + " Before HWND: " + msg.LParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 72:
                         // SetTabActive
-                        CairoLogger.Instance.Debug("ITaskbarList: SetTabActive HWND:" + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: SetTabActive HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 75:
                         // Unknown
-                        CairoLogger.Instance.Debug("ITaskbarList: Unknown HWND:" + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: Unknown HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 76:
                         // ThumbBarAddButtons
-                        CairoLogger.Instance.Debug("ITaskbarList: ThumbBarAddButtons HWND:" + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: ThumbBarAddButtons HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 77:
                         // ThumbBarUpdateButtons
-                        CairoLogger.Instance.Debug("ITaskbarList: ThumbBarUpdateButtons HWND:" + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: ThumbBarUpdateButtons HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 78:
                         // ThumbBarSetImageList
-                        CairoLogger.Instance.Debug("ITaskbarList: ThumbBarSetImageList HWND:" + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: ThumbBarSetImageList HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 79:
                         // SetOverlayIcon - Icon
-                        CairoLogger.Instance.Debug("ITaskbarList: SetOverlayIcon - Icon HWND:" + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: SetOverlayIcon - Icon HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 80:
                         // SetThumbnailTooltip
-                        CairoLogger.Instance.Debug("ITaskbarList: SetThumbnailTooltip HWND:" + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: SetThumbnailTooltip HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 81:
                         // SetThumbnailClip
-                        CairoLogger.Instance.Debug("ITaskbarList: SetThumbnailClip HWND:" + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: SetThumbnailClip HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 85:
                         // SetOverlayIcon - Description
-                        CairoLogger.Instance.Debug("ITaskbarList: SetOverlayIcon - Description HWND:" + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: SetOverlayIcon - Description HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 87:
                         // SetTabProperties
-                        CairoLogger.Instance.Debug("ITaskbarList: SetTabProperties HWND:" + msg.WParam);
+                        CairoLogger.Debug("ITaskbarList: SetTabProperties HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                 }

@@ -128,7 +128,7 @@ namespace CairoDesktop.SupportingClasses
             }
             else if (Settings.Instance.EnableDynamicDesktop && DesktopWindow == null) // NavigationManager can be expected null
             {
-                CairoLogger.Instance.Warning("DesktopManager: Attempted to create ToolBar with uninitialized properties");
+                CairoLogger.Warning("DesktopManager: Attempted to create ToolBar with uninitialized properties");
             }
         }
 
@@ -216,7 +216,7 @@ namespace CairoDesktop.SupportingClasses
             }
             else
             {
-                CairoLogger.Instance.Warning("DesktopManager: Attempted to configure desktop with uninitialized values");
+                CairoLogger.Warning("DesktopManager: Attempted to configure desktop with uninitialized values");
             }
         }
 
@@ -279,7 +279,7 @@ namespace CairoDesktop.SupportingClasses
             if (ShellWindow.IsShellWindow)
             {
                 // we did it
-                CairoLogger.Instance.Debug("DesktopManager: Successfully set as shell window");
+                CairoLogger.Debug("DesktopManager: Successfully set as shell window");
             }
         }
 
@@ -329,11 +329,11 @@ namespace CairoDesktop.SupportingClasses
             }
             else if (DesktopOverlayWindow != null)
             {
-                CairoLogger.Instance.Debug("DesktopManager: Desktop overlay already open, ignoring");
+                CairoLogger.Debug("DesktopManager: Desktop overlay already open, ignoring");
             }
             else
             {
-                CairoLogger.Instance.Warning("DesktopManager: Attempted to show desktop overlay using uninitialized properties");
+                CairoLogger.Warning("DesktopManager: Attempted to show desktop overlay using uninitialized properties");
             }
         }
 
@@ -363,11 +363,11 @@ namespace CairoDesktop.SupportingClasses
             }
             else if (DesktopOverlayWindow == null)
             {
-                CairoLogger.Instance.Debug("DesktopManager: Desktop overlay already closed, ignoring");
+                CairoLogger.Debug("DesktopManager: Desktop overlay already closed, ignoring");
             }
             else
             {
-                CairoLogger.Instance.Warning("DesktopManager: Attempted to close desktop overlay using uninitialized properties");
+                CairoLogger.Warning("DesktopManager: Attempted to close desktop overlay using uninitialized properties");
             }
         }
 

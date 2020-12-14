@@ -7,7 +7,7 @@ using CairoDesktop.Common.Logging;
 
 namespace CairoDesktop.WindowsTasks
 {
-    public class Tasks : SingletonObject<Tasks>, IDisposable
+    public class Tasks : CairoDesktop.Common.DesignPatterns.SingletonObject<Tasks>, IDisposable
     {
         private ICollectionView groupedWindows;
 
@@ -48,7 +48,7 @@ namespace CairoDesktop.WindowsTasks
         {
             if (window.Close() != IntPtr.Zero)
             {
-                CairoLogger.Instance.Debug($"Removing window {window.Title} from collection due to no response");
+                CairoLogger.Debug($"Removing window {window.Title} from collection due to no response");
                 window.Dispose();
                 TasksService.Instance.Windows.Remove(window);
             }

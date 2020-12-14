@@ -235,7 +235,7 @@ namespace CairoDesktop
             }
             catch (Exception exception)
             {
-                CairoLogger.Instance.Warning($"DesktopNavigationToolbar: Exception in FolderBrowserDialog: {exception.Message}");
+                CairoLogger.Warning($"DesktopNavigationToolbar: Exception in FolderBrowserDialog: {exception.Message}");
             }
         }
         
