@@ -113,9 +113,11 @@
     <Compile Include="StacksScroller.xaml.cs">
       <DependentUpon>StacksScroller.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SupportingClasses\AppBarEventReason.cs" />
     <Compile Include="SupportingClasses\AppBarWindow.cs" />
     <Compile Include="SupportingClasses\AppBarWindowService.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
+    <Compile Include="SupportingClasses\AppBarEventArgs.cs" />
     <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
     <Compile Include="SupportingClasses\DesktopManager.cs" />
     <Compile Include="SupportingClasses\EnumUtility.cs" />

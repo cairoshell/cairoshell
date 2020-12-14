@@ -19,6 +19,12 @@ namespace CairoDesktop.SupportingClasses
         public void Initialize(WindowManager windowManager)
         {
             _windowManager = windowManager;
+
+            PostInit();
+        }
+
+        public virtual void PostInit()
+        {
         }
 
         public virtual void Dispose()

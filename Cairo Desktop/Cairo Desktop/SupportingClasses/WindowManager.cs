@@ -18,6 +18,7 @@ namespace CairoDesktop.SupportingClasses
         public bool IsSettingDisplays { get; set; }
         public Screen[] ScreenState = Array.Empty<Screen>();
 
+        public EventHandler<AppBarEventArgs> AppBarEvent;
         public EventHandler<WindowManagerEventArgs> DwmChanged;
         public EventHandler<WindowManagerEventArgs> ScreensChanged;
 
@@ -107,6 +108,12 @@ namespace CairoDesktop.SupportingClasses
                     ProcessDisplayChanges(reason);
                 }
             }
+        }
+
+        public void NotifyAppBarEvent(AppBarWindow sender, AppBarEventReason reason)
+        {
+            AppBarEventArgs args = new AppBarEventArgs { Reason = reason };
+            AppBarEvent?.Invoke(sender, args);
         }
 
         private bool HaveDisplaysChanged()
