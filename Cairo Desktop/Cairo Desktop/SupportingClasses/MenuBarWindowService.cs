@@ -19,8 +19,8 @@ namespace CairoDesktop.SupportingClasses
         protected override void OpenWindow(Screen screen)
         {
             MenuBar newMenuBar = new MenuBar(_windowManager, _updateService, screen);
-            newMenuBar.Show();
             Windows.Add(newMenuBar);
+            newMenuBar.Show();
         }
     }
 }

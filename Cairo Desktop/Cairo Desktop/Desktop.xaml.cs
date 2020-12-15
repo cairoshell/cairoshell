@@ -286,7 +286,6 @@ namespace CairoDesktop
 
             if (Settings.Instance.TaskbarMode == 1)
             {
-                // TODO: There are some issues here when the taskbar is set to overlap: the code doesn't run when a taskbar starts or when changing settings.
                 // special case, since work area is not reduced with this setting
                 // this keeps the desktop going beneath the TaskBar
                 // get the TaskBar's height

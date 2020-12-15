@@ -61,8 +61,8 @@ namespace CairoDesktop.SupportingClasses
         protected override void OpenWindow(Screen screen)
         {
             Taskbar newTaskbar = new Taskbar(_windowManager, _desktopManager, screen);
-            newTaskbar.Show();
             Windows.Add(newTaskbar);
+            newTaskbar.Show();
         }
 
         public override void Dispose()
