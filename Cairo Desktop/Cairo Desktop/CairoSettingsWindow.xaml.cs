@@ -269,6 +269,10 @@ namespace CairoDesktop
             {
                 chkEnableMenuExtraVolume.Visibility = Visibility.Collapsed;
             }
+            else if (Shell.IsWindows10OrBetter && Shell.IsCairoRunningAsShell)
+            {
+                chkEnableMenuExtraActionCenter.Visibility = Visibility.Collapsed;
+            }
         }
 
 
