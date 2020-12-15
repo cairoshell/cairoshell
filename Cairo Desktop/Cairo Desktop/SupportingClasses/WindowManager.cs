@@ -281,7 +281,7 @@ namespace CairoDesktop.SupportingClasses
         {
             foreach (string name in removedScreens)
             {
-                CairoLogger.Instance.Debug("WindowManager: Removing windows associated with screen " + name);
+                CairoLogger.Debug("WindowManager: Removing windows associated with screen " + name);
 
                 foreach (var windowService in _windowServices)
                 {
@@ -310,7 +310,7 @@ namespace CairoDesktop.SupportingClasses
             {
                 if (addedScreens.Contains(screen.DeviceName))
                 {
-                    CairoLogger.Instance.Debug("WindowManager: Opening windows on screen " + screen.DeviceName);
+                    CairoLogger.Debug("WindowManager: Opening windows on screen " + screen.DeviceName);
 
                     foreach (var windowService in _windowServices)
                     {
