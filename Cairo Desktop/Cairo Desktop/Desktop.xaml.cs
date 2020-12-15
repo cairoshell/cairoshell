@@ -278,7 +278,7 @@ namespace CairoDesktop
 
             grid.Width = WindowManager.PrimaryMonitorWorkArea.Width / Shell.DpiScale;
 
-            if (Settings.Instance.TaskbarMode == 1 && WindowManager.Instance.TaskbarWindows.Count > 0)
+            if (Settings.Instance.TaskbarMode == 1 && WindowManager.Instance != null && WindowManager.Instance.TaskbarWindows.Count > 0)
             {
                 // special case, since work area is not reduced with this setting
                 // this keeps the desktop going beneath the TaskBar
