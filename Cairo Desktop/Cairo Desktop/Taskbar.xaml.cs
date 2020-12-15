@@ -268,6 +268,7 @@ namespace CairoDesktop
                 case "TaskbarPosition":
                     setupTaskbarAppearance();
                     SetScreenPosition();
+                    if (Settings.Instance.TaskbarMode == 1) SetDesktopPosition();
                     if (Shell.IsCairoRunningAsShell) _windowManager.SetWorkArea(Screen);
                     break;
                 case "FullWidthTaskBar":
