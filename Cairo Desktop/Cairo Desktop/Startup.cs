@@ -59,10 +59,13 @@ namespace CairoDesktop
             setTheme(app);
 
             // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-            MenuBar initialMenuBar = new MenuBar(System.Windows.Forms.Screen.PrimaryScreen);
-            app.MainWindow = initialMenuBar;
-            WindowManager.Instance.MenuBarWindows.Add(initialMenuBar);
-            initialMenuBar.Show();
+            if (Settings.Instance.EnableMenuBar)
+            {
+                MenuBar initialMenuBar = new MenuBar(System.Windows.Forms.Screen.PrimaryScreen);
+                app.MainWindow = initialMenuBar;
+                WindowManager.Instance.MenuBarWindows.Add(initialMenuBar);
+                initialMenuBar.Show();
+            }
 
             // Future: This should be moved to whatever plugin is responsible for Taskbar stuff
             if (Settings.Instance.EnableTaskbar)
