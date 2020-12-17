@@ -8,7 +8,7 @@ namespace CairoDesktop.SupportingClasses
     {
         private readonly IApplicationUpdateService _updateService;
 
-        public MenuBarWindowService(IApplicationUpdateService updateService)
+        public MenuBarWindowService(WindowManager windowManager, IApplicationUpdateService updateService) : base(windowManager)
         {
             _updateService = updateService;
 

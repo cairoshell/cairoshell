@@ -10,7 +10,7 @@ namespace CairoDesktop.SupportingClasses
     {
         List<AppBarWindow> Windows { get; }
 
-        void Initialize(WindowManager windowManager);
+        void Register();
 
         void HandleScreenAdded(Screen screen);
 

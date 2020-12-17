@@ -105,7 +105,7 @@ namespace CairoDesktop
 
             base.OnStartup(e);
 
-            Host.Services.GetService<WindowManager>().InitialSetup();
+            SetupWindowServices();
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
             // Don't allow showing both the Windows TaskBar and the Cairo tray

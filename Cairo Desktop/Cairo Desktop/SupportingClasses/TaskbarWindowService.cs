@@ -7,7 +7,7 @@ namespace CairoDesktop.SupportingClasses
     {
         private readonly DesktopManager _desktopManager;
 
-        public TaskbarWindowService(DesktopManager desktopManager)
+        public TaskbarWindowService(WindowManager windowManager, DesktopManager desktopManager) : base(windowManager)
         {
             _desktopManager = desktopManager;
 
@@ -17,13 +17,6 @@ namespace CairoDesktop.SupportingClasses
             if (EnableService)
             {
                 AppBarHelper.HideWindowsTaskbar();
-            }
-        }
-
-        public override void PostInit()
-        {
-            if (EnableService)
-            {
                 _windowManager.AppBarEvent += AppBarEvent;
             }
         }

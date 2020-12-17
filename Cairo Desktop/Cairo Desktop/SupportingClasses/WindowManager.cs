@@ -13,7 +13,7 @@ namespace CairoDesktop.SupportingClasses
         private bool hasCompletedInitialDisplaySetup;
         private int pendingDisplayEvents;
         private readonly static object displaySetupLock = new object();
-        private readonly IEnumerable<IWindowService> _windowServices;
+        private readonly List<IWindowService> _windowServices = new List<IWindowService>();
 
         public bool IsSettingDisplays { get; set; }
         public Screen[] ScreenState = Array.Empty<Screen>();
@@ -46,10 +46,8 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public WindowManager(IEnumerable<IWindowService> windowServices, DesktopManager desktopManager)
+        public WindowManager(DesktopManager desktopManager)
         {
-            _windowServices = windowServices;
-
             desktopManager.Initialize(this);
 
             // start a timer to handle orphaned display events
@@ -72,15 +70,15 @@ namespace CairoDesktop.SupportingClasses
                 ProcessDisplayChanges(ScreenSetupReason.Reconciliation);
             }
         }
+        
+        public void RegisterWindowService(IWindowService service)
+        {
+            _windowServices.Add(service);
+        }
 
         public void InitialSetup()
         {
             IsSettingDisplays = true;
-
-            foreach (var windowService in _windowServices)
-            {
-                windowService.Initialize(this);
-            }
 
             DisplaySetup(ScreenSetupReason.FirstRun);
 
