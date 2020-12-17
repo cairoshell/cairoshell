@@ -12,19 +12,14 @@ namespace CairoDesktop.SupportingClasses
 
         protected WindowManager _windowManager;
 
-        protected AppBarWindowService()
-        {
-        }
-
-        public void Initialize(WindowManager windowManager)
+        protected AppBarWindowService(WindowManager windowManager)
         {
             _windowManager = windowManager;
-
-            PostInit();
         }
 
-        public virtual void PostInit()
+        public void Register()
         {
+            _windowManager?.RegisterWindowService(this);
         }
 
         public virtual void Dispose()
