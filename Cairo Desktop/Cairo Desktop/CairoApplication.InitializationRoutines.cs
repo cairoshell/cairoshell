@@ -9,6 +9,7 @@ using Microsoft.VisualBasic.Devices;
 using System;
 using System.Diagnostics;
 using System.IO;
+using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop
 {
@@ -293,6 +294,16 @@ namespace CairoDesktop
                 // Commenting out as per comments on PR #274
                 SupportingClasses.SystemHotKeys.RegisterSystemHotkeys();
             }
+        }
+        
+        private void SetupWindowServices()
+        {
+            foreach (var service in Host.Services.GetServices<IWindowService>())
+            {
+                service.Register();
+            }
+
+            Host.Services.GetService<WindowManager>()?.InitialSetup();
         }
     }
 }

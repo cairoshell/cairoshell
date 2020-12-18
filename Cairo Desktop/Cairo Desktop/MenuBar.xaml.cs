@@ -4,7 +4,6 @@ using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
-using CairoDesktop.ObjectModel;
 using CairoDesktop.SupportingClasses;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,6 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -35,20 +33,17 @@ namespace CairoDesktop
         private MenuExtraActionCenter menuExtraActionCenter;
         private MenuExtraClock menuExtraClock;
         private MenuExtraSearch menuExtraSearch;
-        private WindowManager _windowManager;
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        public MenuBar(IApplicationUpdateService applicationUpdateService) : this(applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
+        public MenuBar(WindowManager windowManager, IApplicationUpdateService applicationUpdateService) : this(windowManager, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
         {
         }
 
-        public MenuBar(IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen)
+        public MenuBar(WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen) : base(windowManager)
         {
             _applicationUpdateService = applicationUpdateService;
 
             InitializeComponent();
-
-            _windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
 
             Screen = screen;
             desiredHeight = 23;
@@ -423,28 +418,12 @@ namespace CairoDesktop
 
         private void MenuBar_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            if (Settings.Instance.TaskbarMode == 2)
-            {
-                Taskbar taskbar = WindowManager.GetScreenWindow(_windowManager.TaskbarWindows, Screen);
-
-                if (taskbar != null && taskbar.appBarEdge == appBarEdge)
-                {
-                    taskbar.CanAutoHide = false;
-                }
-            }
+            _windowManager.NotifyAppBarEvent(this, AppBarEventReason.MouseEnter);
         }
 
         private void MenuBar_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            if (Settings.Instance.TaskbarMode == 2)
-            {
-                Taskbar taskbar = WindowManager.GetScreenWindow(_windowManager.TaskbarWindows, Screen);
-
-                if (taskbar != null && taskbar.appBarEdge == appBarEdge)
-                {
-                    taskbar.CanAutoHide = true;
-                }
-            }
+            _windowManager.NotifyAppBarEvent(this, AppBarEventReason.MouseLeave);
         }
 
         private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

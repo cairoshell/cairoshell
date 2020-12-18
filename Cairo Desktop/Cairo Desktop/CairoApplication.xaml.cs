@@ -62,6 +62,9 @@ namespace CairoDesktop
                     services.AddSingleton<DesktopManager>();
                     services.AddSingleton<WindowManager>();
 
+                    services.AddSingleton<IWindowService, MenuBarWindowService>();
+                    services.AddSingleton<IWindowService, TaskbarWindowService>();
+
                     services.AddInfrastructureServices(context.Configuration);
 
                     services.AddDependencyLoadingServices(context.Configuration, Path.Combine(StartupPath, "Extensions"));
@@ -102,26 +105,7 @@ namespace CairoDesktop
 
             base.OnStartup(e);
 
-            // Future: This should be moved to whatever plugin is responsible for MenuBar stuff
-            var applicationUpdateService = (IApplicationUpdateService)Host.Services.GetService(typeof(IApplicationUpdateService));
-            var windowManager = Host.Services.GetService<WindowManager>();
-
-            MenuBar initialMenuBar = new MenuBar(applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen);
-            MainWindow = initialMenuBar;
-            windowManager.MenuBarWindows.Add(initialMenuBar);
-            initialMenuBar.Show();
-
-            // Future: This should be moved to whatever plugin is responsible for TaskBar stuff
-            if (Settings.Instance.EnableTaskbar)
-            {
-                AppBarHelper.HideWindowsTaskbar();
-                Taskbar initialTaskbar = new Taskbar(System.Windows.Forms.Screen.PrimaryScreen);
-                windowManager.TaskbarWindows.Add(initialTaskbar);
-                initialTaskbar.Show();
-            }
-
-            // Open windows on secondary displays and set work area
-            windowManager.InitialSetup();
+            SetupWindowServices();
 
             // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
             // Don't allow showing both the Windows TaskBar and the Cairo tray
@@ -231,7 +215,6 @@ namespace CairoDesktop
         private async Task GracefullyExit()
         {
             WindowManager.ResetWorkArea();
-            AppBarHelper.ShowWindowsTaskbar();
 
             DisposeSingletons();
 

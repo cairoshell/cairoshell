@@ -336,25 +336,23 @@ namespace CairoDesktop.SupportingClasses
         {
             double edgeHeight = 0;
             var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
+            double dpiScale = 1;
+            Rect workAreaRect = windowManager.GetWorkArea(ref dpiScale, screen, true, true);
 
-            foreach (MenuBar menuBar in windowManager.MenuBarWindows)
+            switch (edge)
             {
-                if (menuBar.requiresScreenEdge 
-                    && menuBar.appBarEdge == edge 
-                    && menuBar.Screen.DeviceName == screen.DeviceName)
-                {
-                    edgeHeight += menuBar.Height;
-                }
-            }
-
-            foreach (Taskbar taskbar in windowManager.TaskbarWindows)
-            {
-                if (taskbar.requiresScreenEdge 
-                    && taskbar.appBarEdge == edge 
-                    && taskbar.Screen.DeviceName == screen.DeviceName)
-                {
-                    edgeHeight += taskbar.Height; 
-                }
+                case ABEdge.ABE_TOP:
+                    edgeHeight += workAreaRect.Top / dpiScale;
+                    break;
+                case ABEdge.ABE_BOTTOM:
+                    edgeHeight += (screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale;
+                    break;
+                case ABEdge.ABE_LEFT:
+                    edgeHeight += workAreaRect.Left / dpiScale;
+                    break;
+                case ABEdge.ABE_RIGHT:
+                    edgeHeight += (screen.Bounds.Right - workAreaRect.Right) / dpiScale;
+                    break;
             }
 
             return edgeHeight;
