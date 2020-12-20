@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{233781C8-83E4-47A6-847E-FA7A31B1CC51}</ProjectGuid>
+    <ProjectGuid>{3BE34D36-B004-42FA-AE2C-3F4F8BD3861F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CairoDesktop.Interop</RootNamespace>
-    <AssemblyName>CairoDesktop.Interop</AssemblyName>
+    <AssemblyName>CairoDesktop.Interop.WinSparkle</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -74,21 +74,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="WindowsBase">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <Content Include="..\..\Dependencies\WinSparkle\x86\WinSparkle.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup Condition=" '$(Platform)' == 'x64' ">
     <Content Include="..\..\Dependencies\WinSparkle\x64\WinSparkle.dll">
@@ -96,37 +87,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComTaskScheduler.cs" />
-    <Compile Include="KnownFolders.cs" />
-    <Compile Include="NativeMethods.AdvApi32.cs" />
-    <Compile Include="NativeMethods.cs" />
-    <Compile Include="NativeMethods.DocObj.cs" />
-    <Compile Include="NativeMethods.DwmApi.cs" />
-    <Compile Include="NativeMethods.Kernel32.cs" />
-    <Compile Include="NativeMethods.Ole32.cs" />
-    <Compile Include="NativeMethods.PowrProf.cs" />
-    <Compile Include="NativeMethods.Shell32.cs" />
-    <Compile Include="NativeMethods.ShFolder.cs" />
-    <Compile Include="NativeMethods.ShlwApi.cs" />
-    <Compile Include="NativeMethods.User32.cs" />
-    <Compile Include="NativeWindowEx.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shell.cs" />
-    <Compile Include="Shell.Link.cs" />
-    <Compile Include="Shell.Power.cs" />
-    <Compile Include="ShellFolders.cs" />
-    <Compile Include="ShellWindow.cs" />
-    <Compile Include="WindowsServices.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="IWshRuntimeLibrary">
-      <Guid>{F935DC20-1CF0-11D0-ADB9-00C04FD58A0B}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-    </COMReference>
+    <Compile Include="WinSparkle.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -134,12 +96,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj">
-      <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>
-      <Name>CairoDesktop.Localization</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -94,6 +94,10 @@
       <Project>{03D7755E-57CB-4093-8E33-CF95BB038689}</Project>
       <Name>CairoDesktop.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.Interop.WinSparkle\CairoDesktop.Interop.WinSparkle.csproj">
+      <Project>{3be34d36-b004-42fa-ae2c-3f4f8bd3861f}</Project>
+      <Name>CairoDesktop.Interop.WinSparkle</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
       <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
       <Name>CairoDesktop.Interop</Name>
