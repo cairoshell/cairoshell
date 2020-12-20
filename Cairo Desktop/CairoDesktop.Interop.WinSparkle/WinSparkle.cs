@@ -1,9 +1,9 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace CairoDesktop.Interop
 {
-    public class WinSparkle
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1401:P/Invokes should not be visible", Justification = "<Pending>")]
+    public static class WinSparkle
     {
         [DllImport("WinSparkle.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void win_sparkle_init();
@@ -12,7 +12,7 @@ namespace CairoDesktop.Interop
         public static extern void win_sparkle_cleanup();
 
         [DllImport("WinSparkle.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void win_sparkle_set_appcast_url(String url);
+        public static extern void win_sparkle_set_appcast_url(string url);
 
         [DllImport("WinSparkle.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void win_sparkle_check_update_with_ui();
@@ -25,7 +25,7 @@ namespace CairoDesktop.Interop
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate int win_sparkle_can_shutdown_callback_t();
-        
+
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate void win_sparkle_shutdown_request_callback_t();
 
