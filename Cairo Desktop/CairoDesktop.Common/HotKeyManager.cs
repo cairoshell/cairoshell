@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Interop;
 using CairoDesktop.Common.Logging;
-using static CairoDesktop.Interop.NativeMethods;
+using static ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop.Common
 {

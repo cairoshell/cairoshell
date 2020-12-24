@@ -8,7 +8,7 @@ namespace CairoDesktop.SupportingClasses
 {
     public interface IWindowService : IDisposable
     {
-        List<AppBarWindow> Windows { get; }
+        List<CairoAppBarWindow> Windows { get; }
 
         void Register();
 

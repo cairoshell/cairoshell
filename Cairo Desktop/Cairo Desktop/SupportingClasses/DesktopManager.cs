@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Common.Helpers;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
@@ -8,6 +7,10 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ManagedShell;
+using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
+using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -28,6 +31,7 @@ namespace CairoDesktop.SupportingClasses
         private int _renderOverlayFrames;
         private HotKey _overlayHotKey;
         private WindowManager _windowManager;
+        private readonly ShellManager _shellManager;
 
         public DesktopIcons DesktopIconsControl { get; private set; }
 
@@ -56,15 +60,15 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public bool AllowProgmanChild => ShellWindow == null && Shell.IsWindows8OrBetter; // doesn't work in win7 due to layered child window restrictions
+        public bool AllowProgmanChild => ShellWindow == null && EnvironmentHelper.IsWindows8OrBetter; // doesn't work in win7 due to layered child window restrictions
 
         public SystemDirectory DesktopLocation => DesktopIconsControl?.Location;
 
-        public DesktopManager()
+        public DesktopManager(ShellManagerService shellManagerService)
         {
             // DesktopManager is always created on startup by WindowManager, regardless of desktop preferences
             // this allows for dynamic creation and destruction of the desktop per user preference
-
+            _shellManager = shellManagerService.ShellManager;
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         }
 
@@ -79,11 +83,11 @@ namespace CairoDesktop.SupportingClasses
 
         private void InitDesktop()
         {
-            if (!IsEnabled && !Shell.IsCairoRunningAsShell)
+            if (!IsEnabled && !EnvironmentHelper.IsAppRunningAsShell)
                 return;
 
             // hide the windows desktop
-            Shell.ToggleDesktopIcons(false);
+            ShellHelper.ToggleDesktopIcons(false);
 
             CreateShellWindow();
             CreateDesktopBrowser();
@@ -116,7 +120,7 @@ namespace CairoDesktop.SupportingClasses
             if (DesktopWindow != null)
                 return;
 
-            DesktopWindow = new Desktop(_windowManager, this);
+            DesktopWindow = new Desktop(this, _shellManager.AppBarManager, _shellManager.FullScreenHelper);
             DesktopWindow.WorkAreaChanged += WorkAreaChanged;
             DesktopWindow.Show();
         }
@@ -185,7 +189,7 @@ namespace CairoDesktop.SupportingClasses
             DestroyShellWindow();
 
             // show the windows desktop
-            Shell.ToggleDesktopIcons(true);
+            ShellHelper.ToggleDesktopIcons(true);
         }
 
         private void RegisterHotKey()
@@ -211,7 +215,7 @@ namespace CairoDesktop.SupportingClasses
                 {
                     // set the desktop window as a child of the shell window
                     NativeMethods.SetWindowLong(DesktopWindow.Handle, NativeMethods.GWL_STYLE, (NativeMethods.GetWindowLong(DesktopWindow.Handle, NativeMethods.GWL_STYLE) | (int)NativeMethods.WindowStyles.WS_CHILD) & ~unchecked((int)NativeMethods.WindowStyles.WS_OVERLAPPED));
-                    NativeMethods.SetParent(DesktopWindow.Handle, ShellWindow?.Handle ?? Shell.GetLowestDesktopChildHwnd());
+                    NativeMethods.SetParent(DesktopWindow.Handle, ShellWindow?.Handle ?? WindowHelper.GetLowestDesktopChildHwnd());
                 }
 
                 ConfigureDesktopBrowser();
@@ -263,7 +267,7 @@ namespace CairoDesktop.SupportingClasses
         #region Shell window
         private void CreateShellWindow()
         {
-            if (!Shell.IsCairoRunningAsShell || ShellWindow != null)
+            if (!EnvironmentHelper.IsAppRunningAsShell || ShellWindow != null)
                 return;
 
             // create native shell window; we must pass a native window's handle to SetShellWindow
@@ -295,7 +299,7 @@ namespace CairoDesktop.SupportingClasses
         {
             if (DesktopOverlayWindow == null && DesktopWindow != null && DesktopIconsControl != null)
             {
-                DesktopOverlayWindow = new DesktopOverlay(_windowManager, this);
+                DesktopOverlayWindow = new DesktopOverlay(_windowManager, this, _shellManager.AppBarManager);
 
                 // create mask image to show while the icons control is rendered on the overlay window
                 Image maskImage = new Image
@@ -435,7 +439,7 @@ namespace CairoDesktop.SupportingClasses
             switch (e.PropertyName)
             {
                 case "EnableDesktop":
-                    if (Shell.IsCairoRunningAsShell)
+                    if (EnvironmentHelper.IsAppRunningAsShell)
                     {
                         if (Settings.Instance.EnableDesktop)
                         {

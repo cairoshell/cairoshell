@@ -3,11 +3,8 @@ using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.DependencyInjection;
-using CairoDesktop.Interop;
 using CairoDesktop.ObjectModel;
 using CairoDesktop.SupportingClasses;
-using CairoDesktop.WindowsTasks;
-using CairoDesktop.WindowsTray;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -21,6 +18,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
@@ -58,10 +56,11 @@ namespace CairoDesktop
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton<ICairoApplication>(this);
+                    
+                    services.AddSingleton<ShellManagerService>();
 
                     services.AddSingleton<DesktopManager>();
                     services.AddSingleton<WindowManager>();
-
                     services.AddSingleton<IWindowService, MenuBarWindowService>();
                     services.AddSingleton<IWindowService, TaskbarWindowService>();
 
@@ -107,20 +106,13 @@ namespace CairoDesktop
 
             SetupWindowServices();
 
-            // Future: This should be moved to whatever plugin is responsible for SystemTray stuff. Possibly Core with no UI, then have a plugin that gives the UI?
-            // Don't allow showing both the Windows TaskBar and the Cairo tray
-            if (Settings.Instance.EnableSysTray && (Settings.Instance.EnableTaskbar || Shell.IsCairoRunningAsShell))
-            {
-                NotificationArea.Instance.Initialize();
-            }
-
 #if ENABLEFIRSTRUN
             FirstRun();
 #endif
 
 #if !DEBUG
             // login items only necessary if Explorer didn't start them
-            if (Shell.IsCairoRunningAsShell && !_isRestart)
+            if (EnvironmentHelper.IsAppRunningAsShell && !_isRestart)
             {
                 StartupRunner runner = new StartupRunner();
                 runner.Run();
@@ -214,7 +206,7 @@ namespace CairoDesktop
 
         private async Task GracefullyExit()
         {
-            WindowManager.ResetWorkArea();
+            //WindowManager.ResetWorkArea();
 
             DisposeSingletons();
 
@@ -227,12 +219,12 @@ namespace CairoDesktop
 
         private void DisposeSingletons()
         {
-            Shell.DisposeIml();
-            FullScreenHelper.Instance.Dispose();
-            NotificationArea.Instance.Dispose();
+            //Shell.DisposeIml();
+            //FullScreenHelper.Instance.Dispose();
+            //NotificationArea.Instance.Dispose();
             // UpdateManager.Instance.Dispose();
             // WindowManager.Instance.Dispose();
-            Tasks.Instance.Dispose();
+            //Tasks.Instance.Dispose();
         }
 
         private bool _errorVisible;
@@ -330,8 +322,9 @@ namespace CairoDesktop
         public void ExitCairo()
         {
             IsShuttingDown = true;
+            Host.Services.GetService<ShellManagerService>()?.ShellManager.AppBarManager.SignalGracefulShutdown();
 
-            if (Shell.IsCairoRunningAsShell)
+            if (EnvironmentHelper.IsAppRunningAsShell)
             {
                 IndicateGracefulShutdown();
             }

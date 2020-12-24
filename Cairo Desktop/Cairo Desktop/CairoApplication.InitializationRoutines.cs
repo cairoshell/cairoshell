@@ -3,13 +3,14 @@ using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Common.Logging.Observers;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
+using ManagedShell.Interop;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Diagnostics;
 using System.IO;
 using CairoDesktop.SupportingClasses;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
@@ -28,7 +29,7 @@ namespace CairoDesktop
         public void SetIsCairoRunningAsShell()
         {
             // check if there is an existing shell window. If not, we will assume the role of shell.
-            Shell.IsCairoRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !_forceDisableShellMode) || _forceEnableShellMode;
+            EnvironmentHelper.IsAppRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !_forceDisableShellMode) || _forceEnableShellMode;
         }
 
         private bool SingleInstanceCheck()
@@ -52,7 +53,7 @@ namespace CairoDesktop
         private void SetShellReadyEvent()
         {
             int hShellReadyEvent;
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT && Shell.IsWindows2kOrBetter)
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT && EnvironmentHelper.IsWindows2kOrBetter)
             {
                 hShellReadyEvent = NativeMethods.OpenEvent(NativeMethods.EVENT_MODIFY_STATE, true, @"Global\msgina: ShellReadyEvent");
             }
@@ -256,8 +257,8 @@ namespace CairoDesktop
             CairoLogger.Info($"Processor Type: {(IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)}-bit");
             CairoLogger.Info($"Startup Path: {CairoApplication.StartupPath}");
             CairoLogger.Info($"Running As: {IntPtr.Size * 8}-bit Process");
-            CairoLogger.Info($"Configured as shell: {Shell.IsCairoConfiguredAsShell}");
-            CairoLogger.Info($"Running as shell: {Shell.IsCairoRunningAsShell}");
+            CairoLogger.Info($"Configured as shell: {EnvironmentHelper.IsAppConfiguredAsShell}");
+            CairoLogger.Info($"Running as shell: {EnvironmentHelper.IsAppRunningAsShell}");
             CairoLogger.Info(@break);
         }
 
@@ -289,7 +290,7 @@ namespace CairoDesktop
 
         internal void SetSystemKeyboardShortcuts()
         {
-            if (Shell.IsCairoRunningAsShell)
+            if (EnvironmentHelper.IsAppRunningAsShell)
             {
                 // Commenting out as per comments on PR #274
                 SupportingClasses.SystemHotKeys.RegisterSystemHotkeys();

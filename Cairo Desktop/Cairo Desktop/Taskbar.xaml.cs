@@ -1,5 +1,5 @@
 ﻿using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
+using ManagedShell.Interop;
 using CairoDesktop.SupportingClasses;
 using System;
 using System.Collections.Specialized;
@@ -7,19 +7,20 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using CairoDesktop.AppGrabber;
-using CairoDesktop.Common;
-using CairoDesktop.WindowsTasks;
+using ManagedShell;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
     /// <summary>
     /// Interaction logic for Taskbar.xaml
     /// </summary>
-    public partial class Taskbar : AppBarWindow
+    public partial class Taskbar : CairoAppBarWindow
     {
         #region Properties
         // Item sources
         private AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
+        private readonly ShellManager _shellManager;
 
         // display properties
         private int addToSize;
@@ -45,15 +46,16 @@ namespace CairoDesktop
         }
         #endregion
 
-        public Taskbar(WindowManager windowManager, DesktopManager desktopManager) : this(windowManager, desktopManager, System.Windows.Forms.Screen.PrimaryScreen)
+        public Taskbar(ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager) : this(shellManager, windowManager, desktopManager, System.Windows.Forms.Screen.PrimaryScreen)
         {
 
         }
 
-        public Taskbar(WindowManager windowManager, DesktopManager desktopManager, System.Windows.Forms.Screen screen) : base(windowManager)
+        public Taskbar(ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager, System.Windows.Forms.Screen screen) : base(shellManager, windowManager)
         {
             InitializeComponent();
             _desktopManager = desktopManager;
+            _shellManager = shellManager;
 
             Screen = screen;
 
@@ -77,11 +79,11 @@ namespace CairoDesktop
             CanAutoHide = true;
 
             // setup taskbar item source
-            Tasks.Instance.Initialize(new TaskCategoryProvider());
+            _shellManager.Tasks.Initialize(new TaskCategoryProvider());
 
-            TasksList.ItemsSource = Tasks.Instance.GroupedWindows;
-            TasksList2.ItemsSource = Tasks.Instance.GroupedWindows;
-            if (Tasks.Instance.GroupedWindows != null) Tasks.Instance.GroupedWindows.CollectionChanged += GroupedWindows_Changed;
+            TasksList.ItemsSource = _shellManager.Tasks.GroupedWindows;
+            TasksList2.ItemsSource = _shellManager.Tasks.GroupedWindows;
+            if (_shellManager.Tasks.GroupedWindows != null) _shellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_Changed;
 
             // setup data contexts
             bdrMain.DataContext = Settings.Instance;
@@ -115,7 +117,7 @@ namespace CairoDesktop
             }
 
             // show task view on windows >= 10, adjust margin if not shown
-            if (Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
+            if (EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
                 bdrTaskView.Visibility = Visibility.Visible;
             else
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);
@@ -220,7 +222,7 @@ namespace CairoDesktop
         {
             if (_windowManager.IsSettingDisplays || CairoApplication.IsShuttingDown)
             {
-                Tasks.Instance.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
+                _shellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
             }
         }
 
@@ -248,7 +250,7 @@ namespace CairoDesktop
                 case "TaskbarIconSize":
                     setTaskbarSize();
                     SetScreenPosition();
-                    if (Shell.IsCairoRunningAsShell) _windowManager.SetWorkArea(Screen);
+                    if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                     break;
                 case "TaskbarMode":
                     if (Settings.Instance.TaskbarMode == 0)
@@ -261,7 +263,7 @@ namespace CairoDesktop
                         enableAppBar = false;
                         UnregisterAppBar();
                     }
-                    if (Shell.IsCairoRunningAsShell) _windowManager.SetWorkArea(Screen);
+                    if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                     SetDesktopPosition();
                     setTaskbarBlur();
                     break;
@@ -269,7 +271,7 @@ namespace CairoDesktop
                     setupTaskbarAppearance();
                     SetScreenPosition();
                     if (Settings.Instance.TaskbarMode == 1) SetDesktopPosition();
-                    if (Shell.IsCairoRunningAsShell) _windowManager.SetWorkArea(Screen);
+                    if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                     break;
                 case "FullWidthTaskBar":
                     setTaskbarWidthMode();
@@ -329,7 +331,7 @@ namespace CairoDesktop
             }
         }
 
-        internal override void SetPosition()
+        public override void SetPosition()
         {
             double screenWidth = Screen.Bounds.Width / dpiScale;
 
@@ -352,12 +354,12 @@ namespace CairoDesktop
             if (Settings.Instance.TaskbarPosition == 1)
             {
                 // set to bottom of this display's menu bar
-                return (Screen.Bounds.Y / dpiScale) + AppBarHelper.GetAppBarEdgeWindowsHeight(appBarEdge, Screen);
+                return (Screen.Bounds.Y / dpiScale) + _shellManager.AppBarManager.GetAppBarEdgeWindowsHeight(appBarEdge, Screen);
             }
             else
             {
                 // set to bottom of workspace
-                return (Screen.Bounds.Bottom / dpiScale) - Height - AppBarHelper.GetAppBarEdgeWindowsHeight(appBarEdge, Screen);
+                return (Screen.Bounds.Bottom / dpiScale) - Height - _shellManager.AppBarManager.GetAppBarEdgeWindowsHeight(appBarEdge, Screen);
             }
         }
 
@@ -383,7 +385,7 @@ namespace CairoDesktop
             }
         }
 
-        internal override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
+        public override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
             base.AfterAppBarPos(isSameCoords, rect);
 
@@ -404,7 +406,7 @@ namespace CairoDesktop
 
         private void SetTaskListOffset()
         {
-            if (Shell.GetMenuDropAlignment() == 1)
+            if (ShellHelper.GetMenuDropAlignment() == 1)
             {
                 CairoTaskbarTaskList.HorizontalOffset = 26;
             }
@@ -438,7 +440,7 @@ namespace CairoDesktop
         #region Button clicks
         private void TaskView_Click(object sender, RoutedEventArgs e)
         {
-            Shell.ShowWindowSwitcher();
+            ShellHelper.ShowWindowSwitcher();
         }
 
         private void btnDesktopOverlay_Click(object sender, RoutedEventArgs e)
@@ -503,12 +505,12 @@ namespace CairoDesktop
 
         private void OpenRunWindow(object sender, RoutedEventArgs e)
         {
-            Shell.ShowRunDialog();
+            ShellHelper.ShowRunDialog(Localization.DisplayString.sRun_Title, Localization.DisplayString.sRun_Info);
         }
 
         private void OpenTaskManager(object sender, RoutedEventArgs e)
         {
-            Shell.StartTaskManager();
+            ShellHelper.StartTaskManager();
         }
         #endregion
     }

@@ -51,12 +51,36 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ManagedShell, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.AppBar, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.AppBar.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.Common, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.Interop, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.UWPInterop, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.UWPInterop.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.WindowsTasks, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.WindowsTasks.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.WindowsTray, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.WindowsTray.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -144,11 +168,9 @@
       <Name>CairoDesktop.Localization</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\CairoDesktop.WindowsTray\CairoDesktop.WindowsTray.csproj">
-      <Project>{79B5DDAC-5102-4B11-BFA1-B16D6F6FE661}</Project>
-      <Name>CairoDesktop.WindowsTray</Name>
-      <Private>False</Private>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

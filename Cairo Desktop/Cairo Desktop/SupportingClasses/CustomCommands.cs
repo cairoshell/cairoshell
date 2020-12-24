@@ -5,7 +5,7 @@ using System.IO;
 using System.Windows;
 using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
-using CairoDesktop.Interop;
+using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
@@ -28,14 +28,14 @@ namespace CairoDesktop
             {
                 case Actions.Open:
                     desktopManager.IsOverlayOpen = false;
-                    Shell.StartProcess(fileName);
+                    ShellHelper.StartProcess(fileName);
                     return;
                 case Actions.OpenWith:
                     desktopManager.IsOverlayOpen = false;
-                    Shell.ShowOpenWithDialog(fileName);
+                    ShellHelper.ShowOpenWithDialog(fileName);
                     return;
                 case Actions.Delete:
-                    string displayName = Shell.GetDisplayName(fileName);
+                    string displayName = ShellHelper.GetDisplayName(fileName);
                     CairoMessage.ShowOkCancel(string.Format(Localization.DisplayString.sDesktop_DeleteInfo, displayName), 
                         Localization.DisplayString.sDesktop_DeleteTitle, CairoMessageImage.Warning, 
                         Localization.DisplayString.sInterface_Delete, Localization.DisplayString.sInterface_Cancel,
@@ -43,12 +43,12 @@ namespace CairoDesktop
                         {
                             if (result == true)
                             {
-                                Shell.SendToRecycleBin(fileName);
+                                ShellHelper.SendToRecycleBin(fileName);
                             }
                         });
                     return;
                 case Actions.Properties:
-                    Shell.ShowFileProperties(fileName);
+                    ShellHelper.ShowFileProperties(fileName);
                     desktopManager.IsOverlayOpen = false;
                     return;
                 case Actions.Copy:
@@ -65,19 +65,19 @@ namespace CairoDesktop
                 case Actions.OpenWithShell:
                     FolderHelper.OpenWithShell(fileName);
                     break;
-                case Actions.Personalize when Shell.IsCairoRunningAsShell:
+                case Actions.Personalize when EnvironmentHelper.IsAppRunningAsShell:
                     CairoSettingsWindow.Instance.Show();
                     CairoSettingsWindow.Instance.Activate();
                     CairoSettingsWindow.Instance.TabDesktop.IsSelected = true;
                     break;
                 case Actions.Personalize:
-                    Shell.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,2");
+                    ShellHelper.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,2");
                     break;
                 case Actions.DisplaySettings:
-                    Shell.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,3");
+                    ShellHelper.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,3");
                     break;
                 default:
-                    Shell.StartProcess(fileName, "", verb);
+                    ShellHelper.StartProcess(fileName, "", verb);
                     break;
             }
         }

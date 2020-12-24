@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Data;
-using CairoDesktop.WindowsTasks;
+using ManagedShell.WindowsTasks;
 
 namespace CairoDesktop.SupportingClasses
 {

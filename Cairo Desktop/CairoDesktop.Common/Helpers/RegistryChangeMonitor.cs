@@ -1,13 +1,14 @@
-﻿namespace CairoDesktop.Common.Helpers
+﻿using CairoDesktop.Interop;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading;
+using Microsoft.Win32;
+
+namespace CairoDesktop.Common.Helpers
 {
-    using System;
-    using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Threading;
-    using Microsoft.Win32;
-    using static CairoDesktop.Interop.NativeMethods;
 
     public delegate void RegistryChangeHandler(object sender, RegistryChangeEventArgs e);
 
@@ -30,13 +31,13 @@
     /// </summary>
     public class RegistryChangeMonitor : IDisposable
     {
-        private REG_NOTIFY_CHANGE _filter;
+        private AdvApi32.REG_NOTIFY_CHANGE _filter;
         private Thread _monitorThread;
         private RegistryKey _monitorKey;
 
-        public RegistryChangeMonitor(string registryPath) : this(registryPath, REG_NOTIFY_CHANGE.LAST_SET) {; }
+        public RegistryChangeMonitor(string registryPath) : this(registryPath, AdvApi32.REG_NOTIFY_CHANGE.LAST_SET) {; }
 
-        public RegistryChangeMonitor(string registryPath, REG_NOTIFY_CHANGE filter)
+        public RegistryChangeMonitor(string registryPath, AdvApi32.REG_NOTIFY_CHANGE filter)
         {
             RegistryPath = registryPath.ToUpper();
             _filter = filter;
@@ -156,7 +157,7 @@
                             break;
 
                         // RegNotifyChangeKeyValue blocks until a change occurs.
-                        int result = Interop.NativeMethods.RegNotifyChangeKeyValue(ptr, true, _filter, IntPtr.Zero, false);
+                        int result = AdvApi32.RegNotifyChangeKeyValue(ptr, true, _filter, IntPtr.Zero, false);
 
                         if ((_monitorThread == null) || (_monitorKey == null))
                             break;

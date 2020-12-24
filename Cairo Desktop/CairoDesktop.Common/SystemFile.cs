@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Threading;
 using System.Windows;
 using System.Threading.Tasks;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Common
 {
@@ -39,7 +40,7 @@ namespace CairoDesktop.Common
             {
                 try
                 {
-                    return Interop.Shell.Exists(FullName) && (File.GetAttributes(FullName) & FileAttributes.Directory) == FileAttributes.Directory;
+                    return ShellHelper.Exists(FullName) && (File.GetAttributes(FullName) & FileAttributes.Directory) == FileAttributes.Directory;
                 }
                 catch
                 {
@@ -84,7 +85,7 @@ namespace CairoDesktop.Common
             {
                 if (_friendlyName == null)
                 {
-                    this.FriendlyName = Interop.Shell.GetDisplayName(this.FullName);
+                    this.FriendlyName = ShellHelper.GetDisplayName(this.FullName);
                 }
 
                 return _friendlyName;
@@ -145,7 +146,7 @@ namespace CairoDesktop.Common
                         Icon = GetDisplayIcon(IconSize.Large);
                         Icon.Freeze();
                         _iconLoading = false;
-                    }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
+                    }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
 
                 return _icon;
@@ -174,7 +175,7 @@ namespace CairoDesktop.Common
                         LargeIcon = GetDisplayIcon(IconSize.ExtraLarge);
                         LargeIcon.Freeze();
                         _iconLargeLoading = false;
-                    }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
+                    }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
 
                 return _largeIcon;
@@ -219,7 +220,7 @@ namespace CairoDesktop.Common
 
         public bool SetFilePath(string filePath, SystemDirectory parentDirectory)
         {
-            if (Interop.Shell.Exists(filePath))
+            if (ShellHelper.Exists(filePath))
             {
                 FullName = filePath;
                 InteractiveRenameRequested = false;
@@ -324,7 +325,7 @@ namespace CairoDesktop.Common
         /// </summary>
         private ImageSource GetDisplayIcon(IconSize size)
         {
-            if (Interop.Shell.Exists(FullName))
+            if (ShellHelper.Exists(FullName))
             {
                 if (IsImage)
                 {
@@ -341,7 +342,7 @@ namespace CairoDesktop.Common
                             if (size == IconSize.ExtraLarge)
                                 dSize = 48;
 
-                            Interop.Shell.TransformToPixels(dSize, dSize, out dSize, out dSize);
+                            DpiHelper.TransformToPixels(dSize, dSize, out dSize, out dSize);
                             img.DecodePixelWidth = dSize;
                             img.EndInit();
                             img.Freeze();

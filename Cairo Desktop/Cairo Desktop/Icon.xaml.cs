@@ -10,9 +10,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
 using CairoDesktop.Localization;
 using CairoDesktop.SupportingClasses;
+using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
@@ -222,7 +222,7 @@ namespace CairoDesktop
 
                         _desktopManager.IsOverlayOpen = false;
 
-                        Shell.ExecuteProcess(file.FullName);
+                        ShellHelper.ExecuteProcess(file.FullName);
                         return;
                     }
                 }

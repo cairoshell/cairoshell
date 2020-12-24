@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using ManagedShell.Interop;
 
 namespace CairoDesktop.Interop
 {
     public partial class Shell
     {
-        static NativeMethods.SYSTEM_POWER_CAPABILITIES spc;
+        static PowrProf.SYSTEM_POWER_CAPABILITIES spc;
         static bool hasFetchedCapabilities = false;
 
         /// <summary>
@@ -17,25 +18,25 @@ namespace CairoDesktop.Interop
             IntPtr procHandle = System.Diagnostics.Process.GetCurrentProcess().Handle;
             IntPtr tokenHandle = IntPtr.Zero;
 
-            bool tokenOpenResult = NativeMethods.OpenProcessToken(procHandle, NativeMethods.TOKENADJUSTPRIVILEGES | NativeMethods.TOKENQUERY, out tokenHandle);
+            bool tokenOpenResult = AdvApi32.OpenProcessToken(procHandle, AdvApi32.TOKENADJUSTPRIVILEGES | AdvApi32.TOKENQUERY, out tokenHandle);
             if (!tokenOpenResult)
             {
                 throw new ApplicationException("Error attempting to open process token to raise level for shutdown.\nWin32 Error Code: " + Marshal.GetLastWin32Error());
             }
 
             long pluid = new long();
-            bool privLookupResult = NativeMethods.LookupPrivilegeValue(null, "SeShutdownPrivilege", ref pluid);
+            bool privLookupResult = AdvApi32.LookupPrivilegeValue(null, "SeShutdownPrivilege", ref pluid);
             if (!privLookupResult)
             {
                 throw new ApplicationException("Error attempting to lookup value for shutdown privilege.\n Win32 Error Code: " + Marshal.GetLastWin32Error());
             }
 
-            NativeMethods.TOKEN_PRIVILEGES newPriv = new NativeMethods.TOKEN_PRIVILEGES();
+            AdvApi32.TOKEN_PRIVILEGES newPriv = new AdvApi32.TOKEN_PRIVILEGES();
             newPriv.Luid = pluid;
             newPriv.PrivilegeCount = 1;
             newPriv.Attributes = 0x00000002;
 
-            bool tokenPrivResult = NativeMethods.AdjustTokenPrivileges(tokenHandle, false, ref newPriv, 0, IntPtr.Zero, IntPtr.Zero);
+            bool tokenPrivResult = AdvApi32.AdjustTokenPrivileges(tokenHandle, false, ref newPriv, 0, IntPtr.Zero, IntPtr.Zero);
             if (!tokenPrivResult)
             {
                 throw new ApplicationException("Error attempting to adjust the token privileges to allow shutdown.\n Win32 Error Code: " + Marshal.GetLastWin32Error());
@@ -73,7 +74,7 @@ namespace CairoDesktop.Interop
         /// </summary>
         public static void Sleep()
         {
-            NativeMethods.SetSuspendState(false, false, false);
+            PowrProf.SetSuspendState(false, false, false);
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace CairoDesktop.Interop
         /// </summary>
         public static void Hibernate()
         {
-            NativeMethods.SetSuspendState(true, false, false);
+            PowrProf.SetSuspendState(true, false, false);
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace CairoDesktop.Interop
         {
             if (!hasFetchedCapabilities)
             {
-                NativeMethods.GetPwrCapabilities(out spc);
+                PowrProf.GetPwrCapabilities(out spc);
                 hasFetchedCapabilities = true;
             }
         }

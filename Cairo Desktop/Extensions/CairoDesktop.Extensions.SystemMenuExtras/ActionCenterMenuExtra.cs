@@ -1,6 +1,6 @@
-﻿using CairoDesktop.Interop;
-using CairoDesktop.ObjectModel;
+﻿using CairoDesktop.ObjectModel;
 using System.Windows.Controls;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -8,7 +8,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
     {
         public override UserControl StartControl(MenuBar menuBar)
         {
-            if (Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
+            if (EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
             {
                 return new ActionCenter(menuBar);
             }

@@ -3,9 +3,10 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
+using ManagedShell.Interop;
 using CairoDesktop.SupportingClasses;
-using CairoDesktop.WindowsTray;
+using ManagedShell;
+using ManagedShell.WindowsTray;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using ManagedShell.Common.Helpers;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
 namespace CairoDesktop
@@ -30,15 +32,16 @@ namespace CairoDesktop
         private static CairoSettingsWindow _instance = null;
 
         private readonly IApplicationUpdateService _applicationUpdateService;
-
+        private readonly ShellManager _shellManager;
 
         static CairoSettingsWindow() { }
 
-        private CairoSettingsWindow(IApplicationUpdateService applicationUpdateService)
+        private CairoSettingsWindow(ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService)
         {
             InitializeComponent();
 
             _applicationUpdateService = applicationUpdateService;
+            _shellManager = shellManagerService.ShellManager;
 
             loadThemes();
             loadLanguages();
@@ -253,8 +256,8 @@ namespace CairoDesktop
         {
             if (Settings.Instance.EnableSysTray)
             {
-                PinnedIcons.ItemsSource = NotificationArea.Instance.PinnedIcons;
-                UnpinnedIcons.ItemsSource = NotificationArea.Instance.UnpinnedIcons;
+                PinnedIcons.ItemsSource = _shellManager.NotificationArea.PinnedIcons;
+                UnpinnedIcons.ItemsSource = _shellManager.NotificationArea.UnpinnedIcons;
             }
             else
             {
@@ -264,13 +267,13 @@ namespace CairoDesktop
 
         private void loadVersionDependentSettings()
         {
-            if (!Shell.IsWindows10OrBetter)
+            if (!EnvironmentHelper.IsWindows10OrBetter)
             {
                 chkEnableMenuBarBlur.Visibility = Visibility.Collapsed;
                 chkEnableMenuExtraActionCenter.Visibility = Visibility.Collapsed;
                 chkEnableMenuExtraVolume.Visibility = Visibility.Collapsed;
             }
-            else if (Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
+            else if (EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
             {
                 chkEnableMenuExtraVolume.Visibility = Visibility.Collapsed;
             }
@@ -320,7 +323,11 @@ namespace CairoDesktop
             {
                 NotifyIcon dropData = e.Data.GetData(typeof(NotifyIcon)) as NotifyIcon;
 
-                if (dropData.IsPinned) dropData.Unpin();
+                if (dropData.IsPinned)
+                {
+                    dropData.Unpin();
+                    Settings.Instance.PinnedNotifyIcons = _shellManager.NotificationArea.PinnedNotifyIcons;
+                }
             }
 
             e.Handled = true;
@@ -332,7 +339,8 @@ namespace CairoDesktop
             {
                 NotifyIcon dropData = e.Data.GetData(typeof(NotifyIcon)) as NotifyIcon;
 
-                dropData.Pin(Settings.Instance.PinnedNotifyIcons.Length);
+                dropData.Pin(_shellManager.NotificationArea.PinnedNotifyIcons.Length);
+                Settings.Instance.PinnedNotifyIcons = _shellManager.NotificationArea.PinnedNotifyIcons;
             }
 
             e.Handled = true;
@@ -377,6 +385,8 @@ namespace CairoDesktop
                     // non-pinned icons area
                     dropData.Unpin();
                 }
+                
+                Settings.Instance.PinnedNotifyIcons = _shellManager.NotificationArea.PinnedNotifyIcons;
             }
 
             e.Handled = true;
@@ -434,7 +444,7 @@ namespace CairoDesktop
 
         private void checkTrayStatus()
         {
-            if (NotificationArea.Instance.IsFailed)
+            if (_shellManager.NotificationArea.IsFailed)
             {
                 // adjust settings window to alert user they need to install vc_redist
 
@@ -443,7 +453,7 @@ namespace CairoDesktop
 
                 lblTrayWarning.Visibility = Visibility.Visible;
             }
-            else if (!Settings.Instance.EnableTaskbar && !Shell.IsCairoRunningAsShell)
+            else if (!Settings.Instance.EnableTaskbar && !EnvironmentHelper.IsAppRunningAsShell)
             {
                 // if taskbar is disabled and we aren't running as shell, then Explorer tray is visible. Show warning.
                 lblTrayTaskbarWarning.Visibility = Visibility.Visible;
@@ -452,7 +462,7 @@ namespace CairoDesktop
 
         private void checkRunAtLogOn()
         {
-            if (Shell.IsCairoConfiguredAsShell.Equals(true))
+            if (EnvironmentHelper.IsAppConfiguredAsShell.Equals(true))
             {
                 chkRunAtLogOn.Visibility = Visibility.Collapsed;
             }
@@ -482,7 +492,7 @@ namespace CairoDesktop
 
         private void checkIfCanHibernate()
         {
-            if (!Shell.CanHibernate())
+            if (!Interop.Shell.CanHibernate())
             {
                 chkShowHibernate.Visibility = Visibility.Collapsed;
             }
@@ -689,7 +699,7 @@ namespace CairoDesktop
         {
             btnChangeShell.IsEnabled = false;
 
-            Shell.IsCairoConfiguredAsShell = !Shell.IsCairoConfiguredAsShell;
+            EnvironmentHelper.IsAppConfiguredAsShell = !EnvironmentHelper.IsAppConfiguredAsShell;
 
             CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText,
                 Localization.DisplayString.sSettings_Advanced_ShellChanged, CairoMessageImage.LogOff,
@@ -697,7 +707,7 @@ namespace CairoDesktop
                 result =>
                 {
                     if (result == true)
-                        Shell.Logoff();
+                        Interop.Shell.Logoff();
                 });
         }
 
@@ -731,15 +741,11 @@ namespace CairoDesktop
             }
         }
 
-        public static CairoSettingsWindow Instance
-        {
-            get
-            {
-                return _instance ?? (_instance = new CairoSettingsWindow(
-                    (IApplicationUpdateService) CairoApplication.Current.Host.Services.GetService(
-                        typeof(IApplicationUpdateService))));
-            }
-        }
+        public static CairoSettingsWindow Instance =>
+            _instance ?? (_instance = new CairoSettingsWindow(
+                (ShellManagerService)CairoApplication.Current.Host.Services.GetService(typeof(ShellManagerService)),
+                (IApplicationUpdateService) CairoApplication.Current.Host.Services.GetService(
+                    typeof(IApplicationUpdateService))));
 
         #region Desktop Background
         private void loadDesktopBackgroundSettings()
@@ -833,7 +839,7 @@ namespace CairoDesktop
 
                 if (backgroundStyleItem == style) cboWindowsItem.IsSelected = true;
 
-                if (Shell.IsCairoRunningAsShell)
+                if (EnvironmentHelper.IsAppRunningAsShell)
                 {
                     // image
                     ComboBoxItem cboImageItem = new ComboBoxItem()
@@ -857,7 +863,7 @@ namespace CairoDesktop
                 }
             }
 
-            if (Shell.IsCairoRunningAsShell)
+            if (EnvironmentHelper.IsAppRunningAsShell)
             {
                 #region  cairoImageWallpaper
                 ComboBoxItem cairoImageWallpaperItem = new ComboBoxItem()

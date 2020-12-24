@@ -1,10 +1,10 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Interop;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -49,17 +49,17 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 
         private void miOpenVolume_Click(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("sndvol.exe", "-f " + (int)(((ushort)(System.Windows.Forms.Cursor.Position.X / Shell.DpiScaleAdjustment)) | (uint)((int)ActualHeight << 16)));
+            ShellHelper.StartProcess("sndvol.exe", "-f " + (int)(((ushort)(System.Windows.Forms.Cursor.Position.X / DpiHelper.DpiScaleAdjustment)) | (uint)((int)ActualHeight << 16)));
         }
 
         private void miOpenSoundSettings_Click(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("mmsys.cpl");
+            ShellHelper.StartProcess("mmsys.cpl");
         }
 
         private void miOpenVolumeMixer_Click(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("sndvol.exe", "-T " + (int)(((ushort)(System.Windows.Forms.Cursor.Position.X / Shell.DpiScaleAdjustment)) | (uint)((int)ActualHeight << 16)));
+            ShellHelper.StartProcess("sndvol.exe", "-T " + (int)(((ushort)(System.Windows.Forms.Cursor.Position.X / DpiHelper.DpiScaleAdjustment)) | (uint)((int)ActualHeight << 16)));
         }
     }
 }

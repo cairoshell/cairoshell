@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using CairoDesktop.Configuration;
+using ManagedShell.AppBar;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -7,7 +8,7 @@ namespace CairoDesktop.SupportingClasses
     {
         private readonly DesktopManager _desktopManager;
 
-        public TaskbarWindowService(WindowManager windowManager, DesktopManager desktopManager) : base(windowManager)
+        public TaskbarWindowService(ShellManagerService shellManagerService, WindowManager windowManager, DesktopManager desktopManager) : base(shellManagerService, windowManager)
         {
             _desktopManager = desktopManager;
 
@@ -16,8 +17,8 @@ namespace CairoDesktop.SupportingClasses
 
             if (EnableService)
             {
-                AppBarHelper.HideWindowsTaskbar();
-                _windowManager.AppBarEvent += AppBarEvent;
+                _shellManager.ExplorerHelper.HideExplorerTaskbar = true;
+                _shellManager.AppBarManager.AppBarEvent += AppBarEvent;
             }
         }
 
@@ -53,7 +54,7 @@ namespace CairoDesktop.SupportingClasses
 
         protected override void OpenWindow(Screen screen)
         {
-            Taskbar newTaskbar = new Taskbar(_windowManager, _desktopManager, screen);
+            Taskbar newTaskbar = new Taskbar(_shellManager, _windowManager, _desktopManager, screen);
             Windows.Add(newTaskbar);
             newTaskbar.Show();
         }
@@ -62,8 +63,8 @@ namespace CairoDesktop.SupportingClasses
         {
             if (EnableService)
             {
-                _windowManager.AppBarEvent -= AppBarEvent;
-                AppBarHelper.ShowWindowsTaskbar();
+                _shellManager.AppBarManager.AppBarEvent -= AppBarEvent;
+                _shellManager.ExplorerHelper.HideExplorerTaskbar = false;
             }
         }
     }

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using CairoDesktop.Common.Logging;
-using CairoDesktop.Interop;
+using ManagedShell.Common.Helpers;
 using Microsoft.Win32;
 
 namespace CairoDesktop.Common
@@ -157,7 +157,7 @@ namespace CairoDesktop.Common
 
             try
             {
-                if (Shell.Exists(locationExpanded))
+                if (ShellHelper.Exists(locationExpanded))
                 {
                     SystemDirectory directory = new SystemDirectory(locationExpanded, Dispatcher.CurrentDispatcher, false);
 
