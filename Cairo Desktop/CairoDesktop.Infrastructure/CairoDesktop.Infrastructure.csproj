@@ -75,7 +75,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DependencyInjection\DependancyLoader.cs" />
+    <Compile Include="DependencyInjection\DependencyLoader.cs" />
     <Compile Include="DependencyInjection\DependencyInjectionExtensions.cs" />
     <Compile Include="DependencyInjection\DependencyResolver.cs" />
     <Compile Include="Services\ExtensionService.cs" />
@@ -89,10 +89,6 @@
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">
       <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
       <Name>CairoDesktop.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Core\CairoDesktop.Core.csproj">
-      <Project>{03D7755E-57CB-4093-8E33-CF95BB038689}</Project>
-      <Name>CairoDesktop.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Interop.WinSparkle\CairoDesktop.Interop.WinSparkle.csproj">
       <Project>{3be34d36-b004-42fa-ae2c-3f4f8bd3861f}</Project>

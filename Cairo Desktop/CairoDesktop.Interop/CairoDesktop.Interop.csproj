@@ -90,11 +90,6 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition=" '$(Platform)' == 'x64' ">
-    <Content Include="..\..\Dependencies\WinSparkle\x64\WinSparkle.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="ComTaskScheduler.cs" />
     <Compile Include="KnownFolders.cs" />
