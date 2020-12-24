@@ -2,7 +2,7 @@
 
 namespace CairoDesktop.Interop
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1401:P/Invokes should not be visible", Justification = "<Pending>")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1401:P/Invokes should not be visible", Justification = "Caller in other assembly")]
     public static class WinSparkle
     {
         [DllImport("WinSparkle.dll", CallingConvention = CallingConvention.Cdecl)]
