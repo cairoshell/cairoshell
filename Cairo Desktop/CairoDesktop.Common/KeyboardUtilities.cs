@@ -1,4 +1,4 @@
-﻿using CairoDesktop.Interop;
+﻿using ManagedShell.Interop;
 
 namespace CairoDesktop.Common
 {

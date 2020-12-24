@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
-using static CairoDesktop.Interop.NativeMethods;
+using static ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop.Common
 {

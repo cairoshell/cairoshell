@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -116,14 +117,14 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 
         private void btnViewResults_Click(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("search:query=" + searchStr.Text);
+            ShellHelper.StartProcess("search:query=" + searchStr.Text);
         }
 
         private void searchStr_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
-                Shell.StartProcess("search:query=" + searchStr.Text);
+                ShellHelper.StartProcess("search:query=" + searchStr.Text);
             }
         }
 
@@ -157,7 +158,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
         {
             if (e.Parameter is SearchResult searchObj)
             {
-                if (!Shell.StartProcess(searchObj.Path))
+                if (!ShellHelper.StartProcess(searchObj.Path))
                 {
                     CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                 }

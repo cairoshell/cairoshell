@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace CairoDesktop.Interop
 {
-    public partial class NativeMethods
+    public class AdvApi32
     {
         const string AdvApi32_DllName = "advapi32.dll";
         public const uint TOKENADJUSTPRIVILEGES = 0x00000020;

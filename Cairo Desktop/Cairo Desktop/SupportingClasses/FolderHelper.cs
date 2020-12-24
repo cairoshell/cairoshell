@@ -1,6 +1,6 @@
 ﻿using System;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
+using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop.SupportingClasses
@@ -40,7 +40,7 @@ namespace CairoDesktop.SupportingClasses
             var args = Environment.ExpandEnvironmentVariables(path);
             var filename = Environment.ExpandEnvironmentVariables(Settings.Instance.FileManager);
 
-            return Shell.StartProcess(filename, $@"""{args}""");
+            return ShellHelper.StartProcess(filename, $@"""{args}""");
         }
     }
 }

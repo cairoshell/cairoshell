@@ -5,9 +5,9 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
-using CairoDesktop.Interop;
 using System.Windows.Media;
 using CairoDesktop.SupportingClasses;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
@@ -56,7 +56,7 @@ namespace CairoDesktop
 
         public RenderTargetBitmap GenerateBitmap(Grid sourceGrid)
         {
-            RenderTargetBitmap bmp = new RenderTargetBitmap((int)(sourceGrid.ActualWidth * Shell.DpiScale), (int)(sourceGrid.ActualHeight * Shell.DpiScale), Shell.DpiScale * 96, Shell.DpiScale * 96, PixelFormats.Default);
+            RenderTargetBitmap bmp = new RenderTargetBitmap((int)(sourceGrid.ActualWidth * DpiHelper.DpiScale), (int)(sourceGrid.ActualHeight * DpiHelper.DpiScale), DpiHelper.DpiScale * 96, DpiHelper.DpiScale * 96, PixelFormats.Default);
             bmp.Render(this);
             bmp.Freeze();
 

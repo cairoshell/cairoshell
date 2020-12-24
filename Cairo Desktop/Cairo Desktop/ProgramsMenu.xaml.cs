@@ -5,6 +5,7 @@ using CairoDesktop.Localization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
@@ -52,7 +53,7 @@ namespace CairoDesktop
 
         private void btnUninstallApps_Click(object sender, RoutedEventArgs e)
         {
-            if (!Interop.Shell.StartProcess("appwiz.cpl"))
+            if (!ShellHelper.StartProcess("appwiz.cpl"))
                 CairoMessage.Show(DisplayString.sError_CantOpenAppWiz, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
         }
         #endregion

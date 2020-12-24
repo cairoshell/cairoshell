@@ -74,6 +74,27 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ManagedShell, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.AppBar, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.AppBar.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.Common, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.Interop, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.UWPInterop, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.UWPInterop.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.WindowsTasks, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.WindowsTasks.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.WindowsTray, Version=0.0.17.62287, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ManagedShell.0.0.17\lib\net471\ManagedShell.WindowsTray.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -84,6 +105,9 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsBase">
@@ -91,22 +115,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComTaskScheduler.cs" />
     <Compile Include="KnownFolders.cs" />
-    <Compile Include="NativeMethods.AdvApi32.cs" />
-    <Compile Include="NativeMethods.cs" />
-    <Compile Include="NativeMethods.DocObj.cs" />
-    <Compile Include="NativeMethods.DwmApi.cs" />
-    <Compile Include="NativeMethods.Kernel32.cs" />
-    <Compile Include="NativeMethods.Ole32.cs" />
-    <Compile Include="NativeMethods.PowrProf.cs" />
-    <Compile Include="NativeMethods.Shell32.cs" />
-    <Compile Include="NativeMethods.ShFolder.cs" />
-    <Compile Include="NativeMethods.ShlwApi.cs" />
-    <Compile Include="NativeMethods.User32.cs" />
-    <Compile Include="NativeWindowEx.cs" />
+    <Compile Include="AdvApi32.cs" />
+    <Compile Include="PowrProf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shell.cs" />
     <Compile Include="Shell.Link.cs" />
     <Compile Include="Shell.Power.cs" />
     <Compile Include="ShellFolders.cs" />
@@ -135,6 +147,9 @@
       <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>
       <Name>CairoDesktop.Localization</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

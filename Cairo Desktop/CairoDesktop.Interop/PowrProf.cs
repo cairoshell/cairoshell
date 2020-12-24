@@ -1,9 +1,8 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace CairoDesktop.Interop
 {
-    public partial class NativeMethods
+    public class PowrProf
     {
         const string PowrProf_DllName = "powrprof.dll";
 

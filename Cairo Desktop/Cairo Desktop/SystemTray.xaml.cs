@@ -1,23 +1,26 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CairoDesktop.WindowsTray;
+using ManagedShell.WindowsTray;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 
 namespace CairoDesktop
 {
     public partial class SystemTray
     {
-        public MenuBar MenuBar;
+        private readonly MenuBar MenuBar;
+        private readonly NotificationArea _notificationArea;
 
-        public SystemTray(MenuBar menuBar)
+        public SystemTray(MenuBar menuBar, NotificationArea notificationArea)
         {
             InitializeComponent();
 
-            DataContext = NotificationArea.Instance;
+            _notificationArea = notificationArea;
+            DataContext = _notificationArea;
             MenuBar = menuBar;
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
@@ -28,6 +31,12 @@ namespace CairoDesktop
             if (Settings.Instance.SysTrayAlwaysExpanded)
             {
                 UnpinnedItems.Visibility = Visibility.Visible;
+            }
+
+            // Don't allow showing both the Windows TaskBar and the Cairo tray
+            if (Settings.Instance.EnableSysTray && (Settings.Instance.EnableTaskbar || EnvironmentHelper.IsAppRunningAsShell))
+            {
+                _notificationArea.Initialize();
             }
         }
 
@@ -90,7 +99,7 @@ namespace CairoDesktop
                 if (MenuBar != null)
                 {
                     // set current menu bar to return placement for ABM_GETTASKBARPOS message
-                    NotificationArea.Instance.SetTrayHostSizeData(GetMenuBarSizeData());
+                    _notificationArea.SetTrayHostSizeData(GetMenuBarSizeData());
                 }
                 trayIcon.IconMouseClick(e.ChangedButton, getMousePos(), System.Windows.Forms.SystemInformation.DoubleClickTime);
             }
@@ -107,7 +116,7 @@ namespace CairoDesktop
                 Point location = sendingDecorator.PointToScreen(new Point(0, 0));
                 double dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
 
-                trayIcon.Placement = new Interop.NativeMethods.Rect { Top = (int)location.Y, Left = (int)location.X, Bottom = (int)(sendingDecorator.ActualHeight * dpiScale), Right = (int)(sendingDecorator.ActualWidth * dpiScale) };
+                trayIcon.Placement = new NativeMethods.Rect { Top = (int)location.Y, Left = (int)location.X, Bottom = (int)(sendingDecorator.ActualHeight * dpiScale), Right = (int)(sendingDecorator.ActualWidth * dpiScale) };
                 trayIcon.IconMouseEnter(getMousePos());
             }
         }

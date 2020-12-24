@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Xml;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.AppGrabber {
 
@@ -214,7 +215,7 @@ namespace CairoDesktop.AppGrabber {
                     if (appElement.ChildNodes.Count > 2)
                         app.Target = appElement.ChildNodes[2].InnerText;
 
-                    if (!app.IsStoreApp && !Interop.Shell.Exists(app.Path)) {
+                    if (!app.IsStoreApp && !ShellHelper.Exists(app.Path)) {
                         CairoLogger.Debug(app.Path + " does not exist");
                         continue;
                     }

@@ -1,10 +1,10 @@
 ﻿using CairoDesktop.Common.Logging;
-using CairoDesktop.Interop;
 using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -189,7 +189,7 @@ namespace CairoDesktop.AppGrabber
                         {
                             CairoLogger.Debug(fileName);
 
-                            if (Shell.Exists(fileName))
+                            if (ShellHelper.Exists(fileName))
                             {
                                 ApplicationInfo customApp = AppGrabber.PathToApp(fileName, false, false);
                                 if (!object.ReferenceEquals(customApp, null))

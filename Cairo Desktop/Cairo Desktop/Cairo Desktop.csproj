@@ -113,26 +113,22 @@
     <Compile Include="StacksScroller.xaml.cs">
       <DependentUpon>StacksScroller.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SupportingClasses\AppBarEventReason.cs" />
-    <Compile Include="SupportingClasses\AppBarWindow.cs" />
     <Compile Include="SupportingClasses\AppBarWindowService.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
-    <Compile Include="SupportingClasses\AppBarEventArgs.cs" />
+    <Compile Include="SupportingClasses\CairoAppBarWindow.cs" />
     <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
     <Compile Include="SupportingClasses\DesktopManager.cs" />
     <Compile Include="SupportingClasses\EnumUtility.cs" />
-    <Compile Include="SupportingClasses\FullScreenApp.cs" />
     <Compile Include="SupportingClasses\IWindowService.cs" />
     <Compile Include="SupportingClasses\MenuBarWindowService.cs" />
     <Compile Include="SupportingClasses\PicSumWallpaperClient.cs" />
-    <Compile Include="SupportingClasses\ScreenSetupReason.cs" />
+    <Compile Include="SupportingClasses\ShellManagerService.cs" />
     <Compile Include="SupportingClasses\TaskbarWindowService.cs" />
     <Compile Include="SupportingClasses\UpdateManager.cs" />
     <Compile Include="SupportingClasses\WindowManager.cs" />
     <Compile Include="SupportingClasses\FilePathValidationRule.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
     <Compile Include="SupportingClasses\DirectoryPathValidationRule.cs" />
-    <Compile Include="SupportingClasses\FullScreenHelper.cs" />
     <Compile Include="SupportingClasses\SystemHotKeys.cs" />
     <Compile Include="MenuExtraVolume.xaml.cs">
       <DependentUpon>MenuExtraVolume.xaml</DependentUpon>
@@ -260,7 +256,6 @@
     <Compile Include="DesktopNavigationToolbar.xaml.cs">
       <DependentUpon>DesktopNavigationToolbar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SupportingClasses\AppBarHelper.cs" />
     <Compile Include="SystemTray.xaml.cs">
       <DependentUpon>SystemTray.xaml</DependentUpon>
     </Compile>
@@ -483,17 +478,12 @@
       <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>
       <Name>CairoDesktop.Localization</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.WindowsTasks\CairoDesktop.WindowsTasks.csproj">
-      <Project>{5FABAD0F-D28C-4EE6-A826-77968087864E}</Project>
-      <Name>CairoDesktop.WindowsTasks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.WindowsTray\CairoDesktop.WindowsTray.csproj">
-      <Project>{79B5DDAC-5102-4B11-BFA1-B16D6F6FE661}</Project>
-      <Name>CairoDesktop.WindowsTray</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <PackageReference Include="ManagedShell">
+      <Version>0.0.18</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine">
       <Version>5.0.0</Version>
     </PackageReference>
