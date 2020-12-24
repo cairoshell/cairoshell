@@ -5,8 +5,4 @@
     <Platforms>x64;AnyCPU</Platforms>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CairoDesktop.Core\CairoDesktop.Core.csproj" />
-  </ItemGroup>
-
 </Project>
