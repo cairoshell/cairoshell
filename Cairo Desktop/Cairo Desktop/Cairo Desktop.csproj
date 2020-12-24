@@ -124,7 +124,6 @@
     <Compile Include="SupportingClasses\PicSumWallpaperClient.cs" />
     <Compile Include="SupportingClasses\ShellManagerService.cs" />
     <Compile Include="SupportingClasses\TaskbarWindowService.cs" />
-    <Compile Include="SupportingClasses\UpdateManager.cs" />
     <Compile Include="SupportingClasses\WindowManager.cs" />
     <Compile Include="SupportingClasses\FilePathValidationRule.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ManagedShell.WindowsTray;
@@ -34,7 +35,7 @@ namespace CairoDesktop
             }
 
             // Don't allow showing both the Windows TaskBar and the Cairo tray
-            if (Settings.Instance.EnableSysTray && (Settings.Instance.EnableTaskbar || EnvironmentHelper.IsAppRunningAsShell))
+            if (Settings.Instance.EnableSysTray && (Settings.Instance.EnableTaskbar || EnvironmentHelper.IsAppRunningAsShell) && _notificationArea.Handle == IntPtr.Zero)
             {
                 _notificationArea.Initialize();
             }
