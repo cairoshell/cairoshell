@@ -206,25 +206,11 @@ namespace CairoDesktop
 
         private async Task GracefullyExit()
         {
-            //WindowManager.ResetWorkArea();
-
-            DisposeSingletons();
-
             if (Host != null)
             {
                 await Host.StopAsync();
                 Host.Dispose();
             }
-        }
-
-        private void DisposeSingletons()
-        {
-            //Shell.DisposeIml();
-            //FullScreenHelper.Instance.Dispose();
-            //NotificationArea.Instance.Dispose();
-            // UpdateManager.Instance.Dispose();
-            // WindowManager.Instance.Dispose();
-            //Tasks.Instance.Dispose();
         }
 
         private bool _errorVisible;

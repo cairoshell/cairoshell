@@ -11,13 +11,38 @@ namespace CairoDesktop.SupportingClasses
 {
     public sealed class WindowManager : IDisposable
     {
+        private bool _isSettingDisplays;
         private bool hasCompletedInitialDisplaySetup;
         private int pendingDisplayEvents;
         private readonly static object displaySetupLock = new object();
         private readonly List<IWindowService> _windowServices = new List<IWindowService>();
         private readonly AppBarManager _appBarManager;
 
-        public bool IsSettingDisplays { get; set; }
+        public bool IsSettingDisplays
+        {
+            get => _isSettingDisplays;
+            set
+            {
+                if (value != _isSettingDisplays)
+                {
+                    _isSettingDisplays = value;
+
+                    // when setting displays, flip AllowClose to true on AppBars so they will close if their screen goes away
+                    if (_isSettingDisplays)
+                    {
+                        _appBarManager.SignalGracefulShutdown();
+                    }
+                    else
+                    {
+                        foreach (AppBarWindow window in _appBarManager.AppBars)
+                        {
+                            window.AllowClose = false;
+                        }
+                    }
+                }
+            }
+        }
+
         public Screen[] ScreenState = Array.Empty<Screen>();
         
         public EventHandler<WindowManagerEventArgs> DwmChanged;
