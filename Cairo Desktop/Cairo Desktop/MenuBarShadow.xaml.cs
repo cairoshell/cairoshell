@@ -15,7 +15,7 @@ namespace CairoDesktop
     /// </summary>
     public partial class MenuBarShadow : Window
     {
-        private double dpiScale = 1;
+        private double DpiScale = 1;
         public bool IsClosing;
         public bool AllowClose;
 
@@ -35,24 +35,24 @@ namespace CairoDesktop
         {
             if (MenuBar != null)
             {
-                dpiScale = VisualTreeHelper.GetDpi(this).DpiScaleX;
+                DpiScale = VisualTreeHelper.GetDpi(this).DpiScaleX;
 
                 double desiredTop = MenuBar.Top + MenuBar.ActualHeight;
                 double desiredLeft = MenuBar.Left;
                 double desiredHeight = 14;
                 double desiredWidth = MenuBar.ActualWidth;
 
-                if (dpiScale != MenuBar.dpiScale)
+                if (DpiScale != MenuBar.DpiScale)
                 {
                     // we want to always match the menu bar DPI for correct positioning
-                    long newDpi = (int)(MenuBar.dpiScale * 96) & 0xFFFF | (int)(MenuBar.dpiScale * 96) << 16;
+                    long newDpi = (int)(MenuBar.DpiScale * 96) & 0xFFFF | (int)(MenuBar.DpiScale * 96) << 16;
 
                     NativeMethods.Rect newRect = new NativeMethods.Rect
                     {
-                        Top = (int)(desiredTop * MenuBar.dpiScale),
-                        Left = (int)(desiredLeft * MenuBar.dpiScale),
-                        Bottom = (int)((desiredTop + desiredHeight) * MenuBar.dpiScale),
-                        Right = (int)((desiredLeft + desiredWidth) * MenuBar.dpiScale)
+                        Top = (int)(desiredTop * MenuBar.DpiScale),
+                        Left = (int)(desiredLeft * MenuBar.DpiScale),
+                        Bottom = (int)((desiredTop + desiredHeight) * MenuBar.DpiScale),
+                        Right = (int)((desiredLeft + desiredWidth) * MenuBar.DpiScale)
                     };
                     IntPtr newRectPtr = Marshal.AllocHGlobal(Marshal.SizeOf(newRect));
                     Marshal.StructureToPtr(newRect, newRectPtr, false);
@@ -82,7 +82,7 @@ namespace CairoDesktop
             }
             else if (msg == (int)NativeMethods.WM.DPICHANGED)
             {
-                dpiScale = (wparam.ToInt32() & 0xFFFF) / 96d;
+                DpiScale = (wparam.ToInt32() & 0xFFFF) / 96d;
             }
             else
             {
