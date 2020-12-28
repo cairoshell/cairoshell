@@ -76,7 +76,6 @@
     <Compile Include="CairoMessageImage.cs" />
     <Compile Include="ExtensionMethods\IListExtensions.cs" />
     <Compile Include="CommandLineParser.cs" />
-    <Compile Include="DesignPatterns\SingletonObject.cs" />
     <Compile Include="Dialogs.cs" />
     <Compile Include="DisposableCollection.cs" />
     <Compile Include="DisposableObject.cs" />
