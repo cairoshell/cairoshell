@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
+using ManagedShell.Interop;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -18,7 +19,7 @@ namespace CairoDesktop.SupportingClasses
 
         protected override void OpenWindow(Screen screen)
         {
-            MenuBar newMenuBar = new MenuBar(_shellManager, _windowManager, _updateService, screen);
+            MenuBar newMenuBar = new MenuBar(_shellManager, _windowManager, _updateService, screen, NativeMethods.ABEdge.ABE_TOP);
             Windows.Add(newMenuBar);
             newMenuBar.Show();
         }

@@ -27,8 +27,6 @@ namespace CairoDesktop
         private static HotKey cairoMenuHotKey;
         private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
 
-        private bool secretBottomMenuBar = false;
-
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
@@ -40,22 +38,18 @@ namespace CairoDesktop
         private MenuExtraSearch menuExtraSearch;
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService) : this(shellManager, windowManager, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
+        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService) : this(shellManager, windowManager, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen, NativeMethods.ABEdge.ABE_TOP)
         {
         }
 
-        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen) : base(shellManager, windowManager)
+        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(shellManager, windowManager, screen, edge, 23)
         {
             _applicationUpdateService = applicationUpdateService;
             _shellManager = shellManager;
 
             InitializeComponent();
-
-            Screen = screen;
-            desiredHeight = 23;
-            processScreenChanges = true;
-            requiresScreenEdge = true;
-            if (secretBottomMenuBar) appBarEdge = ManagedShell.Interop.NativeMethods.ABEdge.ABE_BOTTOM;
+            
+            RequiresScreenEdge = true;
 
             SetPosition();
 
@@ -204,7 +198,7 @@ namespace CairoDesktop
 
         private void setupShadow()
         {
-            if (Settings.Instance.EnableMenuBarShadow && shadow == null && !secretBottomMenuBar)
+            if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarEdge != NativeMethods.ABEdge.ABE_BOTTOM)
             {
                 shadow = new MenuBarShadow(this);
                 shadow.Show();
@@ -212,8 +206,10 @@ namespace CairoDesktop
             }
         }
 
-        protected override void PostInit()
+        protected override void OnSourceInitialized(object sender, EventArgs e)
         {
+            base.OnSourceInitialized(sender, e);
+            
             setupMenuExtras();
 
             registerCairoMenuHotKey();
@@ -341,9 +337,9 @@ namespace CairoDesktop
         public override void SetPosition()
         {
             Top = getDesiredTopPosition();
-            Left = Screen.Bounds.X / dpiScale;
-            Width = Screen.Bounds.Width / dpiScale;
-            Height = desiredHeight;
+            Left = Screen.Bounds.X / DpiScale;
+            Width = Screen.Bounds.Width / DpiScale;
+            Height = DesiredHeight;
             setShadowPosition();
         }
 
@@ -380,10 +376,10 @@ namespace CairoDesktop
         {
             double top;
 
-            if (secretBottomMenuBar) 
-                top = (Screen.Bounds.Bottom / dpiScale) - desiredHeight;
+            if (AppBarEdge == NativeMethods.ABEdge.ABE_BOTTOM) 
+                top = (Screen.Bounds.Bottom / DpiScale) - DesiredHeight;
             else
-                top = Screen.Bounds.Y / dpiScale;
+                top = Screen.Bounds.Y / DpiScale;
 
             return top;
         }

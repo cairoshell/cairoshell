@@ -88,7 +88,7 @@ namespace CairoDesktop
 
         public TrayHostSizeData GetMenuBarSizeData()
         {
-            return new TrayHostSizeData { edge = (int)MenuBar.appBarEdge, rc = new NativeMethods.Rect { Top = (int)(MenuBar.Top * MenuBar.dpiScale), Left = (int)(MenuBar.Left * MenuBar.dpiScale), Bottom = (int)((MenuBar.Top + MenuBar.Height) * MenuBar.dpiScale), Right = (int)((MenuBar.Left + MenuBar.Width) * MenuBar.dpiScale) } };
+            return new TrayHostSizeData { edge = (int)MenuBar.AppBarEdge, rc = new NativeMethods.Rect { Top = (int)(MenuBar.Top * MenuBar.DpiScale), Left = (int)(MenuBar.Left * MenuBar.DpiScale), Bottom = (int)((MenuBar.Top + MenuBar.Height) * MenuBar.DpiScale), Right = (int)((MenuBar.Left + MenuBar.Width) * MenuBar.DpiScale) } };
         }
 
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)

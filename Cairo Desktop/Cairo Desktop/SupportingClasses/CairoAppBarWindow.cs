@@ -1,5 +1,7 @@
-﻿using ManagedShell;
+﻿using System.Windows.Forms;
+using ManagedShell;
 using ManagedShell.AppBar;
+using ManagedShell.Interop;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -7,11 +9,11 @@ namespace CairoDesktop.SupportingClasses
     {
         protected readonly WindowManager _windowManager;
         
-        public CairoAppBarWindow() : base(null, null, null)
+        public CairoAppBarWindow() : base(null, null, null, Screen.PrimaryScreen, NativeMethods.ABEdge.ABE_BOTTOM, 0)
         { }
         
-        public CairoAppBarWindow(ShellManager shellManager, WindowManager windowManager) : base(
-            shellManager.AppBarManager, shellManager.ExplorerHelper, shellManager.FullScreenHelper)
+        public CairoAppBarWindow(ShellManager shellManager, WindowManager windowManager, Screen screen, NativeMethods.ABEdge edge, double height) : base(
+            shellManager.AppBarManager, shellManager.ExplorerHelper, shellManager.FullScreenHelper, screen, edge, height)
         {
             _windowManager = windowManager;
             

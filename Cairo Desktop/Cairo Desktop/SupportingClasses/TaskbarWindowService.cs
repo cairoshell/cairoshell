@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using CairoDesktop.Configuration;
 using ManagedShell.AppBar;
+using ManagedShell.Interop;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -35,7 +36,7 @@ namespace CairoDesktop.SupportingClasses
                         return;
                     }
 
-                    if (taskbar.appBarEdge != menuBar.appBarEdge)
+                    if (taskbar.AppBarEdge != menuBar.AppBarEdge)
                     {
                         return;
                     }
@@ -54,7 +55,7 @@ namespace CairoDesktop.SupportingClasses
 
         protected override void OpenWindow(Screen screen)
         {
-            Taskbar newTaskbar = new Taskbar(_shellManager, _windowManager, _desktopManager, screen);
+            Taskbar newTaskbar = new Taskbar(_shellManager, _windowManager, _desktopManager, screen, Settings.Instance.TaskbarPosition == 1 ? NativeMethods.ABEdge.ABE_TOP : NativeMethods.ABEdge.ABE_BOTTOM);
             Windows.Add(newTaskbar);
             newTaskbar.Show();
         }

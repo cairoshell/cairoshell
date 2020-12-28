@@ -246,7 +246,7 @@ namespace CairoDesktop
         {
             if (Window != null)
             {
-                Window.CloseByTaskService();
+                Window.Close();
             }
         }
 
@@ -288,10 +288,10 @@ namespace CairoDesktop
                     switch (Settings.Instance.TaskbarMiddleClick)
                     {
                         case 0 when Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift):
-                            Window.CloseByTaskService();
+                            Window.Close();
                             break;
                         case 1 when !Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift):
-                            Window.CloseByTaskService();
+                            Window.Close();
                             break;
                         default:
                             ShellHelper.StartProcess(Window.WinFileName);

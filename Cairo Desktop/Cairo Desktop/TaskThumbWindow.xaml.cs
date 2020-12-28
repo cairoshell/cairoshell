@@ -69,7 +69,7 @@ namespace CairoDesktop
             if (isDwmEnabled)
             {
                 // set up thumbnail
-                dwmThumbnail.DpiScale = taskButton.ParentTaskbar.dpiScale;
+                dwmThumbnail.DpiScale = taskButton.ParentTaskbar.DpiScale;
                 dwmThumbnail.ThumbnailOpacity = 0;
                 dwmThumbnail.SourceWindowHandle = taskButton.Window.Handle;
 
@@ -148,7 +148,7 @@ namespace CairoDesktop
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            taskButton.Window.CloseByTaskService();
+            taskButton.Window.Close();
             Close();
         }
 
