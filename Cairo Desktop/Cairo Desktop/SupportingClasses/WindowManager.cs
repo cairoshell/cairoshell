@@ -170,7 +170,6 @@ namespace CairoDesktop.SupportingClasses
                     {
                         // if this is only a DPI change, screens will be the same but we still need to reposition
                         RefreshWindows(reason, false);
-                        SetDisplayWorkAreas();
                     }
 
                     pendingDisplayEvents--;
@@ -249,9 +248,6 @@ namespace CairoDesktop.SupportingClasses
 
             // open windows on newly added screens
             ProcessAddedScreens(addedScreens);
-
-            // update each display's work area if we are shell
-            SetDisplayWorkAreas();
 
             CairoLogger.Debug("WindowManager: Completed display setup");
         }
@@ -344,18 +340,6 @@ namespace CairoDesktop.SupportingClasses
             return null;
         }
         #endregion
-
-        private void SetDisplayWorkAreas()
-        {
-            // Set desktop work area for when Explorer isn't running
-            if (EnvironmentHelper.IsAppRunningAsShell)
-            {
-                foreach (var screen in ScreenState)
-                {
-                    _appBarManager.SetWorkArea(screen);
-                }
-            }
-        }
 
         public void Dispose()
         {
