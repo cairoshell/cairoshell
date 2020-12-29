@@ -74,7 +74,7 @@ namespace CairoDesktop
 
                 CairoApplication.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    CairoSearchMenu.DataContext =  new ObjectDataProvider
+                    CairoSearchMenu.DataContext = new ObjectDataProvider
                     {
                         ObjectType = provider
                     };

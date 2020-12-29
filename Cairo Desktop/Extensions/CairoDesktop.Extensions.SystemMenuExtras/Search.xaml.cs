@@ -72,7 +72,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
                 // this sometimes takes a while
                 Type provider = typeof(SearchHelper);
 
-                Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                CairoApplication.Current.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     CairoSearchMenu.DataContext = new ObjectDataProvider
                     {
