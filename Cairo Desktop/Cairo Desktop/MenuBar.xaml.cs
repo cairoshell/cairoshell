@@ -324,7 +324,7 @@ namespace CairoDesktop
 
         #region Events
 
-        public override void AfterAppBarPos(bool isSameCoords, ManagedShell.Interop.NativeMethods.Rect rect)
+        public override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
             base.AfterAppBarPos(isSameCoords, rect);
 
@@ -336,10 +336,8 @@ namespace CairoDesktop
 
         public override void SetPosition()
         {
-            Top = getDesiredTopPosition();
-            Left = Screen.Bounds.X / DpiScale;
-            Width = Screen.Bounds.Width / DpiScale;
-            Height = DesiredHeight;
+            base.SetPosition();
+            
             setShadowPosition();
         }
 

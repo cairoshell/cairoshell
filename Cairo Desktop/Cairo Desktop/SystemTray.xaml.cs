@@ -81,14 +81,9 @@ namespace CairoDesktop
             }
         }
 
-        private uint getMousePos()
-        {
-            return (((uint)System.Windows.Forms.Cursor.Position.Y << 16) | (uint)System.Windows.Forms.Cursor.Position.X);
-        }
-
         public TrayHostSizeData GetMenuBarSizeData()
         {
-            return new TrayHostSizeData { edge = (int)MenuBar.AppBarEdge, rc = new NativeMethods.Rect { Top = (int)(MenuBar.Top * MenuBar.DpiScale), Left = (int)(MenuBar.Left * MenuBar.DpiScale), Bottom = (int)((MenuBar.Top + MenuBar.Height) * MenuBar.DpiScale), Right = (int)((MenuBar.Left + MenuBar.Width) * MenuBar.DpiScale) } };
+            return new TrayHostSizeData { edge = MenuBar.AppBarEdge, rc = new NativeMethods.Rect { Top = (int)(MenuBar.Top * MenuBar.DpiScale), Left = (int)(MenuBar.Left * MenuBar.DpiScale), Bottom = (int)((MenuBar.Top + MenuBar.Height) * MenuBar.DpiScale), Right = (int)((MenuBar.Left + MenuBar.Width) * MenuBar.DpiScale) } };
         }
 
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
@@ -102,7 +97,7 @@ namespace CairoDesktop
                     // set current menu bar to return placement for ABM_GETTASKBARPOS message
                     _notificationArea.SetTrayHostSizeData(GetMenuBarSizeData());
                 }
-                trayIcon.IconMouseClick(e.ChangedButton, getMousePos(), System.Windows.Forms.SystemInformation.DoubleClickTime);
+                trayIcon.IconMouseClick(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
             }
         }
 
@@ -118,7 +113,7 @@ namespace CairoDesktop
                 double dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
 
                 trayIcon.Placement = new NativeMethods.Rect { Top = (int)location.Y, Left = (int)location.X, Bottom = (int)(sendingDecorator.ActualHeight * dpiScale), Right = (int)(sendingDecorator.ActualWidth * dpiScale) };
-                trayIcon.IconMouseEnter(getMousePos());
+                trayIcon.IconMouseEnter(MouseHelper.GetCursorPositionParam());
             }
         }
 
@@ -128,7 +123,7 @@ namespace CairoDesktop
 
             if (trayIcon != null)
             {
-                trayIcon.IconMouseLeave(getMousePos());
+                trayIcon.IconMouseLeave(MouseHelper.GetCursorPositionParam());
             }
         }
 
@@ -138,7 +133,7 @@ namespace CairoDesktop
 
             if (trayIcon != null)
             {
-                trayIcon.IconMouseMove(getMousePos());
+                trayIcon.IconMouseMove(MouseHelper.GetCursorPositionParam());
             }
         }
 
