@@ -448,16 +448,7 @@ namespace CairoDesktop
 
         private void checkTrayStatus()
         {
-            if (_shellManager.NotificationArea.IsFailed)
-            {
-                // adjust settings window to alert user they need to install vc_redist
-
-                chkEnableSysTray.IsEnabled = false;
-                pnlTraySettings.Visibility = Visibility.Collapsed;
-
-                lblTrayWarning.Visibility = Visibility.Visible;
-            }
-            else if (!Settings.Instance.EnableTaskbar && !EnvironmentHelper.IsAppRunningAsShell)
+            if (!Settings.Instance.EnableTaskbar && !EnvironmentHelper.IsAppRunningAsShell)
             {
                 // if taskbar is disabled and we aren't running as shell, then Explorer tray is visible. Show warning.
                 lblTrayTaskbarWarning.Visibility = Visibility.Visible;

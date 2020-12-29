@@ -435,11 +435,6 @@
                                Width="300"
                                TextWrapping="Wrap"
                                Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationAreaTaskbarWarning)}" />
-                    <TextBlock Name="lblTrayWarning"
-                               Visibility="Collapsed"
-                               Width="300"
-                               TextWrapping="Wrap"
-                               Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationAreaError)}" />
                     <StackPanel Orientation="Vertical"
                                 Name="pnlTraySettings">
                         <StackPanel Orientation="Horizontal"
