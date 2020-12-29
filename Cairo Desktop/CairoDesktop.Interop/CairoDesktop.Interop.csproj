@@ -126,7 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ManagedShell">
-      <Version>0.0.19</Version>
+      <Version>0.0.20</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

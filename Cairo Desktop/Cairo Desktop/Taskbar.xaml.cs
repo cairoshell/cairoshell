@@ -339,20 +339,13 @@ namespace CairoDesktop
 
         public override void SetPosition()
         {
-            double screenWidth = Screen.Bounds.Width / DpiScale;
+            base.SetPosition();
 
-            Height = DesiredHeight;
-
-            Top = getDesiredTopPosition();
-
-            Left = Screen.Bounds.Left / DpiScale;
-
+            setTaskButtonSize();
             setTaskbarWidthMode();
 
             // set maxwidth always
             bdrTaskbar.MaxWidth = getDesiredWidth();
-
-            Width = screenWidth;
         }
 
         private double getDesiredTopPosition()
