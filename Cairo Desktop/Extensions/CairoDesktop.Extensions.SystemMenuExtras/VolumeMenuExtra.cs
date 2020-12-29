@@ -11,7 +11,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 
         public override UserControl StartControl(MenuBar menuBar)
         {
-            if (Settings.Instance.EnableSysTray && EnvironmentHelper.IsWindows10OrBetter && EnvironmentHelper.IsAppRunningAsShell)
+            if (Settings.Instance.EnableMenuExtraVolume && EnvironmentHelper.IsWindows10OrBetter && EnvironmentHelper.IsAppRunningAsShell)
             {
                 _volume = new Volume();
                 return _volume;
