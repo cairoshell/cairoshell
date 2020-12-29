@@ -1,5 +1,4 @@
-﻿using CairoDesktop.Common;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -29,15 +28,15 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 
         private void VolumeIcon_Tick()
         {
-            if (VolumeUtilities.IsVolumeMuted())
+            if (VolumeHelper.IsVolumeMuted())
             {
                 imgOpenVolume.Source = FindResource("VolumeMuteIcon") as ImageSource;
             }
-            else if (VolumeUtilities.GetMasterVolume() <= 0)
+            else if (VolumeHelper.GetMasterVolume() <= 0)
             {
                 imgOpenVolume.Source = FindResource("VolumeOffIcon") as ImageSource;
             }
-            else if (VolumeUtilities.GetMasterVolume() < 0.5)
+            else if (VolumeHelper.GetMasterVolume() < 0.5)
             {
                 imgOpenVolume.Source = FindResource("VolumeLowIcon") as ImageSource;
             }

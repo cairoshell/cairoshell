@@ -105,7 +105,7 @@ namespace CairoDesktop
             // Show power options depending on system support
             SetHibernateVisibility();
 
-            if (!Shell.CanSleep())
+            if (!PowerHelper.CanSleep())
             {
                 miSleep.Visibility = Visibility.Collapsed;
             }
@@ -263,7 +263,7 @@ namespace CairoDesktop
 
         private void SetHibernateVisibility()
         {
-            if (Settings.Instance.ShowHibernate && Shell.CanHibernate())
+            if (Settings.Instance.ShowHibernate && PowerHelper.CanHibernate())
             {
                 miHibernate.Visibility = Visibility.Visible;
             }
@@ -540,17 +540,17 @@ namespace CairoDesktop
 
         private void SysHibernate(object sender, RoutedEventArgs e)
         {
-            Shell.Hibernate();
+            PowerHelper.Hibernate();
         }
 
         private void SysSleep(object sender, RoutedEventArgs e)
         {
-            Shell.Sleep();
+            PowerHelper.Sleep();
         }
 
         private void SysLock(object sender, RoutedEventArgs e)
         {
-            Shell.Lock();
+            ShellHelper.Lock();
         }
 
         private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
