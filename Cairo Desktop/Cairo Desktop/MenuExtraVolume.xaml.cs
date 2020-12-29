@@ -1,5 +1,4 @@
-﻿using CairoDesktop.Common;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -28,26 +27,26 @@ namespace CairoDesktop
             DispatcherTimer volumeIconTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 2), DispatcherPriority.Background, delegate
             {
                 volumeIcon_Tick();
-            }, this.Dispatcher);
+            }, Dispatcher);
         }
 
         private void volumeIcon_Tick()
         {
-            if (VolumeUtilities.IsVolumeMuted())
+            if (VolumeHelper.IsVolumeMuted())
             {
-                imgOpenVolume.Source = this.FindResource("VolumeMuteIcon") as ImageSource;
+                imgOpenVolume.Source = FindResource("VolumeMuteIcon") as ImageSource;
             }
-            else if (VolumeUtilities.GetMasterVolume() <= 0)
+            else if (VolumeHelper.GetMasterVolume() <= 0)
             {
-                imgOpenVolume.Source = this.FindResource("VolumeOffIcon") as ImageSource;
+                imgOpenVolume.Source = FindResource("VolumeOffIcon") as ImageSource;
             }
-            else if (VolumeUtilities.GetMasterVolume() < 0.5)
+            else if (VolumeHelper.GetMasterVolume() < 0.5)
             {
-                imgOpenVolume.Source = this.FindResource("VolumeLowIcon") as ImageSource;
+                imgOpenVolume.Source = FindResource("VolumeLowIcon") as ImageSource;
             }
             else
             {
-                imgOpenVolume.Source = this.FindResource("VolumeIcon") as ImageSource;
+                imgOpenVolume.Source = FindResource("VolumeIcon") as ImageSource;
             }
         }
 

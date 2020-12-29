@@ -487,7 +487,7 @@ namespace CairoDesktop
 
         private void checkIfCanHibernate()
         {
-            if (!Interop.Shell.CanHibernate())
+            if (!PowerHelper.CanHibernate())
             {
                 chkShowHibernate.Visibility = Visibility.Collapsed;
             }
@@ -702,7 +702,7 @@ namespace CairoDesktop
                 result =>
                 {
                     if (result == true)
-                        Interop.Shell.Logoff();
+                        ShellHelper.Logoff();
                 });
         }
 

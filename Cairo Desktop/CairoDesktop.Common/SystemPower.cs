@@ -1,6 +1,6 @@
-﻿using CairoDesktop.Interop;
-using CairoDesktop.Localization;
+﻿using CairoDesktop.Localization;
 using System;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Common
 {
@@ -23,7 +23,7 @@ namespace CairoDesktop.Common
                 , CairoMessageImage.ShutDown
                 , DisplayString.sShutDown_ShutDown
                 , DisplayString.sInterface_Cancel
-                , Shell.Shutdown);
+                , PowerHelper.Shutdown);
         }
 
         public static void ShowRebootConfirmation()
@@ -33,7 +33,7 @@ namespace CairoDesktop.Common
                 , CairoMessageImage.Restart
                 , DisplayString.sRestart_Restart
                 , DisplayString.sInterface_Cancel
-                , Shell.Reboot);
+                , PowerHelper.Reboot);
         }
 
         public static void ShowLogOffConfirmation()
@@ -43,7 +43,7 @@ namespace CairoDesktop.Common
                 , CairoMessageImage.LogOff
                 , DisplayString.sLogoff_Logoff
                 , DisplayString.sInterface_Cancel
-                , Shell.Logoff);
+                , ShellHelper.Logoff);
         }
     }
 }

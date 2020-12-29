@@ -93,10 +93,8 @@
   <ItemGroup>
     <Compile Include="KnownFolders.cs" />
     <Compile Include="AdvApi32.cs" />
-    <Compile Include="PowrProf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shell.Link.cs" />
-    <Compile Include="Shell.Power.cs" />
     <Compile Include="ShellFolders.cs" />
     <Compile Include="ShellWindow.cs" />
     <Compile Include="WindowsServices.cs" />
@@ -126,7 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ManagedShell">
-      <Version>0.0.20</Version>
+      <Version>0.0.21</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
