@@ -2,12 +2,12 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ManagedShell.WindowsTray;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
+using ManagedShell.WindowsTray;
 
 namespace CairoDesktop
 {
@@ -89,16 +89,13 @@ namespace CairoDesktop
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
-            
-            if (trayIcon != null)
+
+            if (MenuBar != null)
             {
-                if (MenuBar != null)
-                {
-                    // set current menu bar to return placement for ABM_GETTASKBARPOS message
-                    _notificationArea.SetTrayHostSizeData(GetMenuBarSizeData());
-                }
-                trayIcon.IconMouseClick(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
+                // set current menu bar to return placement for ABM_GETTASKBARPOS message
+                _notificationArea.SetTrayHostSizeData(GetMenuBarSizeData());
             }
+            trayIcon?.IconMouseClick(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
@@ -121,20 +118,14 @@ namespace CairoDesktop
         {
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
 
-            if (trayIcon != null)
-            {
-                trayIcon.IconMouseLeave(MouseHelper.GetCursorPositionParam());
-            }
+            trayIcon?.IconMouseLeave(MouseHelper.GetCursorPositionParam());
         }
 
         private void Image_MouseMove(object sender, MouseEventArgs e)
         {
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
 
-            if (trayIcon != null)
-            {
-                trayIcon.IconMouseMove(MouseHelper.GetCursorPositionParam());
-            }
+            trayIcon?.IconMouseMove(MouseHelper.GetCursorPositionParam());
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
