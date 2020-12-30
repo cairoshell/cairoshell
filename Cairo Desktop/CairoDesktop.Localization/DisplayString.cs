@@ -435,8 +435,6 @@ namespace CairoDesktop.Localization
 
         public static string sSettings_MenuBar_EnableNotificationArea => getString();
 
-        public static string sSettings_MenuBar_NotificationAreaError => getString();
-
         public static string sSettings_MenuBar_NotificationAreaTaskbarWarning => getString();
 
         public static string sSettings_MenuBar_ShowNotifyIcons => getString();

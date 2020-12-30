@@ -3,8 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using CairoDesktop.Interop;
-using CairoDesktop.WindowsTasks;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 
 namespace CairoDesktop
 {
@@ -42,7 +42,7 @@ namespace CairoDesktop
             // hide from alt-tab
             WindowInteropHelper helper = new WindowInteropHelper(this);
             handle = helper.Handle;
-            Shell.HideWindowFromTasks(handle);
+            WindowHelper.HideWindowFromTasks(handle);
 
             // get anchor point
             Point taskButtonPoint = taskButton.GetThumbnailAnchor();
@@ -69,7 +69,7 @@ namespace CairoDesktop
             if (isDwmEnabled)
             {
                 // set up thumbnail
-                dwmThumbnail.DpiScale = taskButton.ParentTaskbar.dpiScale;
+                dwmThumbnail.DpiScale = taskButton.ParentTaskbar.DpiScale;
                 dwmThumbnail.ThumbnailOpacity = 0;
                 dwmThumbnail.SourceWindowHandle = taskButton.Window.Handle;
 
@@ -134,7 +134,7 @@ namespace CairoDesktop
         {
             if (isDwmEnabled)
             {
-                Shell.PeekWindow(true, taskButton.Window.Handle, taskButton.ParentTaskbar.Handle);
+                WindowHelper.PeekWindow(true, taskButton.Window.Handle, taskButton.ParentTaskbar.Handle);
             }
         }
 
@@ -142,13 +142,13 @@ namespace CairoDesktop
         {
             if (isDwmEnabled)
             {
-                Shell.PeekWindow(false, taskButton.Window.Handle, taskButton.ParentTaskbar.Handle);
+                WindowHelper.PeekWindow(false, taskButton.Window.Handle, taskButton.ParentTaskbar.Handle);
             }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Tasks.Instance.CloseWindow(taskButton.Window);
+            taskButton.Window.Close();
             Close();
         }
 

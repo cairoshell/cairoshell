@@ -1,11 +1,11 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -81,7 +81,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("timedate.cpl");
+            ShellHelper.StartProcess("timedate.cpl");
         }
 
         private void ClockMenuItem_SubmenuOpened(object sender, RoutedEventArgs e)

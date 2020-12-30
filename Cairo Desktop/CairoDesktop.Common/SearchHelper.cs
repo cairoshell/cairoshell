@@ -11,6 +11,7 @@ using System.Diagnostics;
 using CairoDesktop.Common.Logging;
 using Microsoft.Win32;
 using System.Threading.Tasks;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Common
 {
@@ -76,7 +77,7 @@ namespace CairoDesktop.Common
             string displayNameColumn = "System.ItemNameDisplayWithoutExtension";
             RegistryKey hideFileExt = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced", false);
             object hideFileExtValue = hideFileExt?.GetValue("HideFileExt");
-            if ((hideFileExtValue != null && hideFileExtValue.ToString() == "0") || !Interop.Shell.IsWindows8OrBetter)
+            if ((hideFileExtValue != null && hideFileExtValue.ToString() == "0") || !EnvironmentHelper.IsWindows8OrBetter)
                 displayNameColumn = "System.ItemNameDisplay";
 
             SearchObjectState sos = (SearchObjectState)state;
@@ -176,7 +177,7 @@ namespace CairoDesktop.Common
                         string iconPath = Path.Substring(Path.IndexOf(':') + 1).Replace("/", "\\");
                         Icon = IconImageConverter.GetImageFromAssociatedIcon(iconPath, IconSize.Large);
                         _iconLoading = false;
-                    }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
+                    }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
 
                 return icon;

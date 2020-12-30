@@ -144,11 +144,11 @@
       <Name>CairoDesktop.Localization</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\CairoDesktop.WindowsTray\CairoDesktop.WindowsTray.csproj">
-      <Project>{79B5DDAC-5102-4B11-BFA1-B16D6F6FE661}</Project>
-      <Name>CairoDesktop.WindowsTray</Name>
-      <Private>False</Private>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ManagedShell">
+      <Version>0.0.21</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

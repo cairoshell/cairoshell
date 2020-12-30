@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Interop;
+using ManagedShell.Common.Helpers;
+using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop.Common
 {
@@ -50,7 +52,7 @@ namespace CairoDesktop.Common
 
         public ShellContextMenu(SystemFile[] files, ItemSelectAction itemSelected)
         {
-            lock (Shell.ComLock)
+            lock (IconHelper.ComLock)
             {
                 CreateHandle(new CreateParams());
                 paths = files;
@@ -71,7 +73,7 @@ namespace CairoDesktop.Common
         {
             if (directory != null)
             {
-                lock (Shell.ComLock)
+                lock (IconHelper.ComLock)
                 {
                     CreateHandle(new CreateParams());
                     this.directory = directory;
@@ -487,7 +489,7 @@ namespace CairoDesktop.Common
                 ShellFolders.AppendMenu(contextMenu, 0, (int)CairoContextMenuItem.Properties, Localization.DisplayString.sInterface_Properties);
                 ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.SEPARATOR, 0, string.Empty);
 
-                if (!Shell.IsCairoRunningAsShell)
+                if (!EnvironmentHelper.IsAppRunningAsShell)
                 {
                     ShellFolders.AppendMenu(contextMenu, 0, (int)CairoContextMenuItem.DisplaySettings, Localization.DisplayString.sDesktop_DisplaySettings);
                 }

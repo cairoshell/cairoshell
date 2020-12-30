@@ -1,8 +1,9 @@
-﻿using CairoDesktop.Interop;
+﻿using ManagedShell.Interop;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
@@ -22,7 +23,7 @@ namespace CairoDesktop
 
         private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)
         {
-            Shell.ShowActionCenter();
+            ShellHelper.ShowActionCenter();
         }
 
         private void miOpenActionCenter_MouseEnter(object sender, MouseEventArgs e)

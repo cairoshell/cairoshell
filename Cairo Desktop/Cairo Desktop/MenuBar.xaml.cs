@@ -5,24 +5,27 @@ using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
+using ManagedShell;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
+using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop
 {
-    public partial class MenuBar : AppBarWindow
+    public partial class MenuBar : CairoAppBarWindow
     {
         private readonly IApplicationUpdateService _applicationUpdateService;
+        private readonly ShellManager _shellManager;
 
         private MenuBarShadow shadow;
         private static HotKey cairoMenuHotKey;
         private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
-
-        private bool secretBottomMenuBar = false;
 
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
@@ -35,21 +38,18 @@ namespace CairoDesktop
         private MenuExtraSearch menuExtraSearch;
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        public MenuBar(WindowManager windowManager, IApplicationUpdateService applicationUpdateService) : this(windowManager, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen)
+        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService) : this(shellManager, windowManager, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen, NativeMethods.ABEdge.ABE_TOP)
         {
         }
 
-        public MenuBar(WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen) : base(windowManager)
+        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(shellManager, windowManager, screen, edge, 23)
         {
             _applicationUpdateService = applicationUpdateService;
+            _shellManager = shellManager;
 
             InitializeComponent();
-
-            Screen = screen;
-            desiredHeight = 23;
-            processScreenChanges = true;
-            requiresScreenEdge = true;
-            if (secretBottomMenuBar) appBarEdge = NativeMethods.ABEdge.ABE_BOTTOM;
+            
+            RequiresScreenEdge = true;
 
             SetPosition();
 
@@ -72,7 +72,7 @@ namespace CairoDesktop
 
         private void setupMenu()
         {
-            if (Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
+            if (EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
             {
                 // show Windows 10 features
                 miOpenUWPSettings.Visibility = Visibility.Visible;
@@ -80,7 +80,7 @@ namespace CairoDesktop
 
 #if !DEBUG
             // I didnt like the Exit Cairo option available when Cairo was set as Shell
-            if (Shell.IsCairoRunningAsShell)
+            if (EnvironmentHelper.IsAppRunningAsShell)
             {
                 miExitCairo.Visibility = Visibility.Collapsed;
             }
@@ -105,7 +105,7 @@ namespace CairoDesktop
             // Show power options depending on system support
             SetHibernateVisibility();
 
-            if (!Shell.CanSleep())
+            if (!PowerHelper.CanSleep())
             {
                 miSleep.Visibility = Visibility.Collapsed;
             }
@@ -123,18 +123,18 @@ namespace CairoDesktop
             if (Settings.Instance.EnableSysTray)
             {
                 // add systray
-                systemTray = new SystemTray(this);
+                systemTray = new SystemTray(this, _shellManager.NotificationArea);
                 MenuExtrasHost.Children.Add(systemTray);
             }
 
-            if (Settings.Instance.EnableMenuExtraVolume && Shell.IsWindows10OrBetter && Shell.IsCairoRunningAsShell)
+            if (Settings.Instance.EnableMenuExtraVolume && EnvironmentHelper.IsWindows10OrBetter && EnvironmentHelper.IsAppRunningAsShell)
             {
                 // add volume
                 menuExtraVolume = new MenuExtraVolume();
                 MenuExtrasHost.Children.Add(menuExtraVolume);
             }
 
-            if (Settings.Instance.EnableMenuExtraActionCenter && Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
+            if (Settings.Instance.EnableMenuExtraActionCenter && EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
             {
                 // add action center
                 menuExtraActionCenter = new MenuExtraActionCenter(this);
@@ -177,7 +177,7 @@ namespace CairoDesktop
             miUserName.Header = username;
 
             // Only show Downloads folder on Vista or greater
-            if (!Shell.IsWindowsVistaOrBetter)
+            if (!EnvironmentHelper.IsWindowsVistaOrBetter)
             {
                 PlacesDownloadsItem.Visibility = Visibility.Collapsed;
                 PlacesVideosItem.Visibility = Visibility.Collapsed;
@@ -198,7 +198,7 @@ namespace CairoDesktop
 
         private void setupShadow()
         {
-            if (Settings.Instance.EnableMenuBarShadow && shadow == null && !secretBottomMenuBar)
+            if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarEdge != NativeMethods.ABEdge.ABE_BOTTOM)
             {
                 shadow = new MenuBarShadow(this);
                 shadow.Show();
@@ -206,14 +206,16 @@ namespace CairoDesktop
             }
         }
 
-        protected override void PostInit()
+        protected override void OnSourceInitialized(object sender, EventArgs e)
         {
+            base.OnSourceInitialized(sender, e);
+            
             setupMenuExtras();
 
             registerCairoMenuHotKey();
 
             // Register L+R Windows key to open Programs menu
-            if (Shell.IsCairoRunningAsShell && Screen.Primary && programsMenuHotKeys.Count < 1)
+            if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary && programsMenuHotKeys.Count < 1)
             {
                 /*if (keyboardListener == null)
                     keyboardListener = new LowLevelKeyboardListener();
@@ -225,7 +227,7 @@ namespace CairoDesktop
                 programsMenuHotKeys.Add(new HotKey(Key.RWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
                 programsMenuHotKeys.Add(new HotKey(Key.Escape, HotKeyModifier.Ctrl | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
             }
-            else if (Shell.IsCairoRunningAsShell && Screen.Primary)
+            else if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary)
             {
                 foreach (var hotkey in programsMenuHotKeys)
                 {
@@ -261,7 +263,7 @@ namespace CairoDesktop
 
         private void SetHibernateVisibility()
         {
-            if (Settings.Instance.ShowHibernate && Shell.CanHibernate())
+            if (Settings.Instance.ShowHibernate && PowerHelper.CanHibernate())
             {
                 miHibernate.Visibility = Visibility.Visible;
             }
@@ -322,7 +324,7 @@ namespace CairoDesktop
 
         #region Events
 
-        internal override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
+        public override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
             base.AfterAppBarPos(isSameCoords, rect);
 
@@ -332,12 +334,10 @@ namespace CairoDesktop
             }
         }
 
-        internal override void SetPosition()
+        public override void SetPosition()
         {
-            Top = getDesiredTopPosition();
-            Left = Screen.Bounds.X / dpiScale;
-            Width = Screen.Bounds.Width / dpiScale;
-            Height = desiredHeight;
+            base.SetPosition();
+            
             setShadowPosition();
         }
 
@@ -374,10 +374,10 @@ namespace CairoDesktop
         {
             double top;
 
-            if (secretBottomMenuBar) 
-                top = (Screen.Bounds.Bottom / dpiScale) - desiredHeight;
+            if (AppBarEdge == NativeMethods.ABEdge.ABE_BOTTOM) 
+                top = (Screen.Bounds.Bottom / DpiScale) - DesiredHeight;
             else
-                top = Screen.Bounds.Y / dpiScale;
+                top = Screen.Bounds.Y / DpiScale;
 
             return top;
         }
@@ -418,12 +418,12 @@ namespace CairoDesktop
 
         private void MenuBar_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            _windowManager.NotifyAppBarEvent(this, AppBarEventReason.MouseEnter);
+            _appBarManager.NotifyAppBarEvent(this, AppBarEventReason.MouseEnter);
         }
 
         private void MenuBar_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            _windowManager.NotifyAppBarEvent(this, AppBarEventReason.MouseLeave);
+            _appBarManager.NotifyAppBarEvent(this, AppBarEventReason.MouseLeave);
         }
 
         private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -507,7 +507,7 @@ namespace CairoDesktop
 
         private void OpenRunWindow(object sender, RoutedEventArgs e)
         {
-            Shell.ShowRunDialog();
+            ShellHelper.ShowRunDialog(Localization.DisplayString.sRun_Title, Localization.DisplayString.sRun_Info);
         }
 
         private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
@@ -525,32 +525,32 @@ namespace CairoDesktop
 
         private void OpenControlPanel(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("control.exe");
+            ShellHelper.StartProcess("control.exe");
         }
 
         private void miOpenUWPSettings_Click(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("ms-settings://");
+            ShellHelper.StartProcess("ms-settings://");
         }
 
         private void OpenTaskManager(object sender, RoutedEventArgs e)
         {
-            Shell.StartTaskManager();
+            ShellHelper.StartTaskManager();
         }
 
         private void SysHibernate(object sender, RoutedEventArgs e)
         {
-            Shell.Hibernate();
+            PowerHelper.Hibernate();
         }
 
         private void SysSleep(object sender, RoutedEventArgs e)
         {
-            Shell.Sleep();
+            PowerHelper.Sleep();
         }
 
         private void SysLock(object sender, RoutedEventArgs e)
         {
-            Shell.Lock();
+            ShellHelper.Lock();
         }
 
         private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)

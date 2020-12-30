@@ -4,21 +4,47 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using CairoDesktop.Common.Logging;
-using CairoDesktop.Interop;
+using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.SupportingClasses
 {
     public sealed class WindowManager : IDisposable
     {
+        private bool _isSettingDisplays;
         private bool hasCompletedInitialDisplaySetup;
         private int pendingDisplayEvents;
         private readonly static object displaySetupLock = new object();
         private readonly List<IWindowService> _windowServices = new List<IWindowService>();
+        private readonly AppBarManager _appBarManager;
 
-        public bool IsSettingDisplays { get; set; }
+        public bool IsSettingDisplays
+        {
+            get => _isSettingDisplays;
+            set
+            {
+                if (value != _isSettingDisplays)
+                {
+                    _isSettingDisplays = value;
+
+                    // when setting displays, flip AllowClose to true on AppBars so they will close if their screen goes away
+                    if (_isSettingDisplays)
+                    {
+                        _appBarManager.SignalGracefulShutdown();
+                    }
+                    else
+                    {
+                        foreach (AppBarWindow window in _appBarManager.AppBars)
+                        {
+                            window.AllowClose = false;
+                        }
+                    }
+                }
+            }
+        }
+
         public Screen[] ScreenState = Array.Empty<Screen>();
-
-        public EventHandler<AppBarEventArgs> AppBarEvent;
+        
         public EventHandler<WindowManagerEventArgs> DwmChanged;
         public EventHandler<WindowManagerEventArgs> ScreensChanged;
 
@@ -26,15 +52,7 @@ namespace CairoDesktop.SupportingClasses
         {
             get
             {
-                return new System.Drawing.Size(Convert.ToInt32(SystemParameters.PrimaryScreenWidth / Shell.DpiScaleAdjustment), Convert.ToInt32(SystemParameters.PrimaryScreenHeight / Shell.DpiScaleAdjustment));
-            }
-        }
-
-        public static System.Drawing.Size PrimaryMonitorDeviceSize
-        {
-            get
-            {
-                return new System.Drawing.Size(NativeMethods.GetSystemMetrics(0), NativeMethods.GetSystemMetrics(1));
+                return new System.Drawing.Size(Convert.ToInt32(SystemParameters.PrimaryScreenWidth / DpiHelper.DpiScaleAdjustment), Convert.ToInt32(SystemParameters.PrimaryScreenHeight / DpiHelper.DpiScaleAdjustment));
             }
         }
 
@@ -46,8 +64,9 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public WindowManager(DesktopManager desktopManager)
+        public WindowManager(ShellManagerService shellManagerService, DesktopManager desktopManager)
         {
+            _appBarManager = shellManagerService.ShellManager.AppBarManager;
             desktopManager.Initialize(this);
 
             // start a timer to handle orphaned display events
@@ -108,12 +127,6 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public void NotifyAppBarEvent(AppBarWindow sender, AppBarEventReason reason)
-        {
-            AppBarEventArgs args = new AppBarEventArgs { Reason = reason };
-            AppBarEvent?.Invoke(sender, args);
-        }
-
         private bool HaveDisplaysChanged()
         {
             ResetScreenCache();
@@ -157,7 +170,6 @@ namespace CairoDesktop.SupportingClasses
                     {
                         // if this is only a DPI change, screens will be the same but we still need to reposition
                         RefreshWindows(reason, false);
-                        SetDisplayWorkAreas();
                     }
 
                     pendingDisplayEvents--;
@@ -236,9 +248,6 @@ namespace CairoDesktop.SupportingClasses
 
             // open windows on newly added screens
             ProcessAddedScreens(addedScreens);
-
-            // update each display's work area if we are shell
-            SetDisplayWorkAreas();
 
             CairoLogger.Debug("WindowManager: Completed display setup");
         }
@@ -329,84 +338,6 @@ namespace CairoDesktop.SupportingClasses
             }
 
             return null;
-        }
-        #endregion
-
-        #region Work area
-        private void SetDisplayWorkAreas()
-        {
-            // Set desktop work area for when Explorer isn't running
-            if (Shell.IsCairoRunningAsShell)
-            {
-                foreach (var screen in ScreenState)
-                {
-                    SetWorkArea(screen);
-                }
-            }
-        }
-
-        public NativeMethods.Rect GetWorkArea(ref double dpiScale, Screen screen, bool edgeBarsOnly, bool enabledBarsOnly)
-        {
-            double topEdgeWindowHeight = 0;
-            double bottomEdgeWindowHeight = 0;
-            NativeMethods.Rect rc;
-            rc.Left = screen.Bounds.Left;
-            rc.Right = screen.Bounds.Right;
-
-            // get appropriate windows for this display
-            foreach (var windowService in _windowServices)
-            {
-                foreach (var window in windowService.Windows)
-                {
-                    if (window.Screen.DeviceName == screen.DeviceName)
-                    {
-                        if ((window.enableAppBar || !enabledBarsOnly) && (window.requiresScreenEdge || !edgeBarsOnly))
-                        {
-                            if (window.appBarEdge == NativeMethods.ABEdge.ABE_TOP)
-                            {
-                                topEdgeWindowHeight += window.ActualHeight;
-                            }
-                            else if (window.appBarEdge == NativeMethods.ABEdge.ABE_BOTTOM)
-                            {
-                                bottomEdgeWindowHeight += window.ActualHeight;
-                            }
-                        }
-
-                        dpiScale = window.dpiScale;
-                        break;
-                    }
-                }
-            }
-
-            rc.Top = screen.Bounds.Top + (int)(topEdgeWindowHeight * dpiScale);
-            rc.Bottom = screen.Bounds.Bottom - (int)(bottomEdgeWindowHeight * dpiScale);
-
-            return rc;
-        }
-
-        public void SetWorkArea(Screen screen)
-        {
-            double dpiScale = 1;
-            NativeMethods.Rect rc = GetWorkArea(ref dpiScale, screen, false, true);
-
-            NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 1, ref rc, (uint)(NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
-        }
-
-        public static void ResetWorkArea()
-        {
-            if (Shell.IsCairoRunningAsShell)
-            {
-                // TODO this is wrong for multi-display
-                // set work area back to full screen size. we can't assume what pieces of the old work area may or may not be still used
-                NativeMethods.Rect oldWorkArea;
-                oldWorkArea.Left = SystemInformation.VirtualScreen.Left;
-                oldWorkArea.Top = SystemInformation.VirtualScreen.Top;
-                oldWorkArea.Right = SystemInformation.VirtualScreen.Right;
-                oldWorkArea.Bottom = SystemInformation.VirtualScreen.Bottom;
-
-                NativeMethods.SystemParametersInfo((int)NativeMethods.SPI.SETWORKAREA, 1, ref oldWorkArea,
-                    (uint)(NativeMethods.SPIF.UPDATEINIFILE | NativeMethods.SPIF.SENDWININICHANGE));
-            }
         }
         #endregion
 

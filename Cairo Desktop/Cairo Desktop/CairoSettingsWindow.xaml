@@ -4,7 +4,7 @@
         xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
-        xmlns:interop="clr-namespace:CairoDesktop.Interop;assembly=CairoDesktop.Interop"
+        xmlns:helpers="clr-namespace:ManagedShell.Common.Helpers;assembly=ManagedShell.Common"
         xmlns:validator="clr-namespace:CairoDesktop.SupportingClasses"
         Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
         SizeToContent="WidthAndHeight"
@@ -14,7 +14,7 @@
         WindowStyle="SingleBorderWindow"
         SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
-        <interop:Shell x:Key="shellHelper" />
+        <helpers:EnvironmentHelper x:Key="envHelper" />
         <Style x:Key="CairoSettingsBarRestartStyle"
                TargetType="{x:Type TabItem}">
             <Setter Property="Foreground"
@@ -435,11 +435,6 @@
                                Width="300"
                                TextWrapping="Wrap"
                                Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationAreaTaskbarWarning)}" />
-                    <TextBlock Name="lblTrayWarning"
-                               Visibility="Collapsed"
-                               Width="300"
-                               TextWrapping="Wrap"
-                               Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationAreaError)}" />
                     <StackPanel Orientation="Vertical"
                                 Name="pnlTraySettings">
                         <StackPanel Orientation="Horizontal"
@@ -848,7 +843,7 @@
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Advanced_Shell)}"
                                Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Vertical"
-                                DataContext="{StaticResource shellHelper}">
+                                DataContext="{StaticResource envHelper}">
                         <TextBlock>
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
@@ -861,7 +856,7 @@
                                     <Setter Property="Text"
                                             Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_ExplorerIsShell)}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsCairoConfiguredAsShell}"
+                                        <DataTrigger Binding="{Binding IsAppConfiguredAsShell}"
                                                      Value="True">
                                             <Setter Property="Text"
                                                     Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_CairoIsShell)}" />
@@ -881,7 +876,7 @@
                                     <Setter Property="Content"
                                             Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetCairoAsShell)}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsCairoConfiguredAsShell}"
+                                        <DataTrigger Binding="{Binding IsAppConfiguredAsShell}"
                                                      Value="True">
                                             <Setter Property="Content"
                                                     Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetExplorerAsShell)}" />

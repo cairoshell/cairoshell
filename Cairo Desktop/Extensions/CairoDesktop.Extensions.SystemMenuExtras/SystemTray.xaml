@@ -3,7 +3,7 @@
              x:Class="CairoDesktop.Extensions.SystemMenuExtras.SystemTray"
              x:Name="CairoSystemTray"
              Height="22"
-             Margin="0,0,8,0">
+             Margin="8,0,8,0">
     <UserControl.Resources>
         <Style TargetType="ItemsControl">
             <Setter Property="Template">
@@ -17,7 +17,7 @@
                 <Setter.Value>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal"
-                            HorizontalAlignment="Right" />
+                                    HorizontalAlignment="Right" />
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
@@ -26,9 +26,9 @@
                     <DataTemplate>
                         <Border MouseUp="Image_MouseUp" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave" MouseMove="Image_MouseMove" Background="Transparent" ToolTip="{Binding Path=Title}" ToolTipService.Placement="Bottom">
                             <Image Source="{Binding Path=Icon, Mode=OneWay}"
-                            Width="16"
-                            Height="16"
-                            Margin="5,0,5,2" />
+                                   Width="16"
+                                   Height="16"
+                                   Margin="5,0,5,2" />
                         </Border>
                     </DataTemplate>
                 </Setter.Value>

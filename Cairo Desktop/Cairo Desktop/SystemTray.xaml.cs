@@ -1,23 +1,27 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CairoDesktop.WindowsTray;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
+using ManagedShell.WindowsTray;
 
 namespace CairoDesktop
 {
     public partial class SystemTray
     {
-        public MenuBar MenuBar;
+        private readonly MenuBar MenuBar;
+        private readonly NotificationArea _notificationArea;
 
-        public SystemTray(MenuBar menuBar)
+        public SystemTray(MenuBar menuBar, NotificationArea notificationArea)
         {
             InitializeComponent();
 
-            DataContext = NotificationArea.Instance;
+            _notificationArea = notificationArea;
+            DataContext = _notificationArea;
             MenuBar = menuBar;
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
@@ -28,6 +32,12 @@ namespace CairoDesktop
             if (Settings.Instance.SysTrayAlwaysExpanded)
             {
                 UnpinnedItems.Visibility = Visibility.Visible;
+            }
+
+            // Don't allow showing both the Windows TaskBar and the Cairo tray
+            if (Settings.Instance.EnableSysTray && (Settings.Instance.EnableTaskbar || EnvironmentHelper.IsAppRunningAsShell) && _notificationArea.Handle == IntPtr.Zero)
+            {
+                _notificationArea.Initialize();
             }
         }
 
@@ -71,29 +81,21 @@ namespace CairoDesktop
             }
         }
 
-        private uint getMousePos()
-        {
-            return (((uint)System.Windows.Forms.Cursor.Position.Y << 16) | (uint)System.Windows.Forms.Cursor.Position.X);
-        }
-
         public TrayHostSizeData GetMenuBarSizeData()
         {
-            return new TrayHostSizeData { edge = (int)MenuBar.appBarEdge, rc = new NativeMethods.Rect { Top = (int)(MenuBar.Top * MenuBar.dpiScale), Left = (int)(MenuBar.Left * MenuBar.dpiScale), Bottom = (int)((MenuBar.Top + MenuBar.Height) * MenuBar.dpiScale), Right = (int)((MenuBar.Left + MenuBar.Width) * MenuBar.dpiScale) } };
+            return new TrayHostSizeData { edge = MenuBar.AppBarEdge, rc = new NativeMethods.Rect { Top = (int)(MenuBar.Top * MenuBar.DpiScale), Left = (int)(MenuBar.Left * MenuBar.DpiScale), Bottom = (int)((MenuBar.Top + MenuBar.Height) * MenuBar.DpiScale), Right = (int)((MenuBar.Left + MenuBar.Width) * MenuBar.DpiScale) } };
         }
 
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
-            
-            if (trayIcon != null)
+
+            if (MenuBar != null)
             {
-                if (MenuBar != null)
-                {
-                    // set current menu bar to return placement for ABM_GETTASKBARPOS message
-                    NotificationArea.Instance.SetTrayHostSizeData(GetMenuBarSizeData());
-                }
-                trayIcon.IconMouseClick(e.ChangedButton, getMousePos(), System.Windows.Forms.SystemInformation.DoubleClickTime);
+                // set current menu bar to return placement for ABM_GETTASKBARPOS message
+                _notificationArea.SetTrayHostSizeData(GetMenuBarSizeData());
             }
+            trayIcon?.IconMouseClick(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
@@ -107,8 +109,8 @@ namespace CairoDesktop
                 Point location = sendingDecorator.PointToScreen(new Point(0, 0));
                 double dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
 
-                trayIcon.Placement = new Interop.NativeMethods.Rect { Top = (int)location.Y, Left = (int)location.X, Bottom = (int)(sendingDecorator.ActualHeight * dpiScale), Right = (int)(sendingDecorator.ActualWidth * dpiScale) };
-                trayIcon.IconMouseEnter(getMousePos());
+                trayIcon.Placement = new NativeMethods.Rect { Top = (int)location.Y, Left = (int)location.X, Bottom = (int)(sendingDecorator.ActualHeight * dpiScale), Right = (int)(sendingDecorator.ActualWidth * dpiScale) };
+                trayIcon.IconMouseEnter(MouseHelper.GetCursorPositionParam());
             }
         }
 
@@ -116,20 +118,14 @@ namespace CairoDesktop
         {
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
 
-            if (trayIcon != null)
-            {
-                trayIcon.IconMouseLeave(getMousePos());
-            }
+            trayIcon?.IconMouseLeave(MouseHelper.GetCursorPositionParam());
         }
 
         private void Image_MouseMove(object sender, MouseEventArgs e)
         {
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
 
-            if (trayIcon != null)
-            {
-                trayIcon.IconMouseMove(getMousePos());
-            }
+            trayIcon?.IconMouseMove(MouseHelper.GetCursorPositionParam());
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)

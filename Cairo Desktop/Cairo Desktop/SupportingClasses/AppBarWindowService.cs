@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
+using ManagedShell;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -8,12 +9,14 @@ namespace CairoDesktop.SupportingClasses
         public bool EnableMultiMon { get; protected set; }
         public bool EnableService { get; protected set; }
 
-        public List<AppBarWindow> Windows { get; } = new List<AppBarWindow>();
+        public List<CairoAppBarWindow> Windows { get; } = new List<CairoAppBarWindow>();
 
+        protected ShellManager _shellManager;
         protected WindowManager _windowManager;
 
-        protected AppBarWindowService(WindowManager windowManager)
+        protected AppBarWindowService(ShellManagerService shellManagerService, WindowManager windowManager)
         {
+            _shellManager = shellManagerService.ShellManager;
             _windowManager = windowManager;
         }
 
@@ -39,7 +42,7 @@ namespace CairoDesktop.SupportingClasses
             if (EnableService && EnableMultiMon)
             {
                 // close menu bars
-                AppBarWindow windowToClose = null;
+                CairoAppBarWindow windowToClose = null;
                 foreach (var window in Windows)
                 {
                     if (window.Screen != null && window.Screen.DeviceName == screenDeviceName)
@@ -73,7 +76,7 @@ namespace CairoDesktop.SupportingClasses
             {
                 foreach (Screen screen in _windowManager.ScreenState)
                 {
-                    AppBarWindow window = WindowManager.GetScreenWindow(Windows, screen);
+                    CairoAppBarWindow window = WindowManager.GetScreenWindow(Windows, screen);
 
                     if (window != null)
                     {

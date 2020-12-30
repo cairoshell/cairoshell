@@ -1,7 +1,6 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
 using Microsoft.Win32;
 using System;
@@ -15,6 +14,9 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 using DataFormats = System.Windows.DataFormats;
 using DragDropEffects = System.Windows.DragDropEffects;
 using DragEventArgs = System.Windows.DragEventArgs;
@@ -29,8 +31,9 @@ namespace CairoDesktop
         #region Properties
         private WindowInteropHelper helper;
         private bool altF4Pressed;
+        private AppBarManager _appBarManager;
         private DesktopManager _desktopManager;
-        private WindowManager _windowManager;
+        private FullScreenHelper _fullScreenHelper;
 
         public bool AllowClose;
         public IntPtr Handle;
@@ -39,12 +42,13 @@ namespace CairoDesktop
         private Brush BackgroundBrush { get; set; }
         #endregion
 
-        public Desktop(WindowManager windowManager, DesktopManager desktopManager)
+        public Desktop(DesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper)
         {
             InitializeComponent();
 
+            _appBarManager = appBarManager;
             _desktopManager = desktopManager;
-            _windowManager = windowManager;
+            _fullScreenHelper = fullScreenHelper;
 
             if (_desktopManager.ShellWindow != null)
             {
@@ -57,12 +61,12 @@ namespace CairoDesktop
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
 
-            FullScreenHelper.Instance.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
+            _fullScreenHelper.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
         }
 
         private void SetupPostInit()
         {
-            Shell.HideWindowFromTasks(Handle);
+            WindowHelper.HideWindowFromTasks(Handle);
 
             SendToBottom();
 
@@ -90,7 +94,7 @@ namespace CairoDesktop
                     if ((wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
                     {
                         // get the lowest window, we want to insert after it
-                        IntPtr lowestHwnd = Shell.GetLowestDesktopParentHwnd();
+                        IntPtr lowestHwnd = WindowHelper.GetLowestDesktopParentHwnd();
 
                         if (lowestHwnd != IntPtr.Zero)
                         {
@@ -133,7 +137,7 @@ namespace CairoDesktop
             {
                 // unsubscribe from things
                 Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
-                FullScreenHelper.Instance.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
+                _fullScreenHelper.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
             }
         }
 
@@ -229,7 +233,7 @@ namespace CairoDesktop
                     {
                         if (videoElement.LoadedBehavior == MediaState.Manual)
                         {
-                            if (FullScreenHelper.Instance.FullScreenApps.Count > 0)
+                            if (_fullScreenHelper.FullScreenApps.Count > 0)
                             {
                                 if (videoElement.CanPause)
                                 {
@@ -252,7 +256,7 @@ namespace CairoDesktop
         {
             if (_desktopManager.ShellWindow == null && !_desktopManager.AllowProgmanChild)
             {
-                Shell.ShowWindowDesktop(Handle);
+                WindowHelper.ShowWindowDesktop(Handle);
             }
         }
 
@@ -267,22 +271,22 @@ namespace CairoDesktop
 
         private void setSize()
         {
-            Width = SystemInformation.VirtualScreen.Width / Shell.DpiScale;
-            Height = (SystemInformation.VirtualScreen.Height / Shell.DpiScale) - (Shell.IsCairoRunningAsShell ? 0 : 1); // making size of screen causes explorer to send ABN_FULLSCREENAPP
+            Width = SystemInformation.VirtualScreen.Width / DpiHelper.DpiScale;
+            Height = (SystemInformation.VirtualScreen.Height / DpiHelper.DpiScale) - (EnvironmentHelper.IsAppRunningAsShell ? 0 : 1); // making size of screen causes explorer to send ABN_FULLSCREENAPP
         }
 
         private void setGridPosition()
         {
-            double top = SystemInformation.WorkingArea.Top / Shell.DpiScale;
-            double left = SystemInformation.WorkingArea.Left / Shell.DpiScale;
+            double top = SystemInformation.WorkingArea.Top / DpiHelper.DpiScale;
+            double left = SystemInformation.WorkingArea.Left / DpiHelper.DpiScale;
 
             if (_desktopManager.ShellWindow != null || _desktopManager.AllowProgmanChild)
             {
-                top = (0 - SystemInformation.VirtualScreen.Top + SystemInformation.WorkingArea.Top) / Shell.DpiScale;
-                left = (0 - SystemInformation.VirtualScreen.Left + SystemInformation.WorkingArea.Left) / Shell.DpiScale;
+                top = (0 - SystemInformation.VirtualScreen.Top + SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale;
+                left = (0 - SystemInformation.VirtualScreen.Left + SystemInformation.WorkingArea.Left) / DpiHelper.DpiScale;
             }
 
-            grid.Width = WindowManager.PrimaryMonitorWorkArea.Width / Shell.DpiScale;
+            grid.Width = WindowManager.PrimaryMonitorWorkArea.Width / DpiHelper.DpiScale;
 
             if (Settings.Instance.TaskbarMode == 1)
             {
@@ -290,9 +294,9 @@ namespace CairoDesktop
                 // this keeps the desktop going beneath the TaskBar
                 // get the TaskBar's height
                 double dpiScale = 1;
-                NativeMethods.Rect workAreaRect = _windowManager.GetWorkArea(ref dpiScale, Screen.PrimaryScreen, false, false);
+                NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(ref dpiScale, Screen.PrimaryScreen, false, false);
 
-                grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / Shell.DpiScale) - ((Screen.PrimaryScreen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale);
+                grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale) - ((Screen.PrimaryScreen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale);
 
                 if (Settings.Instance.TaskbarPosition == 1)
                 {
@@ -301,7 +305,7 @@ namespace CairoDesktop
             }
             else
             {
-                grid.Height = WindowManager.PrimaryMonitorWorkArea.Height / Shell.DpiScale;
+                grid.Height = WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale;
             }
 
             grid.Margin = new Thickness(left, top, 0, 0);
@@ -462,7 +466,7 @@ namespace CairoDesktop
         private Brush GetCairoBackgroundBrush_Image(string wallpaper, CairoWallpaperStyle wallpaperStyle)
         {
             ImageBrush backgroundImageBrush = null;
-            if (!string.IsNullOrWhiteSpace(wallpaper) && Shell.Exists(wallpaper))
+            if (!string.IsNullOrWhiteSpace(wallpaper) && ShellHelper.Exists(wallpaper))
             {
                 try
                 {

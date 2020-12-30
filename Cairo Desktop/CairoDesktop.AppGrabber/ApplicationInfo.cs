@@ -1,11 +1,11 @@
-﻿using CairoDesktop.Common;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -181,7 +181,7 @@ namespace CairoDesktop.AppGrabber
                         Icon = GetAssociatedIcon();
                         Icon.Freeze();
                         _iconLoading = false;
-                    }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
+                    }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
 
                 return icon;
@@ -309,11 +309,11 @@ namespace CairoDesktop.AppGrabber
             {
                 string iconUri = IconPath;
 
-                if (!useCache || string.IsNullOrEmpty(iconUri) || !Interop.Shell.Exists(iconUri))
+                if (!useCache || string.IsNullOrEmpty(iconUri) || !ShellHelper.Exists(iconUri))
                 {
                     try
                     {
-                        string[] icon = UWPInterop.StoreAppHelper.GetAppIcon(Target, (int)size);
+                        string[] icon = ManagedShell.UWPInterop.StoreAppHelper.GetAppIcon(Target, (int)size);
                         iconUri = icon[0];
                         IconColor = icon[1];
 
