@@ -1,5 +1,8 @@
-﻿namespace CairoDesktop.Common.Logging.Legacy
+﻿using System;
+
+namespace CairoDesktop.Common.Logging.Legacy
 {
+    [Obsolete("Retiring in favor of Microsoft.Extensions.Logging")]
     public static partial class CairoLogger
     {
         public delegate void LogEventHandler(object sender, LogEventArgs e);

@@ -1,12 +1,14 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Common.Logging;
+using CairoDesktop.Common.Logging.Legacy;
+using CairoDesktop.Common.Logging.Observers;
 using CairoDesktop.Configuration;
-using CairoDesktop.Infrastructure.DependencyInjection;
 using CairoDesktop.ObjectModel;
 using CairoDesktop.SupportingClasses;
+using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,13 +20,12 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-using CairoDesktop.Common.Logging.Legacy;
-using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
     public partial class CairoApplication : System.Windows.Application, ICairoApplication
     {
+        private readonly ILogger<CairoApplication> _logger;
         public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
 
         private System.Threading.Mutex _cairoMutex;
@@ -34,8 +35,16 @@ namespace CairoDesktop
         private bool _forceEnableShellMode;
         private bool _forceDisableShellMode;
 
+        // Needed for WPF?
         public CairoApplication()
         {
+        }
+
+        public CairoApplication(IHost host, ILogger<CairoApplication> logger, LoggerLogAttacher loggerLogAttacher)
+        {
+            Host = host;
+            _logger = logger;
+
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             ProcessCommandLineArgs(Environment.GetCommandLineArgs());
@@ -52,29 +61,6 @@ namespace CairoDesktop
             CairoMenu = new List<IMenuItem>();
             Places = new List<IMenuItem>();
             MenuExtras = new List<MenuExtra>();
-
-            Host = new HostBuilder()
-                .ConfigureServices((context, services) =>
-                {
-                    services.AddSingleton<ICairoApplication>(this);
-                    
-                    services.AddSingleton<ShellManagerService>();
-
-                    services.AddSingleton<DesktopManager>();
-                    services.AddSingleton<WindowManager>();
-                    services.AddSingleton<IWindowService, MenuBarWindowService>();
-                    services.AddSingleton<IWindowService, TaskbarWindowService>();
-
-                    services.AddInfrastructureServices(context.Configuration);
-
-                    services.AddDependencyLoadingServices(context.Configuration, Path.Combine(StartupPath, "Extensions"));
-                    services.AddDependencyLoadingServices(context.Configuration, Path.Combine(CairoApplicationDataFolder, "Extensions"));
-                })
-                .ConfigureLogging((context, logging) =>
-                {
-                    logging.AddInfrastructureLogging();
-                })
-                .Build();
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -87,8 +73,6 @@ namespace CairoDesktop
 
             // Initialize current shell information here, since it won't be accurate if we wait until after we create our own windows
             SetIsCairoRunningAsShell();
-
-            SetupLoggingSystem();
 
             WriteApplicationDebugInfoToConsole();
 

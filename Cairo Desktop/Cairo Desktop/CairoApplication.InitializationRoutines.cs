@@ -1,17 +1,14 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Common.Logging.Observers;
 using CairoDesktop.Configuration;
+using CairoDesktop.SupportingClasses;
+using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic.Devices;
 using System;
 using System.Diagnostics;
-using System.IO;
-using CairoDesktop.Common.Logging.Legacy;
-using CairoDesktop.Common.Logging.Legacy.Observers;
-using CairoDesktop.SupportingClasses;
-using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
@@ -78,189 +75,23 @@ namespace CairoDesktop
             }
         }
 
-        private void SetupLoggingSystem()
-        {
-            // use the default logs folder
-            string logsFolder = CairoApplication.LogsFolder;
-
-            // create the filename that will power the current log file listener
-            string filename = Path.Combine(logsFolder, DefaultLogName);
-
-            // make sure it exists
-            if (!CreateLogsFolder(logsFolder))
-            {
-                // if it already existed, backup the existing log files
-                BackupExistingLogFiles(logsFolder);
-
-                // and then delete any that are too old
-                DeleteOldLogFiles(logsFolder);
-            }
-
-            var fileLog = new FileLog(filename);
-            fileLog.Open();
-
-            CairoLogger.Severity = GetLogSeveritySetting(defaultValue: LogSeverity.Info);
-            CairoLogger.Attach(fileLog);
-            CairoLogger.Attach(new ConsoleLog());
-        }
-
-        private LogSeverity GetLogSeveritySetting(LogSeverity defaultValue)
-        {
-            if (!Enum.TryParse(Settings.Instance.LogSeverity, out LogSeverity result))
-            {
-                Settings.Instance.LogSeverity = defaultValue.ToString();
-                result = defaultValue;
-            }
-
-            return result;
-        }
-
-        #region Log File Management
-
-        /// <summary>
-        /// Returns the default date format used to name log files.
-        /// </summary>
-        private string DefaultDateFormat
-        {
-            get
-            {
-                return "MM-dd-yyyy";
-            }
-        }
-
-        /// <summary>
-        /// Returns the default file extension used to name log files.
-        /// </summary>
-        private string DefaultLogFileExtension
-        {
-            get
-            {
-                return "log";
-            }
-        }
-
-        /// <summary>
-        /// Returns the default name of the log file.
-        /// </summary>
-        private string DefaultLogName
-        {
-            get
-            {
-                return string.Format("{0}.{1}", DateTime.Now.ToString(DefaultDateFormat), DefaultLogFileExtension);
-            }
-        }
-
-        /// <summary>
-        /// Returns the default name of the backup log file.
-        /// </summary>
-        private string DefaultBackupLogName
-        {
-            get
-            {
-                return string.Format("{0}-Backup.{1}", DateTime.Now.ToString(DefaultDateFormat), DefaultLogFileExtension);
-            }
-        }
-
-        /// <summary>
-        /// Creates the logs folder. Returns true if the directory was created, false otherwise.
-        /// </summary>
-        /// <param name="logsFolder">The directory to create.</param>
-        /// <returns></returns>
-        private bool CreateLogsFolder(string logsFolder)
-        {
-            try
-            {
-                if (Directory.Exists(logsFolder))
-                {
-                    return false;
-                }
-
-                Directory.CreateDirectory(logsFolder);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Backs up the existing log file, as the last run backup.
-        /// </summary>
-        /// <param name="logsFolder"></param>
-        private void BackupExistingLogFiles(string logsFolder)
-        {
-            try
-            {
-                string currentFilename = Path.Combine(logsFolder, DefaultLogName);
-                if (File.Exists(currentFilename))
-                {
-                    string backupFilename = Path.Combine(logsFolder, DefaultBackupLogName);
-                    if (File.Exists(backupFilename))
-                    {
-                        File.Delete(backupFilename);
-                    }
-
-                    File.Move(currentFilename, backupFilename);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-        }
-
-        /// <summary>
-        /// Deletes any log files older than a week.
-        /// </summary>
-        /// <param name="logsFolder"></param>
-        private void DeleteOldLogFiles(string logsFolder)
-        {
-            try
-            {
-                // look for all of the log files
-                DirectoryInfo info = new DirectoryInfo(logsFolder);
-                FileInfo[] files = info.GetFiles(string.Format("*.{0}", DefaultLogFileExtension), SearchOption.TopDirectoryOnly);
-
-                // delete any files that are more than a week old
-                DateTime now = DateTime.Now;
-                TimeSpan allowedDelta = new TimeSpan(7, 0, 0);
-
-                foreach (FileInfo file in files)
-                {
-                    if (now.Subtract(file.LastWriteTime) > allowedDelta)
-                    {
-                        file.Delete();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-        }
-        #endregion
-
         internal void LoadExtensions()
         {
             var pluginService = Host.Services.GetService<IExtensionService>();
             pluginService?.Start();
         }
+
         internal void WriteApplicationDebugInfoToConsole()
         {
-            const string @break = @"#############################################";
-
-            CairoLogger.Info(@break);
-            CairoLogger.Info($"{CairoApplication.ProductName}");
-            CairoLogger.Info($"Version: {CairoApplication.ProductVersion}");
-            CairoLogger.Info($"Operating System: {new ComputerInfo().OSFullName}");
-            CairoLogger.Info($"OS Build: {new ComputerInfo().OSVersion}");
-            CairoLogger.Info($"Processor Type: {(IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)}-bit");
-            CairoLogger.Info($"Startup Path: {CairoApplication.StartupPath}");
-            CairoLogger.Info($"Running As: {IntPtr.Size * 8}-bit Process");
-            CairoLogger.Info($"Configured as shell: {EnvironmentHelper.IsAppConfiguredAsShell}");
-            CairoLogger.Info($"Running as shell: {EnvironmentHelper.IsAppRunningAsShell}");
-            CairoLogger.Info(@break);
+            _logger.LogInformation($"{ProductName}");
+            _logger.LogInformation($"Version: {ProductVersion}");
+            _logger.LogInformation($"Operating System: {new ComputerInfo().OSFullName}");
+            _logger.LogInformation($"OS Build: {new ComputerInfo().OSVersion}");
+            _logger.LogInformation($"Processor Type: {(IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)}-bit");
+            _logger.LogInformation($"Startup Path: {StartupPath}");
+            _logger.LogInformation($"Running As: {IntPtr.Size * 8}-bit Process");
+            _logger.LogInformation($"Configured as shell: {EnvironmentHelper.IsAppConfiguredAsShell}");
+            _logger.LogInformation($"Running as shell: {EnvironmentHelper.IsAppRunningAsShell}");
         }
 
         internal bool InternalCheckIsWow64()
@@ -297,7 +128,7 @@ namespace CairoDesktop
                 SupportingClasses.SystemHotKeys.RegisterSystemHotkeys();
             }
         }
-        
+
         private void SetupWindowServices()
         {
             foreach (var service in Host.Services.GetServices<IWindowService>())

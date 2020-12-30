@@ -4,7 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using CairoDesktop.Common.Logging.Other;
+using CairoDesktop.Common.Logging;
+using CairoDesktop.Common.Logging.Legacy;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace CairoDesktop.Infrastructure.DependencyInjection
 {
@@ -25,14 +27,10 @@ namespace CairoDesktop.Infrastructure.DependencyInjection
             return services;
         }
 
-        public static ILoggingBuilder AddInfrastructureLogging(this ILoggingBuilder builder, Action<CairoLogger> configure = null)
+        public static ILoggingBuilder AddInfrastructureLogFile(this ILoggingBuilder builder, Action<CairoFileLoggerOptions> configure = null)
         {
-            builder.Services.AddSingleton<ILoggerProvider, CairoLoggerProvider>();
-
-            if (configure != null)
-            {
-                builder.Services.Configure(configure);
-            }
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, CairoFileLoggerProvider>());
+            builder.Services.Configure(configure);
 
             return builder;
         }

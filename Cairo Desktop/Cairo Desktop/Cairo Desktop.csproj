@@ -16,7 +16,7 @@
     <WarningLevel>4</WarningLevel>
     <ApplicationIcon>Application.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <StartupObject>CairoDesktop.CairoApplication</StartupObject>
+    <StartupObject>CairoDesktop.Program</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -107,6 +107,7 @@
       <DependentUpon>Icon.xaml</DependentUpon>
     </Compile>
     <Compile Include="ObjectModel\MenuExtra.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="ProgramsMenu.xaml.cs">
       <DependentUpon>ProgramsMenu.xaml</DependentUpon>
     </Compile>
