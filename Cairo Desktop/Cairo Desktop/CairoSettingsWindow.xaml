@@ -14,7 +14,6 @@
         WindowStyle="SingleBorderWindow"
         SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
-        <helpers:EnvironmentHelper x:Key="envHelper" />
         <Style x:Key="CairoSettingsBarRestartStyle"
                TargetType="{x:Type TabItem}">
             <Setter Property="Foreground"
@@ -842,8 +841,7 @@
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Advanced_Shell)}"
                                Style="{StaticResource SettingGroupHeader}" />
-                    <StackPanel Orientation="Vertical"
-                                DataContext="{StaticResource envHelper}">
+                    <StackPanel Orientation="Vertical">
                         <TextBlock>
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
@@ -856,7 +854,7 @@
                                     <Setter Property="Text"
                                             Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_ExplorerIsShell)}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsAppConfiguredAsShell}"
+                                        <DataTrigger Binding="{Binding Path=(helpers:EnvironmentHelper.IsAppConfiguredAsShell)}"
                                                      Value="True">
                                             <Setter Property="Text"
                                                     Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_CairoIsShell)}" />
@@ -876,7 +874,7 @@
                                     <Setter Property="Content"
                                             Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetCairoAsShell)}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsAppConfiguredAsShell}"
+                                        <DataTrigger Binding="{Binding Path=(helpers:EnvironmentHelper.IsAppConfiguredAsShell)}"
                                                      Value="True">
                                             <Setter Property="Content"
                                                     Value="{Binding Path=(l10n:DisplayString.sSettings_Advanced_SetExplorerAsShell)}" />
