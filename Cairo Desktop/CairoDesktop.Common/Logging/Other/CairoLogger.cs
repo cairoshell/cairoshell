@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
+using Microsoft.Extensions.Logging;
 
-namespace CairoDesktop.Common.Logging.Loggers
+namespace CairoDesktop.Common.Logging.Other
 {
     public class CairoLogger : ILogger
     {
@@ -26,19 +26,19 @@ namespace CairoDesktop.Common.Logging.Loggers
             {
                 case LogLevel.Trace:
                 case LogLevel.Debug:
-                    Logging.CairoLogger.Debug(formatter(state, exception));
+                    Legacy.CairoLogger.Debug(formatter(state, exception));
                     break;
                 case LogLevel.Information:
-                    Logging.CairoLogger.Info(formatter(state, exception));
+                    Legacy.CairoLogger.Info(formatter(state, exception));
                     break;
                 case LogLevel.Warning:
-                    Logging.CairoLogger.Warning(formatter(state, exception));
+                    Legacy.CairoLogger.Warning(formatter(state, exception));
                     break;
                 case LogLevel.Error:
-                    Logging.CairoLogger.Error(formatter(state, exception));
+                    Legacy.CairoLogger.Error(formatter(state, exception));
                     break;
                 case LogLevel.Critical:
-                    Logging.CairoLogger.Fatal(formatter(state, exception));
+                    Legacy.CairoLogger.Fatal(formatter(state, exception));
                     break;
                 case LogLevel.None:
                 default:

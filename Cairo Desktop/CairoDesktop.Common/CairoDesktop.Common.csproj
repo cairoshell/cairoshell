@@ -81,13 +81,13 @@
     <Compile Include="DisposableObject.cs" />
     <Compile Include="HotKey.cs" />
     <Compile Include="HotKeyModifier.cs" />
-    <Compile Include="Logging\CairoLogger.Debug.cs" />
-    <Compile Include="Logging\CairoLogger.Error.cs" />
-    <Compile Include="Logging\CairoLogger.Fatal.cs" />
-    <Compile Include="Logging\CairoLogger.Info.cs" />
-    <Compile Include="Logging\CairoLogger.Warning.cs" />
-    <Compile Include="Logging\Loggers\CairoLogger.cs" />
-    <Compile Include="Logging\Providers\CairoLoggerProvider.cs" />
+    <Compile Include="Logging\Legacy\CairoLogger.Debug.cs" />
+    <Compile Include="Logging\Legacy\CairoLogger.Error.cs" />
+    <Compile Include="Logging\Legacy\CairoLogger.Fatal.cs" />
+    <Compile Include="Logging\Legacy\CairoLogger.Info.cs" />
+    <Compile Include="Logging\Legacy\CairoLogger.Warning.cs" />
+    <Compile Include="Logging\Other\CairoLogger.cs" />
+    <Compile Include="Logging\Other\CairoLoggerProvider.cs" />
     <Compile Include="NavigationManager.cs" />
     <Compile Include="Helpers\RegistryChangeMonitor.cs" />
     <Compile Include="LowLevelKeyboardListener.cs" />
@@ -97,13 +97,13 @@
     <Compile Include="HotKeyManager.cs" />
     <Compile Include="InvokingObservableCollection.cs" />
     <Compile Include="KeyboardUtilities.cs" />
-    <Compile Include="Logging\ILog.cs" />
-    <Compile Include="Logging\LogEventArgs.cs" />
-    <Compile Include="Logging\LogSeverity.cs" />
-    <Compile Include="Logging\Observers\ConsoleLog.cs" />
-    <Compile Include="Logging\Observers\DisposableLogBase.cs" />
-    <Compile Include="Logging\Observers\FileLog.cs" />
-    <Compile Include="Logging\CairoLogger.cs" />
+    <Compile Include="Logging\Legacy\ILog.cs" />
+    <Compile Include="Logging\Legacy\LogEventArgs.cs" />
+    <Compile Include="Logging\Legacy\LogSeverity.cs" />
+    <Compile Include="Logging\Legacy\Observers\ConsoleLog.cs" />
+    <Compile Include="Logging\Legacy\Observers\DisposableLogBase.cs" />
+    <Compile Include="Logging\Legacy\Observers\FileLog.cs" />
+    <Compile Include="Logging\Legacy\CairoLogger.cs" />
     <Compile Include="MessageBoxButtonConverter.cs" />
     <Compile Include="CairoMessageImageConverter.cs" />
     <Compile Include="ObjectActions.cs" />
@@ -168,6 +168,7 @@
       <Version>5.0.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -19,6 +19,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
@@ -246,7 +247,7 @@ namespace CairoDesktop
 
         private void loadLoggingLevels()
         {
-            foreach (string sev in Enum.GetNames(typeof(Common.Logging.LogSeverity)))
+            foreach (string sev in Enum.GetNames(typeof(LogSeverity)))
             {
                 cboLogSeverity.Items.Add(sev);
             }

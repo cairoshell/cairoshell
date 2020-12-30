@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using CairoDesktop.Common.Logging;
+using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 

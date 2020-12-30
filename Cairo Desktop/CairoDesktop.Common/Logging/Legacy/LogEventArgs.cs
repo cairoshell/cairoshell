@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CairoDesktop.Common.Logging
+namespace CairoDesktop.Common.Logging.Legacy
 {
     /// <summary>
     /// Contains log specific event data for log events.

@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Common.Logging;
 using CairoDesktop.Interop;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.AppGrabber

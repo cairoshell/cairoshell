@@ -1,4 +1,4 @@
-﻿namespace CairoDesktop.Common.Logging
+﻿namespace CairoDesktop.Common.Logging.Legacy
 {
     /// <summary>
     /// Enumeration of log severity levels.

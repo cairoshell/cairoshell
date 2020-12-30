@@ -1,4 +1,4 @@
-﻿namespace CairoDesktop.Common.Logging
+﻿namespace CairoDesktop.Common.Logging.Legacy
 {
     /// <summary>
     /// Defines a single method to write requested log events to an output device.

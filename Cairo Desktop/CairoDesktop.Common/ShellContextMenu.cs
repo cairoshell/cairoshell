@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using CairoDesktop.Common.Logging;
+using CairoDesktop.Common.Logging.Legacy;
 using CairoDesktop.Interop;
 using ManagedShell.Common.Helpers;
 using NativeMethods = ManagedShell.Interop.NativeMethods;

@@ -1,6 +1,5 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Common.Logging;
 using CairoDesktop.Common.Logging.Observers;
 using CairoDesktop.Configuration;
 using ManagedShell.Interop;
@@ -9,6 +8,8 @@ using Microsoft.VisualBasic.Devices;
 using System;
 using System.Diagnostics;
 using System.IO;
+using CairoDesktop.Common.Logging.Legacy;
+using CairoDesktop.Common.Logging.Legacy.Observers;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Helpers;
 

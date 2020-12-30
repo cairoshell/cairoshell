@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using CairoDesktop.Common.Logging;
+using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
 using Microsoft.VisualBasic.FileIO;
 

@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Controls;
 using CairoDesktop.Common.Logging;
+using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop

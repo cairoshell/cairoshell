@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.AppGrabber

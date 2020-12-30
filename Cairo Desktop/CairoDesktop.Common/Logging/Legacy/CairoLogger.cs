@@ -1,4 +1,4 @@
-﻿namespace CairoDesktop.Common.Logging
+﻿namespace CairoDesktop.Common.Logging.Legacy
 {
     public static partial class CairoLogger
     {

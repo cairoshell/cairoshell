@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using CairoDesktop.Common.Logging;
+using CairoDesktop.Common.Logging.Legacy;
 
 namespace CairoDesktop.Infrastructure.DependencyInjection
 {

@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using NativeMethods = ManagedShell.Interop.NativeMethods;

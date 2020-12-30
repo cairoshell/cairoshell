@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using CairoDesktop.Common.Logging.Legacy;
 
 namespace CairoDesktop.Common.Logging.Observers
 {

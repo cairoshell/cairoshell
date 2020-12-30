@@ -1,4 +1,6 @@
-﻿namespace CairoDesktop.Common.Logging.Observers
+﻿using CairoDesktop.Common.Logging.Legacy;
+
+namespace CairoDesktop.Common.Logging.Observers
 {
     public abstract class DisposableLogBase : DisposableObject, ILog
     {

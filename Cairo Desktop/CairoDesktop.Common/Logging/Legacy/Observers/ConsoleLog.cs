@@ -1,8 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows.Threading;
+﻿using System.Diagnostics;
 
-namespace CairoDesktop.Common.Logging.Observers
+namespace CairoDesktop.Common.Logging.Legacy.Observers
 {
     /// <summary>
     /// Writes log events to the diagnostic trace.

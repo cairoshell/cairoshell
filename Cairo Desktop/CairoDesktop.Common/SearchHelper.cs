@@ -11,6 +11,7 @@ using System.Diagnostics;
 using CairoDesktop.Common.Logging;
 using Microsoft.Win32;
 using System.Threading.Tasks;
+using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Common

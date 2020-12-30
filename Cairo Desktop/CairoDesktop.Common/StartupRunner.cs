@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using CairoDesktop.Common.Logging;
+using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
 using Microsoft.Win32;
 

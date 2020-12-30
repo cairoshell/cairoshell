@@ -1,6 +1,7 @@
 ﻿using CairoDesktop.Common.Logging;
 using System;
 using System.Diagnostics;
+using CairoDesktop.Common.Logging.Legacy;
 
 namespace CairoDesktop.Common.Helpers
 {

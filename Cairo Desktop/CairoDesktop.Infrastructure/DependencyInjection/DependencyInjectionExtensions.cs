@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using CairoDesktop.Common.Logging.Other;
 
 namespace CairoDesktop.Infrastructure.DependencyInjection
 {
@@ -24,9 +25,9 @@ namespace CairoDesktop.Infrastructure.DependencyInjection
             return services;
         }
 
-        public static ILoggingBuilder AddInfrastructureLogging(this ILoggingBuilder builder, Action<Common.Logging.Loggers.CairoLogger> configure = null)
+        public static ILoggingBuilder AddInfrastructureLogging(this ILoggingBuilder builder, Action<CairoLogger> configure = null)
         {
-            builder.Services.AddSingleton<ILoggerProvider, Common.Logging.Providers.CairoLoggerProvider>();
+            builder.Services.AddSingleton<ILoggerProvider, CairoLoggerProvider>();
 
             if (configure != null)
             {

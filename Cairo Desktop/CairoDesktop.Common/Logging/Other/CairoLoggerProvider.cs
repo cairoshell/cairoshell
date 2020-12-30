@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace CairoDesktop.Common.Logging.Providers
+namespace CairoDesktop.Common.Logging.Other
 {
     public class CairoLoggerProvider : DisposableObject, ILoggerProvider
     {
         public ILogger CreateLogger(string categoryName)
         {
-            return new Loggers.CairoLogger();
+            return new CairoLogger();
         }
     }
 }

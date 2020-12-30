@@ -1,7 +1,7 @@
-﻿using CairoDesktop.Common.Logging;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Xml;
+using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.AppGrabber {
