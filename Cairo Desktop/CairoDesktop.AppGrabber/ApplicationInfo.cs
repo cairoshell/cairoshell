@@ -293,9 +293,9 @@ namespace CairoDesktop.AppGrabber
 
         private ImageSource GetAssociatedIcon()
         {
-            IconSize size = IconSize.Small;
-            if (Category != null && Category.Type == AppCategoryType.QuickLaunch && (IconSize)Configuration.Settings.Instance.TaskbarIconSize != IconSize.Small)
-                size = IconSize.Large;
+            IconSize.Sizes size = IconSize.Sizes.Small;
+            if (Category != null && Category.Type == AppCategoryType.QuickLaunch && (IconSize.Sizes)Configuration.Settings.Instance.TaskbarIconSize != IconSize.Sizes.Small)
+                size = IconSize.Sizes.Large;
 
             return GetIconImageSource(size, true);
         }
@@ -303,7 +303,7 @@ namespace CairoDesktop.AppGrabber
         /// <summary>
         /// Gets an ImageSource object representing the associated icon of a file.
         /// </summary>
-        public ImageSource GetIconImageSource(IconSize size, bool useCache)
+        public ImageSource GetIconImageSource(IconSize.Sizes size, bool useCache)
         {
             if (IsStoreApp)
             {

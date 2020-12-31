@@ -83,7 +83,7 @@
                 </MenuItem>
             </ContextMenu>
         </Button.ContextMenu>
-        <Grid>
+        <Grid x:Name="ButtonGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />

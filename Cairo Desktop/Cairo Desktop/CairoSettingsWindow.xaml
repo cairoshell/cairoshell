@@ -737,6 +737,10 @@
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=HideTaskbarLabels, UpdateSourceTrigger=PropertyChanged}"
+                              Name="chkHideTaskbarLabels">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_HideLabels)}" />
+                    </CheckBox>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarThumbnails, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkEnableTaskbarThumbnails">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableThumbnails)}" />

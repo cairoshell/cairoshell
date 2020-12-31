@@ -409,7 +409,7 @@ namespace CairoDesktop.AppGrabber
             if (app != null)
             {
                 if (app.IsStoreApp)
-                    CairoMessage.Show(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, app.GetIconImageSource(IconSize.Jumbo, false), true);
+                    CairoMessage.Show(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, app.GetIconImageSource(IconSize.Sizes.Jumbo, false), true);
                 else
                     Shell.ShowFileProperties(app.Path);
             }

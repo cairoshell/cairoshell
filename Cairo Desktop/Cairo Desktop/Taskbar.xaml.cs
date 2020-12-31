@@ -116,7 +116,7 @@ namespace CairoDesktop
                 bdrTaskView.Visibility = Visibility.Visible;
             else
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);
-            
+
             setTaskbarSize();
             setTaskbarWidthMode();
         }
@@ -141,12 +141,12 @@ namespace CairoDesktop
 
         private void setTaskbarSize()
         {
-            switch ((IconSize)Settings.Instance.TaskbarIconSize)
+            switch ((IconSize.Sizes)Settings.Instance.TaskbarIconSize)
             {
-                case IconSize.Large:
+                case IconSize.Sizes.Large:
                     addToSize = 16;
                     break;
-                case IconSize.Medium:
+                case IconSize.Sizes.Medium:
                     addToSize = 8;
                     break;
                 default:
@@ -154,8 +154,8 @@ namespace CairoDesktop
                     break;
             }
 
-            baseButtonWidth = 140 + addToSize;
-            Height = 29 + addToSize;
+            baseButtonWidth = Settings.Instance.HideTaskbarLabels ? getButtonIconWidth() : (Settings.Instance.TaskbarButtonWidth + addToSize);
+            Height = Settings.Instance.TaskbarButtonHeight + addToSize;
             desiredHeight = Height;
             Top = getDesiredTopPosition();
 
@@ -163,6 +163,27 @@ namespace CairoDesktop
                 bdrTaskListPopup.Margin = new Thickness(5, Top + Height - 1, 5, 11);
             else
                 bdrTaskListPopup.Margin = new Thickness(5, 0, 5, (Screen.Bounds.Bottom / dpiScale) - Top - 1);
+        }
+
+        private int getButtonIconWidth()
+        {
+            int adjustment = 0;
+
+            switch (Settings.Instance.TaskbarIconSize)
+            {
+                case (int)IconSize.Sizes.Large:
+                    adjustment = -2;
+                    break;
+                case (int)IconSize.Sizes.Small:
+                    adjustment = +2;
+                    break;
+            }
+
+            //Get size + adjusment
+            int Width = IconSize.GetSize(Settings.Instance.TaskbarIconSize) + adjustment;
+
+            //Add some extra room based on the icon width
+            return Convert.ToInt32(Width + (Width * 0.5));
         }
 
         private void setTaskbarWidthMode()
@@ -241,6 +262,7 @@ namespace CairoDesktop
             {
                 switch (e.PropertyName)
                 {
+                    case "HideTaskbarLabels":
                     case "TaskbarIconSize":
                         setTaskbarSize();
                         SetScreenPosition();
@@ -502,7 +524,7 @@ namespace CairoDesktop
         {
             Shell.ShowRunDialog();
         }
-        
+
         private void OpenTaskManager(object sender, RoutedEventArgs e)
         {
             Shell.StartTaskManager();
