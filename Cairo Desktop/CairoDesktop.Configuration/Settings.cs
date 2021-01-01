@@ -406,17 +406,17 @@ namespace CairoDesktop.Configuration
             }
         }
 
-        public bool HideTaskbarLabels
+        public bool ShowTaskbarLabels
         {
             get
             {
-                return cairoSettings.HideTaskbarLabels;
+                return cairoSettings.ShowTaskbarLabels;
             }
             set
             {
-                if (cairoSettings.HideTaskbarLabels != value)
+                if (cairoSettings.ShowTaskbarLabels != value)
                 {
-                    cairoSettings.HideTaskbarLabels = value;
+                    cairoSettings.ShowTaskbarLabels = value;
                 }
             }
         }

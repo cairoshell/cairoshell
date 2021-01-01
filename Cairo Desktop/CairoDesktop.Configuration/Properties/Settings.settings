@@ -140,8 +140,8 @@
     <Setting Name="EnableMenuBar" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="HideTaskbarLabels" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+    <Setting Name="ShowTaskbarLabels" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="TaskbarButtonWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">140</Value>

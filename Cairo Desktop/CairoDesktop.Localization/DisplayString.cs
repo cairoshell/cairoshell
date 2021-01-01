@@ -554,7 +554,7 @@ namespace CairoDesktop.Localization
 
         public static string sSettings_Taskbar_MiddleClickCloseWindow => getString();
 
-        public static string sSettings_Taskbar_HideLabels => getString();
+        public static string sSettings_Taskbar_ShowLabels => getString();
 
         public static string sSettings_Taskbar_EnableThumbnails => getString();
 

@@ -142,7 +142,7 @@ namespace CairoDesktop
                         setToolTip();
                         break;
                     case "TaskbarIconSize":
-                    case "HideTaskbarLabels":
+                    case "ShowTaskbarLabels":
                         setLabelVisibility();
                         setIconSize();
                         break;
@@ -174,16 +174,7 @@ namespace CairoDesktop
         {
             if (!ListMode)
             {
-                if (Settings.Instance.HideTaskbarLabels)
-                {
-                    if (ButtonGrid.Children.Contains(WinTitle))
-                        ButtonGrid.Children.Remove(WinTitle);
-                }
-                else
-                {
-                    if (!ButtonGrid.Children.Contains(WinTitle))
-                        ButtonGrid.Children.Add(WinTitle);
-                }
+                WinTitle.Visibility = Settings.Instance.ShowTaskbarLabels ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 

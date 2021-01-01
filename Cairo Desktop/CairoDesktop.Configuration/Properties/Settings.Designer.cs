@@ -578,13 +578,13 @@ namespace CairoDesktop.Configuration.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool HideTaskbarLabels {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowTaskbarLabels {
             get {
-                return ((bool)(this["HideTaskbarLabels"]));
+                return ((bool)(this["ShowTaskbarLabels"]));
             }
             set {
-                this["HideTaskbarLabels"] = value;
+                this["ShowTaskbarLabels"] = value;
             }
         }
         
