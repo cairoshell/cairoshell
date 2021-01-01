@@ -154,7 +154,7 @@ namespace CairoDesktop
                     break;
             }
 
-            baseButtonWidth = Settings.Instance.HideTaskbarLabels ? getButtonIconWidth() : (Settings.Instance.TaskbarButtonWidth + addToSize);
+            baseButtonWidth = Settings.Instance.HideTaskbarLabels ? getButtonWidth() : (Settings.Instance.TaskbarButtonWidth + addToSize);
             Height = Settings.Instance.TaskbarButtonHeight + addToSize;
             desiredHeight = Height;
             Top = getDesiredTopPosition();
@@ -165,7 +165,7 @@ namespace CairoDesktop
                 bdrTaskListPopup.Margin = new Thickness(5, 0, 5, (Screen.Bounds.Bottom / dpiScale) - Top - 1);
         }
 
-        private int getButtonIconWidth()
+        private int getButtonWidth()
         {
             int adjustment = 0;
 
