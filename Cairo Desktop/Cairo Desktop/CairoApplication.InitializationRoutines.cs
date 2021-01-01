@@ -83,7 +83,7 @@ namespace CairoDesktop
 
         internal void WriteApplicationDebugInfoToConsole()
         {
-            _logger.LogInformation($"{ProductName}");
+            _logger.LogInformation($"Product Name: {ProductName}");
             _logger.LogInformation($"Version: {ProductVersion}");
             _logger.LogInformation($"Operating System: {new ComputerInfo().OSFullName}");
             _logger.LogInformation($"OS Build: {new ComputerInfo().OSVersion}");

@@ -40,7 +40,7 @@ namespace CairoDesktop
         {
         }
 
-        public CairoApplication(IHost host, ILogger<CairoApplication> logger, LoggerLogAttacher loggerLogAttacher)
+        public CairoApplication(IHost host, ILogger<CairoApplication> logger)
         {
             Host = host;
             _logger = logger;

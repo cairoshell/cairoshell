@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
+using CairoDesktop.Common.ExtensionMethods;
 
 namespace CairoDesktop
 {
@@ -22,15 +23,17 @@ namespace CairoDesktop
         [STAThread]
         public static int Main(string[] args)
         {
-            _host = Host.CreateDefaultBuilder(args)
+            _host = new HostBuilder()
+                // Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) =>
                 {
+                    services.AddSingleton(s => Settings.Instance);
                     services.AddSingleton<CairoApplication>();
                     services.AddSingleton<ICairoApplication>(x => x.GetRequiredService<CairoApplication>());
 
-                    services.AddScoped<ILog, CairoShellLoggerObserver>();
-                    services.AddScoped<ManagedShell.Common.Logging.ILog, ManagedShellLoggerObserver>();
-                    services.AddSingleton<LoggerLogAttacher>();
+                    //services.AddScoped<ILog, CairoShellLoggerObserver>();
+                    //services.AddScoped<ManagedShell.Common.Logging.ILog, ManagedShellLoggerObserver>();
+                    //services.AddSingleton<LoggerLogAttacher>();
 
                     services.AddSingleton<ShellManagerService>();
 
@@ -43,22 +46,18 @@ namespace CairoDesktop
 
                     services.AddDependencyLoadingServices(context.Configuration, Path.Combine(CairoApplication.StartupPath, "Extensions")); // TODO: this should not be a property of CairoApplication... Possible solution, use Configuration?
                     services.AddDependencyLoadingServices(context.Configuration, Path.Combine(CairoApplication.CairoApplicationDataFolder, "Extensions"));// TODO: this should not be a property of CairoApplication... Possible solution, use Configuration?
-                    
+
                     services.AddLogging();
                 })
                 .ConfigureLogging((context, logging) =>
                 {
-                    logging.AddInfrastructureLogFile(options =>
+                    logging.AddInfrastructureLogging(options =>
                     {
-                        var severity = GetLogSeverityFromCairoSettings(LogSeverity.Info);
+                        var severity = Settings.Instance.GetLogSeverity(LogSeverity.Info);
                         options.LogLevel = severity.ToLogLevel();
 
                         var cairoApplicationDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team");
                         options.LogsFolderPath = Path.Combine(cairoApplicationDataFolder, "Logs");
-
-                        // TODO: ManagedShell and CairoShell logging could be handled better
-                        CairoLogger.Severity = severity;
-                        ManagedShell.Common.Logging.ShellLogger.Severity = severity.ToManagedShellLogSeverity();
                     });
                 })
                 .Build();
@@ -70,15 +69,9 @@ namespace CairoDesktop
             return result;
         }
 
-        private static LogSeverity GetLogSeverityFromCairoSettings(LogSeverity defaultValue)
+        private static Settings ImplementationFactory(IServiceProvider arg)
         {
-            if (Enum.TryParse(Settings.Instance.LogSeverity, out LogSeverity result))
-                return result;
-
-            Settings.Instance.LogSeverity = defaultValue.ToString();
-            result = defaultValue;
-
-            return result;
+            throw new NotImplementedException();
         }
     }
 }

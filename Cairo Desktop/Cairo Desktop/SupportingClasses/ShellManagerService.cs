@@ -36,8 +36,8 @@ namespace CairoDesktop.SupportingClasses
 
         private void ConfigureLogging()
         {
-            ShellLogger.Severity = LogSeverity.Debug;
-            ShellLogger.Attach(new ConsoleLog());
+            //ShellLogger.Severity = LogSeverity.Debug;
+            //ShellLogger.Attach(new ConsoleLog());
         }
 
         private ShellManager ConfigureShellManager()
