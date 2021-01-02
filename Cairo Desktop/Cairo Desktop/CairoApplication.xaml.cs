@@ -61,6 +61,8 @@ namespace CairoDesktop
             CairoMenu = new List<IMenuItem>();
             Places = new List<IMenuItem>();
             MenuExtras = new List<MenuExtra>();
+            
+            InitializeComponent();
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -68,8 +70,6 @@ namespace CairoDesktop
             Host.Start();
 
             SetShellReadyEvent();
-
-            SetupSettings(); // run this before logging setup so that preferences are always used
 
             // Initialize current shell information here, since it won't be accurate if we wait until after we create our own windows
             SetIsCairoRunningAsShell();

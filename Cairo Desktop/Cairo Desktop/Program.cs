@@ -28,8 +28,7 @@ namespace CairoDesktop
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton(s => Settings.Instance);
-                    services.AddSingleton<CairoApplication>();
-                    services.AddSingleton<ICairoApplication>(x => x.GetRequiredService<CairoApplication>());
+                    services.AddSingleton<ICairoApplication, CairoApplication>();
 
                     //services.AddScoped<ILog, CairoShellLoggerObserver>();
                     //services.AddScoped<ManagedShell.Common.Logging.ILog, ManagedShellLoggerObserver>();
@@ -62,11 +61,8 @@ namespace CairoDesktop
                 })
                 .Build();
 
-            var app = _host.Services.GetRequiredService<CairoApplication>(); ;
-            app.InitializeComponent();
-            var result = app.Run();
-
-            return result;
+            var app = _host.Services.GetRequiredService<ICairoApplication>();
+            return app.Run();
         }
 
         private static Settings ImplementationFactory(IServiceProvider arg)

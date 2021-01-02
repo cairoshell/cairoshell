@@ -10,5 +10,7 @@ namespace CairoDesktop.Application.Interfaces
         List<IMenuItem> Places { get; }
 
         void ExitCairo();
+
+        int Run();
     }
 }

@@ -67,14 +67,6 @@ namespace CairoDesktop
             }
         }
 
-        private void SetupSettings()
-        {
-            if (Settings.Instance.IsFirstRun)
-            {
-                Settings.Instance.Upgrade();
-            }
-        }
-
         internal void LoadExtensions()
         {
             var pluginService = Host.Services.GetService<IExtensionService>();
