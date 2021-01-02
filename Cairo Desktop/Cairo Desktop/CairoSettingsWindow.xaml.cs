@@ -67,13 +67,13 @@ namespace CairoDesktop
                     break;
             }
 
-            switch ((IconSize)Settings.Instance.DesktopIconSize)
+            switch ((IconSize.Sizes)Settings.Instance.DesktopIconSize)
             {
-                case IconSize.Large:
+                case IconSize.Sizes.Large:
                     radDesktopIconSize0.IsChecked = true;
                     radDesktopIconSize2.IsChecked = false;
                     break;
-                case IconSize.ExtraLarge:
+                case IconSize.Sizes.ExtraLarge:
                     radDesktopIconSize0.IsChecked = false;
                     radDesktopIconSize2.IsChecked = true;
                     break;
@@ -130,19 +130,19 @@ namespace CairoDesktop
                     break;
             }
 
-            switch ((IconSize)Settings.Instance.TaskbarIconSize)
+            switch ((IconSize.Sizes)Settings.Instance.TaskbarIconSize)
             {
-                case IconSize.Large:
+                case IconSize.Sizes.Large:
                     radTaskbarSize0.IsChecked = true;
                     radTaskbarSize10.IsChecked = false;
                     radTaskbarSize1.IsChecked = false;
                     break;
-                case IconSize.Small:
+                case IconSize.Sizes.Small:
                     radTaskbarSize0.IsChecked = false;
                     radTaskbarSize10.IsChecked = false;
                     radTaskbarSize1.IsChecked = true;
                     break;
-                case IconSize.Medium:
+                case IconSize.Sizes.Medium:
                     radTaskbarSize0.IsChecked = false;
                     radTaskbarSize10.IsChecked = true;
                     radTaskbarSize1.IsChecked = false;
@@ -619,17 +619,17 @@ namespace CairoDesktop
 
         private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Large;
+            Settings.Instance.TaskbarIconSize = (int)IconSize.Sizes.Large;
         }
 
         private void radTaskbarSize1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Small;
+            Settings.Instance.TaskbarIconSize = (int)IconSize.Sizes.Small;
         }
 
         private void radTaskbarSize10_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Medium;
+            Settings.Instance.TaskbarIconSize = (int)IconSize.Sizes.Medium;
         }
 
         private void radTaskbarMiddleClick0_Click(object sender, RoutedEventArgs e)
@@ -654,12 +654,12 @@ namespace CairoDesktop
 
         private void radDesktopIconSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopIconSize = (int)IconSize.Large;
+            Settings.Instance.DesktopIconSize = (int)IconSize.Sizes.Large;
         }
 
         private void radDesktopIconSize2_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopIconSize = (int)IconSize.ExtraLarge;
+            Settings.Instance.DesktopIconSize = (int)IconSize.Sizes.ExtraLarge;
         }
 
         private void radTrayMode0_Click(object sender, RoutedEventArgs e)

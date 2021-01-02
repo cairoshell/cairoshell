@@ -141,10 +141,10 @@ namespace CairoDesktop
                 bdrFilename.SetValue(DockPanel.DockProperty, Dock.Bottom);
             }
 
-            if (Settings.Instance.DesktopIconSize == (int)IconSize.ExtraLarge)
+            if (Settings.Instance.DesktopIconSize == (int)IconSize.Sizes.ExtraLarge)
             {
-                imgIcon.Width = 48;
-                imgIcon.Height = 48;
+                imgIcon.Width = IconSize.GetSize(IconSize.Sizes.ExtraLarge);
+                imgIcon.Height = IconSize.GetSize(IconSize.Sizes.ExtraLarge);
                 Binding iconBinding = new Binding("LargeIcon");
                 iconBinding.Mode = BindingMode.OneWay;
                 iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
@@ -153,8 +153,8 @@ namespace CairoDesktop
             }
             else
             {
-                imgIcon.Width = 32;
-                imgIcon.Height = 32;
+                imgIcon.Width = IconSize.GetSize(IconSize.Sizes.Large);
+                imgIcon.Height = IconSize.GetSize(IconSize.Sizes.Large);
                 Binding iconBinding = new Binding("Icon");
                 iconBinding.Mode = BindingMode.OneWay;
                 iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;

@@ -406,6 +406,51 @@ namespace CairoDesktop.Configuration
             }
         }
 
+        public bool ShowTaskbarLabels
+        {
+            get
+            {
+                return cairoSettings.ShowTaskbarLabels;
+            }
+            set
+            {
+                if (cairoSettings.ShowTaskbarLabels != value)
+                {
+                    cairoSettings.ShowTaskbarLabels = value;
+                }
+            }
+        }
+
+        public int TaskbarButtonWidth
+        {
+            get
+            {
+                return cairoSettings.TaskbarButtonWidth;
+            }
+            set
+            {
+                if (cairoSettings.TaskbarButtonWidth != value)
+                {
+                    cairoSettings.TaskbarButtonWidth = value;
+                }
+            }
+        }
+
+        public int TaskbarButtonHeight
+        {
+            get
+            {
+                return cairoSettings.TaskbarButtonHeight;
+            }
+            set
+            {
+                if (cairoSettings.TaskbarButtonHeight != value)
+                {
+                    cairoSettings.TaskbarButtonHeight = value;
+                }
+            }
+        }
+
         public bool EnableTaskbarMultiMon
         {
             get

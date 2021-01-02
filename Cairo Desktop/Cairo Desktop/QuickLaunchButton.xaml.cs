@@ -45,21 +45,8 @@ namespace CairoDesktop
 
         private void setIconSize()
         {
-            switch ((IconSize)Settings.Instance.TaskbarIconSize)
-            {
-                case IconSize.Large:
-                    imgIcon.Width = 32;
-                    imgIcon.Height = 32;
-                    break;
-                case IconSize.Medium:
-                    imgIcon.Width = 24;
-                    imgIcon.Height = 24;
-                    break;
-                default:
-                    imgIcon.Width = 16;
-                    imgIcon.Height = 16;
-                    break;
-            }
+            imgIcon.Width = IconSize.GetSize(Settings.Instance.TaskbarIconSize);
+            imgIcon.Height = IconSize.GetSize(Settings.Instance.TaskbarIconSize);
         }
 
         private void LaunchProgram(object sender, RoutedEventArgs e)

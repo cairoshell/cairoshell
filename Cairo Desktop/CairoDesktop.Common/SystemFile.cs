@@ -142,7 +142,7 @@ namespace CairoDesktop.Common
 
                     Task.Factory.StartNew(() =>
                     {
-                        Icon = GetDisplayIcon(IconSize.Large);
+                        Icon = GetDisplayIcon(IconSize.Sizes.Large);
                         Icon.Freeze();
                         _iconLoading = false;
                     }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
@@ -171,7 +171,7 @@ namespace CairoDesktop.Common
 
                     Task.Factory.StartNew(() =>
                     {
-                        LargeIcon = GetDisplayIcon(IconSize.ExtraLarge);
+                        LargeIcon = GetDisplayIcon(IconSize.Sizes.ExtraLarge);
                         LargeIcon.Freeze();
                         _iconLargeLoading = false;
                     }, CancellationToken.None, TaskCreationOptions.None, Interop.Shell.IconScheduler);
@@ -322,7 +322,7 @@ namespace CairoDesktop.Common
         /// Retrieves the display icon of the file.
         /// If the file is an image then it will return the image its self (e.g. preview).
         /// </summary>
-        private ImageSource GetDisplayIcon(IconSize size)
+        private ImageSource GetDisplayIcon(IconSize.Sizes size)
         {
             if (Interop.Shell.Exists(FullName))
             {
@@ -336,10 +336,10 @@ namespace CairoDesktop.Common
                             img.BeginInit();
                             img.CacheOption = BitmapCacheOption.OnLoad;
                             img.UriSource = new Uri(FullName);
-                            int dSize = 32;
+                            int dSize = IconSize.GetSize(IconSize.Sizes.Large);
 
-                            if (size == IconSize.ExtraLarge)
-                                dSize = 48;
+                            if (size == IconSize.Sizes.ExtraLarge)
+                                dSize = IconSize.GetSize(IconSize.Sizes.ExtraLarge);
 
                             Interop.Shell.TransformToPixels(dSize, dSize, out dSize, out dSize);
                             img.DecodePixelWidth = dSize;
@@ -370,7 +370,7 @@ namespace CairoDesktop.Common
             }
         }
 
-        private ImageSource handleThumbnailError(IconSize size)
+        private ImageSource handleThumbnailError(IconSize.Sizes size)
         {
             if (_imageReloadAttempts < MAX_IMAGE_RELOAD_ATTEMPTS)
             {

@@ -116,7 +116,7 @@ namespace CairoDesktop
                 bdrTaskView.Visibility = Visibility.Visible;
             else
                 TasksList2.Margin = new Thickness(0, -3, 0, -3);
-            
+
             setTaskbarSize();
             setTaskbarWidthMode();
         }
@@ -141,12 +141,12 @@ namespace CairoDesktop
 
         private void setTaskbarSize()
         {
-            switch ((IconSize)Settings.Instance.TaskbarIconSize)
+            switch ((IconSize.Sizes)Settings.Instance.TaskbarIconSize)
             {
-                case IconSize.Large:
+                case IconSize.Sizes.Large:
                     addToSize = 16;
                     break;
-                case IconSize.Medium:
+                case IconSize.Sizes.Medium:
                     addToSize = 8;
                     break;
                 default:
@@ -154,8 +154,8 @@ namespace CairoDesktop
                     break;
             }
 
-            baseButtonWidth = 140 + addToSize;
-            Height = 29 + addToSize;
+            baseButtonWidth = (Settings.Instance.ShowTaskbarLabels ? Settings.Instance.TaskbarButtonWidth : Settings.Instance.TaskbarButtonHeight) + addToSize;
+            Height = Settings.Instance.TaskbarButtonHeight + addToSize;
             desiredHeight = Height;
             Top = getDesiredTopPosition();
 
@@ -241,6 +241,7 @@ namespace CairoDesktop
             {
                 switch (e.PropertyName)
                 {
+                    case "ShowTaskbarLabels":
                     case "TaskbarIconSize":
                         setTaskbarSize();
                         SetScreenPosition();
@@ -502,7 +503,7 @@ namespace CairoDesktop
         {
             Shell.ShowRunDialog();
         }
-        
+
         private void OpenTaskManager(object sender, RoutedEventArgs e)
         {
             Shell.StartTaskManager();
