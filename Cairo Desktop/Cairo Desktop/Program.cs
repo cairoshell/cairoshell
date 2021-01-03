@@ -55,11 +55,7 @@ namespace CairoDesktop
                     {
                         var severity = Settings.Instance.GetLogSeverity(LogSeverity.Info);
                         options.LogLevel = severity.ToLogLevel();
-
-                        var cairoApplicationDataFolder =
-                            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                                "Cairo_Development_Team");
-                        options.LogsFolderPath = Path.Combine(cairoApplicationDataFolder, "Logs");
+                        options.LogsFolderPath = CairoApplication.LogsFolder;
                     });
                 })
                 .Build();
