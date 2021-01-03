@@ -64,11 +64,8 @@ namespace CairoDesktop
                 })
                 .Build();
             
-            var app = _host.Services.GetRequiredService<CairoApplication>();
-            app.InitializeComponent();
-            var result = app.Run();
-
-            return result;
+            var app = _host.Services.GetRequiredService<ICairoApplication>();
+            return app.Run();
         }
     }
 }
