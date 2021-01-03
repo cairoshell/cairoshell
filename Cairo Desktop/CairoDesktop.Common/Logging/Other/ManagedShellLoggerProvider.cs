@@ -1,4 +1,8 @@
-﻿using ManagedShell.Common.Logging;
+﻿using CairoDesktop.Common.ExtensionMethods;
+using CairoDesktop.Common.Logging.Legacy;
+using CairoDesktop.Common.Logging.Observers;
+using CairoDesktop.Configuration;
+using ManagedShell.Common.Logging;
 using ManagedShell.Common.Logging.Observers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -6,10 +10,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
-using CairoDesktop.Common.ExtensionMethods;
-using CairoDesktop.Common.Logging.Legacy;
-using CairoDesktop.Common.Logging.Legacy.Observers;
-using CairoDesktop.Configuration;
 using ConsoleLog = ManagedShell.Common.Logging.Observers.ConsoleLog;
 
 namespace CairoDesktop.Common.Logging.Other
@@ -45,18 +45,18 @@ namespace CairoDesktop.Common.Logging.Other
 
         private void CairoSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(cairoSettings.LogSeverity))
-            {
-                SetupLoggingSeverity();
-                _settings.LogLevel = CairoLogger.Severity.ToLogLevel();
-            }
+            if (e.PropertyName != nameof(cairoSettings.LogSeverity)) 
+                return;
+
+            SetupLoggingSeverity();
+            _settings.LogLevel = CairoLogger.Severity.ToLogLevel();
         }
 
         private void SetupLoggingSeverity()
         {
             var severity = cairoSettings.GetLogSeverity(Legacy.LogSeverity.Info);
-            CairoLogger.Severity = severity;
 
+            CairoLogger.Severity = severity;
             ShellLogger.Severity = severity.ToManagedShellLogSeverity();
         }
 

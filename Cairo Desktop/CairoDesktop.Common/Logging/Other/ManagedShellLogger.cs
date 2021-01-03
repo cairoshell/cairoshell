@@ -41,28 +41,7 @@ namespace CairoDesktop.Common.Logging.Other
             }
 
             string message = GetCategoryPrefix(_category) + formatter(state, exception);
-            switch (logLevel)
-            {
-                case LogLevel.Trace:
-                case LogLevel.Debug:
-                    ShellLogger.Debug(message);
-                    break;
-                case LogLevel.Information:
-                    ShellLogger.Info(message);
-                    break;
-                case LogLevel.Warning:
-                    ShellLogger.Warning(message);
-                    break;
-                case LogLevel.Error:
-                    ShellLogger.Error(message);
-                    break;
-                case LogLevel.Critical:
-                    ShellLogger.Fatal(message);
-                    break;
-                case LogLevel.None:
-                default:
-                    break;
-            }
+            ShellLogger.OnLog(new LogEventArgs(logLevel.ToManagedShellLogSeverity(), message, exception, DateTime.Now));
         }
 
         private string GetCategoryPrefix(string category)

@@ -1,5 +1,4 @@
 ﻿using System;
-using ManagedShell.Common.Logging;
 using Microsoft.Extensions.Logging;
 
 namespace CairoDesktop.Common.Logging.Other

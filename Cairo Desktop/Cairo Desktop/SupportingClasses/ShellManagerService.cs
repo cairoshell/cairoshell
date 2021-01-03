@@ -1,10 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using CairoDesktop.Configuration;
+﻿using CairoDesktop.Configuration;
 using ManagedShell;
 using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
-using ManagedShell.Common.Logging.Observers;
+using System;
+using System.ComponentModel;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -17,7 +15,7 @@ namespace CairoDesktop.SupportingClasses
             ConfigureLogging();
 
             ShellManager = ConfigureShellManager();
-            
+
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         }
 
@@ -29,7 +27,7 @@ namespace CairoDesktop.SupportingClasses
             switch (e.PropertyName)
             {
                 case "TaskbarIconSize":
-                    ShellManager.TasksService.TaskIconSize = (IconSize) Settings.Instance.TaskbarIconSize;
+                    ShellManager.TasksService.TaskIconSize = (IconSize)Settings.Instance.TaskbarIconSize;
                     break;
             }
         }

@@ -25,6 +25,15 @@ namespace CairoDesktop.Common.Logging
             {LogSeverity.Warning, LogLevel.Warning}
         };
 
+        private static readonly Dictionary<LogLevel, ManagedShell.Common.Logging.LogSeverity> LogLevelToManagedShellLogSeverityDictionary = new Dictionary<LogLevel, ManagedShell.Common.Logging.LogSeverity>
+        {
+            {LogLevel.Debug, ManagedShell.Common.Logging.LogSeverity.Debug},
+            {LogLevel.Error, ManagedShell.Common.Logging.LogSeverity.Error},
+            {LogLevel.Critical, ManagedShell.Common.Logging.LogSeverity.Fatal},
+            {LogLevel.Information, ManagedShell.Common.Logging.LogSeverity.Info},
+            {LogLevel.Warning, ManagedShell.Common.Logging.LogSeverity.Warning}
+        };
+
         private static readonly Dictionary<LogSeverity, ManagedShell.Common.Logging.LogSeverity> CairoShellLogSeverityToManagedShellLogSeverityDictionary = new Dictionary<LogSeverity, ManagedShell.Common.Logging.LogSeverity>
         {
             {LogSeverity.Debug, ManagedShell.Common.Logging.LogSeverity.Debug},
@@ -47,6 +56,11 @@ namespace CairoDesktop.Common.Logging
         public static ManagedShell.Common.Logging.LogSeverity ToManagedShellLogSeverity(this LogSeverity logSeverity)
         {
             return CairoShellLogSeverityToManagedShellLogSeverityDictionary[logSeverity];
+        }
+
+        public static ManagedShell.Common.Logging.LogSeverity ToManagedShellLogSeverity(this LogLevel logLevel)
+        {
+            return LogLevelToManagedShellLogSeverityDictionary[logLevel];
         }
     }
 }

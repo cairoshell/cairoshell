@@ -83,15 +83,15 @@ namespace CairoDesktop
 
         internal void WriteApplicationDebugInfoToConsole()
         {
-            _logger.LogInformation($"Product Name: {ProductName}");
-            _logger.LogInformation($"Version: {ProductVersion}");
-            _logger.LogInformation($"Operating System: {new ComputerInfo().OSFullName}");
-            _logger.LogInformation($"OS Build: {new ComputerInfo().OSVersion}");
-            _logger.LogInformation($"Processor Type: {(IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)}-bit");
-            _logger.LogInformation($"Startup Path: {StartupPath}");
-            _logger.LogInformation($"Running As: {IntPtr.Size * 8}-bit Process");
-            _logger.LogInformation($"Configured as shell: {EnvironmentHelper.IsAppConfiguredAsShell}");
-            _logger.LogInformation($"Running as shell: {EnvironmentHelper.IsAppRunningAsShell}");
+            _logger.LogDebug($"Product Name: {ProductName}");
+            _logger.LogDebug($"Version: {ProductVersion}");
+            _logger.LogDebug($"Operating System: {new ComputerInfo().OSFullName}");
+            _logger.LogDebug($"OS Build: {new ComputerInfo().OSVersion}");
+            _logger.LogDebug($"Processor Type: {(IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)}-bit");
+            _logger.LogDebug($"Startup Path: {StartupPath}");
+            _logger.LogDebug($"Running As: {IntPtr.Size * 8}-bit Process");
+            _logger.LogDebug($"Configured as shell: {EnvironmentHelper.IsAppConfiguredAsShell}");
+            _logger.LogDebug($"Running as shell: {EnvironmentHelper.IsAppRunningAsShell}");
         }
 
         internal bool InternalCheckIsWow64()
