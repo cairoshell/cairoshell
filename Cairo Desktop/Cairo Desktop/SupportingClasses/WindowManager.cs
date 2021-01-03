@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
-using CairoDesktop.Common.Logging;
-using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -18,6 +17,7 @@ namespace CairoDesktop.SupportingClasses
         private readonly static object displaySetupLock = new object();
         private readonly List<IWindowService> _windowServices = new List<IWindowService>();
         private readonly AppBarManager _appBarManager;
+        private readonly ILogger<WindowManager> _logger;
 
         public bool IsSettingDisplays
         {
@@ -65,9 +65,10 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public WindowManager(ShellManagerService shellManagerService, DesktopManager desktopManager)
+        public WindowManager(ILogger<WindowManager> logger, ShellManagerService shellManagerService, DesktopManager desktopManager)
         {
             _appBarManager = shellManagerService.ShellManager.AppBarManager;
+            _logger = logger;
             desktopManager.Initialize(this);
 
             // start a timer to handle orphaned display events
@@ -86,7 +87,7 @@ namespace CairoDesktop.SupportingClasses
         {
             if (!IsSettingDisplays && pendingDisplayEvents > 0)
             {
-                CairoLogger.Debug("WindowManager: Processing additional display events");
+                _logger.LogDebug("Processing additional display events");
                 ProcessDisplayChanges(ScreenSetupReason.Reconciliation);
             }
         }
@@ -108,7 +109,7 @@ namespace CairoDesktop.SupportingClasses
 
         public void NotifyDisplayChange(ScreenSetupReason reason)
         {
-            CairoLogger.Debug($"WindowManager: Received {reason} notification");
+            _logger.LogDebug($"Received {reason} notification");
 
             if (reason == ScreenSetupReason.DwmChange)
             {
@@ -147,7 +148,7 @@ namespace CairoDesktop.SupportingClasses
 
                 if (same)
                 {
-                    CairoLogger.Debug("WindowManager: No display changes");
+                    _logger.LogDebug("No display changes");
                     return false;
                 }
             }
@@ -194,11 +195,11 @@ namespace CairoDesktop.SupportingClasses
         {
             if (reason != ScreenSetupReason.FirstRun && !hasCompletedInitialDisplaySetup)
             {
-                CairoLogger.Debug("WindowManager: Display setup ran before startup completed, aborting");
+                _logger.LogDebug("Display setup ran before startup completed, aborting");
                 return;
             }
 
-            CairoLogger.Debug("WindowManager: Beginning display setup");
+            _logger.LogDebug("Beginning display setup");
 
             List<string> sysScreens = new List<string>();
             List<string> openScreens = new List<string>();
@@ -236,7 +237,7 @@ namespace CairoDesktop.SupportingClasses
                 // abort if we have no screens or if we are removing all screens without adding new ones
                 if (sysScreens.Count == 0 || (removedScreens.Count >= openScreens.Count && addedScreens.Count == 0))
                 {
-                    CairoLogger.Debug("WindowManager: Aborted due to no displays present");
+                    _logger.LogDebug("Aborted due to no displays present");
                     return;
                 }
 
@@ -250,7 +251,7 @@ namespace CairoDesktop.SupportingClasses
             // open windows on newly added screens
             ProcessAddedScreens(addedScreens);
 
-            CairoLogger.Debug("WindowManager: Completed display setup");
+            _logger.LogDebug("Completed display setup");
         }
 
         #region Display setup helpers
@@ -278,7 +279,7 @@ namespace CairoDesktop.SupportingClasses
 
             foreach (var screen in ScreenState)
             {
-                CairoLogger.Debug(string.Format("WindowManager: {0} found at {1} with area {2}; primary? {3}", screen.DeviceName, screen.Bounds.ToString(), screen.WorkingArea.ToString(), screen.Primary.ToString()));
+                _logger.LogDebug($"{screen.DeviceName} found at {screen.Bounds} with area {screen.WorkingArea}; primary? {screen.Primary}");
                 sysScreens.Add(screen.DeviceName);
             }
 
@@ -289,7 +290,7 @@ namespace CairoDesktop.SupportingClasses
         {
             foreach (string name in removedScreens)
             {
-                CairoLogger.Debug("WindowManager: Removing windows associated with screen " + name);
+                _logger.LogDebug("Removing windows associated with screen " + name);
 
                 foreach (var windowService in _windowServices)
                 {
@@ -300,7 +301,7 @@ namespace CairoDesktop.SupportingClasses
 
         private void RefreshWindows(ScreenSetupReason reason, bool displaysChanged)
         {
-            CairoLogger.Debug("WindowManager: Refreshing screen information for existing windows");
+            _logger.LogDebug("Refreshing screen information for existing windows");
 
             WindowManagerEventArgs args = new WindowManagerEventArgs { DisplaysChanged = displaysChanged, Reason = reason };
 
@@ -318,7 +319,7 @@ namespace CairoDesktop.SupportingClasses
             {
                 if (addedScreens.Contains(screen.DeviceName))
                 {
-                    CairoLogger.Debug("WindowManager: Opening windows on screen " + screen.DeviceName);
+                    _logger.LogDebug("Opening windows on screen " + screen.DeviceName);
 
                     foreach (var windowService in _windowServices)
                     {
