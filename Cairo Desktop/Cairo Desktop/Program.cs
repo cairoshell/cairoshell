@@ -27,8 +27,7 @@ namespace CairoDesktop
                 .ConfigureServices((context, services) =>
                 {
                     services.AddSingleton(s => Settings.Instance);
-                    services.AddSingleton<CairoApplication>();
-                    services.AddSingleton<ICairoApplication>(x => x.GetRequiredService<CairoApplication>());
+                    services.AddSingleton<ICairoApplication, CairoApplication>();
 
                     services.AddSingleton<ShellManagerService>();
 
