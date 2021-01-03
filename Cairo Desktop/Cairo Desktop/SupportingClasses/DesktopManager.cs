@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using System;
@@ -7,10 +6,10 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Media;
-using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using Microsoft.Extensions.Logging;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop.SupportingClasses
@@ -33,6 +32,7 @@ namespace CairoDesktop.SupportingClasses
         private HotKey _overlayHotKey;
         private WindowManager _windowManager;
         private readonly ShellManager _shellManager;
+        private readonly ILogger<DesktopManager> _logger;
 
         public DesktopIcons DesktopIconsControl { get; private set; }
 
@@ -65,11 +65,12 @@ namespace CairoDesktop.SupportingClasses
 
         public SystemDirectory DesktopLocation => DesktopIconsControl?.Location;
 
-        public DesktopManager(ShellManagerService shellManagerService)
+        public DesktopManager(ILogger<DesktopManager> logger, ShellManagerService shellManagerService)
         {
             // DesktopManager is always created on startup by WindowManager, regardless of desktop preferences
             // this allows for dynamic creation and destruction of the desktop per user preference
             _shellManager = shellManagerService.ShellManager;
+            _logger = logger;
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         }
 
@@ -135,7 +136,7 @@ namespace CairoDesktop.SupportingClasses
             }
             else if (Settings.Instance.EnableDynamicDesktop && DesktopWindow == null) // NavigationManager can be expected null
             {
-                CairoLogger.Warning("DesktopManager: Attempted to create ToolBar with uninitialized properties");
+                _logger.LogWarning("Attempted to create ToolBar with uninitialized properties");
             }
         }
 
@@ -223,7 +224,7 @@ namespace CairoDesktop.SupportingClasses
             }
             else
             {
-                CairoLogger.Warning("DesktopManager: Attempted to configure desktop with uninitialized values");
+                _logger.LogWarning("Attempted to configure desktop with uninitialized values");
             }
         }
 
@@ -279,7 +280,7 @@ namespace CairoDesktop.SupportingClasses
             if (ShellWindow.IsShellWindow)
             {
                 // we did it
-                CairoLogger.Debug("DesktopManager: Successfully set as shell window");
+                _logger.LogDebug("Successfully set as shell window");
             }
         }
 
@@ -329,11 +330,11 @@ namespace CairoDesktop.SupportingClasses
             }
             else if (DesktopOverlayWindow != null)
             {
-                CairoLogger.Debug("DesktopManager: Desktop overlay already open, ignoring");
+                _logger.LogDebug("Desktop overlay already open, ignoring");
             }
             else
             {
-                CairoLogger.Warning("DesktopManager: Attempted to show desktop overlay using uninitialized properties");
+                _logger.LogWarning("Attempted to show desktop overlay using uninitialized properties");
             }
         }
 
@@ -363,11 +364,11 @@ namespace CairoDesktop.SupportingClasses
             }
             else if (DesktopOverlayWindow == null)
             {
-                CairoLogger.Debug("DesktopManager: Desktop overlay already closed, ignoring");
+                _logger.LogDebug("Desktop overlay already closed, ignoring");
             }
             else
             {
-                CairoLogger.Warning("DesktopManager: Attempted to close desktop overlay using uninitialized properties");
+                _logger.LogWarning("Attempted to close desktop overlay using uninitialized properties");
             }
         }
 
