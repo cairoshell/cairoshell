@@ -1,10 +1,7 @@
 name: Build Cairo
 
 on:
-  push:
-    branches-ignore: [ master ]
-  pull_request:
-    branches-ignore: [ master ]
+  [ push, pull_request ]
 
 jobs:
   build:
