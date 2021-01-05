@@ -1,7 +1,10 @@
 name: Build Cairo
 
 on:
-  [ push, pull_request ]
+  push:
+    branches: [ 'JLaF-DI' ]
+  pull_request:
+    branches: [ 'JLaF-DI' ]
 
 jobs:
   build:
