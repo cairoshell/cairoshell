@@ -1,0 +1,55 @@
+name: Build Cairo
+
+on:
+  push:
+    branches: [ JLaF-DI ]
+  pull_request:
+    branches: [ JLaF-DI ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        buildconfig: [ Release ]
+        buildplatform: [ x64, AnyCPU ]
+
+    runs-on: windows-latest
+
+    env:
+      project: Cairo Desktop.csproj
+      installer32: Installer\CairoShell_32.nsi
+      installer64: Installer\CairoShell_64.nsi
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Restore packages
+      run: msbuild -t:restore
+      working-directory: .\Cairo Desktop\Cairo Desktop
+
+    - name: Build
+      run: msbuild $env:project -p:Configuration=$env:config -p:Platform=$env:platform
+      working-directory: .\Cairo Desktop\Cairo Desktop
+      env:
+        config: ${{ matrix.buildconfig }}
+        platform: ${{ matrix.buildplatform }}
+
+    - name: Generate installer (64-bit)
+      if: matrix.buildplatform == 'x64'
+      run: makensis $env:installer64
+      
+    - name: Generate installer (32-bit)
+      if: matrix.buildplatform == 'AnyCPU'
+      run: makensis $env:installer32
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: Installer
+        path: 'Installer\*.exe'
