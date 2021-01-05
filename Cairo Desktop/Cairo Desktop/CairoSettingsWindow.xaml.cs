@@ -1,7 +1,6 @@
 ﻿using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using ManagedShell.Interop;
 using CairoDesktop.SupportingClasses;
@@ -19,8 +18,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
 namespace CairoDesktop
@@ -482,7 +481,7 @@ namespace CairoDesktop
             }
             catch (Exception e)
             {
-                CairoLogger.Error($"SettingsWindow: Unable to load autorun setting from registry: {e.Message}");
+                ShellLogger.Error($"SettingsWindow: Unable to load autorun setting from registry: {e.Message}");
             }
         }
 
@@ -733,7 +732,7 @@ namespace CairoDesktop
             }
             catch (Exception exception)
             {
-                CairoLogger.Error($"SettingsWindow: Unable to update registry autorun setting: {exception.Message}");
+                ShellLogger.Error($"SettingsWindow: Unable to update registry autorun setting: {exception.Message}");
             }
         }
 

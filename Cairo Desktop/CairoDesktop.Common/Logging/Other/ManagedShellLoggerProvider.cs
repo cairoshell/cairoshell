@@ -1,6 +1,4 @@
 ﻿using CairoDesktop.Common.ExtensionMethods;
-using CairoDesktop.Common.Logging.Legacy;
-using CairoDesktop.Common.Logging.Observers;
 using CairoDesktop.Configuration;
 using ManagedShell.Common.Logging;
 using ManagedShell.Common.Logging.Observers;
@@ -40,7 +38,6 @@ namespace CairoDesktop.Common.Logging.Other
             _fileLog.Open();
             ShellLogger.Attach(_fileLog);
             ShellLogger.Attach(new ConsoleLog());
-            CairoLogger.Attach(new ManagedShellLog());
         }
 
         private void CairoSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -49,15 +46,14 @@ namespace CairoDesktop.Common.Logging.Other
                 return;
 
             SetupLoggingSeverity();
-            _settings.LogLevel = CairoLogger.Severity.ToLogLevel();
         }
 
         private void SetupLoggingSeverity()
         {
-            var severity = cairoSettings.GetLogSeverity(Legacy.LogSeverity.Info);
-
-            CairoLogger.Severity = severity;
+            var severity = cairoSettings.GetLogSeverity(LogSeverity.Info);
+            
             ShellLogger.Severity = severity.ToManagedShellLogSeverity();
+            _settings.LogLevel = severity.ToLogLevel();
         }
 
         public LogLevel LogLevel => _settings.LogLevel;

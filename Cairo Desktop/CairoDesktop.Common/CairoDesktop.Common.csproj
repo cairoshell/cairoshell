@@ -82,12 +82,6 @@
     <Compile Include="ExtensionMethods\SettingsExtensions.cs" />
     <Compile Include="HotKey.cs" />
     <Compile Include="HotKeyModifier.cs" />
-    <Compile Include="Logging\Legacy\CairoLogger.Debug.cs" />
-    <Compile Include="Logging\Legacy\CairoLogger.Error.cs" />
-    <Compile Include="Logging\Legacy\CairoLogger.Fatal.cs" />
-    <Compile Include="Logging\Legacy\CairoLogger.Info.cs" />
-    <Compile Include="Logging\Legacy\CairoLogger.Warning.cs" />
-    <Compile Include="Logging\Observers\ManagedShellLog.cs" />
     <Compile Include="Logging\LogSeverityExtensions.cs" />
     <Compile Include="Logging\NullScope.cs" />
     <Compile Include="Logging\Other\ManagedShellFileLoggerOptions.cs" />
@@ -102,10 +96,7 @@
     <Compile Include="HotKeyManager.cs" />
     <Compile Include="InvokingObservableCollection.cs" />
     <Compile Include="KeyboardUtilities.cs" />
-    <Compile Include="Logging\Legacy\ILog.cs" />
-    <Compile Include="Logging\Legacy\LogEventArgs.cs" />
-    <Compile Include="Logging\Legacy\LogSeverity.cs" />
-    <Compile Include="Logging\Legacy\CairoLogger.cs" />
+    <Compile Include="Logging\LogSeverity.cs" />
     <Compile Include="MessageBoxButtonConverter.cs" />
     <Compile Include="CairoMessageImageConverter.cs" />
     <Compile Include="ObjectActions.cs" />

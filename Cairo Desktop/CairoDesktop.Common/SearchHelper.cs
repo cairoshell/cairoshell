@@ -8,11 +8,10 @@ using System.Data;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.Diagnostics;
-using CairoDesktop.Common.Logging;
 using Microsoft.Win32;
 using System.Threading.Tasks;
-using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.Common
 {
@@ -137,7 +136,7 @@ namespace CairoDesktop.Common
             }
             catch (Exception ex)
             {
-                CairoLogger.Error("Error in doSearch.",ex);
+                ShellLogger.Error("Error in doSearch.",ex);
             }
 
             sos.Reset.Set();

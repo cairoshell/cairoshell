@@ -1,7 +1,5 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Common.Logging.Legacy;
-using CairoDesktop.Common.Logging.Observers;
 using CairoDesktop.Configuration;
 using CairoDesktop.ObjectModel;
 using CairoDesktop.SupportingClasses;

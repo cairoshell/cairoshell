@@ -6,9 +6,8 @@ using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
-using CairoDesktop.Common.Logging;
-using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using Microsoft.VisualBasic.FileIO;
 
 namespace CairoDesktop.Common {
@@ -126,7 +125,7 @@ namespace CairoDesktop.Common {
             }
             catch (Exception ex)
             {
-                CairoLogger.Error("Error in fileWatcher_Renamed.", ex);
+                ShellLogger.Error("Error in fileWatcher_Renamed.", ex);
             }
         }
 
@@ -137,7 +136,7 @@ namespace CairoDesktop.Common {
             }
             catch (Exception ex)
             {
-                CairoLogger.Error("Error in fileWatcher_Deleted.", ex);
+                ShellLogger.Error("Error in fileWatcher_Deleted.", ex);
             }
         }
 

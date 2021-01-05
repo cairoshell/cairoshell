@@ -1,5 +1,4 @@
-﻿using CairoDesktop.Common.Logging.Legacy;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 
 namespace CairoDesktop.Common.Logging

@@ -1,7 +1,6 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common.ExtensionMethods;
 using CairoDesktop.Common.Logging;
-using CairoDesktop.Common.Logging.Legacy;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.DependencyInjection;
 using CairoDesktop.SupportingClasses;

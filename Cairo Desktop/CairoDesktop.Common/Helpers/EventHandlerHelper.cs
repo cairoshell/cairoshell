@@ -1,7 +1,5 @@
-﻿using CairoDesktop.Common.Logging;
-using System;
-using System.Diagnostics;
-using CairoDesktop.Common.Logging.Legacy;
+﻿using System;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.Common.Helpers
 {
@@ -22,7 +20,7 @@ namespace CairoDesktop.Common.Helpers
             }
             catch (Exception ex)
             {
-                CairoLogger.Error("Error raising event.", ex);
+                ShellLogger.Error("Error raising event.", ex);
             }
         }
 
@@ -34,7 +32,7 @@ namespace CairoDesktop.Common.Helpers
             }
             catch (Exception ex)
             {
-                CairoLogger.Error("Error raising event.", ex);
+                ShellLogger.Error("Error raising event.", ex);
             }
         }
     }

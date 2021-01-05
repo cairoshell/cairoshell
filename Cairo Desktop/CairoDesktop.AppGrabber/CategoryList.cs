@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Xml;
-using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.AppGrabber {
 
@@ -216,7 +216,7 @@ namespace CairoDesktop.AppGrabber {
                         app.Target = appElement.ChildNodes[2].InnerText;
 
                     if (!app.IsStoreApp && !ShellHelper.Exists(app.Path)) {
-                        CairoLogger.Debug(app.Path + " does not exist");
+                        ShellLogger.Debug(app.Path + " does not exist");
                         continue;
                     }
                     

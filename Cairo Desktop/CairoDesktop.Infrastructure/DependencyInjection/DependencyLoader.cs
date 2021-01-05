@@ -8,8 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using CairoDesktop.Common.Logging;
-using CairoDesktop.Common.Logging.Legacy;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.Infrastructure.DependencyInjection
 {
@@ -58,7 +57,7 @@ namespace CairoDesktop.Infrastructure.DependencyInjection
                 }
 
                 // TODO: Logging isn't set up at this point in startup
-                CairoLogger.Error($"DependencyLoader: Error registering module: {builder}");
+                ShellLogger.Error($"DependencyLoader: Error registering module: {builder}");
             }
 
             return serviceCollection;

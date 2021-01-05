@@ -1,7 +1,6 @@
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
@@ -12,9 +11,9 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop
@@ -411,7 +410,7 @@ namespace CairoDesktop
         {
             if (e.Key == Key.LWin || e.Key == Key.RWin)
             {
-                CairoLogger.Debug(e.Key.ToString() + " Key Pressed");
+                ShellLogger.Debug(e.Key.ToString() + " Key Pressed");
                 ToggleProgramsMenu();
                 e.Handled = true;
             }

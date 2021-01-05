@@ -14,9 +14,9 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using CairoDesktop.Common.Logging.Legacy;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using DataFormats = System.Windows.DataFormats;
 using DragDropEffects = System.Windows.DragDropEffects;
@@ -329,7 +329,7 @@ namespace CairoDesktop
                 }
                 catch
                 {
-                    CairoLogger.Error("Failed setting desktop background.");
+                    ShellLogger.Error("Failed setting desktop background.");
                 }
             }
             else
@@ -394,7 +394,7 @@ namespace CairoDesktop
             }
             catch (Exception ex)
             {
-                CairoLogger.Debug("Problem loading Windows background", ex);
+                ShellLogger.Debug("Problem loading Windows background", ex);
             }
 
             return GetCairoBackgroundBrush_Image(wallpaper, style) ?? GetCairoBackgroundBrush_Color();
