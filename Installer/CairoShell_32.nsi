@@ -9,6 +9,9 @@ Name "Cairo Desktop Environment"
 ; The file to write
 OutFile "CairoSetup_32bit.exe"
 
+; Use Unicode rather than ANSI
+Unicode True
+
 ; The default installation directory
 InstallDir "$PROGRAMFILES\Cairo Shell"
 
