@@ -12,6 +12,7 @@ using Microsoft.Win32;
 using System.Threading.Tasks;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.Common.Enums;
 
 namespace CairoDesktop.Common
 {

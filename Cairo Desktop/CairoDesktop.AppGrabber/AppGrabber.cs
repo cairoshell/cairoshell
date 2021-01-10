@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 

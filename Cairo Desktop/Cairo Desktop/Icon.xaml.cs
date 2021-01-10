@@ -12,6 +12,7 @@ using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using CairoDesktop.Localization;
 using CairoDesktop.SupportingClasses;
+using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -144,26 +145,24 @@ namespace CairoDesktop
                 bdrFilename.SetValue(DockPanel.DockProperty, Dock.Bottom);
             }
 
+            string bindingPath = "Icon";
             if (Settings.Instance.DesktopIconSize == (int)IconSize.ExtraLarge)
             {
-                imgIcon.Width = 48;
-                imgIcon.Height = 48;
-                Binding iconBinding = new Binding("LargeIcon");
-                iconBinding.Mode = BindingMode.OneWay;
-                iconBinding.FallbackValue = CairoApplication.Current.FindResource("NullIcon") as BitmapImage;
-                iconBinding.TargetNullValue = CairoApplication.Current.FindResource("NullIcon") as BitmapImage;
-                imgIcon.SetBinding(Image.SourceProperty, iconBinding);
+                imgIcon.Width = IconHelper.GetSize(IconSize.ExtraLarge);
+                imgIcon.Height = IconHelper.GetSize(IconSize.ExtraLarge);
+                bindingPath = "LargeIcon";
             }
             else
             {
-                imgIcon.Width = 32;
-                imgIcon.Height = 32;
-                Binding iconBinding = new Binding("Icon");
-                iconBinding.Mode = BindingMode.OneWay;
-                iconBinding.FallbackValue = CairoApplication.Current.FindResource("NullIcon") as BitmapImage;
-                iconBinding.TargetNullValue = CairoApplication.Current.FindResource("NullIcon") as BitmapImage;
-                imgIcon.SetBinding(Image.SourceProperty, iconBinding);
+                imgIcon.Width = IconHelper.GetSize(IconSize.Large);
+                imgIcon.Height = IconHelper.GetSize(IconSize.Large);
             }
+            
+            Binding iconBinding = new Binding(bindingPath);
+            iconBinding.Mode = BindingMode.OneWay;
+            iconBinding.FallbackValue = CairoApplication.Current.FindResource("NullIcon") as BitmapImage;
+            iconBinding.TargetNullValue = CairoApplication.Current.FindResource("NullIcon") as BitmapImage;
+            imgIcon.SetBinding(Image.SourceProperty, iconBinding);
 
             switch ($"{Settings.Instance.DesktopLabelPosition}{Settings.Instance.DesktopIconSize}")
             {

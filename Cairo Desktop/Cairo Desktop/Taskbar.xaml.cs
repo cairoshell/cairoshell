@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using CairoDesktop.AppGrabber;
 using ManagedShell;
+using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
@@ -163,8 +164,8 @@ namespace CairoDesktop
                     break;
             }
 
-            baseButtonWidth = 140 + addToSize;
-            Height = 29 + addToSize;
+            baseButtonWidth = (Settings.Instance.ShowTaskbarLabels ? Settings.Instance.TaskbarButtonWidth : Settings.Instance.TaskbarButtonHeight) + addToSize;
+            Height = Settings.Instance.TaskbarButtonHeight + addToSize;
             DesiredHeight = Height;
             Top = getDesiredTopPosition();
 
@@ -253,6 +254,7 @@ namespace CairoDesktop
 
             switch (e.PropertyName)
             {
+                case "ShowTaskbarLabels":
                 case "TaskbarIconSize":
                     setTaskbarSize();
                     SetScreenPosition();

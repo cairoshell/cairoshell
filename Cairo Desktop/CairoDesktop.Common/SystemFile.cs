@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using System.Windows;
 using System.Threading.Tasks;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Enums;
 
 namespace CairoDesktop.Common
 {
@@ -337,10 +338,7 @@ namespace CairoDesktop.Common
                             img.BeginInit();
                             img.CacheOption = BitmapCacheOption.OnLoad;
                             img.UriSource = new Uri(FullName);
-                            int dSize = 32;
-
-                            if (size == IconSize.ExtraLarge)
-                                dSize = 48;
+                            int dSize = IconHelper.GetSize(size);
 
                             DpiHelper.TransformToPixels(dSize, dSize, out dSize, out dSize);
                             img.DecodePixelWidth = dSize;

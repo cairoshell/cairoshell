@@ -1,8 +1,8 @@
 ﻿using CairoDesktop.Configuration;
 using ManagedShell;
-using ManagedShell.Common.Helpers;
 using System;
 using System.ComponentModel;
+using ManagedShell.Common.Enums;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -12,8 +12,6 @@ namespace CairoDesktop.SupportingClasses
 
         public ShellManagerService()
         {
-            ConfigureLogging();
-
             ShellManager = ConfigureShellManager();
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
@@ -30,12 +28,6 @@ namespace CairoDesktop.SupportingClasses
                     ShellManager.TasksService.TaskIconSize = (IconSize)Settings.Instance.TaskbarIconSize;
                     break;
             }
-        }
-
-        private void ConfigureLogging()
-        {
-            //ShellLogger.Severity = LogSeverity.Debug;
-            //ShellLogger.Attach(new ConsoleLog());
         }
 
         private ShellManager ConfigureShellManager()

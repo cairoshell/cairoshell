@@ -21,6 +21,7 @@ using System.Windows.Interop;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
+using ManagedShell.Common.Enums;
 
 namespace CairoDesktop
 {

@@ -575,5 +575,41 @@ namespace CairoDesktop.Configuration.Properties {
                 this["EnableMenuBar"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowTaskbarLabels {
+            get {
+                return ((bool)(this["ShowTaskbarLabels"]));
+            }
+            set {
+                this["ShowTaskbarLabels"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("140")]
+        public int TaskbarButtonWidth {
+            get {
+                return ((int)(this["TaskbarButtonWidth"]));
+            }
+            set {
+                this["TaskbarButtonWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("29")]
+        public int TaskbarButtonHeight {
+            get {
+                return ((int)(this["TaskbarButtonHeight"]));
+            }
+            set {
+                this["TaskbarButtonHeight"] = value;
+            }
+        }
     }
 }
