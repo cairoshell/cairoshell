@@ -42,6 +42,13 @@ jobs:
       env:
         config: ${{ matrix.buildconfig }}
         platform: ${{ matrix.buildplatform }}
+    
+    - name: Set installer version
+      uses: jacobtomlinson/gha-find-replace@master
+      with:
+        find: "BUILD_VERSION"
+        replace: ${{ steps.nbgv.outputs.SimpleVersion }}
+        include: ".*.nsi"
 
     - name: Generate installer (64-bit)
       if: matrix.buildplatform == 'x64'
