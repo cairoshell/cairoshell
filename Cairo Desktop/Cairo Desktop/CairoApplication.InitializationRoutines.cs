@@ -30,24 +30,6 @@ namespace CairoDesktop
             EnvironmentHelper.IsAppRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !_forceDisableShellMode) || _forceEnableShellMode;
         }
 
-        private bool SingleInstanceCheck()
-        {
-            _cairoMutex = new System.Threading.Mutex(true, "CairoShell", out bool ok);
-
-            if (!ok && !_isRestart)
-            {
-                // Another instance is already running.
-                return false;
-            }
-            else if (!ok && _isRestart)
-            {
-                // this is a restart so let's wait for the old instance to end
-                System.Threading.Thread.Sleep(2000);
-            }
-
-            return true;
-        }
-
         private void SetShellReadyEvent()
         {
             int hShellReadyEvent;

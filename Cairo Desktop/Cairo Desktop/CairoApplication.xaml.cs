@@ -25,8 +25,7 @@ namespace CairoDesktop
     {
         private readonly ILogger<CairoApplication> _logger;
         public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
-
-        private System.Threading.Mutex _cairoMutex;
+        
         private CommandLineParser _commandLineParser;
         private bool _isRestart;
         private bool _isTour;
@@ -46,12 +45,6 @@ namespace CairoDesktop
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             ProcessCommandLineArgs(Environment.GetCommandLineArgs());
-
-            if (!SingleInstanceCheck())
-            {
-                Shutdown(0);
-                return;
-            }
 
             Extensions = new List<IShellExtension>();
 

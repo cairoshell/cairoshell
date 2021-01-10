@@ -14,7 +14,12 @@ namespace CairoDesktop
 {
     internal sealed class Program
     {
+        private const string MutexName = "CairoShell";
+        private const int MutexAttempts = 10;
+        private const int MutexWaitMs = 1000;
+
         private static IHost _host;
+        private static System.Threading.Mutex _cairoMutex;
 
         /// <summary>
         /// The main entry point for the application
@@ -22,6 +27,11 @@ namespace CairoDesktop
         [STAThread]
         public static int Main(string[] args)
         {
+            if (!SingleInstanceCheck())
+            {
+                return 1;
+            }
+            
             _host = new HostBuilder()
                 .ConfigureServices((context, services) =>
                 {
@@ -61,6 +71,32 @@ namespace CairoDesktop
             
             var app = _host.Services.GetRequiredService<ICairoApplication>();
             return app.Run();
+        }
+        
+        private static bool GetMutex()
+        {
+            _cairoMutex = new System.Threading.Mutex(true, MutexName, out bool ok);
+
+            return ok;
+        }
+
+        private static bool SingleInstanceCheck()
+        {
+            for (int i = 0; i < MutexAttempts; i++)
+            {
+                if (!GetMutex())
+                {
+                    // Dispose the mutex, otherwise it will never create new
+                    _cairoMutex.Dispose();
+                    System.Threading.Thread.Sleep(MutexWaitMs);
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

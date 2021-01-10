@@ -102,11 +102,6 @@
     <Compile Include="ObjectActions.cs" />
     <Compile Include="ObjectEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\HostBuilderApplicationExtensions.cs" />
-    <Compile Include="Services\IMutexBuilder.cs" />
-    <Compile Include="Services\MutexBuilder.cs" />
-    <Compile Include="Services\MutexLifetimeService.cs" />
-    <Compile Include="Services\ResourceMutex.cs" />
     <Compile Include="ShellContextMenu.cs" />
     <Compile Include="StacksManager.cs" />
     <Compile Include="StartupRunner.cs" />
