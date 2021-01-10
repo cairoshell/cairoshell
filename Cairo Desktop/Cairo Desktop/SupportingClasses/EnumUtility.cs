@@ -1,4 +1,5 @@
 ﻿using System;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -16,6 +17,7 @@ namespace CairoDesktop.SupportingClasses
             }
             catch (Exception ex)
             {
+                ShellLogger.Warning($"Unable to perform cast: {ex.Message}");
             }
 
             return false;

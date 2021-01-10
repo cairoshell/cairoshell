@@ -8,6 +8,7 @@ using System.Windows.Threading;
 using CairoDesktop.Common;
 using CairoDesktop.Interop;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop
 {
@@ -112,6 +113,7 @@ namespace CairoDesktop
             }
             catch (Exception ex)
             {
+                ShellLogger.Warning($"Search: Unable to bind hotkey: {ex.Message}");
             }
         }
 
