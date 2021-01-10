@@ -14,7 +14,7 @@ namespace CairoDesktop.SupportingClasses
             _updateService = updateService;
 
             EnableMultiMon = Settings.Instance.EnableMenuBarMultiMon;
-            EnableService = true;
+            EnableService = Settings.Instance.EnableMenuBar;
         }
 
         protected override void OpenWindow(Screen screen)
