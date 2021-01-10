@@ -44,7 +44,7 @@ jobs:
         platform: ${{ matrix.buildplatform }}
     
     - name: Set installer version
-      uses: datamonsters/replace-action
+      uses: datamonsters/replace-action@v2
       with:
         files: '$env:installer32,$env:installer64'
         replacements: 'BUILD_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}'
