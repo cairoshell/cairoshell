@@ -175,6 +175,13 @@ namespace CairoDesktop
 
         protected override async void OnExit(ExitEventArgs e)
         {
+            if (EnvironmentHelper.IsAppRunningAsShell)
+            {
+                // WinLogon will automatically launch the local machine shell if AutoRestartShell is enabled and the shell window process exits with code 0.
+                // Setting the exit code to 1 indicates that we are shutting down intentionally and do not want the local machine shell to restart
+                e.ApplicationExitCode = 1;
+            }
+
             base.OnExit(e);
 
             await GracefullyExit();
@@ -286,19 +293,7 @@ namespace CairoDesktop
             IsShuttingDown = true;
             Host.Services.GetService<ShellManagerService>()?.ShellManager.AppBarManager.SignalGracefulShutdown();
 
-            if (EnvironmentHelper.IsAppRunningAsShell)
-            {
-                IndicateGracefulShutdown();
-            }
-
             Dispatcher.Invoke(Shutdown, DispatcherPriority.Normal);
-        }
-
-        private void IndicateGracefulShutdown()
-        {
-            // WinLogon will automatically launch the local machine shell if AutoRestartShell is enabled and the shell window process exits
-            // setting the exit status to 1 indicates that we are shutting down gracefully and do not want the local machine shell to restart
-            Environment.ExitCode = 1;
         }
 
         public static bool IsShuttingDown { get; set; }
