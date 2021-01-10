@@ -28,6 +28,7 @@ jobs:
 
     - name: Install nbgv
       uses: dotnet/nbgv@v0.4.0
+      id: nbgv
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.0.2
@@ -46,7 +47,7 @@ jobs:
     - name: Set installer version
       uses: datamonsters/replace-action@v2
       with:
-        files: '$env:installer32,$env:installer64'
+        files: '${{ env.installer32 }},${{ env.installer64 }}'
         replacements: 'BUILD_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}'
 
     - name: Generate installer (64-bit)
