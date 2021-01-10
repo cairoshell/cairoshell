@@ -1,4 +1,4 @@
-name: Build Cairo
+name: Build
 
 on:
   push:
