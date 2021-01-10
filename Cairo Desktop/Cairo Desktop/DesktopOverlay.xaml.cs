@@ -1,10 +1,12 @@
 ﻿using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
+using ManagedShell.Interop;
 using CairoDesktop.SupportingClasses;
 using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
@@ -13,50 +15,52 @@ namespace CairoDesktop
     /// </summary>
     public partial class DesktopOverlay : Window
     {
-        private DesktopManager desktopManager;
+        private readonly WindowManager _windowManager;
+        private readonly DesktopManager _desktopManager;
+        private readonly AppBarManager _appBarManager;
         public IntPtr Handle;
 
-        public DesktopOverlay(DesktopManager manager)
+        public DesktopOverlay(WindowManager windowManager, DesktopManager manager, AppBarManager appBarManager)
         {
             InitializeComponent();
 
-            desktopManager = manager;
+            _windowManager = windowManager;
+            _desktopManager = manager;
+            _appBarManager = appBarManager;
+
             ResetPosition();
         }
 
         public void ResetPosition()
         {
-            double top = System.Windows.Forms.SystemInformation.WorkingArea.Top / Shell.DpiScale;
+            double top = System.Windows.Forms.SystemInformation.WorkingArea.Top / DpiHelper.DpiScale;
             double taskbarHeight = 0;
 
-            if (Settings.Instance.TaskbarMode == 1 && WindowManager.Instance.TaskbarWindows.Count > 0)
+            if (Settings.Instance.TaskbarMode == 1)
             {
                 // special case, since work area is not reduced with this setting
                 // this keeps the desktop going beneath the TaskBar
 
                 // get the TaskBar's height
-                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, System.Windows.Forms.Screen.PrimaryScreen);
-
-                if (taskbar != null)
-                {
-                    taskbarHeight = taskbar.ActualHeight;
-                }
+                double dpiScale = 1;
+                NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(ref dpiScale, System.Windows.Forms.Screen.PrimaryScreen, false, false);
+                taskbarHeight = (System.Windows.Forms.Screen.PrimaryScreen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale;
 
                 // top TaskBar means we should push down
                 if (Settings.Instance.TaskbarPosition == 1)
                 {
-                    top += taskbarHeight;
+                    top = workAreaRect.Top / dpiScale;
                 }
             }
 
-            Width = WindowManager.PrimaryMonitorWorkArea.Width / Shell.DpiScale;
-            Height = (WindowManager.PrimaryMonitorWorkArea.Height / Shell.DpiScale) - taskbarHeight;
+            Width = WindowManager.PrimaryMonitorWorkArea.Width / DpiHelper.DpiScale;
+            Height = (WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale) - taskbarHeight;
 
             grid.Width = Width;
             grid.Height = Height;
 
             Top = top;
-            Left = System.Windows.Forms.SystemInformation.WorkingArea.Left / Shell.DpiScale;
+            Left = System.Windows.Forms.SystemInformation.WorkingArea.Left / DpiHelper.DpiScale;
         }
 
         public void BringToFront()
@@ -66,7 +70,7 @@ namespace CairoDesktop
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            desktopManager.IsOverlayOpen = false;
+            _desktopManager.IsOverlayOpen = false;
         }
 
         private void DesktopOverlayWindow_SourceInitialized(object sender, EventArgs e)
@@ -74,7 +78,7 @@ namespace CairoDesktop
             WindowInteropHelper helper = new WindowInteropHelper(this);
             Handle = helper.Handle;
 
-            Shell.HideWindowFromTasks(Handle);
+            WindowHelper.HideWindowFromTasks(Handle);
         }
 
         private void DesktopOverlayWindow_LocationChanged(object sender, EventArgs e)
@@ -84,32 +88,32 @@ namespace CairoDesktop
 
         private void DesktopOverlayWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            desktopManager.DesktopWindow?.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
         private void DesktopOverlayWindow_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            desktopManager.DesktopWindow?.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
         private void DesktopOverlayWindow_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            desktopManager.DesktopWindow?.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
         private void DesktopOverlayWindow_DragOver(object sender, DragEventArgs e)
         {
-            desktopManager.DesktopWindow?.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
         private void DesktopOverlayWindow_Drop(object sender, DragEventArgs e)
         {
-            desktopManager.DesktopWindow?.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
         private void grid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            desktopManager.DesktopWindow?.grid.RaiseEvent(e);
+            _desktopManager.DesktopWindow?.grid.RaiseEvent(e);
         }
     }
 }

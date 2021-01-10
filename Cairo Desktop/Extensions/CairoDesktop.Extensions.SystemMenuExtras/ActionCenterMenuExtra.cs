@@ -1,23 +1,20 @@
-﻿using System.Windows.Controls;
-using CairoDesktop.Interop;
-using CairoDesktop.ObjectModel;
+﻿using CairoDesktop.ObjectModel;
+using System.Windows.Controls;
+using CairoDesktop.Configuration;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
     class ActionCenterMenuExtra : MenuExtra
     {
-        public ActionCenterMenuExtra() { }
-
         public override UserControl StartControl(MenuBar menuBar)
         {
-            if (Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
+            if (Settings.Instance.EnableMenuExtraActionCenter && EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
             {
                 return new ActionCenter(menuBar);
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
     }
 }

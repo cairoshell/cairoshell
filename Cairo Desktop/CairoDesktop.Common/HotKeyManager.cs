@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Interop;
-using CairoDesktop.Common.Logging;
-using static CairoDesktop.Interop.NativeMethods;
+using ManagedShell.Common.Logging;
+using static ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop.Common
 {
@@ -26,7 +26,7 @@ namespace CairoDesktop.Common
                     {
                         if (hotKey.Action != null)
                         {
-                            CairoLogger.Instance.Debug(string.Format("HotKey {0} pressed", hotKey.Key.ToString()));
+                            ShellLogger.Debug(string.Format("HotKey {0} pressed", hotKey.Key.ToString()));
                             hotKey.Action.Invoke(hotKey);
                         }
 

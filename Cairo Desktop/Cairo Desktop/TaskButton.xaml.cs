@@ -1,13 +1,13 @@
 ﻿using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
+using ManagedShell.Interop;
 using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using CairoDesktop.Common;
-using CairoDesktop.WindowsTasks;
+using ManagedShell.Common.Helpers;
+using ManagedShell.WindowsTasks;
 
 namespace CairoDesktop
 {
@@ -48,7 +48,7 @@ namespace CairoDesktop
                 if (Keyboard.IsKeyDown(Key.LeftShift) ||
                     Keyboard.IsKeyDown(Key.RightShift))
                 {
-                    Shell.StartProcess(Window.WinFileName);
+                    ShellHelper.StartProcess(Window.WinFileName);
                     return;
                 }
 
@@ -174,7 +174,7 @@ namespace CairoDesktop
         {
             if (!ListMode)
             {
-                WinTitle.Visibility = Settings.Instance.ShowTaskbarLabels ? Visibility.Visible : Visibility.Collapsed;
+                WinTitle.Visibility = Settings.Instance.ShowTaskbarLabels? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -182,8 +182,8 @@ namespace CairoDesktop
         {
             if (!ListMode)
             {
-                imgIcon.Width = IconSize.GetSize(Settings.Instance.TaskbarIconSize);
-                imgIcon.Height = IconSize.GetSize(Settings.Instance.TaskbarIconSize);
+                imgIcon.Width = IconHelper.GetSize(Settings.Instance.TaskbarIconSize);
+                imgIcon.Height = IconHelper.GetSize(Settings.Instance.TaskbarIconSize);
             }
         }
 
@@ -236,7 +236,7 @@ namespace CairoDesktop
         {
             if (Window != null)
             {
-                Shell.StartProcess(Window.WinFileName);
+                ShellHelper.StartProcess(Window.WinFileName);
             }
         }
 
@@ -244,7 +244,7 @@ namespace CairoDesktop
         {
             if (Window != null)
             {
-                Tasks.Instance.CloseWindow(Window);
+                Window.Close();
             }
         }
 
@@ -274,7 +274,7 @@ namespace CairoDesktop
 
         private void miTaskMan_Click(object sender, RoutedEventArgs e)
         {
-            Shell.StartTaskManager();
+            ShellHelper.StartTaskManager();
         }
 
         private void btn_MouseUp(object sender, MouseButtonEventArgs e)
@@ -286,13 +286,13 @@ namespace CairoDesktop
                     switch (Settings.Instance.TaskbarMiddleClick)
                     {
                         case 0 when Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift):
-                            Tasks.Instance.CloseWindow(Window);
+                            Window.Close();
                             break;
                         case 1 when !Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift):
-                            Tasks.Instance.CloseWindow(Window);
+                            Window.Close();
                             break;
                         default:
-                            Shell.StartProcess(Window.WinFileName);
+                            ShellHelper.StartProcess(Window.WinFileName);
                             break;
                     }
                 }

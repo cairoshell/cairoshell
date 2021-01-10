@@ -2,7 +2,7 @@
 using System.Windows;
 using System.IO;
 using System.Windows.Interop;
-using CairoDesktop.Interop;
+using ManagedShell.Interop;
 using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
 using CairoDesktop.Common;
@@ -11,7 +11,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Controls;
-using CairoDesktop.Common.Logging;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop
 {
@@ -133,8 +134,8 @@ namespace CairoDesktop
             if (Settings.Instance.DesktopNavigationToolbarLocation != default &&
                 PointExistsOnScreen(Settings.Instance.DesktopNavigationToolbarLocation))
             {
-                Top = Settings.Instance.DesktopNavigationToolbarLocation.Y / Shell.DpiScale;
-                Left = Settings.Instance.DesktopNavigationToolbarLocation.X / Shell.DpiScale;
+                Top = Settings.Instance.DesktopNavigationToolbarLocation.Y / DpiHelper.DpiScale;
+                Left = Settings.Instance.DesktopNavigationToolbarLocation.X / DpiHelper.DpiScale;
             }
             else
             {
@@ -159,13 +160,13 @@ namespace CairoDesktop
                 PointExistsOnScreen(Settings.Instance.DesktopNavigationToolbarLocation))
             {
                 // use custom size
-                Top = Settings.Instance.DesktopNavigationToolbarLocation.Y / Shell.DpiScale;
-                Left = Settings.Instance.DesktopNavigationToolbarLocation.X / Shell.DpiScale;
+                Top = Settings.Instance.DesktopNavigationToolbarLocation.Y / DpiHelper.DpiScale;
+                Left = Settings.Instance.DesktopNavigationToolbarLocation.X / DpiHelper.DpiScale;
             }
             else
             {
                 // use size from wndproc and adjust for dpi
-                Shell.TransformFromPixels(x, y, out int sWidth, out int sHeight);
+                DpiHelper.TransformFromPixels(x, y, out int sWidth, out int sHeight);
 
                 SetPositionDefault(sWidth, sHeight);
             }
@@ -235,7 +236,7 @@ namespace CairoDesktop
             }
             catch (Exception exception)
             {
-                CairoLogger.Instance.Warning($"DesktopNavigationToolbar: Exception in FolderBrowserDialog: {exception.Message}");
+                ShellLogger.Warning($"DesktopNavigationToolbar: Exception in FolderBrowserDialog: {exception.Message}");
             }
         }
         
@@ -339,7 +340,7 @@ namespace CairoDesktop
                         }
                         else if (desktopManager.DesktopWindow != null)
                         {
-                            ownerWnd = desktopManager.AllowProgmanChild ? Shell.GetLowestDesktopParentHwnd() : desktopManager.DesktopWindow.Handle;
+                            ownerWnd = desktopManager.AllowProgmanChild ? WindowHelper.GetLowestDesktopParentHwnd() : desktopManager.DesktopWindow.Handle;
                         }
 
                         wndPos.hwndInsertAfter = NativeMethods.GetWindow(ownerWnd, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);
@@ -365,7 +366,7 @@ namespace CairoDesktop
         {
             helper = new WindowInteropHelper(this);
             HwndSource.FromHwnd(helper.Handle).AddHook(new HwndSourceHook(WndProc));
-            Shell.HideWindowFromTasks(helper.Handle);
+            WindowHelper.HideWindowFromTasks(helper.Handle);
         }
 
         private void DesktopToolbar_PreviewMouseUp(object sender, MouseButtonEventArgs e)
@@ -399,7 +400,7 @@ namespace CairoDesktop
         private void DesktopToolbar_Closing(object sender, CancelEventArgs e)
         {
 
-            if (!Startup.IsShuttingDown && !AllowClose)
+            if (!CairoApplication.IsShuttingDown && !AllowClose)
             {
                 e.Cancel = true;
             }
@@ -421,7 +422,7 @@ namespace CairoDesktop
 
         private void DesktopToolbar_LocationChanged(object sender, EventArgs e)
         {
-            Settings.Instance.DesktopNavigationToolbarLocation = new Point(Left * Shell.DpiScale, Top * Shell.DpiScale);
+            Settings.Instance.DesktopNavigationToolbarLocation = new Point(Left * DpiHelper.DpiScale, Top * DpiHelper.DpiScale);
         }
         #endregion
 

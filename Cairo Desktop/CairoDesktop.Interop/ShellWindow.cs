@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 
 namespace CairoDesktop.Interop
 {

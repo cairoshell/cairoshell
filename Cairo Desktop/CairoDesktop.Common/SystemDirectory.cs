@@ -6,8 +6,8 @@ using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
-using CairoDesktop.Common.Logging;
-using CairoDesktop.Interop;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using Microsoft.VisualBasic.FileIO;
 
 namespace CairoDesktop.Common {
@@ -59,7 +59,7 @@ namespace CairoDesktop.Common {
             get
             {
                 if (name == null)
-                    name = Shell.GetDisplayName(FullName);
+                    name = ShellHelper.GetDisplayName(FullName);
                 return name;
             }
         }
@@ -125,7 +125,7 @@ namespace CairoDesktop.Common {
             }
             catch (Exception ex)
             {
-                CairoLogger.Instance.Error("Error in fileWatcher_Renamed.", ex);
+                ShellLogger.Error("Error in fileWatcher_Renamed.", ex);
             }
         }
 
@@ -136,7 +136,7 @@ namespace CairoDesktop.Common {
             }
             catch (Exception ex)
             {
-                CairoLogger.Instance.Error("Error in fileWatcher_Deleted.", ex);
+                ShellLogger.Error("Error in fileWatcher_Deleted.", ex);
             }
         }
 
@@ -147,7 +147,7 @@ namespace CairoDesktop.Common {
         }
 
         private SystemFile addFile(string filePath) {
-            if (Shell.Exists(filePath) && isFileVisible(filePath))
+            if (ShellHelper.Exists(filePath) && isFileVisible(filePath))
             {
                 SystemFile newFile = new SystemFile(filePath, this);
                 if (newFile.Name != null)
@@ -204,7 +204,7 @@ namespace CairoDesktop.Common {
 
         private bool isFileVisible(string fileName)
         {
-            if (Shell.Exists(fileName))
+            if (ShellHelper.Exists(fileName))
             {
                 try
                 {
@@ -311,7 +311,7 @@ namespace CairoDesktop.Common {
 
             foreach (string file in operation.files)
             {
-                if (Shell.Exists(file))
+                if (ShellHelper.Exists(file))
                 {
                     try
                     {

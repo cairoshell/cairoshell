@@ -1,6 +1,4 @@
-﻿using CairoDesktop.Common.Logging;
-using CairoDesktop.Interop;
-using CairoDesktop.SupportingClasses;
+﻿using CairoDesktop.SupportingClasses;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +6,8 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -56,8 +56,8 @@ namespace CairoDesktop.AppGrabber
             this.appGrabber = appGrabber;
             InitializeComponent();
 
-            Height = (SystemParameters.MaximizedPrimaryScreenHeight / Shell.DpiScaleAdjustment) - 100;
-            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight / Shell.DpiScaleAdjustment;
+            Height = (SystemParameters.MaximizedPrimaryScreenHeight / DpiHelper.DpiScaleAdjustment) - 100;
+            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight / DpiHelper.DpiScaleAdjustment;
         }
 
         #region Button Clicks
@@ -93,7 +93,7 @@ namespace CairoDesktop.AppGrabber
                 Filter = filter
             })
             {
-                if (dlg.SafeShowDialog() == System.Windows.Forms.DialogResult.OK && Shell.Exists(dlg.FileName))
+                if (dlg.SafeShowDialog() == System.Windows.Forms.DialogResult.OK && ShellHelper.Exists(dlg.FileName))
                 {
                     ApplicationInfo customApp = AppGrabber.PathToApp(dlg.FileName, true, true);
                     if (!ReferenceEquals(customApp, null))
@@ -105,7 +105,7 @@ namespace CairoDesktop.AppGrabber
                         else
                         {
                             // disallow adding a duplicate
-                            CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                            ShellLogger.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
                         }
                     }
                 }

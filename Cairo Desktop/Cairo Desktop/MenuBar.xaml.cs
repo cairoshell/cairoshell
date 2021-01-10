@@ -1,25 +1,31 @@
 using CairoDesktop.AppGrabber;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
+using ManagedShell;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop
 {
-    public partial class MenuBar : AppBarWindow
+    public partial class MenuBar : CairoAppBarWindow
     {
+        private readonly IApplicationUpdateService _applicationUpdateService;
+        private readonly ShellManager _shellManager;
+
         private MenuBarShadow shadow;
         private static HotKey cairoMenuHotKey;
         private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
-
-        private bool secretBottomMenuBar = false;
 
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
@@ -32,20 +38,18 @@ namespace CairoDesktop
         private MenuExtraSearch menuExtraSearch;
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        public MenuBar() : this(System.Windows.Forms.Screen.PrimaryScreen)
+        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService) : this(shellManager, windowManager, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen, NativeMethods.ABEdge.ABE_TOP)
         {
-
         }
 
-        public MenuBar(System.Windows.Forms.Screen screen)
+        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(shellManager, windowManager, screen, edge, 23)
         {
-            InitializeComponent();
+            _applicationUpdateService = applicationUpdateService;
+            _shellManager = shellManager;
 
-            Screen = screen;
-            desiredHeight = 23;
-            processScreenChanges = true;
-            requiresScreenEdge = true;
-            if (secretBottomMenuBar) appBarEdge = NativeMethods.ABEdge.ABE_BOTTOM;
+            InitializeComponent();
+            
+            RequiresScreenEdge = true;
 
             SetPosition();
 
@@ -68,7 +72,7 @@ namespace CairoDesktop
 
         private void setupMenu()
         {
-            if (Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
+            if (EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
             {
                 // show Windows 10 features
                 miOpenUWPSettings.Visibility = Visibility.Visible;
@@ -76,7 +80,7 @@ namespace CairoDesktop
 
 #if !DEBUG
             // I didnt like the Exit Cairo option available when Cairo was set as Shell
-            if (Shell.IsCairoRunningAsShell)
+            if (EnvironmentHelper.IsAppRunningAsShell)
             {
                 miExitCairo.Visibility = Visibility.Collapsed;
             }
@@ -101,7 +105,7 @@ namespace CairoDesktop
             // Show power options depending on system support
             SetHibernateVisibility();
 
-            if (!Shell.CanSleep())
+            if (!PowerHelper.CanSleep())
             {
                 miSleep.Visibility = Visibility.Collapsed;
             }
@@ -110,7 +114,7 @@ namespace CairoDesktop
         private void setupMenuExtras()
         {
             // set up menu extras
-            foreach (var extra in ObjectModel._CairoShell.Instance.MenuExtras)
+            foreach (var extra in CairoApplication.Current.MenuExtras)
             {
                 UserControl menuExtra = extra.StartControl(this);
                 if (menuExtra != null) MenuExtrasHost.Children.Add(menuExtra);
@@ -119,18 +123,18 @@ namespace CairoDesktop
             if (Settings.Instance.EnableSysTray)
             {
                 // add systray
-                systemTray = new SystemTray(this);
+                systemTray = new SystemTray(this, _shellManager.NotificationArea);
                 MenuExtrasHost.Children.Add(systemTray);
             }
 
-            if (Settings.Instance.EnableMenuExtraVolume && Shell.IsWindows10OrBetter && Shell.IsCairoRunningAsShell)
+            if (Settings.Instance.EnableMenuExtraVolume && EnvironmentHelper.IsWindows10OrBetter && EnvironmentHelper.IsAppRunningAsShell)
             {
                 // add volume
                 menuExtraVolume = new MenuExtraVolume();
                 MenuExtrasHost.Children.Add(menuExtraVolume);
             }
 
-            if (Settings.Instance.EnableMenuExtraActionCenter && Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
+            if (Settings.Instance.EnableMenuExtraActionCenter && EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
             {
                 // add action center
                 menuExtraActionCenter = new MenuExtraActionCenter(this);
@@ -154,13 +158,13 @@ namespace CairoDesktop
 
         private void setupCairoMenu()
         {
-            // Add _Application CairoMenu MenuItems
-            if (ObjectModel._CairoShell.Instance.CairoMenu.Count > 0)
+            // Add CairoMenu MenuItems
+            if (CairoApplication.Current.CairoMenu.Count > 0)
             {
                 CairoMenu.Items.Insert(7, new Separator());
-                foreach (var cairoMenuItem in ObjectModel._CairoShell.Instance.CairoMenu)
+                foreach (var cairoMenuItem in CairoApplication.Current.CairoMenu)
                 {
-                    MenuItem menuItem = new MenuItem { Header = cairoMenuItem.Header };
+                    var menuItem = new System.Windows.Controls.MenuItem { Header = cairoMenuItem.Header };
                     menuItem.Click += cairoMenuItem.MenuItem_Click;
                     CairoMenu.Items.Insert(8, menuItem);
                 }
@@ -173,19 +177,19 @@ namespace CairoDesktop
             miUserName.Header = username;
 
             // Only show Downloads folder on Vista or greater
-            if (!Shell.IsWindowsVistaOrBetter)
+            if (!EnvironmentHelper.IsWindowsVistaOrBetter)
             {
                 PlacesDownloadsItem.Visibility = Visibility.Collapsed;
                 PlacesVideosItem.Visibility = Visibility.Collapsed;
             }
 
-            // Add _Application PlacesMenu MenuItems
-            if (ObjectModel._CairoShell.Instance.PlacesMenu.Count > 0)
+            // Add PlacesMenu MenuItems
+            if (CairoApplication.Current.Places.Count > 0)
             {
                 PlacesMenu.Items.Add(new Separator());
-                foreach (var placesMenuItem in ObjectModel._CairoShell.Instance.PlacesMenu)
+                foreach (var placesMenuItem in CairoApplication.Current.Places)
                 {
-                    MenuItem menuItem = new MenuItem { Header = placesMenuItem.Header };
+                    var menuItem = new System.Windows.Controls.MenuItem { Header = placesMenuItem.Header };
                     menuItem.Click += placesMenuItem.MenuItem_Click;
                     PlacesMenu.Items.Add(menuItem);
                 }
@@ -194,7 +198,7 @@ namespace CairoDesktop
 
         private void setupShadow()
         {
-            if (Settings.Instance.EnableMenuBarShadow && shadow == null && !secretBottomMenuBar)
+            if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarEdge != NativeMethods.ABEdge.ABE_BOTTOM)
             {
                 shadow = new MenuBarShadow(this);
                 shadow.Show();
@@ -202,14 +206,16 @@ namespace CairoDesktop
             }
         }
 
-        protected override void PostInit()
+        protected override void OnSourceInitialized(object sender, EventArgs e)
         {
+            base.OnSourceInitialized(sender, e);
+            
             setupMenuExtras();
 
             registerCairoMenuHotKey();
 
             // Register L+R Windows key to open Programs menu
-            if (Shell.IsCairoRunningAsShell && Screen.Primary && programsMenuHotKeys.Count < 1)
+            if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary && programsMenuHotKeys.Count < 1)
             {
                 /*if (keyboardListener == null)
                     keyboardListener = new LowLevelKeyboardListener();
@@ -221,7 +227,7 @@ namespace CairoDesktop
                 programsMenuHotKeys.Add(new HotKey(Key.RWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
                 programsMenuHotKeys.Add(new HotKey(Key.Escape, HotKeyModifier.Ctrl | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
             }
-            else if (Shell.IsCairoRunningAsShell && Screen.Primary)
+            else if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary)
             {
                 foreach (var hotkey in programsMenuHotKeys)
                 {
@@ -257,7 +263,7 @@ namespace CairoDesktop
 
         private void SetHibernateVisibility()
         {
-            if (Settings.Instance.ShowHibernate && Shell.CanHibernate())
+            if (Settings.Instance.ShowHibernate && PowerHelper.CanHibernate())
             {
                 miHibernate.Visibility = Visibility.Visible;
             }
@@ -314,11 +320,11 @@ namespace CairoDesktop
                 appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
             }
         }
-#endregion
+        #endregion
 
         #region Events
 
-        internal override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
+        public override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
             base.AfterAppBarPos(isSameCoords, rect);
 
@@ -328,12 +334,10 @@ namespace CairoDesktop
             }
         }
 
-        internal override void SetPosition()
+        public override void SetPosition()
         {
-            Top = getDesiredTopPosition();
-            Left = Screen.Bounds.X / dpiScale;
-            Width = Screen.Bounds.Width / dpiScale;
-            Height = desiredHeight;
+            base.SetPosition();
+            
             setShadowPosition();
         }
 
@@ -356,30 +360,37 @@ namespace CairoDesktop
         {
             double top = getDesiredTopPosition();
 
-            if (Top != top)
+            if (Top == top)
             {
-                Top = top;
-                setShadowPosition();
+                return;
             }
+
+            Top = top;
+
+            setShadowPosition();
         }
 
         private double getDesiredTopPosition()
         {
             double top;
 
-            if (secretBottomMenuBar) top = (Screen.Bounds.Bottom / dpiScale) - desiredHeight;
-            else top = Screen.Bounds.Y / dpiScale;
+            if (AppBarEdge == NativeMethods.ABEdge.ABE_BOTTOM) 
+                top = (Screen.Bounds.Bottom / DpiScale) - DesiredHeight;
+            else
+                top = Screen.Bounds.Y / DpiScale;
 
             return top;
         }
 
         protected override void CustomClosing()
         {
-            if (WindowManager.Instance.IsSettingDisplays || Startup.IsShuttingDown)
+            if (!_windowManager.IsSettingDisplays && !CairoApplication.IsShuttingDown)
             {
-                closeShadow();
-                Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+                return;
             }
+
+            closeShadow();
+            Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
         }
 
         private void OnShowCairoMenu(HotKey hotKey)
@@ -399,7 +410,7 @@ namespace CairoDesktop
         {
             if (e.Key == Key.LWin || e.Key == Key.RWin)
             {
-                CairoLogger.Instance.Debug(e.Key.ToString() + " Key Pressed");
+                ShellLogger.Debug(e.Key.ToString() + " Key Pressed");
                 ToggleProgramsMenu();
                 e.Handled = true;
             }
@@ -407,28 +418,12 @@ namespace CairoDesktop
 
         private void MenuBar_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            if (Settings.Instance.TaskbarMode == 2)
-            {
-                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, Screen);
-
-                if (taskbar != null && taskbar.appBarEdge == appBarEdge)
-                {
-                    taskbar.CanAutoHide = false;
-                }
-            }
+            _appBarManager.NotifyAppBarEvent(this, AppBarEventReason.MouseEnter);
         }
 
         private void MenuBar_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            if (Settings.Instance.TaskbarMode == 2)
-            {
-                Taskbar taskbar = WindowManager.GetScreenWindow(WindowManager.Instance.TaskbarWindows, Screen);
-
-                if (taskbar != null && taskbar.appBarEdge == appBarEdge)
-                {
-                    taskbar.CanAutoHide = true;
-                }
-            }
+            _appBarManager.NotifyAppBarEvent(this, AppBarEventReason.MouseLeave);
         }
 
         private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -492,7 +487,7 @@ namespace CairoDesktop
 
         private void CheckForUpdates(object sender, RoutedEventArgs e)
         {
-            UpdateManager.Instance.CheckForUpdates();
+            _applicationUpdateService?.CheckForUpdates();
         }
 
         private void OpenLogoffBox(object sender, RoutedEventArgs e)
@@ -512,50 +507,50 @@ namespace CairoDesktop
 
         private void OpenRunWindow(object sender, RoutedEventArgs e)
         {
-            Shell.ShowRunDialog();
+            ShellHelper.ShowRunDialog(Localization.DisplayString.sRun_Title, Localization.DisplayString.sRun_Info);
         }
 
         private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
         {
-            CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title, 
+            CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title,
                 CairoMessageImage.Default, Localization.DisplayString.sExitCairo_ExitCairo, Localization.DisplayString.sInterface_Cancel,
                 result =>
                 {
                     if (result == true)
                     {
-                        Startup.ExitCairo();
+                        CairoApplication.Current.ExitCairo();
                     }
                 });
         }
 
         private void OpenControlPanel(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("control.exe");
+            ShellHelper.StartProcess("control.exe");
         }
 
         private void miOpenUWPSettings_Click(object sender, RoutedEventArgs e)
         {
-            Shell.StartProcess("ms-settings://");
+            ShellHelper.StartProcess("ms-settings://");
         }
 
         private void OpenTaskManager(object sender, RoutedEventArgs e)
         {
-            Shell.StartTaskManager();
+            ShellHelper.StartTaskManager();
         }
 
         private void SysHibernate(object sender, RoutedEventArgs e)
         {
-            Shell.Hibernate();
+            PowerHelper.Hibernate();
         }
 
         private void SysSleep(object sender, RoutedEventArgs e)
         {
-            Shell.Sleep();
+            PowerHelper.Sleep();
         }
 
         private void SysLock(object sender, RoutedEventArgs e)
         {
-            Shell.Lock();
+            ShellHelper.Lock();
         }
 
         private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
@@ -568,7 +563,7 @@ namespace CairoDesktop
         {
             appGrabber.ShowDialog();
         }
-#endregion
+        #endregion
 
         #region Places menu items
         private void OpenMyDocs(object sender, RoutedEventArgs e)
@@ -615,6 +610,6 @@ namespace CairoDesktop
         {
             FolderHelper.OpenLocation("::{645FF040-5081-101B-9F08-00AA002F954E}");
         }
-#endregion
+        #endregion
     }
 }

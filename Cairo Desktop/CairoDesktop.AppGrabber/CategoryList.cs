@@ -1,7 +1,8 @@
-﻿using CairoDesktop.Common.Logging;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Xml;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.AppGrabber {
 
@@ -214,8 +215,8 @@ namespace CairoDesktop.AppGrabber {
                     if (appElement.ChildNodes.Count > 2)
                         app.Target = appElement.ChildNodes[2].InnerText;
 
-                    if (!app.IsStoreApp && !Interop.Shell.Exists(app.Path)) {
-                        CairoLogger.Instance.Debug(app.Path + " does not exist");
+                    if (!app.IsStoreApp && !ShellHelper.Exists(app.Path)) {
+                        ShellLogger.Debug(app.Path + " does not exist");
                         continue;
                     }
                     

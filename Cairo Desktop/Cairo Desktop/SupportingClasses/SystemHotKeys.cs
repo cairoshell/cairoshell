@@ -1,6 +1,7 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Interop;
 using System.Windows.Input;
+using ManagedShell.Common.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -18,12 +19,13 @@ namespace CairoDesktop.SupportingClasses
 
         private static void OnWinDCommand(HotKey obj)
         {
-            DesktopManager.Instance.ToggleOverlay();
+            var desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();
+            desktopManager.ToggleOverlay();
         }
         
         private static void OnWinRCommand(HotKey cmd)
         {
-            Shell.ShowRunDialog();
+            ShellHelper.ShowRunDialog(Localization.DisplayString.sRun_Title, Localization.DisplayString.sRun_Info);
         }
 
         private static void OnWinECommand(HotKey cmd)
@@ -33,12 +35,12 @@ namespace CairoDesktop.SupportingClasses
 
         private static void OnWinICommand(HotKey cmd)
         {
-            Shell.StartProcess("control.exe");
+            ShellHelper.StartProcess("control.exe");
         }
 
         private static void OnWinPauseCommand(HotKey cmd)
         {
-            Shell.StartProcess("system.cpl");
+            ShellHelper.StartProcess("system.cpl");
         }
 
         // TODO: Add window management related HotKeys

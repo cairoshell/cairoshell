@@ -2,8 +2,10 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using CairoDesktop.Common.Logging;
 using CairoDesktop.Interop;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop.Common
 {
@@ -50,7 +52,7 @@ namespace CairoDesktop.Common
 
         public ShellContextMenu(SystemFile[] files, ItemSelectAction itemSelected)
         {
-            lock (Shell.ComLock)
+            lock (IconHelper.ComLock)
             {
                 CreateHandle(new CreateParams());
                 paths = files;
@@ -71,7 +73,7 @@ namespace CairoDesktop.Common
         {
             if (directory != null)
             {
-                lock (Shell.ComLock)
+                lock (IconHelper.ComLock)
                 {
                     CreateHandle(new CreateParams());
                     this.directory = directory;
@@ -117,14 +119,14 @@ namespace CairoDesktop.Common
 
                 if (pidl == IntPtr.Zero)
                 {
-                    CairoLogger.Instance.Debug("HRESULT " + result + " retrieving pidl for " + path);
+                    ShellLogger.Debug("HRESULT " + result + " retrieving pidl for " + path);
                 }
                 
                 return pidl;
             }
             else
             {
-                CairoLogger.Instance.Debug("Parent IShellFolder for " + path + " is null");
+                ShellLogger.Debug("Parent IShellFolder for " + path + " is null");
                 return IntPtr.Zero;
             }
         }
@@ -134,7 +136,7 @@ namespace CairoDesktop.Common
             IntPtr pidl = ShellFolders.ILCreateFromPath(path);
             if (pidl == IntPtr.Zero)
             {
-                CairoLogger.Instance.Debug("Unable to get pidl for " + path);
+                ShellLogger.Debug("Unable to get pidl for " + path);
             }
 
             return pidl;
@@ -174,7 +176,7 @@ namespace CairoDesktop.Common
             }
             else
             {
-                CairoLogger.Instance.Debug("Unable to bind IShellFolder");
+                ShellLogger.Debug("Unable to bind IShellFolder");
                 return null;
             }
         }
@@ -382,7 +384,7 @@ namespace CairoDesktop.Common
                 }
                 else
                 {
-                    CairoLogger.Instance.Debug("Error retrieving IContextMenu");
+                    ShellLogger.Debug("Error retrieving IContextMenu");
                 }
             }
             catch (Exception) { }
@@ -487,7 +489,7 @@ namespace CairoDesktop.Common
                 ShellFolders.AppendMenu(contextMenu, 0, (int)CairoContextMenuItem.Properties, Localization.DisplayString.sInterface_Properties);
                 ShellFolders.AppendMenu(contextMenu, ShellFolders.MFT.SEPARATOR, 0, string.Empty);
 
-                if (!Shell.IsCairoRunningAsShell)
+                if (!EnvironmentHelper.IsAppRunningAsShell)
                 {
                     ShellFolders.AppendMenu(contextMenu, 0, (int)CairoContextMenuItem.DisplaySettings, Localization.DisplayString.sDesktop_DisplaySettings);
                 }

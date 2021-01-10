@@ -76,33 +76,27 @@
     <Compile Include="CairoMessageImage.cs" />
     <Compile Include="ExtensionMethods\IListExtensions.cs" />
     <Compile Include="CommandLineParser.cs" />
-    <Compile Include="DesignPatterns\Provider.cs" />
-    <Compile Include="DesignPatterns\ProviderCollection.cs" />
-    <Compile Include="DesignPatterns\SingletonObject.cs" />
     <Compile Include="Dialogs.cs" />
     <Compile Include="DisposableCollection.cs" />
     <Compile Include="DisposableObject.cs" />
+    <Compile Include="ExtensionMethods\SettingsExtensions.cs" />
     <Compile Include="HotKey.cs" />
     <Compile Include="HotKeyModifier.cs" />
-    <Compile Include="IconSize.cs" />
+    <Compile Include="Logging\LogSeverityExtensions.cs" />
+    <Compile Include="Logging\NullScope.cs" />
+    <Compile Include="Logging\Other\ManagedShellFileLoggerOptions.cs" />
+    <Compile Include="Logging\Other\ManagedShellLogger.cs" />
+    <Compile Include="Logging\Other\ManagedShellLoggerProvider.cs" />
     <Compile Include="NavigationManager.cs" />
-    <Compile Include="Helpers\GroupPolicyManager.cs" />
     <Compile Include="Helpers\RegistryChangeMonitor.cs" />
     <Compile Include="LowLevelKeyboardListener.cs" />
     <Compile Include="Helpers\EventHandlerHelper.cs" />
     <Compile Include="Helpers\TypeHelper.cs" />
     <Compile Include="DragDropHandler.cs" />
     <Compile Include="HotKeyManager.cs" />
-    <Compile Include="IconImageConverter.cs" />
     <Compile Include="InvokingObservableCollection.cs" />
     <Compile Include="KeyboardUtilities.cs" />
-    <Compile Include="Logging\ILog.cs" />
-    <Compile Include="Logging\LogEventArgs.cs" />
     <Compile Include="Logging\LogSeverity.cs" />
-    <Compile Include="Logging\Observers\ConsoleLog.cs" />
-    <Compile Include="Logging\Observers\DisposableLogBase.cs" />
-    <Compile Include="Logging\Observers\FileLog.cs" />
-    <Compile Include="Logging\CairoLogger.cs" />
     <Compile Include="MessageBoxButtonConverter.cs" />
     <Compile Include="CairoMessageImageConverter.cs" />
     <Compile Include="ObjectActions.cs" />
@@ -118,7 +112,6 @@
     <Compile Include="TypeCollectionEventArgs.cs" />
     <Compile Include="ThreadSafeObservableCollection.cs" />
     <Compile Include="SearchHelper.cs" />
-    <Compile Include="VolumeUtilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj">
@@ -157,6 +150,21 @@
   <ItemGroup>
     <Resource Include="Resources\dialogIconShutDown.png" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ManagedShell">
+      <Version>0.0.23</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions">
+      <Version>5.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

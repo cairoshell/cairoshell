@@ -90,39 +90,14 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition=" '$(Platform)' == 'AnyCPU' ">
-    <Content Include="..\..\Dependencies\WinSparkle\x86\WinSparkle.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup Condition=" '$(Platform)' == 'x64' ">
-    <Content Include="..\..\Dependencies\WinSparkle\x64\WinSparkle.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComTaskScheduler.cs" />
     <Compile Include="KnownFolders.cs" />
-    <Compile Include="NativeMethods.AdvApi32.cs" />
-    <Compile Include="NativeMethods.cs" />
-    <Compile Include="NativeMethods.DocObj.cs" />
-    <Compile Include="NativeMethods.DwmApi.cs" />
-    <Compile Include="NativeMethods.Kernel32.cs" />
-    <Compile Include="NativeMethods.Ole32.cs" />
-    <Compile Include="NativeMethods.PowrProf.cs" />
-    <Compile Include="NativeMethods.Shell32.cs" />
-    <Compile Include="NativeMethods.ShFolder.cs" />
-    <Compile Include="NativeMethods.ShlwApi.cs" />
-    <Compile Include="NativeMethods.User32.cs" />
-    <Compile Include="NativeWindowEx.cs" />
+    <Compile Include="AdvApi32.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shell.cs" />
     <Compile Include="Shell.Link.cs" />
-    <Compile Include="Shell.Power.cs" />
     <Compile Include="ShellFolders.cs" />
     <Compile Include="ShellWindow.cs" />
     <Compile Include="WindowsServices.cs" />
-    <Compile Include="WinSparkle.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">
@@ -146,6 +121,11 @@
       <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>
       <Name>CairoDesktop.Localization</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ManagedShell">
+      <Version>0.0.23</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

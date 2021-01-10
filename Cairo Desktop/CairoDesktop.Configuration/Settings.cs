@@ -27,6 +27,8 @@ namespace CairoDesktop.Configuration
         {
             cairoSettings = Properties.Settings.Default;
             cairoSettings.PropertyChanged += CairoSettings_PropertyChanged;
+            
+            UpgradeIfNecessary();
         }
 
         private void CairoSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -889,6 +891,14 @@ namespace CairoDesktop.Configuration
             return concatenated;
         }
         #endregion
+
+        private void UpgradeIfNecessary()
+        {
+            if (IsFirstRun)
+            {
+                Upgrade();
+            }
+        }
 
         public void Save()
         {

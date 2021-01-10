@@ -1,9 +1,11 @@
 ﻿using CairoDesktop.AppGrabber;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
+using ManagedShell.Interop;
 using CairoDesktop.SupportingClasses;
-using CairoDesktop.WindowsTray;
+using ManagedShell;
+using ManagedShell.WindowsTray;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -16,12 +18,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using CairoDesktop.Common.Logging;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
+using ManagedShell.Common.Enums;
 
 namespace CairoDesktop
 {
-
     /// <summary>
     /// Interaction logic for CairoSettingsWindow.xaml
     /// </summary>
@@ -29,11 +32,17 @@ namespace CairoDesktop
     {
         private static CairoSettingsWindow _instance = null;
 
+        private readonly IApplicationUpdateService _applicationUpdateService;
+        private readonly ShellManager _shellManager;
+
         static CairoSettingsWindow() { }
 
-        private CairoSettingsWindow()
+        private CairoSettingsWindow(ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService)
         {
             InitializeComponent();
+
+            _applicationUpdateService = applicationUpdateService;
+            _shellManager = shellManagerService.ShellManager;
 
             loadThemes();
             loadLanguages();
@@ -67,13 +76,13 @@ namespace CairoDesktop
                     break;
             }
 
-            switch ((IconSize.Sizes)Settings.Instance.DesktopIconSize)
+            switch ((IconSize)Settings.Instance.DesktopIconSize)
             {
-                case IconSize.Sizes.Large:
+                case IconSize.Large:
                     radDesktopIconSize0.IsChecked = true;
                     radDesktopIconSize2.IsChecked = false;
                     break;
-                case IconSize.Sizes.ExtraLarge:
+                case IconSize.ExtraLarge:
                     radDesktopIconSize0.IsChecked = false;
                     radDesktopIconSize2.IsChecked = true;
                     break;
@@ -130,19 +139,19 @@ namespace CairoDesktop
                     break;
             }
 
-            switch ((IconSize.Sizes)Settings.Instance.TaskbarIconSize)
+            switch ((IconSize)Settings.Instance.TaskbarIconSize)
             {
-                case IconSize.Sizes.Large:
+                case IconSize.Large:
                     radTaskbarSize0.IsChecked = true;
                     radTaskbarSize10.IsChecked = false;
                     radTaskbarSize1.IsChecked = false;
                     break;
-                case IconSize.Sizes.Small:
+                case IconSize.Small:
                     radTaskbarSize0.IsChecked = false;
                     radTaskbarSize10.IsChecked = false;
                     radTaskbarSize1.IsChecked = true;
                     break;
-                case IconSize.Sizes.Medium:
+                case IconSize.Medium:
                     radTaskbarSize0.IsChecked = false;
                     radTaskbarSize10.IsChecked = true;
                     radTaskbarSize1.IsChecked = false;
@@ -238,7 +247,7 @@ namespace CairoDesktop
 
         private void loadLoggingLevels()
         {
-            foreach (string sev in Enum.GetNames(typeof(Common.Logging.LogSeverity)))
+            foreach (string sev in Enum.GetNames(typeof(LogSeverity)))
             {
                 cboLogSeverity.Items.Add(sev);
             }
@@ -248,8 +257,8 @@ namespace CairoDesktop
         {
             if (Settings.Instance.EnableSysTray)
             {
-                PinnedIcons.ItemsSource = NotificationArea.Instance.PinnedIcons;
-                UnpinnedIcons.ItemsSource = NotificationArea.Instance.UnpinnedIcons;
+                PinnedIcons.ItemsSource = _shellManager.NotificationArea.PinnedIcons;
+                UnpinnedIcons.ItemsSource = _shellManager.NotificationArea.UnpinnedIcons;
             }
             else
             {
@@ -259,17 +268,17 @@ namespace CairoDesktop
 
         private void loadVersionDependentSettings()
         {
-            if (!Shell.IsWindows10OrBetter)
+            if (!EnvironmentHelper.IsWindows10OrBetter)
             {
                 chkEnableMenuBarBlur.Visibility = Visibility.Collapsed;
                 chkEnableMenuExtraActionCenter.Visibility = Visibility.Collapsed;
                 chkEnableMenuExtraVolume.Visibility = Visibility.Collapsed;
             }
-            else if (Shell.IsWindows10OrBetter && !Shell.IsCairoRunningAsShell)
+            else if (EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
             {
                 chkEnableMenuExtraVolume.Visibility = Visibility.Collapsed;
             }
-            else if (Shell.IsWindows10OrBetter && Shell.IsCairoRunningAsShell)
+            else if (EnvironmentHelper.IsWindows10OrBetter && EnvironmentHelper.IsAppRunningAsShell)
             {
                 chkEnableMenuExtraActionCenter.Visibility = Visibility.Collapsed;
             }
@@ -319,7 +328,11 @@ namespace CairoDesktop
             {
                 NotifyIcon dropData = e.Data.GetData(typeof(NotifyIcon)) as NotifyIcon;
 
-                if (dropData.IsPinned) dropData.Unpin();
+                if (dropData.IsPinned)
+                {
+                    dropData.Unpin();
+                    Settings.Instance.PinnedNotifyIcons = _shellManager.NotificationArea.PinnedNotifyIcons;
+                }
             }
 
             e.Handled = true;
@@ -331,7 +344,8 @@ namespace CairoDesktop
             {
                 NotifyIcon dropData = e.Data.GetData(typeof(NotifyIcon)) as NotifyIcon;
 
-                dropData.Pin(Settings.Instance.PinnedNotifyIcons.Length);
+                dropData.Pin(_shellManager.NotificationArea.PinnedNotifyIcons.Length);
+                Settings.Instance.PinnedNotifyIcons = _shellManager.NotificationArea.PinnedNotifyIcons;
             }
 
             e.Handled = true;
@@ -376,6 +390,8 @@ namespace CairoDesktop
                     // non-pinned icons area
                     dropData.Unpin();
                 }
+                
+                Settings.Instance.PinnedNotifyIcons = _shellManager.NotificationArea.PinnedNotifyIcons;
             }
 
             e.Handled = true;
@@ -428,21 +444,12 @@ namespace CairoDesktop
         #region Startup checks
         private void checkUpdateConfig()
         {
-            chkEnableAutoUpdates.IsChecked = UpdateManager.Instance.AutoUpdatesEnabled;
+            chkEnableAutoUpdates.IsChecked = _applicationUpdateService.AutomaticUpdatesEnabled;
         }
 
         private void checkTrayStatus()
         {
-            if (NotificationArea.Instance.IsFailed)
-            {
-                // adjust settings window to alert user they need to install vc_redist
-
-                chkEnableSysTray.IsEnabled = false;
-                pnlTraySettings.Visibility = Visibility.Collapsed;
-
-                lblTrayWarning.Visibility = Visibility.Visible;
-            }
-            else if (!Settings.Instance.EnableTaskbar && !Shell.IsCairoRunningAsShell)
+            if (!Settings.Instance.EnableTaskbar && !EnvironmentHelper.IsAppRunningAsShell)
             {
                 // if taskbar is disabled and we aren't running as shell, then Explorer tray is visible. Show warning.
                 lblTrayTaskbarWarning.Visibility = Visibility.Visible;
@@ -451,7 +458,7 @@ namespace CairoDesktop
 
         private void checkRunAtLogOn()
         {
-            if (Shell.IsCairoConfiguredAsShell.Equals(true))
+            if (EnvironmentHelper.IsAppConfiguredAsShell.Equals(true))
             {
                 chkRunAtLogOn.Visibility = Visibility.Collapsed;
             }
@@ -475,13 +482,13 @@ namespace CairoDesktop
             }
             catch (Exception e)
             {
-                CairoLogger.Instance.Error($"SettingsWindow: Unable to load autorun setting from registry: {e.Message}");
+                ShellLogger.Error($"SettingsWindow: Unable to load autorun setting from registry: {e.Message}");
             }
         }
 
         private void checkIfCanHibernate()
         {
-            if (!Shell.CanHibernate())
+            if (!PowerHelper.CanHibernate())
             {
                 chkShowHibernate.Visibility = Visibility.Collapsed;
             }
@@ -492,34 +499,34 @@ namespace CairoDesktop
         {
             if (chkEnableAutoUpdates.IsChecked != null)
             {
-                UpdateManager.Instance.AutoUpdatesEnabled = (bool) chkEnableAutoUpdates.IsChecked;
+                _applicationUpdateService.AutomaticUpdatesEnabled = (bool)chkEnableAutoUpdates.IsChecked;
             }
             else
             {
-                UpdateManager.Instance.AutoUpdatesEnabled = false;
+                _applicationUpdateService.AutomaticUpdatesEnabled = false;
             }
         }
 
-        private void showRestartButton()
+        private void ShowRestartButton()
         {
             btnRestart.Visibility = Visibility.Visible;
         }
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            showRestartButton();
+            ShowRestartButton();
         }
 
         private void DropDown_Changed(object sender, EventArgs e)
         {
-            showRestartButton();
+            ShowRestartButton();
         }
 
-        private void restartCairo(object sender, RoutedEventArgs e)
+        private void RestartCairo(object sender, RoutedEventArgs e)
         {
             saveChanges();
 
-            Startup.RestartCairo();
+            CairoApplication.Current.RestartCairo();
         }
 
         /// <summary>
@@ -619,17 +626,17 @@ namespace CairoDesktop
 
         private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Sizes.Large;
+            Settings.Instance.TaskbarIconSize = (int)IconSize.Large;
         }
 
         private void radTaskbarSize1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Sizes.Small;
+            Settings.Instance.TaskbarIconSize = (int)IconSize.Small;
         }
 
         private void radTaskbarSize10_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Sizes.Medium;
+            Settings.Instance.TaskbarIconSize = (int)IconSize.Medium;
         }
 
         private void radTaskbarMiddleClick0_Click(object sender, RoutedEventArgs e)
@@ -654,12 +661,12 @@ namespace CairoDesktop
 
         private void radDesktopIconSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopIconSize = (int)IconSize.Sizes.Large;
+            Settings.Instance.DesktopIconSize = (int)IconSize.Large;
         }
 
         private void radDesktopIconSize2_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopIconSize = (int)IconSize.Sizes.ExtraLarge;
+            Settings.Instance.DesktopIconSize = (int)IconSize.ExtraLarge;
         }
 
         private void radTrayMode0_Click(object sender, RoutedEventArgs e)
@@ -688,15 +695,15 @@ namespace CairoDesktop
         {
             btnChangeShell.IsEnabled = false;
 
-            Shell.IsCairoConfiguredAsShell = !Shell.IsCairoConfiguredAsShell;
+            EnvironmentHelper.IsAppConfiguredAsShell = !EnvironmentHelper.IsAppConfiguredAsShell;
 
-            CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText, 
-                Localization.DisplayString.sSettings_Advanced_ShellChanged, CairoMessageImage.LogOff, 
+            CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText,
+                Localization.DisplayString.sSettings_Advanced_ShellChanged, CairoMessageImage.LogOff,
                 Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater,
                 result =>
                 {
                     if (result == true)
-                        Shell.Logoff();
+                        ShellHelper.Logoff();
                 });
         }
 
@@ -726,22 +733,15 @@ namespace CairoDesktop
             }
             catch (Exception exception)
             {
-                CairoLogger.Instance.Error($"SettingsWindow: Unable to update registry autorun setting: {exception.Message}");
+                ShellLogger.Error($"SettingsWindow: Unable to update registry autorun setting: {exception.Message}");
             }
         }
 
-        public static CairoSettingsWindow Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new CairoSettingsWindow();
-                }
-
-                return _instance;
-            }
-        }
+        public static CairoSettingsWindow Instance =>
+            _instance ?? (_instance = new CairoSettingsWindow(
+                (ShellManagerService)CairoApplication.Current.Host.Services.GetService(typeof(ShellManagerService)),
+                (IApplicationUpdateService) CairoApplication.Current.Host.Services.GetService(
+                    typeof(IApplicationUpdateService))));
 
         #region Desktop Background
         private void loadDesktopBackgroundSettings()
@@ -835,7 +835,7 @@ namespace CairoDesktop
 
                 if (backgroundStyleItem == style) cboWindowsItem.IsSelected = true;
 
-                if (Shell.IsCairoRunningAsShell)
+                if (EnvironmentHelper.IsAppRunningAsShell)
                 {
                     // image
                     ComboBoxItem cboImageItem = new ComboBoxItem()
@@ -859,7 +859,7 @@ namespace CairoDesktop
                 }
             }
 
-            if (Shell.IsCairoRunningAsShell)
+            if (EnvironmentHelper.IsAppRunningAsShell)
             {
                 #region  cairoImageWallpaper
                 ComboBoxItem cairoImageWallpaperItem = new ComboBoxItem()
@@ -936,7 +936,7 @@ namespace CairoDesktop
                 }
             }
         }
-        
+
         private void btnCairoVideoFileBrowse_Click(object sender, RoutedEventArgs e)
         {
             using (OpenFileDialog dlg = new OpenFileDialog

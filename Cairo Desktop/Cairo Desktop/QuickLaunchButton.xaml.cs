@@ -4,8 +4,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CairoDesktop.AppGrabber;
-using CairoDesktop.Common;
 using CairoDesktop.Configuration;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
@@ -45,8 +45,8 @@ namespace CairoDesktop
 
         private void setIconSize()
         {
-            imgIcon.Width = IconSize.GetSize(Settings.Instance.TaskbarIconSize);
-            imgIcon.Height = IconSize.GetSize(Settings.Instance.TaskbarIconSize);
+            imgIcon.Width = IconHelper.GetSize(Settings.Instance.TaskbarIconSize);
+            imgIcon.Height = IconHelper.GetSize(Settings.Instance.TaskbarIconSize);
         }
 
         private void LaunchProgram(object sender, RoutedEventArgs e)

@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Common.Logging;
 using CairoDesktop.Interop;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using ManagedShell.Common.Enums;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -28,8 +30,8 @@ namespace CairoDesktop.AppGrabber
             };
 
         private static readonly string[] searchLocations = {
-                Shell.UsersStartMenuPath,
-                Shell.AllUsersStartMenuPath
+                ShellHelper.UsersStartMenuPath,
+                ShellHelper.AllUsersStartMenuPath
         };
 
         public static AppGrabber Instance { get; } = new AppGrabber();
@@ -90,7 +92,7 @@ namespace CairoDesktop.AppGrabber
 
         public void Load()
         {
-            if (Shell.Exists(ConfigFile))
+            if (ShellHelper.Exists(ConfigFile))
             {
                 this.CategoryList = CategoryList.Deserialize(ConfigFile);
             }
@@ -113,7 +115,7 @@ namespace CairoDesktop.AppGrabber
             // add Windows taskbar pinned apps to QuickLaunch
             string pinnedPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar";
 
-            if (Shell.Exists(pinnedPath))
+            if (ShellHelper.Exists(pinnedPath))
                 QuickLaunch.AddRange(generateAppList(pinnedPath));
         }
 
@@ -126,7 +128,7 @@ namespace CairoDesktop.AppGrabber
             }
             List<ApplicationInfo> rval = mergeLists(listsToMerge);
 
-            if (Shell.IsWindows8OrBetter)
+            if (EnvironmentHelper.IsWindows8OrBetter)
                 rval.AddRange(getStoreApps());
             return rval;
         }
@@ -135,7 +137,7 @@ namespace CairoDesktop.AppGrabber
         {
             List<ApplicationInfo> storeApps = new List<ApplicationInfo>();
 
-            foreach (string[] app in UWPInterop.StoreAppHelper.GetStoreApps())
+            foreach (string[] app in ManagedShell.UWPInterop.StoreAppHelper.GetStoreApps())
             {
                 string path = app[0];
 
@@ -194,7 +196,7 @@ namespace CairoDesktop.AppGrabber
             {
                 try
                 {
-                    ai.Name = Shell.GetDisplayName(file);
+                    ai.Name = ShellHelper.GetDisplayName(file);
                     ai.Path = file;
                     string target = string.Empty;
 
@@ -215,7 +217,7 @@ namespace CairoDesktop.AppGrabber
                     {
                         if (!string.IsNullOrEmpty(target) && !ExecutableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
                         {
-                            CairoLogger.Instance.Debug("Not an app: " + file + ": " + target);
+                            ShellLogger.Debug("Not an app: " + file + ": " + target);
                             return null;
                         }
 
@@ -226,7 +228,7 @@ namespace CairoDesktop.AppGrabber
                             {
                                 if (ai.Name.ToLower().Contains(word))
                                 {
-                                    CairoLogger.Instance.Debug("Excluded item: " + file + ": " + target);
+                                    ShellLogger.Debug("Excluded item: " + file + ": " + target);
                                     return null;
                                 }
                             }
@@ -237,7 +239,7 @@ namespace CairoDesktop.AppGrabber
                 }
                 catch (Exception ex)
                 {
-                    CairoLogger.Instance.Error("Error creating ApplicationInfo object in appgrabber. " + ex.Message, ex);
+                    ShellLogger.Error("Error creating ApplicationInfo object in appgrabber. " + ex.Message, ex);
                     return null;
                 }
             }
@@ -305,18 +307,18 @@ namespace CairoDesktop.AppGrabber
 
                 if (!app.IsStoreApp && app.AlwaysAdmin)
                 {
-                    Shell.StartProcess(app.Path, "", "runas");
+                    ShellHelper.StartProcess(app.Path, "", "runas");
                 }
-                else if (Shell.IsCairoRunningAsShell && app.Target.ToLower().EndsWith("explorer.exe"))
+                else if (EnvironmentHelper.IsAppRunningAsShell && app.Target.ToLower().EndsWith("explorer.exe"))
                 {
                     // special case: if we are shell and launching explorer, give it a parameter so that it doesn't do shell things.
                     // this opens My Computer
-                    if (!Shell.StartProcess(app.Path, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"))
+                    if (!ShellHelper.StartProcess(app.Path, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"))
                     {
                         CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                     }
                 }
-                else if (!Shell.StartProcess(app.Path))
+                else if (!ShellHelper.StartProcess(app.Path))
                 {
                     CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                 }
@@ -327,7 +329,7 @@ namespace CairoDesktop.AppGrabber
         {
             if (app != null)
             {
-                if (!Shell.StartProcess(app.Path, "", verb))
+                if (!ShellHelper.StartProcess(app.Path, "", verb))
                 {
                     CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                 }
@@ -361,7 +363,7 @@ namespace CairoDesktop.AppGrabber
                         Save();
                     }
 
-                    Shell.StartProcess(app.Path, "", "runas");
+                    ShellHelper.StartProcess(app.Path, "", "runas");
                 }
                 else
                     LaunchProgram(app);
@@ -409,9 +411,9 @@ namespace CairoDesktop.AppGrabber
             if (app != null)
             {
                 if (app.IsStoreApp)
-                    CairoMessage.Show(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, app.GetIconImageSource(IconSize.Sizes.Jumbo, false), true);
+                    CairoMessage.Show(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, app.GetIconImageSource(IconSize.Jumbo, false), true);
                 else
-                    Shell.ShowFileProperties(app.Path);
+                    ShellHelper.ShowFileProperties(app.Path);
             }
         }
 
@@ -420,7 +422,7 @@ namespace CairoDesktop.AppGrabber
             int count = 0;
             foreach (string fileName in fileNames)
             {
-                if (Shell.Exists(fileName))
+                if (ShellHelper.Exists(fileName))
                 {
                     ApplicationInfo customApp = PathToApp(fileName, false, true);
                     if (!ReferenceEquals(customApp, null))
@@ -434,7 +436,7 @@ namespace CairoDesktop.AppGrabber
                             if (CategoryList.FlatList.Contains(customApp))
                             {
                                 // disallow duplicates within all programs menu categories
-                                CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                                ShellLogger.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
                                 continue;
                             }
                         }
@@ -444,7 +446,7 @@ namespace CairoDesktop.AppGrabber
                             if (category.Contains(customApp))
                             {
                                 // disallow duplicates within the category
-                                CairoLogger.Instance.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                                ShellLogger.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
                                 continue;
                             }
                         }
@@ -474,7 +476,7 @@ namespace CairoDesktop.AppGrabber
         {
             bool success = false;
             // not great but gets the job done I suppose
-            foreach (string[] app in UWPInterop.StoreAppHelper.GetStoreApps())
+            foreach (string[] app in ManagedShell.UWPInterop.StoreAppHelper.GetStoreApps())
             {
                 if (app[0] == appUserModelId)
                 {

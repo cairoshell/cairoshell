@@ -10,9 +10,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
 using CairoDesktop.Localization;
 using CairoDesktop.SupportingClasses;
+using ManagedShell.Common.Enums;
+using ManagedShell.Common.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -39,6 +41,8 @@ namespace CairoDesktop
         public Icon()
         {
             InitializeComponent();
+
+            _desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();
         }
 
         private void Instance_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -70,12 +74,12 @@ namespace CairoDesktop
                 // adjust appearance based on settings and usage
                 if (Location == "Desktop")
                 {
-                    btnFile.Style = Application.Current.FindResource("CairoDesktopButtonStyle") as Style;
+                    btnFile.Style = CairoApplication.Current.FindResource("CairoDesktopButtonStyle") as Style;
                     btnFile.ContextMenu = null;
                     btnFile.Click -= btnFile_Click;
                     btnFile.MouseDoubleClick += btnFile_MouseDoubleClick;
                     btnFile.MouseRightButtonUp += btnFile_MouseRightButtonUp;
-                    txtFilename.Foreground = Application.Current.FindResource("DesktopIconText") as SolidColorBrush;
+                    txtFilename.Foreground = CairoApplication.Current.FindResource("DesktopIconText") as SolidColorBrush;
 
                     setDesktopIconAppearance();
                 }
@@ -95,8 +99,8 @@ namespace CairoDesktop
                     // bind icon
                     Binding iconBinding = new Binding("Icon");
                     iconBinding.Mode = BindingMode.OneWay;
-                    iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                    iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
+                    iconBinding.FallbackValue = CairoApplication.Current.FindResource("NullIcon") as BitmapImage;
+                    iconBinding.TargetNullValue = CairoApplication.Current.FindResource("NullIcon") as BitmapImage;
                     imgIcon.SetBinding(Image.SourceProperty, iconBinding);
                 }
 
@@ -141,26 +145,24 @@ namespace CairoDesktop
                 bdrFilename.SetValue(DockPanel.DockProperty, Dock.Bottom);
             }
 
-            if (Settings.Instance.DesktopIconSize == (int)IconSize.Sizes.ExtraLarge)
+            string bindingPath = "Icon";
+            if (Settings.Instance.DesktopIconSize == (int)IconSize.ExtraLarge)
             {
-                imgIcon.Width = IconSize.GetSize(IconSize.Sizes.ExtraLarge);
-                imgIcon.Height = IconSize.GetSize(IconSize.Sizes.ExtraLarge);
-                Binding iconBinding = new Binding("LargeIcon");
-                iconBinding.Mode = BindingMode.OneWay;
-                iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                imgIcon.SetBinding(Image.SourceProperty, iconBinding);
+                imgIcon.Width = IconHelper.GetSize(IconSize.ExtraLarge);
+                imgIcon.Height = IconHelper.GetSize(IconSize.ExtraLarge);
+                bindingPath = "LargeIcon";
             }
             else
             {
-                imgIcon.Width = IconSize.GetSize(IconSize.Sizes.Large);
-                imgIcon.Height = IconSize.GetSize(IconSize.Sizes.Large);
-                Binding iconBinding = new Binding("Icon");
-                iconBinding.Mode = BindingMode.OneWay;
-                iconBinding.FallbackValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                iconBinding.TargetNullValue = Application.Current.FindResource("NullIcon") as BitmapImage;
-                imgIcon.SetBinding(Image.SourceProperty, iconBinding);
+                imgIcon.Width = IconHelper.GetSize(IconSize.Large);
+                imgIcon.Height = IconHelper.GetSize(IconSize.Large);
             }
+            
+            Binding iconBinding = new Binding(bindingPath);
+            iconBinding.Mode = BindingMode.OneWay;
+            iconBinding.FallbackValue = CairoApplication.Current.FindResource("NullIcon") as BitmapImage;
+            iconBinding.TargetNullValue = CairoApplication.Current.FindResource("NullIcon") as BitmapImage;
+            imgIcon.SetBinding(Image.SourceProperty, iconBinding);
 
             switch ($"{Settings.Instance.DesktopLabelPosition}{Settings.Instance.DesktopIconSize}")
             {
@@ -207,7 +209,7 @@ namespace CairoDesktop
                                 && Settings.Instance.EnableDynamicDesktop
                                 && DesktopManager.IsEnabled)
                             {
-                                DesktopManager.Instance.NavigationManager.NavigateTo(file.FullName);
+                                _desktopManager.NavigationManager.NavigateTo(file.FullName);
                                 return;
                             }
                             else if (file.IsDirectory)
@@ -217,9 +219,9 @@ namespace CairoDesktop
                             }
                         }
 
-                        DesktopManager.Instance.IsOverlayOpen = false;
+                        _desktopManager.IsOverlayOpen = false;
 
-                        Shell.ExecuteProcess(file.FullName);
+                        ShellHelper.ExecuteProcess(file.FullName);
                         return;
                     }
                 }
@@ -248,7 +250,7 @@ namespace CairoDesktop
                 case CustomCommands.DirectoryActions.OpenFolder:
                     if (Settings.Instance.EnableDynamicDesktop)
                     {
-                        DesktopManager.Instance.NavigationManager.NavigateTo(path);
+                        _desktopManager.NavigationManager.NavigateTo(path);
                     }
                     else
                     {
@@ -266,7 +268,7 @@ namespace CairoDesktop
                 default:
                     if (action != CustomCommands.Actions.Cut && action != CustomCommands.Actions.Copy && action != CustomCommands.Actions.Link)
                     {
-                        DesktopManager.Instance.IsOverlayOpen = false;
+                        _desktopManager.IsOverlayOpen = false;
                     }
 
                     break;
@@ -287,7 +289,7 @@ namespace CairoDesktop
                 CustomCommands.PerformAction(verb, file.FullName);
             }
 
-            DesktopManager.Instance.IsOverlayOpen = false;
+            _desktopManager.IsOverlayOpen = false;
         }
 
         private void ctxFile_Loaded(object sender, RoutedEventArgs e)
@@ -451,6 +453,8 @@ namespace CairoDesktop
         #region Drag
         private Point? startPoint = null;
         private bool inDrag = false;
+        private readonly DesktopManager _desktopManager;
+
         private void btnFile_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Store the mouse position

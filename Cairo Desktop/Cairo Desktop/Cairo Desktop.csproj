@@ -16,7 +16,7 @@
     <WarningLevel>4</WarningLevel>
     <ApplicationIcon>Application.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <StartupObject>CairoDesktop.Startup</StartupObject>
+    <StartupObject>CairoDesktop.Program</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -82,7 +82,11 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CairoApplication.InitializationRoutines.cs" />
     <Compile Include="CairoWallpaperStyle.cs" />
     <Compile Include="DesktopOverlay.xaml.cs">
       <DependentUpon>DesktopOverlay.xaml</DependentUpon>
@@ -103,32 +107,28 @@
       <DependentUpon>Icon.xaml</DependentUpon>
     </Compile>
     <Compile Include="ObjectModel\MenuExtra.cs" />
-    <Compile Include="ObjectModel\MenuItem.cs" />
-    <Compile Include="ObjectModel\ShellExtension.cs" />
-    <Compile Include="ObjectModel\ShellService.cs" />
-    <Compile Include="ObjectModel\_CairoShell.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="ProgramsMenu.xaml.cs">
       <DependentUpon>ProgramsMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\PluginService.cs" />
     <Compile Include="StacksScroller.xaml.cs">
       <DependentUpon>StacksScroller.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Startup.InitializationRoutines.cs" />
-    <Compile Include="SupportingClasses\AppBarWindow.cs" />
+    <Compile Include="SupportingClasses\AppBarWindowService.cs" />
     <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
+    <Compile Include="SupportingClasses\CairoAppBarWindow.cs" />
     <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
     <Compile Include="SupportingClasses\DesktopManager.cs" />
     <Compile Include="SupportingClasses\EnumUtility.cs" />
-    <Compile Include="SupportingClasses\FullScreenApp.cs" />
+    <Compile Include="SupportingClasses\IWindowService.cs" />
+    <Compile Include="SupportingClasses\MenuBarWindowService.cs" />
     <Compile Include="SupportingClasses\PicSumWallpaperClient.cs" />
-    <Compile Include="SupportingClasses\ScreenSetupReason.cs" />
-    <Compile Include="SupportingClasses\UpdateManager.cs" />
+    <Compile Include="SupportingClasses\ShellManagerService.cs" />
+    <Compile Include="SupportingClasses\TaskbarWindowService.cs" />
     <Compile Include="SupportingClasses\WindowManager.cs" />
     <Compile Include="SupportingClasses\FilePathValidationRule.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
     <Compile Include="SupportingClasses\DirectoryPathValidationRule.cs" />
-    <Compile Include="SupportingClasses\FullScreenHelper.cs" />
     <Compile Include="SupportingClasses\SystemHotKeys.cs" />
     <Compile Include="MenuExtraVolume.xaml.cs">
       <DependentUpon>MenuExtraVolume.xaml</DependentUpon>
@@ -256,7 +256,6 @@
     <Compile Include="DesktopNavigationToolbar.xaml.cs">
       <DependentUpon>DesktopNavigationToolbar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SupportingClasses\AppBarHelper.cs" />
     <Compile Include="SystemTray.xaml.cs">
       <DependentUpon>SystemTray.xaml</DependentUpon>
     </Compile>
@@ -268,7 +267,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="CairoApplication.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
@@ -309,8 +308,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
+    <Compile Include="CairoApplication.xaml.cs">
+      <DependentUpon>CairoApplication.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MenuBar.xaml.cs">
@@ -340,7 +339,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Startup.cs" />
     <Compile Include="SupportingClasses\TaskButtonStyleConverter.cs" />
     <Compile Include="Taskbar.xaml.cs">
       <DependentUpon>Taskbar.xaml</DependentUpon>
@@ -456,6 +454,10 @@
       <Project>{DE9674CC-507E-4049-9152-5C899B9F0939}</Project>
       <Name>CairoDesktop.AppGrabber</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.Application\CairoDesktop.Application.csproj">
+      <Project>{3ff023f4-7ce3-4171-95b7-b5af10332658}</Project>
+      <Name>CairoDesktop.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">
       <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
       <Name>CairoDesktop.Common</Name>
@@ -463,6 +465,10 @@
     <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj">
       <Project>{8E50FC68-8BF3-44F2-9229-708500625757}</Project>
       <Name>CairoDesktop.Configuration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj">
+      <Project>{583ac66f-5b77-4ee2-aba1-ed2cdc64b5f2}</Project>
+      <Name>CairoDesktop.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
       <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
@@ -472,17 +478,45 @@
       <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>
       <Name>CairoDesktop.Localization</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.WindowsTasks\CairoDesktop.WindowsTasks.csproj">
-      <Project>{5FABAD0F-D28C-4EE6-A826-77968087864E}</Project>
-      <Name>CairoDesktop.WindowsTasks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.WindowsTray\CairoDesktop.WindowsTray.csproj">
-      <Project>{79B5DDAC-5102-4B11-BFA1-B16D6F6FE661}</Project>
-      <Name>CairoDesktop.WindowsTray</Name>
-    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Extensions\" />
+    <PackageReference Include="ManagedShell">
+      <Version>0.0.23</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Xml">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Console">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Options">
+      <Version>5.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions">
+      <Version>5.0.0</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

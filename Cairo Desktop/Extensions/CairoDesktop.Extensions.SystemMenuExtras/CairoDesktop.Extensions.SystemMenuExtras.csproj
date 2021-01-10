@@ -76,6 +76,7 @@
       <DependentUpon>Clock.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClockMenuExtra.cs" />
+    <Compile Include="DependencyRegistrant.cs" />
     <Compile Include="Search.xaml.cs">
       <DependentUpon>Search.xaml</DependentUpon>
     </Compile>
@@ -119,6 +120,10 @@
       <Name>Cairo Desktop</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\CairoDesktop.Application\CairoDesktop.Application.csproj">
+      <Project>{3FF023F4-7CE3-4171-95B7-B5AF10332658}</Project>
+      <Name>CairoDesktop.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CairoDesktop.Common\CairoDesktop.Common.csproj">
       <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
       <Name>CairoDesktop.Common</Name>
@@ -139,11 +144,11 @@
       <Name>CairoDesktop.Localization</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\..\CairoDesktop.WindowsTray\CairoDesktop.WindowsTray.csproj">
-      <Project>{79B5DDAC-5102-4B11-BFA1-B16D6F6FE661}</Project>
-      <Name>CairoDesktop.WindowsTray</Name>
-      <Private>False</Private>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ManagedShell">
+      <Version>0.0.23</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

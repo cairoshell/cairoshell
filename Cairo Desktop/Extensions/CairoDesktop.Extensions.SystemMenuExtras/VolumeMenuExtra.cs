@@ -1,7 +1,7 @@
-﻿using System.Windows.Controls;
-using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
+﻿using CairoDesktop.Configuration;
 using CairoDesktop.ObjectModel;
+using System.Windows.Controls;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -9,19 +9,15 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
     {
         private Volume _volume;
 
-        public VolumeMenuExtra() { }
-
         public override UserControl StartControl(MenuBar menuBar)
         {
-            if (Settings.Instance.EnableSysTray && Shell.IsWindows10OrBetter && Shell.IsCairoRunningAsShell)
+            if (Settings.Instance.EnableMenuExtraVolume && EnvironmentHelper.IsWindows10OrBetter && EnvironmentHelper.IsAppRunningAsShell)
             {
                 _volume = new Volume();
                 return _volume;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
     }
 }

@@ -9,6 +9,9 @@ Name "Cairo Desktop Environment"
 ; The file to write
 OutFile "CairoSetup_64bit.exe"
 
+; Use Unicode rather than ANSI
+Unicode True
+
 ; The default installation directory
 InstallDir "$PROGRAMFILES64\Cairo Shell"
 
@@ -73,18 +76,9 @@ Section "$(SECT_cairo)" cairo
   ; Put file there
   DetailPrint "Installing Cairo files"
   File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.exe"
-  File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.WindowsTray.dll"
-  File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.Common.dll"
-  File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.AppGrabber.dll"
-  File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.Configuration.dll"
-  File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.Interop.dll"
-  File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.Localization.dll"
-  File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.UWPInterop.dll"
-  File "..\Cairo Desktop\Build\x64\Release\Interop.IWshRuntimeLibrary.dll"
-  File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.WindowsTasks.dll"
+  File "..\Cairo Desktop\Build\x64\Release\*.dll"
   File "..\Cairo Desktop\Build\x64\Release\Flat.xaml"
   File "..\Cairo Desktop\Build\x64\Release\White.xaml"
-  File "..\Cairo Desktop\Build\x64\Release\WinSparkle.dll"
 
   ; Set shell context to All Users
   SetShellVarContext all
@@ -100,7 +94,7 @@ Section "$(SECT_cairo)" cairo
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "DisplayIcon" '"$INSTDIR\RemoveCairo.exe"'
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "DisplayVersion" "0.3"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "UninstallString" '"$INSTDIR\RemoveCairo.exe"'
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "URLInfoAbout" "http://cairodesktop.com"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "URLInfoAbout" "https://cairodesktop.com"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "Publisher" "Cairo Development Team"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "NoRepair" 1
@@ -134,10 +128,11 @@ SectionEnd
   LangString DLOG_DotNetText ${LANG_ENGLISH} "Cairo requires Microsoft .NET Framework 4.7.1 or higher. Please install this from the Microsoft web site and install Cairo again."
   LangString SECT_cairo ${LANG_ENGLISH} "Cairo Desktop (required)"
   LangString SECT_startupCU ${LANG_ENGLISH} "Run at startup (current user)"
-  LangString SECT_shellCU ${LANG_ENGLISH} "Advanced users only: Replace Explorer (current user)"
+  LangString SECT_shellCU ${LANG_ENGLISH} "Advanced: Disable Explorer (current user)"
   LangString DESC_cairo ${LANG_ENGLISH} "Installs Cairo and its required components."
   LangString DESC_startupCU ${LANG_ENGLISH} "Makes Cairo start up when you log in."
-  LangString DESC_shellCU ${LANG_ENGLISH} "Run Cairo instead of Windows Explorer. Note this also disables many new features in Windows."
+  LangString DESC_shellCU ${LANG_ENGLISH} "Run Cairo instead of Windows Explorer. Note: this also disables UWP/Windows Store apps and other features in Windows using that technology."
+
   LangString PAGE_Welcome_Text ${LANG_FRENCH} "Cet installateur va vous guider au long de l'installation de Cairo.\r\n\r\nAvant d'installer, veuillez vous assurer que le .NET Framework 4.7.1 ou plus récent est installé, et que vous avez quitté toute instance de Cairo encore en cours de fonctionnement.\r\n\r\nCliquez sur Suivant pour continuer."
   LangString PAGE_Finish_RunText ${LANG_FRENCH} "Démarrer l'environnement de bureau Cairo"
   LangString PAGE_UnDir_TopText ${LANG_FRENCH} "Veuillez vérifier que vous avez fermé Cairo avant de le désinstaller pour assurer que tous les fichiers soient supprimés."
@@ -182,35 +177,11 @@ Section "Uninstall"
   DeleteRegValue HKCU "Software\Microsoft\Windows NT\CurrentVersion\Winlogon" "Shell"
 
   ; Remove files and uninstaller. Includes historical files
-  Delete "$INSTDIR\CairoDesktop.exe"
-  Delete "$INSTDIR\CairoDesktop.exe.config"
-  Delete "$INSTDIR\CairoDesktop.Configuration.dll.config"
-  Delete "$INSTDIR\Cairo.WindowsHooks.dll"
-  Delete "$INSTDIR\Cairo.WindowsHooksWrapper.dll"
-  Delete "$INSTDIR\CairoDesktop.WindowsTray.dll"
-  Delete "$INSTDIR\CairoDesktop.WindowsTrayHooks.dll"
-  Delete "$INSTDIR\CairoDesktop.Common.dll"
-  Delete "$INSTDIR\CairoDesktop.AppGrabber.dll"
-  Delete "$INSTDIR\CairoDesktop.Configuration.dll"
-  Delete "$INSTDIR\CairoDesktop.Extensibility.dll"
-  Delete "$INSTDIR\CairoDesktop.Interop.dll"
-  Delete "$INSTDIR\CairoDesktop.Localization.dll"
-  Delete "$INSTDIR\CairoDesktop.UWPInterop.dll"
-  Delete "$INSTDIR\Interop.IWshRuntimeLibrary.dll"
-  Delete "$INSTDIR\Interop.Shell32.dll"
-  Delete "$INSTDIR\WPFToolkit.dll"
-  Delete "$INSTDIR\SearchAPILib.dll"
   Delete "$SMPROGRAMS\Cairo Desktop.lnk"
-  Delete "$INSTDIR\UnhandledExceptionFilter.dll"
-  Delete "$INSTDIR\CairoDesktop.WindowsTasks.dll"
-  Delete "$INSTDIR\PostSharp.Core.dll"
-  Delete "$INSTDIR\PostSharp.Public.dll"
-  Delete "$INSTDIR\PostSharp.Laos.dll"
-  Delete "$INSTDIR\PostSharp.Core.XmlSerializers.dll"
-  Delete "$INSTDIR\RemoveCairo.exe"
-  Delete "$INSTDIR\Flat.xaml"
-  Delete "$INSTDIR\White.xaml"
-  Delete "$INSTDIR\WinSparkle.dll"
+  Delete "$INSTDIR\*.exe"
+  Delete "$INSTDIR\*.xaml"
+  Delete "$INSTDIR\*.dll"
+  Delete "$INSTDIR\*.config"
 
   ; Remove directories used
   RMDir "$INSTDIR"

@@ -1,34 +1,38 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common.ExtensionMethods;
 using CairoDesktop.ObjectModel;
+using System.Collections.Generic;
+using CairoDesktop.SupportingClasses;
+using ManagedShell;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
-    [Export(typeof(ShellExtension))]
-    public sealed class SystemMenuExtrasExtension : ShellExtension
+    public sealed class SystemMenuExtrasExtension : IShellExtension
     {
+        private ShellManager _shellManager;
+        
         public List<MenuExtra> MenuExtras { get; private set; }
 
-        public SystemMenuExtrasExtension()
+        public SystemMenuExtrasExtension(ShellManagerService shellManagerService)
         {
+            _shellManager = shellManagerService.ShellManager;
             MenuExtras = new List<MenuExtra>();
         }
 
-        public override void Start()
+        public void Start()
         {
-            MenuExtras.AddRange(new SystemTrayMenuExtra(),
+            MenuExtras.AddRange(new SystemTrayMenuExtra(_shellManager.NotificationArea),
                                 new VolumeMenuExtra(),
                                 new ActionCenterMenuExtra(),
                                 new ClockMenuExtra(),
                                 new SearchMenuExtra());
 
-            MenuExtras.AddTo(_CairoShell.Instance.MenuExtras);
+            MenuExtras.AddTo(CairoApplication.Current.MenuExtras);
         }
 
-        public override void Stop()
+        public void Stop()
         {
-            MenuExtras.RemoveFrom(_CairoShell.Instance.MenuExtras);
+            MenuExtras.RemoveFrom(CairoApplication.Current.MenuExtras);
             MenuExtras.Clear();
             MenuExtras = null;
         }

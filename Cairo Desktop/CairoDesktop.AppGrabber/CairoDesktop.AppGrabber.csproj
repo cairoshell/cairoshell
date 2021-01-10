@@ -142,14 +142,6 @@
       <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>
       <Name>CairoDesktop.Localization</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.UWPInterop\CairoDesktop.UWPInterop.csproj">
-      <Project>{52a795c9-3c28-487a-b7b8-aab324da7305}</Project>
-      <Name>CairoDesktop.UWPInterop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.WindowsTasks\CairoDesktop.WindowsTasks.csproj">
-      <Project>{5fabad0f-d28c-4ee6-a826-77968087864e}</Project>
-      <Name>CairoDesktop.WindowsTasks</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -163,6 +155,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\nullIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ManagedShell">
+      <Version>0.0.23</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -57,6 +57,7 @@
     <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DependencyRegistrant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShellFolderExtension.cs" />
     <Compile Include="ShellFolderMenuItem.cs" />
@@ -67,10 +68,18 @@
       <Name>Cairo Desktop</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\CairoDesktop.Application\CairoDesktop.Application.csproj">
+      <Project>{3ff023f4-7ce3-4171-95b7-b5af10332658}</Project>
+      <Name>CairoDesktop.Application</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CairoDesktop.Common\CairoDesktop.Common.csproj">
       <Project>{963EB868-7672-4557-8FE9-6A1A388AA5FF}</Project>
       <Name>CairoDesktop.Common</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj">
+      <Project>{583ac66f-5b77-4ee2-aba1-ed2cdc64b5f2}</Project>
+      <Name>CairoDesktop.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

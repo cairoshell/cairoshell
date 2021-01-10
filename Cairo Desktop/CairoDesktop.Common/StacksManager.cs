@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Common
 {
@@ -106,7 +107,7 @@ namespace CairoDesktop.Common
 
         private void deserializeStacks()
         {
-            if (Interop.Shell.Exists(stackConfigFile))
+            if (ShellHelper.Exists(stackConfigFile))
             {
                 System.Xml.XmlReader reader = System.Xml.XmlReader.Create(stackConfigFile);
                 List<string> locationPaths = serializer.Deserialize(reader) as List<string>;

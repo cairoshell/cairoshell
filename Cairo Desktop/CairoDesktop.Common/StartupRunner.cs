@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using CairoDesktop.Common.Logging;
-using CairoDesktop.Interop;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using Microsoft.Win32;
 
 namespace CairoDesktop.Common
@@ -67,7 +67,7 @@ namespace CairoDesktop.Common
                 startInfo.FileName = procInfo[0];
                 startInfo.Arguments = procInfo[1];
 
-                CairoLogger.Instance.Debug($"StartupRunner: Starting program: {startInfo.FileName}");
+                ShellLogger.Debug($"StartupRunner: Starting program: {startInfo.FileName}");
 
                 try
                 {
@@ -75,7 +75,7 @@ namespace CairoDesktop.Common
                 }
                 catch
                 {
-                    CairoLogger.Instance.Info($"StartupRunner: Failed to start program: {startInfo.FileName}");
+                    ShellLogger.Info($"StartupRunner: Failed to start program: {startInfo.FileName}");
                 }
             }
         }
@@ -115,7 +115,7 @@ namespace CairoDesktop.Common
                                 if (((byte[])registryKey.GetValue(valueName))[0] % 2 != 0) // if value is odd number, item is disabled
                                 {
                                     disallowedApps.Add(valueName);
-                                    CairoLogger.Instance.Debug($"StartupRunner: Skipping disabled entry: {valueName}");
+                                    ShellLogger.Debug($"StartupRunner: Skipping disabled entry: {valueName}");
                                 }
                             }
                         }
@@ -125,7 +125,7 @@ namespace CairoDesktop.Common
                     }
                     catch
                     {
-                        CairoLogger.Instance.Warning($"StartupRunner: Unable to load allowed startup items list from registry key {location.ApprovedLocation}");
+                        ShellLogger.Warning($"StartupRunner: Unable to load allowed startup items list from registry key {location.ApprovedLocation}");
                     }
                 }
             }
@@ -142,7 +142,7 @@ namespace CairoDesktop.Common
                 case StartupEntryType.RegistryKey:
                     return GetAppsFromRegistryKey(location);
                 default:
-                    CairoLogger.Instance.Debug("StartupRunner: Unknown startup location type");
+                    ShellLogger.Debug("StartupRunner: Unknown startup location type");
                     break;
             }
 
@@ -157,7 +157,7 @@ namespace CairoDesktop.Common
 
             try
             {
-                if (Shell.Exists(locationExpanded))
+                if (ShellHelper.Exists(locationExpanded))
                 {
                     SystemDirectory directory = new SystemDirectory(locationExpanded, Dispatcher.CurrentDispatcher, false);
 
@@ -179,7 +179,7 @@ namespace CairoDesktop.Common
             }
             catch
             {
-                CairoLogger.Instance.Warning($"StartupRunner: Unable to load startup items from directory {location}");
+                ShellLogger.Warning($"StartupRunner: Unable to load startup items from directory {location}");
             }
 
             return startupApps;
@@ -229,7 +229,7 @@ namespace CairoDesktop.Common
                                     }
                                     catch
                                     {
-                                        CairoLogger.Instance.Warning($"StartupRunner: Unable to delete RunOnce startup item {valueName}");
+                                        ShellLogger.Warning($"StartupRunner: Unable to delete RunOnce startup item {valueName}");
                                     }
                                 }
                             }
@@ -241,7 +241,7 @@ namespace CairoDesktop.Common
                 }
                 catch
                 {
-                    CairoLogger.Instance.Warning($"StartupRunner: Unable to load startup items from registry key {location.Location}");
+                    ShellLogger.Warning($"StartupRunner: Unable to load startup items from registry key {location.Location}");
                 }
             }
 
