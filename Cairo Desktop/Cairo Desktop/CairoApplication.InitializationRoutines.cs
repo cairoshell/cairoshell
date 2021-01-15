@@ -94,15 +94,6 @@ namespace CairoDesktop
             return false;
         }
 
-        internal void SetSystemKeyboardShortcuts()
-        {
-            if (EnvironmentHelper.IsAppRunningAsShell)
-            {
-                // Commenting out as per comments on PR #274
-                SupportingClasses.SystemHotKeys.RegisterSystemHotkeys();
-            }
-        }
-
         private void SetupWindowServices()
         {
             foreach (var service in Host.Services.GetServices<IWindowService>())

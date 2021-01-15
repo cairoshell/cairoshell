@@ -58,16 +58,14 @@ namespace CairoDesktop
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            // Initialize current shell information here, since it won't be accurate if we wait until after we create our own windows
+            SetIsCairoRunningAsShell();
+            
             Host.Start();
 
             SetShellReadyEvent();
 
-            // Initialize current shell information here, since it won't be accurate if we wait until after we create our own windows
-            SetIsCairoRunningAsShell();
-
             WriteApplicationDebugInfoToConsole();
-
-            SetSystemKeyboardShortcuts();
 
             LoadExtensions();
 

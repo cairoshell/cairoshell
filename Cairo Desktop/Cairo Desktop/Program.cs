@@ -38,11 +38,11 @@ namespace CairoDesktop
                     services.AddSingleton(s => Settings.Instance);
                     services.AddSingleton<ICairoApplication, CairoApplication>();
 
+                    services.AddHostedService<ShellHotKeyService>();
                     services.AddSingleton<ShellManagerService>();
 
                     services.AddSingleton<DesktopManager>();
                     services.AddSingleton<WindowManager>();
-
                     services.AddSingleton<IWindowService, MenuBarWindowService>();
                     services.AddSingleton<IWindowService, TaskbarWindowService>();
 

@@ -129,7 +129,7 @@
     <Compile Include="SupportingClasses\FilePathValidationRule.cs" />
     <Compile Include="SupportingClasses\FolderHelper.cs" />
     <Compile Include="SupportingClasses\DirectoryPathValidationRule.cs" />
-    <Compile Include="SupportingClasses\SystemHotKeys.cs" />
+    <Compile Include="SupportingClasses\ShellHotKeyService.cs" />
     <Compile Include="MenuExtraVolume.xaml.cs">
       <DependentUpon>MenuExtraVolume.xaml</DependentUpon>
     </Compile>
