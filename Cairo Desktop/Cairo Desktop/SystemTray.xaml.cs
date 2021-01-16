@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using CairoDesktop.Configuration;
+using CairoDesktop.ObjectModel;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
@@ -13,16 +14,16 @@ namespace CairoDesktop
 {
     public partial class SystemTray
     {
-        private readonly MenuBar MenuBar;
+        private readonly IMenuExtraHost Host;
         private readonly NotificationArea _notificationArea;
 
-        public SystemTray(MenuBar menuBar, NotificationArea notificationArea)
+        public SystemTray(IMenuExtraHost host, NotificationArea notificationArea)
         {
             InitializeComponent();
 
             _notificationArea = notificationArea;
             DataContext = _notificationArea;
-            MenuBar = menuBar;
+            Host = host;
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
 
@@ -81,19 +82,14 @@ namespace CairoDesktop
             }
         }
 
-        public TrayHostSizeData GetMenuBarSizeData()
-        {
-            return new TrayHostSizeData { edge = MenuBar.AppBarEdge, rc = new NativeMethods.Rect { Top = (int)(MenuBar.Top * MenuBar.DpiScale), Left = (int)(MenuBar.Left * MenuBar.DpiScale), Bottom = (int)((MenuBar.Top + MenuBar.Height) * MenuBar.DpiScale), Right = (int)((MenuBar.Left + MenuBar.Width) * MenuBar.DpiScale) } };
-        }
-
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
 
-            if (MenuBar != null)
+            if (Host != null)
             {
                 // set current menu bar to return placement for ABM_GETTASKBARPOS message
-                _notificationArea.SetTrayHostSizeData(GetMenuBarSizeData());
+                _notificationArea.SetTrayHostSizeData(Host.GetTrayHostSizeData());
             }
             trayIcon?.IconMouseClick(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
         }

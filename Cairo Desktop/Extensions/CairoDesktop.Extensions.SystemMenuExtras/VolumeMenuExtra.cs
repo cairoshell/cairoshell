@@ -9,7 +9,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
     {
         private Volume _volume;
 
-        public override UserControl StartControl(MenuBar menuBar)
+        public override UserControl StartControl(IMenuExtraHost host)
         {
             if (Settings.Instance.EnableMenuExtraVolume && EnvironmentHelper.IsWindows10OrBetter && EnvironmentHelper.IsAppRunningAsShell)
             {

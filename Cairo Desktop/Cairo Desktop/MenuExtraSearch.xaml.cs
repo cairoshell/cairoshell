@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using CairoDesktop.Common;
 using CairoDesktop.Interop;
+using CairoDesktop.ObjectModel;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 
@@ -17,11 +18,11 @@ namespace CairoDesktop
         public bool _isPrimaryScreen;
         private static bool isSearchHotkeyRegistered;
 
-        public MenuExtraSearch(MenuBar menuBar)
+        public MenuExtraSearch(IMenuExtraHost host)
         {
             InitializeComponent();
 
-            _isPrimaryScreen = menuBar.Screen.Primary;
+            _isPrimaryScreen = host.GetScreen().Primary;
 
             SetupSearch();
         }

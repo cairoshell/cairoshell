@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CairoDesktop.ObjectModel;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -18,7 +19,7 @@ using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop
 {
-    public partial class MenuBar : CairoAppBarWindow
+    public partial class MenuBar : CairoAppBarWindow, IMenuExtraHost
     {
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ShellManager _shellManager;
@@ -609,6 +610,18 @@ namespace CairoDesktop
         private void OpenRecycleBin(object sender, RoutedEventArgs e)
         {
             FolderHelper.OpenLocation("::{645FF040-5081-101B-9F08-00AA002F954E}");
+        }
+        #endregion
+        
+        #region IMenuExtraHost
+        public IntPtr GetHandle()
+        {
+            return Handle;
+        }
+        
+        public System.Windows.Forms.Screen GetScreen()
+        {
+            return Screen;
         }
         #endregion
     }

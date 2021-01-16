@@ -120,6 +120,7 @@
     <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
     <Compile Include="SupportingClasses\DesktopManager.cs" />
     <Compile Include="SupportingClasses\EnumUtility.cs" />
+    <Compile Include="ObjectModel\IMenuExtraHost.cs" />
     <Compile Include="SupportingClasses\IWindowService.cs" />
     <Compile Include="SupportingClasses\MenuBarWindowService.cs" />
     <Compile Include="SupportingClasses\PicSumWallpaperClient.cs" />

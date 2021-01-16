@@ -2,6 +2,7 @@
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Interop;
+using ManagedShell.WindowsTray;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -23,6 +24,21 @@ namespace CairoDesktop.SupportingClasses
         protected override void SetScreenProperties(ScreenSetupReason reason)
         {
             _windowManager.NotifyDisplayChange(reason); // update Cairo window list based on new screen setup
+        }
+
+        public TrayHostSizeData GetTrayHostSizeData()
+        {
+            return new TrayHostSizeData
+            {
+                edge = AppBarEdge,
+                rc = new NativeMethods.Rect
+                {
+                    Top = (int)(Top * DpiScale),
+                    Left = (int)(Left * DpiScale),
+                    Bottom = (int)((Top + Height) * DpiScale),
+                    Right = (int)((Left + Width) * DpiScale)
+                }
+            };
         }
     }
 }
