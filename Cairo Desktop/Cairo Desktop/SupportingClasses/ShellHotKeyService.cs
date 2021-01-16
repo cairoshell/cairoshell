@@ -10,6 +10,7 @@ namespace CairoDesktop.SupportingClasses
     public sealed class ShellHotKeyService : BackgroundService
     {
         private readonly DesktopManager _desktopManager;
+        private Task ServiceStartTask;
 
         public ShellHotKeyService(DesktopManager desktopManager)
         {
@@ -18,14 +19,14 @@ namespace CairoDesktop.SupportingClasses
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Task serviceStart = new Task(RegisterSystemHotkeys);
+            ServiceStartTask = new Task(RegisterSystemHotkeys);
 
             if (!stoppingToken.IsCancellationRequested)
             {
-                serviceStart.Start();
+                ServiceStartTask.Start();
             }
 
-            return serviceStart;
+            return ServiceStartTask;
         }
 
         private void RegisterSystemHotkeys()
