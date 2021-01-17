@@ -134,6 +134,11 @@
       <Name>CairoDesktop.Configuration</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj">
+      <Project>{583ac66f-5b77-4ee2-aba1-ed2cdc64b5f2}</Project>
+      <Name>CairoDesktop.Infrastructure</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
       <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
       <Name>CairoDesktop.Interop</Name>

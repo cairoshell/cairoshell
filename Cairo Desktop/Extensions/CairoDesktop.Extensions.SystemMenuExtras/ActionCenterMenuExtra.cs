@@ -1,7 +1,8 @@
-﻿using CairoDesktop.ObjectModel;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
+using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Infrastructure.ObjectModel;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {

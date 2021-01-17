@@ -25,20 +25,5 @@ namespace CairoDesktop.SupportingClasses
         {
             _windowManager.NotifyDisplayChange(reason); // update Cairo window list based on new screen setup
         }
-
-        public TrayHostSizeData GetTrayHostSizeData()
-        {
-            return new TrayHostSizeData
-            {
-                edge = AppBarEdge,
-                rc = new NativeMethods.Rect
-                {
-                    Top = (int)(Top * DpiScale),
-                    Left = (int)(Left * DpiScale),
-                    Bottom = (int)((Top + Height) * DpiScale),
-                    Right = (int)((Left + Width) * DpiScale)
-                }
-            };
-        }
     }
 }

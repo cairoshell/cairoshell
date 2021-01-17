@@ -3,9 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
-using CairoDesktop.ObjectModel;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
@@ -19,7 +19,7 @@ namespace CairoDesktop
         {
             InitializeComponent();
 
-            _isPrimaryScreen = host.GetScreen().Primary;
+            _isPrimaryScreen = host.GetIsPrimaryDisplay();
 
             InitializeClock();
         }

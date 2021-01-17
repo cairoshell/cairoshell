@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using CairoDesktop.ObjectModel;
+using CairoDesktop.Application.Interfaces;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
@@ -19,7 +19,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
         {
             InitializeComponent();
 
-            _isPrimaryScreen = host.GetScreen().Primary;
+            _isPrimaryScreen = host.GetIsPrimaryDisplay();
 
             InitializeClock();
         }

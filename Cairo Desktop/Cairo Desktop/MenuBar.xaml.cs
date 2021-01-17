@@ -1,5 +1,6 @@
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Application.Structs;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
@@ -11,7 +12,6 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CairoDesktop.ObjectModel;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -618,10 +618,22 @@ namespace CairoDesktop
         {
             return Handle;
         }
-        
-        public System.Windows.Forms.Screen GetScreen()
+
+        public bool GetIsPrimaryDisplay()
         {
-            return Screen;
+            return Screen.Primary;
+        }
+
+        public MenuExtraHostDimensions GetDimensions()
+        {
+            return new MenuExtraHostDimensions
+            {
+                DpiScale = DpiScale,
+                Height = Height,
+                Width = Width,
+                Left = Left,
+                Top = Top
+            };
         }
         #endregion
     }

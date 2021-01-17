@@ -4,8 +4,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Application.Structs;
 using CairoDesktop.Configuration;
-using CairoDesktop.ObjectModel;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
@@ -82,6 +83,23 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
             }
         }
 
+        private TrayHostSizeData GetTrayHostSizeData()
+        {
+            MenuExtraHostDimensions dimensions = Host.GetDimensions();
+
+            return new TrayHostSizeData
+            {
+                edge = (NativeMethods.ABEdge)dimensions.ScreenEdge,
+                rc = new NativeMethods.Rect
+                {
+                    Top = (int)(dimensions.Top * dimensions.DpiScale),
+                    Left = (int)(dimensions.Left * dimensions.DpiScale),
+                    Bottom = (int)((dimensions.Top + Height) * dimensions.DpiScale),
+                    Right = (int)((dimensions.Left + Width) * dimensions.DpiScale)
+                }
+            };
+        }
+
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
@@ -89,7 +107,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
             if (Host != null)
             {
                 // set current menu bar to return placement for ABM_GETTASKBARPOS message
-                _notificationArea.SetTrayHostSizeData(Host.GetTrayHostSizeData());
+                _notificationArea.SetTrayHostSizeData(GetTrayHostSizeData());
             }
             trayIcon?.IconMouseClick(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
         }
