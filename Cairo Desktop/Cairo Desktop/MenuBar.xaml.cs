@@ -1,5 +1,6 @@
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Application.Structs;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using CairoDesktop.Interop;
@@ -18,7 +19,7 @@ using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop
 {
-    public partial class MenuBar : CairoAppBarWindow
+    public partial class MenuBar : CairoAppBarWindow, IMenuExtraHost
     {
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ShellManager _shellManager;
@@ -609,6 +610,30 @@ namespace CairoDesktop
         private void OpenRecycleBin(object sender, RoutedEventArgs e)
         {
             FolderHelper.OpenLocation("::{645FF040-5081-101B-9F08-00AA002F954E}");
+        }
+        #endregion
+        
+        #region IMenuExtraHost
+        public IntPtr GetHandle()
+        {
+            return Handle;
+        }
+
+        public bool GetIsPrimaryDisplay()
+        {
+            return Screen.Primary;
+        }
+
+        public MenuExtraHostDimensions GetDimensions()
+        {
+            return new MenuExtraHostDimensions
+            {
+                DpiScale = DpiScale,
+                Height = Height,
+                Width = Width,
+                Left = Left,
+                Top = Top
+            };
         }
         #endregion
     }

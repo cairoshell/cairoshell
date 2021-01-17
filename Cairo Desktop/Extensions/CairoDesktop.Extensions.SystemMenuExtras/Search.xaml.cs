@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Interop;
 using System;
 using System.Threading;
 using System.Windows;
@@ -7,7 +6,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Interop;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -16,11 +18,11 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
         public bool _isPrimaryScreen;
         private static bool isSearchHotkeyRegistered;
 
-        public Search(MenuBar menuBar)
+        public Search(IMenuExtraHost host)
         {
             InitializeComponent();
 
-            _isPrimaryScreen = menuBar.Screen.Primary;
+            _isPrimaryScreen = host.GetIsPrimaryDisplay();
 
             SetupSearch();
         }
@@ -112,6 +114,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
             }
             catch (Exception ex)
             {
+                ShellLogger.Warning($"Search: Unable to bind hotkey: {ex.Message}");
             }
         }
 

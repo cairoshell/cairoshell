@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
-using CairoDesktop.ObjectModel;
+using CairoDesktop.Infrastructure.ObjectModel;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
@@ -8,14 +9,14 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
     {
         private Clock _clock;
 
-        public override UserControl StartControl(MenuBar menuBar)
+        public override UserControl StartControl(IMenuExtraHost host)
         {
             if (!Settings.Instance.EnableMenuExtraClock)
             {
                 return null;
             }
 
-            _clock = new Clock(menuBar);
+            _clock = new Clock(host);
             return _clock;
         }
     }

@@ -3,6 +3,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CairoDesktop.Application.Interfaces;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
@@ -14,11 +15,11 @@ namespace CairoDesktop
     {
         private IntPtr _parentHwnd;
 
-        public MenuExtraActionCenter(MenuBar menuBar)
+        public MenuExtraActionCenter(IMenuExtraHost host)
         {
             InitializeComponent();
 
-            _parentHwnd = menuBar.Handle;
+            _parentHwnd = host.GetHandle();
         }
 
         private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)

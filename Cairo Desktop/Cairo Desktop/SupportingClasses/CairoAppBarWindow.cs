@@ -2,6 +2,7 @@
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Interop;
+using ManagedShell.WindowsTray;
 
 namespace CairoDesktop.SupportingClasses
 {

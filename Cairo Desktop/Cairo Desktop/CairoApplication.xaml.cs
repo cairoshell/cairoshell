@@ -1,7 +1,6 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
-using CairoDesktop.ObjectModel;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using CairoDesktop.Infrastructure.ObjectModel;
 
 namespace CairoDesktop
 {

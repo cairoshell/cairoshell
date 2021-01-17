@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
@@ -14,11 +15,11 @@ namespace CairoDesktop
         private readonly bool _isPrimaryScreen;
         private static bool isClockHotkeyRegistered;
 
-        public MenuExtraClock(MenuBar menuBar)
+        public MenuExtraClock(IMenuExtraHost host)
         {
             InitializeComponent();
 
-            _isPrimaryScreen = menuBar.Screen.Primary;
+            _isPrimaryScreen = host.GetIsPrimaryDisplay();
 
             InitializeClock();
         }

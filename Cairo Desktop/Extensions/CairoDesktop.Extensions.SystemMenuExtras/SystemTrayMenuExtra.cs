@@ -1,6 +1,7 @@
 ﻿using CairoDesktop.Configuration;
-using CairoDesktop.ObjectModel;
 using System.Windows.Controls;
+using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.WindowsTray;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
@@ -15,14 +16,14 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
             _notificationArea = notificationArea;
         }
 
-        public override UserControl StartControl(MenuBar menuBar)
+        public override UserControl StartControl(IMenuExtraHost host)
         {
             if (!Settings.Instance.EnableSysTray)
             {
                 return null;
             }
 
-            _systemTray = new SystemTray(menuBar, _notificationArea);
+            _systemTray = new SystemTray(host, _notificationArea);
             return _systemTray;
         }
     }

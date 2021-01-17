@@ -74,7 +74,6 @@
       <DependentUpon>CairoMessage.xaml</DependentUpon>
     </Compile>
     <Compile Include="CairoMessageImage.cs" />
-    <Compile Include="ExtensionMethods\IListExtensions.cs" />
     <Compile Include="CommandLineParser.cs" />
     <Compile Include="Dialogs.cs" />
     <Compile Include="DisposableCollection.cs" />
