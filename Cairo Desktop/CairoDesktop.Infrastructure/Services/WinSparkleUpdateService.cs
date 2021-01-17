@@ -1,8 +1,8 @@
 ﻿using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Common;
 using CairoDesktop.Interop;
 using Microsoft.Extensions.Logging;
 using System;
+using ManagedShell.Common;
 
 namespace CairoDesktop.Infrastructure.Services
 {

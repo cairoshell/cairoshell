@@ -18,6 +18,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
 using CairoDesktop.Infrastructure.ObjectModel;
+using ManagedShell.Common.SupportingClasses;
 
 namespace CairoDesktop
 {

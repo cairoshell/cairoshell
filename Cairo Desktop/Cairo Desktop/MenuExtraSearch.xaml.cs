@@ -7,9 +7,10 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Interop;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.Common.SupportingClasses;
+using ManagedShell.Interop;
 
 namespace CairoDesktop
 {

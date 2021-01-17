@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
+using ManagedShell.Common;
 
 namespace CairoDesktop.Common
 {

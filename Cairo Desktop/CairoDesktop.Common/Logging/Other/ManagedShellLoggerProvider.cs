@@ -8,6 +8,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
+using ManagedShell.Common;
 using ConsoleLog = ManagedShell.Common.Logging.Observers.ConsoleLog;
 
 namespace CairoDesktop.Common.Logging.Other

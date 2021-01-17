@@ -481,7 +481,7 @@
   <ItemGroup />
   <ItemGroup>
     <PackageReference Include="ManagedShell">
-      <Version>0.0.23</Version>
+      <Version>0.0.29</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine">
       <Version>5.0.0</Version>
