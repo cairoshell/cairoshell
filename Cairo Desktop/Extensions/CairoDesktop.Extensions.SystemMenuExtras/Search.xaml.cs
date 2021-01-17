@@ -16,13 +16,15 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 {
     public partial class Search : UserControl
     {
+        private readonly ICairoApplication _cairoApplication;
         public bool _isPrimaryScreen;
         private static bool isSearchHotkeyRegistered;
 
-        public Search(IMenuExtraHost host)
+        public Search(ICairoApplication cairoApplication, IMenuExtraHost host)
         {
             InitializeComponent();
 
+            _cairoApplication = cairoApplication;
             _isPrimaryScreen = host.GetIsPrimaryDisplay();
 
             SetupSearch();
@@ -75,7 +77,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
                 // this sometimes takes a while
                 Type provider = typeof(SearchHelper);
 
-                CairoApplication.Current.Dispatcher.BeginInvoke(new Action(() =>
+                _cairoApplication.Dispatch(() =>
                 {
                     CairoSearchMenu.DataContext = new ObjectDataProvider
                     {
@@ -96,7 +98,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 
                     searchStr.SetBinding(TextBox.TextProperty, bSearchText);
                     lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
-                }));
+                });
             })
             {
                 IsBackground = true

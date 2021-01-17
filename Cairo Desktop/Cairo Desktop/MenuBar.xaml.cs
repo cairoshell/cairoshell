@@ -39,11 +39,8 @@ namespace CairoDesktop
         private MenuExtraSearch menuExtraSearch;
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService) : this(shellManager, windowManager, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen, NativeMethods.ABEdge.ABE_TOP)
-        {
-        }
-
-        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(shellManager, windowManager, screen, edge, 23)
+        
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
         {
             _applicationUpdateService = applicationUpdateService;
             _shellManager = shellManager;
@@ -152,7 +149,7 @@ namespace CairoDesktop
             if (Settings.Instance.EnableMenuExtraSearch)
             {
                 // add search
-                menuExtraSearch = new MenuExtraSearch(this);
+                menuExtraSearch = new MenuExtraSearch(_cairoApplication, this);
                 MenuExtrasHost.Children.Add(menuExtraSearch);
             }
         }
@@ -160,12 +157,12 @@ namespace CairoDesktop
         private void setupCairoMenu()
         {
             // Add CairoMenu MenuItems
-            if (CairoApplication.Current.CairoMenu.Count > 0)
+            if (_cairoApplication.CairoMenu.Count > 0)
             {
                 CairoMenu.Items.Insert(7, new Separator());
-                foreach (var cairoMenuItem in CairoApplication.Current.CairoMenu)
+                foreach (var cairoMenuItem in _cairoApplication.CairoMenu)
                 {
-                    var menuItem = new System.Windows.Controls.MenuItem { Header = cairoMenuItem.Header };
+                    var menuItem = new MenuItem { Header = cairoMenuItem.Header };
                     menuItem.Click += cairoMenuItem.MenuItem_Click;
                     CairoMenu.Items.Insert(8, menuItem);
                 }
@@ -185,12 +182,12 @@ namespace CairoDesktop
             }
 
             // Add PlacesMenu MenuItems
-            if (CairoApplication.Current.Places.Count > 0)
+            if (_cairoApplication.Places.Count > 0)
             {
                 PlacesMenu.Items.Add(new Separator());
-                foreach (var placesMenuItem in CairoApplication.Current.Places)
+                foreach (var placesMenuItem in _cairoApplication.Places)
                 {
-                    var menuItem = new System.Windows.Controls.MenuItem { Header = placesMenuItem.Header };
+                    var menuItem = new MenuItem { Header = placesMenuItem.Header };
                     menuItem.Click += placesMenuItem.MenuItem_Click;
                     PlacesMenu.Items.Add(menuItem);
                 }
@@ -201,7 +198,7 @@ namespace CairoDesktop
         {
             if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarEdge != NativeMethods.ABEdge.ABE_BOTTOM)
             {
-                shadow = new MenuBarShadow(this);
+                shadow = new MenuBarShadow(_cairoApplication, _windowManager, this);
                 shadow.Show();
                 setShadowPosition();
             }
@@ -385,7 +382,7 @@ namespace CairoDesktop
 
         protected override void CustomClosing()
         {
-            if (!_windowManager.IsSettingDisplays && !CairoApplication.IsShuttingDown)
+            if (!_windowManager.IsSettingDisplays && !_cairoApplication.IsShuttingDown)
             {
                 return;
             }
@@ -519,7 +516,7 @@ namespace CairoDesktop
                 {
                     if (result == true)
                     {
-                        CairoApplication.Current.ExitCairo();
+                        _cairoApplication.ExitCairo();
                     }
                 });
         }

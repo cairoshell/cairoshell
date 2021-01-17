@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CairoDesktop.Common;
 using System.Windows.Input;
+using CairoDesktop.Application.Interfaces;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.Hosting;
 
@@ -9,11 +10,13 @@ namespace CairoDesktop.SupportingClasses
 {
     public sealed class ShellHotKeyService : BackgroundService
     {
+        private readonly ICairoApplication _cairoApplication;
         private readonly DesktopManager _desktopManager;
         private Task ServiceStartTask;
 
-        public ShellHotKeyService(DesktopManager desktopManager)
+        public ShellHotKeyService(ICairoApplication cairoApplication, DesktopManager desktopManager)
         {
+            _cairoApplication = cairoApplication;
             _desktopManager = desktopManager;
         }
 
@@ -33,7 +36,7 @@ namespace CairoDesktop.SupportingClasses
         {
             if (EnvironmentHelper.IsAppRunningAsShell)
             {
-                CairoApplication.Current.Dispatcher.Invoke(() =>
+                _cairoApplication.Dispatch(() =>
                 {
                     new HotKey(Key.R, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnWinRCommand);
                     new HotKey(Key.D, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnWinDCommand);

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Media;
+using CairoDesktop.Application.Interfaces;
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
@@ -32,6 +33,7 @@ namespace CairoDesktop.SupportingClasses
         private HotKey _overlayHotKey;
         private WindowManager _windowManager;
         private readonly ShellManager _shellManager;
+        private readonly ICairoApplication _cairoApplication;
         private readonly ILogger<DesktopManager> _logger;
 
         public DesktopIcons DesktopIconsControl { get; private set; }
@@ -65,10 +67,11 @@ namespace CairoDesktop.SupportingClasses
 
         public SystemDirectory DesktopLocation => DesktopIconsControl?.Location;
 
-        public DesktopManager(ILogger<DesktopManager> logger, ShellManagerService shellManagerService)
+        public DesktopManager(ILogger<DesktopManager> logger, ICairoApplication cairoApplication, ShellManagerService shellManagerService)
         {
             // DesktopManager is always created on startup by WindowManager, regardless of desktop preferences
             // this allows for dynamic creation and destruction of the desktop per user preference
+            _cairoApplication = cairoApplication;
             _shellManager = shellManagerService.ShellManager;
             _logger = logger;
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
@@ -131,7 +134,7 @@ namespace CairoDesktop.SupportingClasses
         {
             if (Settings.Instance.EnableDynamicDesktop && DesktopWindow != null && NavigationManager != null)
             {
-                DesktopToolbar = new DesktopNavigationToolbar(this) { Owner = DesktopWindow, NavigationManager = NavigationManager };
+                DesktopToolbar = new DesktopNavigationToolbar(_cairoApplication, this) { Owner = DesktopWindow, NavigationManager = NavigationManager };
                 DesktopToolbar.Show();
             }
             else if (Settings.Instance.EnableDynamicDesktop && DesktopWindow == null) // NavigationManager can be expected null

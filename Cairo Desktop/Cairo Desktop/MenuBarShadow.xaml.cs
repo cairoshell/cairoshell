@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using CairoDesktop.Application.Interfaces;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,16 +16,21 @@ namespace CairoDesktop
     /// </summary>
     public partial class MenuBarShadow : Window
     {
+        private readonly ICairoApplication _cairoApplication;
+        private readonly MenuBar _menuBar;
+        private readonly WindowManager _windowManager;
+
         private double DpiScale = 1;
         public bool IsClosing;
         public bool AllowClose;
 
-        public MenuBar MenuBar;
         private IntPtr Handle;
 
-        public MenuBarShadow(MenuBar bar)
+        public MenuBarShadow(ICairoApplication cairoApplication, WindowManager windowManager, MenuBar bar)
         {
-            MenuBar = bar;
+            _cairoApplication = cairoApplication;
+            _menuBar = bar;
+            _windowManager = windowManager;
 
             InitializeComponent();
 
@@ -33,26 +39,26 @@ namespace CairoDesktop
 
         public void SetPosition()
         {
-            if (MenuBar != null)
+            if (_menuBar != null)
             {
                 DpiScale = VisualTreeHelper.GetDpi(this).DpiScaleX;
 
-                double desiredTop = MenuBar.Top + MenuBar.ActualHeight;
-                double desiredLeft = MenuBar.Left;
+                double desiredTop = _menuBar.Top + _menuBar.ActualHeight;
+                double desiredLeft = _menuBar.Left;
                 double desiredHeight = 14;
-                double desiredWidth = MenuBar.ActualWidth;
+                double desiredWidth = _menuBar.ActualWidth;
 
-                if (DpiScale != MenuBar.DpiScale)
+                if (DpiScale != _menuBar.DpiScale)
                 {
                     // we want to always match the menu bar DPI for correct positioning
-                    long newDpi = (int)(MenuBar.DpiScale * 96) & 0xFFFF | (int)(MenuBar.DpiScale * 96) << 16;
+                    long newDpi = (int)(_menuBar.DpiScale * 96) & 0xFFFF | (int)(_menuBar.DpiScale * 96) << 16;
 
                     NativeMethods.Rect newRect = new NativeMethods.Rect
                     {
-                        Top = (int)(desiredTop * MenuBar.DpiScale),
-                        Left = (int)(desiredLeft * MenuBar.DpiScale),
-                        Bottom = (int)((desiredTop + desiredHeight) * MenuBar.DpiScale),
-                        Right = (int)((desiredLeft + desiredWidth) * MenuBar.DpiScale)
+                        Top = (int)(desiredTop * _menuBar.DpiScale),
+                        Left = (int)(desiredLeft * _menuBar.DpiScale),
+                        Bottom = (int)((desiredTop + desiredHeight) * _menuBar.DpiScale),
+                        Right = (int)((desiredLeft + desiredWidth) * _menuBar.DpiScale)
                     };
                     IntPtr newRectPtr = Marshal.AllocHGlobal(Marshal.SizeOf(newRect));
                     Marshal.StructureToPtr(newRect, newRectPtr, false);
@@ -109,9 +115,8 @@ namespace CairoDesktop
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             IsClosing = true;
-            var windowManager = CairoApplication.Current.Host.Services.GetService<WindowManager>();
 
-            if (!CairoApplication.IsShuttingDown && !windowManager.IsSettingDisplays && !AllowClose)
+            if (!_cairoApplication.IsShuttingDown && !_windowManager.IsSettingDisplays && !AllowClose)
             {
                 IsClosing = false;
                 e.Cancel = true;

@@ -9,12 +9,14 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 {
     public sealed class SystemMenuExtrasExtension : IShellExtension
     {
-        private ShellManager _shellManager;
+        private readonly ICairoApplication _cairoApplication;
+        private readonly ShellManager _shellManager;
         
         public List<MenuExtra> MenuExtras { get; private set; }
 
-        public SystemMenuExtrasExtension(ShellManagerService shellManagerService)
+        public SystemMenuExtrasExtension(ICairoApplication cairoApplication, ShellManagerService shellManagerService)
         {
+            _cairoApplication = cairoApplication;
             _shellManager = shellManagerService.ShellManager;
             MenuExtras = new List<MenuExtra>();
         }
@@ -25,7 +27,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
                                 new VolumeMenuExtra(),
                                 new ActionCenterMenuExtra(),
                                 new ClockMenuExtra(),
-                                new SearchMenuExtra());
+                                new SearchMenuExtra(_cairoApplication));
 
             MenuExtras.AddTo(CairoApplication.Current.MenuExtras);
         }

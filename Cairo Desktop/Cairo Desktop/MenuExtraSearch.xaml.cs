@@ -16,13 +16,15 @@ namespace CairoDesktop
 {
     public partial class MenuExtraSearch : UserControl
     {
+        private readonly ICairoApplication _cairoApplication;
         public bool _isPrimaryScreen;
         private static bool isSearchHotkeyRegistered;
 
-        public MenuExtraSearch(IMenuExtraHost host)
+        public MenuExtraSearch(ICairoApplication cairoApplication, IMenuExtraHost host)
         {
             InitializeComponent();
 
+            _cairoApplication = cairoApplication;
             _isPrimaryScreen = host.GetIsPrimaryDisplay();
 
             SetupSearch();
@@ -75,7 +77,7 @@ namespace CairoDesktop
                 // this sometimes takes a while
                 Type provider = typeof(SearchHelper);
 
-                CairoApplication.Current.Dispatcher.BeginInvoke(new Action(() =>
+                _cairoApplication.Dispatch(() =>
                 {
                     CairoSearchMenu.DataContext = new ObjectDataProvider
                     {
@@ -96,7 +98,7 @@ namespace CairoDesktop
 
                     searchStr.SetBinding(TextBox.TextProperty, bSearchText);
                     lstSearchResults.SetBinding(ItemsControl.ItemsSourceProperty, bSearchResults);
-                }));
+                });
             })
             {
                 IsBackground = true

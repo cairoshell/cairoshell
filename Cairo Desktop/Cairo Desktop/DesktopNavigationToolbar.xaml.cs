@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Controls;
+using CairoDesktop.Application.Interfaces;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 
@@ -23,11 +24,12 @@ namespace CairoDesktop
     {
         private const int DEFAULT_Y = 150;
         private WindowInteropHelper helper;
-        private ContextMenu browseContextMenu;
-        private ContextMenu homeContextMenu;
-        private ContextMenu toolbarContextMenu;
+        private readonly ContextMenu browseContextMenu;
+        private readonly ContextMenu homeContextMenu;
+        private readonly ContextMenu toolbarContextMenu;
         private LowLevelKeyboardListener lowLevelKeyboardListener;
-        private DesktopManager desktopManager;
+        private readonly ICairoApplication _cairoApplication;
+        private readonly DesktopManager _desktopManager;
 
         private static DependencyProperty navigationManagerProperty = DependencyProperty.Register("NavigationManager", typeof(NavigationManager), typeof(DesktopNavigationToolbar));
         private static DependencyProperty isShiftKeyHeldProperty = DependencyProperty.Register("isShiftKeyHeld", typeof(bool), typeof(DesktopNavigationToolbar), new PropertyMetadata(new bool()));
@@ -68,11 +70,12 @@ namespace CairoDesktop
             }
         }
 
-        public DesktopNavigationToolbar(DesktopManager manager)
+        public DesktopNavigationToolbar(ICairoApplication cairoApplication, DesktopManager manager)
         {
             InitializeComponent();
 
-            desktopManager = manager;
+            _cairoApplication = cairoApplication;
+            _desktopManager = manager;
 
             SetPosition();
 
@@ -185,8 +188,8 @@ namespace CairoDesktop
 
         public void SendToBottom()
         {
-            if (desktopManager.ShellWindow != null) NativeMethods.SetWindowPos(helper.Handle, NativeMethods.GetWindow(desktopManager.ShellWindow.Handle, NativeMethods.GetWindow_Cmd.GW_HWNDPREV), 0, 0, 0, 0, (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE);
-            else if (desktopManager.DesktopWindow != null) NativeMethods.SetWindowPos(helper.Handle, NativeMethods.GetWindow(desktopManager.DesktopWindow.Handle, NativeMethods.GetWindow_Cmd.GW_HWNDPREV), 0, 0, 0, 0, (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE);
+            if (_desktopManager.ShellWindow != null) NativeMethods.SetWindowPos(helper.Handle, NativeMethods.GetWindow(_desktopManager.ShellWindow.Handle, NativeMethods.GetWindow_Cmd.GW_HWNDPREV), 0, 0, 0, 0, (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE);
+            else if (_desktopManager.DesktopWindow != null) NativeMethods.SetWindowPos(helper.Handle, NativeMethods.GetWindow(_desktopManager.DesktopWindow.Handle, NativeMethods.GetWindow_Cmd.GW_HWNDPREV), 0, 0, 0, 0, (int)NativeMethods.SetWindowPosFlags.SWP_NOMOVE | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE | (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE);
         }
 
         private void ResetPositionMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -321,7 +324,7 @@ namespace CairoDesktop
             }
             else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
             {
-                if (!desktopManager.IsOverlayOpen)
+                if (!_desktopManager.IsOverlayOpen)
                 {
                     // if the overlay isn't open, we always want to be on the bottom. modify the WINDOWPOS structure so that we always go to right above the desktop.
                     // the desktop will do the work of bringing us to the bottom.
@@ -334,13 +337,13 @@ namespace CairoDesktop
                     {
                         // if the overlay is not open, we want to be right above the desktop. otherwise, we want to be right above the overlay.
                         IntPtr ownerWnd = IntPtr.Zero;
-                        if (desktopManager.ShellWindow != null)
+                        if (_desktopManager.ShellWindow != null)
                         {
-                            ownerWnd = desktopManager.ShellWindow.Handle;
+                            ownerWnd = _desktopManager.ShellWindow.Handle;
                         }
-                        else if (desktopManager.DesktopWindow != null)
+                        else if (_desktopManager.DesktopWindow != null)
                         {
-                            ownerWnd = desktopManager.AllowProgmanChild ? WindowHelper.GetLowestDesktopParentHwnd() : desktopManager.DesktopWindow.Handle;
+                            ownerWnd = _desktopManager.AllowProgmanChild ? WindowHelper.GetLowestDesktopParentHwnd() : _desktopManager.DesktopWindow.Handle;
                         }
 
                         wndPos.hwndInsertAfter = NativeMethods.GetWindow(ownerWnd, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);
@@ -400,7 +403,7 @@ namespace CairoDesktop
         private void DesktopToolbar_Closing(object sender, CancelEventArgs e)
         {
 
-            if (!CairoApplication.IsShuttingDown && !AllowClose)
+            if (!_cairoApplication.IsShuttingDown && !AllowClose)
             {
                 e.Cancel = true;
             }

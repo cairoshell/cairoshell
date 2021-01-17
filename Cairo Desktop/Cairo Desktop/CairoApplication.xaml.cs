@@ -13,11 +13,11 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.Common.SupportingClasses;
 
 namespace CairoDesktop
@@ -33,7 +33,7 @@ namespace CairoDesktop
         private bool _forceEnableShellMode;
         private bool _forceDisableShellMode;
 
-        // Needed for WPF?
+        // Parameter-less constructor required for WPF
         public CairoApplication()
         {
         }
@@ -52,7 +52,7 @@ namespace CairoDesktop
             Commands = new List<ICommand>();
             CairoMenu = new List<IMenuItem>();
             Places = new List<IMenuItem>();
-            MenuExtras = new List<MenuExtra>();
+            MenuExtras = new List<IMenuExtra<UserControl>>();
             
             InitializeComponent();
         }
@@ -295,7 +295,12 @@ namespace CairoDesktop
             Dispatcher.Invoke(Shutdown, DispatcherPriority.Normal);
         }
 
-        public static bool IsShuttingDown { get; set; }
+        public void Dispatch(Action action)
+        {
+            Dispatcher.BeginInvoke(action);
+        }
+
+        public bool IsShuttingDown { get; private set; }
 
         public static string StartupPath => Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).Location);
 
@@ -317,6 +322,6 @@ namespace CairoDesktop
 
         public List<IMenuItem> Places { get; }
 
-        public List<MenuExtra> MenuExtras { get; }
+        public List<IMenuExtra<UserControl>> MenuExtras { get; }
     }
 }
