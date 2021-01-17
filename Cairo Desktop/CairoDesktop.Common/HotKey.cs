@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using ManagedShell.Common;
 using static ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop.Common

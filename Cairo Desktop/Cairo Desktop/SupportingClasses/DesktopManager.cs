@@ -1,6 +1,5 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -9,6 +8,7 @@ using System.Windows.Media;
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.SupportingClasses;
 using Microsoft.Extensions.Logging;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 

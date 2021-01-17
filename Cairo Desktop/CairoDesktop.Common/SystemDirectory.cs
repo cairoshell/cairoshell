@@ -147,7 +147,7 @@ namespace CairoDesktop.Common {
         }
 
         private SystemFile addFile(string filePath) {
-            if (ShellHelper.Exists(filePath) && isFileVisible(filePath))
+            if (ShellHelper.IsFileVisible(filePath))
             {
                 SystemFile newFile = new SystemFile(filePath, this);
                 if (newFile.Name != null)
@@ -202,24 +202,6 @@ namespace CairoDesktop.Common {
                 removeFile(oldPath);
         }
 
-        private bool isFileVisible(string fileName)
-        {
-            if (ShellHelper.Exists(fileName))
-            {
-                try
-                {
-                    FileAttributes attributes = File.GetAttributes(fileName);
-                    return (((attributes & FileAttributes.Hidden) != FileAttributes.Hidden) && ((attributes & FileAttributes.System) != FileAttributes.System) && ((attributes & FileAttributes.Temporary) != FileAttributes.Temporary));
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-
-            return false;
-        }
-
         private void initializeAsync()
         {
             files.Clear();
@@ -245,7 +227,7 @@ namespace CairoDesktop.Common {
             IEnumerable<string> dirs = Directory.EnumerateDirectories(DirectoryInfo.FullName);
             foreach (string subDir in dirs)
             {
-                if (isFileVisible(subDir))
+                if (ShellHelper.IsFileVisible(subDir))
                 {
                     files.Add(new SystemFile(subDir, this));
                 }
@@ -254,7 +236,7 @@ namespace CairoDesktop.Common {
             IEnumerable<string> dirFiles = Directory.EnumerateFiles(DirectoryInfo.FullName, "*");
             foreach (string file in dirFiles)
             {
-                if (isFileVisible(file))
+                if (ShellHelper.IsFileVisible(file))
                 {
                     files.Add(new SystemFile(file, this));
                 }

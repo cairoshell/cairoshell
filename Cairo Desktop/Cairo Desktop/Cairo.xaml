@@ -1279,13 +1279,22 @@
                                                        TextTrimming="CharacterEllipsis"
                                                        HorizontalAlignment="Left"
                                                        Width="268" />
-                                            <TextBlock Foreground="{DynamicResource ResourceKey=SearchResultSubtext}"
-                                                       FontSize="{DynamicResource ResourceKey=MediumFontSize}"
-                                                       FontFamily="{DynamicResource ResourceKey=GlobalFontFamily}"
-                                                       Text="{Binding Path=DateModifiedDisplay}"
-                                                       TextTrimming="CharacterEllipsis"
-                                                       HorizontalAlignment="Left"
-                                                       Width="268" />
+                                            <StackPanel Orientation="Horizontal"
+                                                        MaxWidth="268">
+                                                <TextBlock Foreground="{DynamicResource ResourceKey=SearchResultSubtext}"
+                                                           FontSize="{DynamicResource ResourceKey=MediumFontSize}"
+                                                           FontFamily="{DynamicResource ResourceKey=GlobalFontFamily}"
+                                                           Text="{Binding Path=(l10n:DisplayString.sSearch_LastModified)}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           Margin="0,0,3,0"
+                                                           HorizontalAlignment="Left" />
+                                                <TextBlock Foreground="{DynamicResource ResourceKey=SearchResultSubtext}"
+                                                           FontSize="{DynamicResource ResourceKey=MediumFontSize}"
+                                                           FontFamily="{DynamicResource ResourceKey=GlobalFontFamily}"
+                                                           Text="{Binding Path=DateModified}"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           HorizontalAlignment="Left" />
+                                            </StackPanel>
                                         </StackPanel>
                                     </StackPanel>
                                 </ItemContainerTemplate>
