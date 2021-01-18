@@ -94,8 +94,8 @@ namespace CairoDesktop.MenuBarExtensions
                 {
                     Top = (int)(dimensions.Top * dimensions.DpiScale),
                     Left = (int)(dimensions.Left * dimensions.DpiScale),
-                    Bottom = (int)((dimensions.Top + Height) * dimensions.DpiScale),
-                    Right = (int)((dimensions.Left + Width) * dimensions.DpiScale)
+                    Bottom = (int)((dimensions.Top + dimensions.Height) * dimensions.DpiScale),
+                    Right = (int)((dimensions.Left + dimensions.Width) * dimensions.DpiScale)
                 }
             };
         }

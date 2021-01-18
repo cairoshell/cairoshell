@@ -185,8 +185,6 @@ namespace CairoDesktop
                     radTrayMode0.IsChecked = false;
                     radTrayMode1.IsChecked = true;
                     break;
-                default:
-                    break;
             }
         }
 

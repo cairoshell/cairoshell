@@ -585,6 +585,7 @@ namespace CairoDesktop
         {
             return new MenuBarDimensions
             {
+                ScreenEdge = (int)AppBarEdge,
                 DpiScale = DpiScale,
                 Height = Height,
                 Width = Width,
