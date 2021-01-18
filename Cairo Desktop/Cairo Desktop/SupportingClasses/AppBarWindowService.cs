@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
+using CairoDesktop.Infrastructure.Services;
 using ManagedShell;
 
 namespace CairoDesktop.SupportingClasses

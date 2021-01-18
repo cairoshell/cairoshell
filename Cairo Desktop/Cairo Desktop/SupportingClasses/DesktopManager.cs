@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.Windows.Media;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Infrastructure.Services;
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;

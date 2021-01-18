@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
+using CairoDesktop.Infrastructure.Services;
 using ManagedShell.Interop;
 
 namespace CairoDesktop.SupportingClasses

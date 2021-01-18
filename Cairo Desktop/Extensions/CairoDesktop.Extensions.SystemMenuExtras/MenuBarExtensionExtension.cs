@@ -1,8 +1,8 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.ExtensionMethods;
-using CairoDesktop.SupportingClasses;
 using ManagedShell;
 using System.Collections.Generic;
+using CairoDesktop.Infrastructure.Services;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {

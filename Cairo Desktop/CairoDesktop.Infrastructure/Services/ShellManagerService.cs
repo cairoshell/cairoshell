@@ -4,7 +4,7 @@ using System;
 using System.ComponentModel;
 using ManagedShell.Common.Enums;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Infrastructure.Services
 {
     public class ShellManagerService : IDisposable
     {

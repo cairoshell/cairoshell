@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using CairoDesktop.Infrastructure.Services;
 
 namespace CairoDesktop
 {

@@ -81,6 +81,7 @@
     <Compile Include="ExtensionMethods\ListExtensions.cs" />
     <Compile Include="ObjectModel\UserControlMenuBarExtension.cs" />
     <Compile Include="Services\ExtensionService.cs" />
+    <Compile Include="Services\ShellManagerService.cs" />
     <Compile Include="Services\WinSparkleUpdateService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +92,10 @@
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">
       <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
       <Name>CairoDesktop.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj">
+      <Project>{8e50fc68-8bf3-44f2-9229-708500625757}</Project>
+      <Name>CairoDesktop.Configuration</Name>
     </ProjectReference>
     <ProjectReference Include="..\CairoDesktop.Interop.WinSparkle\CairoDesktop.Interop.WinSparkle.csproj">
       <Project>{3be34d36-b004-42fa-ae2c-3f4f8bd3861f}</Project>
