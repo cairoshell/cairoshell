@@ -64,8 +64,6 @@ namespace CairoDesktop
 
             Host.Start();
 
-            SetShellReadyEvent();
-
             WriteApplicationDebugInfoToConsole();
 
             LoadExtensions();
@@ -80,6 +78,8 @@ namespace CairoDesktop
             base.OnStartup(e);
 
             SetupWindowServices();
+
+            ShellHelper.SetShellReadyEvent();
 
 #if ENABLEFIRSTRUN
             FirstRun();

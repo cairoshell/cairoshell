@@ -6,7 +6,7 @@
     <UseWPF>True</UseWPF>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net471'">
     <Reference Include="System.Configuration" />
   </ItemGroup>
 

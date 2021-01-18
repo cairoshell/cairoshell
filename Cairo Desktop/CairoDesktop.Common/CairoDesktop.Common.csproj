@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ManagedShell" Version="0.0.30" />
+    <PackageReference Include="ManagedShell" Version="0.0.31" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
@@ -19,7 +19,7 @@
     <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net471'">
     <Reference Include="Microsoft.VisualBasic" />
   </ItemGroup>
 
