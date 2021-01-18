@@ -1,159 +1,36 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{963EB868-7672-4557-8FE9-6A1A388AA5FF}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CairoDesktop.Common</RootNamespace>
-    <AssemblyName>CairoDesktop.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>net471</TargetFramework>
+    <Platforms>x64;AnyCPU</Platforms>
+    <UseWPF>True</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Build\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\Build\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ManagedShell" Version="0.0.30" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.XML" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CairoMessage.xaml.cs">
-      <DependentUpon>CairoMessage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CairoMessageImage.cs" />
-    <Compile Include="CommandLineParser.cs" />
-    <Compile Include="Dialogs.cs" />
-    <Compile Include="ExtensionMethods\SettingsExtensions.cs" />
-    <Compile Include="HotKey.cs" />
-    <Compile Include="HotKeyModifier.cs" />
-    <Compile Include="Logging\LogSeverityExtensions.cs" />
-    <Compile Include="Logging\NullScope.cs" />
-    <Compile Include="Logging\Other\ManagedShellFileLoggerOptions.cs" />
-    <Compile Include="Logging\Other\ManagedShellLogger.cs" />
-    <Compile Include="Logging\Other\ManagedShellLoggerProvider.cs" />
-    <Compile Include="NavigationManager.cs" />
-    <Compile Include="Helpers\RegistryChangeMonitor.cs" />
-    <Compile Include="LowLevelKeyboardListener.cs" />
-    <Compile Include="Helpers\EventHandlerHelper.cs" />
-    <Compile Include="Helpers\TypeHelper.cs" />
-    <Compile Include="DragDropHandler.cs" />
-    <Compile Include="HotKeyManager.cs" />
-    <Compile Include="InvokingObservableCollection.cs" />
-    <Compile Include="KeyboardUtilities.cs" />
-    <Compile Include="Logging\LogSeverity.cs" />
-    <Compile Include="MessageBoxButtonConverter.cs" />
-    <Compile Include="CairoMessageImageConverter.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShellContextMenu.cs" />
-    <Compile Include="StacksManager.cs" />
-    <Compile Include="SystemDirectory.cs" />
-    <Compile Include="SystemFile.cs" />
-    <Compile Include="SystemPower.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj">
-      <Project>{8e50fc68-8bf3-44f2-9229-708500625757}</Project>
-      <Name>CairoDesktop.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
-      <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
-      <Name>CairoDesktop.Interop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj">
-      <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>
-      <Name>CairoDesktop.Localization</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="CairoMessage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
+
   <ItemGroup>
     <Resource Include="Resources\dialogIconCairo.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\dialogIconError.png" />
     <Resource Include="Resources\dialogIconInformation.png" />
     <Resource Include="Resources\dialogIconWarning.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\dialogIconLogOff.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\dialogIconRestart.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\dialogIconShutDown.png" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="ManagedShell">
-      <Version>0.0.30</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging">
-      <Version>5.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions">
-      <Version>5.0.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
