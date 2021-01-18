@@ -8,12 +8,10 @@ namespace CairoDesktop.SupportingClasses
 {
     public class TaskbarWindowService : AppBarWindowService
     {
-        private readonly ICairoApplication _cairoApplication;
         private readonly DesktopManager _desktopManager;
 
-        public TaskbarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, DesktopManager desktopManager) : base(shellManagerService, windowManager)
+        public TaskbarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, DesktopManager desktopManager) : base(cairoApplication, shellManagerService, windowManager)
         {
-            _cairoApplication = cairoApplication;
             _desktopManager = desktopManager;
 
             EnableMultiMon = Settings.Instance.EnableTaskbarMultiMon;
@@ -23,6 +21,21 @@ namespace CairoDesktop.SupportingClasses
             {
                 _shellManager.ExplorerHelper.HideExplorerTaskbar = true;
                 _shellManager.AppBarManager.AppBarEvent += AppBarEvent;
+            }
+        }
+
+        protected override void HandleSettingChange(string setting)
+        {
+            switch (setting)
+            {
+                case "EnableTaskbar":
+                    _shellManager.ExplorerHelper.HideExplorerTaskbar = Settings.Instance.EnableTaskbar;
+                    
+                    HandleEnableServiceChanged(Settings.Instance.EnableTaskbar);
+                    break;
+                case "EnableTaskbarMultiMon":
+                    HandleEnableMultiMonChanged(Settings.Instance.EnableTaskbarMultiMon);
+                    break;
             }
         }
 
@@ -65,6 +78,8 @@ namespace CairoDesktop.SupportingClasses
 
         public override void Dispose()
         {
+            base.Dispose();
+            
             if (EnableService)
             {
                 _shellManager.AppBarManager.AppBarEvent -= AppBarEvent;

@@ -7,16 +7,27 @@ namespace CairoDesktop.SupportingClasses
 {
     public class MenuBarWindowService : AppBarWindowService
     {
-        private readonly ICairoApplication _cairoApplication;
         private readonly IApplicationUpdateService _updateService;
 
-        public MenuBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, IApplicationUpdateService updateService) : base(shellManagerService, windowManager)
+        public MenuBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, IApplicationUpdateService updateService) : base(cairoApplication, shellManagerService, windowManager)
         {
-            _cairoApplication = cairoApplication;
             _updateService = updateService;
 
             EnableMultiMon = Settings.Instance.EnableMenuBarMultiMon;
             EnableService = Settings.Instance.EnableMenuBar;
+        }
+
+        protected override void HandleSettingChange(string setting)
+        {
+            switch (setting)
+            {
+                case "EnableMenuBar":
+                    HandleEnableServiceChanged(Settings.Instance.EnableMenuBar);
+                    break;
+                case "EnableMenuBarMultiMon":
+                    HandleEnableMultiMonChanged(Settings.Instance.EnableMenuBarMultiMon);
+                    break;
+            }
         }
 
         protected override void OpenWindow(Screen screen)

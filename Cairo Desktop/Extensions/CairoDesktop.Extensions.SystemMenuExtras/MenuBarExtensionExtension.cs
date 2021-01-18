@@ -28,12 +28,12 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
                                 new ClockMenuBarExtension(),
                                 new SearchMenuBarExtension(_cairoApplication));
 
-            MenuExtras.AddTo(CairoApplication.Current.MenuBarExtensions);
+            MenuExtras.AddTo(_cairoApplication.MenuBarExtensions);
         }
 
         public void Stop()
         {
-            MenuExtras.RemoveFrom(CairoApplication.Current.MenuBarExtensions);
+            MenuExtras.RemoveFrom(_cairoApplication.MenuBarExtensions);
             MenuExtras.Clear();
             MenuExtras = null;
         }

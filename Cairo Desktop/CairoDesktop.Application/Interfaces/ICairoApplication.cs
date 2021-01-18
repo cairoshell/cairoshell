@@ -9,6 +9,8 @@ namespace CairoDesktop.Application.Interfaces
         
         List<IShellExtension> Extensions { get; }
 
+        List<IMenuBarExtension> MenuBarExtensions { get; }
+
         List<IMenuItem> Places { get; }
         
         bool IsShuttingDown { get; }

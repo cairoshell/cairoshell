@@ -113,13 +113,13 @@ namespace CairoDesktop
 
         private void SetupMenuBarExtensions()
         {
-            foreach (var userControlMenuBarExtension in CairoApplication.Current.MenuBarExtensions.OfType<UserControlMenuBarExtension>())
+            foreach (var userControlMenuBarExtension in _cairoApplication.MenuBarExtensions.OfType<UserControlMenuBarExtension>())
             {
-                    var menuExtra = userControlMenuBarExtension.StartControl(this);
-                    if (menuExtra != null)
-                    {
-                        MenuExtrasHost.Children.Add(menuExtra);
-                    }
+                var menuExtra = userControlMenuBarExtension.StartControl(this);
+                if (menuExtra != null)
+                {
+                    MenuExtrasHost.Children.Add(menuExtra);
+                }
             }
 
             if (Settings.Instance.EnableSysTray)
@@ -386,7 +386,7 @@ namespace CairoDesktop
 
         protected override void CustomClosing()
         {
-            if (!_windowManager.IsSettingDisplays && !_cairoApplication.IsShuttingDown)
+            if (!_windowManager.IsSettingDisplays && !AllowClose)
             {
                 return;
             }

@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ManagedShell.Common.SupportingClasses; // Required for StartupRunner; excluded from debug builds
 
 namespace CairoDesktop
 {
