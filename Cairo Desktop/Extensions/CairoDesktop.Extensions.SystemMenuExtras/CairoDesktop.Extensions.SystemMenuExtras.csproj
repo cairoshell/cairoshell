@@ -71,26 +71,26 @@
     <Compile Include="ActionCenter.xaml.cs">
       <DependentUpon>ActionCenter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ActionCenterMenuExtra.cs" />
+    <Compile Include="ActionCenterMenuBarExtension.cs" />
     <Compile Include="Clock.xaml.cs">
       <DependentUpon>Clock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ClockMenuExtra.cs" />
+    <Compile Include="ClockMenuBarExtension.cs" />
     <Compile Include="DependencyRegistrant.cs" />
     <Compile Include="Search.xaml.cs">
       <DependentUpon>Search.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SearchMenuExtra.cs" />
-    <Compile Include="SystemMenuExtrasExtension.cs" />
+    <Compile Include="SearchMenuBarExtension.cs" />
+    <Compile Include="MenuBarExtensionExtension.cs" />
     <Compile Include="SystemTray.xaml.cs">
       <DependentUpon>SystemTray.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SystemTrayMenuExtra.cs" />
+    <Compile Include="SystemTrayMenuBarExtension.cs" />
     <Compile Include="Volume.xaml.cs">
       <DependentUpon>Volume.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VolumeMenuExtra.cs" />
+    <Compile Include="VolumeMenuBarExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="ActionCenter.xaml">

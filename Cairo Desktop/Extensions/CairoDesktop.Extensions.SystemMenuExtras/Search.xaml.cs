@@ -20,7 +20,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
         public bool _isPrimaryScreen;
         private static bool isSearchHotkeyRegistered;
 
-        public Search(ICairoApplication cairoApplication, IMenuExtraHost host)
+        public Search(ICairoApplication cairoApplication, IMenuBar host)
         {
             InitializeComponent();
 

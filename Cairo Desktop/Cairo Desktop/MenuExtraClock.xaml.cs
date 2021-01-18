@@ -15,7 +15,7 @@ namespace CairoDesktop
         private readonly bool _isPrimaryScreen;
         private static bool isClockHotkeyRegistered;
 
-        public MenuExtraClock(IMenuExtraHost host)
+        public MenuExtraClock(IMenuBar host)
         {
             InitializeComponent();
 

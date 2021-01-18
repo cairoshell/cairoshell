@@ -1,15 +1,15 @@
-﻿using System.Windows.Controls;
-using CairoDesktop.Application.Interfaces;
+﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.ObjectModel;
+using System.Windows.Controls;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
-    class ClockMenuExtra : MenuExtra
+    class ClockMenuBarExtension : UserControlMenuBarExtension
     {
         private Clock _clock;
 
-        public override UserControl StartControl(IMenuExtraHost host)
+        public override UserControl StartControl(IMenuBar host)
         {
             if (!Settings.Instance.EnableMenuExtraClock)
             {

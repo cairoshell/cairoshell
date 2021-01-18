@@ -6,17 +6,17 @@ using ManagedShell.WindowsTray;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
-    class SystemTrayMenuExtra : MenuExtra
+    class SystemTrayMenuBarExtension : UserControlMenuBarExtension
     {
-        private NotificationArea _notificationArea;
+        private readonly NotificationArea _notificationArea;
         private SystemTray _systemTray;
 
-        internal SystemTrayMenuExtra(NotificationArea notificationArea)
+        internal SystemTrayMenuBarExtension(NotificationArea notificationArea)
         {
             _notificationArea = notificationArea;
         }
 
-        public override UserControl StartControl(IMenuExtraHost host)
+        public override UserControl StartControl(IMenuBar host)
         {
             if (!Settings.Instance.EnableSysTray)
             {

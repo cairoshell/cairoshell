@@ -9,9 +9,11 @@ using ManagedShell;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -19,7 +21,7 @@ using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop
 {
-    public partial class MenuBar : CairoAppBarWindow, IMenuExtraHost
+    public partial class MenuBar : CairoAppBarWindow, IMenuBar
     {
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ShellManager _shellManager;
@@ -109,13 +111,15 @@ namespace CairoDesktop
             }
         }
 
-        private void setupMenuExtras()
+        private void SetupMenuBarExtensions()
         {
-            // set up menu extras
-            foreach (var extra in CairoApplication.Current.MenuExtras)
+            foreach (var userControlMenuBarExtension in CairoApplication.Current.MenuBarExtensions.OfType<UserControlMenuBarExtension>())
             {
-                UserControl menuExtra = extra.StartControl(this);
-                if (menuExtra != null) MenuExtrasHost.Children.Add(menuExtra);
+                    var menuExtra = userControlMenuBarExtension.StartControl(this);
+                    if (menuExtra != null)
+                    {
+                        MenuExtrasHost.Children.Add(menuExtra);
+                    }
             }
 
             if (Settings.Instance.EnableSysTray)
@@ -208,7 +212,7 @@ namespace CairoDesktop
         {
             base.OnSourceInitialized(sender, e);
             
-            setupMenuExtras();
+            SetupMenuBarExtensions();
 
             registerCairoMenuHotKey();
 
@@ -621,9 +625,9 @@ namespace CairoDesktop
             return Screen.Primary;
         }
 
-        public MenuExtraHostDimensions GetDimensions()
+        public MenuBarDimensions GetDimensions()
         {
-            return new MenuExtraHostDimensions
+            return new MenuBarDimensions
             {
                 DpiScale = DpiScale,
                 Height = Height,

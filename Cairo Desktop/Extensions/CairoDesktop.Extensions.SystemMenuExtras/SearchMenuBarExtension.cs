@@ -5,25 +5,23 @@ using CairoDesktop.Infrastructure.ObjectModel;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
-    class SearchMenuExtra : MenuExtra
+    class SearchMenuBarExtension : UserControlMenuBarExtension
     {
         private readonly ICairoApplication _cairoApplication;
         private Search _search;
 
-        internal SearchMenuExtra(ICairoApplication cairoApplication)
+        internal SearchMenuBarExtension(ICairoApplication cairoApplication)
         {
             _cairoApplication = cairoApplication;
         }
 
-        public override UserControl StartControl(IMenuExtraHost host)
+        public override UserControl StartControl(IMenuBar host)
         {
-            if (Settings.Instance.EnableMenuExtraSearch)
-            {
-                _search = new Search(_cairoApplication, host);
-                return _search;
-            }
+            if (!Settings.Instance.EnableMenuExtraSearch) 
+                return null;
 
-            return null;
+            _search = new Search(_cairoApplication, host);
+            return _search;
         }
     }
 }

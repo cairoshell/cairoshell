@@ -15,10 +15,10 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 {
     public partial class SystemTray
     {
-        private readonly IMenuExtraHost Host;
+        private readonly IMenuBar Host;
         private readonly NotificationArea _notificationArea;
 
-        public SystemTray(IMenuExtraHost host, NotificationArea notificationArea)
+        public SystemTray(IMenuBar host, NotificationArea notificationArea)
         {
             InitializeComponent();
 
@@ -85,7 +85,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
 
         private TrayHostSizeData GetTrayHostSizeData()
         {
-            MenuExtraHostDimensions dimensions = Host.GetDimensions();
+            MenuBarDimensions dimensions = Host.GetDimensions();
 
             return new TrayHostSizeData
             {
