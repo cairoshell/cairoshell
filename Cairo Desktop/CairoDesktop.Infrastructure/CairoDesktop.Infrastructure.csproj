@@ -59,11 +59,8 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -100,10 +97,6 @@
     <ProjectReference Include="..\CairoDesktop.Interop.WinSparkle\CairoDesktop.Interop.WinSparkle.csproj">
       <Project>{3be34d36-b004-42fa-ae2c-3f4f8bd3861f}</Project>
       <Name>CairoDesktop.Interop.WinSparkle</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
-      <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
-      <Name>CairoDesktop.Interop</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
