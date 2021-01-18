@@ -79,7 +79,7 @@
     <Compile Include="DependencyInjection\DependencyInjectionExtensions.cs" />
     <Compile Include="DependencyInjection\DependencyResolver.cs" />
     <Compile Include="ExtensionMethods\ListExtensions.cs" />
-    <Compile Include="ObjectModel\MenuExtra.cs" />
+    <Compile Include="ObjectModel\UserControlMenuBarExtension.cs" />
     <Compile Include="Services\ExtensionService.cs" />
     <Compile Include="Services\WinSparkleUpdateService.cs" />
   </ItemGroup>

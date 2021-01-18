@@ -8,7 +8,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
     {
         public void Register(IDependencyRegistrar registrar)
         {
-            registrar.AddSingleton<IShellExtension, SystemMenuExtrasExtension>();
+            registrar.AddSingleton<IShellExtension, MenuBarExtensionsShellExtension>();
         }
     }
 }

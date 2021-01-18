@@ -1,14 +1,14 @@
-﻿using System.Windows.Controls;
+﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
-using ManagedShell.Common.Helpers;
-using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.ObjectModel;
+using ManagedShell.Common.Helpers;
+using System.Windows.Controls;
 
 namespace CairoDesktop.Extensions.SystemMenuExtras
 {
-    class ActionCenterMenuExtra : MenuExtra
+    class ActionCenterMenuBarExtension : UserControlMenuBarExtension
     {
-        public override UserControl StartControl(IMenuExtraHost host)
+        public override UserControl StartControl(IMenuBar host)
         {
             if (Settings.Instance.EnableMenuExtraActionCenter && EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
             {

@@ -15,7 +15,7 @@ namespace CairoDesktop.Extensions.SystemMenuExtras
     {
         private IntPtr _parentHwnd;
 
-        public ActionCenter(IMenuExtraHost host)
+        public ActionCenter(IMenuBar host)
         {
             InitializeComponent();
 

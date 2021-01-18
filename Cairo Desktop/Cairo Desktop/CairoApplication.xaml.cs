@@ -13,12 +13,10 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-using ManagedShell.Common.SupportingClasses;
 
 namespace CairoDesktop
 {
@@ -26,7 +24,7 @@ namespace CairoDesktop
     {
         private readonly ILogger<CairoApplication> _logger;
         public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
-        
+
         private CommandLineParser _commandLineParser;
         private bool _isRestart;
         private bool _isTour;
@@ -52,8 +50,8 @@ namespace CairoDesktop
             Commands = new List<ICommand>();
             CairoMenu = new List<IMenuItem>();
             Places = new List<IMenuItem>();
-            MenuExtras = new List<IMenuExtra<UserControl>>();
-            
+            MenuBarExtensions = new List<IMenuBarExtension>();
+
             InitializeComponent();
         }
 
@@ -61,7 +59,7 @@ namespace CairoDesktop
         {
             // Initialize current shell information here, since it won't be accurate if we wait until after we create our own windows
             SetIsCairoRunningAsShell();
-            
+
             Host.Start();
 
             SetShellReadyEvent();
@@ -322,6 +320,6 @@ namespace CairoDesktop
 
         public List<IMenuItem> Places { get; }
 
-        public List<IMenuExtra<UserControl>> MenuExtras { get; }
+        public List<IMenuBarExtension> MenuBarExtensions { get; }
     }
 }

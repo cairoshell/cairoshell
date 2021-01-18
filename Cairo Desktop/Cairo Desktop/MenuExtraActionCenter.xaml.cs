@@ -15,7 +15,7 @@ namespace CairoDesktop
     {
         private IntPtr _parentHwnd;
 
-        public MenuExtraActionCenter(IMenuExtraHost host)
+        public MenuExtraActionCenter(IMenuBar host)
         {
             InitializeComponent();
 

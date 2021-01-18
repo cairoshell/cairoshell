@@ -3,12 +3,12 @@ using CairoDesktop.Application.Structs;
 
 namespace CairoDesktop.Application.Interfaces
 {
-    public interface IMenuExtraHost
+    public interface IMenuBar
     {
         IntPtr GetHandle();
         
         bool GetIsPrimaryDisplay();
 
-        MenuExtraHostDimensions GetDimensions();
+        MenuBarDimensions GetDimensions();
     }
 }
