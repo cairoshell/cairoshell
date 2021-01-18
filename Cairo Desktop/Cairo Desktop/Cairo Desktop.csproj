@@ -1,486 +1,130 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F0383E91-6ADC-4016-9E21-D3DC0FFC55FF}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CairoDesktop</RootNamespace>
-    <AssemblyName>CairoDesktop</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <ApplicationIcon>Application.ico</ApplicationIcon>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <StartupObject>CairoDesktop.Program</StartupObject>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkProfile />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFramework>net471</TargetFramework>
+    <Platforms>x64;AnyCPU</Platforms>
+    <UseWPF>True</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+
+  <PropertyGroup>
+    <ApplicationIcon>Application.ico</ApplicationIcon>
+    <StartupObject>CairoDesktop.Program</StartupObject>
+    <OutputType>WinExe</OutputType>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RootNamespace>CairoDesktop</RootNamespace>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AssemblyName>CairoDesktop</AssemblyName>
+    <Company>Cairo Development Team</Company>
+    <Authors>Cairo Development Team</Authors>
+    <Product>Cairo Desktop Environment</Product>
+    <Copyright>Copyright © 2021 Cairo Development Team</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\Build\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;ENABLEFIRSTRUN</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <OutputPath>..\Build\x86\Release\</OutputPath>
     <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <DebugSymbols>true</DebugSymbols>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutputPath>..\Build\x64\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;ENABLEFIRSTRUN</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\Build\x64\Release\</OutputPath>
     <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Compile Include="CairoApplication.InitializationRoutines.cs" />
-    <Compile Include="CairoWallpaperStyle.cs" />
-    <Compile Include="DesktopOverlay.xaml.cs">
-      <DependentUpon>DesktopOverlay.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DwmThumbnail.xaml.cs">
-      <DependentUpon>DwmThumbnail.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Icon.xaml.cs">
-      <DependentUpon>Icon.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="ProgramsMenu.xaml.cs">
-      <DependentUpon>ProgramsMenu.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="StacksScroller.xaml.cs">
-      <DependentUpon>StacksScroller.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SupportingClasses\AppBarWindowService.cs" />
-    <Compile Include="SupportingClasses\BingWallpaperClient.cs" />
-    <Compile Include="SupportingClasses\CairoAppBarWindow.cs" />
-    <Compile Include="SupportingClasses\DateTimeValidationRule.cs" />
-    <Compile Include="SupportingClasses\DesktopManager.cs" />
-    <Compile Include="SupportingClasses\EnumUtility.cs" />
-    <Compile Include="SupportingClasses\IWindowService.cs" />
-    <Compile Include="SupportingClasses\MenuBarWindowService.cs" />
-    <Compile Include="SupportingClasses\PicSumWallpaperClient.cs" />
-    <Compile Include="SupportingClasses\TaskbarWindowService.cs" />
-    <Compile Include="SupportingClasses\WindowManager.cs" />
-    <Compile Include="SupportingClasses\FilePathValidationRule.cs" />
-    <Compile Include="SupportingClasses\FolderHelper.cs" />
-    <Compile Include="SupportingClasses\DirectoryPathValidationRule.cs" />
-    <Compile Include="SupportingClasses\ShellHotKeyService.cs" />
-    <Compile Include="SupportingClasses\WindowManagerEventArgs.cs" />
-    <Compile Include="TaskThumbWindow.xaml.cs">
-      <DependentUpon>TaskThumbWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Welcome.xaml.cs">
-      <DependentUpon>Welcome.xaml</DependentUpon>
-    </Compile>
-    <Page Include="DesktopOverlay.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="DwmThumbnail.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <None Include="Fade.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Page Include="Icon.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <None Include="MiniMeow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Page Include="ProgramsMenu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="StacksScroller.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TaskThumbWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Welcome.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <None Include="Flat.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.XML" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="WindowsBase">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="PresentationCore">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="PresentationFramework">
-      <RequiredTargetFramework>3.0</RequiredTargetFramework>
-      <Private>False</Private>
-    </Reference>
-    <Page Include="CairoSettingsWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="DesktopNavigationToolbar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TaskButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="QuickLaunchButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="CairoSettingsWindow.xaml.cs">
-      <DependentUpon>CairoSettingsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DesktopNavigationToolbar.xaml.cs">
-      <DependentUpon>DesktopNavigationToolbar.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TaskButton.xaml.cs">
-      <DependentUpon>TaskButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="QuickLaunchButton.xaml.cs">
-      <DependentUpon>QuickLaunchButton.xaml</DependentUpon>
-    </Compile>
+    <Page Remove="Fade.xaml" />
+    <Page Remove="Flat.xaml" />
+    <Page Remove="MiniMeow.xaml" />
+    <Page Remove="White.xaml" />
   </ItemGroup>
+
   <ItemGroup>
-    <ApplicationDefinition Include="CairoApplication.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Page Include="Cairo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <None Include="app.config" />
-    <None Include="app.manifest">
-      <SubType>Designer</SubType>
+    <None Include="Fade.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Flat.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="MiniMeow.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="White.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Page Include="Desktop.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="DesktopIcons.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MenuBar.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MenuBarShadow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="StacksContainer.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Taskbar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Compile Include="CairoApplication.xaml.cs">
-      <DependentUpon>CairoApplication.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="MenuBar.xaml.cs">
-      <DependentUpon>MenuBar.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="DesktopIcons.xaml.cs">
-      <DependentUpon>DesktopIcons.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SupportingClasses\CustomCommands.cs" />
-    <Compile Include="Desktop.xaml.cs">
-      <DependentUpon>Desktop.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MenuBarShadow.xaml.cs">
-      <DependentUpon>MenuBarShadow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="StacksContainer.xaml.cs">
-      <DependentUpon>StacksContainer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="SupportingClasses\TaskButtonStyleConverter.cs" />
-    <Compile Include="Taskbar.xaml.cs">
-      <DependentUpon>Taskbar.xaml</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <AppDesigner Include="Properties\" />
+    <PackageReference Include="ManagedShell" Version="0.0.30" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Resource Include="Resources\searchDefault.png">
-    </Resource>
+    <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Application\CairoDesktop.Application.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj" />
+    <ProjectReference Include="..\CairoDesktop.MenuBarExtensions\CairoDesktop.MenuBarExtensions.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+  </ItemGroup>
+
   <ItemGroup>
     <Resource Include="Application.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\controlsBack.png">
-    </Resource>
-    <Resource Include="Resources\controlsForward.png">
-    </Resource>
-    <Resource Include="Resources\controlsHome.png">
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="Resources\searchDefault.png" />
+    <Resource Include="Resources\controlsBack.png" />
+    <Resource Include="Resources\controlsForward.png" />
+    <Resource Include="Resources\controlsHome.png" />
     <Resource Include="Resources\menubarShadow.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\dateTimeIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\searchBlack.png" />
     <Resource Include="Resources\menubarWhite.png" />
-    <Resource Include="Resources\nullIcon.png">
-    </Resource>
-    <Resource Include="Resources\taskListIcon.png">
-    </Resource>
+    <Resource Include="Resources\nullIcon.png" />
+    <Resource Include="Resources\taskListIcon.png" />
     <Resource Include="Resources\controlsBrowse.png" />
     <Resource Include="Resources\taskViewIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\actionCenterDefault.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\actionCenterBlack.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\cairoMenuBlack.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\cairoMenuDefault.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\desktopOverlayIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Welcome\cairoIcon.png" />
     <Resource Include="Resources\Welcome\desktop.jpg" />
     <Resource Include="Resources\Welcome\menuBar.png" />
     <Resource Include="Resources\Welcome\taskbar.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\volumeIconDefault.png" />
     <Resource Include="Resources\volumeIconBlack.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\volumeLowIconBlack.png" />
     <Resource Include="Resources\volumeLowIconDefault.png" />
     <Resource Include="Resources\volumeMuteIconBlack.png" />
     <Resource Include="Resources\volumeMuteIconDefault.png" />
     <Resource Include="Resources\volumeOffIconBlack.png" />
     <Resource Include="Resources\volumeOffIconDefault.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\controlsUp.png" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj">
-      <Project>{DE9674CC-507E-4049-9152-5C899B9F0939}</Project>
-      <Name>CairoDesktop.AppGrabber</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Application\CairoDesktop.Application.csproj">
-      <Project>{3ff023f4-7ce3-4171-95b7-b5af10332658}</Project>
-      <Name>CairoDesktop.Application</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj">
-      <Project>{963eb868-7672-4557-8fe9-6a1a388aa5ff}</Project>
-      <Name>CairoDesktop.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj">
-      <Project>{8E50FC68-8BF3-44F2-9229-708500625757}</Project>
-      <Name>CairoDesktop.Configuration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj">
-      <Project>{583ac66f-5b77-4ee2-aba1-ed2cdc64b5f2}</Project>
-      <Name>CairoDesktop.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj">
-      <Project>{233781c8-83e4-47a6-847e-fa7a31b1cc51}</Project>
-      <Name>CairoDesktop.Interop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj">
-      <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>
-      <Name>CairoDesktop.Localization</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CairoDesktop.MenuBarExtensions\CairoDesktop.MenuBarExtensions.csproj">
-      <Project>{60c21248-96f9-4358-82c1-b920d0bb86c1}</Project>
-      <Name>CairoDesktop.MenuBarExtensions</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <PackageReference Include="ManagedShell">
-      <Version>0.0.30</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine">
-      <Version>5.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables">
-      <Version>5.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>5.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Hosting">
-      <Version>5.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging">
-      <Version>5.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Configuration">
-      <Version>5.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Console">
-      <Version>5.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug">
-      <Version>5.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Options">
-      <Version>5.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions">
-      <Version>5.0.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
