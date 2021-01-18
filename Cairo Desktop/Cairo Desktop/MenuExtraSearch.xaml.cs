@@ -9,7 +9,6 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
-using ManagedShell.Common.SupportingClasses;
 using ManagedShell.Interop;
 
 namespace CairoDesktop
@@ -32,8 +31,6 @@ namespace CairoDesktop
 
         private void SetupSearch()
         {
-            CommandBindings.Add(new CommandBinding(CustomCommands.OpenSearchResult, ExecuteOpenSearchResult));
-
             // Show the search button only if the service is running
             if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
             {
@@ -158,17 +155,6 @@ namespace CairoDesktop
             searchStr.Focusable = true;
             searchStr.Focus();
             Keyboard.Focus(searchStr);
-        }
-
-        public void ExecuteOpenSearchResult(object sender, ExecutedRoutedEventArgs e)
-        {
-            if (e.Parameter is SearchResult searchObj)
-            {
-                if (!ShellHelper.StartProcess(searchObj.Path))
-                {
-                    CairoMessage.Show(Localization.DisplayString.sSearch_Error, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
-                }
-            }
         }
 
         internal void ToggleSearch()

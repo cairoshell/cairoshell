@@ -18,8 +18,6 @@ namespace CairoDesktop
         {
         }
 
-        public static RoutedUICommand OpenSearchResult { get; } = new RoutedUICommand("OpenSearchResult", "OpenSearchResult", typeof(CustomCommands));
-
         public static void PerformAction(string verb, string fileName)
         {
              var desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();

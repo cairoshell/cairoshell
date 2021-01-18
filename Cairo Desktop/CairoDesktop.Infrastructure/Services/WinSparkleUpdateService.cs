@@ -21,34 +21,65 @@ namespace CairoDesktop.Infrastructure.Services
             _logger = logger;
             _app = app;
 
-            WinSparkle.win_sparkle_set_appcast_url(UpdateUrl);
+            try
+            {
+                WinSparkle.win_sparkle_set_appcast_url(UpdateUrl);
 
-            _canShutdownDelegate = canShutdown;
-            _shutdownDelegate = doShutdown;
+                _canShutdownDelegate = canShutdown;
+                _shutdownDelegate = doShutdown;
 
-            WinSparkle.win_sparkle_set_can_shutdown_callback(_canShutdownDelegate);
-            WinSparkle.win_sparkle_set_shutdown_request_callback(_shutdownDelegate);
-            WinSparkle.win_sparkle_init();
+                WinSparkle.win_sparkle_set_can_shutdown_callback(_canShutdownDelegate);
+                WinSparkle.win_sparkle_set_shutdown_request_callback(_shutdownDelegate);
+                WinSparkle.win_sparkle_init();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to initialize WinSparkle: {e.Message}");
+            }
         }
 
         public bool AutomaticUpdatesEnabled
         {
             get
             {
-                int result = WinSparkle.win_sparkle_get_automatic_check_for_updates();
+                int result = 0;
+                try
+                {
+                    result = WinSparkle.win_sparkle_get_automatic_check_for_updates();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"Failed to get WinSparkle settings: {e.Message}");
+                }
+                
                 return Convert.ToBoolean(result);
             }
 
             set
             {
                 int intValue = Convert.ToInt32(value);
-                WinSparkle.win_sparkle_set_automatic_check_for_updates(intValue);
+
+                try
+                {
+                    WinSparkle.win_sparkle_set_automatic_check_for_updates(intValue);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"Failed to set WinSparkle settings: {e.Message}");
+                }
             }
         }
 
         public void CheckForUpdates()
         {
-            WinSparkle.win_sparkle_check_update_with_ui();
+            try
+            {
+                WinSparkle.win_sparkle_check_update_with_ui();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to check for updates: {e.Message}");
+            }
         }
 
         private int canShutdown()
@@ -63,7 +94,14 @@ namespace CairoDesktop.Infrastructure.Services
 
         protected override void DisposeOfUnManagedResources()
         {
-            WinSparkle.win_sparkle_cleanup();
+            try
+            {
+                WinSparkle.win_sparkle_cleanup();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to clean up WinSparkle: {e.Message}");
+            }
         }
     }
 }

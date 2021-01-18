@@ -77,6 +77,9 @@
     </Compile>
     <Compile Include="ClockMenuBarExtension.cs" />
     <Compile Include="DependencyRegistrant.cs" />
+    <Compile Include="SearchResult.xaml.cs">
+      <DependentUpon>SearchResult.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Search.xaml.cs">
       <DependentUpon>Search.xaml</DependentUpon>
     </Compile>
@@ -101,6 +104,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="SearchResult.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Search.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -115,11 +122,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cairo Desktop\Cairo Desktop.csproj">
-      <Project>{F0383E91-6ADC-4016-9E21-D3DC0FFC55FF}</Project>
-      <Name>Cairo Desktop</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\..\CairoDesktop.Application\CairoDesktop.Application.csproj">
       <Project>{3FF023F4-7CE3-4171-95B7-B5AF10332658}</Project>
       <Name>CairoDesktop.Application</Name>
