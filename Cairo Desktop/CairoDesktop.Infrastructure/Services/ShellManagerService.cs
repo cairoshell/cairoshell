@@ -34,7 +34,7 @@ namespace CairoDesktop.Infrastructure.Services
         {
             ShellConfig config = new ShellConfig()
             {
-                EnableTasksService = Settings.Instance.EnableTaskbar,
+                EnableTasksService = true,
                 AutoStartTasksService = false,
                 TaskIconSize = (IconSize)Settings.Instance.TaskbarIconSize,
 
