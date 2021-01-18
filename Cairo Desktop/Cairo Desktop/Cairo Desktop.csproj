@@ -94,20 +94,8 @@
     <Compile Include="DwmThumbnail.xaml.cs">
       <DependentUpon>DwmThumbnail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MenuExtraActionCenter.xaml.cs">
-      <DependentUpon>MenuExtraActionCenter.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MenuExtraClock.xaml.cs">
-      <DependentUpon>MenuExtraClock.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MenuExtraSearch.xaml.cs">
-      <DependentUpon>MenuExtraSearch.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Icon.xaml.cs">
       <DependentUpon>Icon.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MenuExtraSearchResult.xaml.cs">
-      <DependentUpon>MenuExtraSearchResult.xaml</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ProgramsMenu.xaml.cs">
@@ -131,9 +119,6 @@
     <Compile Include="SupportingClasses\FolderHelper.cs" />
     <Compile Include="SupportingClasses\DirectoryPathValidationRule.cs" />
     <Compile Include="SupportingClasses\ShellHotKeyService.cs" />
-    <Compile Include="MenuExtraVolume.xaml.cs">
-      <DependentUpon>MenuExtraVolume.xaml</DependentUpon>
-    </Compile>
     <Compile Include="SupportingClasses\WindowManagerEventArgs.cs" />
     <Compile Include="TaskThumbWindow.xaml.cs">
       <DependentUpon>TaskThumbWindow.xaml</DependentUpon>
@@ -158,32 +143,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MenuExtraActionCenter.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MenuExtraClock.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MenuExtraSearch.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <None Include="MiniMeow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Page Include="MenuExtraSearchResult.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="ProgramsMenu.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MenuExtraVolume.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -243,10 +208,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SystemTray.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="TaskButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -260,9 +221,6 @@
     </Compile>
     <Compile Include="DesktopNavigationToolbar.xaml.cs">
       <DependentUpon>DesktopNavigationToolbar.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SystemTray.xaml.cs">
-      <DependentUpon>SystemTray.xaml</DependentUpon>
     </Compile>
     <Compile Include="TaskButton.xaml.cs">
       <DependentUpon>TaskButton.xaml</DependentUpon>
@@ -482,6 +440,10 @@
     <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj">
       <Project>{9eea28c8-3af4-4853-a31c-46e6fbf7fbb5}</Project>
       <Name>CairoDesktop.Localization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CairoDesktop.MenuBarExtensions\CairoDesktop.MenuBarExtensions.csproj">
+      <Project>{60c21248-96f9-4358-82c1-b920d0bb86c1}</Project>
+      <Name>CairoDesktop.MenuBarExtensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

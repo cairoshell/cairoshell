@@ -11,7 +11,7 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
 
-namespace CairoDesktop
+namespace CairoDesktop.MenuBarExtensions
 {
     public partial class SystemTray
     {
@@ -82,11 +82,11 @@ namespace CairoDesktop
                     btnToggle.Visibility = Visibility.Collapsed;
             }
         }
-        
+
         private TrayHostSizeData GetTrayHostSizeData()
         {
             MenuBarDimensions dimensions = Host.GetDimensions();
-            
+
             return new TrayHostSizeData
             {
                 edge = (NativeMethods.ABEdge)dimensions.ScreenEdge,
@@ -144,24 +144,26 @@ namespace CairoDesktop
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+            if (e == null || string.IsNullOrWhiteSpace(e.PropertyName))
             {
-                switch (e.PropertyName)
-                {
-                    case "SysTrayAlwaysExpanded":
-                        if (Settings.Instance.SysTrayAlwaysExpanded)
-                        {
-                            btnToggle.Visibility = Visibility.Collapsed;
-                            UnpinnedItems.Visibility = Visibility.Visible;
-                        }
-                        else
-                        {
-                            btnToggle.IsChecked = false;
-                            UnpinnedItems.Visibility = Visibility.Collapsed;
-                            SetToggleVisibility();
-                        }
-                        break;
-                }
+                return;
+            }
+
+            if (e.PropertyName != "SysTrayAlwaysExpanded")
+            {
+                return;
+            }
+
+            if (Settings.Instance.SysTrayAlwaysExpanded)
+            {
+                btnToggle.Visibility = Visibility.Collapsed;
+                UnpinnedItems.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                btnToggle.IsChecked = false;
+                UnpinnedItems.Visibility = Visibility.Collapsed;
+                SetToggleVisibility();
             }
         }
     }

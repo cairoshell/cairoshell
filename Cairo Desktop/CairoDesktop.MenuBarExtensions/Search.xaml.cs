@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CairoDesktop.Common;
+using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,20 +7,19 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Common;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
-namespace CairoDesktop
+namespace CairoDesktop.MenuBarExtensions
 {
-    public partial class MenuExtraSearch : UserControl
+    public partial class Search : UserControl
     {
         private readonly ICairoApplication _cairoApplication;
         public bool _isPrimaryScreen;
         private static bool isSearchHotkeyRegistered;
 
-        public MenuExtraSearch(ICairoApplication cairoApplication, IMenuBar host)
+        public Search(ICairoApplication cairoApplication, IMenuBar host)
         {
             InitializeComponent();
 
@@ -94,7 +94,7 @@ namespace CairoDesktop
                     };
 
                     searchStr.SetBinding(TextBox.TextProperty, bSearchText);
-                    lstSearchResults.SetBinding(ItemsControl.ItemsSourceProperty, bSearchResults);
+                    lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
                 });
             })
             {

@@ -2,16 +2,15 @@
 using System.Windows.Controls;
 using CairoDesktop.Common;
 using ManagedShell.Common.Helpers;
-using ManagedShell.Common.SupportingClasses;
 
-namespace CairoDesktop
+namespace CairoDesktop.MenuBarExtensions
 {
     /// <summary>
     /// Interaction logic for MenuExtraSearchResult.xaml
     /// </summary>
-    public partial class MenuExtraSearchResult : UserControl
+    public partial class SearchResult : UserControl
     {
-        public MenuExtraSearchResult()
+        public SearchResult()
         {
             InitializeComponent();
         }
@@ -20,7 +19,7 @@ namespace CairoDesktop
         {
             if (sender is MenuItem menuItem)
             {
-                if (menuItem.CommandParameter is SearchResult searchObj)
+                if (menuItem.CommandParameter is ManagedShell.Common.SupportingClasses.SearchResult searchObj)
                 {
                     if (!ShellHelper.StartProcess(searchObj.Path))
                     {

@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net471</TargetFramework>
+    <Platforms>x64;AnyCPU</Platforms>
+    <UseWPF>True</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CairoDesktop.Application\CairoDesktop.Application.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj" />
+  </ItemGroup>
+
+</Project>

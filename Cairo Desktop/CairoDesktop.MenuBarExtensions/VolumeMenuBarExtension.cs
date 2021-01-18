@@ -4,7 +4,7 @@ using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.Common.Helpers;
 using System.Windows.Controls;
 
-namespace CairoDesktop.Extensions.SystemMenuExtras
+namespace CairoDesktop.MenuBarExtensions
 {
     class VolumeMenuBarExtension : UserControlMenuBarExtension
     {

@@ -24,7 +24,6 @@ namespace CairoDesktop
     public partial class MenuBar : CairoAppBarWindow, IMenuBar
     {
         private readonly IApplicationUpdateService _applicationUpdateService;
-        private readonly ShellManager _shellManager;
 
         private MenuBarShadow shadow;
         private static HotKey cairoMenuHotKey;
@@ -33,19 +32,11 @@ namespace CairoDesktop
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
-        // menu extras
-        private SystemTray systemTray;
-        private MenuExtraVolume menuExtraVolume;
-        private MenuExtraActionCenter menuExtraActionCenter;
-        private MenuExtraClock menuExtraClock;
-        private MenuExtraSearch menuExtraSearch;
-
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
         public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
         {
             _applicationUpdateService = applicationUpdateService;
-            _shellManager = shellManager;
 
             InitializeComponent();
             
@@ -120,41 +111,6 @@ namespace CairoDesktop
                 {
                     MenuExtrasHost.Children.Add(menuExtra);
                 }
-            }
-
-            if (Settings.Instance.EnableSysTray)
-            {
-                // add systray
-                systemTray = new SystemTray(this, _shellManager.NotificationArea);
-                MenuExtrasHost.Children.Add(systemTray);
-            }
-
-            if (Settings.Instance.EnableMenuExtraVolume && EnvironmentHelper.IsWindows10OrBetter && EnvironmentHelper.IsAppRunningAsShell)
-            {
-                // add volume
-                menuExtraVolume = new MenuExtraVolume();
-                MenuExtrasHost.Children.Add(menuExtraVolume);
-            }
-
-            if (Settings.Instance.EnableMenuExtraActionCenter && EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
-            {
-                // add action center
-                menuExtraActionCenter = new MenuExtraActionCenter(this);
-                MenuExtrasHost.Children.Add(menuExtraActionCenter);
-            }
-
-            if (Settings.Instance.EnableMenuExtraClock)
-            {
-                // add date/time
-                menuExtraClock = new MenuExtraClock(this);
-                MenuExtrasHost.Children.Add(menuExtraClock);
-            }
-
-            if (Settings.Instance.EnableMenuExtraSearch)
-            {
-                // add search
-                menuExtraSearch = new MenuExtraSearch(_cairoApplication, this);
-                MenuExtrasHost.Children.Add(menuExtraSearch);
             }
         }
 

@@ -1,21 +1,21 @@
-﻿using System;
+﻿using CairoDesktop.Common;
+using CairoDesktop.Configuration;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
 
-namespace CairoDesktop
+namespace CairoDesktop.MenuBarExtensions
 {
-    public partial class MenuExtraClock : UserControl
+    public partial class Clock : UserControl
     {
         private readonly bool _isPrimaryScreen;
         private static bool isClockHotkeyRegistered;
 
-        public MenuExtraClock(IMenuBar host)
+        public Clock(IMenuBar host)
         {
             InitializeComponent();
 

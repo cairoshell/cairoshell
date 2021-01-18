@@ -4,7 +4,7 @@ using ManagedShell;
 using System.Collections.Generic;
 using CairoDesktop.Infrastructure.Services;
 
-namespace CairoDesktop.Extensions.SystemMenuExtras
+namespace CairoDesktop.MenuBarExtensions
 {
     public sealed class MenuBarExtensionsShellExtension : IShellExtension
     {

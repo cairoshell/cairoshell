@@ -3,7 +3,7 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.ObjectModel;
 using System.Windows.Controls;
 
-namespace CairoDesktop.Extensions.SystemMenuExtras
+namespace CairoDesktop.MenuBarExtensions
 {
     class ClockMenuBarExtension : UserControlMenuBarExtension
     {

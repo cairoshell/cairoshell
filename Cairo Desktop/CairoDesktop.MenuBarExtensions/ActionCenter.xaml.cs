@@ -6,7 +6,7 @@ using System.Windows.Input;
 using CairoDesktop.Application.Interfaces;
 using ManagedShell.Common.Helpers;
 
-namespace CairoDesktop.Extensions.SystemMenuExtras
+namespace CairoDesktop.MenuBarExtensions
 {
     /// <summary>
     /// Interaction logic for ActionCenter.xaml

@@ -3,7 +3,7 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.ObjectModel;
 
-namespace CairoDesktop.Extensions.SystemMenuExtras
+namespace CairoDesktop.MenuBarExtensions
 {
     class SearchMenuBarExtension : UserControlMenuBarExtension
     {

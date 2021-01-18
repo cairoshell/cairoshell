@@ -4,7 +4,7 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.WindowsTray;
 
-namespace CairoDesktop.Extensions.SystemMenuExtras
+namespace CairoDesktop.MenuBarExtensions
 {
     class SystemTrayMenuBarExtension : UserControlMenuBarExtension
     {
