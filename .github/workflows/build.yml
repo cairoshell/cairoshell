@@ -36,6 +36,9 @@ jobs:
     - name: Restore packages
       run: msbuild -t:restore -p:Configuration=$env:config -p:Platform=$env:platform
       working-directory: .\Cairo Desktop\Cairo Desktop
+      env:
+        config: ${{ matrix.buildconfig }}
+        platform: ${{ matrix.buildplatform }}
 
     - name: Build
       run: msbuild $env:project -p:Configuration=$env:config -p:Platform=$env:platform
