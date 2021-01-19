@@ -1,14 +1,11 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic.Devices;
 using System;
-using System.Diagnostics;
 
 namespace CairoDesktop
 {
@@ -30,25 +27,6 @@ namespace CairoDesktop
             EnvironmentHelper.IsAppRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !_forceDisableShellMode) || _forceEnableShellMode;
         }
 
-        private void SetShellReadyEvent()
-        {
-            int hShellReadyEvent;
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT && EnvironmentHelper.IsWindows2kOrBetter)
-            {
-                hShellReadyEvent = NativeMethods.OpenEvent(NativeMethods.EVENT_MODIFY_STATE, true, @"Global\msgina: ShellReadyEvent");
-            }
-            else
-            {
-                hShellReadyEvent = NativeMethods.OpenEvent(NativeMethods.EVENT_MODIFY_STATE, false, "msgina: ShellReadyEvent");
-            }
-
-            if (hShellReadyEvent != 0)
-            {
-                NativeMethods.SetEvent(hShellReadyEvent);
-                NativeMethods.CloseHandle(hShellReadyEvent);
-            }
-        }
-
         internal void LoadExtensions()
         {
             var pluginService = Host.Services.GetService<IExtensionService>();
@@ -57,41 +35,13 @@ namespace CairoDesktop
 
         internal void WriteApplicationDebugInfoToConsole()
         {
-            _logger.LogInformation($"Product Name: {ProductName}");
             _logger.LogInformation($"Version: {ProductVersion}");
-            _logger.LogInformation($"Operating System: {new ComputerInfo().OSFullName}");
-            _logger.LogInformation($"OS Build: {new ComputerInfo().OSVersion}");
-            _logger.LogInformation($"Processor Type: {(IntPtr.Size == 8 || InternalCheckIsWow64() ? 64 : 32)}-bit");
-            _logger.LogInformation($"Startup Path: {StartupPath}");
+            _logger.LogInformation($"Operating System: {EnvironmentHelper.WindowsProductName} {Environment.OSVersion.Version}");
+            _logger.LogInformation($"Processor Type: {(IntPtr.Size == 8 || EnvironmentHelper.IsWow64 ? 64 : 32)}-bit");
             _logger.LogInformation($"Running As: {IntPtr.Size * 8}-bit Process");
+            _logger.LogInformation($"Startup Path: {StartupPath}");
             _logger.LogInformation($"Configured as shell: {EnvironmentHelper.IsAppConfiguredAsShell}");
             _logger.LogInformation($"Running as shell: {EnvironmentHelper.IsAppRunningAsShell}");
-        }
-
-        internal bool InternalCheckIsWow64()
-        {
-            if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major >= 6)
-            {
-                using (Process p = Process.GetCurrentProcess())
-                {
-                    bool retVal;
-
-                    try
-                    {
-                        if (!NativeMethods.IsWow64Process(p.Handle, out retVal))
-                        {
-                            return false;
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        return false;
-                    }
-
-                    return retVal;
-                }
-            }
-            return false;
         }
 
         private void SetupWindowServices()

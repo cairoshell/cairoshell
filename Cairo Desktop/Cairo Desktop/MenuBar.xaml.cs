@@ -9,9 +9,11 @@ using ManagedShell;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -19,10 +21,9 @@ using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop
 {
-    public partial class MenuBar : CairoAppBarWindow, IMenuExtraHost
+    public partial class MenuBar : CairoAppBarWindow, IMenuBar
     {
         private readonly IApplicationUpdateService _applicationUpdateService;
-        private readonly ShellManager _shellManager;
 
         private MenuBarShadow shadow;
         private static HotKey cairoMenuHotKey;
@@ -31,22 +32,11 @@ namespace CairoDesktop
         // AppGrabber instance
         public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
 
-        // menu extras
-        private SystemTray systemTray;
-        private MenuExtraVolume menuExtraVolume;
-        private MenuExtraActionCenter menuExtraActionCenter;
-        private MenuExtraClock menuExtraClock;
-        private MenuExtraSearch menuExtraSearch;
-
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService) : this(shellManager, windowManager, applicationUpdateService, System.Windows.Forms.Screen.PrimaryScreen, NativeMethods.ABEdge.ABE_TOP)
-        {
-        }
-
-        public MenuBar(ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(shellManager, windowManager, screen, edge, 23)
+        
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
         {
             _applicationUpdateService = applicationUpdateService;
-            _shellManager = shellManager;
 
             InitializeComponent();
             
@@ -112,60 +102,27 @@ namespace CairoDesktop
             }
         }
 
-        private void setupMenuExtras()
+        private void SetupMenuBarExtensions()
         {
-            // set up menu extras
-            foreach (var extra in CairoApplication.Current.MenuExtras)
+            foreach (var userControlMenuBarExtension in _cairoApplication.MenuBarExtensions.OfType<UserControlMenuBarExtension>())
             {
-                UserControl menuExtra = extra.StartControl(this);
-                if (menuExtra != null) MenuExtrasHost.Children.Add(menuExtra);
-            }
-
-            if (Settings.Instance.EnableSysTray)
-            {
-                // add systray
-                systemTray = new SystemTray(this, _shellManager.NotificationArea);
-                MenuExtrasHost.Children.Add(systemTray);
-            }
-
-            if (Settings.Instance.EnableMenuExtraVolume && EnvironmentHelper.IsWindows10OrBetter && EnvironmentHelper.IsAppRunningAsShell)
-            {
-                // add volume
-                menuExtraVolume = new MenuExtraVolume();
-                MenuExtrasHost.Children.Add(menuExtraVolume);
-            }
-
-            if (Settings.Instance.EnableMenuExtraActionCenter && EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
-            {
-                // add action center
-                menuExtraActionCenter = new MenuExtraActionCenter(this);
-                MenuExtrasHost.Children.Add(menuExtraActionCenter);
-            }
-
-            if (Settings.Instance.EnableMenuExtraClock)
-            {
-                // add date/time
-                menuExtraClock = new MenuExtraClock(this);
-                MenuExtrasHost.Children.Add(menuExtraClock);
-            }
-
-            if (Settings.Instance.EnableMenuExtraSearch)
-            {
-                // add search
-                menuExtraSearch = new MenuExtraSearch(this);
-                MenuExtrasHost.Children.Add(menuExtraSearch);
+                var menuExtra = userControlMenuBarExtension.StartControl(this);
+                if (menuExtra != null)
+                {
+                    MenuExtrasHost.Children.Add(menuExtra);
+                }
             }
         }
 
         private void setupCairoMenu()
         {
             // Add CairoMenu MenuItems
-            if (CairoApplication.Current.CairoMenu.Count > 0)
+            if (_cairoApplication.CairoMenu.Count > 0)
             {
                 CairoMenu.Items.Insert(7, new Separator());
-                foreach (var cairoMenuItem in CairoApplication.Current.CairoMenu)
+                foreach (var cairoMenuItem in _cairoApplication.CairoMenu)
                 {
-                    var menuItem = new System.Windows.Controls.MenuItem { Header = cairoMenuItem.Header };
+                    var menuItem = new MenuItem { Header = cairoMenuItem.Header };
                     menuItem.Click += cairoMenuItem.MenuItem_Click;
                     CairoMenu.Items.Insert(8, menuItem);
                 }
@@ -185,12 +142,12 @@ namespace CairoDesktop
             }
 
             // Add PlacesMenu MenuItems
-            if (CairoApplication.Current.Places.Count > 0)
+            if (_cairoApplication.Places.Count > 0)
             {
                 PlacesMenu.Items.Add(new Separator());
-                foreach (var placesMenuItem in CairoApplication.Current.Places)
+                foreach (var placesMenuItem in _cairoApplication.Places)
                 {
-                    var menuItem = new System.Windows.Controls.MenuItem { Header = placesMenuItem.Header };
+                    var menuItem = new MenuItem { Header = placesMenuItem.Header };
                     menuItem.Click += placesMenuItem.MenuItem_Click;
                     PlacesMenu.Items.Add(menuItem);
                 }
@@ -201,7 +158,7 @@ namespace CairoDesktop
         {
             if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarEdge != NativeMethods.ABEdge.ABE_BOTTOM)
             {
-                shadow = new MenuBarShadow(this);
+                shadow = new MenuBarShadow(_cairoApplication, _windowManager, this);
                 shadow.Show();
                 setShadowPosition();
             }
@@ -211,7 +168,7 @@ namespace CairoDesktop
         {
             base.OnSourceInitialized(sender, e);
             
-            setupMenuExtras();
+            SetupMenuBarExtensions();
 
             registerCairoMenuHotKey();
 
@@ -385,7 +342,7 @@ namespace CairoDesktop
 
         protected override void CustomClosing()
         {
-            if (!_windowManager.IsSettingDisplays && !CairoApplication.IsShuttingDown)
+            if (!_windowManager.IsSettingDisplays && !AllowClose)
             {
                 return;
             }
@@ -519,7 +476,7 @@ namespace CairoDesktop
                 {
                     if (result == true)
                     {
-                        CairoApplication.Current.ExitCairo();
+                        _cairoApplication.ExitCairo();
                     }
                 });
         }
@@ -624,10 +581,11 @@ namespace CairoDesktop
             return Screen.Primary;
         }
 
-        public MenuExtraHostDimensions GetDimensions()
+        public MenuBarDimensions GetDimensions()
         {
-            return new MenuExtraHostDimensions
+            return new MenuBarDimensions
             {
+                ScreenEdge = (int)AppBarEdge,
                 DpiScale = DpiScale,
                 Height = Height,
                 Width = Width,

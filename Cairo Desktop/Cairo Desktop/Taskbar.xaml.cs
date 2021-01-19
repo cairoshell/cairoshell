@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using CairoDesktop.AppGrabber;
+using CairoDesktop.Application.Interfaces;
 using ManagedShell;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
@@ -46,13 +47,8 @@ namespace CairoDesktop
             set { SetValue(CanAutoHideProperty, value); }
         }
         #endregion
-
-        public Taskbar(ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager) : this(shellManager, windowManager, desktopManager, System.Windows.Forms.Screen.PrimaryScreen, NativeMethods.ABEdge.ABE_BOTTOM)
-        {
-
-        }
-
-        public Taskbar(ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(shellManager, windowManager, screen, edge, 0)
+        
+        public Taskbar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
         {
             InitializeComponent();
             _desktopManager = desktopManager;
@@ -111,13 +107,13 @@ namespace CairoDesktop
             if (Settings.Instance.TaskbarPosition == 1)
             {
                 AppBarEdge = NativeMethods.ABEdge.ABE_TOP;
-                TaskbarGroupStyle.ContainerStyle = CairoApplication.Current.FindResource("CairoTaskbarTopGroupStyle") as Style;
+                TaskbarGroupStyle.ContainerStyle = FindResource("CairoTaskbarTopGroupStyle") as Style;
                 TasksList.Margin = new Thickness(0);
             }
             else
             {
                 AppBarEdge = NativeMethods.ABEdge.ABE_BOTTOM;
-                TaskbarGroupStyle.ContainerStyle = CairoApplication.Current.FindResource("CairoTaskbarGroupStyle") as Style;
+                TaskbarGroupStyle.ContainerStyle = FindResource("CairoTaskbarGroupStyle") as Style;
                 TasksList.Margin = new Thickness(-3, -1, 0, 0);
             }
 
@@ -183,15 +179,15 @@ namespace CairoDesktop
 
                 if (Settings.Instance.TaskbarPosition == 1)
                 {
-                    bdrTaskbar.Style = CairoApplication.Current.FindResource("CairoTaskbarTopFullBorderStyle") as Style;
-                    btnDesktopOverlay.Style = CairoApplication.Current.FindResource("CairoTaskbarTopFullButtonDesktopOverlay") as Style;
-                    btnTaskList.Style = CairoApplication.Current.FindResource("CairoTaskbarTopFullButtonList") as Style;
+                    bdrTaskbar.Style = FindResource("CairoTaskbarTopFullBorderStyle") as Style;
+                    btnDesktopOverlay.Style = FindResource("CairoTaskbarTopFullButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = FindResource("CairoTaskbarTopFullButtonList") as Style;
                 }
                 else
                 {
-                    bdrTaskbar.Style = CairoApplication.Current.FindResource("CairoTaskbarFullBorderStyle") as Style;
-                    btnDesktopOverlay.Style = CairoApplication.Current.FindResource("CairoTaskbarFullButtonDesktopOverlay") as Style;
-                    btnTaskList.Style = CairoApplication.Current.FindResource("CairoTaskbarFullButtonList") as Style;
+                    bdrTaskbar.Style = FindResource("CairoTaskbarFullBorderStyle") as Style;
+                    btnDesktopOverlay.Style = FindResource("CairoTaskbarFullButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = FindResource("CairoTaskbarFullButtonList") as Style;
                 }
             }
             else
@@ -200,15 +196,15 @@ namespace CairoDesktop
 
                 if (Settings.Instance.TaskbarPosition == 1)
                 {
-                    bdrTaskbar.Style = CairoApplication.Current.FindResource("CairoTaskbarTopBorderStyle") as Style;
-                    btnDesktopOverlay.Style = CairoApplication.Current.FindResource("CairoTaskbarTopButtonDesktopOverlay") as Style;
-                    btnTaskList.Style = CairoApplication.Current.FindResource("CairoTaskbarTopButtonList") as Style;
+                    bdrTaskbar.Style = FindResource("CairoTaskbarTopBorderStyle") as Style;
+                    btnDesktopOverlay.Style = FindResource("CairoTaskbarTopButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = FindResource("CairoTaskbarTopButtonList") as Style;
                 }
                 else
                 {
-                    bdrTaskbar.Style = CairoApplication.Current.FindResource("CairoTaskbarBorderStyle") as Style;
-                    btnDesktopOverlay.Style = CairoApplication.Current.FindResource("CairoTaskbarButtonDesktopOverlay") as Style;
-                    btnTaskList.Style = CairoApplication.Current.FindResource("CairoTaskbarButtonList") as Style;
+                    bdrTaskbar.Style = FindResource("CairoTaskbarBorderStyle") as Style;
+                    btnDesktopOverlay.Style = FindResource("CairoTaskbarButtonDesktopOverlay") as Style;
+                    btnTaskList.Style = FindResource("CairoTaskbarButtonList") as Style;
                 }
             }
 
@@ -225,7 +221,7 @@ namespace CairoDesktop
 
         protected override void CustomClosing()
         {
-            if (_windowManager.IsSettingDisplays || CairoApplication.IsShuttingDown)
+            if (_windowManager.IsSettingDisplays || AllowClose)
             {
                 _shellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
             }

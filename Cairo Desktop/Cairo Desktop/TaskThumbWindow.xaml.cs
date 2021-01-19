@@ -52,8 +52,8 @@ namespace CairoDesktop
                 // taskbar on top
                 Top = taskButtonPoint.Y + taskButton.ActualHeight;
 
-                bdrThumb.Style = CairoApplication.Current.FindResource("TaskThumbWindowBorderTopStyle") as Style;
-                bdrThumbInner.Style = CairoApplication.Current.FindResource("TaskThumbWindowInnerBorderTopStyle") as Style;
+                bdrThumb.Style = FindResource("TaskThumbWindowBorderTopStyle") as Style;
+                bdrThumbInner.Style = FindResource("TaskThumbWindowInnerBorderTopStyle") as Style;
 
                 bdrTranslate.Y *= -1;
 

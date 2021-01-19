@@ -5,12 +5,20 @@ namespace CairoDesktop.Application.Interfaces
 {
     public interface ICairoApplication
     {
+        List<IMenuItem> CairoMenu { get; }
+        
         List<IShellExtension> Extensions { get; }
 
+        List<IMenuBarExtension> MenuBarExtensions { get; }
+
         List<IMenuItem> Places { get; }
+        
+        bool IsShuttingDown { get; }
 
         void ExitCairo();
 
         int Run();
+
+        void Dispatch(Action action);
     }
 }

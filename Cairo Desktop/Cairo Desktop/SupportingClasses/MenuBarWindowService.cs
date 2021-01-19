@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
+using CairoDesktop.Infrastructure.Services;
 using ManagedShell.Interop;
 
 namespace CairoDesktop.SupportingClasses
@@ -9,7 +10,7 @@ namespace CairoDesktop.SupportingClasses
     {
         private readonly IApplicationUpdateService _updateService;
 
-        public MenuBarWindowService(ShellManagerService shellManagerService, WindowManager windowManager, IApplicationUpdateService updateService) : base(shellManagerService, windowManager)
+        public MenuBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, IApplicationUpdateService updateService) : base(cairoApplication, shellManagerService, windowManager)
         {
             _updateService = updateService;
 
@@ -17,9 +18,22 @@ namespace CairoDesktop.SupportingClasses
             EnableService = Settings.Instance.EnableMenuBar;
         }
 
+        protected override void HandleSettingChange(string setting)
+        {
+            switch (setting)
+            {
+                case "EnableMenuBar":
+                    HandleEnableServiceChanged(Settings.Instance.EnableMenuBar);
+                    break;
+                case "EnableMenuBarMultiMon":
+                    HandleEnableMultiMonChanged(Settings.Instance.EnableMenuBarMultiMon);
+                    break;
+            }
+        }
+
         protected override void OpenWindow(Screen screen)
         {
-            MenuBar newMenuBar = new MenuBar(_shellManager, _windowManager, _updateService, screen, NativeMethods.ABEdge.ABE_TOP);
+            MenuBar newMenuBar = new MenuBar(_cairoApplication, _shellManager, _windowManager, _updateService, screen, NativeMethods.ABEdge.ABE_TOP);
             Windows.Add(newMenuBar);
             newMenuBar.Show();
         }

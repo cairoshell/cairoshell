@@ -1,8 +1,6 @@
-﻿using System.Drawing;
-
-namespace CairoDesktop.Application.Structs
+﻿namespace CairoDesktop.Application.Structs
 {
-    public struct MenuExtraHostDimensions
+    public struct MenuBarDimensions
     {
         /// <summary>
         /// ABE_LEFT = 0,

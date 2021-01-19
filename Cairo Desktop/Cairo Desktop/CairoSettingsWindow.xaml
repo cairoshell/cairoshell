@@ -371,7 +371,6 @@
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarShadow)}" />
                     </CheckBox>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarMultiMon, UpdateSourceTrigger=PropertyChanged}"
-                              Click="CheckBox_Click"
                               Name="chkEnableMenuBarMultiMon">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarMultiMon)}" />
                     </CheckBox>
@@ -661,7 +660,6 @@
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Taskbar)}">
                 <StackPanel Orientation="Vertical">
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbar, UpdateSourceTrigger=PropertyChanged}"
-                              Click="CheckBox_Click"
                               Name="chkEnableTaskbar">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableTaskbar)}" />
                     </CheckBox>
@@ -740,7 +738,6 @@
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableThumbnails)}" />
                     </CheckBox>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
-                              Click="CheckBox_Click"
                               Name="chkEnableTaskbarMultiMon">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableTaskbarMultiMon)}" />
                     </CheckBox>

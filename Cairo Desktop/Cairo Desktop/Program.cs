@@ -9,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.MenuBarExtensions;
 
 namespace CairoDesktop
 {
@@ -55,6 +57,9 @@ namespace CairoDesktop
                     };
 
                     services.AddDependencyLoadingServices(context.Configuration, extensionPaths); // TODO: this should not be a property of CairoApplication... Possible solution, use Configuration?
+
+                    // Inbox extensions below
+                    services.AddSingleton<IShellExtension, MenuBarExtensionsShellExtension>();
                 })
                 .ConfigureLogging((context, logging) =>
                 {
