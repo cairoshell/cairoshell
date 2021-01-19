@@ -13,12 +13,21 @@
     <OutputType>WinExe</OutputType>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RootNamespace>CairoDesktop</RootNamespace>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AssemblyName>CairoDesktop</AssemblyName>
     <Company>Cairo Development Team</Company>
     <Authors>Cairo Development Team</Authors>
     <Product>Cairo Desktop Environment</Product>
     <Copyright>Copyright © 2021 Cairo Development Team</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -37,7 +46,6 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\Build\x64\Release\</OutputPath>
     <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
   </PropertyGroup>
