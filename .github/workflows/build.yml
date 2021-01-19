@@ -34,7 +34,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Restore packages
-      run: msbuild -t:restore
+      run: msbuild -t:restore -p:Configuration=$env:config -p:Platform=$env:platform
       working-directory: .\Cairo Desktop\Cairo Desktop
 
     - name: Build
