@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
+using CairoDesktop.AppGrabber;
 using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.MenuBarExtensions;
 
@@ -40,6 +41,7 @@ namespace CairoDesktop
                     services.AddSingleton(s => Settings.Instance);
                     services.AddSingleton<ICairoApplication, CairoApplication>();
 
+                    services.AddSingleton<AppGrabberService>();
                     services.AddHostedService<ShellHotKeyService>();
                     services.AddSingleton<ShellManagerService>();
 

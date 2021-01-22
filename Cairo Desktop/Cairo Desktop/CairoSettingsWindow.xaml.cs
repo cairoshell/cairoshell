@@ -33,15 +33,17 @@ namespace CairoDesktop
     {
         private static CairoSettingsWindow _instance = null;
 
+        private readonly AppGrabberService _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ShellManager _shellManager;
 
         static CairoSettingsWindow() { }
 
-        private CairoSettingsWindow(ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService)
+        private CairoSettingsWindow(ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService, AppGrabberService appGrabber)
         {
             InitializeComponent();
 
+            _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
             _shellManager = shellManagerService.ShellManager;
 
@@ -211,7 +213,7 @@ namespace CairoDesktop
 
         private void loadCategories()
         {
-            foreach (Category cat in AppGrabber.AppGrabber.Instance.CategoryList)
+            foreach (Category cat in _appGrabber.CategoryList)
             {
                 if (cat.ShowInMenu)
                 {
@@ -739,8 +741,8 @@ namespace CairoDesktop
         public static CairoSettingsWindow Instance =>
             _instance ?? (_instance = new CairoSettingsWindow(
                 (ShellManagerService)CairoApplication.Current.Host.Services.GetService(typeof(ShellManagerService)),
-                (IApplicationUpdateService) CairoApplication.Current.Host.Services.GetService(
-                    typeof(IApplicationUpdateService))));
+                (IApplicationUpdateService) CairoApplication.Current.Host.Services.GetService(typeof(IApplicationUpdateService)),
+                (AppGrabberService)CairoApplication.Current.Host.Services.GetService(typeof(AppGrabberService))));
 
         #region Desktop Background
         private void loadDesktopBackgroundSettings()

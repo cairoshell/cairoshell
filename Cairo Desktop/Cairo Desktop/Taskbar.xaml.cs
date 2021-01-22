@@ -21,7 +21,7 @@ namespace CairoDesktop
     {
         #region Properties
         // Item sources
-        private AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
+        internal readonly AppGrabberService _appGrabber;
         private readonly ShellManager _shellManager;
 
         // display properties
@@ -48,9 +48,10 @@ namespace CairoDesktop
         }
         #endregion
         
-        public Taskbar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
+        public Taskbar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager, AppGrabberService appGrabber, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
         {
             InitializeComponent();
+            _appGrabber = appGrabber;
             _desktopManager = desktopManager;
             _shellManager = shellManager;
 
@@ -80,7 +81,7 @@ namespace CairoDesktop
             CanAutoHide = true;
 
             // setup taskbar item source
-            _shellManager.Tasks.Initialize(new TaskCategoryProvider());
+            _shellManager.Tasks.Initialize(new TaskCategoryProvider(_appGrabber));
 
             TasksList.ItemsSource = _shellManager.Tasks.GroupedWindows;
             TasksList2.ItemsSource = _shellManager.Tasks.GroupedWindows;
@@ -88,7 +89,7 @@ namespace CairoDesktop
 
             // setup data contexts
             bdrMain.DataContext = Settings.Instance;
-            quickLaunchList.ItemsSource = appGrabber.QuickLaunch;
+            quickLaunchList.ItemsSource = _appGrabber.QuickLaunch;
 
             setTaskbarDesktopOverlayButton();
 
@@ -469,7 +470,7 @@ namespace CairoDesktop
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
-                appGrabber.AddByPath(fileNames, AppGrabber.AppCategoryType.QuickLaunch);
+                _appGrabber.AddByPath(fileNames, AppGrabber.AppCategoryType.QuickLaunch);
             }
 
             CanAutoHide = true;

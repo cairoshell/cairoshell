@@ -16,7 +16,7 @@ namespace CairoDesktop.AppGrabber
     /// </summary>
     public partial class AppGrabberUI : Window
     {
-        private AppGrabber appGrabber;
+        private AppGrabberService appGrabber;
         ObservableCollection<ApplicationInfo> programsMenuAppsCollection;
 
         public Visibility AppVisibility
@@ -46,12 +46,13 @@ namespace CairoDesktop.AppGrabber
         public static readonly DependencyProperty AppVisibilityProperty = DependencyProperty.Register("AppVisibility", typeof(Visibility), typeof(AppGrabberUI), new PropertyMetadata(null));
         private static readonly DependencyProperty bAppsHiddenProperty = DependencyProperty.Register("bAppsHidden", typeof(bool), typeof(AppGrabberUI), new PropertyMetadata(null));
 
+        // Required by WPF, should not be used
         public AppGrabberUI()
-            : this(AppGrabber.Instance)
         {
+            ShellLogger.Error("Unable to initialize AppGrabberUI due to missing AppGrabber.");
         }
 
-        public AppGrabberUI(AppGrabber appGrabber)
+        public AppGrabberUI(AppGrabberService appGrabber)
         {
             this.appGrabber = appGrabber;
             InitializeComponent();
@@ -64,7 +65,7 @@ namespace CairoDesktop.AppGrabber
 
         private void SkipWizard(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void btnContinue_Click(object sender, RoutedEventArgs e)
@@ -75,13 +76,13 @@ namespace CairoDesktop.AppGrabber
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             appGrabber.Save();
-            this.Close();
+            Close();
         }
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
             string filter = "Programs and shortcuts|";
-            foreach (string ext in AppGrabber.ExecutableExtensions)
+            foreach (string ext in AppGrabberService.ExecutableExtensions)
             {
                 filter += $"*{ext};";
             }
@@ -95,7 +96,7 @@ namespace CairoDesktop.AppGrabber
             {
                 if (dlg.SafeShowDialog() == System.Windows.Forms.DialogResult.OK && ShellHelper.Exists(dlg.FileName))
                 {
-                    ApplicationInfo customApp = AppGrabber.PathToApp(dlg.FileName, true, true);
+                    ApplicationInfo customApp = AppGrabberService.PathToApp(dlg.FileName, true, true);
                     if (!ReferenceEquals(customApp, null))
                     {
                         if (!programsMenuAppsCollection.Contains(customApp) && !(InstalledAppsView.ItemsSource as ObservableCollection<ApplicationInfo>).Contains(customApp))
@@ -208,7 +209,7 @@ namespace CairoDesktop.AppGrabber
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            AppGrabber.uiInstance = null;
+            AppGrabberService.uiInstance = null;
         }
 
         private void ScrollViewer_DragOver(object sender, System.Windows.DragEventArgs e)

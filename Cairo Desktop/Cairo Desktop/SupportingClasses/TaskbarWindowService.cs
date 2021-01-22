@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
@@ -9,10 +10,12 @@ namespace CairoDesktop.SupportingClasses
 {
     public class TaskbarWindowService : AppBarWindowService
     {
+        private readonly AppGrabberService _appGrabber;
         private readonly DesktopManager _desktopManager;
 
-        public TaskbarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, DesktopManager desktopManager) : base(cairoApplication, shellManagerService, windowManager)
+        public TaskbarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, DesktopManager desktopManager, AppGrabberService appGrabber) : base(cairoApplication, shellManagerService, windowManager)
         {
+            _appGrabber = appGrabber;
             _desktopManager = desktopManager;
 
             EnableMultiMon = Settings.Instance.EnableTaskbarMultiMon;
@@ -72,7 +75,7 @@ namespace CairoDesktop.SupportingClasses
 
         protected override void OpenWindow(Screen screen)
         {
-            Taskbar newTaskbar = new Taskbar(_cairoApplication, _shellManager, _windowManager, _desktopManager, screen, Settings.Instance.TaskbarPosition == 1 ? NativeMethods.ABEdge.ABE_TOP : NativeMethods.ABEdge.ABE_BOTTOM);
+            Taskbar newTaskbar = new Taskbar(_cairoApplication, _shellManager, _windowManager, _desktopManager, _appGrabber, screen, Settings.Instance.TaskbarPosition == 1 ? NativeMethods.ABEdge.ABE_TOP : NativeMethods.ABEdge.ABE_BOTTOM);
             Windows.Add(newTaskbar);
             newTaskbar.Show();
         }

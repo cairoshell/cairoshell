@@ -4,10 +4,17 @@ namespace CairoDesktop.AppGrabber
 {
     public class QuickLaunchManager
     {
+        private readonly AppGrabberService _appGrabber;
+        
+        public QuickLaunchManager(AppGrabberService appGrabber)
+        {
+            _appGrabber = appGrabber;
+        }
+        
         public ApplicationInfo GetQuickLaunchApplicationInfo(ApplicationWindow window)
         {
             // it would be nice to cache this, but need to handle case of user adding/removing app via various means after first access
-            foreach (ApplicationInfo ai in AppGrabber.Instance.QuickLaunch)
+            foreach (ApplicationInfo ai in _appGrabber.QuickLaunch)
             {
                 if (ai.Target.ToLower() == window.WinFileName.ToLower() || (window.IsUWP && ai.Target == window.AppUserModelID))
                 {
@@ -28,11 +35,11 @@ namespace CairoDesktop.AppGrabber
             if (isUWP)
             {
                 // store app, do special stuff
-                AppGrabber.Instance.AddStoreApp(path, AppCategoryType.QuickLaunch);
+                _appGrabber.AddStoreApp(path, AppCategoryType.QuickLaunch);
             }
             else
             {
-                AppGrabber.Instance.AddByPath(new[] { path }, AppCategoryType.QuickLaunch);
+                _appGrabber.AddByPath(new[] { path }, AppCategoryType.QuickLaunch);
             }
         }
     }

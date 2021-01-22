@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using CairoDesktop.AppGrabber;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using CairoDesktop.Localization;
@@ -89,8 +90,10 @@ namespace CairoDesktop
 
         private void btnAppGrabber_Click(object sender, RoutedEventArgs e)
         {
+            AppGrabberService appGrabber =
+                (AppGrabberService) CairoApplication.Current.Host.Services.GetService(typeof(AppGrabberService));
             Settings.Instance.IsFirstRun = false;
-            AppGrabber.AppGrabber.Instance.ShowDialog();
+            appGrabber?.ShowDialog();
             Close();
         }
 

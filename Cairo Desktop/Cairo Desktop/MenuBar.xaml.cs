@@ -23,19 +23,18 @@ namespace CairoDesktop
 {
     public partial class MenuBar : CairoAppBarWindow, IMenuBar
     {
+        internal readonly AppGrabberService _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
 
         private MenuBarShadow shadow;
         private static HotKey cairoMenuHotKey;
         private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
 
-        // AppGrabber instance
-        public AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
-
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
         {
+            _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
 
             InitializeComponent();
@@ -269,13 +268,13 @@ namespace CairoDesktop
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
-                appGrabber.AddByPath(fileNames, AppCategoryType.Uncategorized);
+                _appGrabber.AddByPath(fileNames, AppCategoryType.Uncategorized);
             }
             else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
             {
                 ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
 
-                appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
+                _appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
             }
         }
         #endregion
@@ -519,7 +518,7 @@ namespace CairoDesktop
 
         private void InitAppGrabberWindow(object sender, RoutedEventArgs e)
         {
-            appGrabber.ShowDialog();
+            _appGrabber.ShowDialog();
         }
         #endregion
 

@@ -5,11 +5,14 @@ namespace CairoDesktop.AppGrabber
 {
     public class TaskCategoryProvider : ITaskCategoryProvider
     {
+        private readonly AppGrabberService _appGrabber;
         private TaskCategoryChangeDelegate categoryChangeDelegate;
 
-        public TaskCategoryProvider()
+        public TaskCategoryProvider(AppGrabberService appGrabber)
         {
-            foreach (Category category in AppGrabber.Instance.CategoryList)
+            _appGrabber = appGrabber;
+            
+            foreach (Category category in _appGrabber.CategoryList)
             {
                 category.PropertyChanged += Category_PropertyChanged;
             }
@@ -17,7 +20,7 @@ namespace CairoDesktop.AppGrabber
 
         public void Dispose()
         {
-            foreach (Category category in AppGrabber.Instance.CategoryList)
+            foreach (Category category in _appGrabber.CategoryList)
             {
                 category.PropertyChanged -= Category_PropertyChanged;
             }
@@ -47,8 +50,8 @@ namespace CairoDesktop.AppGrabber
         public void SetCategoryChangeDelegate(TaskCategoryChangeDelegate changeDelegate)
         {
             categoryChangeDelegate = changeDelegate;
-            AppGrabber.Instance.CategoryList.CategoryChanged += (sender, args) => categoryChangeDelegate();
-            AppGrabber.Instance.CategoryList.CollectionChanged += CategoryList_CollectionChanged;
+            _appGrabber.CategoryList.CategoryChanged += (sender, args) => categoryChangeDelegate();
+            _appGrabber.CategoryList.CollectionChanged += CategoryList_CollectionChanged;
         }
 
         private void CategoryList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -73,7 +76,7 @@ namespace CairoDesktop.AppGrabber
         private ApplicationInfo GetTaskApplicationInfo(ApplicationWindow window)
         {
             ApplicationInfo appInfo = null;
-            foreach (ApplicationInfo ai in AppGrabber.Instance.CategoryList.FlatList)
+            foreach (ApplicationInfo ai in _appGrabber.CategoryList.FlatList)
             {
                 if ((ai.Target.ToLower() == window.WinFileName.ToLower() || (window.IsUWP && ai.Target == window.AppUserModelID)) && ai.Category != null)
                 {
