@@ -25,6 +25,7 @@ namespace CairoDesktop
     {
         internal readonly AppGrabberService _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
+        private readonly ISettingsUIService _settingsUiService;
 
         private MenuBarShadow shadow;
         private static HotKey cairoMenuHotKey;
@@ -32,10 +33,11 @@ namespace CairoDesktop
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService applicationUpdateService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
         {
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
+            _settingsUiService = settingsUiService;
 
             InitializeComponent();
             
@@ -512,8 +514,7 @@ namespace CairoDesktop
 
         private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
         {
-            CairoSettingsWindow.Instance.Show();
-            CairoSettingsWindow.Instance.Activate();
+            _settingsUiService.Show();
         }
 
         private void InitAppGrabberWindow(object sender, RoutedEventArgs e)

@@ -1,8 +1,8 @@
 using System.Windows.Threading;
-using System.Windows.Input;
 using System.Collections.Specialized;
 using System.IO;
 using System.Windows;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Helpers;
@@ -21,6 +21,7 @@ namespace CairoDesktop
         public static void PerformAction(string verb, string fileName)
         {
              var desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();
+             var settingsUiService = CairoApplication.Current.Host.Services.GetService<ISettingsUIService>();
 
             switch (verb)
             {
@@ -64,9 +65,7 @@ namespace CairoDesktop
                     FolderHelper.OpenWithShell(fileName);
                     break;
                 case Actions.Personalize when EnvironmentHelper.IsAppRunningAsShell:
-                    CairoSettingsWindow.Instance.Show();
-                    CairoSettingsWindow.Instance.Activate();
-                    CairoSettingsWindow.Instance.TabDesktop.IsSelected = true;
+                    settingsUiService?.Show("desktop");
                     break;
                 case Actions.Personalize:
                     ShellHelper.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,2");

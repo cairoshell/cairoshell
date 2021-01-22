@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="CairoDesktop.CairoSettingsWindow"
+<Window x:Class="CairoDesktop.SettingsUI"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

@@ -27,25 +27,23 @@ using ManagedShell.Common.Enums;
 namespace CairoDesktop
 {
     /// <summary>
-    /// Interaction logic for CairoSettingsWindow.xaml
+    /// Interaction logic for SettingsUI.xaml
     /// </summary>
-    public partial class CairoSettingsWindow : Window
+    public partial class SettingsUI : Window
     {
-        private static CairoSettingsWindow _instance = null;
-
         private readonly AppGrabberService _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ShellManager _shellManager;
+        private readonly SettingsUIService _uiService;
 
-        static CairoSettingsWindow() { }
-
-        private CairoSettingsWindow(ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService, AppGrabberService appGrabber)
+        internal SettingsUI(SettingsUIService uiService, ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService, AppGrabberService appGrabber)
         {
             InitializeComponent();
 
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
             _shellManager = shellManagerService.ShellManager;
+            _uiService = uiService;
 
             loadThemes();
             loadLanguages();
@@ -538,7 +536,7 @@ namespace CairoDesktop
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             saveChanges();
-            _instance = null;
+            _uiService.SettingsUi = null;
         }
 
         private void saveChanges()
@@ -737,12 +735,6 @@ namespace CairoDesktop
                 ShellLogger.Error($"SettingsWindow: Unable to update registry autorun setting: {exception.Message}");
             }
         }
-
-        public static CairoSettingsWindow Instance =>
-            _instance ?? (_instance = new CairoSettingsWindow(
-                (ShellManagerService)CairoApplication.Current.Host.Services.GetService(typeof(ShellManagerService)),
-                (IApplicationUpdateService) CairoApplication.Current.Host.Services.GetService(typeof(IApplicationUpdateService)),
-                (AppGrabberService)CairoApplication.Current.Host.Services.GetService(typeof(AppGrabberService))));
 
         #region Desktop Background
         private void loadDesktopBackgroundSettings()
