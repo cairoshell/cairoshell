@@ -123,16 +123,22 @@ namespace CairoDesktop.AppGrabber
             {
                 listsToMerge.Add(generateAppList(location));
             }
-            List<ApplicationInfo> rval = mergeLists(listsToMerge);
-
-            if (EnvironmentHelper.IsWindows8OrBetter)
-                rval.AddRange(getStoreApps());
-            return rval;
+            
+            listsToMerge.Add(getStoreApps());
+            
+            return mergeLists(listsToMerge);
         }
 
         private List<ApplicationInfo> getStoreApps()
         {
             List<ApplicationInfo> storeApps = new List<ApplicationInfo>();
+
+            if (!EnvironmentHelper.IsWindows8OrBetter || EnvironmentHelper.IsServerCore)
+            {
+                // Package management components are not available before Windows 8 or on Server Core installations
+                // Just return an empty list
+                return storeApps;
+            }
 
             foreach (string[] app in ManagedShell.UWPInterop.StoreAppHelper.GetStoreApps())
             {
