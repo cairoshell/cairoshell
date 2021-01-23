@@ -466,25 +466,25 @@
 
     <!-- Image resources -->
     <BitmapImage x:Key="MenuIcon"
-                 UriSource="Resources\cairoMenuDefault.png"></BitmapImage>
+                 UriSource="..\Resources\cairoMenuDefault.png"></BitmapImage>
     <BitmapImage x:Key="SearchIcon"
-                 UriSource="Resources\searchDefault.png"></BitmapImage>
+                 UriSource="..\Resources\searchDefault.png"></BitmapImage>
     <BitmapImage x:Key="ActionCenterIcon"
-                 UriSource="Resources\actionCenterDefault.png"></BitmapImage>
+                 UriSource="..\Resources\actionCenterDefault.png"></BitmapImage>
     <BitmapImage x:Key="VolumeIcon"
-                 UriSource="Resources\volumeIconDefault.png"></BitmapImage>
+                 UriSource="..\Resources\volumeIconDefault.png"></BitmapImage>
     <BitmapImage x:Key="VolumeLowIcon"
-                 UriSource="Resources\volumeLowIconDefault.png"></BitmapImage>
+                 UriSource="..\Resources\volumeLowIconDefault.png"></BitmapImage>
     <BitmapImage x:Key="VolumeOffIcon"
-                 UriSource="Resources\volumeOffIconDefault.png"></BitmapImage>
+                 UriSource="..\Resources\volumeOffIconDefault.png"></BitmapImage>
     <BitmapImage x:Key="VolumeMuteIcon"
-                 UriSource="Resources\volumeMuteIconDefault.png"></BitmapImage>
+                 UriSource="..\Resources\volumeMuteIconDefault.png"></BitmapImage>
     <BitmapImage x:Key="MenubarShadow"
-                 UriSource="Resources\menubarShadow.png"></BitmapImage>
+                 UriSource="..\Resources\menubarShadow.png"></BitmapImage>
     <BitmapImage x:Key="NullIcon"
-                 UriSource="Resources\nullIcon.png"></BitmapImage>
+                 UriSource="..\Resources\nullIcon.png"></BitmapImage>
     <BitmapImage x:Key="DateTimeIcon"
-                 UriSource="Resources\dateTimeIcon.png"></BitmapImage>
+                 UriSource="..\Resources\dateTimeIcon.png"></BitmapImage>
 
     <Style TargetType="{x:Type Control}">
         <Setter Property="Template">

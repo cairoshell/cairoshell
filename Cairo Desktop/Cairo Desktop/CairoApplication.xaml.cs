@@ -94,76 +94,6 @@ namespace CairoDesktop
 #endif
         }
 
-        private void FirstRun()
-        {
-            try
-            {
-                if (Settings.Instance.IsFirstRun || _isTour)
-                {
-                    Welcome welcome = new Welcome();
-                    welcome.Show();
-                }
-            }
-            catch (Exception ex)
-            {
-                CairoMessage.Show(
-                    $"Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{ex}",
-                    "Unexpected error!",
-                    CairoMessageImage.Error);
-            }
-        }
-
-        private void SetTheme()
-        {
-            // Themes are very UI centric. We should devise a way of having Plugins/Extensions contribute to this.
-            string theme = Settings.Instance.CairoTheme;
-            if (theme != "Default")
-            {
-                string themeFilePath = AppDomain.CurrentDomain.BaseDirectory + theme;
-                if (File.Exists(themeFilePath))
-                {
-                    var newRes = new ResourceDictionary
-                    {
-                        Source = new Uri(themeFilePath, UriKind.RelativeOrAbsolute)
-                    };
-                    Resources.MergedDictionaries.Add(newRes);
-                }
-            }
-
-            Settings.Instance.PropertyChanged += (s, e) =>
-            {
-                if (e == null || string.IsNullOrWhiteSpace(e.PropertyName) || e.PropertyName != "CairoTheme")
-                {
-                    return;
-                }
-
-                Resources.MergedDictionaries.Clear();
-                var cairoResource = new ResourceDictionary
-                {
-                    Source = new Uri("Cairo.xaml", UriKind.RelativeOrAbsolute)
-                };
-                Resources.MergedDictionaries.Add(cairoResource);
-
-                string newTheme = Settings.Instance.CairoTheme;
-                if (newTheme == "Default")
-                {
-                    return;
-                }
-
-                string newThemeFilePath = AppDomain.CurrentDomain.BaseDirectory + newTheme;
-                if (!File.Exists(newThemeFilePath))
-                {
-                    return;
-                }
-
-                var newRes = new ResourceDictionary
-                {
-                    Source = new Uri(newThemeFilePath, UriKind.RelativeOrAbsolute)
-                };
-                Resources.MergedDictionaries.Add(newRes);
-            };
-        }
-
         protected override async void OnSessionEnding(SessionEndingCancelEventArgs e)
         {
             base.OnSessionEnding(e);
@@ -298,12 +228,23 @@ namespace CairoDesktop
         {
             Dispatcher.BeginInvoke(action);
         }
+        
+        public void ClearResources()
+        {
+            Resources.MergedDictionaries.Clear();
+        }
+        
+        public void AddResource(object resource)
+        {
+            if (resource is ResourceDictionary theme)
+            {
+                Resources.MergedDictionaries.Add(theme);
+            }
+        }
 
         public bool IsShuttingDown { get; private set; }
 
         public static string StartupPath => Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).Location);
-
-        public static string ProductName => (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Name;
 
         public static Version ProductVersion => (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Version;
 

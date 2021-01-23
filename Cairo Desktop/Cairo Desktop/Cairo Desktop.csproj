@@ -52,23 +52,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Page Remove="Fade.xaml" />
-    <Page Remove="Flat.xaml" />
-    <Page Remove="MiniMeow.xaml" />
-    <Page Remove="White.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Fade.xaml">
+    <None Include="Themes\Fade.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Flat.xaml">
+    <None Include="Themes\Flat.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MiniMeow.xaml">
+    <None Include="Themes\MiniMeow.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="White.xaml">
+    <None Include="Themes\White.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

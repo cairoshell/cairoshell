@@ -34,15 +34,17 @@ namespace CairoDesktop
         private readonly AppGrabberService _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ShellManager _shellManager;
+        private readonly ThemeService _themeService;
         private readonly SettingsUIService _uiService;
 
-        internal SettingsUI(SettingsUIService uiService, ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService, AppGrabberService appGrabber)
+        internal SettingsUI(SettingsUIService uiService, ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService, AppGrabberService appGrabber, ThemeService themeService)
         {
             InitializeComponent();
 
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
             _shellManager = shellManagerService.ShellManager;
+            _themeService = themeService;
             _uiService = uiService;
 
             loadThemes();
@@ -190,11 +192,8 @@ namespace CairoDesktop
 
         private void loadThemes()
         {
-            cboThemeSelect.Items.Add("Default");
-
-            foreach (string subStr in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory).Where(s => Path.GetExtension(s).Contains("xaml")))
+            foreach (var theme in _themeService.GetThemes())
             {
-                string theme = Path.GetFileName(subStr);
                 cboThemeSelect.Items.Add(theme);
             }
         }

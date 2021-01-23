@@ -6,6 +6,7 @@ using ManagedShell.Interop;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using CairoDesktop.Configuration;
 
 namespace CairoDesktop
 {
@@ -42,6 +43,30 @@ namespace CairoDesktop
             _logger.LogInformation($"Startup Path: {StartupPath}");
             _logger.LogInformation($"Configured as shell: {EnvironmentHelper.IsAppConfiguredAsShell}");
             _logger.LogInformation($"Running as shell: {EnvironmentHelper.IsAppRunningAsShell}");
+        }
+
+        private void FirstRun()
+        {
+            try
+            {
+                if (Settings.Instance.IsFirstRun || _isTour)
+                {
+                    Welcome welcome = new Welcome();
+                    welcome.Show();
+                }
+            }
+            catch (Exception ex)
+            {
+                CairoMessage.Show(
+                    $"Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{ex}",
+                    "Unexpected error!",
+                    CairoMessageImage.Error);
+            }
+        }
+
+        private void SetTheme()
+        {
+            Host.Services.GetService<ThemeService>()?.SetThemeFromSettings();
         }
 
         private void SetupWindowServices()

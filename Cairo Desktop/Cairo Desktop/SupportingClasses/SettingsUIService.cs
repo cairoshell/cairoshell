@@ -7,16 +7,18 @@ namespace CairoDesktop.SupportingClasses
     class SettingsUIService : ISettingsUIService
     {
         private readonly AppGrabberService _appGrabber;
-        private readonly IApplicationUpdateService _updateService;
         private readonly ShellManagerService _shellManager;
+        private readonly ThemeService _themeService;
+        private readonly IApplicationUpdateService _updateService;
 
         internal SettingsUI SettingsUi;
         
         public SettingsUIService(AppGrabberService appGrabber, IApplicationUpdateService updateService,
-            ShellManagerService shellManager)
+            ShellManagerService shellManager, ThemeService themeService)
         {
             _appGrabber = appGrabber;
             _shellManager = shellManager;
+            _themeService = themeService;
             _updateService = updateService;
         }
         
@@ -24,7 +26,7 @@ namespace CairoDesktop.SupportingClasses
         {
             if (SettingsUi == null)
             {
-                SettingsUi = new SettingsUI(this, _shellManager, _updateService, _appGrabber);
+                SettingsUi = new SettingsUI(this, _shellManager, _updateService, _appGrabber, _themeService);
             }
             
             SettingsUi.Show();

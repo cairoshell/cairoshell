@@ -44,7 +44,7 @@ namespace CairoDesktop
                     services.AddSingleton<AppGrabberService>();
                     services.AddSingleton<ISettingsUIService, SettingsUIService>();
                     services.AddHostedService<ShellHotKeyService>();
-                    services.AddSingleton<ShellManagerService>();
+                    services.AddSingleton<ThemeService>();
 
                     services.AddSingleton<DesktopManager>();
                     services.AddSingleton<WindowManager>();
