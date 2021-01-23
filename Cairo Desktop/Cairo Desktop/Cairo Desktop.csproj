@@ -53,13 +53,13 @@
 
   <ItemGroup>
     <None Include="Themes\Fade.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Include="Themes\Flat.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Themes\MiniMeow.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Include="Themes\White.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

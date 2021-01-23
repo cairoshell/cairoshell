@@ -77,8 +77,9 @@ Section "$(SECT_cairo)" cairo
   DetailPrint "Installing Cairo files"
   File "..\Cairo Desktop\Build\x64\Release\CairoDesktop.exe"
   File "..\Cairo Desktop\Build\x64\Release\*.dll"
-  File "..\Cairo Desktop\Build\x64\Release\Flat.xaml"
-  File "..\Cairo Desktop\Build\x64\Release\White.xaml"
+
+  CreateDirectory "$INSTDIR\Themes"
+  File /r "..\Cairo Desktop\Build\x64\Release\Themes"
 
   ; Set shell context to All Users
   SetShellVarContext all
