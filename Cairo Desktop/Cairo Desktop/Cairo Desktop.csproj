@@ -16,6 +16,7 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AssemblyName>CairoDesktop</AssemblyName>
+    <AssemblyTitle>Cairo Desktop Environment</AssemblyTitle>
     <Company>Cairo Development Team</Company>
     <Authors>Cairo Development Team</Authors>
     <Product>Cairo Desktop Environment</Product>
