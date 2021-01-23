@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-// TODO: This should be moved to the Application project, but AppBarWindow needs TLC first
+// TODO: Window services should move to the Infrastructure project
 
 namespace CairoDesktop.SupportingClasses
 {

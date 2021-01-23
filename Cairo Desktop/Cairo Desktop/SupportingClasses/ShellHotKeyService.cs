@@ -1,35 +1,23 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using CairoDesktop.Common;
 using System.Windows.Input;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Infrastructure.DependencyInjection;
 using ManagedShell.Common.Helpers;
-using Microsoft.Extensions.Hosting;
 
 namespace CairoDesktop.SupportingClasses
 {
-    public sealed class ShellHotKeyService : BackgroundService
+    public sealed class ShellHotKeyService : CairoBackgroundService
     {
         private readonly ICairoApplication _cairoApplication;
         private readonly DesktopManager _desktopManager;
-        private Task ServiceStartTask;
 
         public ShellHotKeyService(ICairoApplication cairoApplication, DesktopManager desktopManager)
         {
             _cairoApplication = cairoApplication;
             _desktopManager = desktopManager;
-        }
-
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
-        {
+            
             ServiceStartTask = new Task(RegisterSystemHotkeys);
-
-            if (!stoppingToken.IsCancellationRequested)
-            {
-                ServiceStartTask.Start();
-            }
-
-            return ServiceStartTask;
         }
 
         private void RegisterSystemHotkeys()
