@@ -1,10 +1,11 @@
-﻿using System;
+﻿using CairoDesktop.SupportingClasses;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
 // TODO: Window services should move to the Infrastructure project
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     public interface IWindowService : IDisposable
     {

@@ -3,10 +3,11 @@ using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.SupportingClasses;
 using ManagedShell.AppBar;
 using ManagedShell.Interop;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     public class TaskbarWindowService : AppBarWindowService
     {

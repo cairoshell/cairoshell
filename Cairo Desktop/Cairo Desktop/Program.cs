@@ -10,8 +10,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using CairoDesktop.AppGrabber;
-using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.MenuBarExtensions;
+using CairoDesktop.Services;
 
 namespace CairoDesktop
 {

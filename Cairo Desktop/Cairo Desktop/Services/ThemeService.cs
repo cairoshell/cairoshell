@@ -8,7 +8,7 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using ManagedShell.Common.Logging;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     class ThemeService
     {

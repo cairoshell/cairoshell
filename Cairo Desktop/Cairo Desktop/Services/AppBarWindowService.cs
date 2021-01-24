@@ -4,9 +4,10 @@ using System.Windows.Forms;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.SupportingClasses;
 using ManagedShell;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     public abstract class AppBarWindowService : IWindowService
     {

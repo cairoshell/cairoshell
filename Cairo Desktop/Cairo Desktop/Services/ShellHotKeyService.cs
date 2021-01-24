@@ -4,8 +4,9 @@ using System.Windows.Input;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.DependencyInjection;
 using ManagedShell.Common.Helpers;
+using CairoDesktop.SupportingClasses;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     public sealed class ShellHotKeyService : CairoBackgroundService
     {

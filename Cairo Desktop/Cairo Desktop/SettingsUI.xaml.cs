@@ -23,6 +23,7 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using ManagedShell.Common.Enums;
+using CairoDesktop.Services;
 
 namespace CairoDesktop
 {

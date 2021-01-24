@@ -2,7 +2,7 @@
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.Services;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     class SettingsUIService : ISettingsUIService
     {

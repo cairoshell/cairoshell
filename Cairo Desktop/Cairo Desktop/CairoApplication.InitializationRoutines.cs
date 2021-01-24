@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using CairoDesktop.Configuration;
+using CairoDesktop.Services;
 
 namespace CairoDesktop
 {
