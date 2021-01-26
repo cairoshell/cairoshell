@@ -17,6 +17,8 @@ namespace CairoDesktop.Application.Interfaces
 
         void ExitCairo();
 
+        void RestartCairo();
+
         int Run();
 
         void Dispatch(Action action);

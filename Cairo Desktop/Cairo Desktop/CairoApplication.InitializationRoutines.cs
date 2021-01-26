@@ -1,32 +1,33 @@
 ﻿using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using CairoDesktop.Configuration;
 using CairoDesktop.Services;
 
 namespace CairoDesktop
 {
     public partial class CairoApplication
     {
-        private void ProcessCommandLineArgs(string[] args)
-        {
-            _commandLineParser = new CommandLineParser(args);
-
-            _isRestart = _commandLineParser.ToBoolean("restart");
-            _isTour = _commandLineParser.ToBoolean("tour");
-            _forceEnableShellMode = _commandLineParser.ToBoolean("shell");
-            _forceDisableShellMode = _commandLineParser.ToBoolean("noshell");
-        }
-
         public void SetIsCairoRunningAsShell()
         {
+            bool forceNoShell = false;
+            bool forceShell = false;
+
+            try
+            {
+                forceNoShell = _options.CurrentValue.NoShell;
+                forceShell = _options.CurrentValue.Shell;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Unable to read shell command line options: {e.Message}");
+            }
+
             // check if there is an existing shell window. If not, we will assume the role of shell.
-            EnvironmentHelper.IsAppRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !_forceDisableShellMode) || _forceEnableShellMode;
+            EnvironmentHelper.IsAppRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !forceNoShell) || forceShell;
         }
 
         internal void LoadExtensions()
@@ -44,25 +45,6 @@ namespace CairoDesktop
             _logger.LogInformation($"Startup Path: {StartupPath}");
             _logger.LogInformation($"Configured as shell: {EnvironmentHelper.IsAppConfiguredAsShell}");
             _logger.LogInformation($"Running as shell: {EnvironmentHelper.IsAppRunningAsShell}");
-        }
-
-        private void FirstRun()
-        {
-            try
-            {
-                if (Settings.Instance.IsFirstRun || _isTour)
-                {
-                    Welcome welcome = new Welcome();
-                    welcome.Show();
-                }
-            }
-            catch (Exception ex)
-            {
-                CairoMessage.Show(
-                    $"Whoops! Something bad happened in the startup process.\nCairo will probably run, but please report the following details (preferably as a screen shot...)\n\n{ex}",
-                    "Unexpected error!",
-                    CairoMessageImage.Error);
-            }
         }
 
         private void SetTheme()

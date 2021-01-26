@@ -12,6 +12,8 @@ using System.IO;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.MenuBarExtensions;
 using CairoDesktop.Services;
+using Microsoft.Extensions.Configuration;
+using CairoDesktop.Infrastructure.Options;
 
 namespace CairoDesktop
 {
@@ -36,8 +38,14 @@ namespace CairoDesktop
             }
             
             _host = new HostBuilder()
+                .ConfigureAppConfiguration((context, builder) =>
+                {
+                    builder.AddCommandLine(args);
+                })
                 .ConfigureServices((context, services) =>
                 {
+                    services.Configure<CommandLineOptions>(context.Configuration);
+
                     services.AddSingleton(s => Settings.Instance);
                     services.AddSingleton<ICairoApplication, CairoApplication>();
 
@@ -50,6 +58,10 @@ namespace CairoDesktop
                     services.AddSingleton<WindowManager>();
                     services.AddSingleton<IWindowService, MenuBarWindowService>();
                     services.AddSingleton<IWindowService, TaskbarWindowService>();
+
+#if ENABLEFIRSTRUN
+                    services.AddHostedService<FirstRunService>();
+#endif
 
                     services.AddInfrastructureServices(context.Configuration);
 

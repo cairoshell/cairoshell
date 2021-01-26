@@ -1,10 +1,10 @@
 ﻿using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using CairoDesktop.Infrastructure.Options;
 using CairoDesktop.Infrastructure.Services;
 using ManagedShell.Common.SupportingClasses; // Required for StartupRunner; excluded from debug builds
 
@@ -24,27 +25,21 @@ namespace CairoDesktop
     public partial class CairoApplication : System.Windows.Application, ICairoApplication
     {
         private readonly ILogger<CairoApplication> _logger;
+        private readonly IOptionsMonitor<CommandLineOptions> _options;
         public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
-
-        private CommandLineParser _commandLineParser;
-        private bool _isRestart;
-        private bool _isTour;
-        private bool _forceEnableShellMode;
-        private bool _forceDisableShellMode;
 
         // Parameter-less constructor required for WPF
         public CairoApplication()
         {
         }
 
-        public CairoApplication(IHost host, ILogger<CairoApplication> logger)
+        public CairoApplication(IHost host, ILogger<CairoApplication> logger, IOptionsMonitor<CommandLineOptions> options)
         {
             Host = host;
             _logger = logger;
+            _options = options;
 
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
-
-            ProcessCommandLineArgs(Environment.GetCommandLineArgs());
 
             Extensions = new List<IShellExtension>();
 
@@ -80,13 +75,20 @@ namespace CairoDesktop
 
             ShellHelper.SetShellReadyEvent();
 
-#if ENABLEFIRSTRUN
-            FirstRun();
-#endif
-
 #if !DEBUG
             // login items only necessary if Explorer didn't start them
-            if (EnvironmentHelper.IsAppRunningAsShell && !_isRestart)
+            bool isRestart = false;
+
+            try
+            {
+                isRestart = _options.CurrentValue.Restart;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Unable to read restart command line option: {ex.Message}");
+            }
+
+            if (EnvironmentHelper.IsAppRunningAsShell && !isRestart)
             {
                 StartupRunner runner = new StartupRunner();
                 runner.Run();
@@ -206,7 +208,7 @@ namespace CairoDesktop
                 // run the program again
                 Process current = new Process();
                 current.StartInfo.FileName = AppDomain.CurrentDomain.BaseDirectory + "CairoDesktop.exe";
-                current.StartInfo.Arguments = "/restart";
+                current.StartInfo.Arguments = "/restart=true";
                 current.Start();
 
                 // close this instance

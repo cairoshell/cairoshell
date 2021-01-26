@@ -34,16 +34,18 @@ namespace CairoDesktop
     {
         private readonly AppGrabberService _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
+        private readonly ICairoApplication _cairoApplication;
         private readonly ShellManager _shellManager;
         private readonly ThemeService _themeService;
         private readonly SettingsUIService _uiService;
 
-        internal SettingsUI(SettingsUIService uiService, ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService, AppGrabberService appGrabber, ThemeService themeService)
+        internal SettingsUI(ICairoApplication cairoApplication, SettingsUIService uiService, ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService, AppGrabberService appGrabber, ThemeService themeService)
         {
             InitializeComponent();
 
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
+            _cairoApplication = cairoApplication;
             _shellManager = shellManagerService.ShellManager;
             _themeService = themeService;
             _uiService = uiService;
@@ -525,7 +527,7 @@ namespace CairoDesktop
         {
             saveChanges();
 
-            CairoApplication.Current.RestartCairo();
+            _cairoApplication.RestartCairo();
         }
 
         /// <summary>

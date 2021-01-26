@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using CairoDesktop.AppGrabber;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using CairoDesktop.Localization;
@@ -14,11 +15,17 @@ namespace CairoDesktop
     /// </summary>
     public partial class Welcome : Window
     {
+        private readonly AppGrabberService _appGrabber;
+        private readonly ICairoApplication _cairoApplication;
+
         const int maxSize = 780;
         string _initialLanguage = "en_US";
 
-        public Welcome()
+        public Welcome(ICairoApplication cairoApplication, AppGrabberService appGrabber)
         {
+            _appGrabber = appGrabber;
+            _cairoApplication = cairoApplication;
+
             InitializeComponent();
 
             SetSizeAndLocation();
@@ -90,10 +97,8 @@ namespace CairoDesktop
 
         private void btnAppGrabber_Click(object sender, RoutedEventArgs e)
         {
-            AppGrabberService appGrabber =
-                (AppGrabberService) CairoApplication.Current.Host.Services.GetService(typeof(AppGrabberService));
             Settings.Instance.IsFirstRun = false;
-            appGrabber?.ShowDialog();
+            _appGrabber?.ShowDialog();
             Close();
         }
 
@@ -106,7 +111,7 @@ namespace CairoDesktop
                     {
                         if (result == true)
                         {
-                            CairoApplication.Current.RestartCairo();
+                            _cairoApplication?.RestartCairo();
                         }
                     });
             }

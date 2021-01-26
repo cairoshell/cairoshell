@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
+using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.Services
@@ -98,12 +99,16 @@ namespace CairoDesktop.Services
 
             foreach (var location in THEME_LOCATIONS)
             {
-                foreach (string subStr in Directory.GetFiles(Path.Combine(location, THEME_FOLDER)).Where(s => Path.GetExtension(s).Contains(THEME_EXT)))
+                string themePath = Path.Combine(location, THEME_FOLDER);
+                if (ShellHelper.Exists(themePath))
                 {
-                    string theme = Path.GetFileNameWithoutExtension(subStr);
-                    if (!themes.Contains(theme))
+                    foreach (string subStr in Directory.GetFiles(themePath).Where(s => Path.GetExtension(s).Contains(THEME_EXT)))
                     {
-                        themes.Add(theme);
+                        string theme = Path.GetFileNameWithoutExtension(subStr);
+                        if (!themes.Contains(theme))
+                        {
+                            themes.Add(theme);
+                        }
                     }
                 }
             }

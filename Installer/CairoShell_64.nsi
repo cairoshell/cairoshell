@@ -197,7 +197,7 @@ Function LaunchCairo
     Exec '"$WINDIR\explorer.exe" "$INSTDIR\CairoDesktop.exe"' ; use the shell to launch as current user (otherwise notification area breaks)
     goto end_launch
   std_exec:
-    Exec '$INSTDIR\CairoDesktop.exe /restart'
+    Exec '$INSTDIR\CairoDesktop.exe /restart=true'
   end_launch:
 FunctionEnd
 
