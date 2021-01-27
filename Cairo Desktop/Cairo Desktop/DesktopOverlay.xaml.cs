@@ -15,16 +15,14 @@ namespace CairoDesktop
     /// </summary>
     public partial class DesktopOverlay : Window
     {
-        private readonly WindowManager _windowManager;
         private readonly DesktopManager _desktopManager;
         private readonly AppBarManager _appBarManager;
         public IntPtr Handle;
 
-        public DesktopOverlay(WindowManager windowManager, DesktopManager manager, AppBarManager appBarManager)
+        public DesktopOverlay(DesktopManager manager, AppBarManager appBarManager)
         {
             InitializeComponent();
-
-            _windowManager = windowManager;
+            
             _desktopManager = manager;
             _appBarManager = appBarManager;
 
@@ -43,8 +41,9 @@ namespace CairoDesktop
 
                 // get the TaskBar's height
                 double dpiScale = 1;
-                NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(ref dpiScale, System.Windows.Forms.Screen.PrimaryScreen, false, false);
-                taskbarHeight = (System.Windows.Forms.Screen.PrimaryScreen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale;
+                AppBarScreen screen = AppBarScreen.FromPrimaryScreen();
+                NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(ref dpiScale, screen, false, false);
+                taskbarHeight = (screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale;
 
                 // top TaskBar means we should push down
                 if (Settings.Instance.TaskbarPosition == 1)

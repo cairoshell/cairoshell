@@ -74,9 +74,9 @@ namespace CairoDesktop.Services
             }
         }
 
-        protected override void OpenWindow(Screen screen)
+        protected override void OpenWindow(AppBarScreen screen)
         {
-            Taskbar newTaskbar = new Taskbar(_cairoApplication, _shellManager, _windowManager, _desktopManager, _appGrabber, screen, Settings.Instance.TaskbarPosition == 1 ? NativeMethods.ABEdge.ABE_TOP : NativeMethods.ABEdge.ABE_BOTTOM);
+            Taskbar newTaskbar = new Taskbar(_cairoApplication, _shellManager, _windowManager, _desktopManager, _appGrabber, screen, Settings.Instance.TaskbarPosition == 1 ? AppBarEdge.Top : AppBarEdge.Bottom);
             Windows.Add(newTaskbar);
             newTaskbar.Show();
         }

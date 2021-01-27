@@ -1,7 +1,7 @@
 ﻿using CairoDesktop.SupportingClasses;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using ManagedShell.AppBar;
 
 // TODO: Window services should move to the Infrastructure project
 
@@ -13,7 +13,7 @@ namespace CairoDesktop.Services
 
         void Register();
 
-        void HandleScreenAdded(Screen screen);
+        void HandleScreenAdded(AppBarScreen screen);
 
         void RefreshWindows(WindowManagerEventArgs args);
 

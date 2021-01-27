@@ -305,7 +305,7 @@ namespace CairoDesktop.SupportingClasses
         {
             if (DesktopOverlayWindow == null && DesktopWindow != null && DesktopIconsControl != null)
             {
-                DesktopOverlayWindow = new DesktopOverlay(_windowManager, this, _shellManager.AppBarManager);
+                DesktopOverlayWindow = new DesktopOverlay(this, _shellManager.AppBarManager);
 
                 // create mask image to show while the icons control is rendered on the overlay window
                 Image maskImage = new Image

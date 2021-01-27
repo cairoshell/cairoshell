@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
 using Microsoft.Win32;
@@ -295,9 +294,10 @@ namespace CairoDesktop
                 // this keeps the desktop going beneath the TaskBar
                 // get the TaskBar's height
                 double dpiScale = 1;
-                NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(ref dpiScale, Screen.PrimaryScreen, false, false);
+                AppBarScreen screen = AppBarScreen.FromPrimaryScreen();
+                NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(ref dpiScale, screen, false, false);
 
-                grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale) - ((Screen.PrimaryScreen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale);
+                grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale) - ((screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale);
 
                 if (Settings.Instance.TaskbarPosition == 1)
                 {

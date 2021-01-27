@@ -9,6 +9,7 @@ using System.Windows.Controls.Primitives;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using ManagedShell;
+using ManagedShell.AppBar;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 
@@ -48,14 +49,12 @@ namespace CairoDesktop
         }
         #endregion
         
-        public Taskbar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager, AppGrabberService appGrabber, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
+        public Taskbar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager, AppGrabberService appGrabber, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
         {
             InitializeComponent();
             _appGrabber = appGrabber;
             _desktopManager = desktopManager;
             _shellManager = shellManager;
-
-            Screen = screen;
 
             if (!Screen.Primary && !Settings.Instance.EnableMenuBarMultiMon)
             {
@@ -107,13 +106,13 @@ namespace CairoDesktop
             // set taskbar edge based on preference
             if (Settings.Instance.TaskbarPosition == 1)
             {
-                AppBarEdge = NativeMethods.ABEdge.ABE_TOP;
+                AppBarEdge = AppBarEdge.Top;
                 TaskbarGroupStyle.ContainerStyle = FindResource("CairoTaskbarTopGroupStyle") as Style;
                 TasksList.Margin = new Thickness(0);
             }
             else
             {
-                AppBarEdge = NativeMethods.ABEdge.ABE_BOTTOM;
+                AppBarEdge = AppBarEdge.Bottom;
                 TaskbarGroupStyle.ContainerStyle = FindResource("CairoTaskbarGroupStyle") as Style;
                 TasksList.Margin = new Thickness(-3, -1, 0, 0);
             }

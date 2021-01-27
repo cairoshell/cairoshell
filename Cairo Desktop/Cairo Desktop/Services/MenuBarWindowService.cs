@@ -1,10 +1,9 @@
-﻿using System.Windows.Forms;
-using CairoDesktop.AppGrabber;
+﻿using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.SupportingClasses;
-using ManagedShell.Interop;
+using ManagedShell.AppBar;
 
 namespace CairoDesktop.Services
 {
@@ -37,9 +36,9 @@ namespace CairoDesktop.Services
             }
         }
 
-        protected override void OpenWindow(Screen screen)
+        protected override void OpenWindow(AppBarScreen screen)
         {
-            MenuBar newMenuBar = new MenuBar(_cairoApplication, _shellManager, _windowManager, _appGrabber, _updateService, _settingsUiService, screen, NativeMethods.ABEdge.ABE_TOP);
+            MenuBar newMenuBar = new MenuBar(_cairoApplication, _shellManager, _windowManager, _appGrabber, _updateService, _settingsUiService, screen, AppBarEdge.Top);
             Windows.Add(newMenuBar);
             newMenuBar.Show();
         }

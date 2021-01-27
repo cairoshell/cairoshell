@@ -33,7 +33,7 @@ namespace CairoDesktop
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, System.Windows.Forms.Screen screen, NativeMethods.ABEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
         {
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
@@ -157,7 +157,7 @@ namespace CairoDesktop
 
         private void setupShadow()
         {
-            if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarEdge != NativeMethods.ABEdge.ABE_BOTTOM)
+            if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarEdge != AppBarEdge.Bottom)
             {
                 shadow = new MenuBarShadow(_cairoApplication, _windowManager, this);
                 shadow.Show();
@@ -333,7 +333,7 @@ namespace CairoDesktop
         {
             double top;
 
-            if (AppBarEdge == NativeMethods.ABEdge.ABE_BOTTOM) 
+            if (AppBarEdge == AppBarEdge.Bottom) 
                 top = (Screen.Bounds.Bottom / DpiScale) - DesiredHeight;
             else
                 top = Screen.Bounds.Y / DpiScale;
