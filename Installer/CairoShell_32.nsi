@@ -79,7 +79,7 @@ Section "$(SECT_cairo)" cairo
   File "..\Cairo Desktop\Build\x86\Release\*.dll"
 
   CreateDirectory "$INSTDIR\Themes"
-  File /r "..\Cairo Desktop\Build\x64\Release\Themes"
+  File /r "..\Cairo Desktop\Build\x86\Release\Themes"
 
   ; Set shell context to All Users
   SetShellVarContext all

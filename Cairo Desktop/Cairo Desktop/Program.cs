@@ -3,7 +3,6 @@ using CairoDesktop.Common.ExtensionMethods;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.DependencyInjection;
-using CairoDesktop.SupportingClasses;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
