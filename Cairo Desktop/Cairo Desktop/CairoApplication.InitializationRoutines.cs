@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Application.Interfaces;
-using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,7 +41,6 @@ namespace CairoDesktop
             _logger.LogInformation($"Operating System: {EnvironmentHelper.WindowsProductName} {Environment.OSVersion.Version}");
             _logger.LogInformation($"Processor Type: {(IntPtr.Size == 8 || EnvironmentHelper.IsWow64 ? 64 : 32)}-bit");
             _logger.LogInformation($"Running As: {IntPtr.Size * 8}-bit Process");
-            _logger.LogInformation($"Startup Path: {StartupPath}");
             _logger.LogInformation($"Configured as shell: {EnvironmentHelper.IsAppConfiguredAsShell}");
             _logger.LogInformation($"Running as shell: {EnvironmentHelper.IsAppRunningAsShell}");
         }
