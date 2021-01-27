@@ -6,7 +6,7 @@ using CairoDesktop.Common;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
-using CairoDesktop.SupportingClasses;
+using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop

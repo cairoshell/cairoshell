@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using CairoDesktop.Localization;
+using CairoDesktop.Services;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;

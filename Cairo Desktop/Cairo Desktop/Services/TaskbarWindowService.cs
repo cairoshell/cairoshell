@@ -1,11 +1,8 @@
-﻿using System.Windows.Forms;
-using CairoDesktop.AppGrabber;
+﻿using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
-using CairoDesktop.SupportingClasses;
 using ManagedShell.AppBar;
-using ManagedShell.Interop;
 
 namespace CairoDesktop.Services
 {

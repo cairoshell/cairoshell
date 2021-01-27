@@ -4,11 +4,11 @@ using System.IO;
 using System.Windows;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.SupportingClasses;
+using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CairoDesktop
+namespace CairoDesktop.SupportingClasses
 {
     public static class CustomCommands
     {

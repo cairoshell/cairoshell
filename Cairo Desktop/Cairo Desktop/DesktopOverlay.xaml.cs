@@ -1,10 +1,10 @@
 ﻿using CairoDesktop.Configuration;
 using ManagedShell.Interop;
-using CairoDesktop.SupportingClasses;
 using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using CairoDesktop.Services;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 

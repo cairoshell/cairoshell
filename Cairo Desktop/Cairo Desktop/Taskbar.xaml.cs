@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Services;
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Enums;

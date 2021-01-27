@@ -5,6 +5,7 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Input;
+using CairoDesktop.Services;
 
 namespace CairoDesktop {
     /// <summary>

@@ -1,5 +1,6 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Configuration;
+using CairoDesktop.SupportingClasses;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -14,7 +15,7 @@ using ManagedShell.Common.SupportingClasses;
 using Microsoft.Extensions.Logging;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     public class DesktopManager : INotifyPropertyChanged, IDisposable
     {

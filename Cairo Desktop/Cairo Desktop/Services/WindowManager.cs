@@ -4,12 +4,12 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using CairoDesktop.Infrastructure.Services;
-using CairoDesktop.Services;
+using CairoDesktop.SupportingClasses;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.Logging;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     public sealed class WindowManager : IDisposable
     {

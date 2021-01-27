@@ -6,7 +6,7 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using CairoDesktop.Localization;
-using CairoDesktop.SupportingClasses;
+using CairoDesktop.Services;
 
 namespace CairoDesktop
 {
