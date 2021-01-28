@@ -4,7 +4,6 @@ using System.IO;
 using System.Windows.Interop;
 using ManagedShell.Interop;
 using CairoDesktop.Configuration;
-using CairoDesktop.SupportingClasses;
 using CairoDesktop.Common;
 using System.Linq;
 using System.ComponentModel;
@@ -12,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Controls;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 

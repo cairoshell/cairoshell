@@ -4,11 +4,12 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.SupportingClasses;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.Logging;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     public sealed class WindowManager : IDisposable
     {
@@ -45,7 +46,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public Screen[] ScreenState = Array.Empty<Screen>();
+        public List<AppBarScreen> ScreenState = new List<AppBarScreen>();
         
         public EventHandler<WindowManagerEventArgs> DwmChanged;
         public EventHandler<WindowManagerEventArgs> ScreensChanged;
@@ -134,10 +135,10 @@ namespace CairoDesktop.SupportingClasses
         {
             ResetScreenCache();
 
-            if (ScreenState.Length == Screen.AllScreens.Length)
+            if (ScreenState.Count == Screen.AllScreens.Length)
             {
                 bool same = true;
-                for (int i = 0; i < ScreenState.Length; i++)
+                for (int i = 0; i < Screen.AllScreens.Length; i++)
                 {
                     Screen current = Screen.AllScreens[i];
                     if (!(ScreenState[i].Bounds == current.Bounds && ScreenState[i].DeviceName == current.DeviceName && ScreenState[i].Primary == current.Primary && ScreenState[i].WorkingArea == current.WorkingArea))
@@ -208,7 +209,7 @@ namespace CairoDesktop.SupportingClasses
             List<string> removedScreens = new List<string>();
 
             // update our knowledge of the displays present
-            ScreenState = Screen.AllScreens;
+            ScreenState = AppBarScreen.FromAllScreens();
 
             // enumerate screens based on currently open windows
             openScreens = GetOpenScreens();
@@ -330,7 +331,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        public static T GetScreenWindow<T>(List<T> windowList, Screen screen) where T : AppBarWindow
+        public static T GetScreenWindow<T>(List<T> windowList, AppBarScreen screen) where T : AppBarWindow
         {
             foreach (AppBarWindow window in windowList)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using CairoDesktop.Configuration;
+using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 

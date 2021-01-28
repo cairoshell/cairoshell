@@ -11,8 +11,6 @@ namespace CairoDesktop
 {
 	public partial class QuickLaunchButton
 	{
-        static AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
-
         public static DependencyProperty ParentTaskbarProperty = DependencyProperty.Register("ParentTaskbar", typeof(Taskbar), typeof(QuickLaunchButton));
         public Taskbar ParentTaskbar
         {
@@ -54,7 +52,7 @@ namespace CairoDesktop
             Button item = (Button)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            appGrabber.LaunchProgram(app);
+            ParentTaskbar._appGrabber.LaunchProgram(app);
         }
 
         private void LaunchProgramMenu(object sender, RoutedEventArgs e)
@@ -62,7 +60,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            appGrabber.LaunchProgram(app);
+            ParentTaskbar._appGrabber.LaunchProgram(app);
         }
 
         private void LaunchProgramAdmin(object sender, RoutedEventArgs e)
@@ -70,7 +68,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            appGrabber.LaunchProgramAdmin(app);
+            ParentTaskbar._appGrabber.LaunchProgramAdmin(app);
         }
 
         private void programsMenu_Remove(object sender, RoutedEventArgs e)
@@ -78,7 +76,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            appGrabber.RemoveAppConfirm(app);
+            ParentTaskbar._appGrabber.RemoveAppConfirm(app);
         }
 
         private void programsMenu_Properties(object sender, RoutedEventArgs e)
@@ -86,7 +84,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            AppGrabber.AppGrabber.ShowAppProperties(app);
+            ParentTaskbar._appGrabber.ShowAppProperties(app);
         }
 
         #region Drag and drop reordering
@@ -117,17 +115,17 @@ namespace CairoDesktop
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
-                int dropIndex = appGrabber.QuickLaunch.IndexOf(replacedApp);
-                appGrabber.InsertByPath(fileNames, dropIndex, AppCategoryType.QuickLaunch);
+                int dropIndex = ParentTaskbar._appGrabber.QuickLaunch.IndexOf(replacedApp);
+                ParentTaskbar._appGrabber.InsertByPath(fileNames, dropIndex, AppCategoryType.QuickLaunch);
             }
             else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
             {
                 ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
 
-                int initialIndex = appGrabber.QuickLaunch.IndexOf(dropData);
-                int dropIndex = appGrabber.QuickLaunch.IndexOf(replacedApp);
-                appGrabber.QuickLaunch.Move(initialIndex, dropIndex);
-                appGrabber.Save();
+                int initialIndex = ParentTaskbar._appGrabber.QuickLaunch.IndexOf(dropData);
+                int dropIndex = ParentTaskbar._appGrabber.QuickLaunch.IndexOf(replacedApp);
+                ParentTaskbar._appGrabber.QuickLaunch.Move(initialIndex, dropIndex);
+                ParentTaskbar._appGrabber.Save();
             }
 
             setParentAutoHide(true);

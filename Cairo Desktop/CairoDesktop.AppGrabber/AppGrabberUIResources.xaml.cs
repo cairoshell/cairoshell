@@ -191,7 +191,7 @@ namespace CairoDesktop.AppGrabber
 
                             if (ShellHelper.Exists(fileName))
                             {
-                                ApplicationInfo customApp = AppGrabber.PathToApp(fileName, false, false);
+                                ApplicationInfo customApp = AppGrabberService.PathToApp(fileName, false, false);
                                 if (!object.ReferenceEquals(customApp, null))
                                 {
                                     (dropTarget.ItemsSource as IList<ApplicationInfo>).Add(customApp);

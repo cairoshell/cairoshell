@@ -77,8 +77,9 @@ Section "$(SECT_cairo)" cairo
   DetailPrint "Installing Cairo files"
   File "..\Cairo Desktop\Build\x86\Release\CairoDesktop.exe"
   File "..\Cairo Desktop\Build\x86\Release\*.dll"
-  File "..\Cairo Desktop\Build\x86\Release\Flat.xaml"
-  File "..\Cairo Desktop\Build\x86\Release\White.xaml"
+
+  CreateDirectory "$INSTDIR\Themes"
+  File /r "..\Cairo Desktop\Build\x86\Release\Themes"
 
   ; Set shell context to All Users
   SetShellVarContext all
@@ -196,7 +197,7 @@ Function LaunchCairo
     Exec '"$WINDIR\explorer.exe" "$INSTDIR\CairoDesktop.exe"' ; use the shell to launch as current user (otherwise notification area breaks)
     goto end_launch
   std_exec:
-    Exec '$INSTDIR\CairoDesktop.exe /restart'
+    Exec '$INSTDIR\CairoDesktop.exe /restart=true'
   end_launch:
 FunctionEnd
 

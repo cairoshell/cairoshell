@@ -1,13 +1,12 @@
 ﻿using ManagedShell.Interop;
-using CairoDesktop.SupportingClasses;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {

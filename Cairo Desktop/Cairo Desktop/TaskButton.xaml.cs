@@ -74,7 +74,7 @@ namespace CairoDesktop
                 int ws = Window.WindowStyles;
 
                 // show pin option if this app is not yet in quick launch
-                if (AppGrabber.AppGrabber.Instance.QuickLaunchManager.GetQuickLaunchApplicationInfo(Window) == null)
+                if (ParentTaskbar._appGrabber.QuickLaunchManager.GetQuickLaunchApplicationInfo(Window) == null)
                     vis = Visibility.Visible;
 
                 miPin.Visibility = vis;
@@ -268,7 +268,7 @@ namespace CairoDesktop
         {
             if (Window != null)
             {
-                AppGrabber.AppGrabber.Instance.QuickLaunchManager.PinToQuickLaunch(Window.IsUWP, Window.IsUWP ? Window.AppUserModelID : Window.WinFileName);
+                ParentTaskbar._appGrabber.QuickLaunchManager.PinToQuickLaunch(Window.IsUWP, Window.IsUWP ? Window.AppUserModelID : Window.WinFileName);
             }
         }
 

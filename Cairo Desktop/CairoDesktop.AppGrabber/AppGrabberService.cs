@@ -12,9 +12,9 @@ using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.AppGrabber
 {
-    public class AppGrabber : DependencyObject
+    public class AppGrabberService : DependencyObject, IDisposable
     {
-        private static DependencyProperty programsListProperty = DependencyProperty.Register("ProgramsList", typeof(List<ApplicationInfo>), typeof(AppGrabber), new PropertyMetadata(new List<ApplicationInfo>()));
+        private static DependencyProperty programsListProperty = DependencyProperty.Register("ProgramsList", typeof(List<ApplicationInfo>), typeof(AppGrabberService), new PropertyMetadata(new List<ApplicationInfo>()));
         public static AppGrabberUI uiInstance;
 
         private static readonly string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web", "safe mode" };
@@ -34,8 +34,6 @@ namespace CairoDesktop.AppGrabber
                 ShellHelper.AllUsersStartMenuPath
         };
 
-        public static AppGrabber Instance { get; } = new AppGrabber();
-
         public CategoryList CategoryList { get; set; }
         public List<ApplicationInfo> ProgramList
         {
@@ -54,7 +52,7 @@ namespace CairoDesktop.AppGrabber
                 }
                 else
                 {
-                    Dispatcher.Invoke((Action)(() => this.ProgramList = value), null);
+                    Dispatcher.Invoke((Action)(() => ProgramList = value), null);
                 }
             }
         }
@@ -73,33 +71,32 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
-        public bool hasNewApps = false;
-
         public string ConfigFile { get; set; }
 
-        public QuickLaunchManager QuickLaunchManager = new QuickLaunchManager();
+        public QuickLaunchManager QuickLaunchManager;
 
-        private AppGrabber()
+        public AppGrabberService()
             : this(null) { }
 
-        private AppGrabber(string configFile)
+        public AppGrabberService(string configFile)
         {
-            this.ConfigFile = configFile ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";
+            ConfigFile = configFile ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoAppConfig.xml";
 
-            this.Load();
-            this.NewApps = new List<ApplicationInfo>();
+            Load();
+            NewApps = new List<ApplicationInfo>();
+            QuickLaunchManager = new QuickLaunchManager(this);
         }
 
         public void Load()
         {
             if (ShellHelper.Exists(ConfigFile))
             {
-                this.CategoryList = CategoryList.Deserialize(ConfigFile);
+                CategoryList = CategoryList.Deserialize(ConfigFile);
             }
             else
             {
                 // config file not initialized, run first start logic
-                this.CategoryList = new CategoryList(true);
+                CategoryList = new CategoryList(true);
 
                 getPinnedApps();
             }
@@ -107,7 +104,7 @@ namespace CairoDesktop.AppGrabber
 
         public void Save()
         {
-            this.CategoryList.Serialize(ConfigFile);
+            CategoryList.Serialize(ConfigFile);
         }
 
         private void getPinnedApps()
@@ -119,23 +116,29 @@ namespace CairoDesktop.AppGrabber
                 QuickLaunch.AddRange(generateAppList(pinnedPath));
         }
 
-        private static List<ApplicationInfo> GetApps()
+        private List<ApplicationInfo> GetApps()
         {
             List<List<ApplicationInfo>> listsToMerge = new List<List<ApplicationInfo>>();
-            foreach (String location in searchLocations)
+            foreach (string location in searchLocations)
             {
                 listsToMerge.Add(generateAppList(location));
             }
-            List<ApplicationInfo> rval = mergeLists(listsToMerge);
-
-            if (EnvironmentHelper.IsWindows8OrBetter)
-                rval.AddRange(getStoreApps());
-            return rval;
+            
+            listsToMerge.Add(getStoreApps());
+            
+            return mergeLists(listsToMerge);
         }
 
-        private static List<ApplicationInfo> getStoreApps()
+        private List<ApplicationInfo> getStoreApps()
         {
             List<ApplicationInfo> storeApps = new List<ApplicationInfo>();
+
+            if (!EnvironmentHelper.IsWindows8OrBetter || EnvironmentHelper.IsServerCore)
+            {
+                // Package management components are not available before Windows 8 or on Server Core installations
+                // Just return an empty list
+                return storeApps;
+            }
 
             foreach (string[] app in ManagedShell.UWPInterop.StoreAppHelper.GetStoreApps())
             {
@@ -155,7 +158,7 @@ namespace CairoDesktop.AppGrabber
             return storeApps;
         }
 
-        private static List<ApplicationInfo> generateAppList(string directory)
+        private List<ApplicationInfo> generateAppList(string directory)
         {
             List<ApplicationInfo> rval = new List<ApplicationInfo>();
 
@@ -247,21 +250,7 @@ namespace CairoDesktop.AppGrabber
             return null;
         }
 
-        private static List<ApplicationInfo> mergeLists(List<ApplicationInfo> a, List<ApplicationInfo> b)
-        {
-            List<ApplicationInfo> rval = new List<ApplicationInfo>(a.Count);
-            rval.AddRange(a);
-            foreach (ApplicationInfo ai in b)
-            {
-                if (!rval.Contains(ai))
-                {
-                    rval.Add(ai);
-                }
-            }
-            return rval;
-        }
-
-        private static List<ApplicationInfo> mergeLists(List<List<ApplicationInfo>> listOfApplicationLists)
+        private List<ApplicationInfo> mergeLists(List<List<ApplicationInfo>> listOfApplicationLists)
         {
             List<ApplicationInfo> rval = new List<ApplicationInfo>(listOfApplicationLists[0].Count);
             rval.AddRange(listOfApplicationLists[0]);
@@ -290,7 +279,10 @@ namespace CairoDesktop.AppGrabber
 
                 uiInstance.Activate();
             }
-            catch { }
+            catch (Exception e)
+            {
+                ShellLogger.Error($"Error creating AppGrabberUI: {e.Message}", e);
+            }
         }
 
         /* Helper methods */
@@ -406,7 +398,7 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
-        public static void ShowAppProperties(ApplicationInfo app)
+        public void ShowAppProperties(ApplicationInfo app)
         {
             if (app != null)
             {
@@ -515,6 +507,11 @@ namespace CairoDesktop.AppGrabber
 
                 Save();
             }
+        }
+
+        public void Dispose()
+        {
+            // no work to do here
         }
     }
 }

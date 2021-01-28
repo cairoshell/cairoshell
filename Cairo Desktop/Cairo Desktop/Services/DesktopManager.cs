@@ -1,5 +1,6 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Configuration;
+using CairoDesktop.SupportingClasses;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -14,7 +15,7 @@ using ManagedShell.Common.SupportingClasses;
 using Microsoft.Extensions.Logging;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     public class DesktopManager : INotifyPropertyChanged, IDisposable
     {
@@ -305,7 +306,7 @@ namespace CairoDesktop.SupportingClasses
         {
             if (DesktopOverlayWindow == null && DesktopWindow != null && DesktopIconsControl != null)
             {
-                DesktopOverlayWindow = new DesktopOverlay(_windowManager, this, _shellManager.AppBarManager);
+                DesktopOverlayWindow = new DesktopOverlay(this, _shellManager.AppBarManager);
 
                 // create mask image to show while the icons control is rendered on the overlay window
                 Image maskImage = new Image

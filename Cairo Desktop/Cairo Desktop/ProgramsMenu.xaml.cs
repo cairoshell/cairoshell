@@ -15,9 +15,7 @@ namespace CairoDesktop
     public partial class ProgramsMenu : UserControl
     {
         public MenuBar MenuBar;
-
-        // AppGrabber instance
-        private AppGrabber.AppGrabber appGrabber = AppGrabber.AppGrabber.Instance;
+        
         bool hasLoaded;
 
         public ProgramsMenu()
@@ -30,10 +28,10 @@ namespace CairoDesktop
             if (!hasLoaded)
             {
                 // Set Programs Menu to use appGrabber's ProgramList as its source
-                categorizedProgramsList.ItemsSource = appGrabber.CategoryList;
+                categorizedProgramsList.ItemsSource = MenuBar._appGrabber.CategoryList;
 
                 // set tab based on user preference
-                int i = categorizedProgramsList.Items.IndexOf(appGrabber.CategoryList.GetCategory(Settings.Instance.DefaultProgramsCategory));
+                int i = categorizedProgramsList.Items.IndexOf(MenuBar._appGrabber.CategoryList.GetCategory(Settings.Instance.DefaultProgramsCategory));
                 categorizedProgramsList.SelectedIndex = i;
 
                 hasLoaded = true;
@@ -48,7 +46,7 @@ namespace CairoDesktop
                 MenuBar.ProgramsMenu.IsSubmenuOpen = false;
             }
 
-            appGrabber.ShowDialog();
+            MenuBar._appGrabber.ShowDialog();
         }
 
         private void btnUninstallApps_Click(object sender, RoutedEventArgs e)
@@ -92,7 +90,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            appGrabber.LaunchProgram(app);
+            MenuBar._appGrabber.LaunchProgram(app);
         }
 
         private void programsMenu_OpenAsAdmin(object sender, RoutedEventArgs e)
@@ -100,7 +98,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            appGrabber.LaunchProgramAdmin(app);
+            MenuBar._appGrabber.LaunchProgramAdmin(app);
         }
 
         private void programsMenu_OpenRunAs(object sender, RoutedEventArgs e)
@@ -108,7 +106,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            appGrabber.LaunchProgramVerb(app, "runasuser");
+            MenuBar._appGrabber.LaunchProgramVerb(app, "runasuser");
         }
 
         private void programsMenu_AddToQuickLaunch(object sender, RoutedEventArgs e)
@@ -116,7 +114,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            appGrabber.AddToQuickLaunch(app);
+            MenuBar._appGrabber.AddToQuickLaunch(app);
         }
 
         private void programsMenu_Rename(object sender, RoutedEventArgs e)
@@ -137,7 +135,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            appGrabber.RemoveAppConfirm(app);
+            MenuBar._appGrabber.RemoveAppConfirm(app);
         }
 
         private void programsMenu_Properties(object sender, RoutedEventArgs e)
@@ -145,7 +143,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            AppGrabber.AppGrabber.ShowAppProperties(app);
+            MenuBar._appGrabber.ShowAppProperties(app);
         }
 
         private void miProgramsChangeCategory_SubmenuOpened(object sender, RoutedEventArgs e)
@@ -154,7 +152,7 @@ namespace CairoDesktop
             ApplicationInfo ai = mi.DataContext as ApplicationInfo;
             mi.Items.Clear();
 
-            foreach (Category cat in appGrabber.CategoryList)
+            foreach (Category cat in MenuBar._appGrabber.CategoryList)
             {
                 if (cat.Type == 0 && cat != ai.Category)
                 {
@@ -180,7 +178,7 @@ namespace CairoDesktop
             ai.Category.Remove(ai);
             newCat.Add(ai);
 
-            appGrabber.Save();
+            MenuBar._appGrabber.Save();
         }
         #endregion
 
@@ -192,7 +190,7 @@ namespace CairoDesktop
 
             if (!ReferenceEquals(app, null))
             {
-                appGrabber.Rename(app, box.Text);
+                MenuBar._appGrabber.Rename(app, box.Text);
             }
 
             foreach (UIElement peer in (box.Parent as DockPanel).Children)

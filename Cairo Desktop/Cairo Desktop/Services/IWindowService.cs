@@ -1,10 +1,11 @@
-﻿using System;
+﻿using CairoDesktop.SupportingClasses;
+using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using ManagedShell.AppBar;
 
-// TODO: This should be moved to the Application project, but AppBarWindow needs TLC first
+// TODO: Window services should move to the Infrastructure project
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     public interface IWindowService : IDisposable
     {
@@ -12,7 +13,7 @@ namespace CairoDesktop.SupportingClasses
 
         void Register();
 
-        void HandleScreenAdded(Screen screen);
+        void HandleScreenAdded(AppBarScreen screen);
 
         void RefreshWindows(WindowManagerEventArgs args);
 

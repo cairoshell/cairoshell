@@ -3,14 +3,16 @@ using CairoDesktop.Common.ExtensionMethods;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.DependencyInjection;
-using CairoDesktop.SupportingClasses;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.AppGrabber;
 using CairoDesktop.MenuBarExtensions;
+using CairoDesktop.Services;
+using Microsoft.Extensions.Configuration;
+using CairoDesktop.Infrastructure.Options;
 
 namespace CairoDesktop
 {
@@ -35,18 +37,30 @@ namespace CairoDesktop
             }
             
             _host = new HostBuilder()
+                .ConfigureAppConfiguration((context, builder) =>
+                {
+                    builder.AddCommandLine(args);
+                })
                 .ConfigureServices((context, services) =>
                 {
+                    services.Configure<CommandLineOptions>(context.Configuration);
+
                     services.AddSingleton(s => Settings.Instance);
                     services.AddSingleton<ICairoApplication, CairoApplication>();
 
+                    services.AddSingleton<AppGrabberService>();
+                    services.AddSingleton<ISettingsUIService, SettingsUIService>();
                     services.AddHostedService<ShellHotKeyService>();
-                    services.AddSingleton<ShellManagerService>();
+                    services.AddSingleton<ThemeService>();
 
                     services.AddSingleton<DesktopManager>();
                     services.AddSingleton<WindowManager>();
                     services.AddSingleton<IWindowService, MenuBarWindowService>();
                     services.AddSingleton<IWindowService, TaskbarWindowService>();
+
+#if ENABLEFIRSTRUN
+                    services.AddHostedService<FirstRunService>();
+#endif
 
                     services.AddInfrastructureServices(context.Configuration);
 

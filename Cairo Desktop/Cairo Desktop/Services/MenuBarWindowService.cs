@@ -1,17 +1,22 @@
-﻿using System.Windows.Forms;
+﻿using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
-using ManagedShell.Interop;
+using CairoDesktop.SupportingClasses;
+using ManagedShell.AppBar;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     public class MenuBarWindowService : AppBarWindowService
     {
+        private readonly AppGrabberService _appGrabber;
+        private readonly ISettingsUIService _settingsUiService;
         private readonly IApplicationUpdateService _updateService;
 
-        public MenuBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, IApplicationUpdateService updateService) : base(cairoApplication, shellManagerService, windowManager)
+        public MenuBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService updateService, ISettingsUIService settingsUiService) : base(cairoApplication, shellManagerService, windowManager)
         {
+            _appGrabber = appGrabber;
+            _settingsUiService = settingsUiService;
             _updateService = updateService;
 
             EnableMultiMon = Settings.Instance.EnableMenuBarMultiMon;
@@ -31,9 +36,9 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        protected override void OpenWindow(Screen screen)
+        protected override void OpenWindow(AppBarScreen screen)
         {
-            MenuBar newMenuBar = new MenuBar(_cairoApplication, _shellManager, _windowManager, _updateService, screen, NativeMethods.ABEdge.ABE_TOP);
+            MenuBar newMenuBar = new MenuBar(_cairoApplication, _shellManager, _windowManager, _appGrabber, _updateService, _settingsUiService, screen, AppBarEdge.Top);
             Windows.Add(newMenuBar);
             newMenuBar.Show();
         }

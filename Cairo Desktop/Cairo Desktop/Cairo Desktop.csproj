@@ -16,6 +16,7 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AssemblyName>CairoDesktop</AssemblyName>
+    <AssemblyTitle>Cairo Desktop Environment</AssemblyTitle>
     <Company>Cairo Development Team</Company>
     <Authors>Cairo Development Team</Authors>
     <Product>Cairo Desktop Environment</Product>
@@ -51,29 +52,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Page Remove="Fade.xaml" />
-    <Page Remove="Flat.xaml" />
-    <Page Remove="MiniMeow.xaml" />
-    <Page Remove="White.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Fade.xaml">
+    <None Include="Themes\Fade.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Include="Themes\Flat.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Flat.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Themes\MiniMeow.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Include="MiniMeow.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="White.xaml">
+    <None Include="Themes\White.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ManagedShell" Version="0.0.31" />
+    <PackageReference Include="ManagedShell" Version="0.0.32" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />

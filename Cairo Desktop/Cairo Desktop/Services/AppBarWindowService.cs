@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Forms;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.SupportingClasses;
 using ManagedShell;
+using ManagedShell.AppBar;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Services
 {
     public abstract class AppBarWindowService : IWindowService
     {
@@ -45,7 +46,7 @@ namespace CairoDesktop.SupportingClasses
             HandleSettingChange(e.PropertyName);
         }
 
-        public void HandleScreenAdded(Screen screen)
+        public void HandleScreenAdded(AppBarScreen screen)
         {
             if (EnableService && (EnableMultiMon || screen.Primary))
             {
@@ -71,7 +72,7 @@ namespace CairoDesktop.SupportingClasses
 
             if (EnableMultiMon)
             {
-                foreach (Screen screen in _windowManager.ScreenState)
+                foreach (AppBarScreen screen in _windowManager.ScreenState)
                 {
                     CairoAppBarWindow window = WindowManager.GetScreenWindow(Windows, screen);
 
@@ -84,7 +85,7 @@ namespace CairoDesktop.SupportingClasses
             }
             else if (Windows.Count > 0)
             {
-                Windows[0].Screen = Screen.PrimaryScreen;
+                Windows[0].Screen = AppBarScreen.FromPrimaryScreen();
                 Windows[0].SetScreenPosition();
             }
         }
@@ -187,7 +188,7 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        protected abstract void OpenWindow(Screen screen);
+        protected abstract void OpenWindow(AppBarScreen screen);
 
         protected abstract void HandleSettingChange(string setting);
     }
