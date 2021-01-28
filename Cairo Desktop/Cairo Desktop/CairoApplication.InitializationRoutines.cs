@@ -47,6 +47,8 @@ namespace CairoDesktop
 
         private void SetTheme()
         {
+            // TODO: Find a cleaner way to do this. We can't inject it to CairoApplication since it has a dependency on ICairoApplication.
+            // We could work around this using something similar to how WindowManager receives WindowServices, but that doesn't seem any better.
             Host.Services.GetService<ThemeService>()?.SetThemeFromSettings();
         }
 
