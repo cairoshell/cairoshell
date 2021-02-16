@@ -14,6 +14,7 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.ShellFolders;
 
 namespace CairoDesktop
 {
@@ -295,10 +296,17 @@ namespace CairoDesktop
         #region Path history menu
         private string GetCleanFolderName(string path)
         {
-            if (Directory.GetDirectoryRoot(path) == path)
-                return path;
-            else
-                return Path.GetFileName(path);
+            string folderName = path;
+            ShellFolder currentFolder = new ShellFolder(path, IntPtr.Zero);
+
+            if (currentFolder.DisplayName != string.Empty)
+            {
+                folderName = currentFolder.DisplayName;
+            }
+            
+            currentFolder.Dispose();
+
+            return folderName;
         }
 
         private void ClearHistoryMenuItem_Click(object sender, RoutedEventArgs e)

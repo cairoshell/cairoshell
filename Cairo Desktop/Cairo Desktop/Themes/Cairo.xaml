@@ -2554,13 +2554,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <cairo:Icon Location="Desktop" />
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
     <Style x:Key="FolderViewStyle"
            TargetType="ListView">
@@ -2577,13 +2570,6 @@
                         </Setter.Value>
                     </Setter>
                 </Style>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <cairo:Icon Location="Stacks" />
-                </DataTemplate>
             </Setter.Value>
         </Setter>
         <Setter Property="Template">

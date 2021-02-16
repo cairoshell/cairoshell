@@ -2,8 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.CompilerServices;
+using ManagedShell.Common.Helpers;
+using ManagedShell.ShellFolders;
 
 namespace CairoDesktop.Common
 {
@@ -122,7 +123,7 @@ namespace CairoDesktop.Common
 
         public void NavigateTo(string path)
         {
-            if (path != CurrentPath && Directory.Exists(path))
+            if (path != CurrentPath)
             {
                 if (CanGoForward)
                 {
@@ -138,7 +139,7 @@ namespace CairoDesktop.Common
 
         public void NavigateForward()
         {
-            if (CanGoForward && Directory.Exists(list[currentIndex + 1]))
+            if (CanGoForward)
             {
                 currentIndex += 1;
             }
@@ -146,7 +147,7 @@ namespace CairoDesktop.Common
 
         public void NavigateBackward()
         {
-            if (CanGoBack && Directory.Exists(list[currentIndex - 1]))
+            if (CanGoBack)
             {
                 currentIndex -= 1;
             }
@@ -154,7 +155,7 @@ namespace CairoDesktop.Common
 
         public void NavigateToIndex(int index)
         {
-            if (index < list.Count && Directory.Exists(list[index]))
+            if (index < list.Count)
             {
                 currentIndex = index;
             }
@@ -162,12 +163,16 @@ namespace CairoDesktop.Common
 
         public void NavigateToParent()
         {
-            DirectoryInfo parentDirectoryInfo = Directory.GetParent(CurrentPath);
-            if (parentDirectoryInfo != null && parentDirectoryInfo.Exists)
+            string parentPath = string.Empty;
+            ShellFolder currentFolder = new ShellFolder(CurrentPath, IntPtr.Zero);
+            if (currentFolder.ParentItem != null)
             {
-                string parentPath = parentDirectoryInfo.FullName;
-                NavigateTo(parentPath);
+                parentPath = currentFolder.ParentItem.Path;
+                currentFolder.ParentItem.Dispose();
             }
+            currentFolder.Dispose();
+            
+            NavigateTo(parentPath);
         }
 
         public void NavigateHome()
@@ -182,7 +187,7 @@ namespace CairoDesktop.Common
                 desktopPath = defaultDesktopPath;
             }
 
-            if (!Directory.Exists(desktopPath))
+            if (!ShellHelper.Exists(desktopPath))
                 desktopPath = defaultDesktopPath;
 
             NavigateTo(desktopPath);

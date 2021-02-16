@@ -11,7 +11,7 @@ using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.Services
 {
-    class ThemeService : IDisposable
+    public class ThemeService : IDisposable
     {
         private const string THEME_DEFAULT_FILE = "Cairo";
         private const string THEME_DEFAULT = "Default";

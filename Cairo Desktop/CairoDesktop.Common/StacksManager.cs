@@ -4,24 +4,22 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Threading;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+using ManagedShell.ShellFolders;
 
 namespace CairoDesktop.Common
 {
     public class StacksManager : DependencyObject
     {
-        private string stackConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoStacksConfig.xml";
+        private readonly string stackConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoStacksConfig.xml";
         private System.Xml.Serialization.XmlSerializer serializer;
 
-        private InvokingObservableCollection<SystemDirectory> _stackLocations = new InvokingObservableCollection<SystemDirectory>(Application.Current.Dispatcher);
+        private InvokingObservableCollection<ShellFolder> _stackLocations = new InvokingObservableCollection<ShellFolder>(Application.Current.Dispatcher);
 
-        public InvokingObservableCollection<SystemDirectory> StackLocations
+        public InvokingObservableCollection<ShellFolder> StackLocations
         {
-            get
-            {
-                return _stackLocations;
-            }
+            get => _stackLocations;
             set
             {
                 if (!Application.Current.Dispatcher.CheckAccess())
@@ -34,11 +32,8 @@ namespace CairoDesktop.Common
             }
         }
 
-        private static StacksManager _instance = new StacksManager();
-        public static StacksManager Instance
-        {
-            get { return _instance; }
-        }
+        private static readonly StacksManager _instance = new StacksManager();
+        public static StacksManager Instance => _instance;
 
         public StacksManager()
         {
@@ -56,9 +51,12 @@ namespace CairoDesktop.Common
             {
                 deserializeStacks();
             }
-            catch { }
+            catch (Exception e)
+            {
+                ShellLogger.Error($"StacksManager: Unable to deserialize stacks config: {e.Message}");
+            }
 
-            StackLocations.CollectionChanged += new NotifyCollectionChangedEventHandler(stackLocations_CollectionChanged);
+            StackLocations.CollectionChanged += stackLocations_CollectionChanged;
         }
 
         private void stackLocations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -70,7 +68,7 @@ namespace CairoDesktop.Common
         {
             if (CanAdd(path))
             {
-                SystemDirectory dir = new SystemDirectory(path, Dispatcher.CurrentDispatcher);
+                ShellFolder dir = new ShellFolder(path, IntPtr.Zero, true);
                 StackLocations.Add(dir);
 
                 return true;
@@ -81,25 +79,39 @@ namespace CairoDesktop.Common
 
         public bool CanAdd(string path)
         {
-            return Directory.Exists(path) && !StackLocations.Any(i => i.Equals(path));
+            return Directory.Exists(path) && StackLocations.All(i => i.Path != path);
         }
 
-        public void RemoveLocation(SystemDirectory directory)
+        public void RemoveLocation(ShellFolder directory)
         {
             directory.Dispose();
             StackLocations.Remove(directory);
         }
 
+        public void RemoveLocation(string path)
+        {
+            for (int i = 0; i < StackLocations.Count; i++)
+            {
+                if (StackLocations[i].Path == path)
+                {
+                    StackLocations.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
         private void serializeStacks()
         {
             List<string> locationPaths = new List<string>();
-            foreach (SystemDirectory dir in StackLocations)
+            foreach (ShellFolder dir in StackLocations)
             {
-                locationPaths.Add(dir.FullName);
+                locationPaths.Add(dir.Path);
             }
-            System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings();
-            settings.Indent = true;
-            settings.IndentChars = "    ";
+            System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings
+            {
+                Indent = true,
+                IndentChars = "    "
+            };
             System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(stackConfigFile, settings);
             serializer.Serialize(writer, locationPaths);
             writer.Close();
@@ -110,11 +122,15 @@ namespace CairoDesktop.Common
             if (ShellHelper.Exists(stackConfigFile))
             {
                 System.Xml.XmlReader reader = System.Xml.XmlReader.Create(stackConfigFile);
-                List<string> locationPaths = serializer.Deserialize(reader) as List<string>;
-                foreach (string path in locationPaths)
+
+                if (serializer.Deserialize(reader) is List<string> locationPaths)
                 {
-                    AddLocation(path);
+                    foreach (string path in locationPaths)
+                    {
+                        AddLocation(path);
+                    }
                 }
+
                 reader.Close();
             }
             else
@@ -125,7 +141,7 @@ namespace CairoDesktop.Common
                 string myDocsPath = Interop.KnownFolders.GetPath(Interop.KnownFolder.Documents);
                 if (Directory.Exists(myDocsPath))
                 {
-                    SystemDirectory myDocsSysDir = new SystemDirectory(myDocsPath, Dispatcher.CurrentDispatcher);
+                    ShellFolder myDocsSysDir = new ShellFolder(myDocsPath, IntPtr.Zero);
                     // Don't duplicate defaults
                     if (!StackLocations.Contains(myDocsSysDir))
                     {
@@ -136,7 +152,7 @@ namespace CairoDesktop.Common
                 string downloadsPath = Interop.KnownFolders.GetPath(Interop.KnownFolder.Downloads);
                 if (Directory.Exists(downloadsPath))
                 {
-                    SystemDirectory downloadsSysDir = new SystemDirectory(downloadsPath, Dispatcher.CurrentDispatcher);
+                    ShellFolder downloadsSysDir = new ShellFolder(downloadsPath, IntPtr.Zero);
                     // Don't duplicate defaults
                     if (!StackLocations.Contains(downloadsSysDir))
                     {

@@ -12,6 +12,7 @@ using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.SupportingClasses;
+using ManagedShell.ShellFolders;
 using Microsoft.Extensions.Logging;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
@@ -37,6 +38,7 @@ namespace CairoDesktop.Services
         private readonly ShellManager _shellManager;
         private readonly ICairoApplication _cairoApplication;
         private readonly ILogger<DesktopManager> _logger;
+        private readonly ISettingsUIService _settingsUiService;
 
         public DesktopIcons DesktopIconsControl { get; private set; }
 
@@ -67,15 +69,16 @@ namespace CairoDesktop.Services
 
         public bool AllowProgmanChild => ShellWindow == null && EnvironmentHelper.IsWindows8OrBetter; // doesn't work in win7 due to layered child window restrictions
 
-        public SystemDirectory DesktopLocation => DesktopIconsControl?.Location;
+        public ShellFolder DesktopLocation => DesktopIconsControl?.Location;
 
-        public DesktopManager(ILogger<DesktopManager> logger, ICairoApplication cairoApplication, ShellManagerService shellManagerService)
+        public DesktopManager(ILogger<DesktopManager> logger, ICairoApplication cairoApplication, ShellManagerService shellManagerService, ISettingsUIService settingsUiService)
         {
             // DesktopManager is always created on startup by WindowManager, regardless of desktop preferences
             // this allows for dynamic creation and destruction of the desktop per user preference
             _cairoApplication = cairoApplication;
             _shellManager = shellManagerService.ShellManager;
             _logger = logger;
+            _settingsUiService = settingsUiService;
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         }
 
@@ -127,7 +130,7 @@ namespace CairoDesktop.Services
             if (DesktopWindow != null)
                 return;
 
-            DesktopWindow = new Desktop(this, _shellManager.AppBarManager, _shellManager.FullScreenHelper);
+            DesktopWindow = new Desktop(this, _shellManager.AppBarManager, _shellManager.FullScreenHelper, _settingsUiService);
             DesktopWindow.WorkAreaChanged += WorkAreaChanged;
             DesktopWindow.Show();
         }
@@ -431,13 +434,26 @@ namespace CairoDesktop.Services
                 return;
 
             if (DesktopIconsControl.Location != null &&
-                DesktopIconsControl.Location.FullName == NavigationManager.CurrentPath)
+                DesktopIconsControl.Location.Path == NavigationManager.CurrentPath)
                 return;
 
             // dispose of current directory so that we don't keep a lock on it
-            DesktopIconsControl.Location?.Dispose();
+            ShellFolder previousFolder = null;
+            if (DesktopIconsControl.Location != null)
+            {
+                previousFolder = DesktopIconsControl.Location;
+            }
 
             DesktopIconsControl.SetIconLocation();
+
+            try
+            {
+                previousFolder?.Dispose();
+            }
+            catch (Exception exception)
+            {
+                _logger.LogWarning($"Exception during ShellFolder disposal: {exception.Message}");
+            }
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)

@@ -4,7 +4,7 @@ using CairoDesktop.Infrastructure.Services;
 
 namespace CairoDesktop.Services
 {
-    class SettingsUIService : ISettingsUIService
+    public class SettingsUIService : ISettingsUIService
     {
         private readonly AppGrabberService _appGrabber;
         private readonly ICairoApplication _cairoApplication;

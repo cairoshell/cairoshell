@@ -3,8 +3,10 @@ using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
 using Microsoft.Win32;
 using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,11 +15,14 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
+using ManagedShell.ShellFolders;
+using ManagedShell.ShellFolders.Enums;
 using DataFormats = System.Windows.DataFormats;
 using DragDropEffects = System.Windows.DragDropEffects;
 using DragEventArgs = System.Windows.DragEventArgs;
@@ -32,9 +37,11 @@ namespace CairoDesktop
         #region Properties
         private WindowInteropHelper helper;
         private bool altF4Pressed;
-        private AppBarManager _appBarManager;
-        private DesktopManager _desktopManager;
-        private FullScreenHelper _fullScreenHelper;
+        private readonly AppBarManager _appBarManager;
+        private readonly DesktopManager _desktopManager;
+        private readonly FullScreenHelper _fullScreenHelper;
+        private readonly FileOperationWorker _fileWorker;
+        private readonly ISettingsUIService _settingsUiService;
 
         public bool AllowClose;
         public IntPtr Handle;
@@ -43,13 +50,15 @@ namespace CairoDesktop
         private Brush BackgroundBrush { get; set; }
         #endregion
 
-        public Desktop(DesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper)
+        public Desktop(DesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService)
         {
             InitializeComponent();
 
             _appBarManager = appBarManager;
             _desktopManager = desktopManager;
             _fullScreenHelper = fullScreenHelper;
+            _fileWorker = new FileOperationWorker();
+            _settingsUiService = settingsUiService;
 
             if (_desktopManager.ShellWindow != null)
             {
@@ -178,7 +187,7 @@ namespace CairoDesktop
             // we check source here so that we don't override the rename textbox context menu
             if (_desktopManager.DesktopLocation != null && (e.OriginalSource.GetType() == typeof(ScrollViewer) || e.Source.GetType() == typeof(Desktop) || e.Source.GetType() == typeof(Grid)))
             {
-                ShellContextMenu cm = new ShellContextMenu(_desktopManager.DesktopLocation, executeFolderAction);
+                ShellFolderContextMenu cm = new ShellFolderContextMenu(_desktopManager.DesktopLocation, HandleFolderAction, GetFolderCommandBuilder());
                 e.Handled = true;
             }
         }
@@ -669,38 +678,145 @@ namespace CairoDesktop
         #endregion
 
         #region Desktop context menu
-        private void executeFolderAction(string action, string path)
+        private ShellMenuCommandBuilder GetFolderCommandBuilder()
         {
+            if (_desktopManager.DesktopLocation == null)
+            {
+                return new ShellMenuCommandBuilder();
+            }
+
+            ShellMenuCommandBuilder builder = new ShellMenuCommandBuilder();
+            MFT flags = MFT.BYCOMMAND;
+
+            if (!_desktopManager.DesktopLocation.IsFileSystem)
+            {
+                flags |= MFT.DISABLED;
+            }
+
+            builder.AddCommand(new ShellMenuCommand
+            {
+                Flags = MFT.BYCOMMAND, // enable this entry always
+                Label = Localization.DisplayString.sStacks_OpenInNewWindow,
+                UID = (uint)CairoContextMenuItem.OpenInNewWindow
+            });
+
+            if (StacksManager.Instance.StackLocations.All(i => i.Path != _desktopManager.DesktopLocation.Path))
+            {
+                builder.AddCommand(new ShellMenuCommand
+                {
+                    Flags = MFT.BYCOMMAND, // enable this entry always
+                    Label = Localization.DisplayString.sInterface_AddToStacks,
+                    UID = (uint)CairoContextMenuItem.AddToStacks
+                });
+            }
+            else
+            {
+                builder.AddCommand(new ShellMenuCommand
+                {
+                    Flags = MFT.BYCOMMAND, // enable this entry always
+                    Label = Localization.DisplayString.sInterface_RemoveFromStacks,
+                    UID = (uint)CairoContextMenuItem.RemoveFromStacks
+                });
+            }
+            builder.AddSeparator();
+
+            builder.AddCommand(new ShellMenuCommand
+            {
+                Flags = flags,
+                Label = Localization.DisplayString.sInterface_Paste,
+                UID = (uint)CommonContextMenuItem.Paste
+            });
+            builder.AddSeparator();
+
+            if (_desktopManager.DesktopLocation.IsFileSystem && _desktopManager.DesktopLocation.IsFolder)
+            {
+                builder.AddShellNewMenu();
+                builder.AddSeparator();
+            }
+
+            builder.AddCommand(new ShellMenuCommand
+            {
+                Flags = flags,
+                Label = Localization.DisplayString.sInterface_Properties,
+                UID = (uint)CommonContextMenuItem.Properties
+            });
+            builder.AddSeparator();
+
+            if (!EnvironmentHelper.IsAppRunningAsShell)
+            {
+                builder.AddCommand(new ShellMenuCommand
+                {
+                    Flags = flags,
+                    Label = Localization.DisplayString.sDesktop_DisplaySettings,
+                    UID = (uint)CairoContextMenuItem.DisplaySettings
+                });
+            }
+
+            builder.AddCommand(new ShellMenuCommand
+            {
+                Flags = flags,
+                Label = Localization.DisplayString.sDesktop_Personalize,
+                UID = (uint)CairoContextMenuItem.Personalize
+            });
+
+            return builder;
+        }
+        
+        private void HandleFolderAction(uint action, string path)
+        {
+            // TODO: Use command system
             switch (action)
             {
-                case CustomCommands.DirectoryActions.Paste:
-                case CustomCommands.DirectoryActions.New:
-                    if (_desktopManager.DesktopLocation != null)
-                    {
-                        CustomCommands.PerformDirectoryAction(action, _desktopManager.DesktopLocation, _desktopManager.IsOverlayOpen ? (Window)_desktopManager.DesktopOverlayWindow : this);
-                    }
+                case (uint)CommonContextMenuItem.Paste:
+                    _fileWorker.PasteFromClipboard(path);
                     break;
-                // no need to dismiss overlay for these actions
-                case CustomCommands.DirectoryActions.AddStack:
-                case CustomCommands.DirectoryActions.RemoveStack:
-                    CustomCommands.PerformAction(action, path);
+                case (uint)CommonContextMenuItem.Properties:
+                    CustomCommands.PerformAction(CustomCommands.Actions.Properties, path);
+                    break;
+                case (uint)CairoContextMenuItem.OpenInNewWindow:
+                    CustomCommands.PerformAction(CustomCommands.Actions.OpenWithShell, path);
+                    break;
+                case (uint)CairoContextMenuItem.DisplaySettings:
+                    CustomCommands.PerformAction(CustomCommands.Actions.DisplaySettings, path);
+                    break;
+                case (uint)CairoContextMenuItem.Personalize when EnvironmentHelper.IsAppRunningAsShell:
+                    _settingsUiService?.Show("desktop");
+                    break;
+                case (uint)CairoContextMenuItem.Personalize:
+                    CustomCommands.PerformAction(CustomCommands.Actions.Personalize, path);
+                    break;
+                case (uint)CairoContextMenuItem.AddToStacks:
+                    CustomCommands.PerformAction(CustomCommands.Actions.AddStack, path);
+                    break;
+                case (uint)CairoContextMenuItem.RemoveFromStacks:
+                    CustomCommands.PerformAction(CustomCommands.Actions.RemoveStack, path);
                     break;
                 default:
-                    if (action != "")
-                    {
-                        CustomCommands.PerformAction(action, path);
-                        _desktopManager.IsOverlayOpen = false;
-                    }
+                    // must be "New" menu
+                    Activate();
+                    // watch for new file to be created so we can perform an action
+                    _desktopManager.DesktopLocation.Files.CollectionChanged += ShellNew_FileCreated;
                     break;
             }
+        }
+
+        private void ShellNew_FileCreated(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // file was created due to usage of the shell new menu
+            CairoApplication.Current.Dispatcher.Invoke(() =>
+            {
+                _desktopManager.DesktopLocation.Files.CollectionChanged -= ShellNew_FileCreated;
+
+                _desktopManager.DesktopIconsControl.RenameNewIcon = true;
+            });
         }
         #endregion
 
         #region Drop
-        private bool isDropMove = false;
+        private bool isDropMove;
         private void CairoDesktopWindow_DragOver(object sender, DragEventArgs e)
         {
-            if (_desktopManager.DesktopLocation != null && (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(SystemFile))))
+            if (_desktopManager.DesktopLocation != null && (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(ShellItem))))
             {
                 if ((e.KeyStates & DragDropKeyStates.RightMouseButton) != 0)
                 {
@@ -733,16 +849,16 @@ namespace CairoDesktop
         private void CairoDesktopWindow_Drop(object sender, DragEventArgs e)
         {
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (e.Data.GetDataPresent(typeof(SystemFile)))
+            if (e.Data.GetDataPresent(typeof(ShellItem)) && e.Data.GetData(typeof(ShellItem)) is ShellItem dropData)
             {
-                SystemFile dropData = e.Data.GetData(typeof(SystemFile)) as SystemFile;
-                fileNames = new string[] { dropData.FullName };
+                fileNames = new[] { dropData.Path };
             }
 
-            if (fileNames != null && _desktopManager.DesktopLocation != null)
+            if (fileNames != null && _desktopManager.DesktopLocation != null && _fileWorker != null)
             {
-                if (!isDropMove) _desktopManager.DesktopLocation.CopyInto(fileNames);
-                else if (isDropMove) _desktopManager.DesktopLocation.MoveInto(fileNames);
+                _fileWorker.PerformOperation(isDropMove ? FileOperation.Move : FileOperation.Copy, 
+                    fileNames, 
+                    _desktopManager.DesktopLocation.Path);
 
                 e.Handled = true;
             }
