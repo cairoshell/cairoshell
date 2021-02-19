@@ -65,8 +65,6 @@ namespace CairoDesktop.SupportingClasses
 
             public const string Open = "open";
 
-            public const string OpenFolder = "openFolder";
-
             public const string Delete = "delete";
 
             public const string Properties = "properties";

@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ManagedShell" Version="0.0.50" />
+    <PackageReference Include="ManagedShell" Version="0.0.55" />
   </ItemGroup>
 
 </Project>

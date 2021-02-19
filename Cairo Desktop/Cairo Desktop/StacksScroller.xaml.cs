@@ -6,6 +6,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using CairoDesktop.Common;
+using CairoDesktop.Configuration;
 using CairoDesktop.Localization;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.ShellFolders;
@@ -69,6 +70,11 @@ namespace CairoDesktop
                 widthBinding.Source = ParentContainer;
                 Scroller.SetBinding(WidthProperty, widthBinding);
 
+                if (DataContext is ShellFolder folder)
+                {
+                    Scroller.ItemsSource = new FolderView(folder).DisplayItems;
+                }
+
                 isLoaded = true;
             }
         }
@@ -120,6 +126,14 @@ namespace CairoDesktop
             {
                 e.Handled = true;
 
+                if (LastIconSelected != null && LastIconSelected.IsRenaming)
+                {
+                    LastIconSelected = null;
+                    
+                    // user selected rename, so keep things open
+                    return;
+                }
+
                 LastIconSelected = null;
                 
                 if (ParentMenuItem != null)
@@ -140,12 +154,21 @@ namespace CairoDesktop
 
             if (file.IsFolder)
             {
-                builder.AddCommand(new ShellMenuCommand
+                if (Settings.Instance.EnableDesktop && Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay)
                 {
-                    Flags = MFT.BYCOMMAND, // enable this entry always
-                    Label = DisplayString.sStacks_OpenInNewWindow,
-                    UID = (uint)CairoContextMenuItem.OpenInNewWindow
-                });
+                    builder.AddCommand(new ShellMenuCommand
+                    {
+                        Flags = MFT.BYCOMMAND, // enable this entry always
+                        Label = DisplayString.sStacks_OpenOnDesktop,
+                        UID = (uint) CairoContextMenuItem.OpenOnDesktop
+                    });
+                    
+                    // If the [SHIFT] key is held, don't change the default action to ours
+                    if (!KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
+                    {
+                        builder.DefaultItemUID = (uint) CairoContextMenuItem.OpenOnDesktop;
+                    }
+                }
 
                 if (StacksManager.Instance.StackLocations.All(i => i.Path != file.Path))
                 {
@@ -192,20 +215,9 @@ namespace CairoDesktop
 
             switch (action)
             {
-                case CustomCommands.Actions.OpenFolder:
-                    // Determine if [SHIFT] key is held. Bypass directory processing, which will use the Shell to open the item.
-                    if (KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
-                    {
-                        FolderHelper.OpenWithShell(items[0].Path);
-                    }
-                    else
-                    {
-                        FolderHelper.OpenLocation(items[0].Path);
-                    }
-                    break;
                 case CustomCommands.Actions.Rename:
                     LastIconSelected?.BeginRename();
-                    break;
+                    return; // don't reset LastIconSelected yet so that we can tell that it entered rename mode
                 default:
                     // handle Cairo actions
                     if (uint.TryParse(action, out uint cairoAction))
@@ -218,8 +230,8 @@ namespace CairoDesktop
                             case CairoContextMenuItem.RemoveFromStacks:
                                 CustomCommands.PerformAction(CustomCommands.Actions.RemoveStack, items[0].Path);
                                 break;
-                            case CairoContextMenuItem.OpenInNewWindow:
-                                CustomCommands.PerformAction(CustomCommands.Actions.OpenWithShell, items[0].Path);
+                            case CairoContextMenuItem.OpenOnDesktop:
+                                FolderHelper.OpenLocation(items[0].Path);
                                 break;
                         }
                     }

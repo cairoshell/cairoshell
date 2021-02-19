@@ -8,7 +8,6 @@
         <ListView x:Name="Scroller"
                   FocusManager.IsFocusScope="True"
                   Style="{StaticResource FolderViewStyle}"
-                  ItemsSource="{Binding Path=Files}"
                   PreviewMouseWheel="Scroller_PreviewMouseWheel">
             <ListView.ItemTemplate>
                 <DataTemplate>

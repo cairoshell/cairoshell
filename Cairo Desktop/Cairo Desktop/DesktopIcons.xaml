@@ -3,13 +3,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:cairo="clr-namespace:CairoDesktop"
-             x:Name="CairoDesktopIcons" 
              UseLayoutRounding="True">
     <DockPanel Name="panel" Margin="0">
         <ItemsControl Name="IconsControl" 
-                      DataContext="{Binding ElementName=CairoDesktopIcons, Path=Location}" 
-                      Style="{StaticResource  DesktopFolderViewStyle}" 
-                      ItemsSource="{Binding Path=Files}"
+                      Style="{StaticResource DesktopFolderViewStyle}" 
                       PreviewMouseWheel="IconsControl_PreviewMouseWheel">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

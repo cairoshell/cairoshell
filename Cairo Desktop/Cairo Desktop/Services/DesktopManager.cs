@@ -434,7 +434,7 @@ namespace CairoDesktop.Services
                 return;
 
             if (DesktopIconsControl.Location != null &&
-                DesktopIconsControl.Location.Path == NavigationManager.CurrentPath)
+                DesktopIconsControl.Location.Path == NavigationManager.CurrentItem.Path)
                 return;
 
             // dispose of current directory so that we don't keep a lock on it

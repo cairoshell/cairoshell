@@ -10,9 +10,9 @@ namespace CairoDesktop.Common
 {
     public class NavigationManager : INotifyPropertyChanged
     {
-        private List<string> list;
+        private List<NavigationItem> list;
         private int _currentIndex;
-        private IReadOnlyList<string> readOnlyList;
+        private IReadOnlyList<NavigationItem> readOnlyList;
 
         private int currentIndex
         {
@@ -34,7 +34,7 @@ namespace CairoDesktop.Common
 
         public NavigationManager()
         {
-            list = new List<string>();
+            list = new List<NavigationItem>();
             currentIndex = 0;
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
@@ -55,18 +55,18 @@ namespace CairoDesktop.Common
             }
         }
 
-        public string CurrentPath
+        public NavigationItem CurrentItem
         {
             get
             {
                 if (list.Count > 0)
                     return list[currentIndex];
                 else
-                    return string.Empty;
+                    return new NavigationItem();
             }
         }
 
-        public IReadOnlyList<string> PathHistory
+        public IReadOnlyList<NavigationItem> PathHistory
         {
             get
             {
@@ -101,7 +101,7 @@ namespace CairoDesktop.Common
         {
             get
             {
-                return Localization.DisplayString.sDesktop_CurrentFolder + " " + CurrentPath;
+                return Localization.DisplayString.sDesktop_CurrentFolder + " " + CurrentItem.Path;
             }
         }
 
@@ -115,7 +115,7 @@ namespace CairoDesktop.Common
 
         public void Clear()
         {
-            string current = CurrentPath;
+            NavigationItem current = CurrentItem;
             list.Clear();
             list.Add(current);
             currentIndex = 0;
@@ -123,7 +123,7 @@ namespace CairoDesktop.Common
 
         public void NavigateTo(string path)
         {
-            if (path != CurrentPath)
+            if (path != CurrentItem.Path)
             {
                 if (CanGoForward)
                 {
@@ -132,7 +132,7 @@ namespace CairoDesktop.Common
                     list.RemoveRange(forwardStart, list.Count - forwardStart);
                 }
 
-                list.Add(path);
+                list.Add(new NavigationItem {Path = path});
                 currentIndex = list.Count - 1;
             }
         }
@@ -161,16 +161,14 @@ namespace CairoDesktop.Common
             }
         }
 
-        public void NavigateToParent()
+        public void NavigateToParent(ShellFolder currentFolder)
         {
             string parentPath = string.Empty;
-            ShellFolder currentFolder = new ShellFolder(CurrentPath, IntPtr.Zero);
             if (currentFolder.ParentItem != null)
             {
                 parentPath = currentFolder.ParentItem.Path;
                 currentFolder.ParentItem.Dispose();
             }
-            currentFolder.Dispose();
             
             NavigateTo(parentPath);
         }

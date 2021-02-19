@@ -734,16 +734,21 @@ namespace CairoDesktop
                 builder.AddSeparator();
             }
 
-            builder.AddCommand(new ShellMenuCommand
+            if (!EnvironmentHelper.IsWindows8OrBetter && _desktopManager.DesktopLocation.IsDesktop)
             {
-                Flags = flags,
-                Label = Localization.DisplayString.sInterface_Properties,
-                UID = (uint)CommonContextMenuItem.Properties
-            });
-            builder.AddSeparator();
+                // On Windows 7, this does the same thing as Personalize when on the Desktop folder
+                builder.AddCommand(new ShellMenuCommand
+                {
+                    Flags = flags,
+                    Label = Localization.DisplayString.sInterface_Properties,
+                    UID = (uint)CommonContextMenuItem.Properties
+                });
+                builder.AddSeparator();
+            }
 
             if (!EnvironmentHelper.IsAppRunningAsShell)
             {
+                // Don't show this if we are shell, since this launches a UWP app
                 builder.AddCommand(new ShellMenuCommand
                 {
                     Flags = flags,

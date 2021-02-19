@@ -207,13 +207,13 @@ namespace CairoDesktop
 
         private void btnBack_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            NavigationManager.NavigateToParent();
+            NavigationManager.NavigateToParent(_desktopManager.DesktopLocation);
             e.Handled = true;
         }
 
         private void btnUp_Click(object sender, RoutedEventArgs e)
         {
-            NavigationManager.NavigateToParent();
+            NavigationManager.NavigateToParent(_desktopManager.DesktopLocation);
         }
 
         private void btnHome_Click(object sender, RoutedEventArgs e)
@@ -229,7 +229,7 @@ namespace CairoDesktop
                 {
                     Description = Localization.DisplayString.sDesktop_BrowseTitle,
                     ShowNewFolderButton = false,
-                    SelectedPath = NavigationManager.CurrentPath
+                    SelectedPath = NavigationManager.CurrentItem.Path
                 })
                 {
                     NativeMethods.SetForegroundWindow(helper.Handle); // bring browse window to front
@@ -259,8 +259,16 @@ namespace CairoDesktop
 
                 for (int i = 0; i < NavigationManager.PathHistory.Count; i++)
                 {
+                    string displayName = NavigationManager.PathHistory[i].DisplayName;
+
+                    if (string.IsNullOrEmpty(displayName))
+                    {
+                        displayName = NavigationManager.PathHistory[i].Path;
+                    }
+                    
                     MenuItem locationMenuItem = new MenuItem();
-                    locationMenuItem.Header = GetCleanFolderName(NavigationManager.PathHistory[i]);
+                    locationMenuItem.Header = displayName;
+                    locationMenuItem.ToolTip = new ToolTip {Content = NavigationManager.PathHistory[i].Path};
                     locationMenuItem.Tag = i;
                     locationMenuItem.Click += LocationMenuItem_Click;
 
@@ -289,26 +297,11 @@ namespace CairoDesktop
         #region Home menu
         private void SetHomeMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopDirectory = NavigationManager.CurrentPath;
+            Settings.Instance.DesktopDirectory = NavigationManager.CurrentItem.Path;
         }
         #endregion
 
         #region Path history menu
-        private string GetCleanFolderName(string path)
-        {
-            string folderName = path;
-            ShellFolder currentFolder = new ShellFolder(path, IntPtr.Zero);
-
-            if (currentFolder.DisplayName != string.Empty)
-            {
-                folderName = currentFolder.DisplayName;
-            }
-            
-            currentFolder.Dispose();
-
-            return folderName;
-        }
-
         private void ClearHistoryMenuItem_Click(object sender, RoutedEventArgs e)
         {
             NavigationManager.Clear();

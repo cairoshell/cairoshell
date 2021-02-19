@@ -7,6 +7,7 @@ namespace CairoDesktop.SupportingClasses
         AddToStacks = CommonContextMenuItem.Properties + 1,
         RemoveFromStacks,
         OpenInNewWindow,
+        OpenOnDesktop,
         Personalize,
         DisplaySettings
     }

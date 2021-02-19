@@ -34,18 +34,6 @@ namespace CairoDesktop
                 typeof(DesktopIcons),
                 new PropertyMetadata(null));
 
-        public DesktopIcons(DesktopManager manager)
-        {
-            InitializeComponent();
-
-            _desktopManager = manager;
-
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
-
-            setPosition();
-            SetIconLocation();
-        }
-        
         public ShellFolder Location
         {
             get
@@ -56,12 +44,29 @@ namespace CairoDesktop
             {
                 if (!Dispatcher.CheckAccess())
                 {
-                    Dispatcher.Invoke(() => Location = value);
+                    Dispatcher.Invoke(() =>
+                    {
+                        Location = value;
+                        IconsControl.ItemsSource = new FolderView(value).DisplayItems;
+                    });
                     return;
                 }
 
                 SetValue(locationProperty, value);
+                IconsControl.ItemsSource = new FolderView(value).DisplayItems;
             }
+        }
+
+        public DesktopIcons(DesktopManager manager)
+        {
+            InitializeComponent();
+
+            _desktopManager = manager;
+
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+
+            setPosition();
+            SetIconLocation();
         }
 
         public RenderTargetBitmap GenerateBitmap(Grid sourceGrid)
@@ -85,7 +90,10 @@ namespace CairoDesktop
                 desktopPtr = _desktopManager.DesktopWindow.Handle;
             }
             
-            Location = new ShellFolder(_desktopManager.NavigationManager.CurrentPath, desktopPtr, true);
+            Location = new ShellFolder(_desktopManager.NavigationManager.CurrentItem.Path, desktopPtr, true);
+            
+            // set the display name for navigation history
+            _desktopManager.NavigationManager.CurrentItem.DisplayName = Location.DisplayName;
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -184,13 +192,22 @@ namespace CairoDesktop
 
             if (file.IsFolder)
             {
-                builder.AddCommand(new ShellMenuCommand
+                if (Settings.Instance.EnableDynamicDesktop)
                 {
-                    Flags = MFT.BYCOMMAND, // enable this entry always
-                    Label = DisplayString.sStacks_OpenInNewWindow,
-                    UID = (uint)CairoContextMenuItem.OpenInNewWindow
-                });
-                
+                    builder.AddCommand(new ShellMenuCommand
+                    {
+                        Flags = MFT.BYCOMMAND, // enable this entry always
+                        Label = DisplayString.sStacks_OpenOnDesktop,
+                        UID = (uint)CairoContextMenuItem.OpenOnDesktop
+                    });
+
+                    // If the [SHIFT] key is held, don't change the default action to ours
+                    if (!KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
+                    {
+                        builder.DefaultItemUID = (uint)CairoContextMenuItem.OpenOnDesktop;
+                    }
+                }
+
                 if (StacksManager.Instance.StackLocations.All(i => i.Path != file.Path))
                 {
                     builder.AddCommand(new ShellMenuCommand
@@ -246,21 +263,6 @@ namespace CairoDesktop
 
             switch (action)
             {
-                case CustomCommands.Actions.OpenFolder:
-                    // Determine if [SHIFT] key is held. Bypass directory processing, which will use the Shell to open the item.
-                    if (Settings.Instance.EnableDynamicDesktop && !KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
-                    {
-                        _desktopManager.NavigationManager.NavigateTo(items[0].Path);
-                    }
-                    else if (KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
-                    {
-                        FolderHelper.OpenWithShell(items[0].Path);
-                    }
-                    else
-                    {
-                        FolderHelper.OpenLocation(items[0].Path);
-                    }
-                    break;
                 case CustomCommands.Actions.Rename:
                     LastIconSelected?.BeginRename();
                     break;
@@ -276,8 +278,15 @@ namespace CairoDesktop
                             case CairoContextMenuItem.RemoveFromStacks:
                                 CustomCommands.PerformAction(CustomCommands.Actions.RemoveStack, items[0].Path);
                                 break;
-                            case CairoContextMenuItem.OpenInNewWindow:
-                                CustomCommands.PerformAction(CustomCommands.Actions.OpenWithShell, items[0].Path);
+                            case CairoContextMenuItem.OpenOnDesktop:
+                                if (Settings.Instance.EnableDynamicDesktop)
+                                {
+                                    _desktopManager.NavigationManager.NavigateTo(items[0].Path);
+                                }
+                                else
+                                {
+                                    FolderHelper.OpenLocation(items[0].Path);
+                                }
                                 break;
                             default:
                                 // these actions are handled for us, but we should hide the desktop overlay
