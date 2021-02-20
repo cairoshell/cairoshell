@@ -152,7 +152,7 @@ namespace CairoDesktop
 
             ShellMenuCommandBuilder builder = new ShellMenuCommandBuilder();
 
-            if (file.IsFolder)
+            if (file.IsNavigableFolder)
             {
                 if (Settings.Instance.EnableDesktop && Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay)
                 {
@@ -170,25 +170,32 @@ namespace CairoDesktop
                     }
                 }
 
-                if (StacksManager.Instance.StackLocations.All(i => i.Path != file.Path))
+                if (file.IsFolder)
                 {
-                    builder.AddCommand(new ShellMenuCommand
+                    if (StacksManager.Instance.StackLocations.All(i => i.Path != file.Path))
                     {
-                        Flags = MFT.BYCOMMAND, // enable this entry always
-                        Label = DisplayString.sInterface_AddToStacks,
-                        UID = (uint)CairoContextMenuItem.AddToStacks
-                    });
+                        builder.AddCommand(new ShellMenuCommand
+                        {
+                            Flags = MFT.BYCOMMAND, // enable this entry always
+                            Label = DisplayString.sInterface_AddToStacks,
+                            UID = (uint) CairoContextMenuItem.AddToStacks
+                        });
+                    }
+                    else
+                    {
+                        builder.AddCommand(new ShellMenuCommand
+                        {
+                            Flags = MFT.BYCOMMAND, // enable this entry always
+                            Label = DisplayString.sInterface_RemoveFromStacks,
+                            UID = (uint) CairoContextMenuItem.RemoveFromStacks
+                        });
+                    }
                 }
-                else
+
+                if ((Settings.Instance.EnableDesktop && Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay) || file.IsFolder)
                 {
-                    builder.AddCommand(new ShellMenuCommand
-                    {
-                        Flags = MFT.BYCOMMAND, // enable this entry always
-                        Label = DisplayString.sInterface_RemoveFromStacks,
-                        UID = (uint)CairoContextMenuItem.RemoveFromStacks
-                    });
+                    builder.AddSeparator();
                 }
-                builder.AddSeparator();
             }
 
             return builder;
