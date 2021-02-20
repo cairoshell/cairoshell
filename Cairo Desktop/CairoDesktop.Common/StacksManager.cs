@@ -69,9 +69,14 @@ namespace CairoDesktop.Common
             if (CanAdd(path))
             {
                 ShellFolder dir = new ShellFolder(path, IntPtr.Zero, true);
-                StackLocations.Add(dir);
 
-                return true;
+                if (!string.IsNullOrEmpty(dir.Path))
+                {
+                    StackLocations.Add(dir);
+                    return true;
+                }
+
+                dir.Dispose();
             }
 
             return false;
@@ -79,7 +84,7 @@ namespace CairoDesktop.Common
 
         public bool CanAdd(string path)
         {
-            return Directory.Exists(path) && StackLocations.All(i => i.Path != path);
+            return StackLocations.All(i => i.Path != path);
         }
 
         public void RemoveLocation(ShellFolder directory)

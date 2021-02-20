@@ -208,32 +208,25 @@ namespace CairoDesktop
                     }
                 }
 
-                if (file.IsFolder)
+                if (StacksManager.Instance.StackLocations.All(i => i.Path != file.Path))
                 {
-                    if (StacksManager.Instance.StackLocations.All(i => i.Path != file.Path))
+                    builder.AddCommand(new ShellMenuCommand
                     {
-                        builder.AddCommand(new ShellMenuCommand
-                        {
-                            Flags = MFT.BYCOMMAND, // enable this entry always
-                            Label = DisplayString.sInterface_AddToStacks,
-                            UID = (uint) CairoContextMenuItem.AddToStacks
-                        });
-                    }
-                    else
-                    {
-                        builder.AddCommand(new ShellMenuCommand
-                        {
-                            Flags = MFT.BYCOMMAND, // enable this entry always
-                            Label = DisplayString.sInterface_RemoveFromStacks,
-                            UID = (uint) CairoContextMenuItem.RemoveFromStacks
-                        });
-                    }
+                        Flags = MFT.BYCOMMAND, // enable this entry always
+                        Label = DisplayString.sInterface_AddToStacks,
+                        UID = (uint)CairoContextMenuItem.AddToStacks
+                    });
                 }
-
-                if (Settings.Instance.EnableDynamicDesktop || file.IsFolder)
+                else
                 {
-                    builder.AddSeparator();
+                    builder.AddCommand(new ShellMenuCommand
+                    {
+                        Flags = MFT.BYCOMMAND, // enable this entry always
+                        Label = DisplayString.sInterface_RemoveFromStacks,
+                        UID = (uint)CairoContextMenuItem.RemoveFromStacks
+                    });
                 }
+                builder.AddSeparator();
             }
 
             return builder;
