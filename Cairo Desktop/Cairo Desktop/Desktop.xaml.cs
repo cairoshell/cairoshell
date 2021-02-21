@@ -734,9 +734,10 @@ namespace CairoDesktop
                 builder.AddSeparator();
             }
 
-            if (!EnvironmentHelper.IsWindows8OrBetter && _desktopManager.DesktopLocation.IsDesktop)
+            if (EnvironmentHelper.IsWindows10OrBetter || !_desktopManager.DesktopLocation.IsDesktop)
             {
-                // On Windows 7, this does the same thing as Personalize when on the Desktop folder
+                // On Windows < 10, this does the same thing as Personalize when on the Desktop folder.
+                // Show it only if this isn't the Desktop folder, or if we are on Windows 10 (or later).
                 builder.AddCommand(new ShellMenuCommand
                 {
                     Flags = flags,
@@ -751,7 +752,7 @@ namespace CairoDesktop
                 // Don't show this if we are shell, since this launches a UWP app
                 builder.AddCommand(new ShellMenuCommand
                 {
-                    Flags = flags,
+                    Flags = MFT.BYCOMMAND, // enable this entry always
                     Label = Localization.DisplayString.sDesktop_DisplaySettings,
                     UID = (uint)CairoContextMenuItem.DisplaySettings
                 });
@@ -759,7 +760,7 @@ namespace CairoDesktop
 
             builder.AddCommand(new ShellMenuCommand
             {
-                Flags = flags,
+                Flags = MFT.BYCOMMAND, // enable this entry always
                 Label = Localization.DisplayString.sDesktop_Personalize,
                 UID = (uint)CairoContextMenuItem.Personalize
             });
@@ -776,18 +777,23 @@ namespace CairoDesktop
                     _fileWorker.PasteFromClipboard(path);
                     break;
                 case (uint)CommonContextMenuItem.Properties:
+                    _desktopManager.IsOverlayOpen = false;
                     CustomCommands.PerformAction(CustomCommands.Actions.Properties, path);
                     break;
                 case (uint)CairoContextMenuItem.OpenInNewWindow:
+                    _desktopManager.IsOverlayOpen = false;
                     CustomCommands.PerformAction(CustomCommands.Actions.OpenWithShell, path);
                     break;
                 case (uint)CairoContextMenuItem.DisplaySettings:
+                    _desktopManager.IsOverlayOpen = false;
                     CustomCommands.PerformAction(CustomCommands.Actions.DisplaySettings, path);
                     break;
                 case (uint)CairoContextMenuItem.Personalize when EnvironmentHelper.IsAppRunningAsShell:
+                    _desktopManager.IsOverlayOpen = false;
                     _settingsUiService?.Show("desktop");
                     break;
                 case (uint)CairoContextMenuItem.Personalize:
+                    _desktopManager.IsOverlayOpen = false;
                     CustomCommands.PerformAction(CustomCommands.Actions.Personalize, path);
                     break;
                 case (uint)CairoContextMenuItem.AddToStacks:
@@ -798,7 +804,17 @@ namespace CairoDesktop
                     break;
                 default:
                     // must be "New" menu
-                    Activate();
+                    CairoApplication.Current.Dispatcher.Invoke(() =>
+                    {
+                        if (_desktopManager.IsOverlayOpen)
+                        {
+                            _desktopManager.DesktopOverlayWindow.Activate();
+                        }
+                        else
+                        {
+                            Activate();
+                        }
+                    });
                     // watch for new file to be created so we can perform an action
                     _desktopManager.DesktopLocation.Files.CollectionChanged += ShellNew_FileCreated;
                     break;
@@ -821,7 +837,7 @@ namespace CairoDesktop
         private bool isDropMove;
         private void CairoDesktopWindow_DragOver(object sender, DragEventArgs e)
         {
-            if (_desktopManager.DesktopLocation != null && (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(ShellItem))))
+            if (_desktopManager.DesktopLocation != null && _desktopManager.DesktopLocation.IsFileSystem && (e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(typeof(ShellItem))))
             {
                 if ((e.KeyStates & DragDropKeyStates.RightMouseButton) != 0)
                 {

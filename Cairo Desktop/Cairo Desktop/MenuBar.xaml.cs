@@ -18,6 +18,8 @@ using CairoDesktop.Services;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
+using ManagedShell.ShellFolders.Enums;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop
@@ -485,7 +487,8 @@ namespace CairoDesktop
 
         private void OpenControlPanel(object sender, RoutedEventArgs e)
         {
-            ShellHelper.StartProcess("control.exe");
+            //ShellHelper.StartProcess("control.exe");
+            FolderHelper.OpenLocation(ShellFolderPath.ControlPanelFolder.Value);
         }
 
         private void miOpenUWPSettings_Click(object sender, RoutedEventArgs e)
@@ -527,22 +530,22 @@ namespace CairoDesktop
         #region Places menu items
         private void OpenMyDocs(object sender, RoutedEventArgs e)
         {
-            FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Documents));
+            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.DoNotVerify));
         }
 
         private void OpenMyPics(object sender, RoutedEventArgs e)
         {
-            FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Pictures));
+            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.DoNotVerify));
         }
 
         private void OpenMyMusic(object sender, RoutedEventArgs e)
         {
-            FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Music));
+            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic, Environment.SpecialFolderOption.DoNotVerify));
         }
 
         private void OpenMyVideos(object sender, RoutedEventArgs e)
         {
-            FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Videos));
+            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos, Environment.SpecialFolderOption.DoNotVerify));
         }
 
         private void OpenDownloads(object sender, RoutedEventArgs e)
@@ -552,22 +555,22 @@ namespace CairoDesktop
 
         private void OpenMyComputer(object sender, RoutedEventArgs e)
         {
-            FolderHelper.OpenLocation("::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
+            FolderHelper.OpenLocation(ShellFolderPath.ComputerFolder.Value);
         }
 
         private void OpenUserFolder(object sender, RoutedEventArgs e)
         {
-            FolderHelper.OpenLocation(Environment.GetEnvironmentVariable("USERPROFILE"));
+            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.DoNotVerify));
         }
 
         private void OpenProgramFiles(object sender, RoutedEventArgs e)
         {
-            FolderHelper.OpenLocation(Environment.GetEnvironmentVariable("ProgramFiles"));
+            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles, Environment.SpecialFolderOption.DoNotVerify));
         }
 
         private void OpenRecycleBin(object sender, RoutedEventArgs e)
         {
-            FolderHelper.OpenLocation("::{645FF040-5081-101B-9F08-00AA002F954E}");
+            FolderHelper.OpenWithShell(ShellFolderPath.RecycleBinFolder.Value);
         }
         #endregion
         

@@ -18,8 +18,4 @@
     </COMReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ManagedShell" Version="0.0.55" />
-  </ItemGroup>
-
 </Project>

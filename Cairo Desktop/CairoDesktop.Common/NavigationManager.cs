@@ -61,8 +61,8 @@ namespace CairoDesktop.Common
             {
                 if (list.Count > 0)
                     return list[currentIndex];
-                else
-                    return new NavigationItem();
+                
+                return new NavigationItem();
             }
         }
 
@@ -77,41 +77,19 @@ namespace CairoDesktop.Common
             }
         }
 
-        public bool CanGoBack
-        {
-            get
-            {
-                return list != null &&
-                       list.Count > 1 &&
-                       currentIndex > 0;
-            }
-        }
+        public bool CanGoBack =>
+            list != null &&
+            list.Count > 1 &&
+            currentIndex > 0;
 
-        public bool CanGoForward
-        {
-            get
-            {
-                return list != null &&
-                       list.Count > 1 &&
-                       currentIndex < list.Count - 1;
-            }
-        }
+        public bool CanGoForward =>
+            list != null &&
+            list.Count > 1 &&
+            currentIndex < list.Count - 1;
 
-        public string CurrentPathFriendly
-        {
-            get
-            {
-                return Localization.DisplayString.sDesktop_CurrentFolder + " " + CurrentItem.Path;
-            }
-        }
+        public string CurrentPathFriendly => Localization.DisplayString.sDesktop_CurrentFolder + " " + CurrentItem.DisplayName;
 
-        public string HomePathFriendly
-        {
-            get
-            {
-                return string.Format("{0} ({1})", Localization.DisplayString.sDesktop_Home, Settings.Instance.DesktopDirectory);
-            }
-        }
+        public string HomePathFriendly => $"{Localization.DisplayString.sDesktop_Home} ({Settings.Instance.DesktopDirectory})";
 
         public void Clear()
         {

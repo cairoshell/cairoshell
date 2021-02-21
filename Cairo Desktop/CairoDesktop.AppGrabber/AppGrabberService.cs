@@ -201,11 +201,11 @@ namespace CairoDesktop.AppGrabber
                 {
                     ai.Name = ShellHelper.GetDisplayName(file);
                     ai.Path = file;
-                    string target = string.Empty;
+                    string target;
 
                     if (fileExt.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
                     {
-                        Shell.Link link = new Shell.Link(file);
+                        Link link = new Link(file);
                         target = link.Target;
                     }
                     else

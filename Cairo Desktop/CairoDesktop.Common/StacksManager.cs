@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
 using ManagedShell.ShellFolders;
 
 namespace CairoDesktop.Common
@@ -140,33 +140,27 @@ namespace CairoDesktop.Common
             }
             else
             {
-                // Add some default folders on FirstRun
+                // Add some default folders on first run
+                AddDefaultDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.None));
+                AddDefaultDirectory(KnownFolders.GetPath(KnownFolder.Downloads, NativeMethods.KnownFolderFlags.None));
 
-                // Check for Documents Folder
-                string myDocsPath = Interop.KnownFolders.GetPath(Interop.KnownFolder.Documents);
-                if (Directory.Exists(myDocsPath))
-                {
-                    ShellFolder myDocsSysDir = new ShellFolder(myDocsPath, IntPtr.Zero);
-                    // Don't duplicate defaults
-                    if (!StackLocations.Contains(myDocsSysDir))
-                    {
-                        StackLocations.Add(myDocsSysDir);
-                    }
-                }
-                // Check for Downloads folder
-                string downloadsPath = Interop.KnownFolders.GetPath(Interop.KnownFolder.Downloads);
-                if (Directory.Exists(downloadsPath))
-                {
-                    ShellFolder downloadsSysDir = new ShellFolder(downloadsPath, IntPtr.Zero);
-                    // Don't duplicate defaults
-                    if (!StackLocations.Contains(downloadsSysDir))
-                    {
-                        StackLocations.Add(downloadsSysDir);
-                    }
-                }
-
-                // save
+                // Save
                 serializeStacks();
+            }
+        }
+
+        private void AddDefaultDirectory(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+            
+            ShellFolder folder = new ShellFolder(path, IntPtr.Zero);
+            // Don't duplicate defaults
+            if (!string.IsNullOrEmpty(folder.Path) && !StackLocations.Contains(folder))
+            {
+                StackLocations.Add(folder);
             }
         }
     }

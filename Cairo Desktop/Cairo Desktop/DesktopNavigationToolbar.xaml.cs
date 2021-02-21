@@ -14,7 +14,6 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
-using ManagedShell.ShellFolders;
 
 namespace CairoDesktop
 {
@@ -267,7 +266,7 @@ namespace CairoDesktop
                     }
                     
                     MenuItem locationMenuItem = new MenuItem();
-                    locationMenuItem.Header = displayName;
+                    locationMenuItem.Header = displayName.Replace("_", "__");
                     locationMenuItem.ToolTip = new ToolTip {Content = NavigationManager.PathHistory[i].Path};
                     locationMenuItem.Tag = i;
                     locationMenuItem.Click += LocationMenuItem_Click;

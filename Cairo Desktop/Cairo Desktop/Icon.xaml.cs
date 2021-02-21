@@ -14,6 +14,7 @@ using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
 
@@ -204,7 +205,7 @@ namespace CairoDesktop
             {
                 selectionLength = txtFilename.Text.LastIndexOf('.');
             }
-
+            
             txtRename.Focus();
             txtRename.Select(0, selectionLength);
 
@@ -308,7 +309,7 @@ namespace CairoDesktop
         private Point? startPoint;
         private bool inDrag;
 
-        private void btnFile_PreviewMouseButtonDown(object sender, MouseButtonEventArgs e)
+        private void btnFile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             // Store the mouse position
             if (!IsRenaming)
@@ -317,8 +318,28 @@ namespace CairoDesktop
             }
         }
 
+        private void btnFile_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            // Reset the mouse position
+            if (!IsRenaming)
+            {
+                startPoint = null;
+            }
+        }
+
         private void btnFile_PreviewMouseMove(object sender, MouseEventArgs e)
         {
+            if (file == null)
+            {
+                return;
+            }
+
+            if (!file.IsFileSystem)
+            {
+                // we can only perform file operations on filesystem objects
+                return;
+            }
+            
             if (!IsRenaming)
             {
                 if (!inDrag && startPoint != null)
@@ -326,6 +347,14 @@ namespace CairoDesktop
                     inDrag = true;
 
                     Point mousePos = e.GetPosition(this);
+
+                    if (mousePos.X == 0 && mousePos.Y == 0)
+                    {
+                        // sometimes we get an invalid position, ignore it so we don't start a drag operation
+                        startPoint = null;
+                        return;
+                    }
+                    
                     Vector diff = (Point)startPoint - mousePos;
 
                     if (mousePos.Y <= ActualHeight && ((Point)startPoint).Y <= ActualHeight &&
@@ -335,18 +364,20 @@ namespace CairoDesktop
                     {
                         Button button = sender as Button;
                         DataObject dragObject = new DataObject();
-                        dragObject.SetFileDropList(
-                            new System.Collections.Specialized.StringCollection() { file.Path });
 
                         try
                         {
+                            dragObject.SetFileDropList(
+                                new System.Collections.Specialized.StringCollection { file.Path });
+                            
                             DragDrop.DoDragDrop(button, dragObject,
                                 (e.RightButton == MouseButtonState.Pressed
                                     ? DragDropEffects.All
                                     : DragDropEffects.Move));
                         }
-                        catch
+                        catch (Exception exception)
                         {
+                            ShellLogger.Warning($"Icon: Unable to perform drag-drop operation: {exception.Message}");
                         }
 
                         // reset the stored mouse position

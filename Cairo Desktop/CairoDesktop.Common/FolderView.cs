@@ -66,6 +66,12 @@ namespace CairoDesktop.Common
                         return false;
                     }
                 }
+
+                if (file.Path == @"::{21EC2020-3AEA-1069-A2DD-08002B30309D}\::{98F2AB62-0E29-4E4C-8EE7-B542E66740B1}")
+                {
+                    // this is a mystery item in Control Panel
+                    return false;
+                }
             }
 
             return true;

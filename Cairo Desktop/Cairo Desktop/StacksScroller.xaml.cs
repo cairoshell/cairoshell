@@ -162,9 +162,10 @@ namespace CairoDesktop
                         Label = DisplayString.sStacks_OpenOnDesktop,
                         UID = (uint) CairoContextMenuItem.OpenOnDesktop
                     });
-                    
+
                     // If the [SHIFT] key is held, don't change the default action to ours
-                    if (!KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
+                    // Only set as the default action for filesystem items because we don't support all shell views
+                    if (file.IsFileSystem && !KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
                     {
                         builder.DefaultItemUID = (uint) CairoContextMenuItem.OpenOnDesktop;
                     }
@@ -205,19 +206,20 @@ namespace CairoDesktop
             return true;
         }
 
-        private void HandleFileAction(string action, ShellItem[] items)
+        private bool HandleFileAction(string action, ShellItem[] items, bool allFolders)
         {
             // TODO: Use command system
             if (items.Length < 1)
             {
-                return;
+                return false;
             }
 
+            bool handled = false;
             switch (action)
             {
                 case CustomCommands.Actions.Rename:
                     LastIconSelected?.BeginRename();
-                    return; // don't reset LastIconSelected yet so that we can tell that it entered rename mode
+                    return true; // don't reset LastIconSelected yet so that we can tell that it entered rename mode
                 default:
                     // handle Cairo actions
                     if (uint.TryParse(action, out uint cairoAction))
@@ -226,12 +228,15 @@ namespace CairoDesktop
                         {
                             case CairoContextMenuItem.AddToStacks:
                                 CustomCommands.PerformAction(CustomCommands.Actions.AddStack, items[0].Path);
+                                handled = true;
                                 break;
                             case CairoContextMenuItem.RemoveFromStacks:
                                 CustomCommands.PerformAction(CustomCommands.Actions.RemoveStack, items[0].Path);
+                                handled = true;
                                 break;
                             case CairoContextMenuItem.OpenOnDesktop:
                                 FolderHelper.OpenLocation(items[0].Path);
+                                handled = true;
                                 break;
                         }
                     }
@@ -239,6 +244,7 @@ namespace CairoDesktop
             }
 
             LastIconSelected = null;
+            return handled;
         }
     }
 }
