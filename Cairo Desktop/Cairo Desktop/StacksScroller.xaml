@@ -11,8 +11,7 @@
                   PreviewMouseWheel="Scroller_PreviewMouseWheel">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <cairo:Icon Location="Stacks"
-                                PreviewMouseLeftButtonUp="Icon_OnMouseLeftButtonUp"
+                    <cairo:Icon PreviewMouseLeftButtonUp="Icon_OnMouseLeftButtonUp"
                                 PreviewMouseRightButtonUp="Icon_OnMouseRightButtonUp" />
                 </DataTemplate>
             </ListView.ItemTemplate>

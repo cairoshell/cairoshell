@@ -10,6 +10,7 @@ using CairoDesktop.Configuration;
 using CairoDesktop.Localization;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
 
@@ -28,7 +29,7 @@ namespace CairoDesktop
         }
 
         public MenuItem ParentMenuItem;
-
+        
         private bool isLoaded;
         private Icon LastIconSelected;
 
@@ -92,13 +93,22 @@ namespace CairoDesktop
 
         private void Close()
         {
-            if (ParentMenuItem != null)
+            try
             {
-                ParentMenuItem.IsSubmenuOpen = false;
-                
-                // Stacks capture the mouse; need to release so that mouse events go to the intended recipient after closing
-                Mouse.Capture(null);
+                // For some reason the framework throws an NRE here if you attempt to drag a non-filesystem file, so catch it
+                if (ParentMenuItem != null)
+                {
+                    ParentMenuItem.IsSubmenuOpen = false;
+
+                    // Stacks capture the mouse; need to release so that mouse events go to the intended recipient after closing
+                    Mouse.Capture(null);
+                }
             }
+            catch (Exception e)
+            {
+                ShellLogger.Warning($"StacksScroller: Unable to close stack: {e.Message}");
+            }
+            
         }
         
         #region Icons

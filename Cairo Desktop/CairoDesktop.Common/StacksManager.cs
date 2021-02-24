@@ -70,7 +70,7 @@ namespace CairoDesktop.Common
             {
                 ShellFolder dir = new ShellFolder(path, IntPtr.Zero, true);
 
-                if (!string.IsNullOrEmpty(dir.Path))
+                if (dir.IsNavigableFolder)
                 {
                     StackLocations.Add(dir);
                     return true;
@@ -84,7 +84,7 @@ namespace CairoDesktop.Common
 
         public bool CanAdd(string path)
         {
-            return StackLocations.All(i => i.Path != path);
+            return !string.IsNullOrEmpty(path) && StackLocations.All(i => i.Path != path);
         }
 
         public void RemoveLocation(ShellFolder directory)
@@ -141,26 +141,11 @@ namespace CairoDesktop.Common
             else
             {
                 // Add some default folders on first run
-                AddDefaultDirectory(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.None));
-                AddDefaultDirectory(KnownFolders.GetPath(KnownFolder.Downloads, NativeMethods.KnownFolderFlags.None));
+                AddLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.None));
+                AddLocation(KnownFolders.GetPath(KnownFolder.Downloads, NativeMethods.KnownFolderFlags.None));
 
                 // Save
                 serializeStacks();
-            }
-        }
-
-        private void AddDefaultDirectory(string path)
-        {
-            if (string.IsNullOrEmpty(path))
-            {
-                return;
-            }
-            
-            ShellFolder folder = new ShellFolder(path, IntPtr.Zero);
-            // Don't duplicate defaults
-            if (!string.IsNullOrEmpty(folder.Path) && !StackLocations.Contains(folder))
-            {
-                StackLocations.Add(folder);
             }
         }
     }
