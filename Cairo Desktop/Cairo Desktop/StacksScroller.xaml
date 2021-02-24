@@ -21,6 +21,7 @@
                 Click="Open_Click"
                 CommandParameter="{Binding Path=Path}"
                 Content="2"
+                Name="OpenButton"
                 ToolTip="{Binding Path=(l10n:DisplayString.sStacks_OpenInNewWindow)}" />
     </Grid>
 </UserControl>

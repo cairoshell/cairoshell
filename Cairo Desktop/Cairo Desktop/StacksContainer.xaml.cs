@@ -68,14 +68,15 @@ namespace CairoDesktop {
                 }
             }
         }
-        
+
         /// <summary>
         /// Launches the FileManager specified in the application Settings object to the specified directory.
         /// </summary>
         /// <param name="directoryPath">Directory to open.</param>
-        internal void OpenDir(string directoryPath, bool openWithShell) 
+        /// <param name="alwaysOpenWithShell">If true, user preferences will not be honored and the shell will always be used to open the directory.</param>
+        internal void OpenDir(string directoryPath, bool alwaysOpenWithShell) 
         {
-            if ((!openWithShell && !FolderHelper.OpenLocation(directoryPath)) || (openWithShell && !FolderHelper.OpenWithShell(directoryPath)))
+            if ((!alwaysOpenWithShell && !FolderHelper.OpenLocation(directoryPath)) || (alwaysOpenWithShell && !FolderHelper.OpenWithShell(directoryPath)))
             {
                 CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
             }

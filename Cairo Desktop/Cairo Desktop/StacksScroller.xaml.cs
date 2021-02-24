@@ -9,6 +9,7 @@ using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using CairoDesktop.Localization;
 using CairoDesktop.SupportingClasses;
+using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
 
@@ -38,10 +39,14 @@ namespace CairoDesktop
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            if (sender != null)
+            if (sender == null)
             {
-                ParentContainer?.OpenDir((sender as ICommandSource).CommandParameter.ToString(), true);
+                return;
             }
+
+            Close();
+
+            ParentContainer?.OpenDir((sender as ICommandSource).CommandParameter.ToString(), KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey));
         }
 
         private void Scroller_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -75,10 +80,28 @@ namespace CairoDesktop
                     Scroller.ItemsSource = new FolderView(folder).DisplayItems;
                 }
 
+                if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay &&
+                    Settings.Instance.EnableDesktop && !GroupPolicyHelper.NoDesktop)
+                {
+                    OpenButton.ToolTip = new ToolTip { Content = DisplayString.sStacks_OpenOnDesktop };
+                }
+
                 isLoaded = true;
             }
         }
 
+        private void Close()
+        {
+            if (ParentMenuItem != null)
+            {
+                ParentMenuItem.IsSubmenuOpen = false;
+                
+                // Stacks capture the mouse; need to release so that mouse events go to the intended recipient after closing
+                Mouse.Capture(null);
+            }
+        }
+        
+        #region Icons
         private void Icon_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Icon icon = sender as Icon;
@@ -90,11 +113,8 @@ namespace CairoDesktop
             e.Handled = true;
 
             ShellFile file = icon.DataContext as ShellFile;
-
-            if (ParentMenuItem != null)
-            {
-                ParentMenuItem.IsSubmenuOpen = false;
-            }
+            
+            Close();
 
             if (file == null || string.IsNullOrWhiteSpace(file.Path))
             {
@@ -135,14 +155,13 @@ namespace CairoDesktop
                 }
 
                 LastIconSelected = null;
-                
-                if (ParentMenuItem != null)
-                {
-                    ParentMenuItem.IsSubmenuOpen = false;
-                }
+
+                Close();
             }
         }
+        #endregion
 
+        #region Context menu
         private ShellMenuCommandBuilder GetFileCommandBuilder(ShellFile file)
         {
             if (file == null)
@@ -154,7 +173,8 @@ namespace CairoDesktop
 
             if (file.IsNavigableFolder)
             {
-                if (Settings.Instance.EnableDesktop && Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay)
+                if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay && 
+                    Settings.Instance.EnableDesktop && !GroupPolicyHelper.NoDesktop)
                 {
                     builder.AddCommand(new ShellMenuCommand
                     {
@@ -246,5 +266,6 @@ namespace CairoDesktop
             LastIconSelected = null;
             return handled;
         }
+        #endregion
     }
 }
