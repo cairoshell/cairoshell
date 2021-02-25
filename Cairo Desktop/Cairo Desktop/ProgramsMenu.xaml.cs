@@ -41,16 +41,24 @@ namespace CairoDesktop
         #region Sidebar items
         private void btnAppGrabber_Click(object sender, RoutedEventArgs e)
         {
-            if (MenuBar != null)
+            if (MenuBar == null)
             {
-                MenuBar.ProgramsMenu.IsSubmenuOpen = false;
+                return;
             }
+            
+            MenuBar.ProgramsMenu.IsSubmenuOpen = false;
+
+            // Buttons capture the mouse; need to release so that mouse events go to the intended recipient after closing
+            Mouse.Capture(null);
 
             MenuBar._appGrabber.ShowDialog();
         }
 
         private void btnUninstallApps_Click(object sender, RoutedEventArgs e)
         {
+            // Buttons capture the mouse; need to release so that mouse events go to the intended recipient after closing
+            Mouse.Capture(null);
+
             if (!ShellHelper.StartProcess("appwiz.cpl"))
                 CairoMessage.Show(DisplayString.sError_CantOpenAppWiz, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
         }
