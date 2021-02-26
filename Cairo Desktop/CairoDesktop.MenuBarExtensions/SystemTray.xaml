@@ -24,7 +24,14 @@
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <Border MouseUp="Image_MouseUp" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave" MouseMove="Image_MouseMove" Background="Transparent" ToolTip="{Binding Path=Title}" ToolTipService.Placement="Bottom">
+                        <Border MouseUp="Image_MouseUp" 
+                                MouseDown="Image_MouseDown" 
+                                MouseEnter="Image_MouseEnter" 
+                                MouseLeave="Image_MouseLeave" 
+                                MouseMove="Image_MouseMove" 
+                                Background="Transparent" 
+                                ToolTip="{Binding Path=Title}" 
+                                ToolTipService.Placement="Bottom">
                             <Image Source="{Binding Path=Icon, Mode=OneWay}"
                                    Width="16"
                                    Height="16"

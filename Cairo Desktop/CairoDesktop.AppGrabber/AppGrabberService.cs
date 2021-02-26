@@ -9,6 +9,8 @@ using System.Windows.Data;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.ShellFolders;
+using ManagedShell.ShellFolders.Enums;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -161,56 +163,65 @@ namespace CairoDesktop.AppGrabber
         private List<ApplicationInfo> generateAppList(string directory)
         {
             List<ApplicationInfo> rval = new List<ApplicationInfo>();
+            ShellFolder folder = null;
 
             try
             {
-                IEnumerable<string> subs = Directory.EnumerateDirectories(directory);
+                folder = new ShellFolder(directory, IntPtr.Zero);
 
-                foreach (string dir in subs)
+                foreach (var file in folder.Files)
                 {
-                    if (!dir.ToLower().EndsWith("\\startup"))
-                        rval.AddRange(generateAppList(dir));
+                    if (file.IsFolder)
+                    {
+                        if (!file.Path.ToLower().EndsWith("\\startup"))
+                            rval.AddRange(generateAppList(file.Path));
+                    }
+                    else
+                    {
+                        ApplicationInfo app = PathToApp(file.Path, file.DisplayName, false, false);
+                        if (!ReferenceEquals(app, null))
+                            rval.Add(app);
+                    }
                 }
             }
-            catch { }
-
-            try
+            catch (Exception e)
             {
-                IEnumerable<string> files = Directory.EnumerateFiles(directory, "*");
-
-                foreach (string file in files)
-                {
-                    ApplicationInfo app = PathToApp(file, false, false);
-                    if (!ReferenceEquals(app, null))
-                        rval.Add(app);
-                }
+                ShellLogger.Warning($"AppGrabberService: Unable to enumerate files: {e.Message}");
             }
-            catch { }
+            finally
+            {
+                folder?.Dispose();
+            }
 
             return rval;
         }
 
-        public static ApplicationInfo PathToApp(string file, bool allowNonApps, bool allowExcludedNames)
+        public static ApplicationInfo PathToApp(string filePath, bool allowNonApps, bool allowExcludedNames)
+        {
+            return PathToApp(filePath, ShellHelper.GetDisplayName(filePath), allowNonApps, allowExcludedNames);
+        }
+
+        public static ApplicationInfo PathToApp(string filePath, string fileDisplayName, bool allowNonApps, bool allowExcludedNames)
         {
             ApplicationInfo ai = new ApplicationInfo();
-            string fileExt = Path.GetExtension(file);
+            string fileExt = Path.GetExtension(filePath);
 
             if (allowNonApps || ExecutableExtensions.Contains(fileExt, StringComparer.OrdinalIgnoreCase))
             {
                 try
                 {
-                    ai.Name = ShellHelper.GetDisplayName(file);
-                    ai.Path = file;
-                    string target = string.Empty;
+                    ai.Name = fileDisplayName;
+                    ai.Path = filePath;
+                    string target;
 
                     if (fileExt.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
                     {
-                        Shell.Link link = new Shell.Link(file);
+                        Link link = new Link(filePath);
                         target = link.Target;
                     }
                     else
                     {
-                        target = file;
+                        target = filePath;
                     }
 
                     ai.Target = target;
@@ -220,7 +231,7 @@ namespace CairoDesktop.AppGrabber
                     {
                         if (!string.IsNullOrEmpty(target) && !ExecutableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
                         {
-                            ShellLogger.Debug("Not an app: " + file + ": " + target);
+                            ShellLogger.Debug($"AppGrabberService: Not an app: {filePath}: {target}");
                             return null;
                         }
 
@@ -231,7 +242,7 @@ namespace CairoDesktop.AppGrabber
                             {
                                 if (ai.Name.ToLower().Contains(word))
                                 {
-                                    ShellLogger.Debug("Excluded item: " + file + ": " + target);
+                                    ShellLogger.Debug($"AppGrabberService: Excluded item: {filePath}: {target}");
                                     return null;
                                 }
                             }
@@ -242,7 +253,7 @@ namespace CairoDesktop.AppGrabber
                 }
                 catch (Exception ex)
                 {
-                    ShellLogger.Error("Error creating ApplicationInfo object in appgrabber. " + ex.Message, ex);
+                    ShellLogger.Error($"AppGrabberService: Error creating ApplicationInfo object: {ex.Message}");
                     return null;
                 }
             }
@@ -281,7 +292,7 @@ namespace CairoDesktop.AppGrabber
             }
             catch (Exception e)
             {
-                ShellLogger.Error($"Error creating AppGrabberUI: {e.Message}", e);
+                ShellLogger.Error($"AppGrabberService: Error creating AppGrabberUI: {e.Message}", e);
             }
         }
 
@@ -304,8 +315,7 @@ namespace CairoDesktop.AppGrabber
                 else if (EnvironmentHelper.IsAppRunningAsShell && app.Target.ToLower().EndsWith("explorer.exe"))
                 {
                     // special case: if we are shell and launching explorer, give it a parameter so that it doesn't do shell things.
-                    // this opens My Computer
-                    if (!ShellHelper.StartProcess(app.Path, "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"))
+                    if (!ShellHelper.StartProcess(app.Path, ShellFolderPath.ComputerFolder.Value))
                     {
                         CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                     }
@@ -428,7 +438,7 @@ namespace CairoDesktop.AppGrabber
                             if (CategoryList.FlatList.Contains(customApp))
                             {
                                 // disallow duplicates within all programs menu categories
-                                ShellLogger.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                                ShellLogger.Debug($"AppGrabberService: Excluded duplicate item: {customApp.Name}: {customApp.Target}");
                                 continue;
                             }
                         }
@@ -438,7 +448,7 @@ namespace CairoDesktop.AppGrabber
                             if (category.Contains(customApp))
                             {
                                 // disallow duplicates within the category
-                                ShellLogger.Debug("Excluded duplicate item: " + customApp.Name + ": " + customApp.Target);
+                                ShellLogger.Debug($"AppGrabberService: Excluded duplicate item: {customApp.Name}: {customApp.Target}");
                                 continue;
                             }
                         }

@@ -21,7 +21,7 @@ namespace CairoDesktop.MenuBarExtensions
         public SystemTray(IMenuBar host, NotificationArea notificationArea)
         {
             InitializeComponent();
-
+            
             _notificationArea = notificationArea;
             DataContext = _notificationArea;
             Host = host;
@@ -100,7 +100,7 @@ namespace CairoDesktop.MenuBarExtensions
             };
         }
 
-        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
 
@@ -109,7 +109,15 @@ namespace CairoDesktop.MenuBarExtensions
                 // set current menu bar to return placement for ABM_GETTASKBARPOS message
                 _notificationArea.SetTrayHostSizeData(GetTrayHostSizeData());
             }
-            trayIcon?.IconMouseClick(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
+
+            trayIcon?.IconMouseDown(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
+        }
+
+        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
+
+            trayIcon?.IconMouseUp(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)

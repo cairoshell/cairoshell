@@ -63,12 +63,12 @@
                     Value="21" />
         </Style>
     </Window.Resources>
-    <Border Style="{StaticResource DesktopNavToolbar}">
-        <StackPanel Orientation="Horizontal"
-                    DataContext="{Binding ElementName=DesktopToolbar}">
-            <StackPanel.ToolTip>
-                <ToolTip Content="{Binding Path=NavigationManager.CurrentPathFriendly}" />
-            </StackPanel.ToolTip>
+    <Border Style="{StaticResource DesktopNavToolbar}"
+            DataContext="{Binding ElementName=DesktopToolbar}">
+        <Border.ToolTip>
+            <ToolTip Content="{Binding Path=NavigationManager.CurrentPathFriendly}" />
+        </Border.ToolTip>
+        <StackPanel Orientation="Horizontal">
             <Button x:Name="btnBack"
                     Style="{StaticResource CairoDesktopBackNavItemStyle}"
                     Margin="22,0,1,0"

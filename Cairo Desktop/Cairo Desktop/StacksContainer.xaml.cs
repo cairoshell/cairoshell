@@ -6,6 +6,7 @@ using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Input;
 using CairoDesktop.Services;
+using ManagedShell.ShellFolders;
 
 namespace CairoDesktop {
     /// <summary>
@@ -31,7 +32,7 @@ namespace CairoDesktop {
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-            StacksManager.Instance.RemoveLocation((sender as MenuItem).CommandParameter as SystemDirectory);
+            StacksManager.Instance.RemoveLocation((sender as MenuItem).CommandParameter as ShellFolder);
         }
         
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -60,21 +61,22 @@ namespace CairoDesktop {
             {
                 // Some checks just in case.
                 ICommandSource cmdsrc = sender as ICommandSource;
-                if (cmdsrc?.CommandParameter is SystemDirectory cmdparam)
+                if (cmdsrc?.CommandParameter is ShellFolder cmdparam)
                 {
-                    OpenDir(cmdparam.FullName, false); 
+                    OpenDir(cmdparam.Path, false); 
                     e.Handled = true;
                 }
             }
         }
-        
+
         /// <summary>
         /// Launches the FileManager specified in the application Settings object to the specified directory.
         /// </summary>
         /// <param name="directoryPath">Directory to open.</param>
-        internal void OpenDir(string directoryPath, bool openWithShell) 
+        /// <param name="alwaysOpenWithShell">If true, user preferences will not be honored and the shell will always be used to open the directory.</param>
+        internal void OpenDir(string directoryPath, bool alwaysOpenWithShell) 
         {
-            if ((!openWithShell && !FolderHelper.OpenLocation(directoryPath)) || (openWithShell && !FolderHelper.OpenWithShell(directoryPath)))
+            if ((!alwaysOpenWithShell && !FolderHelper.OpenLocation(directoryPath)) || (alwaysOpenWithShell && !FolderHelper.OpenWithShell(directoryPath)))
             {
                 CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
             }
@@ -82,9 +84,9 @@ namespace CairoDesktop {
 
         #region Drag and drop
 
-        private Point? startPoint = null;
-        private bool ctxOpen = false;
-        private bool inMove = false;
+        private Point? startPoint;
+        private bool ctxOpen;
+        private bool inMove;
 
         private void locationDisplay_DragEnter(object sender, DragEventArgs e)
         {
@@ -92,7 +94,7 @@ namespace CairoDesktop {
             {
                 e.Effects = DragDropEffects.Link;
             }
-            else if (e.Data.GetDataPresent(typeof(SystemDirectory)))
+            else if (e.Data.GetDataPresent(typeof(ShellFolder)))
             {
                 e.Effects = DragDropEffects.Move;
             }
@@ -106,7 +108,7 @@ namespace CairoDesktop {
 
         private void locationDisplay_DragOver(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(DataFormats.FileDrop) && !e.Data.GetDataPresent(typeof(SystemDirectory)))
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop) && !e.Data.GetDataPresent(typeof(ShellFolder)))
             {
                 e.Effects = DragDropEffects.None;
                 e.Handled = true;
@@ -146,9 +148,9 @@ namespace CairoDesktop {
                     StacksManager.Instance.AddLocation(fileName);
                 }
             }
-            else if (e.Data.GetDataPresent(typeof(SystemDirectory)))
+            else if (e.Data.GetDataPresent(typeof(ShellFolder)))
             {
-                SystemDirectory dropData = e.Data.GetData(typeof(SystemDirectory)) as SystemDirectory;
+                ShellFolder dropData = e.Data.GetData(typeof(ShellFolder)) as ShellFolder;
 
                 int initialIndex = StacksManager.Instance.StackLocations.IndexOf(dropData);
                 StacksManager.Instance.StackLocations.Move(initialIndex, StacksManager.Instance.StackLocations.Count - 1);
@@ -175,10 +177,10 @@ namespace CairoDesktop {
                 Point mousePos = e.GetPosition(this);
                 Vector diff = (Point)startPoint - mousePos;
 
-                if (mousePos.Y <= this.ActualHeight && ((Point)startPoint).Y <= this.ActualHeight && e.LeftButton == MouseButtonState.Pressed && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
+                if (mousePos.Y <= ActualHeight && ((Point)startPoint).Y <= ActualHeight && e.LeftButton == MouseButtonState.Pressed && (Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance || Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance))
                 {
                     Menu menu = sender as Menu;
-                    SystemDirectory selectedDir = menu.DataContext as SystemDirectory;
+                    ShellFolder selectedDir = menu.DataContext as ShellFolder;
 
                     try
                     {
@@ -199,7 +201,7 @@ namespace CairoDesktop {
         private void StackMenu_Drop(object sender, DragEventArgs e)
         {
             Menu dropContainer = sender as Menu;
-            SystemDirectory replacedDir = dropContainer.DataContext as SystemDirectory;
+            ShellFolder replacedDir = dropContainer.DataContext as ShellFolder;
 
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
@@ -213,9 +215,9 @@ namespace CairoDesktop {
                     }
                 }
             }
-            else if (e.Data.GetDataPresent(typeof(SystemDirectory)))
+            else if (e.Data.GetDataPresent(typeof(ShellFolder)))
             {
-                SystemDirectory dropData = e.Data.GetData(typeof(SystemDirectory)) as SystemDirectory;
+                ShellFolder dropData = e.Data.GetData(typeof(ShellFolder)) as ShellFolder;
 
                 int initialIndex = StacksManager.Instance.StackLocations.IndexOf(dropData);
                 int dropIndex = StacksManager.Instance.StackLocations.IndexOf(replacedDir);
@@ -266,7 +268,8 @@ namespace CairoDesktop {
                     StacksScroller scroller = new StacksScroller()
                     {
                         DataContext = menuItem.DataContext,
-                        ParentContainer = this
+                        ParentContainer = this,
+                        ParentMenuItem = menuItem
                     };
                     subMenuItem.Header = scroller;
                 }

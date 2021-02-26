@@ -10,7 +10,7 @@ namespace CairoDesktop.SupportingClasses
     {
         public static bool OpenLocation(string path)
         {
-            if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay && DesktopManager.IsEnabled && !path.StartsWith("::{"))
+            if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay && DesktopManager.IsEnabled)
             {
                 try
                 {
@@ -26,10 +26,8 @@ namespace CairoDesktop.SupportingClasses
                     return false;
                 }
             }
-            else
-            {
-                return OpenWithShell(path);
-            }
+
+            return OpenWithShell(path);
         }
 
         public static bool OpenWithShell(string path)
