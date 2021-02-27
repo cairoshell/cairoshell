@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:cairo="clr-namespace:CairoDesktop"
                     xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <!-- Font resources -->
@@ -13,6 +12,8 @@
     <system:Double x:Key="LargeFontSize">14</system:Double>
     <system:Double x:Key="MediumFontSize">12</system:Double>
     <system:Double x:Key="SmallFontSize">10</system:Double>
+
+    <system:Boolean x:Key="EnableDarkMode">True</system:Boolean>
 
     <!-- Menu resources -->
     <LinearGradientBrush StartPoint="0,0"

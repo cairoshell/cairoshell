@@ -244,6 +244,11 @@ namespace CairoDesktop
             }
         }
 
+        public object FindResource(string name)
+        {
+            return TryFindResource(name);
+        }
+
         public bool IsShuttingDown { get; private set; }
 
         public static string StartupPath => Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).Location);

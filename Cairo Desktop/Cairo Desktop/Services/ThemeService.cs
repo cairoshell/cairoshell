@@ -8,6 +8,7 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
 
 namespace CairoDesktop.Services
 {
@@ -49,6 +50,7 @@ namespace CairoDesktop.Services
             {
                 SetTheme(Settings.Instance.CairoTheme);
             }
+            SetDarkMode();
         }
 
         public void SetTheme(string theme)
@@ -114,6 +116,25 @@ namespace CairoDesktop.Services
             }
 
             return themes;
+        }
+
+        private void SetDarkMode()
+        {
+            // Enable dark mode support if specified by theme
+            
+            if (!EnvironmentHelper.IsWindows10DarkModeSupported)
+            {
+                return;
+            }
+            
+            // Unfortunately, the dark mode API does not allow setting this more than once,
+            // so once we go dark, there's no going back. As such, there's no reason to
+            // specify light mode here for now (as that's the default).
+            bool? darkMode = _cairoApplication.FindResource("EnableDarkMode") as bool?;
+            if (darkMode == true)
+            {
+                WindowHelper.SetDarkModePreference(NativeMethods.PreferredAppMode.ForceDark);
+            }
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
