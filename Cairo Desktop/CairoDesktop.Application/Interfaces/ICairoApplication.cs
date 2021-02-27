@@ -26,5 +26,7 @@ namespace CairoDesktop.Application.Interfaces
         void ClearResources();
 
         void AddResource(object resource);
+
+        object FindResource(string name);
     }
 }

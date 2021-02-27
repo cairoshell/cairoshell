@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <system:Boolean x:Key="EnableDarkMode">False</system:Boolean>
+
     <!-- Menu resources -->
     <SolidColorBrush Color="#FF000000" x:Key="MenuHeaderForeground" />
     <SolidColorBrush Color="#FF000000" x:Key="SysTrayExpanderColor" />
