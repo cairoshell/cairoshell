@@ -183,8 +183,10 @@ Section "Uninstall"
   Delete "$INSTDIR\*.xaml"
   Delete "$INSTDIR\*.dll"
   Delete "$INSTDIR\*.config"
+  Delete "$INSTDIR\Themes\*.xaml"
 
   ; Remove directories used
+  RMDir "$INSTDIR\Themes"
   RMDir "$INSTDIR"
 
 SectionEnd
