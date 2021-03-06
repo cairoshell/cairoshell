@@ -333,7 +333,8 @@
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="{x:Type ListViewItem}">
                                                             <Border BorderThickness="0" BorderBrush="Transparent">
-                                                                <self:TaskButton ListMode="True">
+                                                                <self:TaskButton ListMode="True"
+                                                                                 ParentTaskbar="{Binding ElementName=TaskbarWindow}">
                                                                     <self:TaskButton.Style>
                                                                         <Style TargetType="self:TaskButton">
                                                                             <Setter Property="Visibility"

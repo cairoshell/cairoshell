@@ -78,7 +78,7 @@ namespace CairoDesktop.AppGrabber
             ApplicationInfo appInfo = null;
             foreach (ApplicationInfo ai in _appGrabber.CategoryList.FlatList)
             {
-                if ((ai.Target.ToLower() == window.WinFileName.ToLower() || (window.IsUWP && ai.Target == window.AppUserModelID)) && ai.Category != null)
+                if (!string.IsNullOrEmpty(ai.Target) && ((!window.IsUWP && ai.Target.ToLower() == window.WinFileName.ToLower()) || (window.IsUWP && ai.Target == window.AppUserModelID)) && ai.Category != null)
                 {
                     appInfo = ai;
                     break;
