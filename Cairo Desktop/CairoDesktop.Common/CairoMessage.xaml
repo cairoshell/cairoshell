@@ -48,7 +48,8 @@
                        Width="73" />
                 <StackPanel Grid.Row="1"
                             Grid.Column="3"
-                            VerticalAlignment="Center">
+                            VerticalAlignment="Center"
+                            x:Name="ContentPanel">
                     <TextBlock
                         x:Name="TitleContent"
                         Text="{Binding ElementName=messageWindow, Path=Title}"
@@ -56,10 +57,6 @@
                     <TextBox x:Name="MessageContent"
                              Text="{Binding ElementName=messageWindow, Path=Message}"
                              Style="{StaticResource CairoMessageText}" />
-                    <TextBox x:Name="InputField"
-                             Text="{Binding ElementName=messageWindow, Path=InputText}"
-                             Style="{StaticResource CairoMessageInput}"
-                             Visibility="Collapsed"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Grid.Row="3"

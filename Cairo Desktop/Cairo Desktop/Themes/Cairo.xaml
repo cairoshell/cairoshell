@@ -2136,7 +2136,7 @@
         <Setter Property="FontSize"
                 Value="{DynamicResource ResourceKey=LargeFontSize}" />
         <Setter Property="Margin"
-                Value="0,15,0,0" />
+                Value="0" />
         <Setter Property="Padding"
                 Value="4" />
     </Style>

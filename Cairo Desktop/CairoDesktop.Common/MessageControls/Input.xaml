@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="CairoDesktop.Common.MessageControls.Input"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Focusable="True"
+             Margin="0,15,0,0">
+    <TextBox x:Name="InputField"
+             x:FieldModifier="public"
+             Style="{StaticResource CairoMessageInput}" />
+</UserControl>
