@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 
@@ -196,6 +197,44 @@ namespace CairoDesktop.Common
             msgDialog.OkButton.Content = OkButtonText;
             msgDialog.CancelButton.Content = CancelButtonText;
             
+            msgDialog.Show();
+        }
+
+        /// <summary>
+        /// Displays the Cairo Message Dialog with custom control, OK/Cancel buttons, implicit settings, custom image and button text.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="title">The title of the dialog.</param>
+        /// <param name="image">The path to the image for the dialog.</param>
+        /// <param name="control">The custom control to embed within the dialog.</param>
+        /// <param name="OkButtonText">The text for the OK button.</param>
+        /// <param name="CancelButtonText">The text for the cancel button.</param>
+        /// <param name="resultCallback">The delegate to execute upon user action.</param>
+        /// <returns>void</returns>
+        public static void ShowControl(string message, string title, CairoMessageImage image, UserControl control, string OkButtonText, string CancelButtonText, DialogResultDelegate resultCallback)
+        {
+            if (string.IsNullOrEmpty(CancelButtonText))
+            {
+                CancelButtonText = Localization.DisplayString.sInterface_Cancel;
+            }
+
+            if (string.IsNullOrEmpty(OkButtonText))
+            {
+                OkButtonText = Localization.DisplayString.sInterface_OK;
+            }
+
+            CairoMessage msgDialog = new CairoMessage();
+            msgDialog.Message = message;
+            msgDialog.Title = title;
+            msgDialog.Buttons = MessageBoxButton.OKCancel;
+            msgDialog.Image = image;
+            msgDialog.ResultCallback = resultCallback;
+            msgDialog.OkButton.Content = OkButtonText;
+            msgDialog.CancelButton.Content = CancelButtonText;
+
+            msgDialog.ContentPanel.Children.Add(control);
+            control.Focus();
+
             msgDialog.Show();
         }
         #endregion

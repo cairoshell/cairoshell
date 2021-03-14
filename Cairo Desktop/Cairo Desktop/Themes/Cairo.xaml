@@ -2129,6 +2129,17 @@
         <Setter Property="VerticalScrollBarVisibility"
                 Value="Auto" />
     </Style>
+    <Style x:Key="CairoMessageInput"
+           TargetType="{x:Type TextBox}">
+        <Setter Property="FontFamily"
+                Value="{DynamicResource ResourceKey=DialogFontFamily}" />
+        <Setter Property="FontSize"
+                Value="{DynamicResource ResourceKey=LargeFontSize}" />
+        <Setter Property="Margin"
+                Value="0" />
+        <Setter Property="Padding"
+                Value="4" />
+    </Style>
 
     <!-- Wizards -->
     <Style x:Key="WizardText"

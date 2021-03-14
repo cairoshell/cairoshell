@@ -167,6 +167,8 @@ namespace CairoDesktop.Localization
 
         public static string sInterface_Browse => getString();
 
+        public static string sInterface_Go => getString();
+
         public static string sAppGrabber => getString();
 
         public static string sAppGrabber_PleaseWait => getString();
@@ -350,6 +352,12 @@ namespace CairoDesktop.Localization
         public static string sDesktop_ClearHistory => getString();
 
         public static string sDesktop_ResetPosition => getString();
+
+        public static string sDesktop_GoToFolderMenu => getString();
+
+        public static string sDesktop_GoToFolderTitle => getString();
+
+        public static string sDesktop_GoToFolderMessage => getString();
 
         public static string sTaskbar_Empty => getString();
 

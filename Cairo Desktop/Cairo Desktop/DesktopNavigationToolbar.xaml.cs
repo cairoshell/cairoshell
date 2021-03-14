@@ -14,6 +14,7 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.ShellFolders;
 
 namespace CairoDesktop
 {
@@ -222,6 +223,12 @@ namespace CairoDesktop
 
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
+            if (isShiftKeyHeld)
+            {
+                ShowGoToFolderDialog();
+                return;
+            }
+
             try
             {
                 using (System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog
@@ -281,6 +288,11 @@ namespace CairoDesktop
 
                 browseContextMenu.Items.Add(clearHistoryMenuItem);
 
+                MenuItem goToFolderMenuItem = new MenuItem { Header = Localization.DisplayString.sDesktop_GoToFolderMenu };
+                goToFolderMenuItem.Click += GoToFolderMenuItem_Click;
+
+                browseContextMenu.Items.Add(goToFolderMenuItem);
+
                 browseContextMenu.IsOpen = true;
 
                 e.Handled = true;
@@ -311,6 +323,54 @@ namespace CairoDesktop
             if (sender is MenuItem menuItem)
                 if (menuItem.Tag is int index)
                     NavigationManager.NavigateToIndex(index);
+        }
+
+        private void GoToFolderMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowGoToFolderDialog();
+        }
+
+        private void ShowGoToFolderDialog()
+        {
+            Common.MessageControls.Input inputControl = new Common.MessageControls.Input();
+            inputControl.InputField.Text = NavigationManager.CurrentItem.Path;
+            inputControl.InputField.SelectAll();
+            inputControl.InputField.Focus();
+
+            CairoMessage.ShowControl(Localization.DisplayString.sDesktop_GoToFolderMessage,
+                Localization.DisplayString.sDesktop_GoToFolderTitle,
+                CairoMessageImage.Default,
+                inputControl,
+                Localization.DisplayString.sInterface_Go,
+                Localization.DisplayString.sInterface_Cancel,
+                (bool? result) =>
+                {
+                    string path = inputControl.InputField.Text;
+                    if (result != true || string.IsNullOrEmpty(path))
+                    {
+                        return;
+                    }
+
+                    // Check if this is a valid folder
+                    ShellFolder shellFolder = new ShellFolder(path, IntPtr.Zero);
+                    bool valid = shellFolder.Loaded;
+                    shellFolder.Dispose();
+
+                    if (valid)
+                    {
+                        NavigationManager.NavigateTo(path);
+                    }
+                    else
+                    {
+                        CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo,
+                            Localization.DisplayString.sError_OhNo,
+                            MessageBoxButton.OK,
+                            CairoMessageImage.Error, (bool? errResult) =>
+                            {
+                                ShowGoToFolderDialog();
+                            });
+                    }
+                });
         }
         #endregion
 
