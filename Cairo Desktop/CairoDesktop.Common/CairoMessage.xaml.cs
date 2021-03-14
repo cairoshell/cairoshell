@@ -252,7 +252,6 @@ namespace CairoDesktop.Common
 
             msgDialog.InputField.Text = initialInput;
             msgDialog.InputField.SelectAll();
-            //msgDialog.InputField.CaretIndex = msgDialog.InputField.Text.Length;
             msgDialog.InputField.Visibility = Visibility.Visible;
             msgDialog.InputField.Focus();
 
