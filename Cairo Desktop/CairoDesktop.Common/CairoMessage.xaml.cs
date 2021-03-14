@@ -12,10 +12,12 @@ namespace CairoDesktop.Common
     public partial class CairoMessage : Window
     {
         public delegate void DialogResultDelegate(bool? result);
+        public delegate void DialogInputResultDelegate(string input);
 
         private static DependencyProperty buttonsProperty = DependencyProperty.Register("Buttons", typeof(MessageBoxButton), typeof(CairoMessage));
         private static DependencyProperty imageProperty = DependencyProperty.Register("Image", typeof(CairoMessageImage), typeof(CairoMessage));
         private static DependencyProperty messageProperty = DependencyProperty.Register("Message", typeof(string), typeof(CairoMessage));
+        private static DependencyProperty inputTextProperty = DependencyProperty.Register("InputText", typeof(string), typeof(CairoMessage));
 
         /// <summary>
         /// Initializes a new instance of the CairoMessage class.
@@ -26,6 +28,23 @@ namespace CairoDesktop.Common
         }
 
         #region Public Properties
+        /// <summary>
+        /// Gets or sets the user input.
+        /// </summary>
+        /// <value>The contents of the input field.</value>
+        public string InputText
+        {
+            get
+            {
+                return (string)GetValue(inputTextProperty);
+            }
+
+            set
+            {
+                SetValue(inputTextProperty, value);
+            }
+        }
+
         /// <summary>
         /// Gets or sets the content of the message.
         /// </summary>
@@ -78,6 +97,7 @@ namespace CairoDesktop.Common
         }
 
         public DialogResultDelegate ResultCallback;
+        public DialogInputResultDelegate InputResultCallback;
         #endregion
 
         #region Static Methods
@@ -198,6 +218,46 @@ namespace CairoDesktop.Common
             
             msgDialog.Show();
         }
+
+        /// <summary>
+        /// Displays the Cairo Message Dialog with input field, OK/Cancel buttons, implicit settings, custom image and button text.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        /// <param name="title">The title of the dialog.</param>
+        /// <param name="image">The path to the image for the dialog.</param>
+        /// <param name="OkButtonText">The text for the OK button.</param>
+        /// <param name="CancelButtonText">The text for the cancel button.</param>
+        /// <param name="resultCallback">The delegate to execute upon user action.</param>
+        /// <returns>void</returns>
+        public static void ShowInput(string message, string title, CairoMessageImage image, string initialInput, string OkButtonText, string CancelButtonText, DialogInputResultDelegate inputResultCallback)
+        {
+            if (string.IsNullOrEmpty(CancelButtonText))
+            {
+                CancelButtonText = Localization.DisplayString.sInterface_Cancel;
+            }
+
+            if (string.IsNullOrEmpty(OkButtonText))
+            {
+                OkButtonText = Localization.DisplayString.sInterface_OK;
+            }
+
+            CairoMessage msgDialog = new CairoMessage();
+            msgDialog.Message = message;
+            msgDialog.Title = title;
+            msgDialog.Buttons = MessageBoxButton.OKCancel;
+            msgDialog.Image = image;
+            msgDialog.InputResultCallback = inputResultCallback;
+            msgDialog.OkButton.Content = OkButtonText;
+            msgDialog.CancelButton.Content = CancelButtonText;
+
+            msgDialog.InputField.Text = initialInput;
+            msgDialog.InputField.SelectAll();
+            //msgDialog.InputField.CaretIndex = msgDialog.InputField.Text.Length;
+            msgDialog.InputField.Visibility = Visibility.Visible;
+            msgDialog.InputField.Focus();
+
+            msgDialog.Show();
+        }
         #endregion
 
         private bool IsModal()
@@ -213,6 +273,7 @@ namespace CairoDesktop.Common
                 Close();
 
             ResultCallback?.Invoke(true);
+            InputResultCallback?.Invoke(InputText);
         }
 
         private void NoButton_Click(object sender, RoutedEventArgs e)
@@ -223,6 +284,7 @@ namespace CairoDesktop.Common
                 Close();
 
             ResultCallback?.Invoke(false);
+            InputResultCallback?.Invoke(string.Empty);
         }
 
         private void messageWindow_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

@@ -281,10 +281,26 @@ namespace CairoDesktop
 
                 browseContextMenu.Items.Add(clearHistoryMenuItem);
 
+                MenuItem goToFolderMenuItem = new MenuItem { Header = Localization.DisplayString.sDesktop_GoToFolderMenu };
+                goToFolderMenuItem.Click += GoToFolderMenuItem_Click;
+
+                browseContextMenu.Items.Add(goToFolderMenuItem);
+
                 browseContextMenu.IsOpen = true;
 
                 e.Handled = true;
             }
+        }
+
+        private void GoToFolderMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            CairoMessage.ShowInput(Localization.DisplayString.sDesktop_GoToFolderMessage, Localization.DisplayString.sDesktop_GoToFolderTitle, CairoMessageImage.Default, NavigationManager.CurrentItem.Path, Localization.DisplayString.sInterface_Go, Localization.DisplayString.sInterface_Cancel, (string input) =>
+            {
+                if (!string.IsNullOrEmpty(input))
+                {
+                    NavigationManager.NavigateTo(input);
+                }
+            });
         }
 
         private void btnFwd_Click(object sender, RoutedEventArgs e)
