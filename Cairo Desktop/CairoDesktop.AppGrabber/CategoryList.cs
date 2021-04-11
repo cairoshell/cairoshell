@@ -8,6 +8,7 @@ namespace CairoDesktop.AppGrabber {
 
     public class CategoryList : ObservableCollection<Category> {
 
+        public const int MIN_CATEGORIES = 3;
         public event EventHandler<EventArgs> CategoryChanged;
 
         /// <summary>
@@ -114,12 +115,12 @@ namespace CairoDesktop.AppGrabber {
         /// <param name="category">Category to move.</param>
         /// <param name="delta">Number of places to move relative to starting index.</param>
         public bool MoveCategory(Category category, int delta) {
-            int currentIndex = this.IndexOf(category);
+            int currentIndex = IndexOf(category);
             int requestedIndex = currentIndex + delta;
-            if (requestedIndex < 0 || requestedIndex > this.Count - 1) {
+            if (requestedIndex < MIN_CATEGORIES || requestedIndex > Count - 1) {
                 return false;
             } else {
-                this.Move(currentIndex, requestedIndex);
+                Move(currentIndex, requestedIndex);
             }
             return true;
         }

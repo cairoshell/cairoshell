@@ -44,6 +44,8 @@ namespace CairoDesktop.Localization
             { "sInterface_Properties", "Properties" },
             { "sInterface_Browse", "Browse..." },
             { "sInterface_Go", "Go" },
+            { "sInterface_MoveDown", "Move down" },
+            { "sInterface_MoveUp", "Move up" },
             { "sAppGrabber", "App Grabber" },
             { "sAppGrabber_PleaseWait", "Please wait while Cairo finds your apps..." },
             { "sAppGrabber_Page1Title", "Cairo has found the following applications installed on your computer." },

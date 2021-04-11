@@ -284,8 +284,21 @@ namespace CairoDesktop
             foreach (Control item in menu.Items)
             {
                 item.IsEnabled = enableItems;
+
+                if (item is MenuItem mi)
+                {
+                    if ((string)mi.CommandParameter == "MoveUp" && category.ParentCategoryList.IndexOf(category) <= CategoryList.MIN_CATEGORIES)
+                    {
+                        item.IsEnabled = false;
+                    }
+                    else if ((string)mi.CommandParameter == "MoveDown" && category.ParentCategoryList.IndexOf(category) >= category.ParentCategoryList.Count - 1)
+                    {
+                        item.IsEnabled = false;
+                    }
+                }
             }
         }
+        
         private void categoryMenu_Rename(object sender, RoutedEventArgs e)
         {
             MenuItem menuItem = sender as MenuItem;
@@ -331,6 +344,26 @@ namespace CairoDesktop
                         MenuBar.ProgramsMenu.IsSubmenuOpen = true;
                     }
                 });
+        }
+
+        private void categoryMenu_MoveUp(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            Category category = menuItem.DataContext as Category;
+            CategoryList catList = category.ParentCategoryList;
+
+            catList.MoveCategory(category, -1);
+            MenuBar._appGrabber.Save();
+        }
+
+        private void categoryMenu_MoveDown(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            Category category = menuItem.DataContext as Category;
+            CategoryList catList = category.ParentCategoryList;
+
+            catList.MoveCategory(category, 1);
+            MenuBar._appGrabber.Save();
         }
         #endregion
     }

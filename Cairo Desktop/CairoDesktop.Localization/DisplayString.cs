@@ -169,6 +169,10 @@ namespace CairoDesktop.Localization
 
         public static string sInterface_Go => getString();
 
+        public static string sInterface_MoveDown => getString();
+
+        public static string sInterface_MoveUp => getString();
+
         public static string sAppGrabber => getString();
 
         public static string sAppGrabber_PleaseWait => getString();

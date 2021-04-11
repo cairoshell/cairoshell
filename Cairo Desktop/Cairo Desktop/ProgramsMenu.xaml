@@ -122,6 +122,13 @@
 
             <ContextMenu x:Key="CategoryContextMenu"
                          Opened="ContextMenu_Opened">
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_MoveUp)}"
+                          Click="categoryMenu_MoveUp"
+                          CommandParameter="MoveUp" />
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_MoveDown)}"
+                          Click="categoryMenu_MoveDown"
+                          CommandParameter="MoveDown" />
+                <Separator />
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Rename)}"
                           Click="categoryMenu_Rename" />
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Delete)}"
