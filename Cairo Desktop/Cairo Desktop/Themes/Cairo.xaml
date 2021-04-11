@@ -2848,6 +2848,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="Border"
+                            Background="#01000000"
                             BorderThickness="0">
                         <ContentPresenter Margin="10,0,10,2"
                                           HorizontalAlignment="Left"

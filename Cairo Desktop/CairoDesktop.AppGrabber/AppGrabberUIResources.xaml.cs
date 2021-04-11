@@ -49,7 +49,7 @@ namespace CairoDesktop.AppGrabber
             Button button = sender as Button;
             Category actionableCategory = button.CommandParameter as Category;
             CategoryList catList = actionableCategory.ParentCategoryList;
-            switch (button.Content as String)
+            switch (button.Content as string)
             {
                 case "5":
                     catList.MoveCategory(actionableCategory, -1);
@@ -58,16 +58,6 @@ namespace CairoDesktop.AppGrabber
                     catList.MoveCategory(actionableCategory, 1);
                     break;
                 case "r":
-                    //Don't allow removal of special category
-                    if (actionableCategory.Type > 0) return;
-
-                    Category uncategorized = catList.GetSpecialCategory(AppCategoryType.Uncategorized);
-                    for (int i = actionableCategory.Count - 1; i >= 0; i--)
-                    {
-                        ApplicationInfo app = actionableCategory[i];
-                        actionableCategory.RemoveAt(i);
-                        uncategorized.Add(app);
-                    }
                     catList.Remove(actionableCategory);
                     break;
             }

@@ -160,6 +160,7 @@ namespace CairoDesktop
             ApplicationInfo ai = mi.DataContext as ApplicationInfo;
             mi.Items.Clear();
 
+            // Dynamically add existing categories
             foreach (Category cat in MenuBar._appGrabber.CategoryList)
             {
                 if (cat.Type == 0 && cat != ai.Category)
@@ -174,6 +175,19 @@ namespace CairoDesktop
                     mi.Items.Add(newItem);
                 }
             }
+
+            // Add separated option to add new category
+            if (mi.Items.Count > 0)
+            {
+                mi.Items.Add(new Separator());
+            }
+
+            MenuItem addCategoryItem = new MenuItem();
+            addCategoryItem.Header = "Add new category...";
+            addCategoryItem.Click += miProgramsAddCategory_Click;
+            addCategoryItem.DataContext = ai;
+
+            mi.Items.Add(addCategoryItem);
         }
 
         private void miProgramsChangeCategory_Click(object sender, RoutedEventArgs e)
@@ -187,6 +201,36 @@ namespace CairoDesktop
             newCat.Add(ai);
 
             MenuBar._appGrabber.Save();
+        }
+
+        private void miProgramsAddCategory_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem mi = sender as MenuItem;
+            ApplicationInfo ai = mi.DataContext as ApplicationInfo;
+
+            Common.MessageControls.Input inputControl = new Common.MessageControls.Input();
+            inputControl.Initialize(DisplayString.sAppGrabber_Untitled);
+
+            CairoMessage.ShowControl("Enter a name for the category:",
+                "Add new category",
+                CairoMessageImage.Default,
+                inputControl,
+                DisplayString.sInterface_OK,
+                DisplayString.sInterface_Cancel,
+                (bool? result) => {
+                    if (result == true)
+                    {
+                        Category newCat = new Category(inputControl.Text);
+                        MenuBar._appGrabber.CategoryList.Add(newCat);
+
+                        ai.Category.Remove(ai);
+                        newCat.Add(ai);
+
+                        MenuBar._appGrabber.Save();
+
+                        MenuBar.ProgramsMenu.IsSubmenuOpen = true;
+                    }
+                });
         }
         #endregion
 
@@ -226,6 +270,67 @@ namespace CairoDesktop
             {
                 e.Handled = true;
             }
+        }
+        #endregion
+
+        #region Category context menu
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ContextMenu menu = sender as ContextMenu;
+            Category category = menu.DataContext as Category;
+
+            bool enableItems = category.Type <= 0;
+
+            foreach (Control item in menu.Items)
+            {
+                item.IsEnabled = enableItems;
+            }
+        }
+        private void categoryMenu_Rename(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            Category category = menuItem.DataContext as Category;
+
+            Common.MessageControls.Input inputControl = new Common.MessageControls.Input();
+            inputControl.Initialize(category.Name);
+
+            CairoMessage.ShowControl(string.Format("Enter a new name for this category:", category.DisplayName),
+                string.Format("Rename \"{0}\"", category.DisplayName),
+                CairoMessageImage.Default,
+                inputControl,
+                DisplayString.sInterface_Rename,
+                DisplayString.sInterface_Cancel,
+                (bool? result) => {
+                    if (result == true)
+                    {
+                        category.Name = inputControl.Text;
+                        MenuBar._appGrabber.Save();
+
+                        MenuBar.ProgramsMenu.IsSubmenuOpen = true;
+                    }
+                });
+        }
+
+        private void categoryMenu_Delete(object sender, RoutedEventArgs e)
+        {
+            MenuItem menuItem = sender as MenuItem;
+            Category category = menuItem.DataContext as Category;
+            CategoryList catList = category.ParentCategoryList;
+
+            CairoMessage.ShowOkCancel(string.Format("Are you sure you want to delete the \"{0}\" category? Apps in this category will still be accessible from the \"{1}\" category in the Programs menu.", category.DisplayName, MenuBar._appGrabber.CategoryList.GetSpecialCategory(AppCategoryType.All)),
+                string.Format("Delete \"{0}\"?", category.DisplayName),
+                CairoMessageImage.Warning,
+                DisplayString.sInterface_Yes,
+                DisplayString.sInterface_No,
+                (bool? result) => {
+                    if (result == true)
+                    {
+                        catList.Remove(category);
+                        MenuBar._appGrabber.Save();
+
+                        MenuBar.ProgramsMenu.IsSubmenuOpen = true;
+                    }
+                });
         }
         #endregion
     }

@@ -86,6 +86,18 @@ namespace CairoDesktop.AppGrabber {
         /// <param name="category">Category to remove.</param>
         public new void Remove(Category category)
         {
+            // Don't allow removal of special categories
+            if (category.Type > 0) return;
+
+            // Move apps to uncategorized
+            Category uncategorized = GetSpecialCategory(AppCategoryType.Uncategorized);
+            for (int i = category.Count - 1; i >= 0; i--)
+            {
+                ApplicationInfo app = category[i];
+                category.RemoveAt(i);
+                uncategorized.Add(app);
+            }
+
             category.CollectionChanged -= Category_CollectionChanged;
             base.Remove(category);
         }
