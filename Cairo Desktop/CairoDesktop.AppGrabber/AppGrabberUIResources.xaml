@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Class="CairoDesktop.AppGrabber.AppGrabberUIResources">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+                    x:Class="CairoDesktop.AppGrabber.AppGrabberUIResources">
     <BitmapImage x:Key="NullIcon" UriSource="Resources/nullIcon.png"></BitmapImage>
 
     <!-- Text -->
@@ -469,14 +472,23 @@
                                     </LinearGradientBrush>
                                 </DockPanel.Background>
                                 <Button DockPanel.Dock="Right"
-                                    Style="{StaticResource CategoryManipulationButtonStyle}"
-                                    CommandParameter="{Binding}" Name="CatDelButton" Initialized="DelCatButtonShown">r</Button>
+                                        Style="{StaticResource CategoryManipulationButtonStyle}"
+                                        CommandParameter="{Binding}"
+                                        Name="CatDelButton"
+                                        Initialized="DelCatButtonShown"
+                                        ToolTip="{Binding Path=(l10n:DisplayString.sInterface_Delete)}">r</Button>
                                 <Button DockPanel.Dock="Right"
-                                    Style="{StaticResource CategoryManipulationButtonStyle}"
-                                    CommandParameter="{Binding}" Name="CatDownButton" Initialized="DelCatButtonShown">6</Button>
+                                        Style="{StaticResource CategoryManipulationButtonStyle}"
+                                        CommandParameter="{Binding}"
+                                        Name="CatDownButton"
+                                        Initialized="DelCatButtonShown"
+                                        ToolTip="{Binding Path=(l10n:DisplayString.sInterface_MoveDown)}">6</Button>
                                 <Button DockPanel.Dock="Right"
-                                    Style="{StaticResource CategoryManipulationButtonStyle}"
-                                    CommandParameter="{Binding}" Name="CatUpButton" Initialized="DelCatButtonShown">5</Button>
+                                        Style="{StaticResource CategoryManipulationButtonStyle}"
+                                        CommandParameter="{Binding}"
+                                        Name="CatUpButton"
+                                        Initialized="DelCatButtonShown"
+                                        ToolTip="{Binding Path=(l10n:DisplayString.sInterface_MoveUp)}">5</Button>
                                 <TextBox DockPanel.Dock="Left"
                                     Visibility="Collapsed"
                                     Text="{Binding Path=Name}"

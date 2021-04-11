@@ -76,24 +76,23 @@
                                 </Grid.ColumnDefinitions>
                                 <DockPanel Grid.Column="1" x:Name="TabPanel">
                                     <TabPanel x:Name="CategoriesPanel"
-                            DockPanel.Dock="Top"
-                            Panel.ZIndex="1"
-                            Margin="0,3"
-                            IsItemsHost="True"
-                            Background="Transparent" />
+                                              DockPanel.Dock="Top"
+                                              Panel.ZIndex="1"
+                                              Margin="0,3"
+                                              IsItemsHost="True"
+                                              Background="Transparent" />
                                     <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom" Margin="0,12,0,3" VerticalAlignment="Bottom">
                                         <Button Style="{StaticResource ProgramsMenuButton}" Name="btnAppGrabber" Click="btnAppGrabber_Click" Content="{Binding Path=(l10n:DisplayString.sAppGrabber)}" />
                                         <Button Style="{StaticResource ProgramsMenuButton}" Name="btnUninstallApps" Click="btnUninstallApps_Click" Content="{Binding Path=(l10n:DisplayString.sProgramsMenu_UninstallAProgram)}" />
                                     </StackPanel>
                                 </DockPanel>
                                 <Border x:Name="Border"
-                      Grid.Column="0"
-                      BorderThickness="0,0,1,0"
-                                BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}"
-                                Background="Transparent">
-                                    <ContentPresenter
-                                  Margin="0,3"
-                                  ContentSource="SelectedContent" />
+                                        Grid.Column="0"
+                                        BorderThickness="0,0,1,0"
+                                        BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}"
+                                        Background="Transparent">
+                                    <ContentPresenter Margin="0,3"
+                                                      ContentSource="SelectedContent" />
                                 </Border>
                             </Grid>
                             <ControlTemplate.Triggers>
@@ -120,6 +119,21 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+
+            <ContextMenu x:Key="CategoryContextMenu"
+                         Opened="ContextMenu_Opened">
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_MoveUp)}"
+                          Click="categoryMenu_MoveUp"
+                          CommandParameter="MoveUp" />
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_MoveDown)}"
+                          Click="categoryMenu_MoveDown"
+                          CommandParameter="MoveDown" />
+                <Separator />
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Rename)}"
+                          Click="categoryMenu_Rename" />
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Delete)}"
+                          Click="categoryMenu_Delete" />
+            </ContextMenu>
         </ResourceDictionary>
     </UserControl.Resources>
     <TabControl Name="categorizedProgramsList">
@@ -129,5 +143,12 @@
                               Style="{StaticResource InnerProgramsListStyle}" />
             </DataTemplate>
         </TabControl.ContentTemplate>
+        <TabControl.ItemContainerStyle>
+            <Style TargetType="{x:Type TabItem}"
+                   BasedOn="{StaticResource ProgramsTabItem}">
+                <Setter Property="ContextMenu"
+                        Value="{StaticResource CategoryContextMenu}" />
+            </Style>
+        </TabControl.ItemContainerStyle>
     </TabControl>
 </UserControl>

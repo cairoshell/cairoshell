@@ -8,6 +8,7 @@ namespace CairoDesktop.AppGrabber {
 
     public class CategoryList : ObservableCollection<Category> {
 
+        public const int MIN_CATEGORIES = 3;
         public event EventHandler<EventArgs> CategoryChanged;
 
         /// <summary>
@@ -86,6 +87,18 @@ namespace CairoDesktop.AppGrabber {
         /// <param name="category">Category to remove.</param>
         public new void Remove(Category category)
         {
+            // Don't allow removal of special categories
+            if (category.Type > 0) return;
+
+            // Move apps to uncategorized
+            Category uncategorized = GetSpecialCategory(AppCategoryType.Uncategorized);
+            for (int i = category.Count - 1; i >= 0; i--)
+            {
+                ApplicationInfo app = category[i];
+                category.RemoveAt(i);
+                uncategorized.Add(app);
+            }
+
             category.CollectionChanged -= Category_CollectionChanged;
             base.Remove(category);
         }
@@ -102,12 +115,12 @@ namespace CairoDesktop.AppGrabber {
         /// <param name="category">Category to move.</param>
         /// <param name="delta">Number of places to move relative to starting index.</param>
         public bool MoveCategory(Category category, int delta) {
-            int currentIndex = this.IndexOf(category);
+            int currentIndex = IndexOf(category);
             int requestedIndex = currentIndex + delta;
-            if (requestedIndex < 0 || requestedIndex > this.Count - 1) {
+            if (requestedIndex < MIN_CATEGORIES || requestedIndex > Count - 1) {
                 return false;
             } else {
-                this.Move(currentIndex, requestedIndex);
+                Move(currentIndex, requestedIndex);
             }
             return true;
         }

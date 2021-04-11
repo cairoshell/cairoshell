@@ -169,6 +169,10 @@ namespace CairoDesktop.Localization
 
         public static string sInterface_Go => getString();
 
+        public static string sInterface_MoveDown => getString();
+
+        public static string sInterface_MoveUp => getString();
+
         public static string sAppGrabber => getString();
 
         public static string sAppGrabber_PleaseWait => getString();
@@ -278,6 +282,20 @@ namespace CairoDesktop.Localization
         public static string sProgramsMenu_AddToQuickLaunch => getString();
 
         public static string sProgramsMenu_ChangeCategory => getString();
+
+        public static string sProgramsMenu_AddToNewCategory => getString();
+
+        public static string sProgramsMenu_AddCategoryTitle => getString();
+
+        public static string sProgramsMenu_AddCategoryInfo => getString();
+
+        public static string sProgramsMenu_DeleteCategoryTitle => getString();
+
+        public static string sProgramsMenu_DeleteCategoryInfo => getString();
+
+        public static string sProgramsMenu_RenameCategoryTitle => getString();
+
+        public static string sProgramsMenu_RenameCategoryInfo => getString();
 
         public static string sPlacesMenu_Documents => getString();
 

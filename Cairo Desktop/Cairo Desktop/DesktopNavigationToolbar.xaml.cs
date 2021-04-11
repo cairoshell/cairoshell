@@ -333,9 +333,7 @@ namespace CairoDesktop
         private void ShowGoToFolderDialog()
         {
             Common.MessageControls.Input inputControl = new Common.MessageControls.Input();
-            inputControl.InputField.Text = NavigationManager.CurrentItem.Path;
-            inputControl.InputField.SelectAll();
-            inputControl.InputField.Focus();
+            inputControl.Initialize(NavigationManager.CurrentItem.Path);
 
             CairoMessage.ShowControl(Localization.DisplayString.sDesktop_GoToFolderMessage,
                 Localization.DisplayString.sDesktop_GoToFolderTitle,
