@@ -183,7 +183,7 @@ namespace CairoDesktop
             }
 
             MenuItem addCategoryItem = new MenuItem();
-            addCategoryItem.Header = "Add new category...";
+            addCategoryItem.Header = DisplayString.sProgramsMenu_AddToNewCategory;
             addCategoryItem.Click += miProgramsAddCategory_Click;
             addCategoryItem.DataContext = ai;
 
@@ -211,8 +211,8 @@ namespace CairoDesktop
             Common.MessageControls.Input inputControl = new Common.MessageControls.Input();
             inputControl.Initialize(DisplayString.sAppGrabber_Untitled);
 
-            CairoMessage.ShowControl("Enter a name for the category:",
-                "Add new category",
+            CairoMessage.ShowControl(DisplayString.sProgramsMenu_AddCategoryInfo,
+                DisplayString.sProgramsMenu_AddCategoryTitle,
                 CairoMessageImage.Default,
                 inputControl,
                 DisplayString.sInterface_OK,
@@ -307,8 +307,8 @@ namespace CairoDesktop
             Common.MessageControls.Input inputControl = new Common.MessageControls.Input();
             inputControl.Initialize(category.Name);
 
-            CairoMessage.ShowControl(string.Format("Enter a new name for this category:", category.DisplayName),
-                string.Format("Rename \"{0}\"", category.DisplayName),
+            CairoMessage.ShowControl(string.Format(DisplayString.sProgramsMenu_RenameCategoryInfo, category.DisplayName),
+                string.Format(DisplayString.sProgramsMenu_RenameCategoryTitle, category.DisplayName),
                 CairoMessageImage.Default,
                 inputControl,
                 DisplayString.sInterface_Rename,
@@ -330,8 +330,8 @@ namespace CairoDesktop
             Category category = menuItem.DataContext as Category;
             CategoryList catList = category.ParentCategoryList;
 
-            CairoMessage.ShowOkCancel(string.Format("Are you sure you want to delete the \"{0}\" category? Apps in this category will still be accessible from the \"{1}\" category in the Programs menu.", category.DisplayName, MenuBar._appGrabber.CategoryList.GetSpecialCategory(AppCategoryType.All)),
-                string.Format("Delete \"{0}\"?", category.DisplayName),
+            CairoMessage.ShowOkCancel(string.Format(DisplayString.sProgramsMenu_DeleteCategoryInfo, category.DisplayName, MenuBar._appGrabber.CategoryList.GetSpecialCategory(AppCategoryType.All)),
+                string.Format(DisplayString.sProgramsMenu_DeleteCategoryTitle, category.DisplayName),
                 CairoMessageImage.Warning,
                 DisplayString.sInterface_Yes,
                 DisplayString.sInterface_No,

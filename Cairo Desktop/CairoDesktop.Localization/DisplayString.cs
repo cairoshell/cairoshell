@@ -283,6 +283,20 @@ namespace CairoDesktop.Localization
 
         public static string sProgramsMenu_ChangeCategory => getString();
 
+        public static string sProgramsMenu_AddToNewCategory => getString();
+
+        public static string sProgramsMenu_AddCategoryTitle => getString();
+
+        public static string sProgramsMenu_AddCategoryInfo => getString();
+
+        public static string sProgramsMenu_DeleteCategoryTitle => getString();
+
+        public static string sProgramsMenu_DeleteCategoryInfo => getString();
+
+        public static string sProgramsMenu_RenameCategoryTitle => getString();
+
+        public static string sProgramsMenu_RenameCategoryInfo => getString();
+
         public static string sPlacesMenu_Documents => getString();
 
         public static string sPlacesMenu_Downloads => getString();
