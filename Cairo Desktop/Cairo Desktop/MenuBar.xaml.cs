@@ -480,7 +480,14 @@ namespace CairoDesktop
                 {
                     if (result == true)
                     {
-                        _cairoApplication.ExitCairo();
+                        if (KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
+                        {
+                            _cairoApplication.RestartCairo();
+                        }
+                        else
+                        {
+                            _cairoApplication.ExitCairo();
+                        }
                     }
                 });
         }
