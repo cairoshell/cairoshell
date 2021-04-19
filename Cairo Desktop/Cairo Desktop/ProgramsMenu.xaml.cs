@@ -228,9 +228,9 @@ namespace CairoDesktop
                         newCat.Add(ai);
 
                         MenuBar._appGrabber.Save();
-
-                        MenuBar.ProgramsMenu.IsSubmenuOpen = true;
                     }
+
+                    MenuBar.ProgramsMenu.IsSubmenuOpen = true;
                 });
         }
         #endregion
@@ -270,7 +270,7 @@ namespace CairoDesktop
             inputControl.Initialize(category.Name);
 
             CairoMessage.ShowControl(string.Format(DisplayString.sProgramsMenu_RenameCategoryInfo, category.DisplayName),
-                string.Format(DisplayString.sProgramsMenu_RenameCategoryTitle, category.DisplayName),
+                string.Format(DisplayString.sProgramsMenu_RenameTitle, category.DisplayName),
                 CairoMessageImage.Default,
                 inputControl,
                 DisplayString.sInterface_Rename,
@@ -280,9 +280,9 @@ namespace CairoDesktop
                     {
                         category.Name = inputControl.Text;
                         MenuBar._appGrabber.Save();
-
-                        MenuBar.ProgramsMenu.IsSubmenuOpen = true;
                     }
+
+                    MenuBar.ProgramsMenu.IsSubmenuOpen = true;
                 });
         }
 
@@ -302,9 +302,9 @@ namespace CairoDesktop
                     {
                         catList.Remove(category);
                         MenuBar._appGrabber.Save();
-
-                        MenuBar.ProgramsMenu.IsSubmenuOpen = true;
                     }
+
+                    MenuBar.ProgramsMenu.IsSubmenuOpen = true;
                 });
         }
 

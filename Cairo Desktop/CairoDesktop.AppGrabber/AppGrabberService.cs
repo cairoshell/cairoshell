@@ -406,8 +406,8 @@ namespace CairoDesktop.AppGrabber
                 Common.MessageControls.Input inputControl = new Common.MessageControls.Input();
                 inputControl.Initialize(app.Name);
 
-                CairoMessage.ShowControl(string.Format(DisplayString.sProgramsMenu_RenameCategoryInfo, app.Name),
-                    string.Format(DisplayString.sProgramsMenu_RenameCategoryTitle, app.Name),
+                CairoMessage.ShowControl(string.Format(DisplayString.sProgramsMenu_RenameAppInfo, app.Name),
+                    string.Format(DisplayString.sProgramsMenu_RenameTitle, app.Name),
                     CairoMessageImage.Default,
                     inputControl,
                     DisplayString.sInterface_Rename,
