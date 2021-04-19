@@ -1,5 +1,6 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Interop;
+using CairoDesktop.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -317,12 +318,12 @@ namespace CairoDesktop.AppGrabber
                     // special case: if we are shell and launching explorer, give it a parameter so that it doesn't do shell things.
                     if (!ShellHelper.StartProcess(app.Path, ShellFolderPath.ComputerFolder.Value))
                     {
-                        CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
+                        CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                     }
                 }
                 else if (!ShellHelper.StartProcess(app.Path))
                 {
-                    CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
+                    CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                 }
             }
         }
@@ -333,7 +334,7 @@ namespace CairoDesktop.AppGrabber
             {
                 if (!ShellHelper.StartProcess(app.Path, "", verb))
                 {
-                    CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
+                    CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                 }
             }
         }
@@ -350,8 +351,8 @@ namespace CairoDesktop.AppGrabber
                         {
                             app.AskAlwaysAdmin = false;
 
-                            CairoMessage.Show(string.Format(Localization.DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), 
-                                Localization.DisplayString.sProgramsMenu_AlwaysAdminTitle, 
+                            CairoMessage.Show(string.Format(DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), 
+                                DisplayString.sProgramsMenu_AlwaysAdminTitle, 
                                 MessageBoxButton.YesNo, CairoMessageImage.Information,
                                 result =>
                                 {
@@ -372,19 +373,19 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
-        public void RemoveAppConfirm(ApplicationInfo app)
+        public void RemoveAppConfirm(ApplicationInfo app, Action callback)
         {
             if (app != null)
             {
                 string menu;
                 if (app.Category.Type == AppCategoryType.QuickLaunch)
-                    menu = Localization.DisplayString.sAppGrabber_QuickLaunch;
+                    menu = DisplayString.sAppGrabber_QuickLaunch;
                 else
-                    menu = Localization.DisplayString.sProgramsMenu;
+                    menu = DisplayString.sProgramsMenu;
                 
-                CairoMessage.ShowOkCancel(string.Format(Localization.DisplayString.sProgramsMenu_RemoveInfo, app.Name, menu), 
-                    Localization.DisplayString.sProgramsMenu_RemoveTitle, CairoMessageImage.Warning, 
-                    Localization.DisplayString.sProgramsMenu_Remove, Localization.DisplayString.sInterface_Cancel,
+                CairoMessage.ShowOkCancel(string.Format(DisplayString.sProgramsMenu_RemoveInfo, app.Name, menu), 
+                    DisplayString.sProgramsMenu_RemoveTitle, CairoMessageImage.Warning, 
+                    DisplayString.sProgramsMenu_Remove, DisplayString.sInterface_Cancel,
                     result =>
                     {
                         if (result == true)
@@ -392,6 +393,32 @@ namespace CairoDesktop.AppGrabber
                             app.Category.Remove(app);
                             Save();
                         }
+
+                        callback?.Invoke();
+                    });
+            }
+        }
+
+        public void RenameAppDialog(ApplicationInfo app, Action callback)
+        {
+            if (app != null)
+            {
+                Common.MessageControls.Input inputControl = new Common.MessageControls.Input();
+                inputControl.Initialize(app.Name);
+
+                CairoMessage.ShowControl(string.Format(DisplayString.sProgramsMenu_RenameCategoryInfo, app.Name),
+                    string.Format(DisplayString.sProgramsMenu_RenameCategoryTitle, app.Name),
+                    CairoMessageImage.Default,
+                    inputControl,
+                    DisplayString.sInterface_Rename,
+                    DisplayString.sInterface_Cancel,
+                    (bool? result) => {
+                        if (result == true)
+                        {
+                            Rename(app, inputControl.Text);
+                        }
+
+                        callback?.Invoke();
                     });
             }
         }
@@ -413,7 +440,7 @@ namespace CairoDesktop.AppGrabber
             if (app != null)
             {
                 if (app.IsStoreApp)
-                    CairoMessage.Show(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, app.GetIconImageSource(IconSize.Jumbo, false), true);
+                    CairoMessage.Show(DisplayString.sProgramsMenu_UWPInfo, app.Name, app.GetIconImageSource(IconSize.Jumbo, false), true);
                 else
                     ShellHelper.ShowFileProperties(app.Path);
             }
