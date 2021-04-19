@@ -125,7 +125,6 @@ namespace CairoDesktop.AppGrabber
                                 target.Add(dropClone);
 
                             dropClone.Icon = null; // icon may differ depending on category
-                            dropClone.IconPath = null;
                         }
                         else
                         {
@@ -276,7 +275,6 @@ namespace CairoDesktop.AppGrabber
                         ApplicationInfo dropClone = dropData.Clone();
                         dropCategory.Add(dropClone);
                         dropClone.Icon = null; // icon may differ depending on category
-                        dropClone.IconPath = null;
                     }
                 }
                 else if (sourceView != null)
