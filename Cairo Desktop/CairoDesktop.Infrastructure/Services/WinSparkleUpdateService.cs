@@ -9,6 +9,8 @@ namespace CairoDesktop.Infrastructure.Services
     public class WinSparkleApplicationUpdateService : DisposableObject, IApplicationUpdateService
     {
         private const string UpdateUrl = "https://cairoshell.github.io/appdescriptor.rss";
+        private const string AppName = "Cairo Desktop Environment";
+        private const string CompanyName = "Cairo Development Team";
 
         private readonly ILogger<WinSparkleApplicationUpdateService> _logger;
         private readonly ICairoApplication _app;
@@ -24,6 +26,7 @@ namespace CairoDesktop.Infrastructure.Services
             try
             {
                 WinSparkle.win_sparkle_set_appcast_url(UpdateUrl);
+                WinSparkle.win_sparkle_set_app_details(CompanyName, AppName, _app.AppVersion);
 
                 _canShutdownDelegate = canShutdown;
                 _shutdownDelegate = doShutdown;
