@@ -34,5 +34,8 @@ namespace CairoDesktop.Interop
 
         [DllImport("WinSparkle.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern long win_sparkle_set_shutdown_request_callback(win_sparkle_shutdown_request_callback_t callback);
+
+        [DllImport("WinSparkle.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void win_sparkle_set_app_details(string company_name, string app_name, string app_version);
     }
 }

@@ -48,6 +48,8 @@ namespace CairoDesktop
             Places = new List<IMenuItem>();
             MenuBarExtensions = new List<IMenuBarExtension>();
 
+            AppVersion = ProductVersion.ToString();
+
             InitializeComponent();
         }
 
@@ -258,6 +260,8 @@ namespace CairoDesktop
         public static string CairoApplicationDataFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team");
 
         public static string LogsFolder => Path.Combine(CairoApplicationDataFolder, "Logs");
+
+        public string AppVersion { get; }
 
         public IHost Host { get; }
 
