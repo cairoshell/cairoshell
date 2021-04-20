@@ -408,7 +408,8 @@ namespace CairoDesktop.AppGrabber
 
                 CairoMessage.ShowControl(string.Format(DisplayString.sProgramsMenu_RenameAppInfo, app.Name),
                     string.Format(DisplayString.sProgramsMenu_RenameTitle, app.Name),
-                    CairoMessageImage.Default,
+                    app.GetIconImageSource(app.IsStoreApp ? IconSize.Jumbo : IconSize.ExtraLarge, false),
+                    app.IsStoreApp,
                     inputControl,
                     DisplayString.sInterface_Rename,
                     DisplayString.sInterface_Cancel,

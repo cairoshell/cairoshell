@@ -44,6 +44,7 @@
                        Grid.Row="1"
                        x:Name="MessageIconImage"
                        Source="{Binding ElementName=messageWindow, Path=Image, Converter={StaticResource CairoMessageImageConverter}}"
+                       StretchDirection="DownOnly"
                        Height="73"
                        Width="73" />
                 <StackPanel Grid.Row="1"
