@@ -10,7 +10,10 @@
   ],
   "cloudBuild": {
     "buildNumber": {
-      "enabled": true
+      "enabled": true,
+      "includeCommitId": {
+        "when": "never"
+      }
     }
   }
 }
