@@ -373,7 +373,7 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
-        public void RemoveAppConfirm(ApplicationInfo app, Action callback)
+        public void RemoveAppConfirm(ApplicationInfo app, CairoMessage.DialogResultDelegate resultCallback)
         {
             if (app != null)
             {
@@ -394,12 +394,12 @@ namespace CairoDesktop.AppGrabber
                             Save();
                         }
 
-                        callback?.Invoke();
+                        resultCallback?.Invoke(result);
                     });
             }
         }
 
-        public void RenameAppDialog(ApplicationInfo app, Action callback)
+        public void RenameAppDialog(ApplicationInfo app, CairoMessage.DialogResultDelegate resultCallback)
         {
             if (app != null)
             {
@@ -419,7 +419,7 @@ namespace CairoDesktop.AppGrabber
                             Rename(app, inputControl.Text);
                         }
 
-                        callback?.Invoke();
+                        resultCallback?.Invoke(result);
                     });
             }
         }

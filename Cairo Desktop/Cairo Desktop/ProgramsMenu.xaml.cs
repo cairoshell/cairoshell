@@ -130,7 +130,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            MenuBar._appGrabber.RenameAppDialog(app, () =>
+            MenuBar._appGrabber.RenameAppDialog(app, (bool? result) =>
             {
                 MenuBar.ProgramsMenu.IsSubmenuOpen = true;
             });
@@ -141,7 +141,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            MenuBar._appGrabber.RemoveAppConfirm(app, () => 
+            MenuBar._appGrabber.RemoveAppConfirm(app, (bool? result) => 
             {
                 MenuBar.ProgramsMenu.IsSubmenuOpen = true;
             });
