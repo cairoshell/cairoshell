@@ -76,7 +76,15 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            ParentTaskbar._appGrabber.RemoveAppConfirm(app);
+            ParentTaskbar._appGrabber.RemoveAppConfirm(app, null);
+        }
+
+        private void programsMenu_Rename(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            ParentTaskbar._appGrabber.RenameAppDialog(app, null);
         }
 
         private void programsMenu_Properties(object sender, RoutedEventArgs e)

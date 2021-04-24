@@ -293,7 +293,9 @@ namespace CairoDesktop.Localization
 
         public static string sProgramsMenu_DeleteCategoryInfo => getString();
 
-        public static string sProgramsMenu_RenameCategoryTitle => getString();
+        public static string sProgramsMenu_RenameTitle => getString();
+
+        public static string sProgramsMenu_RenameAppInfo => getString();
 
         public static string sProgramsMenu_RenameCategoryInfo => getString();
 

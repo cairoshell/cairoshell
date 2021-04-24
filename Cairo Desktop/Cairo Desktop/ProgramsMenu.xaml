@@ -35,10 +35,7 @@
                                     </ContextMenu>
                                 </MenuItem.ContextMenu>
                                 <MenuItem.Header>
-                                    <DockPanel>
-                                        <TextBlock Text="{Binding Path=Name}" Name="lblProgramName" />
-                                        <TextBox Visibility="Collapsed" Text="{Binding Path=Name}" Name="txtProgramRename" LostFocus="txtProgramRename_LostFocus" PreviewKeyDown="txtProgramRename_PreviewKeyDown" TextWrapping="WrapWithOverflow" PreviewLostKeyboardFocus="txtProgramRename_PreviewLostKeyboardFocus" />
-                                    </DockPanel>
+                                    <TextBlock Text="{Binding Path=Name}" Name="lblProgramName" TextTrimming="CharacterEllipsis" Width="191" />
                                 </MenuItem.Header>
                             </MenuItem>
                         </DataTemplate>

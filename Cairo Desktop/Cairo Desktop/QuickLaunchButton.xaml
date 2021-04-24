@@ -32,8 +32,11 @@
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_OpenAsAdministrator)}" 
                               Click="LaunchProgramAdmin" />
                     <Separator />
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Rename)}" 
+                              Click="programsMenu_Rename" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu_RemoveFromMenu)}" 
                               Click="programsMenu_Remove" />
+                    <Separator />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Properties)}" 
                               Click="programsMenu_Properties" />
                 </ContextMenu>
