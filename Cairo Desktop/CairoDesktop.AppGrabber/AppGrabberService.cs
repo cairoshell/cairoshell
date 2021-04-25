@@ -143,16 +143,12 @@ namespace CairoDesktop.AppGrabber
                 return storeApps;
             }
 
-            foreach (string[] app in ManagedShell.UWPInterop.StoreAppHelper.GetStoreApps())
-            {
-                string path = app[0];
+            // Fetch all store apps
+            ManagedShell.UWPInterop.StoreAppHelper.AppList.FetchApps();
 
-                ApplicationInfo ai = new ApplicationInfo();
-                ai.Name = app[1];
-                ai.Path = "appx:" + path;
-                ai.Target = path;
-                ai.IconPath = app[2];
-                ai.IconColor = app[3];
+            foreach (ManagedShell.UWPInterop.StoreApp app in ManagedShell.UWPInterop.StoreAppHelper.AppList)
+            {
+                ApplicationInfo ai = ApplicationInfo.FromStoreApp(app);
 
                 if (ai.Name != "")
                     storeApps.Add(ai);
@@ -168,7 +164,7 @@ namespace CairoDesktop.AppGrabber
 
             try
             {
-                folder = new ShellFolder(directory, IntPtr.Zero);
+                folder = new ShellFolder(directory, IntPtr.Zero, false, false);
 
                 foreach (var file in folder.Files)
                 {
@@ -408,7 +404,7 @@ namespace CairoDesktop.AppGrabber
 
                 CairoMessage.ShowControl(string.Format(DisplayString.sProgramsMenu_RenameAppInfo, app.Name),
                     string.Format(DisplayString.sProgramsMenu_RenameTitle, app.Name),
-                    app.GetIconImageSource(app.IsStoreApp ? IconSize.Jumbo : IconSize.ExtraLarge, false),
+                    app.GetIconImageSource(app.IsStoreApp ? IconSize.Jumbo : IconSize.ExtraLarge),
                     app.IsStoreApp,
                     inputControl,
                     DisplayString.sInterface_Rename,
@@ -441,7 +437,7 @@ namespace CairoDesktop.AppGrabber
             if (app != null)
             {
                 if (app.IsStoreApp)
-                    CairoMessage.Show(DisplayString.sProgramsMenu_UWPInfo, app.Name, app.GetIconImageSource(IconSize.Jumbo, false), true);
+                    CairoMessage.Show(DisplayString.sProgramsMenu_UWPInfo, app.Name, app.GetIconImageSource(IconSize.Jumbo), true);
                 else
                     ShellHelper.ShowFileProperties(app.Path);
             }
@@ -504,33 +500,21 @@ namespace CairoDesktop.AppGrabber
 
         public void AddStoreApp(string appUserModelId, AppCategoryType categoryType)
         {
-            bool success = false;
-            // not great but gets the job done I suppose
-            foreach (string[] app in ManagedShell.UWPInterop.StoreAppHelper.GetStoreApps())
+            var storeApp = ManagedShell.UWPInterop.StoreAppHelper.AppList.GetAppByAumid(appUserModelId);
+
+            if (storeApp == null)
             {
-                if (app[0] == appUserModelId)
-                {
-                    // bringo
-                    ApplicationInfo ai = new ApplicationInfo();
-                    ai.Name = app[1];
-                    ai.Path = "appx:" + appUserModelId;
-                    ai.Target = appUserModelId;
-                    ai.IconPath = app[2];
-                    ai.IconColor = app[3];
-
-                    // add it
-                    if (!ReferenceEquals(ai, null))
-                    {
-                        CategoryList.GetSpecialCategory(categoryType).Add(ai);
-                        success = true;
-                    }
-
-                    break;
-                }
+                return;
             }
 
-            if (success)
+            ApplicationInfo ai = ApplicationInfo.FromStoreApp(storeApp);
+
+            // add it
+            if (!ReferenceEquals(ai, null))
+            {
+                CategoryList.GetSpecialCategory(categoryType).Add(ai);
                 Save();
+            }
         }
 
         public void AddToQuickLaunch(ApplicationInfo app)
@@ -539,7 +523,6 @@ namespace CairoDesktop.AppGrabber
             {
                 ApplicationInfo appClone = app.Clone();
                 appClone.Icon = null;
-                appClone.IconPath = null;
 
                 QuickLaunch.Add(appClone);
 

@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 
@@ -29,14 +28,13 @@ namespace CairoDesktop.AppGrabber
         /// <param name="path">Path to the shortcut.</param>
         /// <param name="target">Path to the executable.</param>
         /// <param name="icon">ImageSource used to denote the application's icon in a graphical environment.</param>
-        public ApplicationInfo(string name, string path, string target, ImageSource icon, string iconColor, string iconPath)
+        public ApplicationInfo(string name, string path, string target, ImageSource icon, string iconColor)
         {
             Name = name;
             Path = path;
             Target = target;
             Icon = icon;
             IconColor = iconColor;
-            IconPath = iconPath;
         }
 
         private bool _iconLoading;
@@ -105,7 +103,7 @@ namespace CairoDesktop.AppGrabber
 
         private string iconColor;
         /// <summary>
-        /// Path to the executable.
+        /// Icon plate background color
         /// </summary>
         public string IconColor
         {
@@ -119,20 +117,6 @@ namespace CairoDesktop.AppGrabber
             set
             {
                 iconColor = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string iconPath;
-        /// <summary>
-        /// Path to the executable.
-        /// </summary>
-        public string IconPath
-        {
-            get { return iconPath; }
-            set
-            {
-                iconPath = value;
                 OnPropertyChanged();
             }
         }
@@ -217,6 +201,7 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
+        #region IEquatable
         /// <summary>
         /// Determines if this ApplicationInfo object refers to the same application as another ApplicationInfo object.
         /// </summary>
@@ -260,7 +245,9 @@ namespace CairoDesktop.AppGrabber
                 hashCode ^= Path.GetHashCode();
             return hashCode;
         }
+        #endregion
 
+        #region IComparable
         /// <summary>
         /// Is this object greater than, less than, or equal to another ApplicationInfo? (For sorting purposes only)
         /// </summary>
@@ -270,10 +257,11 @@ namespace CairoDesktop.AppGrabber
         {
             return Name.CompareTo(other.Name);
         }
+        #endregion
 
         public override string ToString()
         {
-            return string.Format("Name={0} Path={1}", this.Name, this.Path);
+            return $"Name={Name} Path={Path}";
         }
 
         public static bool operator ==(ApplicationInfo x, ApplicationInfo y)
@@ -298,54 +286,38 @@ namespace CairoDesktop.AppGrabber
             if (Category != null && Category.Type == AppCategoryType.QuickLaunch && (IconSize)Configuration.Settings.Instance.TaskbarIconSize != IconSize.Small)
                 size = IconSize.Large;
 
-            return GetIconImageSource(size, true);
+            return GetIconImageSource(size);
         }
 
         /// <summary>
         /// Gets an ImageSource object representing the associated icon of a file.
         /// </summary>
-        public ImageSource GetIconImageSource(IconSize size, bool useCache)
+        public ImageSource GetIconImageSource(IconSize size)
         {
             if (IsStoreApp)
             {
-                string iconUri = IconPath;
+                var storeApp = ManagedShell.UWPInterop.StoreAppHelper.AppList.GetAppByAumid(Target);
 
-                if (!useCache || string.IsNullOrEmpty(iconUri) || !ShellHelper.Exists(iconUri))
-                {
-                    try
-                    {
-                        string[] icon = ManagedShell.UWPInterop.StoreAppHelper.GetAppIcon(Target, (int)size);
-                        iconUri = icon[0];
-                        IconColor = icon[1];
-
-                        if (useCache)
-                        {
-                            IconPath = iconUri;
-                        }
-                    }
-                    catch
-                    {
-                        return IconImageConverter.GetDefaultIcon();
-                    }
-                }
-
-                try
-                {
-                    BitmapImage img = new BitmapImage();
-                    img.BeginInit();
-                    img.UriSource = new Uri(iconUri, UriKind.Absolute);
-                    img.CacheOption = BitmapCacheOption.OnLoad;
-                    img.EndInit();
-                    img.Freeze();
-                    return img;
-                }
-                catch
+                if (storeApp == null)
                 {
                     return IconImageConverter.GetDefaultIcon();
                 }
+
+                return storeApp.GetIconImageSource(size);
             }
-            else
-                return IconImageConverter.GetImageFromAssociatedIcon(Path, size);
+            
+            return IconImageConverter.GetImageFromAssociatedIcon(Path, size);
+        }
+
+        public static ApplicationInfo FromStoreApp(ManagedShell.UWPInterop.StoreApp storeApp)
+        {
+            ApplicationInfo ai = new ApplicationInfo();
+            ai.Name = storeApp.DisplayName;
+            ai.Path = "appx:" + storeApp.AppUserModelId;
+            ai.Target = storeApp.AppUserModelId;
+            ai.IconColor = storeApp.IconColor;
+
+            return ai;
         }
 
         /// <summary>
@@ -354,7 +326,7 @@ namespace CairoDesktop.AppGrabber
         /// <returns>A new ApplicationInfo object with the same data as this object, not bound to a Category.</returns>
         internal ApplicationInfo Clone()
         {
-            ApplicationInfo rval = new ApplicationInfo(Name, Path, Target, Icon, IconColor, IconPath);
+            ApplicationInfo rval = new ApplicationInfo(Name, Path, Target, Icon, IconColor);
             return rval;
         }
 
