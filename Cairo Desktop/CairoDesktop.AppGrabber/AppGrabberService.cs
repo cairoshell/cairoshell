@@ -404,7 +404,7 @@ namespace CairoDesktop.AppGrabber
 
                 CairoMessage.ShowControl(string.Format(DisplayString.sProgramsMenu_RenameAppInfo, app.Name),
                     string.Format(DisplayString.sProgramsMenu_RenameTitle, app.Name),
-                    app.GetIconImageSource(app.IsStoreApp ? IconSize.Jumbo : IconSize.ExtraLarge, false),
+                    app.GetIconImageSource(app.IsStoreApp ? IconSize.Jumbo : IconSize.ExtraLarge),
                     app.IsStoreApp,
                     inputControl,
                     DisplayString.sInterface_Rename,
@@ -437,7 +437,7 @@ namespace CairoDesktop.AppGrabber
             if (app != null)
             {
                 if (app.IsStoreApp)
-                    CairoMessage.Show(Localization.DisplayString.sProgramsMenu_UWPInfo, app.Name, app.GetIconImageSource(IconSize.Jumbo), true);
+                    CairoMessage.Show(DisplayString.sProgramsMenu_UWPInfo, app.Name, app.GetIconImageSource(IconSize.Jumbo), true);
                 else
                     ShellHelper.ShowFileProperties(app.Path);
             }
