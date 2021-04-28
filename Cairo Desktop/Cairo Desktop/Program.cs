@@ -51,7 +51,8 @@ namespace CairoDesktop
                     services.AddSingleton<AppGrabberService>();
                     services.AddSingleton<ISettingsUIService, SettingsUIService>();
                     services.AddHostedService<ShellHotKeyService>();
-                    services.AddSingleton<ThemeService>();
+
+                    AddThemeService(services);
 
                     services.AddSingleton<DesktopManager>();
                     services.AddSingleton<WindowManager>();
@@ -90,6 +91,19 @@ namespace CairoDesktop
             
             var app = _host.Services.GetRequiredService<ICairoApplication>();
             return app.Run();
+        }
+
+        private static void AddThemeService(IServiceCollection services)
+        {
+            ThemeService themeService = default;
+
+            ThemeService GetThemeService(ICairoApplication cairoApplication)
+            {
+                return themeService ?? (themeService = new ThemeService(cairoApplication));
+            }
+
+            services.AddSingleton(provider => GetThemeService(provider.GetService<ICairoApplication>()));
+            services.AddSingleton<Func<ICairoApplication, ThemeService>>(provider => GetThemeService);
         }
         
         private static bool GetMutex()

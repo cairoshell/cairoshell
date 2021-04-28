@@ -24,7 +24,7 @@ namespace CairoDesktop.Services
             CairoApplication.CairoApplicationDataFolder
         };
 
-        protected readonly ICairoApplication _cairoApplication;
+        private readonly ICairoApplication _cairoApplication;
 
         public ThemeService(ICairoApplication cairoApplication)
         {

@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using CairoDesktop.Infrastructure.Options;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.Services;
 using ManagedShell.Common.SupportingClasses; // Required for StartupRunner; excluded from debug builds
 
 namespace CairoDesktop
@@ -26,6 +27,7 @@ namespace CairoDesktop
     {
         private readonly ILogger<CairoApplication> _logger;
         private readonly IOptionsMonitor<CommandLineOptions> _options;
+        private readonly ThemeService _themeService;
         public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
 
         // Parameter-less constructor required for WPF
@@ -33,9 +35,10 @@ namespace CairoDesktop
         {
         }
 
-        public CairoApplication(IHost host, ILogger<CairoApplication> logger, IOptionsMonitor<CommandLineOptions> options)
+        public CairoApplication(IHost host, Func<ICairoApplication, ThemeService> themeServiceFactory, ILogger<CairoApplication> logger, IOptionsMonitor<CommandLineOptions> options)
         {
             Host = host;
+            _themeService = themeServiceFactory(this);
             _logger = logger;
             _options = options;
 
