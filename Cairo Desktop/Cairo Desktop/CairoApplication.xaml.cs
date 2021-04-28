@@ -35,10 +35,10 @@ namespace CairoDesktop
         {
         }
 
-        public CairoApplication(IHost host, Func<ICairoApplication, ThemeService> themeServiceFactory, ILogger<CairoApplication> logger, IOptionsMonitor<CommandLineOptions> options)
+        public CairoApplication(IHost host, ThemeService themeService, ILogger<CairoApplication> logger, IOptionsMonitor<CommandLineOptions> options)
         {
             Host = host;
-            _themeService = themeServiceFactory(this);
+            _themeService = themeService;
             _logger = logger;
             _options = options;
 

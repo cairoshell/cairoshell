@@ -14,6 +14,8 @@ namespace CairoDesktop.Services
 {
     public class ThemeService : IDisposable
     {
+        private readonly Func<ICairoApplication> _cairoApplicationFactory;
+
         private const string THEME_DEFAULT_FILE = "Cairo";
         private const string THEME_DEFAULT = "Default";
         private const string THEME_FOLDER = "Themes";
@@ -24,12 +26,9 @@ namespace CairoDesktop.Services
             CairoApplication.CairoApplicationDataFolder
         };
 
-        private readonly ICairoApplication _cairoApplication;
-
-        public ThemeService(ICairoApplication cairoApplication)
+        public ThemeService(Func<ICairoApplication> cairoApplicationFactory)
         {
-            _cairoApplication = cairoApplication;
-            
+            _cairoApplicationFactory = cairoApplicationFactory;
             MigrateSettings();
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
@@ -43,23 +42,23 @@ namespace CairoDesktop.Services
             }
         }
 
-        public void SetThemeFromSettings()
+        public void SetThemeFromSettings(ICairoApplication cairoApplication)
         {
-            SetTheme(THEME_DEFAULT);
+            SetTheme(THEME_DEFAULT, cairoApplication);
             if (Settings.Instance.CairoTheme != THEME_DEFAULT)
             {
-                SetTheme(Settings.Instance.CairoTheme);
+                SetTheme(Settings.Instance.CairoTheme, cairoApplication);
             }
-            SetDarkMode();
+            SetDarkMode(cairoApplication);
         }
 
-        public void SetTheme(string theme)
+        private void SetTheme(string theme, ICairoApplication cairoApplication)
         {
             string themeFilePath = "";
 
             if (theme == THEME_DEFAULT)
             {
-                _cairoApplication.ClearResources();
+                cairoApplication.ClearResources();
                 themeFilePath = Path.ChangeExtension(Path.Combine(THEME_FOLDER, THEME_DEFAULT_FILE), THEME_EXT);
             }
             else
@@ -86,7 +85,7 @@ namespace CairoDesktop.Services
                 {
                     Source = new Uri(themeFilePath, UriKind.RelativeOrAbsolute)
                 };
-                _cairoApplication.AddResource(newRes);
+                cairoApplication.AddResource(newRes);
             }
             catch (Exception e)
             {
@@ -118,7 +117,7 @@ namespace CairoDesktop.Services
             return themes;
         }
 
-        private void SetDarkMode()
+        private void SetDarkMode(ICairoApplication cairoApplication)
         {
             // Enable dark mode support if specified by theme
             
@@ -130,7 +129,7 @@ namespace CairoDesktop.Services
             // Unfortunately, the dark mode API does not allow setting this more than once,
             // so once we go dark, there's no going back. As such, there's no reason to
             // specify light mode here for now (as that's the default).
-            bool? darkMode = _cairoApplication.FindResource("EnableDarkMode") as bool?;
+            bool? darkMode = cairoApplication.FindResource("EnableDarkMode") as bool?;
             if (darkMode == true)
             {
                 WindowHelper.SetDarkModePreference(NativeMethods.PreferredAppMode.ForceDark);
@@ -144,7 +143,7 @@ namespace CairoDesktop.Services
                 return;
             }
 
-            SetThemeFromSettings();
+            SetThemeFromSettings(_cairoApplicationFactory?.Invoke());
         }
 
         public void Dispose()

@@ -47,7 +47,7 @@ namespace CairoDesktop
 
         private void SetTheme()
         {
-            _themeService.SetThemeFromSettings();
+            _themeService.SetThemeFromSettings(this);
         }
 
         private void SetupWindowServices()
