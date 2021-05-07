@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using ManagedShell;
 using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
 
@@ -12,12 +12,14 @@ namespace CairoDesktop.AppGrabber
     public class TaskCategoryProvider : ITaskCategoryProvider
     {
         private readonly AppGrabberService _appGrabber;
+        private readonly ShellManager _shellManager;
         private TaskCategoryChangeDelegate categoryChangeDelegate;
 
-        public TaskCategoryProvider(AppGrabberService appGrabber)
+        public TaskCategoryProvider(AppGrabberService appGrabber, ShellManager shellManager)
         {
             _appGrabber = appGrabber;
-            
+            _shellManager = shellManager;
+
             foreach (Category category in _appGrabber.CategoryList)
             {
                 category.PropertyChanged += Category_PropertyChanged;
@@ -32,9 +34,9 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
-        public string GetCategory(ApplicationWindow window, ICollection<ApplicationWindow> applicationWindows)
+        public string GetCategory(ApplicationWindow window)
         {
-            var category = GetCategoryDisplayName(window, applicationWindows);
+            var category = GetCategoryDisplayName(window, _shellManager.Tasks.Windows);
 
             switch (category)
             {
@@ -79,7 +81,7 @@ namespace CairoDesktop.AppGrabber
         }
 
         private string GetCategoryDisplayName(ApplicationWindow window,
-            IEnumerable<ApplicationWindow> applicationWindows)
+            ICollection<ApplicationWindow> applicationWindows)
         {
             var category = _appGrabber.CategoryList.FlatList
                 .FirstOrDefault(ai => !string.IsNullOrEmpty(ai.Target) &&

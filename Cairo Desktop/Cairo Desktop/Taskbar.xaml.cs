@@ -81,7 +81,7 @@ namespace CairoDesktop
             CanAutoHide = true;
 
             // setup taskbar item source
-            _shellManager.Tasks.Initialize(new TaskCategoryProvider(_appGrabber));
+            _shellManager.Tasks.Initialize(new TaskCategoryProvider(_appGrabber, _shellManager));
 
             TasksList.ItemsSource = _shellManager.Tasks.GroupedWindows;
             TasksList2.ItemsSource = _shellManager.Tasks.GroupedWindows;
