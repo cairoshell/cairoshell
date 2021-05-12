@@ -36,7 +36,7 @@ namespace CairoDesktop.AppGrabber
 
         public string GetCategory(ApplicationWindow window)
         {
-            var category = GetCategoryDisplayName(window, _shellManager.Tasks.Windows);
+            var category = GetCategoryDisplayName(window, _shellManager.Tasks.GroupedWindows.Cast<ApplicationWindow>());
 
             switch (category)
             {
@@ -81,7 +81,7 @@ namespace CairoDesktop.AppGrabber
         }
 
         private string GetCategoryDisplayName(ApplicationWindow window,
-            ICollection<ApplicationWindow> applicationWindows)
+            IEnumerable<ApplicationWindow> applicationWindows)
         {
             var category = _appGrabber.CategoryList.FlatList
                 .FirstOrDefault(ai => !string.IsNullOrEmpty(ai.Target) &&
