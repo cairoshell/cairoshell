@@ -49,9 +49,13 @@ namespace CairoDesktop
             set { SetValue(CanAutoHideProperty, value); }
         }
         #endregion
-        
+
         public Taskbar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager, AppGrabberService appGrabber, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
         {
+            object taskBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["TaskBarWindowAllowsTransparency"];
+            if (taskBarWindowAllowsTransparencyResource is bool resourceValue)
+                AllowsTransparency = resourceValue;
+
             InitializeComponent();
             _appGrabber = appGrabber;
             _desktopManager = desktopManager;
@@ -231,7 +235,7 @@ namespace CairoDesktop
         protected override void OnSourceInitialized(object sender, EventArgs e)
         {
             base.OnSourceInitialized(sender, e);
-            
+
             setTaskButtonSize();
 
             SetDesktopPosition();
@@ -246,7 +250,7 @@ namespace CairoDesktop
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e == null || string.IsNullOrWhiteSpace(e.PropertyName)) 
+            if (e == null || string.IsNullOrWhiteSpace(e.PropertyName))
                 return;
 
             switch (e.PropertyName)
@@ -419,7 +423,7 @@ namespace CairoDesktop
         protected override IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             base.WndProc(hwnd, msg, wParam, lParam, ref handled);
-            
+
             if (msg == (int)NativeMethods.WM.MOUSEACTIVATE)
             {
                 handled = true;
