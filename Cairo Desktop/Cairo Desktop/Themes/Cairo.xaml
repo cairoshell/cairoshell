@@ -16,6 +16,7 @@
     <system:Boolean x:Key="EnableDarkMode">True</system:Boolean>
 
     <!-- Menu resources -->
+    <SolidColorBrush Color="#00FFFFFF" x:Key="MenuBarWindowStyleBackground" />
     <LinearGradientBrush StartPoint="0,0"
                          EndPoint="0,1"
                          x:Key="MenuBarBackground">
@@ -202,6 +203,7 @@
                       BlurRadius="5" />
 
     <!-- Taskbar resources -->
+    <SolidColorBrush Color="#00FFFFFF" x:Key="TaskBarWindowBackground" />
     <LinearGradientBrush x:Key="TaskbarBottomBackground"
                          StartPoint="0,0"
                          EndPoint="0,1">
@@ -523,7 +525,7 @@
     <Style x:Key="MenuBarWindowStyle"
            TargetType="{x:Type Window}">
         <Setter Property="Background"
-                Value="Transparent" />
+                Value="{DynamicResource ResourceKey=MenuBarWindowStyleBackground}" />
         <Setter Property="BorderBrush"
                 Value="{DynamicResource ResourceKey=MenuBarBorder}" />
         <Setter Property="BorderThickness"
