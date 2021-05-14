@@ -14,7 +14,7 @@
     Visibility="Visible"
     Loaded="TaskbarWindow_Loaded"
     LocationChanged="TaskbarWindow_LocationChanged"
-    Background="Transparent"
+    Background="{DynamicResource ResourceKey=TaskBarWindowBackground}"
     HorizontalAlignment="Center">
     <Border Name="bdrBackground">
         <Border.Style>

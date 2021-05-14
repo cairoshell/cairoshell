@@ -42,6 +42,10 @@ namespace CairoDesktop
             _applicationUpdateService = applicationUpdateService;
             _settingsUiService = settingsUiService;
 
+            object menuBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["MenuBarWindowAllowsTransparency"];
+            if (menuBarWindowAllowsTransparencyResource is bool resourceValue)
+                AllowsTransparency = resourceValue;
+
             InitializeComponent();
             
             RequiresScreenEdge = true;
