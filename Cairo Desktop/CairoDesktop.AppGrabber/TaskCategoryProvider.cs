@@ -1,4 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using ManagedShell;
+using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
 
 namespace CairoDesktop.AppGrabber
@@ -6,12 +11,14 @@ namespace CairoDesktop.AppGrabber
     public class TaskCategoryProvider : ITaskCategoryProvider
     {
         private readonly AppGrabberService _appGrabber;
+        private readonly ShellManager _shellManager;
         private TaskCategoryChangeDelegate categoryChangeDelegate;
 
-        public TaskCategoryProvider(AppGrabberService appGrabber)
+        public TaskCategoryProvider(AppGrabberService appGrabber, ShellManager shellManager)
         {
             _appGrabber = appGrabber;
-            
+            _shellManager = shellManager;
+
             foreach (Category category in _appGrabber.CategoryList)
             {
                 category.PropertyChanged += Category_PropertyChanged;
@@ -28,21 +35,20 @@ namespace CairoDesktop.AppGrabber
 
         public string GetCategory(ApplicationWindow window)
         {
-            ApplicationInfo applicationInfo = GetTaskApplicationInfo(window);
+            var category = GetCategoryDisplayName(window);
 
-            if (applicationInfo != null && applicationInfo.Category == null)
+            switch (category)
             {
-                // if app was removed, category is null, so stop using that app
-                applicationInfo = null;
+                case null when window.WinFileName.ToLower().Contains("cairodesktop.exe"):
+                    category = "Cairo";
+                    break;
+                case null when window.WinFileName.ToLower().Contains("\\windows\\") && !window.IsUWP:
+                    category = "Windows";
+                    break;
+                case null:
+                    category = Localization.DisplayString.sAppGrabber_Uncategorized;
+                    break;
             }
-            string category = applicationInfo?.Category?.DisplayName;
-
-            if (category == null && window.WinFileName.ToLower().Contains("cairodesktop.exe"))
-                category = "Cairo";
-            else if (category == null && window.WinFileName.ToLower().Contains("\\windows\\") && !window.IsUWP)
-                category = "Windows";
-            else if (category == null)
-                category = Localization.DisplayString.sAppGrabber_Uncategorized;
 
             return category;
         }
@@ -73,23 +79,77 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
-        private ApplicationInfo GetTaskApplicationInfo(ApplicationWindow window)
+        private string GetCategoryDisplayName(ApplicationWindow window)
         {
-            ApplicationInfo appInfo = null;
-            foreach (ApplicationInfo ai in _appGrabber.CategoryList.FlatList)
-            {
-                if (!string.IsNullOrEmpty(ai.Target) && ((!window.IsUWP && ai.Target.ToLower() == window.WinFileName.ToLower()) || (window.IsUWP && ai.Target == window.AppUserModelID)) && ai.Category != null)
-                {
-                    appInfo = ai;
-                    break;
-                }
-                else if (window.Title.ToLower().Contains(ai.Name.ToLower()) && ai.Category != null)
-                {
-                    appInfo = ai;
-                }
-            }
+            return window.IsUWP ?
+                GetCategoryDisplayNameOfUWPApp(window) :
+                GetCategoryDisplayNameOfWin32App(window);
+        }
 
-            return appInfo;
+        private string GetCategoryDisplayNameOfUWPApp(ApplicationWindow window)
+        {
+            if (TryGetCategoryDisplayNameByAppUserModelId(window, out var category)) return category;
+            if (TryGetCategoryDisplayNameByProcId(window, out category)) return category;
+            if (TryGetCategoryDisplayNameByTitle(window, out category)) return category;
+            return null;
+        }
+
+        private string GetCategoryDisplayNameOfWin32App(ApplicationWindow window)
+        {
+            if (TryGetCategoryDisplayNameByWinFileName(window, out var category)) return category;
+            if (TryGetCategoryDisplayNameByProcId(window, out category)) return category;
+            if (TryGetCategoryDisplayNameByFileEquality(window, out category)) return category;
+            if (TryGetCategoryDisplayNameByTitle(window, out category)) return category;
+            return null;
+        }
+
+        private bool TryGetCategoryDisplayNameByAppUserModelId(ApplicationWindow window, out string category)
+        {
+            category = _appGrabber.CategoryList.FlatList
+                .FirstOrDefault(ai =>
+                    !string.IsNullOrEmpty(ai.Target) && ai.Target == window.AppUserModelID && ai.Category != null)
+                ?.Category.DisplayName;
+            return category != null;
+        }
+
+        private bool TryGetCategoryDisplayNameByWinFileName(ApplicationWindow window, out string category)
+        {
+            category = _appGrabber.CategoryList.FlatList
+                .FirstOrDefault(ai =>
+                    !string.IsNullOrEmpty(ai.Target)
+                    && string.Equals(ai.Target, window.WinFileName, StringComparison.CurrentCultureIgnoreCase))
+                ?.Category.DisplayName;
+            return category != null;
+        }
+
+        private bool TryGetCategoryDisplayNameByProcId(ApplicationWindow window, out string category)
+        {
+            var applicationWindows = _shellManager.Tasks.GroupedWindows.Cast<ApplicationWindow>();
+            category = applicationWindows
+                .FirstOrDefault(ai => ai.ProcId == window.ProcId && ai.Category != null)
+                ?.Category;
+            return category != null;
+        }
+
+        private bool TryGetCategoryDisplayNameByFileEquality(ApplicationWindow window, out string category)
+        {
+            category = null;
+            if (!File.Exists(window.WinFileName)) return false;
+            category = _appGrabber.CategoryList.FlatList
+                .FirstOrDefault(ai =>
+                {
+                    if (string.IsNullOrEmpty(ai.Target)) return false;
+                    return File.Exists(ai.Target) && ShellHelper.IsSameFile(ai.Target, window.WinFileName);
+                })?.Category.DisplayName;
+            return category != null;
+        }
+
+        private bool TryGetCategoryDisplayNameByTitle(ApplicationWindow window, out string category)
+        {
+            category = _appGrabber.CategoryList.FlatList
+                .FirstOrDefault(ai => window.Title.ToLower().Contains(ai.Name.ToLower()) && ai.Category != null)
+                ?.Category.DisplayName;
+            return category != null;
         }
 
         private void Category_PropertyChanged(object sender, PropertyChangedEventArgs e)
