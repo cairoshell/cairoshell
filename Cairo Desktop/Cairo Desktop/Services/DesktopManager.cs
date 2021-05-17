@@ -96,15 +96,10 @@ namespace CairoDesktop.Services
             if (!IsEnabled && !EnvironmentHelper.IsAppRunningAsShell)
                 return;
 
-            HideWindowsDesktopIcons();
+            ToggleDesktopIcons(false);
             CreateShellWindow();
             CreateDesktopBrowser();
             CreateDesktopWindow();
-        }
-
-        private static void HideWindowsDesktopIcons()
-        {
-            if (IsEnabled && !EnvironmentHelper.IsAppRunningAsShell) ShellHelper.ToggleDesktopIcons(false);
         }
 
         private void CreateDesktopBrowser()
@@ -200,12 +195,12 @@ namespace CairoDesktop.Services
             DestroyDesktopBrowser();
             DestroyDesktopWindow();
             DestroyShellWindow();
-            ShowWindowsDesktopIcons();
+            ToggleDesktopIcons(true);
         }
 
-        private static void ShowWindowsDesktopIcons()
+        private static void ToggleDesktopIcons(bool enable)
         {
-            if (IsEnabled && !EnvironmentHelper.IsAppRunningAsShell) ShellHelper.ToggleDesktopIcons(true);
+            if (IsEnabled) ShellHelper.ToggleDesktopIcons(enable);
         }
 
         private void RegisterHotKey()
