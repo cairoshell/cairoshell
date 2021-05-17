@@ -198,6 +198,9 @@ namespace CairoDesktop.Services
             DestroyDesktopWindow();
             DestroyShellWindow();
 
+            if (!IsEnabled && !EnvironmentHelper.IsAppRunningAsShell)
+                return;
+
             // show the windows desktop
             ShellHelper.ToggleDesktopIcons(true);
         }
