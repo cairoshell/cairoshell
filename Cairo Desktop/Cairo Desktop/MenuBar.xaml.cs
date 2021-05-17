@@ -35,7 +35,7 @@ namespace CairoDesktop
         private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        
+
         public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
         {
             _appGrabber = appGrabber;
@@ -44,10 +44,12 @@ namespace CairoDesktop
 
             object menuBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["MenuBarWindowAllowsTransparency"];
             if (menuBarWindowAllowsTransparencyResource is bool resourceValue)
+            {
                 AllowsTransparency = resourceValue;
+            }
 
             InitializeComponent();
-            
+
             RequiresScreenEdge = true;
 
             SetPosition();
@@ -175,7 +177,7 @@ namespace CairoDesktop
         protected override void OnSourceInitialized(object sender, EventArgs e)
         {
             base.OnSourceInitialized(sender, e);
-            
+
             SetupMenuBarExtensions();
 
             registerCairoMenuHotKey();
@@ -201,8 +203,11 @@ namespace CairoDesktop
                 }
             }
 
-            SetBlur(Settings.Instance.EnableMenuBarBlur);
-
+            if (AllowsTransparency)
+            {
+                SetBlur(Settings.Instance.EnableMenuBarBlur);
+            }
+            
             setupShadow();
         }
 
@@ -303,7 +308,7 @@ namespace CairoDesktop
         public override void SetPosition()
         {
             base.SetPosition();
-            
+
             setShadowPosition();
         }
 
@@ -340,7 +345,7 @@ namespace CairoDesktop
         {
             double top;
 
-            if (AppBarEdge == AppBarEdge.Bottom) 
+            if (AppBarEdge == AppBarEdge.Bottom)
                 top = (Screen.Bounds.Bottom / DpiScale) - DesiredHeight;
             else
                 top = Screen.Bounds.Y / DpiScale;
@@ -418,7 +423,10 @@ namespace CairoDesktop
 
                         break;
                     case "EnableMenuBarBlur":
-                        SetBlur(Settings.Instance.EnableMenuBarBlur);
+                        if (AllowsTransparency)
+                        {
+                            SetBlur(Settings.Instance.EnableMenuBarBlur);
+                        }
                         break;
                     case "EnableMenuBarShadow":
                         if (Settings.Instance.EnableMenuBarShadow)
@@ -584,7 +592,7 @@ namespace CairoDesktop
             FolderHelper.OpenWithShell(ShellFolderPath.RecycleBinFolder.Value);
         }
         #endregion
-        
+
         #region IMenuExtraHost
         public IntPtr GetHandle()
         {

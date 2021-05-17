@@ -298,7 +298,7 @@ namespace CairoDesktop
         #region Position and appearance
         private void setTaskbarBlur()
         {
-            if (Settings.Instance.EnableMenuBarBlur && useFullWidthAppearance && Settings.Instance.TaskbarMode != 2)
+            if (AllowsTransparency && Settings.Instance.EnableMenuBarBlur && useFullWidthAppearance && Settings.Instance.TaskbarMode != 2)
             {
                 SetBlur(true);
             }
