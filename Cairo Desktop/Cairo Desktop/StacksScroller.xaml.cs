@@ -80,6 +80,10 @@ namespace CairoDesktop
                 {
                     Scroller.ItemsSource = new FolderView(folder).DisplayItems;
                 }
+                else if(DataContext is StackLocation stackLocation)
+                {
+                    Scroller.ItemsSource = new StackLocationFolderView(stackLocation).DisplayItems;
+                }
 
                 if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay &&
                     Settings.Instance.EnableDesktop && !GroupPolicyHelper.NoDesktop)

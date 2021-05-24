@@ -1,23 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Windows;
+﻿using ManagedShell.Common.Common;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Xml.Serialization;
 
 namespace CairoDesktop.Common
 {
     public class StacksManager : DependencyObject
     {
-        private readonly string stackConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoStacksConfig.xml";
-        private System.Xml.Serialization.XmlSerializer serializer;
+        private StackManagerPersistence _stackManagerPersistence;
 
-        private InvokingObservableCollection<ShellFolder> _stackLocations = new InvokingObservableCollection<ShellFolder>(Application.Current.Dispatcher);
+        private InvokingObservableCollection<StackLocation> _stackLocations = new InvokingObservableCollection<StackLocation>(Application.Current.Dispatcher);
 
-        public InvokingObservableCollection<ShellFolder> StackLocations
+        public InvokingObservableCollection<StackLocation> StackLocations
         {
             get => _stackLocations;
             set
@@ -37,19 +39,19 @@ namespace CairoDesktop.Common
 
         public StacksManager()
         {
+            _stackManagerPersistence = new StackManagerPersistence();
             initialize();
         }
 
         private void initialize()
         {
-            // this causes an exception, thanks MS!
-            //serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<String>));
-
-            serializer = System.Xml.Serialization.XmlSerializer.FromTypes(new[] { typeof(List<string>) })[0];
-
             try
             {
-                deserializeStacks();
+                var paths = _stackManagerPersistence.Load();
+                foreach (var path in paths)
+                {
+                    AddLocation(path);
+                }
             }
             catch (Exception e)
             {
@@ -61,18 +63,23 @@ namespace CairoDesktop.Common
 
         private void stackLocations_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            serializeStacks();
+            _stackManagerPersistence.Save(StackLocations.Select(location => location.Path));
         }
 
         public bool AddLocation(string path)
         {
-            if (CanAdd(path))
+            if (Path.GetExtension(path) == ".xml")
+            {
+                StackLocations.Add(new XmlConfigStackLocation(path));
+                return true;
+            }
+            else if (CanAdd(path))
             {
                 ShellFolder dir = new ShellFolder(path, IntPtr.Zero, true);
 
                 if (dir.IsNavigableFolder)
                 {
-                    StackLocations.Add(dir);
+                    StackLocations.Add(new ShellFolderStackLocation(dir));
                     return true;
                 }
 
@@ -87,10 +94,9 @@ namespace CairoDesktop.Common
             return !string.IsNullOrEmpty(path) && StackLocations.All(i => i.Path != path);
         }
 
-        public void RemoveLocation(ShellFolder directory)
+        public void RemoveLocation(StackLocation location)
         {
-            directory.Dispose();
-            StackLocations.Remove(directory);
+            StackLocations.Remove(location);
         }
 
         public void RemoveLocation(string path)
@@ -104,35 +110,170 @@ namespace CairoDesktop.Common
                 }
             }
         }
+    }
 
-        private void serializeStacks()
+    public abstract class StackLocation
+    {
+        public abstract string Path { get; }
+        public abstract string DisplayName { get; }
+        public abstract bool IsDesktop { get; }
+        public abstract ThreadSafeObservableCollection<ShellFile> Files { get; }
+        public abstract bool IsFileSystem { get; }
+    }
+
+    public class ShellFolderStackLocation : StackLocation
+    {
+        private readonly ShellFolder _shellFolder;
+
+        public ShellFolderStackLocation(ShellFolder shellFolder)
+        {
+            _shellFolder = shellFolder;
+        }
+
+        public override string Path { get { return _shellFolder.Path; } }
+        public override string DisplayName
+        {
+            get { return _shellFolder.DisplayName; }
+        }
+        public override bool IsDesktop { get { return _shellFolder.IsDesktop; } }
+
+        public override ThreadSafeObservableCollection<ShellFile> Files
+        {
+            get { return _shellFolder.Files; }
+        }
+
+        public override bool IsFileSystem
+        {
+            get { return _shellFolder.IsFileSystem; }
+        }
+    }
+
+    public class XmlConfigStackLocation : StackLocation
+    {
+        private readonly XmlSerializer _serializer;
+        private readonly string _configFile;
+        private readonly string _displayName;
+        private readonly ThreadSafeObservableCollection<ShellFile> _files;
+        private readonly FileSystemWatcher _watcher;
+
+        public XmlConfigStackLocation(string configFile)
+        {
+            _serializer = System.Xml.Serialization.XmlSerializer.FromTypes(new[] { typeof(List<string>) })[0];
+            _configFile = configFile;
+            _displayName = System.IO.Path.GetFileNameWithoutExtension(_configFile);
+            _files = new ThreadSafeObservableCollection<ShellFile>();
+
+            LoadConfig();
+
+            _watcher = new FileSystemWatcher();
+            _watcher.Path = System.IO.Path.GetDirectoryName(_configFile);
+            _watcher.Filter = System.IO.Path.GetFileName(_configFile);
+            _watcher.EnableRaisingEvents = true;
+            _watcher.Changed += _watcher_Changed; ;
+        }
+
+        private void LoadConfig()
+        {
+            _files.Clear();
+            var shellFiles = Load();
+            foreach (var path in shellFiles)
+            {
+                ShellFile shellFile = new ShellFile(null, path);
+
+                _files.Add(shellFile);
+            }
+        }
+
+        private void _watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            LoadConfig();
+        }
+
+        private IEnumerable<string> Load()
+        {
+            List<string> result = new List<string>();
+            if (ShellHelper.Exists(_configFile))
+            {
+                System.Xml.XmlReader reader = System.Xml.XmlReader.Create(_configFile);
+
+                if (_serializer.Deserialize(reader) is List<string> locationPaths)
+                {
+                    foreach (string path in locationPaths)
+                    {
+                        result.Add(path);
+                    }
+                }
+
+                reader.Close();
+            }
+
+            return result;
+        }
+
+        public override string Path { get { return _configFile; } }
+
+        public override string DisplayName
+        {
+            get { return _displayName; }
+        }
+        public override bool IsDesktop { get { return false; } }
+
+        public override ThreadSafeObservableCollection<ShellFile> Files
+        {
+            get { return _files; }
+        }
+
+        public override bool IsFileSystem
+        {
+            get { return true; }
+        }
+    }
+
+
+
+    internal class StackManagerPersistence
+    {
+        private readonly string _configFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoStacksConfig.xml";
+        private readonly XmlSerializer _serializer;
+
+        public StackManagerPersistence()
+        {
+            _serializer = System.Xml.Serialization.XmlSerializer.FromTypes(new[] { typeof(List<string>) })[0];
+        }
+
+        public void Save(IEnumerable<string> stackLocations)
         {
             List<string> locationPaths = new List<string>();
-            foreach (ShellFolder dir in StackLocations)
+
+            foreach (string dir in stackLocations)
             {
-                locationPaths.Add(dir.Path);
+                locationPaths.Add(dir);
             }
+
             System.Xml.XmlWriterSettings settings = new System.Xml.XmlWriterSettings
             {
                 Indent = true,
                 IndentChars = "    "
             };
-            System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(stackConfigFile, settings);
-            serializer.Serialize(writer, locationPaths);
+
+            System.Xml.XmlWriter writer = System.Xml.XmlWriter.Create(_configFile, settings);
+            _serializer.Serialize(writer, locationPaths);
+
             writer.Close();
         }
 
-        private void deserializeStacks()
+        public IEnumerable<string> Load()
         {
-            if (ShellHelper.Exists(stackConfigFile))
+            List<string> result = new List<string>();
+            if (ShellHelper.Exists(_configFile))
             {
-                System.Xml.XmlReader reader = System.Xml.XmlReader.Create(stackConfigFile);
+                System.Xml.XmlReader reader = System.Xml.XmlReader.Create(_configFile);
 
-                if (serializer.Deserialize(reader) is List<string> locationPaths)
+                if (_serializer.Deserialize(reader) is List<string> locationPaths)
                 {
                     foreach (string path in locationPaths)
                     {
-                        AddLocation(path);
+                        result.Add(path);
                     }
                 }
 
@@ -141,12 +282,17 @@ namespace CairoDesktop.Common
             else
             {
                 // Add some default folders on first run
-                AddLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.None));
-                AddLocation(KnownFolders.GetPath(KnownFolder.Downloads, NativeMethods.KnownFolderFlags.None));
+                result.AddRange(new[]
+                    {
+                        Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.None),
+                        KnownFolders.GetPath(KnownFolder.Downloads, NativeMethods.KnownFolderFlags.None)
+                    });
 
                 // Save
-                serializeStacks();
+                Save(result);
             }
+
+            return result;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using CairoDesktop.Configuration;
@@ -32,7 +33,7 @@ namespace CairoDesktop {
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-            StacksManager.Instance.RemoveLocation((sender as MenuItem).CommandParameter as ShellFolder);
+            StacksManager.Instance.RemoveLocation((sender as MenuItem).CommandParameter as StackLocation);
         }
         
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -61,9 +62,14 @@ namespace CairoDesktop {
             {
                 // Some checks just in case.
                 ICommandSource cmdsrc = sender as ICommandSource;
-                if (cmdsrc?.CommandParameter is ShellFolder cmdparam)
+                if (cmdsrc?.CommandParameter is ShellFolder shelloFolderCmd)
                 {
-                    OpenDir(cmdparam.Path, false); 
+                    OpenDir(shelloFolderCmd.Path, false); 
+                    e.Handled = true;
+                }
+                else if (cmdsrc?.CommandParameter is StackLocation stackLocationCmd)
+                {
+                    OpenDir(stackLocationCmd.Path, false);
                     e.Handled = true;
                 }
             }
@@ -95,6 +101,10 @@ namespace CairoDesktop {
                 e.Effects = DragDropEffects.Link;
             }
             else if (e.Data.GetDataPresent(typeof(ShellFolder)))
+            {
+                e.Effects = DragDropEffects.Move;
+            }
+            else if (e.Data.GetDataPresent(typeof(StackLocation)))
             {
                 e.Effects = DragDropEffects.Move;
             }
@@ -152,7 +162,14 @@ namespace CairoDesktop {
             {
                 ShellFolder dropData = e.Data.GetData(typeof(ShellFolder)) as ShellFolder;
 
-                int initialIndex = StacksManager.Instance.StackLocations.IndexOf(dropData);
+                int initialIndex = StacksManager.Instance.StackLocations.Select((location, index) => new { Location = location, Index = index }).First(item => item.Location.Path == dropData.Path).Index;
+                StacksManager.Instance.StackLocations.Move(initialIndex, StacksManager.Instance.StackLocations.Count - 1);
+            }
+            else if (e.Data.GetDataPresent(typeof(StackLocation)))
+            {
+                StackLocation dropData = e.Data.GetData(typeof(StackLocation)) as StackLocation;
+
+                int initialIndex = StacksManager.Instance.StackLocations.Select((location, index) => new { Location = location, Index = index }).First(item => item.Location.Path == dropData.Path).Index;
                 StacksManager.Instance.StackLocations.Move(initialIndex, StacksManager.Instance.StackLocations.Count - 1);
             }
 
@@ -210,7 +227,7 @@ namespace CairoDesktop {
                 {
                     if (StacksManager.Instance.AddLocation(fileName))
                     {
-                        int dropIndex = StacksManager.Instance.StackLocations.IndexOf(replacedDir);
+                        int dropIndex = StacksManager.Instance.StackLocations.Select((location, index) => new { Location = location, Index = index }).First(item => item.Location.Path == replacedDir.Path).Index;
                         StacksManager.Instance.StackLocations.Move(StacksManager.Instance.StackLocations.Count - 1, dropIndex);
                     }
                 }
@@ -219,8 +236,14 @@ namespace CairoDesktop {
             {
                 ShellFolder dropData = e.Data.GetData(typeof(ShellFolder)) as ShellFolder;
 
-                int initialIndex = StacksManager.Instance.StackLocations.IndexOf(dropData);
-                int dropIndex = StacksManager.Instance.StackLocations.IndexOf(replacedDir);
+                var indexedItems =
+                    StacksManager.Instance.StackLocations.Select((location, index) =>
+                        new {Location = location, Index = index}).ToList();
+
+
+               int initialIndex = indexedItems.First(item => item.Location.Path == dropData.Path).Index;
+               int dropIndex = indexedItems.First(item => item.Location.Path == replacedDir.Path).Index;
+
                 StacksManager.Instance.StackLocations.Move(initialIndex, dropIndex);
             }
 
