@@ -10,10 +10,11 @@ namespace CairoDesktop.Common
     public class XmlConfigStackLocation : StackLocation
     {
         private readonly XmlSerializer _serializer;
-        private readonly string _configFile;
-        private readonly string _displayName;
         private readonly ThreadSafeObservableCollection<ShellFile> _files;
         private readonly FileSystemWatcher _watcher;
+
+        private string _configFile;
+        private string _displayName;
 
         public XmlConfigStackLocation(string configFile)
         {
@@ -28,7 +29,22 @@ namespace CairoDesktop.Common
             _watcher.Path = System.IO.Path.GetDirectoryName(_configFile);
             _watcher.Filter = System.IO.Path.GetFileName(_configFile);
             _watcher.EnableRaisingEvents = true;
-            _watcher.Changed += _watcher_Changed; ;
+            _watcher.Changed += _watcher_Changed;
+            _watcher.Renamed += _watcher_Renamed;
+        }
+        
+        private void _watcher_Renamed(object sender, RenamedEventArgs e)
+        {
+            _watcher.EnableRaisingEvents = false;
+
+            _configFile = e.FullPath;
+            _displayName = System.IO.Path.GetFileNameWithoutExtension(_configFile);
+
+            LoadConfig();
+            
+            _watcher.Path = System.IO.Path.GetDirectoryName(_configFile);
+            _watcher.Filter = System.IO.Path.GetFileName(_configFile);
+            _watcher.EnableRaisingEvents = true;
         }
 
         private void LoadConfig()
