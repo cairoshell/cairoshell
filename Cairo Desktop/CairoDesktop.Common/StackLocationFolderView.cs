@@ -6,7 +6,7 @@ using ManagedShell.ShellFolders;
 
 namespace CairoDesktop.Common
 {
-    public class FolderView
+    public class StackLocationFolderView
     {
         public ICollectionView DisplayItems;
 
@@ -16,7 +16,7 @@ namespace CairoDesktop.Common
         private readonly string PublicDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory,
             Environment.SpecialFolderOption.DoNotVerify);
 
-        public FolderView(ShellFolder location)
+        public StackLocationFolderView(StackLocation location)
         {
             isDesktop = location.IsDesktop;
             path = location.Path;
@@ -24,7 +24,7 @@ namespace CairoDesktop.Common
             DisplayItems = GetCollectionView(location);
         }
 
-        private ICollectionView GetCollectionView(ShellFolder location)
+        private ICollectionView GetCollectionView(StackLocation location)
         {
             if (location == null)
             {
