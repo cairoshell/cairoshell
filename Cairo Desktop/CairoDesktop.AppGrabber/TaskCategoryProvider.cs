@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using ManagedShell;
 using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
@@ -98,7 +99,7 @@ namespace CairoDesktop.AppGrabber
         {
             if (TryGetCategoryDisplayNameByWinFileName(window, out var category)) return category;
             if (TryGetCategoryDisplayNameByProcId(window, out category)) return category;
-            if (TryGetCategoryDisplayNameByFileEquality(window, out category)) return category;
+            TryGetCategoryDisplayNameByFileEquality(window);
             if (TryGetCategoryDisplayNameByTitle(window, out category)) return category;
             return null;
         }
@@ -131,17 +132,23 @@ namespace CairoDesktop.AppGrabber
             return category != null;
         }
 
-        private bool TryGetCategoryDisplayNameByFileEquality(ApplicationWindow window, out string category)
+        private void TryGetCategoryDisplayNameByFileEquality(ApplicationWindow window)
         {
-            category = null;
-            if (!File.Exists(window.WinFileName)) return false;
-            category = _appGrabber.CategoryList.FlatList
-                .FirstOrDefault(ai =>
+            Task.Run(() =>
+            {
+                if (!File.Exists(window.WinFileName)) return;
+                string category = _appGrabber.CategoryList.FlatList
+                    .FirstOrDefault(ai =>
+                    {
+                        if (string.IsNullOrEmpty(ai.Target)) return false;
+                        return File.Exists(ai.Target) && ShellHelper.IsSameFile(ai.Target, window.WinFileName);
+                    })?.Category.DisplayName;
+
+                if (!string.IsNullOrEmpty(category))
                 {
-                    if (string.IsNullOrEmpty(ai.Target)) return false;
-                    return File.Exists(ai.Target) && ShellHelper.IsSameFile(ai.Target, window.WinFileName);
-                })?.Category.DisplayName;
-            return category != null;
+                    window.Category = category;
+                }
+            });
         }
 
         private bool TryGetCategoryDisplayNameByTitle(ApplicationWindow window, out string category)
