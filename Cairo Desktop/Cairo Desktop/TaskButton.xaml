@@ -86,10 +86,11 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <ProgressBar Name="pbProgress" 
-                         Grid.ColumnSpan="2"
+                         Grid.ColumnSpan="3"
                          Minimum="0" 
                          Maximum="65534" 
                          Value="{Binding Path=ProgressValue}" 
@@ -98,15 +99,25 @@
                    Name="imgIcon"
                    Width="16"
                    Height="16"
-                   Grid.Column="0" 
-                   Margin="0,0,5,0"/>
+                   Grid.Column="0" />
+            <StackPanel Grid.Column="0" 
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Margin="0,0,-2,-2"
+                        Name="overlayIcon"
+                        Visibility="Collapsed">
+                <Image Source="{Binding Path=OverlayIcon, Mode=OneWay}"
+                       Width="16"
+                       Height="16"
+                       ToolTip="{Binding Path=OverlayIconDescription}"/>
+            </StackPanel>
             <TextBlock Padding="0,0,5,0"
                        Name="WinTitle" 
                        HorizontalAlignment="Stretch" 
                        VerticalAlignment="Center"
                        Text="{Binding Path=Title}"
                        TextTrimming="CharacterEllipsis"
-                       Grid.Column="1" 
+                       Grid.Column="2" 
                        TextAlignment="Center" />
         </Grid>
     </Button>

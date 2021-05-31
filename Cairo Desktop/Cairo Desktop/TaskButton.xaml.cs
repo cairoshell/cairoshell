@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
 
@@ -114,7 +115,7 @@ namespace CairoDesktop
                 pbProgress.Style = FindResource("TaskListProgressBar") as Style;
                 ToolTipService.SetPlacement(btn, System.Windows.Controls.Primitives.PlacementMode.Right);
                 WinTitle.TextAlignment = TextAlignment.Left;
-                imgIcon.Margin = new Thickness(3, 0, 6, 0);
+                imgIcon.Margin = new Thickness(3, 0, 1, 0);
             }
 
             // drag support - delayed activation using system setting
@@ -145,6 +146,9 @@ namespace CairoDesktop
                     case "ShowTaskbarLabels":
                         setLabelVisibility();
                         setIconSize();
+                        break;
+                    case "ShowTaskbarBadges":
+                        setIconBadges();
                         break;
                 }
             }
@@ -182,8 +186,24 @@ namespace CairoDesktop
         {
             if (!ListMode)
             {
-                imgIcon.Width = IconHelper.GetSize(Settings.Instance.TaskbarIconSize);
-                imgIcon.Height = IconHelper.GetSize(Settings.Instance.TaskbarIconSize);
+                int size = IconHelper.GetSize(Settings.Instance.TaskbarIconSize);
+
+                imgIcon.Width = size;
+                imgIcon.Height = size;
+
+                setIconBadges();
+            }
+        }
+
+        private void setIconBadges()
+        {
+            if (ListMode || (IconSize)Settings.Instance.TaskbarIconSize == IconSize.Small || !Settings.Instance.ShowTaskbarBadges)
+            {
+                overlayIcon.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                overlayIcon.Visibility = Visibility.Visible;
             }
         }
 

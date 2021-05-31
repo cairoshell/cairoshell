@@ -249,6 +249,7 @@ namespace CairoDesktop.Localization
             { "sSettings_Taskbar_MiddleClick", "Middle-click action:" },
             { "sSettings_Taskbar_MiddleClickNewWindow", "Open new window" },
             { "sSettings_Taskbar_MiddleClickCloseWindow", "Close window" },
+            { "sSettings_Taskbar_ShowBadges", "Show badges" },
             { "sSettings_Taskbar_ShowLabels", "Show labels" },
             { "sSettings_Taskbar_EnableThumbnails", "Show window thumbnails" },
             { "sSettings_Advanced_LoggingLevel", "Logging level:" },

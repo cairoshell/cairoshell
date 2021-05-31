@@ -408,6 +408,21 @@ namespace CairoDesktop.Configuration
             }
         }
 
+        public bool ShowTaskbarBadges
+        {
+            get
+            {
+                return cairoSettings.ShowTaskbarBadges;
+            }
+            set
+            {
+                if (cairoSettings.ShowTaskbarBadges != value)
+                {
+                    cairoSettings.ShowTaskbarBadges = value;
+                }
+            }
+        }
+
         public bool ShowTaskbarLabels
         {
             get

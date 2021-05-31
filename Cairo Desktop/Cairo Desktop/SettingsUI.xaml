@@ -729,6 +729,10 @@
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ShowTaskbarBadges, UpdateSourceTrigger=PropertyChanged}"
+                              Name="chkHideTaskbarBadges">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_ShowBadges)}" />
+                    </CheckBox>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ShowTaskbarLabels, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkHideTaskbarLabels">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_ShowLabels)}" />
