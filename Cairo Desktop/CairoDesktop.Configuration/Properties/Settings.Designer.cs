@@ -611,5 +611,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["TaskbarButtonHeight"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowTaskbarBadges {
+            get {
+                return ((bool)(this["ShowTaskbarBadges"]));
+            }
+            set {
+                this["ShowTaskbarBadges"] = value;
+            }
+        }
     }
 }
