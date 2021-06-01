@@ -70,7 +70,25 @@
                     <local:DwmThumbnail x:Name="dwmThumbnail"
                                         Width="180"
                                         Height="120" />
-
+                    <ItemsControl ItemsSource="{Binding Path=ThumbButtons}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button ToolTip="{Binding Path=Title}"
+                                        Style="{StaticResource TaskThumbButton}"
+                                        Click="ButtonBase_OnClick">
+                                    <Image Source="{Binding Path=Icon}"
+                                           Width="16"
+                                           Height="16" />
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Center" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
                 </StackPanel>
 
             </Border>

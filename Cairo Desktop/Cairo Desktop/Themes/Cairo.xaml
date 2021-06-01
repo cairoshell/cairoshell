@@ -401,9 +401,11 @@
     <SolidColorBrush Color="#22FFFFFF"
                      x:Key="TaskThumbHoverBackground" />
     <SolidColorBrush Color="#AAFFFFFF"
-                     x:Key="TaskThumbCloseButtonForeground" />
+                     x:Key="TaskThumbButtonForeground" />
     <SolidColorBrush Color="#22FFFFFF"
-                     x:Key="TaskThumbCloseButtonHoverBackground" />
+                     x:Key="TaskThumbButtonHoverBackground" />
+    <SolidColorBrush Color="#66000000"
+                     x:Key="TaskThumbButtonPressedBackground" />
     <SolidColorBrush Color="#AAFF2600"
                      x:Key="TaskThumbCloseButtonPressedBackground" />
 
@@ -1738,12 +1740,12 @@
         <Setter Property="TextTrimming"
                 Value="CharacterEllipsis" />
     </Style>
-    <Style x:Key="TaskThumbCloseButton"
+    <Style x:Key="TaskThumbButton"
            TargetType="{x:Type Button}">
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="Foreground"
-                Value="{DynamicResource ResourceKey=TaskThumbCloseButtonForeground}" />
+                Value="{DynamicResource ResourceKey=TaskThumbButtonForeground}" />
         <Setter Property="Border.CornerRadius"
                 Value="3" />
         <Setter Property="Margin"
@@ -1751,9 +1753,9 @@
         <Setter Property="Padding"
                 Value="3" />
         <Setter Property="Height"
-                Value="16" />
+                Value="22" />
         <Setter Property="Width"
-                Value="16" />
+                Value="22" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -1772,9 +1774,26 @@
                      Value="True">
                 <Trigger.Setters>
                     <Setter Property="Background"
-                            Value="{DynamicResource ResourceKey=TaskThumbCloseButtonHoverBackground}" />
+                            Value="{DynamicResource ResourceKey=TaskThumbButtonHoverBackground}" />
                 </Trigger.Setters>
             </Trigger>
+            <Trigger Property="IsPressed"
+                     Value="True">
+                <Trigger.Setters>
+                    <Setter Property="Background"
+                            Value="{DynamicResource ResourceKey=TaskThumbButtonPressedBackground}" />
+                </Trigger.Setters>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="TaskThumbCloseButton"
+           BasedOn="{StaticResource TaskThumbButton}"
+           TargetType="{x:Type Button}">
+        <Setter Property="Height"
+                Value="16" />
+        <Setter Property="Width"
+                Value="16" />
+        <Style.Triggers>
             <Trigger Property="IsPressed"
                      Value="True">
                 <Trigger.Setters>

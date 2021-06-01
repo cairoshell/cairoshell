@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
+using ManagedShell.WindowsTasks;
 
 namespace CairoDesktop
 {
@@ -156,6 +157,14 @@ namespace CairoDesktop
         {
             if (closeButton.Visibility != Visibility.Visible)
                 closeButton.Visibility = Visibility.Visible;
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            Button btn = sender as Button;
+            TaskThumbButton thumbButton = btn?.DataContext as TaskThumbButton;
+
+            taskButton.Window.ClickThumbButton(thumbButton);
         }
     }
 }
