@@ -43,55 +43,56 @@
         </Border.Triggers>
         <Border Name="bdrThumbInner"
                 Style="{StaticResource TaskThumbWindowInnerBorderStyle}">
-            <Border Style="{StaticResource TaskThumbWindowInnerStyle}"
-                    MouseEnter="bdrThumbInner_OnMouseEnter"
-                    MouseLeave="bdrThumbInner_OnMouseLeave"
-                    MouseUp="bdrThumbInner_MouseUp"
-                    MouseRightButtonUp="bdrThumbInner_MouseRightButtonUp">
-                <StackPanel>
-                    <StackPanel Name="pnlTitle"
-                                Orientation="Horizontal"
-                                Margin="0,0,0,5">
-                        <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
-                               Width="16"
-                               Height="16" />
-                        <TextBlock Style="{StaticResource TaskThumbTitleStyle}"
-                                   Text="{Binding Path=Title}"
-                                   Width="138" />
-                        <Button	Name="closeButton" 
-                                Style="{StaticResource TaskThumbCloseButton}"
-                                Visibility="Hidden"
-                                Click="Button_Click">
-                            <Path Data="M 18,11 27,20 M 18,20 27,11"	
-                                  Stroke="{Binding Path=Foreground,	RelativeSource={RelativeSource AncestorType={x:Type Button}}}"		
-                                  StrokeThickness="1" Stretch="Fill" />
-                        </Button>
+            <StackPanel Orientation="Vertical">
+                <Border Style="{StaticResource TaskThumbWindowInnerStyle}"
+                        MouseEnter="bdrThumbInner_OnMouseEnter"
+                        MouseLeave="bdrThumbInner_OnMouseLeave"
+                        MouseUp="bdrThumbInner_MouseUp"
+                        MouseRightButtonUp="bdrThumbInner_MouseRightButtonUp">
+                    <StackPanel>
+                        <StackPanel Name="pnlTitle"
+                                    Orientation="Horizontal"
+                                    Margin="0,0,0,5">
+                            <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
+                                   Width="16"
+                                   Height="16" />
+                            <TextBlock Style="{StaticResource TaskThumbTitleStyle}"
+                                       Text="{Binding Path=Title}"
+                                       Width="138" />
+                            <Button	Name="closeButton" 
+                                    Style="{StaticResource TaskThumbCloseButton}"
+                                    Visibility="Hidden"
+                                    Click="Button_Click">
+                                <Path Data="M 18,11 27,20 M 18,20 27,11"	
+                                      Stroke="{Binding Path=Foreground,	RelativeSource={RelativeSource AncestorType={x:Type Button}}}"		
+                                      StrokeThickness="1" Stretch="Fill" />
+                            </Button>
+                        </StackPanel>
+                        <local:DwmThumbnail x:Name="dwmThumbnail"
+                                            Width="180"
+                                            Height="120" />
                     </StackPanel>
-                    <local:DwmThumbnail x:Name="dwmThumbnail"
-                                        Width="180"
-                                        Height="120" />
-                    <ItemsControl ItemsSource="{Binding Path=ThumbButtons}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Button ToolTip="{Binding Path=Title}"
-                                        Style="{StaticResource TaskThumbButton}"
-                                        Click="ButtonBase_OnClick">
-                                    <Image Source="{Binding Path=Icon}"
-                                           Width="16"
-                                           Height="16" />
-                                </Button>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"
-                                            HorizontalAlignment="Center" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </StackPanel>
-
-            </Border>
+                </Border>
+                <ItemsControl ItemsSource="{Binding Path=ThumbButtons}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button ToolTip="{Binding Path=Title}"
+                                    Style="{StaticResource TaskThumbButton}"
+                                    Click="ButtonBase_OnClick">
+                                <Image Source="{Binding Path=Icon}"
+                                       Width="16"
+                                       Height="16" />
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </StackPanel>
         </Border>
     </Border>
 </Window>
