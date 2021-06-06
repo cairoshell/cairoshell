@@ -17,6 +17,7 @@ jobs:
 
     env:
       project: Cairo Desktop.csproj
+      installer: Installer\CairoShell.nsi
       installer32: Installer\CairoShell_32.nsi
       installer64: Installer\CairoShell_64.nsi
 
@@ -47,18 +48,10 @@ jobs:
         config: ${{ matrix.buildconfig }}
         platform: ${{ matrix.buildplatform }}
     
-    - name: Set installer version (64-bit)
-      if: matrix.buildplatform == 'x64'
+    - name: Set installer version
       uses: datamonsters/replace-action@v2
       with:
-        files: '${{ env.installer64 }}'
-        replacements: 'BUILD_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}'
-    
-    - name: Set installer version (32-bit)
-      if: matrix.buildplatform == 'AnyCPU'
-      uses: datamonsters/replace-action@v2
-      with:
-        files: '${{ env.installer32 }}'
+        files: '${{ env.installer }}'
         replacements: 'BUILD_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}'
 
     - name: Generate installer (64-bit)
