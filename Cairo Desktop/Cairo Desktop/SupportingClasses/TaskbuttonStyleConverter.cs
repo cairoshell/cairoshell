@@ -24,19 +24,10 @@ namespace CairoDesktop.SupportingClasses
             }
 
             EnumUtility.TryCast(values[1], out ApplicationWindow.WindowState winState, ApplicationWindow.WindowState.Inactive);
-            switch (winState)
+
+            if (winState == ApplicationWindow.WindowState.Active)
             {
-                case ApplicationWindow.WindowState.Active:
-                    fxStyle = fxElement.FindResource("CairoTaskbarButtonActiveStyle");
-                    break;
-
-                case ApplicationWindow.WindowState.Flashing:
-                    fxStyle = fxElement.FindResource("CairoTaskbarButtonFlashingStyle");
-                    break;
-
-                    // case ApplicationWindow.WindowState.Hidden:
-                    //     fxStyle = fxElement.FindResource("CairoTaskbarButtonHiddenStyle");
-                    //     break;
+                fxStyle = fxElement.FindResource("CairoTaskbarButtonActiveStyle");
             }
 
             return fxStyle;
