@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.Interfaces;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
@@ -67,10 +68,11 @@ namespace CairoDesktop.Services
             }
         }
 
-        public WindowManager(ILogger<WindowManager> logger, ShellManagerService shellManagerService, DesktopManager desktopManager)
+        public WindowManager(ILogger<WindowManager> logger, ShellManagerService shellManagerService, IDesktopManager desktopManager)
         {
             _appBarManager = shellManagerService.ShellManager.AppBarManager;
             _logger = logger;
+
             desktopManager.Initialize(this);
 
             // start a timer to handle orphaned display events

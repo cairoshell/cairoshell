@@ -21,6 +21,10 @@ namespace CairoDesktop.Services
 {
     public class DesktopManager : IDesktopManager, INotifyPropertyChanged, IDisposable
     {
+        // TODO: find a better solution for these static properties
+        public static bool IsEnabled => Settings.Instance.EnableDesktop && !GroupPolicyHelper.NoDesktop;
+
+
         public Desktop DesktopWindow { get; private set; }
 
         public DesktopOverlay DesktopOverlayWindow { get; private set; }
@@ -28,8 +32,6 @@ namespace CairoDesktop.Services
         public DesktopNavigationToolbar DesktopToolbar { get; private set; }
 
         public ShellWindow ShellWindow { get; private set; }
-
-        public static bool IsEnabled => Settings.Instance.EnableDesktop && !GroupPolicyHelper.NoDesktop;
 
         private bool _isOverlayOpen;
         private bool _isOverlayClosing;
@@ -199,9 +201,10 @@ namespace CairoDesktop.Services
             ToggleDesktopIcons(true);
         }
 
-        private static void ToggleDesktopIcons(bool enable)
+        private void ToggleDesktopIcons(bool enable)
         {
-            if (IsEnabled) ShellHelper.ToggleDesktopIcons(enable);
+            if (IsEnabled)
+                ShellHelper.ToggleDesktopIcons(enable);
         }
 
         private void RegisterHotKey()

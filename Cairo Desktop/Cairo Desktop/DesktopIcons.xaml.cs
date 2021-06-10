@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using CairoDesktop.Common;
+using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
@@ -23,7 +24,7 @@ namespace CairoDesktop
     /// </summary>
     public partial class DesktopIcons : UserControl
     {
-        private readonly DesktopManager _desktopManager;
+        private readonly IDesktopManager _desktopManager;
 
         internal bool RenameNewIcon;
         private Icon LastIconSelected;
@@ -57,7 +58,7 @@ namespace CairoDesktop
             }
         }
 
-        public DesktopIcons(DesktopManager manager)
+        public DesktopIcons(IDesktopManager manager)
         {
             InitializeComponent();
 

@@ -4,6 +4,7 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
@@ -15,11 +16,11 @@ namespace CairoDesktop
     /// </summary>
     public partial class DesktopOverlay : Window
     {
-        private readonly DesktopManager _desktopManager;
+        private readonly IDesktopManager _desktopManager;
         private readonly AppBarManager _appBarManager;
         public IntPtr Handle;
 
-        public DesktopOverlay(DesktopManager manager, AppBarManager appBarManager)
+        public DesktopOverlay(IDesktopManager manager, AppBarManager appBarManager)
         {
             InitializeComponent();
             

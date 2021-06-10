@@ -3,6 +3,7 @@ using CairoDesktop.Common;
 using System.Windows.Input;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.DependencyInjection;
+using CairoDesktop.Interfaces;
 using ManagedShell.Common.Helpers;
 using CairoDesktop.SupportingClasses;
 
@@ -11,9 +12,9 @@ namespace CairoDesktop.Services
     public sealed class ShellHotKeyService : CairoBackgroundService
     {
         private readonly ICairoApplication _cairoApplication;
-        private readonly DesktopManager _desktopManager;
+        private readonly IDesktopManager _desktopManager;
 
-        public ShellHotKeyService(ICairoApplication cairoApplication, DesktopManager desktopManager)
+        public ShellHotKeyService(ICairoApplication cairoApplication, IDesktopManager desktopManager)
         {
             _cairoApplication = cairoApplication;
             _desktopManager = desktopManager;

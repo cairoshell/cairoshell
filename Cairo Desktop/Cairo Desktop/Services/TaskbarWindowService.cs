@@ -2,6 +2,7 @@
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.Interfaces;
 using ManagedShell.AppBar;
 
 namespace CairoDesktop.Services
@@ -9,9 +10,9 @@ namespace CairoDesktop.Services
     public class TaskbarWindowService : AppBarWindowService
     {
         private readonly AppGrabberService _appGrabber;
-        private readonly DesktopManager _desktopManager;
+        private readonly IDesktopManager _desktopManager;
 
-        public TaskbarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, DesktopManager desktopManager, AppGrabberService appGrabber) : base(cairoApplication, shellManagerService, windowManager)
+        public TaskbarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, IDesktopManager desktopManager, AppGrabberService appGrabber) : base(cairoApplication, shellManagerService, windowManager)
         {
             _appGrabber = appGrabber;
             _desktopManager = desktopManager;
