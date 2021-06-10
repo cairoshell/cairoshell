@@ -27,7 +27,7 @@ namespace CairoDesktop.Interfaces
 
         void ConfigureDesktop();
 
-        void Initialize(WindowManager manager);
+        void Initialize(IWindowManager manager);
 
         void ResetPosition(bool displayChanged);
 

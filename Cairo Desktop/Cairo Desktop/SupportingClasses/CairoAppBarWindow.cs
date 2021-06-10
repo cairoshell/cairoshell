@@ -1,4 +1,5 @@
 ﻿using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell;
 using ManagedShell.AppBar;
@@ -8,12 +9,12 @@ namespace CairoDesktop.SupportingClasses
     public class CairoAppBarWindow : AppBarWindow
     {
         protected readonly ICairoApplication _cairoApplication;
-        protected readonly WindowManager _windowManager;
+        protected readonly IWindowManager _windowManager;
         
         public CairoAppBarWindow() : base(null, null, null, AppBarScreen.FromPrimaryScreen(), AppBarEdge.Bottom, 0)
         { }
         
-        public CairoAppBarWindow(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, AppBarScreen screen, AppBarEdge edge, double height) : base(
+        public CairoAppBarWindow(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, AppBarScreen screen, AppBarEdge edge, double height) : base(
             shellManager.AppBarManager, shellManager.ExplorerHelper, shellManager.FullScreenHelper, screen, edge, height)
         {
             _cairoApplication = cairoApplication;

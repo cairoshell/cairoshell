@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CairoDesktop.Infrastructure.ObjectModel;
+using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
@@ -36,7 +37,7 @@ namespace CairoDesktop
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
         {
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;

@@ -12,16 +12,38 @@ using Microsoft.Extensions.Logging;
 
 namespace CairoDesktop.Services
 {
-    public sealed class WindowManager : IDisposable
+    public sealed class WindowManager : IWindowManager, IDisposable
     {
+        // TODO: Do something better with these static properties
+        public static System.Drawing.Size PrimaryMonitorSize
+        {
+            get
+            {
+                return new System.Drawing.Size(Convert.ToInt32(SystemParameters.PrimaryScreenWidth / DpiHelper.DpiScaleAdjustment), Convert.ToInt32(SystemParameters.PrimaryScreenHeight / DpiHelper.DpiScaleAdjustment));
+            }
+        }
+
+        public static System.Drawing.Size PrimaryMonitorWorkArea
+        {
+            get
+            {
+                return new System.Drawing.Size(SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left, SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top);
+            }
+        }
+
+
         private bool _isSettingDisplays;
         private bool hasCompletedInitialDisplaySetup;
         private int pendingDisplayEvents;
-        private readonly static object displaySetupLock = new object();
+        private static readonly object displaySetupLock = new object();
+
         private readonly List<IWindowService> _windowServices = new List<IWindowService>();
         private readonly AppBarManager _appBarManager;
         private readonly ILogger<WindowManager> _logger;
 
+        public event EventHandler<WindowManagerEventArgs> DwmChanged;
+        public event EventHandler<WindowManagerEventArgs> ScreensChanged;
+        
         public bool IsSettingDisplays
         {
             get => _isSettingDisplays;
@@ -47,29 +69,12 @@ namespace CairoDesktop.Services
             }
         }
 
-        public List<AppBarScreen> ScreenState = new List<AppBarScreen>();
-        
-        public EventHandler<WindowManagerEventArgs> DwmChanged;
-        public EventHandler<WindowManagerEventArgs> ScreensChanged;
-
-        public static System.Drawing.Size PrimaryMonitorSize
-        {
-            get
-            {
-                return new System.Drawing.Size(Convert.ToInt32(SystemParameters.PrimaryScreenWidth / DpiHelper.DpiScaleAdjustment), Convert.ToInt32(SystemParameters.PrimaryScreenHeight / DpiHelper.DpiScaleAdjustment));
-            }
-        }
-
-        public static System.Drawing.Size PrimaryMonitorWorkArea
-        {
-            get
-            {
-                return new System.Drawing.Size(SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left, SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top);
-            }
-        }
+        public List<AppBarScreen> ScreenState { get; set; }
 
         public WindowManager(ILogger<WindowManager> logger, ShellManagerService shellManagerService, IDesktopManager desktopManager)
         {
+            ScreenState = new List<AppBarScreen>();
+
             _appBarManager = shellManagerService.ShellManager.AppBarManager;
             _logger = logger;
 

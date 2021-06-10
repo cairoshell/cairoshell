@@ -61,7 +61,7 @@ namespace CairoDesktop
                     services.AddSingleton<IThemeService, CairoApplicationThemeService>();
 
                     services.AddSingleton<IDesktopManager, DesktopManager>();
-                    services.AddSingleton<WindowManager>();
+                    services.AddSingleton<IWindowManager, WindowManager>();
                     services.AddSingleton<IWindowService, MenuBarWindowService>();
                     services.AddSingleton<IWindowService, TaskbarWindowService>();
 

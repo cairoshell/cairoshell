@@ -37,7 +37,7 @@ namespace CairoDesktop.Services
         private bool _isOverlayClosing;
         private int _renderOverlayFrames;
         private HotKey _overlayHotKey;
-        private WindowManager _windowManager;
+        private IWindowManager _windowManager;
         private readonly ShellManager _shellManager;
         private readonly ICairoApplication _cairoApplication;
         private readonly ILogger<DesktopManager> _logger;
@@ -85,7 +85,7 @@ namespace CairoDesktop.Services
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         }
 
-        public void Initialize(WindowManager manager)
+        public void Initialize(IWindowManager manager)
         {
             _windowManager = manager;
             _windowManager.DwmChanged += DwmChanged;
