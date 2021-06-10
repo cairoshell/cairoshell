@@ -4,7 +4,6 @@ using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,7 +15,6 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
-using CairoDesktop.Infrastructure.Options;
 using CairoDesktop.Infrastructure.Services;
 using ManagedShell.Common.SupportingClasses; // Required for StartupRunner; excluded from debug builds
 
@@ -25,7 +23,8 @@ namespace CairoDesktop
     public partial class CairoApplication : System.Windows.Application, ICairoApplication
     {
         private readonly ILogger<CairoApplication> _logger;
-        private readonly IOptionsMonitor<CommandLineOptions> _options;
+        private readonly IInitializationService _initializationService;
+
         public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
 
         // Parameter-less constructor required for WPF
@@ -33,12 +32,11 @@ namespace CairoDesktop
         {
         }
 
-        public CairoApplication(IHost host, ILogger<CairoApplication> logger, IOptionsMonitor<CommandLineOptions> options)
+        public CairoApplication(IHost host, ILogger<CairoApplication> logger, IInitializationService initializationService)
         {
             Host = host;
             _logger = logger;
-            _options = options;
-
+            _initializationService = initializationService;
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             Extensions = new List<IShellExtension>();
@@ -56,15 +54,15 @@ namespace CairoDesktop
         protected override void OnStartup(StartupEventArgs e)
         {
             // Initialize current shell information here, since it won't be accurate if we wait until after we create our own windows
-            SetIsCairoRunningAsShell();
+            _initializationService.SetIsCairoRunningAsShell();
 
             Host.Start();
 
-            WriteApplicationDebugInfoToConsole();
+            _initializationService.WriteApplicationDebugInfoToConsole(productVersion: ProductVersion);
 
-            LoadExtensions();
+            _initializationService.LoadExtensions();
 
-            SetTheme();
+            _initializationService.SetTheme();
 
             if (Settings.Instance.ForceSoftwareRendering)
             {
@@ -73,7 +71,7 @@ namespace CairoDesktop
 
             base.OnStartup(e);
 
-            SetupWindowServices();
+            _initializationService.SetupWindowServices();
 
             ShellHelper.SetShellReadyEvent();
 
@@ -233,24 +231,6 @@ namespace CairoDesktop
             Dispatcher.BeginInvoke(action);
         }
         
-        public void ClearResources()
-        {
-            Resources.MergedDictionaries.Clear();
-        }
-        
-        public void AddResource(object resource)
-        {
-            if (resource is ResourceDictionary theme)
-            {
-                Resources.MergedDictionaries.Add(theme);
-            }
-        }
-
-        public object FindResource(string name)
-        {
-            return TryFindResource(name);
-        }
-
         public bool IsShuttingDown { get; private set; }
 
         public static string StartupPath => Path.GetDirectoryName((Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).Location);

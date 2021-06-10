@@ -1,16 +1,36 @@
 ﻿using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Infrastructure.Options;
+using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
-using CairoDesktop.Services;
 
 namespace CairoDesktop
 {
-    public partial class CairoApplication
+    public class CairoApplicationInitializationService : IInitializationService
     {
-        public void SetIsCairoRunningAsShell()
+        private readonly IHost _host;
+        private readonly ILogger<CairoApplicationInitializationService> _logger;
+        private readonly IOptionsMonitor<CommandLineOptions> _options;
+        private readonly IThemeService _themeService;
+
+        public CairoApplicationInitializationService(
+            IHost host,
+            ILogger<CairoApplicationInitializationService> logger,
+            IOptionsMonitor<CommandLineOptions> options,
+            IThemeService themeService)
+        {
+            _host = host;
+            _logger = logger;
+            _options = options;
+            _themeService = themeService;
+        }
+
+        void IInitializationService.SetIsCairoRunningAsShell()
         {
             bool forceNoShell = false;
             bool forceShell = false;
@@ -29,15 +49,15 @@ namespace CairoDesktop
             EnvironmentHelper.IsAppRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !forceNoShell) || forceShell;
         }
 
-        internal void LoadExtensions()
+        void IInitializationService.LoadExtensions()
         {
-            var pluginService = Host.Services.GetService<IExtensionService>();
+            var pluginService = _host.Services.GetService<IExtensionService>();
             pluginService?.Start();
         }
 
-        internal void WriteApplicationDebugInfoToConsole()
+        void IInitializationService.WriteApplicationDebugInfoToConsole(Version productVersion)
         {
-            _logger.LogInformation($"Version: {ProductVersion}");
+            _logger.LogInformation($"Version: {productVersion}");
             _logger.LogInformation($"Operating System: {EnvironmentHelper.WindowsProductName} {Environment.OSVersion.Version}");
             _logger.LogInformation($"Processor Type: {(IntPtr.Size == 8 || EnvironmentHelper.IsWow64 ? 64 : 32)}-bit");
             _logger.LogInformation($"Running As: {IntPtr.Size * 8}-bit Process");
@@ -45,21 +65,19 @@ namespace CairoDesktop
             _logger.LogInformation($"Running as shell: {EnvironmentHelper.IsAppRunningAsShell}");
         }
 
-        private void SetTheme()
+        void IInitializationService.SetTheme()
         {
-            // TODO: Find a cleaner way to do this. We can't inject it to CairoApplication since it has a dependency on ICairoApplication.
-            // We could work around this using something similar to how WindowManager receives WindowServices, but that doesn't seem any better.
-            Host.Services.GetService<ThemeService>()?.SetThemeFromSettings();
+            _themeService.SetThemeFromSettings();
         }
 
-        private void SetupWindowServices()
+        void IInitializationService.SetupWindowServices()
         {
-            foreach (var service in Host.Services.GetServices<IWindowService>())
+            foreach (var service in _host.Services.GetServices<IWindowService>())
             {
                 service.Register();
             }
 
-            Host.Services.GetService<WindowManager>()?.InitialSetup();
+            _host.Services.GetService<WindowManager>()?.InitialSetup();
         }
     }
 }

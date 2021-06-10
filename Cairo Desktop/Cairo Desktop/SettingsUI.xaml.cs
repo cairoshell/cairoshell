@@ -36,10 +36,10 @@ namespace CairoDesktop
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ICairoApplication _cairoApplication;
         private readonly ShellManager _shellManager;
-        private readonly ThemeService _themeService;
+        private readonly IThemeService _themeService;
         private readonly SettingsUIService _uiService;
 
-        internal SettingsUI(ICairoApplication cairoApplication, SettingsUIService uiService, ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService, AppGrabberService appGrabber, ThemeService themeService)
+        internal SettingsUI(ICairoApplication cairoApplication, SettingsUIService uiService, ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService, AppGrabberService appGrabber, IThemeService themeService)
         {
             InitializeComponent();
 
