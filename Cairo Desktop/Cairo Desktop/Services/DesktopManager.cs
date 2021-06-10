@@ -1,25 +1,30 @@
-﻿using CairoDesktop.Common;
+﻿using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Common;
 using CairoDesktop.Configuration;
-using CairoDesktop.SupportingClasses;
-using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Controls;
-using System.Windows.Media;
-using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.Interfaces;
+using CairoDesktop.SupportingClasses;
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.SupportingClasses;
 using ManagedShell.ShellFolders;
 using Microsoft.Extensions.Logging;
+using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Controls;
+using System.Windows.Media;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop.Services
 {
-    public class DesktopManager : INotifyPropertyChanged, IDisposable
+    public class DesktopManager : IDesktopManager, INotifyPropertyChanged, IDisposable
     {
+        // TODO: find a better solution for these static properties
+        public static bool IsEnabled => Settings.Instance.EnableDesktop && !GroupPolicyHelper.NoDesktop;
+
+
         public Desktop DesktopWindow { get; private set; }
 
         public DesktopOverlay DesktopOverlayWindow { get; private set; }
@@ -27,8 +32,6 @@ namespace CairoDesktop.Services
         public DesktopNavigationToolbar DesktopToolbar { get; private set; }
 
         public ShellWindow ShellWindow { get; private set; }
-
-        public static bool IsEnabled => Settings.Instance.EnableDesktop && !GroupPolicyHelper.NoDesktop;
 
         private bool _isOverlayOpen;
         private bool _isOverlayClosing;
@@ -198,9 +201,10 @@ namespace CairoDesktop.Services
             ToggleDesktopIcons(true);
         }
 
-        private static void ToggleDesktopIcons(bool enable)
+        private void ToggleDesktopIcons(bool enable)
         {
-            if (IsEnabled) ShellHelper.ToggleDesktopIcons(enable);
+            if (IsEnabled)
+                ShellHelper.ToggleDesktopIcons(enable);
         }
 
         private void RegisterHotKey()

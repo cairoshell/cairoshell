@@ -1,11 +1,13 @@
 ﻿using System;
 using CairoDesktop.Configuration;
+using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop.SupportingClasses
 {
+    // TODO: Convert this to a service that uses DI to get IDesktopManager and require consumers to get it from ServiceProvider or DI
     class FolderHelper
     {
         public static bool OpenLocation(string path)
@@ -14,7 +16,7 @@ namespace CairoDesktop.SupportingClasses
             {
                 try
                 {
-                    var desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();
+                    var desktopManager = CairoApplication.Current.Host.Services.GetService<IDesktopManager>();
 
                     desktopManager.NavigationManager.NavigateTo(path);
                     desktopManager.IsOverlayOpen = true;
@@ -32,7 +34,7 @@ namespace CairoDesktop.SupportingClasses
 
         public static bool OpenWithShell(string path)
         {                    
-            var desktopManager = CairoApplication.Current.Host.Services.GetService<DesktopManager>();
+            var desktopManager = CairoApplication.Current.Host.Services.GetService<IDesktopManager>();
 
             desktopManager.IsOverlayOpen = false;
 

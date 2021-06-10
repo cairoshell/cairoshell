@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell;
 using ManagedShell.AppBar;
@@ -41,7 +42,7 @@ namespace CairoDesktop
         }
 
         public static DependencyProperty CanAutoHideProperty = DependencyProperty.Register("CanAutoHide", typeof(bool), typeof(Taskbar), new PropertyMetadata(new bool()));
-        private DesktopManager _desktopManager;
+        private readonly IDesktopManager _desktopManager;
 
         public bool CanAutoHide
         {
@@ -50,7 +51,7 @@ namespace CairoDesktop
         }
         #endregion
 
-        public Taskbar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager, AppGrabberService appGrabber, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
+        public Taskbar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, IDesktopManager desktopManager, AppGrabberService appGrabber, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
         {
             object taskBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["TaskBarWindowAllowsTransparency"];
             if (taskBarWindowAllowsTransparencyResource is bool resourceValue)

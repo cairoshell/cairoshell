@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Controls;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -30,7 +31,7 @@ namespace CairoDesktop
         private readonly ContextMenu toolbarContextMenu;
         private LowLevelKeyboardListener lowLevelKeyboardListener;
         private readonly ICairoApplication _cairoApplication;
-        private readonly DesktopManager _desktopManager;
+        private readonly IDesktopManager _desktopManager;
 
         private static DependencyProperty navigationManagerProperty = DependencyProperty.Register("NavigationManager", typeof(NavigationManager), typeof(DesktopNavigationToolbar));
         private static DependencyProperty isShiftKeyHeldProperty = DependencyProperty.Register("isShiftKeyHeld", typeof(bool), typeof(DesktopNavigationToolbar), new PropertyMetadata(new bool()));
@@ -71,7 +72,7 @@ namespace CairoDesktop
             }
         }
 
-        public DesktopNavigationToolbar(ICairoApplication cairoApplication, DesktopManager manager)
+        public DesktopNavigationToolbar(ICairoApplication cairoApplication, IDesktopManager manager)
         {
             InitializeComponent();
 
