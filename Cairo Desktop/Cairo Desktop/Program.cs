@@ -45,13 +45,16 @@ namespace CairoDesktop
                 {
                     services.Configure<CommandLineOptions>(context.Configuration);
 
-                    services.AddSingleton(s => Settings.Instance);
-                    services.AddSingleton<ICairoApplication, CairoApplication>();
+                    services.AddSingleton<Settings>(s => Settings.Instance);
+                    services.AddSingleton<IInitializationService, CairoApplicationInitializationService>();
+
+                    services.AddSingleton<CairoApplication>();
+                    services.AddSingleton<ICairoApplication>(provider => provider.GetRequiredService<CairoApplication>());
 
                     services.AddSingleton<AppGrabberService>();
                     services.AddSingleton<ISettingsUIService, SettingsUIService>();
                     services.AddHostedService<ShellHotKeyService>();
-                    services.AddSingleton<ThemeService>();
+                    services.AddSingleton<IThemeService, CairoApplicationThemeService>();
 
                     services.AddSingleton<DesktopManager>();
                     services.AddSingleton<WindowManager>();
