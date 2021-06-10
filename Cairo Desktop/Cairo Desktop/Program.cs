@@ -1,18 +1,19 @@
-﻿using CairoDesktop.Application.Interfaces;
+﻿using CairoDesktop.AppGrabber;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common.ExtensionMethods;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.DependencyInjection;
+using CairoDesktop.Infrastructure.Options;
+using CairoDesktop.MenuBarExtensions;
+using CairoDesktop.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using CairoDesktop.AppGrabber;
-using CairoDesktop.MenuBarExtensions;
-using CairoDesktop.Services;
-using Microsoft.Extensions.Configuration;
-using CairoDesktop.Infrastructure.Options;
+using CairoDesktop.Interfaces;
 
 namespace CairoDesktop
 {
@@ -35,7 +36,7 @@ namespace CairoDesktop
             {
                 return 1;
             }
-            
+
             _host = new HostBuilder()
                 .ConfigureAppConfiguration((context, builder) =>
                 {
@@ -46,6 +47,7 @@ namespace CairoDesktop
                     services.Configure<CommandLineOptions>(context.Configuration);
 
                     services.AddSingleton<Settings>(s => Settings.Instance);
+
                     services.AddSingleton<IInitializationService, CairoApplicationInitializationService>();
 
                     services.AddSingleton<CairoApplication>();
@@ -53,10 +55,12 @@ namespace CairoDesktop
 
                     services.AddSingleton<AppGrabberService>();
                     services.AddSingleton<ISettingsUIService, SettingsUIService>();
+
                     services.AddHostedService<ShellHotKeyService>();
+
                     services.AddSingleton<IThemeService, CairoApplicationThemeService>();
 
-                    services.AddSingleton<DesktopManager>();
+                    services.AddSingleton<IDesktopManager, DesktopManager>();
                     services.AddSingleton<WindowManager>();
                     services.AddSingleton<IWindowService, MenuBarWindowService>();
                     services.AddSingleton<IWindowService, TaskbarWindowService>();
@@ -81,7 +85,7 @@ namespace CairoDesktop
                 .ConfigureLogging((context, logging) =>
                 {
                     logging.SetMinimumLevel(LogLevel.Debug);
-                    
+
                     logging.AddManagedShellLogging(options =>
                     {
                         var severity = Settings.Instance.GetLogSeverity(LogSeverity.Info);
@@ -90,11 +94,11 @@ namespace CairoDesktop
                     });
                 })
                 .Build();
-            
+
             var app = _host.Services.GetRequiredService<ICairoApplication>();
             return app.Run();
         }
-        
+
         private static bool GetMutex()
         {
             _cairoMutex = new System.Threading.Mutex(true, MutexName, out bool ok);

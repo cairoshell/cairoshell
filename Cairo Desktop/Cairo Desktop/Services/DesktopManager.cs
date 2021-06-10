@@ -1,24 +1,25 @@
-﻿using CairoDesktop.Common;
+﻿using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Common;
 using CairoDesktop.Configuration;
-using CairoDesktop.SupportingClasses;
-using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Controls;
-using System.Windows.Media;
-using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.Interfaces;
+using CairoDesktop.SupportingClasses;
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.SupportingClasses;
 using ManagedShell.ShellFolders;
 using Microsoft.Extensions.Logging;
+using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Controls;
+using System.Windows.Media;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop.Services
 {
-    public class DesktopManager : INotifyPropertyChanged, IDisposable
+    public class DesktopManager : IDesktopManager, INotifyPropertyChanged, IDisposable
     {
         public Desktop DesktopWindow { get; private set; }
 

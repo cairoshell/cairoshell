@@ -16,6 +16,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
@@ -34,11 +35,10 @@ namespace CairoDesktop
     /// </summary>
     public partial class Desktop : Window, INotifyPropertyChanged
     {
-        #region Properties
         private WindowInteropHelper helper;
         private bool altF4Pressed;
         private readonly AppBarManager _appBarManager;
-        private readonly DesktopManager _desktopManager;
+        private readonly IDesktopManager _desktopManager;
         private readonly FullScreenHelper _fullScreenHelper;
         private readonly FileOperationWorker _fileWorker;
         private readonly ISettingsUIService _settingsUiService;
@@ -48,9 +48,8 @@ namespace CairoDesktop
         public EventHandler WorkAreaChanged;
 
         private Brush BackgroundBrush { get; set; }
-        #endregion
 
-        public Desktop(DesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService)
+        public Desktop(IDesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService)
         {
             InitializeComponent();
 
