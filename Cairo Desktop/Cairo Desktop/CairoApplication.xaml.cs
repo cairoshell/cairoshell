@@ -15,14 +15,17 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using CairoDesktop.Infrastructure.Options;
 using CairoDesktop.Infrastructure.Services;
-using ManagedShell.Common.SupportingClasses; // Required for StartupRunner; excluded from debug builds
+using ManagedShell.Common.SupportingClasses;
+using Microsoft.Extensions.Options; // Required for StartupRunner; excluded from debug builds
 
 namespace CairoDesktop
 {
     public partial class CairoApplication : System.Windows.Application, ICairoApplication
     {
         private readonly ILogger<CairoApplication> _logger;
+        private readonly IOptionsMonitor<CommandLineOptions> _options;
         private readonly IInitializationService _initializationService;
 
         public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
@@ -32,10 +35,13 @@ namespace CairoDesktop
         {
         }
 
-        public CairoApplication(IHost host, ILogger<CairoApplication> logger, IInitializationService initializationService)
+        public CairoApplication(IHost host, ILogger<CairoApplication> logger,
+            IOptionsMonitor<CommandLineOptions> options,
+            IInitializationService initializationService)
         {
             Host = host;
             _logger = logger;
+            _options = options;
             _initializationService = initializationService;
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
