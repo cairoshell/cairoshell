@@ -2,6 +2,7 @@
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.Interfaces;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.AppBar;
 
@@ -13,7 +14,7 @@ namespace CairoDesktop.Services
         private readonly ISettingsUIService _settingsUiService;
         private readonly IApplicationUpdateService _updateService;
 
-        public MenuBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService updateService, ISettingsUIService settingsUiService) : base(cairoApplication, shellManagerService, windowManager)
+        public MenuBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, IWindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService updateService, ISettingsUIService settingsUiService) : base(cairoApplication, shellManagerService, windowManager)
         {
             _appGrabber = appGrabber;
             _settingsUiService = settingsUiService;

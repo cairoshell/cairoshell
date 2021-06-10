@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 
@@ -17,7 +18,7 @@ namespace CairoDesktop
     {
         private readonly ICairoApplication _cairoApplication;
         private readonly MenuBar _menuBar;
-        private readonly WindowManager _windowManager;
+        private readonly IWindowManager _windowManager;
 
         private double DpiScale = 1;
         public bool IsClosing;
@@ -25,7 +26,7 @@ namespace CairoDesktop
 
         private IntPtr Handle;
 
-        public MenuBarShadow(ICairoApplication cairoApplication, WindowManager windowManager, MenuBar bar)
+        public MenuBarShadow(ICairoApplication cairoApplication, IWindowManager windowManager, MenuBar bar)
         {
             _cairoApplication = cairoApplication;
             _menuBar = bar;

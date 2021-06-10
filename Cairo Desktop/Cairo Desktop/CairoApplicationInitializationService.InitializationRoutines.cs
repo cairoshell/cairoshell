@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using CairoDesktop.Interfaces;
 
 namespace CairoDesktop
 {
@@ -77,7 +78,7 @@ namespace CairoDesktop
                 service.Register();
             }
 
-            _host.Services.GetService<WindowManager>()?.InitialSetup();
+            _host.Services.GetService<IWindowManager>()?.InitialSetup();
         }
     }
 }

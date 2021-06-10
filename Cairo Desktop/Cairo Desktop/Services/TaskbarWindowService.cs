@@ -12,7 +12,7 @@ namespace CairoDesktop.Services
         private readonly AppGrabberService _appGrabber;
         private readonly IDesktopManager _desktopManager;
 
-        public TaskbarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, IDesktopManager desktopManager, AppGrabberService appGrabber) : base(cairoApplication, shellManagerService, windowManager)
+        public TaskbarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, IWindowManager windowManager, IDesktopManager desktopManager, AppGrabberService appGrabber) : base(cairoApplication, shellManagerService, windowManager)
         {
             _appGrabber = appGrabber;
             _desktopManager = desktopManager;

@@ -51,7 +51,7 @@ namespace CairoDesktop
         }
         #endregion
 
-        public Taskbar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, IDesktopManager desktopManager, AppGrabberService appGrabber, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
+        public Taskbar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IDesktopManager desktopManager, AppGrabberService appGrabber, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
         {
             object taskBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["TaskBarWindowAllowsTransparency"];
             if (taskBarWindowAllowsTransparencyResource is bool resourceValue)
