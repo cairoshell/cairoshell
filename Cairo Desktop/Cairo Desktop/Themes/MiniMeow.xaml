@@ -35,8 +35,15 @@
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskbarTopBackground" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskbarTopBorder" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskGroupBorder" />
-    <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskbarItemInactiveBackground" />
-    <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskbarItemInactiveBorder" />
+    <LinearGradientBrush x:Key="TaskbarItemInactiveBackgroundGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.0" />
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.35" />
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemInactiveBorderGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.0" />
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="1.0" />
+    </LinearGradientBrush>
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskbarItemInactiveHoverBackground" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskbarItemInactiveHoverBorder" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskbarItemInactivePressedBackground" />
@@ -44,26 +51,29 @@
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskbarItemActiveBorder" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskbarItemActiveHoverBackground" />
     <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskbarItemActivePressedBackground" />
-    <LinearGradientBrush x:Key="TaskbarItemFlashingBackground" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="1.0" />
+    <LinearGradientBrush x:Key="TaskbarItemFlashingBackgroundGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.0" />
         <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.35" />
-        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.0" />
-    </LinearGradientBrush>
-    <SolidColorBrush Color="{StaticResource MiniMeowColor}" x:Key="TaskbarItemFlashingBorder" />
-    <LinearGradientBrush x:Key="TaskbarItemFlashingDisabledBackground" StartPoint="0,1" EndPoint="0,0">
         <GradientStop Color="{StaticResource MiniMeowColor}" Offset="1.0" />
-        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.3" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemFlashingBorderGradient" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.0" />
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="1.0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TaskbarItemFlashingDisabledBackground" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.0" />
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.35" />
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="1.0" />
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="TaskbarItemFlashingHoverBackground" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="1.0" />
-        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.3" />
         <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.0" />
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.35" />
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="1.0" />
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="TaskbarItemFlashingPressedBackground" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="1.0" />
-        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.3" />
         <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.0" />
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="0.35" />
+        <GradientStop Color="{StaticResource MiniMeowColor}" Offset="1.0" />
     </LinearGradientBrush>
 
     <!-- Dialog resources -->
