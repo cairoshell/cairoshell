@@ -4,9 +4,9 @@ namespace CairoDesktop.AppGrabber
 {
     public class QuickLaunchManager
     {
-        private readonly AppGrabberService _appGrabber;
+        private readonly IAppGrabber _appGrabber;
         
-        public QuickLaunchManager(AppGrabberService appGrabber)
+        public QuickLaunchManager(IAppGrabber appGrabber)
         {
             _appGrabber = appGrabber;
         }

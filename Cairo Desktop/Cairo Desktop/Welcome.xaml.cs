@@ -15,13 +15,13 @@ namespace CairoDesktop
     /// </summary>
     public partial class Welcome : Window
     {
-        private readonly AppGrabberService _appGrabber;
+        private readonly IAppGrabber _appGrabber;
         private readonly ICairoApplication _cairoApplication;
 
         const int maxSize = 780;
         string _initialLanguage = "en_US";
 
-        public Welcome(ICairoApplication cairoApplication, AppGrabberService appGrabber)
+        public Welcome(ICairoApplication cairoApplication, IAppGrabber appGrabber)
         {
             _appGrabber = appGrabber;
             _cairoApplication = cairoApplication;

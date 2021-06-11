@@ -32,14 +32,19 @@ namespace CairoDesktop
     /// </summary>
     public partial class SettingsUI : Window
     {
-        private readonly AppGrabberService _appGrabber;
+        private readonly IAppGrabber _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ICairoApplication _cairoApplication;
         private readonly ShellManager _shellManager;
         private readonly IThemeService _themeService;
         private readonly SettingsUIService _uiService;
 
-        internal SettingsUI(ICairoApplication cairoApplication, SettingsUIService uiService, ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService, AppGrabberService appGrabber, IThemeService themeService)
+        internal SettingsUI(ICairoApplication cairoApplication,
+            SettingsUIService uiService,
+            ShellManagerService shellManagerService,
+            IApplicationUpdateService applicationUpdateService,
+            IAppGrabber appGrabber,
+            IThemeService themeService)
         {
             InitializeComponent();
 
@@ -391,7 +396,7 @@ namespace CairoDesktop
                     // non-pinned icons area
                     dropData.Unpin();
                 }
-                
+
                 Settings.Instance.PinnedNotifyIcons = _shellManager.NotificationArea.PinnedNotifyIcons;
             }
 

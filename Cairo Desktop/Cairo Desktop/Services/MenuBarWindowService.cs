@@ -10,11 +10,11 @@ namespace CairoDesktop.Services
 {
     public class MenuBarWindowService : AppBarWindowService
     {
-        private readonly AppGrabberService _appGrabber;
+        private readonly IAppGrabber _appGrabber;
         private readonly ISettingsUIService _settingsUiService;
         private readonly IApplicationUpdateService _updateService;
 
-        public MenuBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, IWindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService updateService, ISettingsUIService settingsUiService) : base(cairoApplication, shellManagerService, windowManager)
+        public MenuBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService updateService, ISettingsUIService settingsUiService) : base(cairoApplication, shellManagerService, windowManager)
         {
             _appGrabber = appGrabber;
             _settingsUiService = settingsUiService;

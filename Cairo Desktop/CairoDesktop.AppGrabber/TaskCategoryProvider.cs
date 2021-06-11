@@ -11,11 +11,11 @@ namespace CairoDesktop.AppGrabber
 {
     public class TaskCategoryProvider : ITaskCategoryProvider
     {
-        private readonly AppGrabberService _appGrabber;
+        private readonly IAppGrabber _appGrabber;
         private readonly ShellManager _shellManager;
         private TaskCategoryChangeDelegate categoryChangeDelegate;
 
-        public TaskCategoryProvider(AppGrabberService appGrabber, ShellManager shellManager)
+        public TaskCategoryProvider(IAppGrabber appGrabber, ShellManager shellManager)
         {
             _appGrabber = appGrabber;
             _shellManager = shellManager;

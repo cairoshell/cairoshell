@@ -1,23 +1,26 @@
 ﻿using CairoDesktop.Common;
 using CairoDesktop.Interop;
 using CairoDesktop.Localization;
+using ManagedShell.Common.Enums;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+using ManagedShell.ShellFolders;
+using ManagedShell.ShellFolders.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
-using ManagedShell.Common.Enums;
-using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
-using ManagedShell.ShellFolders;
-using ManagedShell.ShellFolders.Enums;
 
 namespace CairoDesktop.AppGrabber
 {
-    public class AppGrabberService : DependencyObject, IDisposable
+    public class AppGrabberService : DependencyObject, IAppGrabber, IDisposable
     {
+        // TODO: Do something better than static properties here
+
         private static DependencyProperty programsListProperty = DependencyProperty.Register("ProgramsList", typeof(List<ApplicationInfo>), typeof(AppGrabberService), new PropertyMetadata(new List<ApplicationInfo>()));
+
         public static AppGrabberUI uiInstance;
 
         private static readonly string[] excludedNames = { "documentation", "help", "install", "more info", "read me", "read first", "readme", "remove", "setup", "what's new", "support", "on the web", "safe mode" };
@@ -38,6 +41,7 @@ namespace CairoDesktop.AppGrabber
         };
 
         public CategoryList CategoryList { get; set; }
+
         public List<ApplicationInfo> ProgramList
         {
             get
@@ -76,7 +80,7 @@ namespace CairoDesktop.AppGrabber
 
         public string ConfigFile { get; set; }
 
-        public QuickLaunchManager QuickLaunchManager;
+        public QuickLaunchManager QuickLaunchManager { get; set; }
 
         public AppGrabberService()
             : this(null) { }
@@ -126,9 +130,9 @@ namespace CairoDesktop.AppGrabber
             {
                 listsToMerge.Add(generateAppList(location));
             }
-            
+
             listsToMerge.Add(getStoreApps());
-            
+
             return mergeLists(listsToMerge);
         }
 
@@ -347,8 +351,8 @@ namespace CairoDesktop.AppGrabber
                         {
                             app.AskAlwaysAdmin = false;
 
-                            CairoMessage.Show(string.Format(DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name), 
-                                DisplayString.sProgramsMenu_AlwaysAdminTitle, 
+                            CairoMessage.Show(string.Format(DisplayString.sProgramsMenu_AlwaysAdminInfo, app.Name),
+                                DisplayString.sProgramsMenu_AlwaysAdminTitle,
                                 MessageBoxButton.YesNo, CairoMessageImage.Information,
                                 result =>
                                 {
@@ -378,9 +382,9 @@ namespace CairoDesktop.AppGrabber
                     menu = DisplayString.sAppGrabber_QuickLaunch;
                 else
                     menu = DisplayString.sProgramsMenu;
-                
-                CairoMessage.ShowOkCancel(string.Format(DisplayString.sProgramsMenu_RemoveInfo, app.Name, menu), 
-                    DisplayString.sProgramsMenu_RemoveTitle, CairoMessageImage.Warning, 
+
+                CairoMessage.ShowOkCancel(string.Format(DisplayString.sProgramsMenu_RemoveInfo, app.Name, menu),
+                    DisplayString.sProgramsMenu_RemoveTitle, CairoMessageImage.Warning,
                     DisplayString.sProgramsMenu_Remove, DisplayString.sInterface_Cancel,
                     result =>
                     {
@@ -409,7 +413,8 @@ namespace CairoDesktop.AppGrabber
                     inputControl,
                     DisplayString.sInterface_Rename,
                     DisplayString.sInterface_Cancel,
-                    (bool? result) => {
+                    (bool? result) =>
+                    {
                         if (result == true)
                         {
                             Rename(app, inputControl.Text);
@@ -534,5 +539,27 @@ namespace CairoDesktop.AppGrabber
         {
             // no work to do here
         }
+    }
+
+    public interface IAppGrabber
+    {
+        CategoryList CategoryList { get; set; }
+        Category QuickLaunch { get; }
+        List<ApplicationInfo> ProgramList { get; }
+        QuickLaunchManager QuickLaunchManager { get; set; }
+
+        void AddByPath(string[] fileNames, AppCategoryType categoryType);
+        void AddByPath(string fileName, AppCategoryType categoryType);
+        void AddStoreApp(string appUserModelId, AppCategoryType categoryType);
+        void AddToQuickLaunch(ApplicationInfo app);
+        void InsertByPath(string[] fileNames, int index, AppCategoryType categoryType);
+        void LaunchProgram(ApplicationInfo app);
+        void LaunchProgramAdmin(ApplicationInfo app);
+        void LaunchProgramVerb(ApplicationInfo app, string verb);
+        void RemoveAppConfirm(ApplicationInfo app, CairoMessage.DialogResultDelegate resultCallback);
+        void RenameAppDialog(ApplicationInfo app, CairoMessage.DialogResultDelegate resultCallback);
+        void Save();
+        void ShowAppProperties(ApplicationInfo app);
+        void ShowDialog();
     }
 }
