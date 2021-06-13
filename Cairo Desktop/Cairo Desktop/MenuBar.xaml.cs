@@ -27,7 +27,7 @@ namespace CairoDesktop
 {
     public partial class MenuBar : CairoAppBarWindow, IMenuBar
     {
-        internal readonly AppGrabberService _appGrabber;
+        internal readonly IAppGrabber _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ISettingsUIService _settingsUiService;
 
@@ -37,7 +37,7 @@ namespace CairoDesktop
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
         {
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;

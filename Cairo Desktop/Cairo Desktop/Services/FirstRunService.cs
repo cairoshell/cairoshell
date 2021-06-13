@@ -12,13 +12,13 @@ namespace CairoDesktop.Services
 {
     class FirstRunService : CairoBackgroundService
     {
-        private readonly AppGrabberService _appGrabber;
+        private readonly IAppGrabber _appGrabber;
         private readonly ICairoApplication _cairoApplication;
         private readonly ILogger<FirstRunService> _logger;
 
         private readonly bool _forceTour;
 
-        public FirstRunService(ICairoApplication cairoApplication, AppGrabberService appGrabber, ILogger<FirstRunService> logger, IOptionsMonitor<CommandLineOptions> options)
+        public FirstRunService(ICairoApplication cairoApplication, IAppGrabber appGrabber, ILogger<FirstRunService> logger, IOptionsMonitor<CommandLineOptions> options)
         {
             _appGrabber = appGrabber;
             _cairoApplication = cairoApplication;

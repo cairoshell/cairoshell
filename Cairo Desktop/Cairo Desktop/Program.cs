@@ -53,7 +53,8 @@ namespace CairoDesktop
                     services.AddSingleton<CairoApplication>();
                     services.AddSingleton<ICairoApplication>(provider => provider.GetRequiredService<CairoApplication>());
 
-                    services.AddSingleton<AppGrabberService>();
+                    services.AddSingleton<IAppGrabber, AppGrabberService>();
+
                     services.AddSingleton<ISettingsUIService, SettingsUIService>();
 
                     services.AddHostedService<ShellHotKeyService>();
