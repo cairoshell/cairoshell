@@ -57,7 +57,7 @@ namespace CairoDesktop.Services
 
         public void HandleScreenRemoved(string screenDeviceName)
         {
-            if (EnableService && EnableMultiMon)
+            if (EnableService)
             {
                 CloseScreenWindow(screenDeviceName);
             }

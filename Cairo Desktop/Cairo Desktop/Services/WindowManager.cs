@@ -223,6 +223,15 @@ namespace CairoDesktop.Services
 
             sysScreens = GetScreenDeviceNames();
 
+            // if we have 1 display before and after, skip setup and just refresh with new primary screen information
+            if (openScreens.Count == 1 && sysScreens.Count == 1)
+            {
+                RefreshWindows(reason, true);
+
+                _logger.LogDebug("Completed fast display setup");
+                return;
+            }
+
             // figure out which screens have been added
             foreach (string name in sysScreens)
             {
