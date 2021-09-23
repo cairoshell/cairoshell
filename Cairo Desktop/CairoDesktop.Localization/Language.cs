@@ -3014,7 +3014,7 @@ namespace CairoDesktop.Localization
             { "sAppGrabber_ProgramsMenuItems", "프로그램 메뉴 항목" },
             { "sAppGrabber_InstalledApplications", "설치된 프로그램" },
             { "sAppGrabber_Page2Title", "카테고리" },
-            { "sAppGrabber_Page2Line1", "카테고리를 사용하면 카테고리별로 프로그램을 그룹화 하여 더 쉽게 찾을 수 있습니다. 완료되면 프로그램 메뉴를 통해 카테고리 및 프로그램을 추가,  제거 또는 편집할 수 있습니다. 편의를 위해 Cario 메뉴에서 앱 그래버를 실행할 수도 있습니다." },
+            { "sAppGrabber_Page2Line1", "카테고리를 사용하면 카테고리별로 프로그램을 그룹화 하여 더 쉽게 찾을 수 있습니다. 완료되면 프로그램 메뉴를 통해 카테고리 및 프로그램을 추가,  제거 또는 편집할 수 있습니다. 편의를 위해 Cairo 메뉴에서 앱 그래버를 실행할 수도 있습니다." },
             { "sAppGrabber_Page2Line2", "Tip: 작업 표시줄 버튼은 여기에서 설정한 카테고리별로 그룹화됩니다." },
             { "sAppGrabber_Page2Directions", "사용 방법:" },
             { "sAppGrabber_Page2Directions1", "프로그램을 원하는 카테고리로 드래그합니다." },
