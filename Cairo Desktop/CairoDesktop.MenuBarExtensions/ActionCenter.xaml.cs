@@ -24,7 +24,14 @@ namespace CairoDesktop.MenuBarExtensions
 
         private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)
         {
-            ShellHelper.ShowActionCenter();
+            if (EnvironmentHelper.IsWindows11OrBetter)
+            {
+                ShellHelper.ShowNotificationCenter();
+            }
+            else
+            {
+                ShellHelper.ShowActionCenter();
+            }
         }
 
         private void miOpenActionCenter_MouseEnter(object sender, MouseEventArgs e)
