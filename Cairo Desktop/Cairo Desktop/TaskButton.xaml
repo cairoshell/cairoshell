@@ -13,8 +13,6 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Button x:Name="btn"
-            BorderThickness="0"
-            VerticalAlignment="Stretch"
             Click="btnClick"
             ToolTip="{Binding Path=Title}"
             ToolTipService.Placement="Top"
@@ -86,11 +84,11 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <ProgressBar Name="pbProgress" 
-                         Grid.ColumnSpan="3"
+            <ProgressBar Name="pbProgress"
+                         Grid.Column="0"
+                         Grid.ColumnSpan="2"
                          Minimum="0" 
                          Maximum="65534" 
                          Value="{Binding Path=ProgressValue}" 
@@ -99,6 +97,7 @@
                    Name="imgIcon"
                    Width="16"
                    Height="16"
+                   Style="{StaticResource TaskbarButtonIcon}"
                    Grid.Column="0" />
             <StackPanel Grid.Column="0" 
                         HorizontalAlignment="Right"
@@ -111,14 +110,10 @@
                        Height="16"
                        ToolTip="{Binding Path=OverlayIconDescription}"/>
             </StackPanel>
-            <TextBlock Padding="0,0,5,0"
-                       Name="WinTitle" 
-                       HorizontalAlignment="Stretch" 
-                       VerticalAlignment="Center"
+            <TextBlock Name="WinTitle" 
                        Text="{Binding Path=Title}"
-                       TextTrimming="CharacterEllipsis"
-                       Grid.Column="2" 
-                       TextAlignment="Center" />
+                       Style="{StaticResource TaskbarButtonTitle}"
+                       Grid.Column="1" />
         </Grid>
     </Button>
 </UserControl>

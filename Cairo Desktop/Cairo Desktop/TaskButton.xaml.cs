@@ -113,9 +113,9 @@ namespace CairoDesktop
                 // Task list display changes
                 btn.Style = FindResource("CairoTaskListButtonStyle") as Style;
                 pbProgress.Style = FindResource("TaskListProgressBar") as Style;
+                imgIcon.Style = FindResource("TaskListIcon") as Style;
+                WinTitle.Style = FindResource("TaskListTitle") as Style;
                 ToolTipService.SetPlacement(btn, System.Windows.Controls.Primitives.PlacementMode.Right);
-                WinTitle.TextAlignment = TextAlignment.Left;
-                imgIcon.Margin = new Thickness(3, 0, 1, 0);
             }
 
             // drag support - delayed activation using system setting

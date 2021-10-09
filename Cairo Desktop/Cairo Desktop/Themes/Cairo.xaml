@@ -1600,9 +1600,9 @@
                             Margin="0,0,0,0"
                             Background="{DynamicResource ResourceKey=TaskbarItemInactiveBackgroundGradient}"
                             BorderBrush="{DynamicResource ResourceKey=TaskbarItemInactiveBorderGradient}">
-                        <ContentPresenter Margin="5,1,5,0"
+                        <ContentPresenter Margin="0,1,0,0"
                                           HorizontalAlignment="Stretch"
-                                          VerticalAlignment="Center" />
+                                          VerticalAlignment="Stretch" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <DataTrigger Binding="{Binding Path=State}"
@@ -1677,9 +1677,9 @@
                             Margin="0,0,0,0"
                             Background="{DynamicResource ResourceKey=TaskbarItemActiveBackground}"
                             BorderBrush="{DynamicResource ResourceKey=TaskbarItemActiveBorder}">
-                        <ContentPresenter Margin="5,1,5,0"
+                        <ContentPresenter Margin="0,1,0,0"
                                           HorizontalAlignment="Stretch"
-                                          VerticalAlignment="Center" />
+                                          VerticalAlignment="Stretch" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver"
@@ -1699,10 +1699,40 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="TaskbarButtonTitle"
+           TargetType="{x:Type TextBlock}">
+        <Setter Property="Margin"
+                Value="0,0,5,0" />
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Setter Property="TextAlignment"
+                Value="Center" />
+        <Setter Property="TextTrimming"
+                Value="CharacterEllipsis" />
+    </Style>
+    <Style x:Key="TaskListTitle"
+           TargetType="{x:Type TextBlock}"
+           BasedOn="{StaticResource TaskbarButtonTitle}">
+        <Setter Property="TextAlignment"
+                Value="Left" />
+    </Style>
+    <Style x:Key="TaskbarButtonIcon"
+           TargetType="{x:Type Image}">
+        <Setter Property="Margin"
+                Value="5,0,5,0" />
+    </Style>
+    <Style x:Key="TaskListIcon"
+           TargetType="{x:Type Image}"
+           BasedOn="{StaticResource TaskbarButtonIcon}">
+        <Setter Property="Margin"
+                Value="3,0,6,0" />
+    </Style>
     <Style x:Key="TaskbarProgressBar"
            TargetType="{x:Type ProgressBar}">
         <Setter Property="Margin"
-                Value="-6" />
+                Value="-1" />
         <Setter Property="Opacity"
                 Value="0.6" />
         <Setter Property="Template">
