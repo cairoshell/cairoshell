@@ -67,28 +67,22 @@ namespace CairoDesktop
         #region Context menu
         private void ctxProgramsItem_Opened(object sender, RoutedEventArgs e)
         {
-            if (KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
+            ContextMenu menu = sender as ContextMenu;
+
+            foreach (Control item in menu.Items)
             {
-                ContextMenu menu = (sender as ContextMenu);
-                foreach (Control item in menu.Items)
+                ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+                switch (item.Name)
                 {
-                    if (item.Name == "miProgramsItemRunAs")
-                    {
-                        item.Visibility = Visibility.Visible;
-                        return;
-                    }
-                }
-            }
-            else
-            {
-                ContextMenu menu = (sender as ContextMenu);
-                foreach (Control item in menu.Items)
-                {
-                    if (item.Name == "miProgramsItemRunAs")
-                    {
-                        item.Visibility = Visibility.Collapsed;
-                        return;
-                    }
+                    case "miProgramsItemAdmin":
+                        item.Visibility = app.IsStoreApp ? Visibility.Collapsed : Visibility.Visible;
+                        break;
+                    case "miProgramsItemRunAs":
+                        item.Visibility = KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey) && !app.IsStoreApp ? Visibility.Visible : Visibility.Collapsed;
+                        break;
+                    default:
+                        break;
                 }
             }
         }
