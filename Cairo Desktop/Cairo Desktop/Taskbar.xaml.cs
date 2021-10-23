@@ -14,6 +14,7 @@ using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
+using ManagedShell.WindowsTasks;
 
 namespace CairoDesktop
 {
@@ -93,7 +94,8 @@ namespace CairoDesktop
             CanAutoHide = true;
 
             // setup taskbar item source
-            _shellManager.Tasks.Initialize(new TaskCategoryProvider(_appGrabber, _shellManager));
+
+            _shellManager.Tasks.Initialize(getTaskCategoryProvider());
 
             TasksList.ItemsSource = _shellManager.Tasks.GroupedWindows;
             TasksList2.ItemsSource = _shellManager.Tasks.GroupedWindows;
@@ -107,6 +109,18 @@ namespace CairoDesktop
 
             // register for settings changes
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        private ITaskCategoryProvider getTaskCategoryProvider()
+        {
+            if (Settings.Instance.TaskbarGroupingStyle == 1)
+            {
+                return new SupportingClasses.TaskCategoryProvider();
+            }
+            else
+            {
+                return new AppGrabber.TaskCategoryProvider(_appGrabber, _shellManager);
+            }
         }
 
         private void setupTaskbarAppearance()
@@ -298,6 +312,9 @@ namespace CairoDesktop
                     break;
                 case "EnableMenuBarBlur":
                     setTaskbarBlur();
+                    break;
+                case "TaskbarGroupingStyle":
+                    _shellManager.Tasks.SetTaskCategoryProvider(getTaskCategoryProvider());
                     break;
             }
         }

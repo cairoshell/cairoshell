@@ -59,6 +59,9 @@ namespace CairoDesktop.AppGrabber
             categoryChangeDelegate = changeDelegate;
             _appGrabber.CategoryList.CategoryChanged += (sender, args) => categoryChangeDelegate();
             _appGrabber.CategoryList.CollectionChanged += CategoryList_CollectionChanged;
+
+            // request new categories in case of preference change
+            categoryChangeDelegate();
         }
 
         private void CategoryList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

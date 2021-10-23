@@ -185,6 +185,20 @@ namespace CairoDesktop
                     break;
             }
 
+            switch (Settings.Instance.TaskbarGroupingStyle)
+            {
+                case 0:
+                    radTaskbarGrouping0.IsChecked = true;
+                    radTaskbarGrouping1.IsChecked = false;
+                    break;
+                case 1:
+                    radTaskbarGrouping0.IsChecked = false;
+                    radTaskbarGrouping1.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+
             switch (Settings.Instance.SysTrayAlwaysExpanded)
             {
                 case false:
@@ -653,6 +667,16 @@ namespace CairoDesktop
         private void radTaskbarMiddleClick1_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarMiddleClick = 1;
+        }
+
+        private void radTaskbarGrouping0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.TaskbarGroupingStyle = 0;
+        }
+
+        private void radTaskbarGrouping1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.TaskbarGroupingStyle = 1;
         }
 
         private void radDesktopLabelPos0_Click(object sender, RoutedEventArgs e)
