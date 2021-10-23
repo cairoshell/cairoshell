@@ -299,23 +299,29 @@ namespace CairoDesktop
 
         private void btn_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Middle)
+            if (e.ChangedButton != MouseButton.Middle || Window == null)
             {
-                if (Window != null)
-                {
-                    switch (Settings.Instance.TaskbarMiddleClick)
+                return;
+            }
+
+            switch (Settings.Instance.TaskbarMiddleClick)
+            {
+                case 0 when Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift):
+                    Window.Close();
+                    break;
+                case 1 when !Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift):
+                    Window.Close();
+                    break;
+                default:
+                    if (Window.IsUWP)
                     {
-                        case 0 when Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift):
-                            Window.Close();
-                            break;
-                        case 1 when !Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift):
-                            Window.Close();
-                            break;
-                        default:
-                            ShellHelper.StartProcess(Window.WinFileName);
-                            break;
+                        ShellHelper.StartProcess("appx:" + Window.AppUserModelID);
                     }
-                }
+                    else
+                    {
+                        ShellHelper.StartProcess(Window.WinFileName);
+                    }
+                    break;
             }
         }
 
