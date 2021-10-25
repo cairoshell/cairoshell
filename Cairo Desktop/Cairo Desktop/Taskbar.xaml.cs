@@ -134,13 +134,11 @@ namespace CairoDesktop
             if (Settings.Instance.TaskbarPosition == 1)
             {
                 AppBarEdge = AppBarEdge.Top;
-                TaskbarGroupStyle.ContainerStyle = FindResource("CairoTaskbarTopGroupStyle") as Style;
                 TasksList.Margin = new Thickness(0);
             }
             else
             {
                 AppBarEdge = AppBarEdge.Bottom;
-                TaskbarGroupStyle.ContainerStyle = FindResource("CairoTaskbarGroupStyle") as Style;
                 TasksList.Margin = new Thickness(-3, -1, 0, 0);
             }
 

@@ -61,6 +61,11 @@ namespace CairoDesktop.AppGrabber
             _appGrabber.CategoryList.CollectionChanged += CategoryList_CollectionChanged;
 
             // request new categories in case of preference change
+            // nullify all existing categories so we don't attempt reuse
+            foreach (ApplicationWindow window in _shellManager.Tasks.GroupedWindows)
+            {
+                window.Category = null;
+            }
             categoryChangeDelegate();
         }
 

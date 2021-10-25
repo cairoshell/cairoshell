@@ -6,6 +6,7 @@
     x:Class="CairoDesktop.Taskbar"
     xmlns:self="clr-namespace:CairoDesktop"
     xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+    xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration"
     x:Name="TaskbarWindow"
     Left="0"
     Margin="0,0,0,0"
@@ -310,6 +311,7 @@
                                                                                 BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}"
                                                                                 Width="100" Margin="0,-3">
                                                                             <TextBlock Text="{Binding Path=Name}"
+                                                                                       Name="CategoryText"
                                                                                        HorizontalAlignment="Right"
                                                                                        VerticalAlignment="Top"
                                                                                        Padding="6,7,6,0"
@@ -319,6 +321,16 @@
                                                                         </Border>
                                                                         <ItemsPresenter />
                                                                     </StackPanel>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <DataTrigger Binding="{Binding Source={x:Static Settings:Settings.Instance}, Path=TaskbarGroupingStyle, UpdateSourceTrigger=PropertyChanged}"
+                                                                                     Value="1">
+                                                                            <DataTrigger.Setters>
+                                                                                <Setter TargetName="CategoryText"
+                                                                                        Property="Visibility"
+                                                                                        Value="Collapsed" />
+                                                                            </DataTrigger.Setters>
+                                                                        </DataTrigger>
+                                                                    </ControlTemplate.Triggers>
                                                                 </ControlTemplate>
                                                             </Setter.Value>
                                                         </Setter>
@@ -389,6 +401,19 @@
                                             <StackPanel Orientation="Horizontal" />
                                         </ItemsPanelTemplate>
                                     </GroupStyle.Panel>
+                                    <GroupStyle.ContainerStyle>
+                                        <Style TargetType="{x:Type GroupItem}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="GroupItem">
+                                                        <ContentControl Style="{StaticResource TaskbarGroup}">
+                                                            <ItemsPresenter />
+                                                        </ContentControl>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </GroupStyle.ContainerStyle>
                                 </GroupStyle>
                             </ListView.GroupStyle>
                             <ListView.ItemContainerStyle>
