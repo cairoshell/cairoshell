@@ -113,7 +113,7 @@ namespace CairoDesktop
 
         private ITaskCategoryProvider getTaskCategoryProvider()
         {
-            if (Settings.Instance.TaskbarGroupingStyle == 1)
+            if (Settings.Instance.TaskbarGroupingStyle == 0)
             {
                 return new ApplicationTaskCategoryProvider();
             }

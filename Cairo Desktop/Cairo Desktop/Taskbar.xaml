@@ -6,6 +6,7 @@
     x:Class="CairoDesktop.Taskbar"
     xmlns:self="clr-namespace:CairoDesktop"
     xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+    xmlns:settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration"
     xmlns:support="clr-namespace:CairoDesktop.SupportingClasses"
     x:Name="TaskbarWindow"
     Left="0"
@@ -19,7 +20,9 @@
     HorizontalAlignment="Center">
     <Window.Resources>
         <ResourceDictionary>
+            <support:TaskGroupConverter x:Key="groupConverter" />
             <support:TaskGroupNameConverter x:Key="groupNameConverter" />
+            <support:TaskGroupSizeConverter x:Key="groupSizeConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <Border Name="bdrBackground">
@@ -407,6 +410,31 @@
                                                     </ControlTemplate>
                                                 </Setter.Value>
                                             </Setter>
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Path=ItemCount, Converter={StaticResource groupSizeConverter}}"
+                                                                   Value="True" />
+                                                        <Condition Binding="{Binding Source={x:Static settings:Settings.Instance}, Path=TaskbarGroupingStyle, UpdateSourceTrigger=PropertyChanged}"
+                                                                   Value="2" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="GroupItem">
+                                                                    <ContentControl Style="{StaticResource TaskbarGroup}">
+                                                                        <self:TaskButton ListMode="False"
+                                                                                         ParentTaskbar="{Binding ElementName=TaskbarWindow}"
+                                                                                         Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}"
+                                                                                         Margin="0,0,-1,0"
+                                                                                         DataContext="{Binding Converter={StaticResource groupConverter}}" />
+                                                                    </ContentControl>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
                                         </Style>
                                     </GroupStyle.ContainerStyle>
                                 </GroupStyle>

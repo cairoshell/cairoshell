@@ -252,6 +252,7 @@ namespace CairoDesktop.Localization
             { "sSettings_Taskbar_GroupBy", "Group windows by:" },
             { "sSettings_Taskbar_GroupByProgramsMenuCategory", "Programs menu category" },
             { "sSettings_Taskbar_GroupByApplication", "Application" },
+            { "sSettings_Taskbar_GroupByApplicationCombined", "Application (combined)" },
             { "sSettings_Taskbar_ShowBadges", "Show badges" },
             { "sSettings_Taskbar_ShowLabels", "Show labels" },
             { "sSettings_Taskbar_EnableThumbnails", "Show window thumbnails" },

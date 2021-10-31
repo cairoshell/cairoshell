@@ -69,7 +69,7 @@
                                    Text="&#x31;" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <Separator />
+                <Separator Name="miSingleWindowSeparator" />
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_NewWindow)}" 
                           Click="miNewWindow_Click" />
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Close)}" 

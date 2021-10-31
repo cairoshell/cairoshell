@@ -768,6 +768,11 @@
                                          Click="radTaskbarGrouping1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_GroupByApplication)}" />
                             </RadioButton>
+                            <RadioButton GroupName="rdoTaskbarGrouping"
+                                         Name="radTaskbarGrouping2"
+                                         Click="radTaskbarGrouping2_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_GroupByApplicationCombined)}" />
+                            </RadioButton>
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
