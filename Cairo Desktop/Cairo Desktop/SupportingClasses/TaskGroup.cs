@@ -49,86 +49,43 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        private ApplicationWindow.WindowState _state;
-
         public ApplicationWindow.WindowState State
         {
             get
             {
-                return _state;
-            }
-            set
-            {
-                _state = value;
-                OnPropertyChanged();
+                return getState();
             }
         }
-
-        private ImageSource _overlayIcon;
 
         public ImageSource OverlayIcon
         {
             get
             {
-                return _overlayIcon;
-            }
-            private set
-            {
-                _overlayIcon = value;
-                OnPropertyChanged();
+                return getOverlayIcon();
             }
         }
-
-        private string _overlayIconDescription;
 
         public string OverlayIconDescription
         {
             get
             {
-                return _overlayIconDescription;
-            }
-            private set
-            {
-                _overlayIconDescription = value;
-                OnPropertyChanged();
+                return getOverlayIconDescription();
             }
         }
-
-        private NativeMethods.TBPFLAG _progressState;
 
         public NativeMethods.TBPFLAG ProgressState
         {
             get
             {
-                return _progressState;
-            }
-
-            set
-            {
-                _progressState = value;
-
-                if (value == NativeMethods.TBPFLAG.TBPF_NOPROGRESS)
-                {
-                    ProgressValue = 0;
-                }
-
-                OnPropertyChanged();
+                return getProgressState();
             }
         }
-
-        private int _progressValue;
 
         public int ProgressValue
         {
             get
             {
-                return _progressValue;
-            }
-
-            set
-            {
-                _progressValue = value;
-                OnPropertyChanged();
+                return getProgressValue();
             }
         }
 
@@ -138,8 +95,6 @@ namespace CairoDesktop.SupportingClasses
 
         public TaskGroup(ReadOnlyObservableCollection<object> windows)
         {
-            State = ApplicationWindow.WindowState.Inactive;
-
             if (windows == null)
             {
                 return;
@@ -157,7 +112,6 @@ namespace CairoDesktop.SupportingClasses
             }
 
             setInitialValues();
-            setState();
         }
 
         private void setInitialValues()
@@ -182,19 +136,9 @@ namespace CairoDesktop.SupportingClasses
             }
         }
 
-        private void setState()
+        private ApplicationWindow.WindowState getState()
         {
-            bool active = Windows.Any(win =>
-            {
-                if (win is ApplicationWindow window)
-                {
-                    return window.State == ApplicationWindow.WindowState.Active;
-                }
-
-                return false;
-            });
-
-            bool flashing = Windows.Any(win =>
+            if (Windows.Any(win =>
             {
                 if (win is ApplicationWindow window)
                 {
@@ -202,20 +146,119 @@ namespace CairoDesktop.SupportingClasses
                 }
 
                 return false;
+            }))
+            {
+                return ApplicationWindow.WindowState.Flashing;
+            }
+
+            if (Windows.Any(win =>
+            {
+                if (win is ApplicationWindow window)
+                {
+                    return window.State == ApplicationWindow.WindowState.Active;
+                }
+
+                return false;
+            }))
+            {
+                return ApplicationWindow.WindowState.Active;
+            }
+            
+            return ApplicationWindow.WindowState.Inactive;
+        }
+
+        private ImageSource getOverlayIcon()
+        {
+            return getOverlayIconWindow()?.OverlayIcon;
+        }
+
+        private string getOverlayIconDescription()
+        {
+            return getOverlayIconWindow()?.OverlayIconDescription;
+        }
+
+        private ApplicationWindow getOverlayIconWindow()
+        {
+            ApplicationWindow windowWithOverlay = (ApplicationWindow)Windows.FirstOrDefault(win =>
+            {
+                if (win is ApplicationWindow window)
+                {
+                    return window.OverlayIcon != null;
+                }
+
+                return false;
             });
 
-            if (flashing)
+            if (windowWithOverlay != null && windowWithOverlay.OverlayIcon != null)
             {
-                State = ApplicationWindow.WindowState.Flashing;
+                return windowWithOverlay;
             }
-            else if (active)
+
+            return null;
+        }
+
+        private NativeMethods.TBPFLAG getProgressState()
+        {
+            if (Windows.Any(win =>
             {
-                State = ApplicationWindow.WindowState.Active;
-            }
-            else
+                if (win is ApplicationWindow window)
+                {
+                    return window.ProgressState == NativeMethods.TBPFLAG.TBPF_INDETERMINATE;
+                }
+
+                return false;
+            }))
             {
-                State = ApplicationWindow.WindowState.Inactive;
+                return NativeMethods.TBPFLAG.TBPF_INDETERMINATE;
             }
+
+            if (Windows.Any(win =>
+            {
+                if (win is ApplicationWindow window)
+                {
+                    return window.ProgressState == NativeMethods.TBPFLAG.TBPF_NORMAL;
+                }
+
+                return false;
+            }))
+            {
+                return NativeMethods.TBPFLAG.TBPF_NORMAL;
+            }
+
+            return NativeMethods.TBPFLAG.TBPF_NOPROGRESS;
+        }
+
+        private int getProgressValue()
+        {
+            int count = Windows.Count(win =>
+            {
+                if (win is ApplicationWindow window)
+                {
+                    return window.ProgressValue > 0;
+                }
+
+                return false;
+            });
+
+            if (count < 1)
+            {
+                return 0;
+            }
+
+            int total = Windows.Sum(win => {
+                if (win is ApplicationWindow window)
+                {
+                    return window.ProgressValue > 0 ? window.ProgressValue : 0;
+                }
+                return 0;
+            });
+
+            if (total < 1)
+            {
+                return 0;
+            }
+
+            return total / count;
         }
 
         private void ApplicationWindow_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -223,19 +266,19 @@ namespace CairoDesktop.SupportingClasses
             switch (e.PropertyName)
             {
                 case "State":
-                    setState();
+                    OnPropertyChanged("State");
                     break;
                 case "OverlayIcon":
-                    // TODO
+                    OnPropertyChanged("OverlayIcon");
                     break;
                 case "OverlayIconDescription":
-                    // TODO
+                    OnPropertyChanged("OverlayIconDescription");
                     break;
                 case "ProgressState":
-                    // TODO
+                    OnPropertyChanged("ProgressState");
                     break;
                 case "ProgressValue":
-                    // TODO
+                    OnPropertyChanged("ProgressValue");
                     break;
             }
         }
@@ -264,7 +307,7 @@ namespace CairoDesktop.SupportingClasses
                 }
             }
 
-            setState();
+            OnPropertyChanged("State");
         }
 
         public void Dispose()
