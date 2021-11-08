@@ -183,8 +183,14 @@ namespace CairoDesktop
             {
                 // handle progress changes
                 case "ProgressState":
-                    // TODO: this is wrong for groups
-                    pbProgress.IsIndeterminate = getWindow().ProgressState == NativeMethods.TBPFLAG.TBPF_INDETERMINATE;
+                    if (sender is TaskGroup group)
+                    {
+                        pbProgress.IsIndeterminate = group.ProgressState == NativeMethods.TBPFLAG.TBPF_INDETERMINATE;
+                    }
+                    else if (sender is ApplicationWindow window)
+                    {
+                        pbProgress.IsIndeterminate = window.ProgressState == NativeMethods.TBPFLAG.TBPF_INDETERMINATE;
+                    }
                     break;
             }
         }
@@ -388,11 +394,7 @@ namespace CairoDesktop
 
         private void dragTimer_Tick(object sender, EventArgs e)
         {
-            if (inDrag && _isGroup)
-            {
-                openThumb();
-            }
-            else if (inDrag && getWindow() is ApplicationWindow window)
+            if (inDrag && getWindow() is ApplicationWindow window)
             {
                 window.BringToFront();
             }
@@ -450,7 +452,7 @@ namespace CairoDesktop
 
         public Point GetThumbnailAnchor()
         {
-            Window ancestor = System.Windows.Window.GetWindow(this);
+            Window ancestor = Window.GetWindow(this);
             if (ancestor != null)
             {
                 var generalTransform = TransformToAncestor(ancestor);

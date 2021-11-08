@@ -1,10 +1,8 @@
 ﻿using CairoDesktop.Configuration;
-using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 using System;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
