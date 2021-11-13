@@ -9,13 +9,13 @@ using ManagedShell.WindowsTasks;
 
 namespace CairoDesktop.AppGrabber
 {
-    public class TaskCategoryProvider : ITaskCategoryProvider
+    public class AppGrabberTaskCategoryProvider : ITaskCategoryProvider
     {
         private readonly IAppGrabber _appGrabber;
         private readonly ShellManager _shellManager;
         private TaskCategoryChangeDelegate categoryChangeDelegate;
 
-        public TaskCategoryProvider(IAppGrabber appGrabber, ShellManager shellManager)
+        public AppGrabberTaskCategoryProvider(IAppGrabber appGrabber, ShellManager shellManager)
         {
             _appGrabber = appGrabber;
             _shellManager = shellManager;
@@ -56,6 +56,11 @@ namespace CairoDesktop.AppGrabber
 
         public void SetCategoryChangeDelegate(TaskCategoryChangeDelegate changeDelegate)
         {
+            if (changeDelegate == null)
+            {
+                return;
+            }
+
             categoryChangeDelegate = changeDelegate;
             _appGrabber.CategoryList.CategoryChanged += (sender, args) => categoryChangeDelegate();
             _appGrabber.CategoryList.CollectionChanged += CategoryList_CollectionChanged;
@@ -66,7 +71,7 @@ namespace CairoDesktop.AppGrabber
             {
                 window.Category = null;
             }
-            categoryChangeDelegate();
+            categoryChangeDelegate?.Invoke();
         }
 
         private void CategoryList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

@@ -2,11 +2,11 @@
 
 namespace CairoDesktop.SupportingClasses
 {
-    public class TaskCategoryProvider : ITaskCategoryProvider
+    public class ApplicationTaskCategoryProvider : ITaskCategoryProvider
     {
         private TaskCategoryChangeDelegate categoryChangeDelegate;
 
-        public TaskCategoryProvider()
+        public ApplicationTaskCategoryProvider()
         {
         }
 
@@ -26,10 +26,15 @@ namespace CairoDesktop.SupportingClasses
 
         public void SetCategoryChangeDelegate(TaskCategoryChangeDelegate changeDelegate)
         {
+            if (changeDelegate == null)
+            {
+                return;
+            }
+
             categoryChangeDelegate = changeDelegate;
 
             // request new categories in case of preference change
-            categoryChangeDelegate();
+            categoryChangeDelegate?.Invoke();
         }
     }
 }

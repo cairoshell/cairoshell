@@ -17,19 +17,15 @@ namespace CairoDesktop.SupportingClasses
                 {
                     return group.Name;
                 }
-                else
+
+                if (group.Items[0] is ApplicationWindow window)
                 {
-                    if (group.Items[0] is ApplicationWindow window)
+                    if (window.IsUWP)
                     {
-                        if (window.IsUWP)
-                        {
-                            return ManagedShell.UWPInterop.StoreAppHelper.AppList.GetAppByAumid(window.AppUserModelID).DisplayName;
-                        }
-                        else
-                        {
-                            return FileVersionInfo.GetVersionInfo(window.WinFileName).FileDescription;
-                        }
+                        return ManagedShell.UWPInterop.StoreAppHelper.AppList.GetAppByAumid(window.AppUserModelID).DisplayName;
                     }
+
+                    return FileVersionInfo.GetVersionInfo(window.WinFileName).FileDescription;
                 }
             }
 
@@ -38,7 +34,7 @@ namespace CairoDesktop.SupportingClasses
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return Binding.DoNothing;
         }
     }
 }
