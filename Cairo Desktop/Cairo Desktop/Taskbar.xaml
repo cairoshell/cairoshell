@@ -6,6 +6,7 @@
     x:Class="CairoDesktop.Taskbar"
     xmlns:self="clr-namespace:CairoDesktop"
     xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+    xmlns:support="clr-namespace:CairoDesktop.SupportingClasses"
     x:Name="TaskbarWindow"
     Left="0"
     Margin="0,0,0,0"
@@ -16,6 +17,11 @@
     LocationChanged="TaskbarWindow_LocationChanged"
     Background="{DynamicResource ResourceKey=TaskBarWindowBackground}"
     HorizontalAlignment="Center">
+    <Window.Resources>
+        <ResourceDictionary>
+            <support:TaskGroupNameConverter x:Key="groupNameConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
     <Border Name="bdrBackground">
         <Border.Style>
             <Style TargetType="{x:Type Border}">
@@ -309,7 +315,8 @@
                                                                         <Border BorderThickness="0,0,1,0"
                                                                                 BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}"
                                                                                 Width="100" Margin="0,-3">
-                                                                            <TextBlock Text="{Binding Path=Name}"
+                                                                            <TextBlock Text="{Binding Converter={StaticResource groupNameConverter}}"
+                                                                                       Name="CategoryText"
                                                                                        HorizontalAlignment="Right"
                                                                                        VerticalAlignment="Top"
                                                                                        Padding="6,7,6,0"
@@ -389,6 +396,19 @@
                                             <StackPanel Orientation="Horizontal" />
                                         </ItemsPanelTemplate>
                                     </GroupStyle.Panel>
+                                    <GroupStyle.ContainerStyle>
+                                        <Style TargetType="{x:Type GroupItem}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="GroupItem">
+                                                        <ContentControl Style="{StaticResource TaskbarGroup}">
+                                                            <ItemsPresenter />
+                                                        </ContentControl>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </GroupStyle.ContainerStyle>
                                 </GroupStyle>
                             </ListView.GroupStyle>
                             <ListView.ItemContainerStyle>

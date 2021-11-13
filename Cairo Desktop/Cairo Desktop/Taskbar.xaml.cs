@@ -14,6 +14,7 @@ using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
+using ManagedShell.WindowsTasks;
 
 namespace CairoDesktop
 {
@@ -93,7 +94,8 @@ namespace CairoDesktop
             CanAutoHide = true;
 
             // setup taskbar item source
-            _shellManager.Tasks.Initialize(new TaskCategoryProvider(_appGrabber, _shellManager));
+
+            _shellManager.Tasks.Initialize(getTaskCategoryProvider());
 
             TasksList.ItemsSource = _shellManager.Tasks.GroupedWindows;
             TasksList2.ItemsSource = _shellManager.Tasks.GroupedWindows;
@@ -109,6 +111,18 @@ namespace CairoDesktop
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         }
 
+        private ITaskCategoryProvider getTaskCategoryProvider()
+        {
+            if (Settings.Instance.TaskbarGroupingStyle == 1)
+            {
+                return new ApplicationTaskCategoryProvider();
+            }
+            else
+            {
+                return new AppGrabberTaskCategoryProvider(_appGrabber, _shellManager);
+            }
+        }
+
         private void setupTaskbarAppearance()
         {
             double screenWidth = Screen.Bounds.Width / DpiScale;
@@ -120,13 +134,11 @@ namespace CairoDesktop
             if (Settings.Instance.TaskbarPosition == 1)
             {
                 AppBarEdge = AppBarEdge.Top;
-                TaskbarGroupStyle.ContainerStyle = FindResource("CairoTaskbarTopGroupStyle") as Style;
                 TasksList.Margin = new Thickness(0);
             }
             else
             {
                 AppBarEdge = AppBarEdge.Bottom;
-                TaskbarGroupStyle.ContainerStyle = FindResource("CairoTaskbarGroupStyle") as Style;
                 TasksList.Margin = new Thickness(-3, -1, 0, 0);
             }
 
@@ -298,6 +310,9 @@ namespace CairoDesktop
                     break;
                 case "EnableMenuBarBlur":
                     setTaskbarBlur();
+                    break;
+                case "TaskbarGroupingStyle":
+                    _shellManager.Tasks.SetTaskCategoryProvider(getTaskCategoryProvider());
                     break;
             }
         }

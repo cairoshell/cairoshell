@@ -590,6 +590,12 @@ namespace CairoDesktop.Localization
 
         public static string sSettings_Taskbar_MiddleClickCloseWindow => getString();
 
+        public static string sSettings_Taskbar_GroupBy => getString();
+
+        public static string sSettings_Taskbar_GroupByProgramsMenuCategory => getString();
+
+        public static string sSettings_Taskbar_GroupByApplication => getString();
+
         public static string sSettings_Taskbar_ShowBadges => getString();
 
         public static string sSettings_Taskbar_ShowLabels => getString();

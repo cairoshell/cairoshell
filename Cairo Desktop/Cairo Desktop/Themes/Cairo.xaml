@@ -1547,30 +1547,29 @@
         </Setter>
     </Style>
     <!-- Taskbar window groups -->
-    <Style x:Key="CairoTaskbarGroupStyle"
-           TargetType="{x:Type GroupItem}">
+    <Style x:Key="TaskbarGroup"
+           TargetType="{x:Type ContentControl}">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate>
+                <ControlTemplate TargetType="ContentControl">
                     <Border BorderThickness="1,0,0,0"
                             BorderBrush="{DynamicResource ResourceKey=TaskGroupBorder}"
-                            Margin="3,1,1,0">
-                        <ItemsPresenter Margin="0,-1,0,0" />
+                            Margin="3,1,1,0"
+                            x:Name="GroupBorder">
+                        <ContentPresenter Margin="0,-1,0,0"
+                                          x:Name="GroupItems" />
                     </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style x:Key="CairoTaskbarTopGroupStyle"
-           TargetType="{x:Type GroupItem}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate>
-                    <Border BorderThickness="1,0,0,0"
-                            BorderBrush="{DynamicResource ResourceKey=TaskGroupBorder}"
-                            Margin="3,0,1,0">
-                        <ItemsPresenter />
-                    </Border>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                                     Value="Top">
+                            <Setter TargetName="GroupBorder"
+                                    Property="Margin"
+                                    Value="3,0,1,0" />
+                            <Setter TargetName="GroupItems"
+                                    Property="Margin"
+                                    Value="0" />
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

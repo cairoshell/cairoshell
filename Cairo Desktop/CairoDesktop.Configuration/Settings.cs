@@ -408,6 +408,21 @@ namespace CairoDesktop.Configuration
             }
         }
 
+        public int TaskbarGroupingStyle
+        {
+            get
+            {
+                return cairoSettings.TaskbarGroupingStyle;
+            }
+            set
+            {
+                if (cairoSettings.TaskbarGroupingStyle != value)
+                {
+                    cairoSettings.TaskbarGroupingStyle = value;
+                }
+            }
+        }
+
         public bool ShowTaskbarBadges
         {
             get
