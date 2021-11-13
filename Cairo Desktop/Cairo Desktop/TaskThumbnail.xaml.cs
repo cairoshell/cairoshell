@@ -49,6 +49,10 @@ namespace CairoDesktop
             }
             else
             {
+                if (ThumbWindow.TaskButton.ParentTaskbar == null)
+                {
+                    return;
+                }
                 _taskbarHwnd = ThumbWindow.TaskButton.ParentTaskbar.Handle;
 
                 // set up thumbnail
