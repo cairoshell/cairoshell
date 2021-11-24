@@ -9,6 +9,8 @@ using System.Windows.Threading;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
+using System.Collections.ObjectModel;
+using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop
 {
@@ -29,10 +31,13 @@ namespace CairoDesktop
             set { SetValue(ParentTaskbarProperty, value); }
         }
 
-        public ApplicationWindow Window;
+        public ReadOnlyObservableCollection<object> WindowGroup { get; set; }
+
         private DispatcherTimer dragTimer;
         private DispatcherTimer thumbTimer;
         public TaskThumbWindow ThumbWindow;
+
+        private bool _isGroup => WindowGroup != null && WindowGroup.Count > 1;
 
         public TaskButton()
         {
@@ -42,52 +47,44 @@ namespace CairoDesktop
             Settings.Instance.PropertyChanged += Instance_PropertyChanged;
         }
 
+        private ApplicationWindow getWindow()
+        {
+            if (WindowGroup == null || WindowGroup.Count < 1)
+            {
+                return null;
+            }
+
+            return WindowGroup[0] as ApplicationWindow;
+        }
+
         public void SelectWindow()
         {
-            if (Window != null)
+            if (_isGroup)
+            {
+                openThumb();
+                return;
+            }
+
+            if (getWindow() is ApplicationWindow window)
             {
                 if (Keyboard.IsKeyDown(Key.LeftShift) ||
                     Keyboard.IsKeyDown(Key.RightShift))
                 {
-                    ShellHelper.StartProcess(Window.WinFileName);
+                    ShellHelper.StartProcess(window.IsUWP ? "appx:" + window.AppUserModelID : window.WinFileName);
                     return;
                 }
 
-                if (Window.State == ApplicationWindow.WindowState.Active)
+                if (window.State == ApplicationWindow.WindowState.Active)
                 {
-                    Window.Minimize();
+                    window.Minimize();
                 }
                 else
                 {
-                    Window.BringToFront();
+                    window.BringToFront();
                 }
             }
 
             closeThumb(true);
-        }
-
-        public void ConfigureContextMenu()
-        {
-            if (Window != null)
-            {
-                Visibility vis = Visibility.Collapsed;
-                NativeMethods.WindowShowStyle wss = Window.ShowStyle;
-                int ws = Window.WindowStyles;
-
-                // show pin option if this app is not yet in quick launch
-                if (ParentTaskbar._appGrabber.QuickLaunchManager.GetQuickLaunchApplicationInfo(Window) == null)
-                    vis = Visibility.Visible;
-
-                miPin.Visibility = vis;
-                miPinSeparator.Visibility = vis;
-
-                // disable window operations depending on current window state. originally tried implementing via bindings but found there is no notification we get regarding maximized state
-                miMaximize.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowMaximized && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0);
-                miMinimize.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowMinimized && (ws & (int)NativeMethods.WindowStyles.WS_MINIMIZEBOX) != 0);
-                miRestore.IsEnabled = (wss != NativeMethods.WindowShowStyle.ShowNormal);
-                miMove.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal;
-                miSize.IsEnabled = (wss == NativeMethods.WindowShowStyle.ShowNormal && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0);
-            }
         }
 
         public void SetParentAutoHide(bool enabled)
@@ -95,12 +92,30 @@ namespace CairoDesktop
             if (!ListMode && ParentTaskbar != null) ParentTaskbar.CanAutoHide = enabled;
         }
 
+        private void closeWindows()
+        {
+            if (WindowGroup != null)
+            {
+                foreach (ApplicationWindow window in WindowGroup)
+                {
+                    window.Close();
+                }
+            }
+        }
+
         #region Events
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Window = DataContext as ApplicationWindow;
-
-            Window.PropertyChanged += Window_PropertyChanged;
+            if (DataContext is TaskGroup group)
+            {
+                WindowGroup = group.Windows;
+                group.PropertyChanged += Data_PropertyChanged;
+            }
+            else if (DataContext is ApplicationWindow window)
+            {
+                WindowGroup = new ReadOnlyObservableCollection<object>(new ObservableCollection<object>() { window });
+                window.PropertyChanged += Data_PropertyChanged;
+            }
 
             if (!ListMode)
             {
@@ -129,7 +144,15 @@ namespace CairoDesktop
 
         private void TaskButton_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            Window.PropertyChanged -= Window_PropertyChanged;
+            if (DataContext is TaskGroup group)
+            {
+                group.PropertyChanged -= Data_PropertyChanged;
+            }
+            else if (DataContext is ApplicationWindow window)
+            {
+                window.PropertyChanged -= Data_PropertyChanged;
+            }
+
             Settings.Instance.PropertyChanged -= Instance_PropertyChanged;
         }
 
@@ -154,13 +177,20 @@ namespace CairoDesktop
             }
         }
 
-        private void Window_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Data_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
                 // handle progress changes
                 case "ProgressState":
-                    pbProgress.IsIndeterminate = Window.ProgressState == NativeMethods.TBPFLAG.TBPF_INDETERMINATE;
+                    if (sender is TaskGroup group)
+                    {
+                        pbProgress.IsIndeterminate = group.ProgressState == NativeMethods.TBPFLAG.TBPF_INDETERMINATE;
+                    }
+                    else if (sender is ApplicationWindow window)
+                    {
+                        pbProgress.IsIndeterminate = window.ProgressState == NativeMethods.TBPFLAG.TBPF_INDETERMINATE;
+                    }
                     break;
             }
         }
@@ -212,116 +242,25 @@ namespace CairoDesktop
             SelectWindow();
         }
 
-        private void miRestore_Click(object sender, RoutedEventArgs e)
-        {
-            if (Window != null)
-            {
-                Window.Restore();
-            }
-        }
-
-        private void miMove_Click(object sender, RoutedEventArgs e)
-        {
-            if (Window != null)
-            {
-                Window.Move();
-            }
-        }
-
-        private void miSize_Click(object sender, RoutedEventArgs e)
-        {
-            if (Window != null)
-            {
-                Window.Size();
-            }
-        }
-
-        private void miMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            if (Window != null)
-            {
-                Window.Minimize();
-            }
-        }
-
-        private void miMaximize_Click(object sender, RoutedEventArgs e)
-        {
-            if (Window != null)
-            {
-                Window.Maximize();
-            }
-        }
-
-        private void miNewWindow_Click(object sender, RoutedEventArgs e)
-        {
-            if (Window != null)
-            {
-                ShellHelper.StartProcess(Window.WinFileName);
-            }
-        }
-
-        private void miClose_Click(object sender, RoutedEventArgs e)
-        {
-            if (Window != null)
-            {
-                Window.Close();
-            }
-        }
-
-        /// <summary>
-        /// Handler that adjusts the visibility and usability of menu items depending on window state and app's inclusion in Quick Launch.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ContextMenu_Opening(object sender, ContextMenuEventArgs e)
-        {
-            ConfigureContextMenu();
-        }
-
-        private void ContextMenu_Closed(object sender, RoutedEventArgs e)
-        {
-            if (!IsMouseOver) closeThumb(true);
-            SetParentAutoHide(true);
-        }
-
-        private void miPin_Click(object sender, RoutedEventArgs e)
-        {
-            if (Window != null)
-            {
-                ParentTaskbar._appGrabber.QuickLaunchManager.PinToQuickLaunch(Window.IsUWP, Window.IsUWP ? Window.AppUserModelID : Window.WinFileName);
-            }
-        }
-
-        private void miTaskMan_Click(object sender, RoutedEventArgs e)
-        {
-            ShellHelper.StartTaskManager();
-        }
-
         private void btn_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton != MouseButton.Middle || Window == null)
+            if (e.ChangedButton == MouseButton.Middle)
             {
-                return;
-            }
-
-            switch (Settings.Instance.TaskbarMiddleClick)
-            {
-                case 0 when Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift):
-                    Window.Close();
-                    break;
-                case 1 when !Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift):
-                    Window.Close();
-                    break;
-                default:
-                    if (Window.IsUWP)
-                    {
-                        ShellHelper.StartProcess("appx:" + Window.AppUserModelID);
-                    }
-                    else
-                    {
-                        ShellHelper.StartProcess(Window.WinFileName);
-                    }
-                    break;
+                switch (Settings.Instance.TaskbarMiddleClick)
+                {
+                    case 0 when Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift):
+                        closeWindows();
+                        break;
+                    case 1 when !Keyboard.IsKeyDown(Key.LeftShift) && !Keyboard.IsKeyDown(Key.RightShift):
+                        closeWindows();
+                        break;
+                    default:
+                        if (getWindow() is ApplicationWindow window)
+                        {
+                            ShellHelper.StartProcess(window.IsUWP ? "appx:" + window.AppUserModelID : window.WinFileName);
+                        }
+                        break;
+                }
             }
         }
 
@@ -341,14 +280,123 @@ namespace CairoDesktop
         }
         #endregion
 
+        #region Context menu
+
+        private void ContextMenu_Opening(object sender, RoutedEventArgs e)
+        {
+            ApplicationWindow window = getWindow();
+
+            if (window == null)
+            {
+                return;
+            }
+
+            Visibility pinVisibility = Visibility.Collapsed;
+            Visibility singleWindowVisibility = Visibility.Collapsed;
+            NativeMethods.WindowShowStyle wss = window.ShowStyle;
+            int ws = window.WindowStyles;
+
+            // show pin option if this app is not yet in quick launch
+            if (ParentTaskbar._appGrabber.QuickLaunchManager.GetQuickLaunchApplicationInfo(window) == null)
+            {
+                pinVisibility = Visibility.Visible;
+            }
+
+            miPin.Visibility = pinVisibility;
+            miPinSeparator.Visibility = pinVisibility;
+
+            if (!_isGroup)
+            {
+                // disable window operations depending on current window state. originally tried implementing via bindings but found there is no notification we get regarding maximized state
+                miMaximize.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowMaximized && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0;
+                miMinimize.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowMinimized && (ws & (int)NativeMethods.WindowStyles.WS_MINIMIZEBOX) != 0;
+                miRestore.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowNormal;
+                miMove.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal;
+                miSize.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0;
+            }
+            else
+            {
+                // hide single window controls if group button
+                miMaximize.Visibility = singleWindowVisibility;
+                miMinimize.Visibility = singleWindowVisibility;
+                miRestore.Visibility = singleWindowVisibility;
+                miMove.Visibility = singleWindowVisibility;
+                miSize.Visibility = singleWindowVisibility;
+                miSingleWindowSeparator.Visibility = singleWindowVisibility;
+            }
+        }
+
+        private void ContextMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            if (!IsMouseOver) closeThumb(true);
+            SetParentAutoHide(true);
+        }
+
+        private void miRestore_Click(object sender, RoutedEventArgs e)
+        {
+            getWindow()?.Restore();
+        }
+
+        private void miMove_Click(object sender, RoutedEventArgs e)
+        {
+            getWindow()?.Move();
+        }
+
+        private void miSize_Click(object sender, RoutedEventArgs e)
+        {
+            getWindow()?.Size();
+        }
+
+        private void miMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            getWindow()?.Minimize();
+        }
+
+        private void miMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            getWindow()?.Maximize();
+        }
+
+        private void miNewWindow_Click(object sender, RoutedEventArgs e)
+        {
+            ApplicationWindow toOpen = getWindow();
+
+            if (toOpen != null)
+            {
+                ShellHelper.StartProcess(toOpen.IsUWP ? "appx:" + toOpen.AppUserModelID : toOpen.WinFileName);
+            }
+        }
+
+        private void miClose_Click(object sender, RoutedEventArgs e)
+        {
+            closeWindows();
+        }
+
+        private void miPin_Click(object sender, RoutedEventArgs e)
+        {
+            ApplicationWindow toPin = getWindow();
+
+            if (toPin != null)
+            {
+                ParentTaskbar._appGrabber.QuickLaunchManager.PinToQuickLaunch(toPin.IsUWP, toPin.IsUWP ? toPin.AppUserModelID : toPin.WinFileName);
+            }
+        }
+
+        private void miTaskMan_Click(object sender, RoutedEventArgs e)
+        {
+            ShellHelper.StartTaskManager();
+        }
+
+        #endregion
+
         #region Drag support
         private bool inDrag = false;
 
         private void dragTimer_Tick(object sender, EventArgs e)
         {
-            if (inDrag && Window != null)
+            if (inDrag && getWindow() is ApplicationWindow window)
             {
-                Window.BringToFront();
+                window.BringToFront();
             }
 
             dragTimer.Stop();
@@ -384,7 +432,7 @@ namespace CairoDesktop
 
         private void openThumb()
         {
-            if (!ListMode && ThumbWindow == null && Settings.Instance.EnableTaskbarThumbnails)
+            if (!ListMode && ThumbWindow == null && (Settings.Instance.EnableTaskbarThumbnails || _isGroup))
             {
                 ThumbWindow = new TaskThumbWindow(this);
                 ThumbWindow.Owner = ParentTaskbar;
@@ -395,7 +443,7 @@ namespace CairoDesktop
         private void closeThumb(bool force = false)
         {
             thumbTimer.Stop();
-            if (!ListMode && ThumbWindow != null && !btn.ContextMenu.IsOpen && (!ThumbWindow.IsMouseOver || force))
+            if (!ListMode && ThumbWindow != null && (!ThumbWindow.IsMouseOver || force))
             {
                 ThumbWindow.Close();
                 ThumbWindow = null;
@@ -404,7 +452,7 @@ namespace CairoDesktop
 
         public Point GetThumbnailAnchor()
         {
-            Window ancestor = System.Windows.Window.GetWindow(this);
+            Window ancestor = Window.GetWindow(this);
             if (ancestor != null)
             {
                 var generalTransform = TransformToAncestor(ancestor);

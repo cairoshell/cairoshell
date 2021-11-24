@@ -69,7 +69,7 @@
                                    Text="&#x31;" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <Separator />
+                <Separator Name="miSingleWindowSeparator" />
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_NewWindow)}" 
                           Click="miNewWindow_Click" />
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Close)}" 
@@ -91,7 +91,7 @@
                          Grid.ColumnSpan="2"
                          Minimum="0" 
                          Maximum="65534" 
-                         Value="{Binding Path=ProgressValue}" 
+                         Value="{Binding Path=ProgressValue, Mode=OneWay}" 
                          Style="{StaticResource TaskbarProgressBar}" />
             <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                    Name="imgIcon"
@@ -99,19 +99,17 @@
                    Height="16"
                    Style="{StaticResource TaskbarButtonIcon}"
                    Grid.Column="0" />
-            <StackPanel Grid.Column="0" 
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        Margin="0,0,-2,-2"
+            <StackPanel Grid.Column="0"
+                        Style="{StaticResource TaskbarButtonOverlayPanel}"
                         Name="overlayIcon"
                         Visibility="Collapsed">
                 <Image Source="{Binding Path=OverlayIcon, Mode=OneWay}"
                        Width="16"
                        Height="16"
-                       ToolTip="{Binding Path=OverlayIconDescription}"/>
+                       ToolTip="{Binding Path=OverlayIconDescription, Mode=OneWay}"/>
             </StackPanel>
             <TextBlock Name="WinTitle" 
-                       Text="{Binding Path=Title}"
+                       Text="{Binding Path=Title, Mode=OneWay}"
                        Style="{StaticResource TaskbarButtonTitle}"
                        Grid.Column="1" />
         </Grid>

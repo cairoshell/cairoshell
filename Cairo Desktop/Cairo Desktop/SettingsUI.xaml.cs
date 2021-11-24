@@ -190,10 +190,17 @@ namespace CairoDesktop
                 case 0:
                     radTaskbarGrouping0.IsChecked = true;
                     radTaskbarGrouping1.IsChecked = false;
+                    radTaskbarGrouping2.IsChecked = false;
                     break;
                 case 1:
                     radTaskbarGrouping0.IsChecked = false;
                     radTaskbarGrouping1.IsChecked = true;
+                    radTaskbarGrouping2.IsChecked = false;
+                    break;
+                case 2:
+                    radTaskbarGrouping0.IsChecked = false;
+                    radTaskbarGrouping1.IsChecked = false;
+                    radTaskbarGrouping2.IsChecked = true;
                     break;
                 default:
                     break;
@@ -677,6 +684,11 @@ namespace CairoDesktop
         private void radTaskbarGrouping1_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarGroupingStyle = 1;
+        }
+
+        private void radTaskbarGrouping2_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.TaskbarGroupingStyle = 2;
         }
 
         private void radDesktopLabelPos0_Click(object sender, RoutedEventArgs e)

@@ -596,6 +596,8 @@ namespace CairoDesktop.Localization
 
         public static string sSettings_Taskbar_GroupByApplication => getString();
 
+        public static string sSettings_Taskbar_GroupByApplicationCombined => getString();
+
         public static string sSettings_Taskbar_ShowBadges => getString();
 
         public static string sSettings_Taskbar_ShowLabels => getString();

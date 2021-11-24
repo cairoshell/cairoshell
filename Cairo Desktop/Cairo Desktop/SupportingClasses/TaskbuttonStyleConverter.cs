@@ -17,7 +17,7 @@ namespace CairoDesktop.SupportingClasses
 
             // Default style is Inactive...
             var fxStyle = fxElement.FindResource("CairoTaskbarButtonInactiveStyle");
-            if (values[1] == null)
+            if (values[1] == DependencyProperty.UnsetValue || values[1] == null)
             {
                 // Default - couldn't get window state.
                 return fxStyle;

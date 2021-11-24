@@ -1,6 +1,5 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Interfaces;
-using CairoDesktop.Services;
 using ManagedShell;
 using ManagedShell.AppBar;
 
