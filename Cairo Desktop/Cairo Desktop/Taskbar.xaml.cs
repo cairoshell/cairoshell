@@ -115,11 +115,11 @@ namespace CairoDesktop
         {
             if (Settings.Instance.TaskbarGroupingStyle == 0)
             {
-                return new ApplicationTaskCategoryProvider();
+                return new AppGrabberTaskCategoryProvider(_appGrabber, _shellManager);
             }
             else
             {
-                return new AppGrabberTaskCategoryProvider(_appGrabber, _shellManager);
+                return new ApplicationTaskCategoryProvider();
             }
         }
 
