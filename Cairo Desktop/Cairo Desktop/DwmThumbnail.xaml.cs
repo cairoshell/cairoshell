@@ -29,7 +29,13 @@ namespace CairoDesktop
         {
             get
             {
-                HwndSource source = (HwndSource)HwndSource.FromVisual(this);
+                HwndSource source = (HwndSource)PresentationSource.FromVisual(this);
+
+                if (source == null)
+                {
+                    return IntPtr.Zero;
+                }
+
                 IntPtr handle = source.Handle;
                 return handle;
             }
@@ -53,7 +59,7 @@ namespace CairoDesktop
                 }
 
                 _sourceWindowHandle = value;
-                if (_sourceWindowHandle != IntPtr.Zero && NativeMethods.DwmRegisterThumbnail(Handle, _sourceWindowHandle, out _thumbHandle) == 0)
+                if (_sourceWindowHandle != IntPtr.Zero && Handle != IntPtr.Zero && NativeMethods.DwmRegisterThumbnail(Handle, _sourceWindowHandle, out _thumbHandle) == 0)
                     Refresh();
             }
         }

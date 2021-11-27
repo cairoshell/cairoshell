@@ -313,6 +313,7 @@ namespace CairoDesktop
                     break;
                 case "TaskbarGroupingStyle":
                     _shellManager.Tasks.SetTaskCategoryProvider(getTaskCategoryProvider());
+                    setTaskButtonSize();
                     break;
             }
         }
@@ -336,7 +337,7 @@ namespace CairoDesktop
             if (TasksList.Items.Groups != null)
             {
                 // calculate the maximum per-button size
-                double adjustedSize = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - (btnDesktopOverlay.ActualWidth - 5) - btnTaskList.ActualWidth - (TasksList.Items.Groups.Count * 4 - 3) - 11) / TasksList.Items.Count);
+                double adjustedSize = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - (btnDesktopOverlay.ActualWidth - 5) - btnTaskList.ActualWidth - (TasksList.Items.Groups.Count * 4 - 3) - 11) / (Settings.Instance.TaskbarGroupingStyle == 2 ? TasksList.Items.Groups.Count : TasksList.Items.Count));
 
                 if (adjustedSize > baseButtonWidth)
                 {

@@ -54,8 +54,7 @@
             MouseUp="bdrThumbInner_MouseUp">
         <StackPanel>
             <StackPanel Name="pnlTitle"
-                        Orientation="Horizontal"
-                        Margin="0,0,0,5">
+                        Orientation="Horizontal">
                 <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
                         Width="16"
                         Height="16" />
@@ -74,7 +73,8 @@
             </StackPanel>
             <local:DwmThumbnail x:Name="dwmThumbnail"
                                 Width="180"
-                                Height="120" />
+                                Height="120"
+                                Margin="0,5,0,0" />
         </StackPanel>
     </Border>
 </UserControl>

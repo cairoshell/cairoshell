@@ -13,6 +13,7 @@
         ResizeMode="NoResize"
         Background="Transparent"
         SourceInitialized="Window_SourceInitialized"
+        SizeChanged="ThumbWindow_SizeChanged"
         Closing="Window_Closing"
         MouseLeave="Window_MouseLeave"
         Topmost="True"
@@ -56,7 +57,7 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="{Binding Converter={StaticResource orientationConverter}}"></StackPanel>
+                        <StackPanel Orientation="{Binding ElementName=ThumbWindow, Path=ShowThumbnails, Converter={StaticResource orientationConverter}}"></StackPanel>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>

@@ -34,37 +34,68 @@ namespace CairoDesktop
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_isLoaded)
+            if (_isLoaded || ThumbWindow == null || ThumbWindow.TaskButton == null || ThumbWindow.TaskButton.ParentTaskbar == null)
             {
                 return;
             }
 
             _window = DataContext as ApplicationWindow;
+            _taskbarHwnd = ThumbWindow.TaskButton.ParentTaskbar.Handle;
 
-            // if DWM or thumbnails disabled, hide the thumbnail placeholder
-            if (!ThumbWindow.IsDwmEnabled || !Settings.Instance.EnableTaskbarThumbnails)
+            SetupThumbnail();
+
+            ThumbWindow.PropertyChanged += ThumbWindow_PropertyChanged;
+
+            _isLoaded = true;
+        }
+
+        private void SetupThumbnail()
+        {
+            if (!ThumbWindow.ShowThumbnails)
             {
-                dwmThumbnail.Visibility = Visibility.Collapsed;
-                pnlTitle.Margin = new Thickness(0);
+                DisableThumbnail();
             }
             else
             {
-                if (ThumbWindow.TaskButton.ParentTaskbar == null)
-                {
-                    return;
-                }
-                _taskbarHwnd = ThumbWindow.TaskButton.ParentTaskbar.Handle;
+                EnableThumbnail();
+            }
+        }
 
-                // set up thumbnail
-                dwmThumbnail.DpiScale = ThumbWindow.TaskButton.ParentTaskbar.DpiScale;
-                dwmThumbnail.ThumbnailOpacity = 0;
-                dwmThumbnail.SourceWindowHandle = _window.Handle;
+        private void EnableThumbnail()
+        {
+            // show thumbnail placeholder
+            dwmThumbnail.Visibility = Visibility.Visible;
 
-                // set up animation
-                CompositionTarget.Rendering += CompositionTarget_Rendering;
+            if (ThumbWindow == null || ThumbWindow.TaskButton == null || ThumbWindow.TaskButton.ParentTaskbar == null)
+            {
+                return;
             }
 
-            _isLoaded = true;
+            // set up thumbnail
+            dwmThumbnail.DpiScale = ThumbWindow.TaskButton.ParentTaskbar.DpiScale;
+            dwmThumbnail.SourceWindowHandle = _window.Handle;
+
+            if (ThumbWindow.IsAnimating)
+            {
+                // set up animation
+                dwmThumbnail.ThumbnailOpacity = 0;
+                CompositionTarget.Rendering += CompositionTarget_Rendering;
+            }
+            else
+            {
+                dwmThumbnail.ThumbnailOpacity = 255;
+            }
+        }
+
+        private void DisableThumbnail()
+        {
+            // hide the thumbnail placeholder if thumbnails are not being used
+            dwmThumbnail.Visibility = Visibility.Collapsed;
+        }
+
+        private void ThumbWindow_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            SetupThumbnail();
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
@@ -74,10 +105,16 @@ namespace CairoDesktop
                 return;
             }
 
-            if (ThumbWindow.IsDwmEnabled)
+            if (ThumbWindow != null)
             {
-                dwmThumbnail.SourceWindowHandle = IntPtr.Zero;
+                if (ThumbWindow.IsDwmEnabled)
+                {
+                    dwmThumbnail.SourceWindowHandle = IntPtr.Zero;
+                }
+
+                ThumbWindow.PropertyChanged -= ThumbWindow_PropertyChanged;
             }
+
             _isLoaded = false;
         }
 

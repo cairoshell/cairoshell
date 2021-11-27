@@ -1,5 +1,4 @@
-﻿using CairoDesktop.Configuration;
-using System;
+﻿using System;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -10,14 +9,12 @@ namespace CairoDesktop.SupportingClasses
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (Settings.Instance.EnableTaskbarThumbnails)
+            if (value is bool showThumbnails)
             {
-                return Orientation.Horizontal;
+                return showThumbnails ? Orientation.Horizontal : Orientation.Vertical;
             }
-            else
-            {
-                return Orientation.Vertical;
-            }
+
+            return Orientation.Horizontal;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

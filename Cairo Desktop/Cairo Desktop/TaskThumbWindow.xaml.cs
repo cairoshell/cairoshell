@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
@@ -11,8 +15,28 @@ namespace CairoDesktop
     /// <summary>
     /// Interaction logic for TaskThumbWindow.xaml
     /// </summary>
-    public partial class TaskThumbWindow : Window
+    public partial class TaskThumbWindow : Window, INotifyPropertyChanged
     {
+        const int MAX_THUMBS = 5;
+
+        public bool ShowThumbnails
+        {
+            get
+            {
+                if (!IsDwmEnabled || !Settings.Instance.EnableTaskbarThumbnails)
+                {
+                    return false;
+                }
+
+                if (TaskButton != null && TaskButton.WindowGroup != null && TaskButton.WindowGroup.Count > MAX_THUMBS)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
         internal TaskButton TaskButton;
         internal bool IsAnimating = true;
         internal bool IsDwmEnabled;
@@ -40,14 +64,9 @@ namespace CairoDesktop
             handle = helper.Handle;
             WindowHelper.HideWindowFromTasks(handle);
 
-            // get anchor point
-            Point taskButtonPoint = TaskButton.GetThumbnailAnchor();
-
-            if (Configuration.Settings.Instance.TaskbarPosition == 1)
+            if (Settings.Instance.TaskbarPosition == 1)
             {
                 // taskbar on top
-                Top = taskButtonPoint.Y + TaskButton.ActualHeight;
-
                 bdrThumb.Style = FindResource("TaskThumbWindowBorderTopStyle") as Style;
                 bdrThumbInner.Style = FindResource("TaskThumbWindowInnerBorderTopStyle") as Style;
 
@@ -55,19 +74,66 @@ namespace CairoDesktop
 
                 ToolTipService.SetPlacement(this, System.Windows.Controls.Primitives.PlacementMode.Bottom);
             }
+
+            SetPosition();
+
+            if (TaskButton != null && TaskButton.WindowGroup != null)
+            {
+                ((INotifyCollectionChanged)TaskButton.WindowGroup).CollectionChanged += TaskThumbWindow_CollectionChanged;
+            }
+        }
+
+        private void TaskThumbWindow_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("ShowThumbnails");
+        }
+
+        private void SetPosition()
+        {
+            if (TaskButton == null || TaskButton.ParentTaskbar == null)
+            {
+                return;
+            }
+
+            Point taskButtonPoint = TaskButton.GetThumbnailAnchor();
+
+            if (Settings.Instance.TaskbarPosition == 1)
+            {
+                // taskbar on top
+                Top = taskButtonPoint.Y + TaskButton.ActualHeight;
+            }
             else
             {
                 Top = taskButtonPoint.Y - ActualHeight;
             }
 
-            Left = taskButtonPoint.X - ((ActualWidth - TaskButton.ActualWidth) / 2);
+            double desiredLeft = taskButtonPoint.X - ((ActualWidth - TaskButton.ActualWidth) / 2);
+
+            if (desiredLeft < 0)
+            {
+                Left = 0;
+            }
+            else if (desiredLeft + ActualWidth > TaskButton.ParentTaskbar.ActualWidth)
+            {
+                double bump = desiredLeft + ActualWidth - TaskButton.ParentTaskbar.ActualWidth;
+                Left = desiredLeft - bump;
+            }
+            else
+            {
+                Left = desiredLeft;
+            }
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             isClosing = true;
             TaskButton.ThumbWindow = null;
             TaskButton.SetParentAutoHide(true);
+
+            if (TaskButton != null && TaskButton.WindowGroup != null)
+            {
+                ((INotifyCollectionChanged)TaskButton.WindowGroup).CollectionChanged -= TaskThumbWindow_CollectionChanged;
+            }
         }
 
         private void Window_MouseLeave(object sender, MouseEventArgs e)
@@ -79,6 +145,19 @@ namespace CairoDesktop
         private void Storyboard_Completed(object sender, EventArgs e)
         {
             IsAnimating = false;
+        }
+
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        #endregion
+
+        private void ThumbWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SetPosition();
         }
     }
 }
