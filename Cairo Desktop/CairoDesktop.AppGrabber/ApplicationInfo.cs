@@ -38,6 +38,7 @@ namespace CairoDesktop.AppGrabber
             AllowRunAsAdmin = allowRunAsAdmin;
         }
 
+        #region Properties
         private bool _iconLoading;
 
         private string name;
@@ -215,63 +216,6 @@ namespace CairoDesktop.AppGrabber
                 OnPropertyChanged();
             }
         }
-
-        #region IEquatable
-        /// <summary>
-        /// Determines if this ApplicationInfo object refers to the same application as another ApplicationInfo object.
-        /// </summary>
-        /// <param name="other">ApplicationInfo object to compare to.</param>
-        /// <returns>True if the Name and Path values are equal, False if not.</returns>
-        public bool Equals(ApplicationInfo other)
-        {
-            //if (this.Name != other.Name) return false; -- because apps can be renamed, this is no longer valid
-            if (Path == other.Path)
-            {
-                return true;
-            }
-            if (System.IO.Path.GetExtension(Path).Equals(".lnk", StringComparison.OrdinalIgnoreCase))
-            {
-                if (Target == other.Target && Name == other.Name)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Determines if this ApplicationInfo object refers to the same application as another ApplicationInfo object.
-        /// </summary>
-        /// <param name="obj">Object to compare to.</param>
-        /// <returns>True if the Name and Path values are equal, False if not.</returns>
-        public override bool Equals(object obj)
-        {
-            if (!(obj is ApplicationInfo))
-                return false;
-            return Equals((ApplicationInfo)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            int hashCode = 0;
-            if (Name != null)
-                hashCode ^= Name.GetHashCode();
-            if (Path != null)
-                hashCode ^= Path.GetHashCode();
-            return hashCode;
-        }
-        #endregion
-
-        #region IComparable
-        /// <summary>
-        /// Is this object greater than, less than, or equal to another ApplicationInfo? (For sorting purposes only)
-        /// </summary>
-        /// <param name="other">Object to compare to.</param>
-        /// <returns>0 if same, negative if less, positive if more.</returns>
-        public int CompareTo(ApplicationInfo other)
-        {
-            return Name.CompareTo(other.Name);
-        }
         #endregion
 
         public override string ToString()
@@ -345,6 +289,64 @@ namespace CairoDesktop.AppGrabber
             ApplicationInfo rval = new ApplicationInfo(Name, Path, Target, Icon, IconColor, AllowRunAsAdmin);
             return rval;
         }
+
+        #region IEquatable
+        /// <summary>
+        /// Determines if this ApplicationInfo object refers to the same application as another ApplicationInfo object.
+        /// </summary>
+        /// <param name="other">ApplicationInfo object to compare to.</param>
+        /// <returns>True if the Name and Path values are equal, False if not.</returns>
+        public bool Equals(ApplicationInfo other)
+        {
+            //if (this.Name != other.Name) return false; -- because apps can be renamed, this is no longer valid
+            if (Path == other.Path)
+            {
+                return true;
+            }
+            if (System.IO.Path.GetExtension(Path).Equals(".lnk", StringComparison.OrdinalIgnoreCase))
+            {
+                if (Target == other.Target && Name == other.Name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if this ApplicationInfo object refers to the same application as another ApplicationInfo object.
+        /// </summary>
+        /// <param name="obj">Object to compare to.</param>
+        /// <returns>True if the Name and Path values are equal, False if not.</returns>
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ApplicationInfo))
+                return false;
+            return Equals((ApplicationInfo)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            if (Name != null)
+                hashCode ^= Name.GetHashCode();
+            if (Path != null)
+                hashCode ^= Path.GetHashCode();
+            return hashCode;
+        }
+        #endregion
+
+        #region IComparable
+        /// <summary>
+        /// Is this object greater than, less than, or equal to another ApplicationInfo? (For sorting purposes only)
+        /// </summary>
+        /// <param name="other">Object to compare to.</param>
+        /// <returns>0 if same, negative if less, positive if more.</returns>
+        public int CompareTo(ApplicationInfo other)
+        {
+            return Name.CompareTo(other.Name);
+        }
+        #endregion
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

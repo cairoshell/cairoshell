@@ -116,7 +116,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            MenuBar._appGrabber.AddToQuickLaunch(app);
+            MenuBar._appGrabber.QuickLaunchManager.AddToQuickLaunch(app);
         }
 
         private void programsMenu_Rename(object sender, RoutedEventArgs e)

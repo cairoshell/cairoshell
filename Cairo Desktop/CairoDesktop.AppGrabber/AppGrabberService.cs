@@ -542,21 +542,6 @@ namespace CairoDesktop.AppGrabber
             }
         }
 
-        public void AddToQuickLaunch(ApplicationInfo app)
-        {
-            if (QuickLaunch.Contains(app))
-            {
-                return;
-            }
-
-            ApplicationInfo appClone = app.Clone();
-            appClone.Icon = null;
-
-            QuickLaunch.Add(appClone);
-
-            Save();
-        }
-
         public void Dispose()
         {
             // no work to do here
@@ -573,7 +558,6 @@ namespace CairoDesktop.AppGrabber
         void AddByPath(string[] fileNames, AppCategoryType categoryType);
         void AddByPath(string fileName, AppCategoryType categoryType);
         void AddStoreApp(string appUserModelId, AppCategoryType categoryType);
-        void AddToQuickLaunch(ApplicationInfo app);
         void InsertByPath(string[] fileNames, int index, AppCategoryType categoryType);
         void LaunchProgram(ApplicationInfo app);
         void LaunchProgramAdmin(ApplicationInfo app);
