@@ -28,13 +28,14 @@ namespace CairoDesktop.AppGrabber
         /// <param name="path">Path to the shortcut.</param>
         /// <param name="target">Path to the executable.</param>
         /// <param name="icon">ImageSource used to denote the application's icon in a graphical environment.</param>
-        public ApplicationInfo(string name, string path, string target, ImageSource icon, string iconColor)
+        public ApplicationInfo(string name, string path, string target, ImageSource icon, string iconColor, bool allowRunAsAdmin)
         {
             Name = name;
             Path = path;
             Target = target;
             Icon = icon;
             IconColor = iconColor;
+            AllowRunAsAdmin = allowRunAsAdmin;
         }
 
         private bool _iconLoading;
@@ -117,6 +118,20 @@ namespace CairoDesktop.AppGrabber
             set
             {
                 iconColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool allowRunAsAdmin;
+        /// <summary>
+        /// If the application allows the user to run it as an administrator.
+        /// </summary>
+        public bool AllowRunAsAdmin
+        {
+            get { return allowRunAsAdmin; }
+            set
+            {
+                allowRunAsAdmin = value;
                 OnPropertyChanged();
             }
         }
@@ -316,6 +331,7 @@ namespace CairoDesktop.AppGrabber
             ai.Path = "appx:" + storeApp.AppUserModelId;
             ai.Target = storeApp.AppUserModelId;
             ai.IconColor = storeApp.IconColor;
+            ai.AllowRunAsAdmin = storeApp.EntryPoint == "Windows.FullTrustApplication";
 
             return ai;
         }
@@ -326,7 +342,7 @@ namespace CairoDesktop.AppGrabber
         /// <returns>A new ApplicationInfo object with the same data as this object, not bound to a Category.</returns>
         internal ApplicationInfo Clone()
         {
-            ApplicationInfo rval = new ApplicationInfo(Name, Path, Target, Icon, IconColor);
+            ApplicationInfo rval = new ApplicationInfo(Name, Path, Target, Icon, IconColor, AllowRunAsAdmin);
             return rval;
         }
 

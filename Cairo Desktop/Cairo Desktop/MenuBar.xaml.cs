@@ -18,7 +18,7 @@ using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
-using ManagedShell.ShellFolders.Enums;
+using ManagedShell.Common.Enums;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop

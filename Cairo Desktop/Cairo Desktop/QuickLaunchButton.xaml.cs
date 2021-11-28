@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CairoDesktop.AppGrabber;
+using CairoDesktop.Common;
 using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
 
@@ -55,7 +56,7 @@ namespace CairoDesktop
             ParentTaskbar._appGrabber.LaunchProgram(app);
         }
 
-        private void LaunchProgramMenu(object sender, RoutedEventArgs e)
+        private void programsMenu_Open(object sender, RoutedEventArgs e)
         {
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
@@ -63,12 +64,20 @@ namespace CairoDesktop
             ParentTaskbar._appGrabber.LaunchProgram(app);
         }
 
-        private void LaunchProgramAdmin(object sender, RoutedEventArgs e)
+        private void programsMenu_OpenAsAdmin(object sender, RoutedEventArgs e)
         {
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
             ParentTaskbar._appGrabber.LaunchProgramAdmin(app);
+        }
+
+        private void programsMenu_OpenRunAs(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+            ParentTaskbar._appGrabber.LaunchProgramVerb(app, "runasuser");
         }
 
         private void programsMenu_Remove(object sender, RoutedEventArgs e)
@@ -195,6 +204,28 @@ namespace CairoDesktop
         private void setParentAutoHide(bool enabled)
         {
             if (ParentTaskbar != null) ParentTaskbar.CanAutoHide = enabled;
+        }
+
+        private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            ContextMenu menu = sender as ContextMenu;
+
+            foreach (Control item in menu.Items)
+            {
+                ApplicationInfo app = item.DataContext as ApplicationInfo;
+
+                switch (item.Name)
+                {
+                    case "miProgramsItemAdmin":
+                        item.Visibility = app.AllowRunAsAdmin ? Visibility.Visible : Visibility.Collapsed;
+                        break;
+                    case "miProgramsItemRunAs":
+                        item.Visibility = KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey) && !app.IsStoreApp ? Visibility.Visible : Visibility.Collapsed;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 }
