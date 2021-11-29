@@ -137,7 +137,7 @@ namespace CairoDesktop
         {
             bool result = false;
 
-            if (System.Windows.Forms.Screen.AllScreens.Any(s => s.Bounds.Contains((int)desktopNavigationToolbarLocation.X, (int)desktopNavigationToolbarLocation.Y)))
+            if (System.Windows.Forms.Screen.AllScreens.Any(s => s.Bounds.Contains((int)(desktopNavigationToolbarLocation.X * DpiHelper.DpiScale), (int)(desktopNavigationToolbarLocation.Y * DpiHelper.DpiScale))))
             {
                 result = true;
             }
