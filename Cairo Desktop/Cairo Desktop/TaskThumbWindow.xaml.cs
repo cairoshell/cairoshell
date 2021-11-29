@@ -109,13 +109,13 @@ namespace CairoDesktop
 
             double desiredLeft = taskButtonPoint.X - ((ActualWidth - TaskButton.ActualWidth) / 2);
 
-            if (desiredLeft < 0)
+            if (desiredLeft < TaskButton.ParentTaskbar.Left)
             {
-                Left = 0;
+                Left = TaskButton.ParentTaskbar.Left;
             }
-            else if (desiredLeft + ActualWidth > TaskButton.ParentTaskbar.ActualWidth)
+            else if (desiredLeft + ActualWidth > TaskButton.ParentTaskbar.Left + TaskButton.ParentTaskbar.ActualWidth)
             {
-                double bump = desiredLeft + ActualWidth - TaskButton.ParentTaskbar.ActualWidth;
+                double bump = desiredLeft + ActualWidth - (TaskButton.ParentTaskbar.Left + TaskButton.ParentTaskbar.ActualWidth);
                 Left = desiredLeft - bump;
             }
             else
