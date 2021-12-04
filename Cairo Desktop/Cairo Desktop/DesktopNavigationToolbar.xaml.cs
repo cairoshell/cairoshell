@@ -151,8 +151,8 @@ namespace CairoDesktop
             {
                 Point desiredLocation = new Point()
                 {
-                    X = PctToAbsPos(Settings.Instance.DesktopNavigationToolbarLocation.X, ActualWidth, WindowManager.PrimaryMonitorSize.Width),
-                    Y = PctToAbsPos(Settings.Instance.DesktopNavigationToolbarLocation.Y, ActualHeight, WindowManager.PrimaryMonitorSize.Height)
+                    X = PercentToAbsPos(Settings.Instance.DesktopNavigationToolbarLocation.X, ActualWidth, WindowManager.PrimaryMonitorSize.Width),
+                    Y = PercentToAbsPos(Settings.Instance.DesktopNavigationToolbarLocation.Y, ActualHeight, WindowManager.PrimaryMonitorSize.Height)
                 };
 
                 if (PointExistsOnScreen(desiredLocation))
@@ -182,17 +182,17 @@ namespace CairoDesktop
 
         private void SetPositionDefault(int screenWidth, int screenHeight)
         {
-            Top = PctToAbsPos(DEFAULT_Y, ActualHeight, screenHeight);
-            Left = PctToAbsPos(DEFAULT_X, ActualWidth, screenWidth);
+            Top = PercentToAbsPos(DEFAULT_Y, ActualHeight, screenHeight);
+            Left = PercentToAbsPos(DEFAULT_X, ActualWidth, screenWidth);
         }
 
-        private double AbsToPctPos(double absolutePos, double size, double total)
+        private double AbsToPercentPos(double absolutePos, double size, double total)
         {
             // adjust to center point
             return (absolutePos + size / 2) / total;
         }
 
-        private double PctToAbsPos(double percentPos, double size, double total)
+        private double PercentToAbsPos(double percentPos, double size, double total)
         {
             // adjust to center point
             return percentPos * total - size / 2;
@@ -501,8 +501,8 @@ namespace CairoDesktop
 
         private void DesktopToolbar_LocationChanged(object sender, EventArgs e)
         {
-            Settings.Instance.DesktopNavigationToolbarLocation = new Point(AbsToPctPos(Left, ActualWidth, WindowManager.PrimaryMonitorSize.Width), 
-                AbsToPctPos(Top, ActualHeight, WindowManager.PrimaryMonitorSize.Height));
+            Settings.Instance.DesktopNavigationToolbarLocation = new Point(AbsToPercentPos(Left, ActualWidth, WindowManager.PrimaryMonitorSize.Width), 
+                AbsToPercentPos(Top, ActualHeight, WindowManager.PrimaryMonitorSize.Height));
         }
         #endregion
 

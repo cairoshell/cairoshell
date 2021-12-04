@@ -196,6 +196,24 @@ namespace CairoDesktop.AppGrabber
             return rval;
         }
 
+        private string getAppParentDirectory(ApplicationInfo app)
+        {
+            if (app.IsStoreApp) return null;
+
+            string parent = null;
+
+            try
+            {
+                parent = Directory.GetParent(app.Path).FullName;
+            }
+            catch (Exception e)
+            {
+                ShellLogger.Warning($"AppGrabberService: Unable to get parent folder for {app.Path}: {e.Message}");
+            }
+
+            return parent;
+        }
+
         public static ApplicationInfo PathToApp(string filePath, bool allowNonApps, bool allowExcludedNames)
         {
             return PathToApp(filePath, ShellHelper.GetDisplayName(filePath), allowNonApps, allowExcludedNames);
@@ -323,7 +341,7 @@ namespace CairoDesktop.AppGrabber
                     CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                 }
             }
-            else if (!ShellHelper.StartProcess(app.Path))
+            else if (!ShellHelper.StartProcess(app.Path, workingDirectory: getAppParentDirectory(app)))
             {
                 CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
             }
@@ -336,7 +354,7 @@ namespace CairoDesktop.AppGrabber
                 return;
             }
 
-            if (!ShellHelper.StartProcess(app.Path, "", verb))
+            if (!ShellHelper.StartProcess(app.Path, "", verb, getAppParentDirectory(app)))
             {
                 CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
             }

@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Specialized;
+using System.IO;
 using CairoDesktop.Common;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -15,7 +18,7 @@ namespace CairoDesktop.SupportingClasses
             switch (verb)
             {
                 case Actions.Open:
-                    ShellHelper.StartProcess(fileName);
+                    ShellHelper.StartProcess(fileName, workingDirectory: getParent(fileName));
                     return;
                 case Actions.Delete:
                     string displayName = ShellHelper.GetDisplayName(fileName);
@@ -54,9 +57,25 @@ namespace CairoDesktop.SupportingClasses
                     ShellHelper.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,3");
                     break;
                 default:
-                    ShellHelper.StartProcess(fileName, "", verb);
+                    ShellHelper.StartProcess(fileName, "", verb, getParent(fileName));
                     break;
             }
+        }
+
+        private static string getParent(string fileName)
+        {
+            string parent = null;
+
+            try
+            {
+                parent = Directory.GetParent(fileName).FullName;
+            }
+            catch (Exception e)
+            {
+                ShellLogger.Warning($"CustomCommands: Unable to get parent folder for {fileName}: {e.Message}");
+            }
+
+            return parent;
         }
 
         public sealed class Actions
