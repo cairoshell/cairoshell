@@ -30,7 +30,7 @@ namespace CairoDesktop.AppGrabber
             return null;
         }
 
-        public void PinToQuickLaunch(bool isUWP, string path)
+        public void AddToQuickLaunch(bool isUWP, string path)
         {
             if (isUWP)
             {
@@ -39,8 +39,23 @@ namespace CairoDesktop.AppGrabber
             }
             else
             {
-                _appGrabber.AddByPath(new[] { path }, AppCategoryType.QuickLaunch);
+                _appGrabber.AddByPath(path, AppCategoryType.QuickLaunch);
             }
+        }
+
+        public void AddToQuickLaunch(ApplicationInfo app)
+        {
+            if (_appGrabber.QuickLaunch.Contains(app))
+            {
+                return;
+            }
+
+            ApplicationInfo appClone = app.Clone();
+            appClone.Icon = null;
+
+            _appGrabber.QuickLaunch.Add(appClone);
+
+            _appGrabber.Save();
         }
     }
 }

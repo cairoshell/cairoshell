@@ -378,7 +378,7 @@ namespace CairoDesktop
 
             if (toPin != null)
             {
-                ParentTaskbar._appGrabber.QuickLaunchManager.PinToQuickLaunch(toPin.IsUWP, toPin.IsUWP ? toPin.AppUserModelID : toPin.WinFileName);
+                ParentTaskbar._appGrabber.QuickLaunchManager.AddToQuickLaunch(toPin.IsUWP, toPin.IsUWP ? toPin.AppUserModelID : toPin.WinFileName);
             }
         }
 

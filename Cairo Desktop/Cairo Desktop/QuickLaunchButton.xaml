@@ -26,11 +26,17 @@
                    Width="16"
                    Height="16" />
             <Button.ContextMenu>
-                <ContextMenu Closed="ContextMenu_Closed">
+                <ContextMenu Closed="ContextMenu_Closed"
+                             Opened="ContextMenu_Opened">
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Open)}" 
-                              Click="LaunchProgramMenu" />
+                              Click="programsMenu_Open" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_OpenAsAdministrator)}" 
-                              Click="LaunchProgramAdmin" />
+                              Name="miProgramsItemAdmin"
+                              Click="programsMenu_OpenAsAdmin" />
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_RunAsUser)}"
+                              Click="programsMenu_OpenRunAs"
+                              Visibility="Collapsed"
+                              Name="miProgramsItemRunAs" />
                     <Separator />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Rename)}" 
                               Click="programsMenu_Rename" />

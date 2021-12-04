@@ -149,29 +149,41 @@ namespace CairoDesktop.AppGrabber {
                     XmlAttribute catNameAttribute = doc.CreateAttribute("Name");
                     catNameAttribute.Value = cat.Name;
                     catElement.Attributes.Append(catNameAttribute);
+
                     XmlAttribute catShowInMenuAttribute = doc.CreateAttribute("ShowInMenu");
                     catShowInMenuAttribute.Value = cat.ShowInMenu.ToString();
                     catElement.Attributes.Append(catShowInMenuAttribute);
+
                     XmlAttribute catTypeAttribute = doc.CreateAttribute("Type");
                     catTypeAttribute.Value = ((int)cat.Type).ToString();
                     catElement.Attributes.Append(catTypeAttribute);
+
                     root.AppendChild(catElement);
                     foreach (ApplicationInfo app in cat)
                     {
                         XmlElement appElement = doc.CreateElement("Application");
                         catElement.AppendChild(appElement);
+
                         XmlAttribute appAskAlwaysAdminAttribute = doc.CreateAttribute("AskAlwaysAdmin");
                         appAskAlwaysAdminAttribute.Value = app.AskAlwaysAdmin.ToString();
                         appElement.Attributes.Append(appAskAlwaysAdminAttribute);
+
                         XmlAttribute appAlwaysAdminAttribute = doc.CreateAttribute("AlwaysAdmin");
                         appAlwaysAdminAttribute.Value = app.AlwaysAdmin.ToString();
                         appElement.Attributes.Append(appAlwaysAdminAttribute);
+
+                        XmlAttribute appAllowRunAsAdminAttribute = doc.CreateAttribute("AllowRunAsAdmin");
+                        appAllowRunAsAdminAttribute.Value = app.AllowRunAsAdmin.ToString();
+                        appElement.Attributes.Append(appAllowRunAsAdminAttribute);
+
                         XmlElement appNameElement = doc.CreateElement("Name");
                         appNameElement.InnerText = app.Name;
                         appElement.AppendChild(appNameElement);
+
                         XmlElement pathElement = doc.CreateElement("Path");
                         pathElement.InnerText = app.Path;
                         appElement.AppendChild(pathElement);
+
                         XmlElement targetElement = doc.CreateElement("Target");
                         targetElement.InnerText = app.Target;
                         appElement.AppendChild(targetElement);
@@ -232,7 +244,23 @@ namespace CairoDesktop.AppGrabber {
                         ShellLogger.Debug(app.Path + " does not exist");
                         continue;
                     }
-                    
+
+                    if (appElement.Attributes["AllowRunAsAdmin"] != null)
+                        app.AllowRunAsAdmin = Convert.ToBoolean(appElement.Attributes["AllowRunAsAdmin"].Value);
+                    else
+                    {
+                        // migration
+                        if (app.IsStoreApp && EnvironmentHelper.IsWindows8OrBetter)
+                        {
+                            ManagedShell.UWPInterop.StoreApp storeApp = ManagedShell.UWPInterop.StoreAppHelper.AppList.GetAppByAumid(app.Target);
+                            app.AllowRunAsAdmin = storeApp.EntryPoint == "Windows.FullTrustApplication";
+                        }
+                        else
+                        {
+                            app.AllowRunAsAdmin = true;
+                        }
+                    }
+
                     cat.Add(app);
                 }
             }

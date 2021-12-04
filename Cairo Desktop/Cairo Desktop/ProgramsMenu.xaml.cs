@@ -76,7 +76,7 @@ namespace CairoDesktop
                 switch (item.Name)
                 {
                     case "miProgramsItemAdmin":
-                        item.Visibility = app.IsStoreApp ? Visibility.Collapsed : Visibility.Visible;
+                        item.Visibility = app.AllowRunAsAdmin ? Visibility.Visible : Visibility.Collapsed;
                         break;
                     case "miProgramsItemRunAs":
                         item.Visibility = KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey) && !app.IsStoreApp ? Visibility.Visible : Visibility.Collapsed;
@@ -116,7 +116,7 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            MenuBar._appGrabber.AddToQuickLaunch(app);
+            MenuBar._appGrabber.QuickLaunchManager.AddToQuickLaunch(app);
         }
 
         private void programsMenu_Rename(object sender, RoutedEventArgs e)
