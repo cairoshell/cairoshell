@@ -253,7 +253,15 @@ namespace CairoDesktop.AppGrabber {
                         if (app.IsStoreApp && EnvironmentHelper.IsWindows8OrBetter)
                         {
                             ManagedShell.UWPInterop.StoreApp storeApp = ManagedShell.UWPInterop.StoreAppHelper.AppList.GetAppByAumid(app.Target);
-                            app.AllowRunAsAdmin = storeApp.EntryPoint == "Windows.FullTrustApplication";
+
+                            if (storeApp != null)
+                            {
+                                app.AllowRunAsAdmin = storeApp.EntryPoint == "Windows.FullTrustApplication";
+                            }
+                            else
+                            {
+                                app.AllowRunAsAdmin = false;
+                            }
                         }
                         else
                         {
