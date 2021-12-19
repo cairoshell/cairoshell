@@ -323,6 +323,7 @@
                                                                                        VerticalAlignment="Top"
                                                                                        Padding="6,7,6,0"
                                                                                        TextTrimming="CharacterEllipsis"
+                                                                                       ToolTip="{Binding Converter={StaticResource groupNameConverter}}"
                                                                                        FontFamily="{DynamicResource ResourceKey=GlobalFontFamily}"
                                                                                        FontSize="{DynamicResource ResourceKey=MediumFontSize}" />
                                                                         </Border>
