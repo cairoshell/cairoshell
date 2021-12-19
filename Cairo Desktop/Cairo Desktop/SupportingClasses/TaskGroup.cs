@@ -8,7 +8,6 @@ using System;
 using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -19,6 +18,8 @@ namespace CairoDesktop.SupportingClasses
 {
     public class TaskGroup : INotifyPropertyChanged, IDisposable
     {
+        private bool _singleWindowMode;
+
         private string _title;
 
         public string Title
@@ -111,12 +112,26 @@ namespace CairoDesktop.SupportingClasses
                 }
             }
 
-            setInitialValues();
+            setDisplayValues();
         }
 
-        private void setInitialValues()
+        private void setDisplayValues()
         {
-            if (Windows[0] is ApplicationWindow window)
+            if (Windows.Count > 1)
+            {
+                _singleWindowMode = false;
+                setDisplayValuesApp();
+            }
+            else
+            {
+                _singleWindowMode = true;
+                setDisplayValuesWindow();
+            }
+        }
+
+        private void setDisplayValuesApp()
+        {
+            if (Windows.Count > 0 && Windows[0] is ApplicationWindow window)
             {
                 if (window.IsUWP)
                 {
@@ -126,13 +141,22 @@ namespace CairoDesktop.SupportingClasses
                 }
                 else
                 {
-                    Title = FileVersionInfo.GetVersionInfo(window.WinFileName).FileDescription;
+                    Title = window.WinFileDescription;
 
                     Task.Factory.StartNew(() =>
                     {
                         Icon = IconImageConverter.GetImageFromAssociatedIcon(window.WinFileName, IconHelper.ParseSize(Settings.Instance.TaskbarIconSize) == IconSize.Small ? IconSize.Small : IconSize.Large);
                     }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
+            }
+        }
+
+        private void setDisplayValuesWindow()
+        {
+            if (Windows.Count > 0 && Windows[0] is ApplicationWindow window)
+            {
+                Title = window.Title;
+                Icon = window.Icon;
             }
         }
 
@@ -281,6 +305,17 @@ namespace CairoDesktop.SupportingClasses
                     OnPropertyChanged("ProgressValue");
                     break;
             }
+
+            if (_singleWindowMode)
+            {
+                switch (e.PropertyName)
+                {
+                    case "Title":
+                    case "Icon":
+                        setDisplayValuesWindow();
+                        break;
+                }
+            }
         }
 
         private void TaskGroup_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -305,6 +340,12 @@ namespace CairoDesktop.SupportingClasses
                         appWindow.PropertyChanged -= ApplicationWindow_PropertyChanged;
                     }
                 }
+            }
+
+            // If the window count has changed such that single window mode should toggle
+            if (_singleWindowMode == (Windows.Count > 1))
+            {
+                setDisplayValues();
             }
 
             OnPropertyChanged("State");
