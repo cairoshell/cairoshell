@@ -292,7 +292,7 @@ namespace CairoDesktop
             }
 
             Visibility pinVisibility = Visibility.Collapsed;
-            Visibility singleWindowVisibility = Visibility.Collapsed;
+            Visibility singleWindowVisibility = _isGroup ? Visibility.Collapsed : Visibility.Visible;
             NativeMethods.WindowShowStyle wss = window.ShowStyle;
             int ws = window.WindowStyles;
 
@@ -305,6 +305,14 @@ namespace CairoDesktop
             miPin.Visibility = pinVisibility;
             miPinSeparator.Visibility = pinVisibility;
 
+            // show/hide single window controls
+            miMaximize.Visibility = singleWindowVisibility;
+            miMinimize.Visibility = singleWindowVisibility;
+            miRestore.Visibility = singleWindowVisibility;
+            miMove.Visibility = singleWindowVisibility;
+            miSize.Visibility = singleWindowVisibility;
+            miSingleWindowSeparator.Visibility = singleWindowVisibility;
+
             if (!_isGroup)
             {
                 // disable window operations depending on current window state. originally tried implementing via bindings but found there is no notification we get regarding maximized state
@@ -313,16 +321,6 @@ namespace CairoDesktop
                 miRestore.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowNormal;
                 miMove.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal;
                 miSize.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0;
-            }
-            else
-            {
-                // hide single window controls if group button
-                miMaximize.Visibility = singleWindowVisibility;
-                miMinimize.Visibility = singleWindowVisibility;
-                miRestore.Visibility = singleWindowVisibility;
-                miMove.Visibility = singleWindowVisibility;
-                miSize.Visibility = singleWindowVisibility;
-                miSingleWindowSeparator.Visibility = singleWindowVisibility;
             }
         }
 

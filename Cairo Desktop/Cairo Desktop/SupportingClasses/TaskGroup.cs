@@ -137,7 +137,7 @@ namespace CairoDesktop.SupportingClasses
                 {
                     _storeApp = StoreAppHelper.AppList.GetAppByAumid(window.AppUserModelID);
                     Title = _storeApp.DisplayName;
-                    Icon = _storeApp.GetIconImageSource(IconHelper.ParseSize(Settings.Instance.TaskbarIconSize));
+                    Icon = window.Icon;
                 }
                 else
                 {
@@ -304,17 +304,18 @@ namespace CairoDesktop.SupportingClasses
                 case "ProgressValue":
                     OnPropertyChanged("ProgressValue");
                     break;
-            }
-
-            if (_singleWindowMode)
-            {
-                switch (e.PropertyName)
-                {
-                    case "Title":
-                    case "Icon":
-                        setDisplayValuesWindow();
-                        break;
-                }
+                case "Title" when _singleWindowMode:
+                    if (Windows.Count > 0 && Windows[0] is ApplicationWindow titleWindow)
+                    {
+                        Title = titleWindow.Title;
+                    }
+                    break;
+                case "Icon":
+                    if (Windows.Count > 0 && Windows[0] is ApplicationWindow iconWindow && (_singleWindowMode || iconWindow.IsUWP))
+                    {
+                        Icon = iconWindow.Icon;
+                    }
+                    break;
             }
         }
 

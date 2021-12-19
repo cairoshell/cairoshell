@@ -7,6 +7,7 @@ using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -216,7 +217,21 @@ namespace CairoDesktop.AppGrabber
 
         public static ApplicationInfo PathToApp(string filePath, bool allowNonApps, bool allowExcludedNames)
         {
-            return PathToApp(filePath, ShellHelper.GetDisplayName(filePath), allowNonApps, allowExcludedNames);
+            string fileDisplayName = ShellHelper.GetDisplayName(filePath);
+
+            if (filePath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    fileDisplayName = FileVersionInfo.GetVersionInfo(filePath).FileDescription;
+                }
+                catch (Exception e)
+                {
+                    ShellLogger.Warning($"AppGrabberService: Unable to get file description for {filePath}: {e.Message}");
+                }
+            }
+
+            return PathToApp(filePath, fileDisplayName, allowNonApps, allowExcludedNames);
         }
 
         public static ApplicationInfo PathToApp(string filePath, string fileDisplayName, bool allowNonApps, bool allowExcludedNames)
