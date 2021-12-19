@@ -137,7 +137,7 @@ namespace CairoDesktop.SupportingClasses
                 {
                     _storeApp = StoreAppHelper.AppList.GetAppByAumid(window.AppUserModelID);
                     Title = _storeApp.DisplayName;
-                    Icon = _storeApp.GetIconImageSource(IconHelper.ParseSize(Settings.Instance.TaskbarIconSize) == IconSize.Small ? IconSize.Small : IconSize.Large);
+                    Icon = _storeApp.GetIconImageSource(IconHelper.ParseSize(Settings.Instance.TaskbarIconSize));
                 }
                 else
                 {
