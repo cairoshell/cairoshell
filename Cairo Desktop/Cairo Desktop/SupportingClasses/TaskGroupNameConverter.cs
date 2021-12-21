@@ -11,7 +11,7 @@ namespace CairoDesktop.SupportingClasses
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value is CollectionViewGroup group)
+            if (value is CollectionViewGroup group && group.ItemCount > 0)
             {
                 if (Settings.Instance.TaskbarGroupingStyle == 0)
                 {
@@ -25,7 +25,7 @@ namespace CairoDesktop.SupportingClasses
                         return ManagedShell.UWPInterop.StoreAppHelper.AppList.GetAppByAumid(window.AppUserModelID).DisplayName;
                     }
 
-                    return FileVersionInfo.GetVersionInfo(window.WinFileName).FileDescription;
+                    return window.WinFileDescription;
                 }
             }
 

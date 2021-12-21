@@ -14,7 +14,7 @@
     </UserControl.Resources>
     <Button x:Name="btn"
             Click="btnClick"
-            ToolTip="{Binding Path=Title}"
+            ToolTip="{Binding Path=Title, Mode=OneWay}"
             ToolTipService.Placement="Top"
             MouseUp="btn_MouseUp" 
             ContextMenuOpening="ContextMenu_Opening"
