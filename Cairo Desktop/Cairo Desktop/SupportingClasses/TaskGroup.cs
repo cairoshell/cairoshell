@@ -341,6 +341,13 @@ namespace CairoDesktop.SupportingClasses
                         appWindow.PropertyChanged -= ApplicationWindow_PropertyChanged;
                     }
                 }
+
+                if (e.OldItems.Count > 0)
+                {
+                    // If windows were removed, update progress values in case the window was destroyed before updating its progress value
+                    OnPropertyChanged("ProgressState");
+                    OnPropertyChanged("ProgressValue");
+                }
             }
 
             // If the window count has changed such that single window mode should toggle
