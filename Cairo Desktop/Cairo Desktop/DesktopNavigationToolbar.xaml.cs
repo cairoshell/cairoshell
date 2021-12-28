@@ -359,7 +359,7 @@ namespace CairoDesktop
                 Localization.DisplayString.sInterface_Cancel,
                 (bool? result) =>
                 {
-                    string path = inputControl.InputField.Text;
+                    string path = Environment.ExpandEnvironmentVariables(inputControl.InputField.Text);
                     if (result != true || string.IsNullOrEmpty(path))
                     {
                         return;
