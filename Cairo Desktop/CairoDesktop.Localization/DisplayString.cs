@@ -19,7 +19,8 @@ namespace CairoDesktop.Localization
             new KeyValuePair<string, string>("Spanish (España)", "es_ES"),
             new KeyValuePair<string, string>("Svenska", "sv_SE"),
             new KeyValuePair<string, string>("Turkish (Türkçe)", "tr_TR"),
-            new KeyValuePair<string, string>("한국어", "ko_KR")
+            new KeyValuePair<string, string>("한국어", "ko_KR"),
+            new KeyValuePair<string, string>("Magyar (Hungarian)", "hu_HU")
         };
 
         public DisplayString()
@@ -80,6 +81,10 @@ namespace CairoDesktop.Localization
             else if (useLang.StartsWith("ko_"))
             {
                 lang = Language.ko_KR;
+            }
+            else if (useLang.StartsWith("hu_"))
+            {
+                lang = Language.hu_HU;
             }
             else
             {
