@@ -16,7 +16,7 @@ namespace CairoDesktop.AppGrabber
     /// </summary>
     public partial class AppGrabberUI : Window
     {
-        private AppGrabberService appGrabber;
+        private IAppGrabber appGrabber;
         ObservableCollection<ApplicationInfo> programsMenuAppsCollection;
 
         public Visibility AppVisibility
@@ -52,7 +52,7 @@ namespace CairoDesktop.AppGrabber
             ShellLogger.Error("Unable to initialize AppGrabberUI due to missing AppGrabber.");
         }
 
-        public AppGrabberUI(AppGrabberService appGrabber)
+        public AppGrabberUI(IAppGrabber appGrabber)
         {
             this.appGrabber = appGrabber;
             InitializeComponent();

@@ -6,16 +6,16 @@ namespace CairoDesktop.Services
 {
     public class SettingsUIService : ISettingsUIService
     {
-        private readonly AppGrabberService _appGrabber;
+        private readonly IAppGrabber _appGrabber;
         private readonly ICairoApplication _cairoApplication;
         private readonly ShellManagerService _shellManager;
-        private readonly ThemeService _themeService;
+        private readonly IThemeService _themeService;
         private readonly IApplicationUpdateService _updateService;
 
         internal SettingsUI SettingsUi;
         
-        public SettingsUIService(ICairoApplication cairoApplication, AppGrabberService appGrabber, IApplicationUpdateService updateService,
-            ShellManagerService shellManager, ThemeService themeService)
+        public SettingsUIService(ICairoApplication cairoApplication, IAppGrabber appGrabber, IApplicationUpdateService updateService,
+            ShellManagerService shellManager, IThemeService themeService)
         {
             _appGrabber = appGrabber;
             _cairoApplication = cairoApplication;

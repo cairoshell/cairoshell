@@ -2,16 +2,22 @@
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.Interfaces;
 using ManagedShell.AppBar;
 
 namespace CairoDesktop.Services
 {
     public class TaskbarWindowService : AppBarWindowService
     {
-        private readonly AppGrabberService _appGrabber;
-        private readonly DesktopManager _desktopManager;
+        private readonly IAppGrabber _appGrabber;
+        private readonly IDesktopManager _desktopManager;
 
-        public TaskbarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager, DesktopManager desktopManager, AppGrabberService appGrabber) : base(cairoApplication, shellManagerService, windowManager)
+        public TaskbarWindowService(ICairoApplication cairoApplication,
+            ShellManagerService shellManagerService,
+            IWindowManager windowManager,
+            IDesktopManager desktopManager, 
+            IAppGrabber appGrabber) 
+            : base(cairoApplication, shellManagerService, windowManager)
         {
             _appGrabber = appGrabber;
             _desktopManager = desktopManager;
@@ -32,7 +38,7 @@ namespace CairoDesktop.Services
             {
                 case "EnableTaskbar":
                     _shellManager.ExplorerHelper.HideExplorerTaskbar = Settings.Instance.EnableTaskbar;
-                    
+
                     HandleEnableServiceChanged(Settings.Instance.EnableTaskbar);
                     break;
                 case "EnableTaskbarMultiMon":
@@ -47,7 +53,7 @@ namespace CairoDesktop.Services
             {
                 if (sender is MenuBar menuBar)
                 {
-                    var taskbar = (Taskbar) WindowManager.GetScreenWindow(Windows, menuBar.Screen);
+                    var taskbar = (Taskbar)WindowManager.GetScreenWindow(Windows, menuBar.Screen);
 
                     if (taskbar == null)
                     {
@@ -81,7 +87,7 @@ namespace CairoDesktop.Services
         public override void Dispose()
         {
             base.Dispose();
-            
+
             if (EnableService)
             {
                 _shellManager.AppBarManager.AppBarEvent -= AppBarEvent;

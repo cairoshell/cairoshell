@@ -24,11 +24,5 @@ namespace CairoDesktop.Application.Interfaces
         int Run();
 
         void Dispatch(Action action);
-
-        void ClearResources();
-
-        void AddResource(object resource);
-
-        object FindResource(string name);
     }
 }

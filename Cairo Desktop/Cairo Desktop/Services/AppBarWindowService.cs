@@ -3,6 +3,7 @@ using System.ComponentModel;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.Interfaces;
 using CairoDesktop.SupportingClasses;
 using ManagedShell;
 using ManagedShell.AppBar;
@@ -18,9 +19,9 @@ namespace CairoDesktop.Services
 
         protected readonly ICairoApplication _cairoApplication;
         protected readonly ShellManager _shellManager;
-        protected readonly WindowManager _windowManager;
+        protected readonly IWindowManager _windowManager;
 
-        protected AppBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, WindowManager windowManager)
+        protected AppBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, IWindowManager windowManager)
         {
             _cairoApplication = cairoApplication;
             _shellManager = shellManagerService.ShellManager;
@@ -56,7 +57,7 @@ namespace CairoDesktop.Services
 
         public void HandleScreenRemoved(string screenDeviceName)
         {
-            if (EnableService && EnableMultiMon)
+            if (EnableService)
             {
                 CloseScreenWindow(screenDeviceName);
             }

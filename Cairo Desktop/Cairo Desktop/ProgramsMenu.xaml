@@ -20,7 +20,7 @@
                                 <MenuItem.ContextMenu>
                                     <ContextMenu Name="ctxProgramsItem" Opened="ctxProgramsItem_Opened">
                                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Open)}" Click="programsMenu_Open" />
-                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_OpenAsAdministrator)}" Click="programsMenu_OpenAsAdmin" />
+                                        <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_OpenAsAdministrator)}" Click="programsMenu_OpenAsAdmin" Name="miProgramsItemAdmin" />
                                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_RunAsUser)}" Click="programsMenu_OpenRunAs" Visibility="Collapsed" Name="miProgramsItemRunAs" />
                                         <Separator />
                                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu_AddToQuickLaunch)}" Click="programsMenu_AddToQuickLaunch" />

@@ -1,18 +1,19 @@
-﻿using System;
+﻿using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Configuration;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Configuration;
-using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
-using ManagedShell.Interop;
+using Microsoft.Extensions.Logging;
 
 namespace CairoDesktop.Services
 {
-    public class ThemeService : IDisposable
+    public sealed class CairoApplicationThemeService : IThemeService, IDisposable
     {
         private const string THEME_DEFAULT_FILE = "Cairo";
         private const string THEME_DEFAULT = "Default";
@@ -23,33 +24,36 @@ namespace CairoDesktop.Services
             AppDomain.CurrentDomain.BaseDirectory,
             CairoApplication.CairoApplicationDataFolder
         };
+        private readonly ILogger<CairoApplicationThemeService> _logger;
+        private readonly Settings _settings;
 
-        protected readonly ICairoApplication _cairoApplication;
-
-        public ThemeService(ICairoApplication cairoApplication)
+        public CairoApplicationThemeService(ILogger<CairoApplicationThemeService> logger, Settings settings)
         {
-            _cairoApplication = cairoApplication;
-            
+            _logger = logger;
+            _settings = settings;
+
             MigrateSettings();
 
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            _settings.PropertyChanged += Settings_PropertyChanged;
         }
 
         private void MigrateSettings()
         {
-            if (Settings.Instance.CairoTheme.EndsWith(".xaml"))
+            if (_settings.CairoTheme.EndsWith(".xaml"))
             {
-                Settings.Instance.CairoTheme = Settings.Instance.CairoTheme.Replace(".xaml", "");
+                _settings.CairoTheme = _settings.CairoTheme.Replace(".xaml", "");
             }
         }
 
         public void SetThemeFromSettings()
         {
             SetTheme(THEME_DEFAULT);
-            if (Settings.Instance.CairoTheme != THEME_DEFAULT)
+
+            if (_settings.CairoTheme != THEME_DEFAULT)
             {
-                SetTheme(Settings.Instance.CairoTheme);
+                SetTheme(_settings.CairoTheme);
             }
+
             SetDarkMode();
         }
 
@@ -59,7 +63,7 @@ namespace CairoDesktop.Services
 
             if (theme == THEME_DEFAULT)
             {
-                _cairoApplication.ClearResources();
+                CairoApplication.Current.Resources.MergedDictionaries.Clear();
                 themeFilePath = Path.ChangeExtension(Path.Combine(THEME_FOLDER, THEME_DEFAULT_FILE), THEME_EXT);
             }
             else
@@ -82,11 +86,10 @@ namespace CairoDesktop.Services
 
             try
             {
-                ResourceDictionary newRes = new ResourceDictionary
+                CairoApplication.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
                 {
                     Source = new Uri(themeFilePath, UriKind.RelativeOrAbsolute)
-                };
-                _cairoApplication.AddResource(newRes);
+                });
             }
             catch (Exception e)
             {
@@ -96,8 +99,10 @@ namespace CairoDesktop.Services
 
         public List<string> GetThemes()
         {
-            List<string> themes = new List<string>();
-            themes.Add(THEME_DEFAULT);
+            List<string> themes = new List<string>
+            {
+                THEME_DEFAULT
+            };
 
             foreach (var location in THEME_LOCATIONS)
             {
@@ -121,16 +126,16 @@ namespace CairoDesktop.Services
         private void SetDarkMode()
         {
             // Enable dark mode support if specified by theme
-            
+
             if (!EnvironmentHelper.IsWindows10DarkModeSupported)
             {
                 return;
             }
-            
+
             // Unfortunately, the dark mode API does not allow setting this more than once,
             // so once we go dark, there's no going back. As such, there's no reason to
             // specify light mode here for now (as that's the default).
-            bool? darkMode = _cairoApplication.FindResource("EnableDarkMode") as bool?;
+            bool? darkMode = CairoApplication.Current.FindResource("EnableDarkMode") as bool?;
             if (darkMode == true)
             {
                 WindowHelper.SetDarkModePreference(NativeMethods.PreferredAppMode.ForceDark);
@@ -149,7 +154,35 @@ namespace CairoDesktop.Services
 
         public void Dispose()
         {
-            Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // The bulk of the clean-up code is implemented in Dispose(bool)
+        private bool _isDisposed;
+
+        private void Dispose(bool disposing)
+        {
+            if (_isDisposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                // free managed resources
+                _settings.PropertyChanged -= Settings_PropertyChanged;
+            }
+
+            // free native resources if there are any.
+
+            _isDisposed = true;
+        }
+
+        ~CairoApplicationThemeService()
+        {
+            // Finalizer calls Dispose(false)
+            Dispose(false);
         }
     }
 }

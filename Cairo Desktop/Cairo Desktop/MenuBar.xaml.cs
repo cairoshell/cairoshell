@@ -3,7 +3,6 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Application.Structs;
 using CairoDesktop.Common;
 using CairoDesktop.Configuration;
-using CairoDesktop.Interop;
 using CairoDesktop.SupportingClasses;
 using ManagedShell;
 using System;
@@ -14,19 +13,19 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CairoDesktop.Infrastructure.ObjectModel;
-using CairoDesktop.Services;
+using CairoDesktop.Interfaces;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
-using ManagedShell.ShellFolders.Enums;
+using ManagedShell.Common.Enums;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop
 {
     public partial class MenuBar : CairoAppBarWindow, IMenuBar
     {
-        internal readonly AppGrabberService _appGrabber;
+        internal readonly IAppGrabber _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ISettingsUIService _settingsUiService;
 
@@ -36,7 +35,7 @@ namespace CairoDesktop
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, AppGrabberService appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
         {
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;

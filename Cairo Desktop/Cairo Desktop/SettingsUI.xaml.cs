@@ -32,14 +32,19 @@ namespace CairoDesktop
     /// </summary>
     public partial class SettingsUI : Window
     {
-        private readonly AppGrabberService _appGrabber;
+        private readonly IAppGrabber _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ICairoApplication _cairoApplication;
         private readonly ShellManager _shellManager;
-        private readonly ThemeService _themeService;
+        private readonly IThemeService _themeService;
         private readonly SettingsUIService _uiService;
 
-        internal SettingsUI(ICairoApplication cairoApplication, SettingsUIService uiService, ShellManagerService shellManagerService, IApplicationUpdateService applicationUpdateService, AppGrabberService appGrabber, ThemeService themeService)
+        internal SettingsUI(ICairoApplication cairoApplication,
+            SettingsUIService uiService,
+            ShellManagerService shellManagerService,
+            IApplicationUpdateService applicationUpdateService,
+            IAppGrabber appGrabber,
+            IThemeService themeService)
         {
             InitializeComponent();
 
@@ -175,6 +180,27 @@ namespace CairoDesktop
                 case 1:
                     radTaskbarMiddleClick0.IsChecked = false;
                     radTaskbarMiddleClick1.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (Settings.Instance.TaskbarGroupingStyle)
+            {
+                case 0:
+                    radTaskbarGrouping0.IsChecked = true;
+                    radTaskbarGrouping1.IsChecked = false;
+                    radTaskbarGrouping2.IsChecked = false;
+                    break;
+                case 1:
+                    radTaskbarGrouping0.IsChecked = false;
+                    radTaskbarGrouping1.IsChecked = true;
+                    radTaskbarGrouping2.IsChecked = false;
+                    break;
+                case 2:
+                    radTaskbarGrouping0.IsChecked = false;
+                    radTaskbarGrouping1.IsChecked = false;
+                    radTaskbarGrouping2.IsChecked = true;
                     break;
                 default:
                     break;
@@ -391,7 +417,7 @@ namespace CairoDesktop
                     // non-pinned icons area
                     dropData.Unpin();
                 }
-                
+
                 Settings.Instance.PinnedNotifyIcons = _shellManager.NotificationArea.PinnedNotifyIcons;
             }
 
@@ -648,6 +674,21 @@ namespace CairoDesktop
         private void radTaskbarMiddleClick1_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarMiddleClick = 1;
+        }
+
+        private void radTaskbarGrouping0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.TaskbarGroupingStyle = 0;
+        }
+
+        private void radTaskbarGrouping1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.TaskbarGroupingStyle = 1;
+        }
+
+        private void radTaskbarGrouping2_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.TaskbarGroupingStyle = 2;
         }
 
         private void radDesktopLabelPos0_Click(object sender, RoutedEventArgs e)

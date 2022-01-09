@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
@@ -11,30 +15,46 @@ namespace CairoDesktop
     /// <summary>
     /// Interaction logic for TaskThumbWindow.xaml
     /// </summary>
-    public partial class TaskThumbWindow : Window
+    public partial class TaskThumbWindow : Window, INotifyPropertyChanged
     {
-        private TaskButton taskButton;
+        const int MAX_THUMBS = 5;
+
+        public bool ShowThumbnails
+        {
+            get
+            {
+                if (!IsDwmEnabled || !Settings.Instance.EnableTaskbarThumbnails)
+                {
+                    return false;
+                }
+
+                if (TaskButton != null && TaskButton.WindowGroup != null && TaskButton.WindowGroup.Count > MAX_THUMBS)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        internal TaskButton TaskButton;
+        internal bool IsAnimating = true;
+        internal bool IsDwmEnabled;
+        internal bool IsContextMenuOpen;
+
         private bool isClosing;
-        private bool isAnimating;
-        private bool isDwmEnabled;
         private IntPtr handle;
 
         public TaskThumbWindow(TaskButton parent)
         {
             InitializeComponent();
 
-            taskButton = parent;
-            DataContext = parent.Window;
+            TaskButton = parent;
+            DataContext = TaskButton;
 
-            taskButton.SetParentAutoHide(false);
+            TaskButton.SetParentAutoHide(false);
 
-            // check if DWM is enabled, if not, hide the thumbnail placeholder
-            isDwmEnabled = NativeMethods.DwmIsCompositionEnabled();
-            if (!isDwmEnabled)
-            {
-                dwmThumbnail.Visibility = Visibility.Collapsed;
-                pnlTitle.Margin = new Thickness(0);
-            }
+            IsDwmEnabled = NativeMethods.DwmIsCompositionEnabled();
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)
@@ -44,14 +64,9 @@ namespace CairoDesktop
             handle = helper.Handle;
             WindowHelper.HideWindowFromTasks(handle);
 
-            // get anchor point
-            Point taskButtonPoint = taskButton.GetThumbnailAnchor();
-
-            if (Configuration.Settings.Instance.TaskbarPosition == 1)
+            if (Settings.Instance.TaskbarPosition == 1)
             {
                 // taskbar on top
-                Top = taskButtonPoint.Y + taskButton.ActualHeight;
-
                 bdrThumb.Style = FindResource("TaskThumbWindowBorderTopStyle") as Style;
                 bdrThumbInner.Style = FindResource("TaskThumbWindowInnerBorderTopStyle") as Style;
 
@@ -59,103 +74,90 @@ namespace CairoDesktop
 
                 ToolTipService.SetPlacement(this, System.Windows.Controls.Primitives.PlacementMode.Bottom);
             }
+
+            SetPosition();
+
+            if (TaskButton != null && TaskButton.WindowGroup != null)
+            {
+                ((INotifyCollectionChanged)TaskButton.WindowGroup).CollectionChanged += TaskThumbWindow_CollectionChanged;
+            }
+        }
+
+        private void TaskThumbWindow_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("ShowThumbnails");
+        }
+
+        private void SetPosition()
+        {
+            if (TaskButton == null || TaskButton.ParentTaskbar == null)
+            {
+                return;
+            }
+
+            Point taskButtonPoint = TaskButton.GetThumbnailAnchor();
+
+            if (Settings.Instance.TaskbarPosition == 1)
+            {
+                // taskbar on top
+                Top = taskButtonPoint.Y + TaskButton.ActualHeight;
+            }
             else
             {
                 Top = taskButtonPoint.Y - ActualHeight;
             }
 
-            Left = taskButtonPoint.X - ((ActualWidth - taskButton.ActualWidth) / 2);
+            double desiredLeft = taskButtonPoint.X - ((ActualWidth - TaskButton.ActualWidth) / 2);
 
-            if (isDwmEnabled)
+            if (desiredLeft < TaskButton.ParentTaskbar.Left)
             {
-                // set up thumbnail
-                dwmThumbnail.DpiScale = taskButton.ParentTaskbar.DpiScale;
-                dwmThumbnail.ThumbnailOpacity = 0;
-                dwmThumbnail.SourceWindowHandle = taskButton.Window.Handle;
-
-                // set up animation
-                isAnimating = true;
-                System.Windows.Media.CompositionTarget.Rendering += CompositionTarget_Rendering;
+                Left = TaskButton.ParentTaskbar.Left;
             }
-        }
-
-        private void CompositionTarget_Rendering(object sender, EventArgs e)
-        {
-            // runs once per frame for the duration of the animation
-            if (isAnimating)
+            else if (desiredLeft + ActualWidth > TaskButton.ParentTaskbar.Left + TaskButton.ParentTaskbar.ActualWidth)
             {
-                dwmThumbnail.ThumbnailOpacity = Convert.ToByte(bdrThumb.Opacity * 255);
-                dwmThumbnail.Refresh();
+                double bump = desiredLeft + ActualWidth - (TaskButton.ParentTaskbar.Left + TaskButton.ParentTaskbar.ActualWidth);
+                Left = desiredLeft - bump;
             }
             else
             {
-                // refresh one last time to get the final frame's updates
-                dwmThumbnail.ThumbnailOpacity = 255;
-                dwmThumbnail.Refresh();
-                System.Windows.Media.CompositionTarget.Rendering -= CompositionTarget_Rendering;
+                Left = desiredLeft;
             }
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             isClosing = true;
-            if (isDwmEnabled) dwmThumbnail.SourceWindowHandle = IntPtr.Zero;
-            taskButton.ThumbWindow = null;
-            taskButton.SetParentAutoHide(true);
+            TaskButton.ThumbWindow = null;
+            TaskButton.SetParentAutoHide(true);
+
+            if (TaskButton != null && TaskButton.WindowGroup != null)
+            {
+                ((INotifyCollectionChanged)TaskButton.WindowGroup).CollectionChanged -= TaskThumbWindow_CollectionChanged;
+            }
         }
 
         private void Window_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (!isClosing && !taskButton.btn.ContextMenu.IsOpen && !taskButton.IsMouseOver)
+            if (!isClosing && !IsContextMenuOpen && !TaskButton.IsMouseOver)
                 Close();
-        }
-
-        private void bdrThumbInner_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                taskButton.SelectWindow();
-                Close();
-            }
-        }
-
-        private void bdrThumbInner_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            taskButton.ConfigureContextMenu();
-            taskButton.btn.ContextMenu.IsOpen = true;
         }
 
         private void Storyboard_Completed(object sender, EventArgs e)
         {
-            isAnimating = false;
+            IsAnimating = false;
         }
 
-        private void bdrThumbInner_OnMouseEnter(object sender, MouseEventArgs e)
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            if (isDwmEnabled)
-            {
-                WindowHelper.PeekWindow(true, taskButton.Window.Handle, taskButton.ParentTaskbar.Handle);
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        #endregion
 
-        private void bdrThumbInner_OnMouseLeave(object sender, MouseEventArgs e)
+        private void ThumbWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (isDwmEnabled)
-            {
-                WindowHelper.PeekWindow(false, taskButton.Window.Handle, taskButton.ParentTaskbar.Handle);
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            taskButton.Window.Close();
-            Close();
-        }
-
-        private void Window_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (closeButton.Visibility != Visibility.Visible)
-                closeButton.Visibility = Visibility.Visible;
+            SetPosition();
         }
     }
 }

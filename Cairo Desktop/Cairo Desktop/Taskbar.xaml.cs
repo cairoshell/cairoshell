@@ -8,11 +8,13 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
+using ManagedShell.WindowsTasks;
 
 namespace CairoDesktop
 {
@@ -23,7 +25,7 @@ namespace CairoDesktop
     {
         #region Properties
         // Item sources
-        internal readonly AppGrabberService _appGrabber;
+        internal readonly IAppGrabber _appGrabber;
         private readonly ShellManager _shellManager;
 
         // display properties
@@ -41,7 +43,7 @@ namespace CairoDesktop
         }
 
         public static DependencyProperty CanAutoHideProperty = DependencyProperty.Register("CanAutoHide", typeof(bool), typeof(Taskbar), new PropertyMetadata(new bool()));
-        private DesktopManager _desktopManager;
+        private readonly IDesktopManager _desktopManager;
 
         public bool CanAutoHide
         {
@@ -50,7 +52,14 @@ namespace CairoDesktop
         }
         #endregion
 
-        public Taskbar(ICairoApplication cairoApplication, ShellManager shellManager, WindowManager windowManager, DesktopManager desktopManager, AppGrabberService appGrabber, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
+        public Taskbar(ICairoApplication cairoApplication, 
+            ShellManager shellManager, 
+            IWindowManager windowManager, 
+            IDesktopManager desktopManager,
+            IAppGrabber appGrabber, 
+            AppBarScreen screen, 
+            AppBarEdge edge) 
+            : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
         {
             object taskBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["TaskBarWindowAllowsTransparency"];
             if (taskBarWindowAllowsTransparencyResource is bool resourceValue)
@@ -85,7 +94,8 @@ namespace CairoDesktop
             CanAutoHide = true;
 
             // setup taskbar item source
-            _shellManager.Tasks.Initialize(new TaskCategoryProvider(_appGrabber, _shellManager));
+
+            _shellManager.Tasks.Initialize(getTaskCategoryProvider());
 
             TasksList.ItemsSource = _shellManager.Tasks.GroupedWindows;
             TasksList2.ItemsSource = _shellManager.Tasks.GroupedWindows;
@@ -101,6 +111,18 @@ namespace CairoDesktop
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         }
 
+        private ITaskCategoryProvider getTaskCategoryProvider()
+        {
+            if (Settings.Instance.TaskbarGroupingStyle == 0)
+            {
+                return new AppGrabberTaskCategoryProvider(_appGrabber, _shellManager);
+            }
+            else
+            {
+                return new ApplicationTaskCategoryProvider();
+            }
+        }
+
         private void setupTaskbarAppearance()
         {
             double screenWidth = Screen.Bounds.Width / DpiScale;
@@ -112,13 +134,11 @@ namespace CairoDesktop
             if (Settings.Instance.TaskbarPosition == 1)
             {
                 AppBarEdge = AppBarEdge.Top;
-                TaskbarGroupStyle.ContainerStyle = FindResource("CairoTaskbarTopGroupStyle") as Style;
                 TasksList.Margin = new Thickness(0);
             }
             else
             {
                 AppBarEdge = AppBarEdge.Bottom;
-                TaskbarGroupStyle.ContainerStyle = FindResource("CairoTaskbarGroupStyle") as Style;
                 TasksList.Margin = new Thickness(-3, -1, 0, 0);
             }
 
@@ -291,6 +311,10 @@ namespace CairoDesktop
                 case "EnableMenuBarBlur":
                     setTaskbarBlur();
                     break;
+                case "TaskbarGroupingStyle":
+                    _shellManager.Tasks.SetTaskCategoryProvider(getTaskCategoryProvider());
+                    setTaskButtonSize();
+                    break;
             }
         }
         #endregion
@@ -313,7 +337,7 @@ namespace CairoDesktop
             if (TasksList.Items.Groups != null)
             {
                 // calculate the maximum per-button size
-                double adjustedSize = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - (btnDesktopOverlay.ActualWidth - 5) - btnTaskList.ActualWidth - (TasksList.Items.Groups.Count * 4 - 3) - 11) / TasksList.Items.Count);
+                double adjustedSize = Math.Floor((ActualWidth - quickLaunchList.ActualWidth - (btnDesktopOverlay.ActualWidth - 5) - btnTaskList.ActualWidth - (TasksList.Items.Groups.Count * 4 - 3) - 11) / (Settings.Instance.TaskbarGroupingStyle == 2 ? TasksList.Items.Groups.Count : TasksList.Items.Count));
 
                 if (adjustedSize > baseButtonWidth)
                 {

@@ -110,7 +110,7 @@ namespace CairoDesktop
                     imgIcon.SetBinding(Image.SourceProperty, iconBinding);
                 }
                 
-                if (!file.IsFolder && ImageFileTypes.Contains(Path.GetExtension(file.Path)))
+                if (!file.IsFolder && ImageFileTypes.Contains(Path.GetExtension(file.Path).ToLower()))
                 {
                     // set icon thumbnail shadow
                     imgIcon.Effect = new DropShadowEffect
