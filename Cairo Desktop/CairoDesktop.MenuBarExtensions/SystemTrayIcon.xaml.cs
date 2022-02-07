@@ -178,8 +178,6 @@ namespace CairoDesktop.MenuBarExtensions
         private void TextBlock_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             Balloon?.Click();
-
-            closeBalloon();
             e.Handled = true;
         }
     }

@@ -33,7 +33,7 @@ namespace CairoDesktop.MenuBarExtensions
             {
                 UnpinnedItems.Visibility = Visibility.Visible;
             }
-
+            // TODO: Promote icons with balloons to the pinned area when tray is collapsed
             // Don't allow showing both the Windows TaskBar and the Cairo tray
             if (Settings.Instance.EnableSysTray && (Settings.Instance.EnableTaskbar || EnvironmentHelper.IsAppRunningAsShell) && _notificationArea.Handle == IntPtr.Zero)
             {

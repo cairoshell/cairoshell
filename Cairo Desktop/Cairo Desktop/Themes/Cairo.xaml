@@ -99,6 +99,14 @@
     <Thickness x:Key="MenuBarBorderThickness" Bottom="1" />
     <SolidColorBrush Color="#FF9a9a9a"
                      x:Key="NoItemsForeground" />
+    <RadialGradientBrush x:Key="NotifyBalloonBackground"
+                         Center="0.5,1"
+                         GradientOrigin="0.5,1">
+        <GradientStop Color="#91ff8400"
+                      Offset="0.0" />
+        <GradientStop Color="#00ff8400"
+                      Offset="1.0" />
+    </RadialGradientBrush>
 
 
     <!-- Search resources -->
@@ -3917,17 +3925,8 @@
     <!-- Styles for notification area and balloon notifications -->
     <Style x:Key="NotifyIconBorder"
            TargetType="Border">
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0,0"
-                                     EndPoint="0,1">
-                    <GradientStop Color="#00000000"
-                                  Offset="0" />
-                    <GradientStop Color="#61ff8400"
-                                  Offset="1" />
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Background"
+                Value="{DynamicResource NotifyBalloonBackground}" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding Path=Balloon, RelativeSource={RelativeSource AncestorType=UserControl}}"
                          Value="{x:Null}">
@@ -3961,16 +3960,20 @@
     </Style>
     <Style x:Key="NotifyIconBalloonCloseButton"
            TargetType="Button">
+        <Setter Property="Effect"
+                Value="{DynamicResource ResourceKey=MenuHeaderShadow}" />
         <Setter Property="OverridesDefaultStyle"
             Value="true" />
         <Setter Property="FontFamily"
                 Value="Webdings" />
+        <Setter Property="FontSize"
+                Value="12" />
         <Setter Property="Foreground"
-                Value="{DynamicResource MenuItemForeground}" />
+                Value="{DynamicResource MenuHeaderForeground}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <ContentPresenter Margin="0,-2,0,0"
+                    <ContentPresenter Margin="0,0,0,3"
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Center" />
                 </ControlTemplate>
@@ -4003,12 +4006,16 @@
     </Style>
     <Style x:Key="NotifyIconBalloonTitle"
            TargetType="TextBlock">
+        <Setter Property="Effect"
+                Value="{DynamicResource ResourceKey=MenuHeaderShadow}" />
         <Setter Property="Foreground"
-                Value="{DynamicResource MenuItemForeground}" />
+                Value="{DynamicResource MenuHeaderForeground}" />
+        <Setter Property="FontSize"
+                Value="{DynamicResource SmallFontSize}" />
         <Setter Property="Margin"
-                Value="0,-1,0,0" />
-        <Setter Property="MaxWidth"
-                Value="145" />
+                Value="0,-1,0,2" />
+        <Setter Property="Width"
+                Value="120" />
         <Setter Property="Padding"
                 Value="0,0,5,0" />
         <Setter Property="TextTrimming"
@@ -4022,10 +4029,10 @@
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetProperty="Width"
-                                        From="0"
-                                        To="145"
-                                        Duration="0:0:0.2"
-                                        FillBehavior="Stop" />
+                                             From="0"
+                                             To="120"
+                                             Duration="0:0:0.2"
+                                             FillBehavior="Stop" />
                         </Storyboard>
                     </BeginStoryboard>
                 </DataTrigger.ExitActions>
@@ -4036,6 +4043,8 @@
            TargetType="TextBlock">
         <Setter Property="Foreground"
                 Value="{DynamicResource MenuItemForeground}" />
+        <Setter Property="FontSize"
+                Value="{DynamicResource MediumFontSize}" />
         <Setter Property="TextWrapping"
                 Value="Wrap" />
     </Style>
@@ -4061,6 +4070,6 @@
         <Setter Property="MaxWidth"
                 Value="260" />
         <Setter Property="Padding"
-                Value="10,5" />
+                Value="10,7" />
     </Style>
 </ResourceDictionary>
