@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using CairoDesktop.Application.Interfaces;
@@ -40,6 +38,15 @@ namespace CairoDesktop.MenuBarExtensions
             if (Settings.Instance.EnableSysTray && (Settings.Instance.EnableTaskbar || EnvironmentHelper.IsAppRunningAsShell) && _notificationArea.Handle == IntPtr.Zero)
             {
                 _notificationArea.Initialize();
+            }
+        }
+
+        public void SetTrayHostSizeData()
+        {
+            if (Host != null)
+            {
+                // set current menu bar to return placement for ABM_GETTASKBARPOS message
+                _notificationArea.SetTrayHostSizeData(GetTrayHostSizeData());
             }
         }
 
@@ -98,56 +105,6 @@ namespace CairoDesktop.MenuBarExtensions
                     Right = (int)((dimensions.Left + dimensions.Width) * dimensions.DpiScale)
                 }
             };
-        }
-
-        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
-
-            if (Host != null)
-            {
-                // set current menu bar to return placement for ABM_GETTASKBARPOS message
-                _notificationArea.SetTrayHostSizeData(GetTrayHostSizeData());
-            }
-
-            trayIcon?.IconMouseDown(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
-        }
-
-        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
-
-            trayIcon?.IconMouseUp(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
-        }
-
-        private void Image_MouseEnter(object sender, MouseEventArgs e)
-        {
-            Decorator sendingDecorator = sender as Decorator;
-            var trayIcon = sendingDecorator.DataContext as NotifyIcon;
-
-            if (trayIcon != null)
-            {
-                // update icon position for Shell_NotifyIconGetRect
-                Point location = sendingDecorator.PointToScreen(new Point(0, 0));
-                double dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
-
-                trayIcon.Placement = new NativeMethods.Rect { Top = (int)location.Y, Left = (int)location.X, Bottom = (int)(sendingDecorator.ActualHeight * dpiScale), Right = (int)(sendingDecorator.ActualWidth * dpiScale) };
-                trayIcon.IconMouseEnter(MouseHelper.GetCursorPositionParam());
-            }
-        }
-
-        private void Image_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
-
-            trayIcon?.IconMouseLeave(MouseHelper.GetCursorPositionParam());
-        }
-
-        private void Image_MouseMove(object sender, MouseEventArgs e)
-        {
-            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
-
-            trayIcon?.IconMouseMove(MouseHelper.GetCursorPositionParam());
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)

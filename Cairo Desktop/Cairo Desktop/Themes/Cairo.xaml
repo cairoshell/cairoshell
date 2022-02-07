@@ -3913,4 +3913,154 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <!-- Styles for notification area and balloon notifications -->
+    <Style x:Key="NotifyIconBorder"
+           TargetType="Border">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0"
+                                     EndPoint="0,1">
+                    <GradientStop Color="#00000000"
+                                  Offset="0" />
+                    <GradientStop Color="#61ff8400"
+                                  Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=Balloon, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                         Value="{x:Null}">
+                <Setter Property="Background"
+                        Value="Transparent" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="NotifyIconImage"
+           TargetType="Image">
+        <Setter Property="Margin"
+                Value="5,0,5,2" />
+        <Setter Property="Height"
+                Value="16" />
+        <Setter Property="Width"
+                Value="16" />
+    </Style>
+    <Style x:Key="NotifyIconBalloonPanel"
+           TargetType="DockPanel">
+        <Setter Property="Margin"
+                Value="0,0,5,0" />
+        <Setter Property="Visibility"
+                Value="Visible" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=Balloon, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                         Value="{x:Null}">
+                <Setter Property="Visibility"
+                        Value="Collapsed" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="NotifyIconBalloonCloseButton"
+           TargetType="Button">
+        <Setter Property="OverridesDefaultStyle"
+            Value="true" />
+        <Setter Property="FontFamily"
+                Value="Webdings" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource MenuItemForeground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter Margin="0,-2,0,0"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="White"
+                                          ShadowDepth="0"
+                                          Opacity="0.5"
+                                          BlurRadius="7" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="IsPressed"
+                     Value="True">
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="White"
+                                          ShadowDepth="0"
+                                          Opacity="1"
+                                          BlurRadius="7" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="NotifyIconBalloonTitle"
+           TargetType="TextBlock">
+        <Setter Property="Foreground"
+                Value="{DynamicResource MenuItemForeground}" />
+        <Setter Property="Margin"
+                Value="0,-1,0,0" />
+        <Setter Property="MaxWidth"
+                Value="145" />
+        <Setter Property="Padding"
+                Value="0,0,5,0" />
+        <Setter Property="TextTrimming"
+                Value="CharacterEllipsis" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=Balloon, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                         Value="{x:Null}">
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="Width"
+                                        From="0"
+                                        To="145"
+                                        Duration="0:0:0.2"
+                                        FillBehavior="Stop" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="NotifyIconBalloonContent"
+           TargetType="TextBlock">
+        <Setter Property="Foreground"
+                Value="{DynamicResource MenuItemForeground}" />
+        <Setter Property="TextWrapping"
+                Value="Wrap" />
+    </Style>
+    <Style x:Key="NotifyIconBalloonContentTitle"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource NotifyIconBalloonContent}">
+        <Setter Property="FontWeight"
+                Value="Bold" />
+        <Setter Property="Margin"
+                Value="0,0,0,5" />
+    </Style>
+    <Style x:Key="NotifyIconBalloonImage"
+           TargetType="Image"
+           BasedOn="{StaticResource NotifyIconImage}">
+        <Setter Property="Margin"
+                Value="0,0,5,5" />
+        <Setter Property="VerticalAlignment"
+                Value="Center" />
+    </Style>
+    <Style x:Key="NotifyIconBalloonPopupInnerBorder"
+           TargetType="Border"
+           BasedOn="{StaticResource CairoMenuInnerBorderStyle}">
+        <Setter Property="MaxWidth"
+                Value="260" />
+        <Setter Property="Padding"
+                Value="10,5" />
+    </Style>
 </ResourceDictionary>
