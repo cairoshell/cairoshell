@@ -56,7 +56,7 @@ namespace CairoDesktop.MenuBarExtensions
             _notifyIcon.NotificationBalloonShown += TrayIcon_NotificationBalloonShown;
 
             // If a notification was received before we started listening, it will be here. Show the first one that is not expired.
-            NotificationBalloon firstUnexpiredNotification = _notifyIcon.MissedNotifications.FirstOrDefault(balloon => balloon.Received.AddMilliseconds(balloon.Timeout) > DateTime.Now);
+            NotificationBalloon firstUnexpiredNotification = _notifyIcon.MissedNotifications.FirstOrDefault(balloon => balloon.Received.AddMilliseconds(GetAdjustedBalloonTimeout(balloon)) > DateTime.Now);
 
             if (firstUnexpiredNotification != null)
             {
@@ -137,7 +137,11 @@ namespace CairoDesktop.MenuBarExtensions
             }
 
             showBalloon(e.Balloon);
-            e.Handled = true;
+
+            if (_notifyIcon.IsPinned || (Host != null && Host.UnpinnedItems.Visibility == Visibility.Visible))
+            {
+                e.Handled = true;
+            }
         }
 
         private void showBalloon(NotificationBalloon balloon)
@@ -147,20 +151,9 @@ namespace CairoDesktop.MenuBarExtensions
 
             _balloonTimer?.Stop();
 
-            // valid timeout is 12-30 seconds
-            int timeout = Balloon.Timeout;
-            if (timeout < 12000)
-            {
-                timeout = 12000;
-            }
-            else if (timeout > 30000)
-            {
-                timeout = 30000;
-            }
-
             _balloonTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(timeout)
+                Interval = TimeSpan.FromMilliseconds(GetAdjustedBalloonTimeout(Balloon))
             };
 
             _balloonTimer.Tick += BalloonTimer_Tick;
@@ -200,6 +193,22 @@ namespace CairoDesktop.MenuBarExtensions
         {
             Balloon?.Click();
             e.Handled = true;
+        }
+
+        internal static int GetAdjustedBalloonTimeout(NotificationBalloon balloon)
+        {
+            // valid timeout is 12-30 seconds
+            int timeout = balloon.Timeout;
+            if (timeout < 12000)
+            {
+                timeout = 12000;
+            }
+            else if (timeout > 30000)
+            {
+                timeout = 30000;
+            }
+
+            return timeout;
         }
         #endregion
     }

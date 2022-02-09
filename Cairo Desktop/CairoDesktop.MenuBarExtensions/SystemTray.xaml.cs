@@ -96,20 +96,9 @@ namespace CairoDesktop.MenuBarExtensions
 
             PromotedIcons.Add(notifyIcon);
 
-            // valid timeout is 12-30 seconds
-            int timeout = e.Balloon.Timeout;
-            if (timeout < 12000)
-            {
-                timeout = 12000;
-            }
-            else if (timeout > 30000)
-            {
-                timeout = 30000;
-            }
-
             DispatcherTimer unpromoteTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(timeout + 600) // Keep it around a few ms for the animation to complete
+                Interval = TimeSpan.FromMilliseconds(SystemTrayIcon.GetAdjustedBalloonTimeout(e.Balloon) + 400) // Keep it around a few ms for the animation to complete
             };
             unpromoteTimer.Tick += (object timerSender, EventArgs timerE) =>
             {
