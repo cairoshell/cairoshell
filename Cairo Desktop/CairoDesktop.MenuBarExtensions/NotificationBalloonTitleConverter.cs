@@ -9,14 +9,25 @@ namespace CairoDesktop.MenuBarExtensions
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
+            string title = string.Empty;
+
             if (value is NotificationBalloon balloon)
             {
-                if (balloon.Title != string.Empty) return balloon.Title.Replace('\n', ' ').Replace('\r', ' ');
-
-                return balloon.NotifyIcon.Title.Replace('\n', ' ').Replace('\r', ' ');
+                if (balloon.Info != string.Empty)
+                {
+                    title = balloon.Info;
+                }
+                else if (balloon.Title != string.Empty)
+                {
+                    title = balloon.Title;
+                }
+                else
+                {
+                    title = balloon.NotifyIcon.Title;
+                }
             }
 
-            return "";
+            return title.Replace('\n', ' ').Replace('\r', ' ');
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

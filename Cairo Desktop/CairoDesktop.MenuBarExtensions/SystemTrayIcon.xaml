@@ -8,51 +8,70 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <local:NotificationBalloonTitleConverter x:Key="balloonTitleConverter" />
+            <local:NotificationBalloonWidthConverter x:Key="balloonWidthConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <Border Style="{DynamicResource NotifyIconBorder}">
-        <StackPanel Orientation="Horizontal">
-            <Border MouseUp="Image_MouseUp" 
-                    MouseDown="Image_MouseDown" 
-                    MouseEnter="Image_MouseEnter" 
-                    MouseLeave="Image_MouseLeave" 
-                    MouseMove="Image_MouseMove" 
-                    Background="Transparent" 
-                    ToolTip="{Binding Path=Title}" 
-                    ToolTipService.Placement="Bottom">
-                <Image Source="{Binding Path=Icon, Mode=OneWay}"
-                       Style="{DynamicResource NotifyIconImage}" />
+    <StackPanel Style="{DynamicResource NotifyIconPanel}">
+        <Border MouseUp="Image_MouseUp" 
+                MouseDown="Image_MouseDown" 
+                MouseEnter="Image_MouseEnter" 
+                MouseLeave="Image_MouseLeave" 
+                MouseMove="Image_MouseMove" 
+                Background="Transparent" 
+                ToolTip="{Binding Path=Title}" 
+                ToolTipService.Placement="Bottom">
+            <Image Source="{Binding Path=Icon, Mode=OneWay}"
+                   Style="{DynamicResource NotifyIconImage}" />
+        </Border>
+        <!-- The width of this border animates to a constant value 0..1 via its style -->
+        <Border Width="0"
+                Style="{DynamicResource NotifyIconBalloonAnimatedBorder}"
+                x:Name="AnimatingBorder" />
+        <!-- This border contains the actual notification, its width is calculated by
+             multiplying the width of the child StackPanel by the width of the above border -->
+        <Border>
+            <!-- The second border here shows/hides based on the balloon's existence.
+                 We also use this element's hover state to determine if the popup should
+                 show, as it will hide during the dismiss animation. This prevents showing
+                 an empty popup. -->
+            <Border Style="{DynamicResource NotifyIconBalloonInlineBorder}"
+                    x:Name="BalloonInlineBorder">
+                <StackPanel Style="{DynamicResource NotifyIconBalloonInlinePanel}"
+                             x:Name="BalloonInlinePanel">
+                     <TextBlock Text="{Binding Path=Balloon, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource balloonTitleConverter}}"
+                                Style="{DynamicResource NotifyIconBalloonInlineTitle}"
+                                MouseLeftButtonUp="TextBlock_MouseLeftButtonUp" />
+                    <Button Style="{DynamicResource NotifyIconBalloonInlineCloseButton}"
+                            ToolTip="{Binding Path=(l10n:DisplayString.sInterface_Dismiss)}"
+                            Click="Button_Click">r</Button>
+                </StackPanel>
             </Border>
-            <DockPanel Style="{DynamicResource NotifyIconBalloonPanel}"
-                       Name="BalloonPanel">
-                <Button Style="{DynamicResource NotifyIconBalloonCloseButton}"
-                        ToolTip="{Binding Path=(l10n:DisplayString.sInterface_Dismiss)}"
-                        DockPanel.Dock="Right"
-                        Click="Button_Click">r</Button>
-                <TextBlock Text="{Binding Path=Balloon, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource balloonTitleConverter}}"
-                           Style="{DynamicResource NotifyIconBalloonTitle}"
-                           MouseLeftButtonUp="TextBlock_MouseLeftButtonUp" />
-            </DockPanel>
-            <Popup AllowsTransparency="True"
-                   PopupAnimation="Slide"
-                   Name="BalloonPopup"
-                   IsOpen="{Binding ElementName=BalloonPanel, Path=IsMouseOver, Mode=OneWay}">
-                <Border Style="{StaticResource ResourceKey=CairoMenuBorderStyle}">
-                    <Border Style="{StaticResource ResourceKey=NotifyIconBalloonPopupInnerBorder}">
-                        <StackPanel Orientation="Vertical">
-                            <DockPanel>
-                                <Image Source="{Binding Path=Balloon.Icon, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"
-                                       Style="{DynamicResource NotifyIconBalloonImage}"
-                                       DockPanel.Dock="Left" />
-                                <TextBlock Text="{Binding Path=Balloon.Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                       Style="{DynamicResource NotifyIconBalloonContentTitle}" />
-                            </DockPanel>
-                            <TextBlock Text="{Binding Path=Balloon.Info, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                       Style="{DynamicResource NotifyIconBalloonContent}" />
-                        </StackPanel>
-                    </Border>
+            <Border.Width>
+                <MultiBinding Converter="{StaticResource balloonWidthConverter}">
+                    <Binding Path="ActualWidth" ElementName="BalloonInlinePanel" />
+                    <Binding Path="Width" ElementName="AnimatingBorder" />
+                </MultiBinding>
+            </Border.Width>
+        </Border>
+        <Popup AllowsTransparency="True"
+                PopupAnimation="Slide"
+                Name="BalloonPopup"
+                IsOpen="{Binding ElementName=BalloonInlineBorder, Path=IsMouseOver, Mode=OneWay}">
+            <Border Style="{StaticResource ResourceKey=CairoMenuBorderStyle}">
+                <Border Style="{StaticResource ResourceKey=NotifyIconBalloonPopupInnerBorder}">
+                    <StackPanel Orientation="Vertical">
+                        <DockPanel>
+                            <Image Source="{Binding Path=Balloon.Icon, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"
+                                    Style="{DynamicResource NotifyIconBalloonImage}"
+                                    DockPanel.Dock="Left" />
+                            <TextBlock Text="{Binding Path=Balloon.Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    Style="{DynamicResource NotifyIconBalloonTitle}" />
+                        </DockPanel>
+                        <TextBlock Text="{Binding Path=Balloon.Info, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    Style="{DynamicResource NotifyIconBalloonContent}" />
+                    </StackPanel>
                 </Border>
-            </Popup>
-        </StackPanel>
-    </Border>
+            </Border>
+        </Popup>
+    </StackPanel>
 </UserControl>

@@ -39,53 +39,6 @@ namespace CairoDesktop.MenuBarExtensions
             InitializeComponent();
         }
 
-        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
-
-            // set current menu bar to return placement for ABM_GETTASKBARPOS message
-            Host?.SetTrayHostSizeData();
-
-            trayIcon?.IconMouseDown(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
-        }
-
-        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
-
-            trayIcon?.IconMouseUp(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
-        }
-
-        private void Image_MouseEnter(object sender, MouseEventArgs e)
-        {
-            Decorator sendingDecorator = sender as Decorator;
-            var trayIcon = sendingDecorator.DataContext as NotifyIcon;
-
-            if (trayIcon != null)
-            {
-                // update icon position for Shell_NotifyIconGetRect
-                Point location = sendingDecorator.PointToScreen(new Point(0, 0));
-                double dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
-
-                trayIcon.Placement = new NativeMethods.Rect { Top = (int)location.Y, Left = (int)location.X, Bottom = (int)(sendingDecorator.ActualHeight * dpiScale), Right = (int)(sendingDecorator.ActualWidth * dpiScale) };
-                trayIcon.IconMouseEnter(MouseHelper.GetCursorPositionParam());
-            }
-        }
-
-        private void Image_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
-
-            trayIcon?.IconMouseLeave(MouseHelper.GetCursorPositionParam());
-        }
-
-        private void Image_MouseMove(object sender, MouseEventArgs e)
-        {
-            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
-
-            trayIcon?.IconMouseMove(MouseHelper.GetCursorPositionParam());
-        }
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             if (_isLoaded)
@@ -124,6 +77,58 @@ namespace CairoDesktop.MenuBarExtensions
             _isLoaded = false;
         }
 
+        #region Notify icon image mouse events
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
+
+            // set current menu bar to return placement for ABM_GETTASKBARPOS message
+            Host?.SetTrayHostSizeData();
+
+            trayIcon?.IconMouseDown(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
+        }
+
+        private void Image_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
+
+            trayIcon?.IconMouseUp(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
+        }
+
+        private void Image_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Decorator sendingDecorator = sender as Decorator;
+            var trayIcon = sendingDecorator.DataContext as NotifyIcon;
+
+            if (trayIcon == null)
+            {
+                return;
+            }
+
+            // update icon position for Shell_NotifyIconGetRect
+            Point location = sendingDecorator.PointToScreen(new Point(0, 0));
+            double dpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
+
+            trayIcon.Placement = new NativeMethods.Rect { Top = (int)location.Y, Left = (int)location.X, Bottom = (int)(sendingDecorator.ActualHeight * dpiScale), Right = (int)(sendingDecorator.ActualWidth * dpiScale) };
+            trayIcon.IconMouseEnter(MouseHelper.GetCursorPositionParam());
+        }
+
+        private void Image_MouseLeave(object sender, MouseEventArgs e)
+        {
+            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
+
+            trayIcon?.IconMouseLeave(MouseHelper.GetCursorPositionParam());
+        }
+
+        private void Image_MouseMove(object sender, MouseEventArgs e)
+        {
+            var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
+
+            trayIcon?.IconMouseMove(MouseHelper.GetCursorPositionParam());
+        }
+        #endregion
+
+        #region Notify icon balloon notifications
         private void TrayIcon_NotificationBalloonShown(object sender, NotificationBalloonEventArgs e)
         {
             showBalloon(e.Balloon);
@@ -137,9 +142,20 @@ namespace CairoDesktop.MenuBarExtensions
 
             _balloonTimer?.Stop();
 
+            // valid timeout is 12-30 seconds
+            int timeout = Balloon.Timeout;
+            if (timeout < 12000)
+            {
+                timeout = 12000;
+            }
+            else if (timeout > 30000)
+            {
+                timeout = 30000;
+            }
+
             _balloonTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(Balloon.Timeout)
+                Interval = TimeSpan.FromMilliseconds(timeout)
             };
 
             _balloonTimer.Tick += BalloonTimer_Tick;
@@ -180,5 +196,6 @@ namespace CairoDesktop.MenuBarExtensions
             Balloon?.Click();
             e.Handled = true;
         }
+        #endregion
     }
 }
