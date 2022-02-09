@@ -432,7 +432,11 @@
                                                                                                              From="0"
                                                                                                              To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}"
                                                                                                              Duration="0:0:0.2"
-                                                                                                             FillBehavior="Stop" />
+                                                                                                             FillBehavior="Stop">
+                                                                                                <DoubleAnimation.EasingFunction>
+                                                                                                    <QuadraticEase EasingMode="EaseInOut" />
+                                                                                                </DoubleAnimation.EasingFunction>
+                                                                                            </DoubleAnimation>
                                                                                         </Storyboard>
                                                                                     </BeginStoryboard>
                                                                                 </EventTrigger>
@@ -479,7 +483,11 @@
                                                                                      From="0"
                                                                                      To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}"
                                                                                      Duration="0:0:0.2"
-                                                                                     FillBehavior="Stop" />
+                                                                                     FillBehavior="Stop">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <QuadraticEase EasingMode="EaseInOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
                                                                 </Storyboard>
                                                             </BeginStoryboard>
                                                         </EventTrigger>

@@ -8,32 +8,36 @@ using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
+using System.Collections.ObjectModel;
+using System.Windows.Threading;
 
 namespace CairoDesktop.MenuBarExtensions
 {
     public partial class SystemTray
     {
-        private readonly IMenuBar Host;
+        private bool _isLoaded;
         private readonly NotificationArea _notificationArea;
+
+        internal readonly IMenuBar Host;
+
+        public ObservableCollection<NotifyIcon> PromotedIcons { get; private set; }
 
         public SystemTray(IMenuBar host, NotificationArea notificationArea)
         {
+            PromotedIcons = new ObservableCollection<NotifyIcon>();
+
             InitializeComponent();
             
             _notificationArea = notificationArea;
             DataContext = _notificationArea;
             Host = host;
 
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
-
-            ((INotifyCollectionChanged)PinnedItems.Items).CollectionChanged += PinnedItems_CollectionChanged;
-            ((INotifyCollectionChanged)UnpinnedItems.Items).CollectionChanged += UnpinnedItems_CollectionChanged;
-
             if (Settings.Instance.SysTrayAlwaysExpanded)
             {
+                PromotedItems.Visibility = Visibility.Collapsed;
                 UnpinnedItems.Visibility = Visibility.Visible;
             }
-            // TODO: Promote icons with balloons to the pinned area when tray is collapsed
+
             // Don't allow showing both the Windows TaskBar and the Cairo tray
             if (Settings.Instance.EnableSysTray && (Settings.Instance.EnableTaskbar || EnvironmentHelper.IsAppRunningAsShell) && _notificationArea.Handle == IntPtr.Zero)
             {
@@ -67,26 +71,85 @@ namespace CairoDesktop.MenuBarExtensions
             SetToggleVisibility();
         }
 
+        private void NotificationArea_NotificationBalloonShown(object sender, NotificationBalloonEventArgs e)
+        {
+            // This is used to promote unpinned icons to show when the tray is collapsed.
+
+            if (_notificationArea == null)
+            {
+                return;
+            }
+
+            NotifyIcon notifyIcon = e.Balloon.NotifyIcon;
+
+            if (_notificationArea.PinnedIcons.Contains(notifyIcon))
+            {
+                // Do not promote pinned icons (they're already there!)
+                return;
+            }
+
+            if (PromotedIcons.Contains(notifyIcon))
+            {
+                // Do not duplicate promoted icons
+                return;
+            }
+
+            PromotedIcons.Add(notifyIcon);
+
+            // valid timeout is 12-30 seconds
+            int timeout = e.Balloon.Timeout;
+            if (timeout < 12000)
+            {
+                timeout = 12000;
+            }
+            else if (timeout > 30000)
+            {
+                timeout = 30000;
+            }
+
+            DispatcherTimer unpromoteTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(timeout + 600) // Keep it around a few ms for the animation to complete
+            };
+            unpromoteTimer.Tick += (object timerSender, EventArgs timerE) =>
+            {
+                if (PromotedIcons.Contains(notifyIcon))
+                {
+                    PromotedIcons.Remove(notifyIcon);
+                }
+                unpromoteTimer.Stop();
+            };
+            unpromoteTimer.Start();
+        }
+
         private void btnToggle_Click(object sender, RoutedEventArgs e)
         {
             if (UnpinnedItems.Visibility == Visibility.Visible)
             {
+                PromotedItems.Visibility = Visibility.Visible;
                 UnpinnedItems.Visibility = Visibility.Collapsed;
             }
             else
             {
+                PromotedItems.Visibility = Visibility.Collapsed;
                 UnpinnedItems.Visibility = Visibility.Visible;
             }
         }
 
         private void SetToggleVisibility()
         {
-            if (!Settings.Instance.SysTrayAlwaysExpanded)
+            if (Settings.Instance.SysTrayAlwaysExpanded)
             {
-                if (UnpinnedItems.Items.Count > 0)
-                    btnToggle.Visibility = Visibility.Visible;
-                else
-                    btnToggle.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            if (UnpinnedItems.Items.Count > 0)
+            {
+                btnToggle.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                btnToggle.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -122,14 +185,48 @@ namespace CairoDesktop.MenuBarExtensions
             if (Settings.Instance.SysTrayAlwaysExpanded)
             {
                 btnToggle.Visibility = Visibility.Collapsed;
+                PromotedItems.Visibility = Visibility.Collapsed;
                 UnpinnedItems.Visibility = Visibility.Visible;
             }
             else
             {
                 btnToggle.IsChecked = false;
+                PromotedItems.Visibility = Visibility.Visible;
                 UnpinnedItems.Visibility = Visibility.Collapsed;
                 SetToggleVisibility();
             }
+        }
+
+        private void CairoSystemTray_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (_isLoaded)
+            {
+                return;
+            }
+
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+
+            ((INotifyCollectionChanged)PinnedItems.Items).CollectionChanged += PinnedItems_CollectionChanged;
+            ((INotifyCollectionChanged)UnpinnedItems.Items).CollectionChanged += UnpinnedItems_CollectionChanged;
+            _notificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
+
+            _isLoaded = true;
+        }
+
+        private void CairoSystemTray_Unloaded(object sender, RoutedEventArgs e)
+        {
+            if (!_isLoaded)
+            {
+                return;
+            }
+
+            Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+
+            ((INotifyCollectionChanged)PinnedItems.Items).CollectionChanged -= PinnedItems_CollectionChanged;
+            ((INotifyCollectionChanged)UnpinnedItems.Items).CollectionChanged -= UnpinnedItems_CollectionChanged;
+            _notificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
+
+            _isLoaded = false;
         }
     }
 }

@@ -6,7 +6,9 @@
              x:Class="CairoDesktop.MenuBarExtensions.SystemTray"
              x:Name="CairoSystemTray"
              Height="23"
-             Margin="8,0,8,0">
+             Margin="8,0,8,0"
+             Loaded="CairoSystemTray_Loaded"
+             Unloaded="CairoSystemTray_Unloaded">
     <UserControl.Resources>
         <Style TargetType="ItemsControl">
             <Setter Property="Template">
@@ -36,6 +38,7 @@
     <StackPanel Orientation="Horizontal">
         <ItemsControl ItemsSource="{Binding Path=UnpinnedIcons}" Name="UnpinnedItems" Visibility="Collapsed" />
         <ToggleButton Name="btnToggle" Click="btnToggle_Click" Visibility="Collapsed" ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_ToggleNotificationArea)}" ToolTipService.Placement="Bottom" Style="{StaticResource CairoSystrayExpanderStyle}" />
+        <ItemsControl ItemsSource="{Binding Path=PromotedIcons, ElementName=CairoSystemTray}" Name="PromotedItems" />
         <ItemsControl ItemsSource="{Binding Path=PinnedIcons}" Name="PinnedItems" />
     </StackPanel>
 </UserControl>

@@ -3972,7 +3972,7 @@
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetProperty="Width"
                                              To="0"
-                                             Duration="0:0:0.2">
+                                             Duration="0:0:0.4">
                                 <DoubleAnimation.EasingFunction>
                                     <QuadraticEase EasingMode="EaseInOut" />
                                 </DoubleAnimation.EasingFunction>
@@ -3985,7 +3985,7 @@
                         <Storyboard>
                             <DoubleAnimation Storyboard.TargetProperty="Width"
                                              To="1"
-                                             Duration="0:0:0.2">
+                                             Duration="0:0:0.4">
                                 <DoubleAnimation.EasingFunction>
                                     <QuadraticEase EasingMode="EaseInOut" />
                                 </DoubleAnimation.EasingFunction>
