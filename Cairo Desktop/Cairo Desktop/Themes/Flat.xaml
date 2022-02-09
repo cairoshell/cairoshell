@@ -30,15 +30,12 @@
     <SolidColorBrush Color="#9F2a2a2a" x:Key="TaskbarTopBackground" />
     <SolidColorBrush Color="#AF707070" x:Key="TaskbarTopBorder" />
     <SolidColorBrush Color="#77000000" x:Key="TaskGroupBorder" />
-    <LinearGradientBrush x:Key="TaskbarItemInactiveBackgroundGradient" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#10FFFFFF" Offset="0.0" />
-        <GradientStop Color="#10FFFFFF" Offset="0.35" />
-        <GradientStop Color="#10FFFFFF" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="TaskbarItemInactiveBorderGradient" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#30FFFFFF" Offset="0.0" />
-        <GradientStop Color="#30FFFFFF" Offset="1.0" />
-    </LinearGradientBrush>
+    <Color A="48" R="255" G="255" B="255"
+           x:Key="TaskbarItemInactiveBorder" />
+    <Color A="16" R="255" G="255" B="255"
+           x:Key="TaskbarItemInactiveBackground" />
+    <SolidColorBrush Color="{StaticResource TaskbarItemInactiveBackground}" x:Key="TaskbarItemInactiveBackgroundGradient" />
+    <SolidColorBrush Color="{StaticResource TaskbarItemInactiveBorder}" x:Key="TaskbarItemInactiveBorderGradient" />
     <SolidColorBrush Color="#AF0057a8" x:Key="TaskbarItemInactiveHoverBackground" />
     <SolidColorBrush Color="#DF0f82c2" x:Key="TaskbarItemInactiveHoverBorder" />
     <SolidColorBrush Color="#FF0057a8" x:Key="TaskbarItemInactivePressedBackground" />
@@ -46,30 +43,59 @@
     <SolidColorBrush Color="#70FFFFFF" x:Key="TaskbarItemActiveBorder" />
     <SolidColorBrush Color="#43FFFFFF" x:Key="TaskbarItemActiveHoverBackground" />
     <SolidColorBrush Color="#53FFFFFF" x:Key="TaskbarItemActivePressedBackground" />
-    <LinearGradientBrush x:Key="TaskbarItemFlashingBackgroundGradient" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#5fff5400" Offset="0.0" />
-        <GradientStop Color="#5fff5400" Offset="0.35" />
-        <GradientStop Color="#5fff5400" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="TaskbarItemFlashingBorderGradient" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#FFcb7900" Offset="0.0" />
-        <GradientStop Color="#FFcb7900" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="TaskbarItemFlashingDisabledBackground" StartPoint="0,1" EndPoint="0,0">
-        <GradientStop Color="#CFDBA715" Offset="0.0" />
-        <GradientStop Color="#CFDBA715" Offset="0.35" />
-        <GradientStop Color="#CFDBA715" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="TaskbarItemFlashingHoverBackground" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#6fff5400" Offset="0.0" />
-        <GradientStop Color="#6fff5400" Offset="0.35" />
-        <GradientStop Color="#6fff5400" Offset="1.0" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="TaskbarItemFlashingPressedBackground" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#7fff5400" Offset="0.0" />
-        <GradientStop Color="#7fff5400" Offset="0.35" />
-        <GradientStop Color="#7fff5400" Offset="1.0" />
-    </LinearGradientBrush>
+    <Color A="255" R="203" G="121" B="0"
+           x:Key="TaskbarItemFlashingBorder" />
+    <Color A="95" R="255" G="84" B="0"
+           x:Key="TaskbarItemFlashingBackground" />
+    <SolidColorBrush Color="{StaticResource TaskbarItemFlashingBackground}" x:Key="TaskbarItemFlashingBackgroundGradient" />
+    <SolidColorBrush Color="{StaticResource TaskbarItemFlashingBorder}" x:Key="TaskbarItemFlashingBorderGradient" />
+    <SolidColorBrush Color="#CFDBA715" x:Key="TaskbarItemFlashingDisabledBackground" />
+    <SolidColorBrush Color="#6fff5400" x:Key="TaskbarItemFlashingHoverBackground" />
+    <SolidColorBrush Color="#7fff5400" x:Key="TaskbarItemFlashingPressedBackground" />
+    <Storyboard x:Key="TaskbarFlashOn">
+        <ColorAnimationUsingKeyFrames BeginTime="00:00:00"
+                                      Storyboard.TargetName="Border"
+                                      Storyboard.TargetProperty="Background.Color"
+                                      AccelerationRatio="0.2"
+                                      DecelerationRatio="0.2">
+            <SplineColorKeyFrame KeyTime="00:00:00.5000000"
+                                 Value="{StaticResource TaskbarItemFlashingBackground}" />
+            <SplineColorKeyFrame KeyTime="00:00:00"
+                                 Value="{StaticResource TaskbarItemInactiveBackground}" />
+        </ColorAnimationUsingKeyFrames>
+        <ColorAnimationUsingKeyFrames BeginTime="00:00:00"
+                                      Storyboard.TargetName="Border"
+                                      Storyboard.TargetProperty="BorderBrush.Color"
+                                      AccelerationRatio="0.2"
+                                      DecelerationRatio="0.2">
+            <SplineColorKeyFrame KeyTime="00:00:00.5000000"
+                                 Value="{StaticResource TaskbarItemFlashingBorder}" />
+            <SplineColorKeyFrame KeyTime="00:00:00"
+                                 Value="{StaticResource TaskbarItemInactiveBorder}" />
+        </ColorAnimationUsingKeyFrames>
+    </Storyboard>
+    <Storyboard x:Key="TaskbarFlashOff">
+        <ColorAnimationUsingKeyFrames BeginTime="00:00:00"
+                                      Storyboard.TargetName="Border"
+                                      Storyboard.TargetProperty="Background.Color"
+                                      AccelerationRatio="0.2"
+                                      DecelerationRatio="0.2">
+            <SplineColorKeyFrame KeyTime="00:00:00"
+                                 Value="{StaticResource TaskbarItemFlashingBackground}" />
+            <SplineColorKeyFrame KeyTime="00:00:00.5000000"
+                                 Value="{StaticResource TaskbarItemInactiveBackground}" />
+        </ColorAnimationUsingKeyFrames>
+        <ColorAnimationUsingKeyFrames BeginTime="00:00:00"
+                                      Storyboard.TargetName="Border"
+                                      Storyboard.TargetProperty="BorderBrush.Color"
+                                      AccelerationRatio="0.2"
+                                      DecelerationRatio="0.2">
+            <SplineColorKeyFrame KeyTime="00:00:00"
+                                 Value="{StaticResource TaskbarItemFlashingBorder}" />
+            <SplineColorKeyFrame KeyTime="00:00:00.5000000"
+                                 Value="{StaticResource TaskbarItemInactiveBorder}" />
+        </ColorAnimationUsingKeyFrames>
+    </Storyboard>
 
     <!-- Dialog resources -->
     <SolidColorBrush Color="#FFFFFFFF" x:Key="DialogWindowBackground" />

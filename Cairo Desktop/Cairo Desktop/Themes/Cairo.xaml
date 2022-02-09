@@ -1607,10 +1607,10 @@
                         <DataTrigger Binding="{Binding Path=State}"
                                      Value="3">
                             <DataTrigger.EnterActions>
-                                <BeginStoryboard Storyboard="{StaticResource TaskbarFlashOn}" />
+                                <BeginStoryboard Storyboard="{DynamicResource TaskbarFlashOn}" />
                             </DataTrigger.EnterActions>
                             <DataTrigger.ExitActions>
-                                <BeginStoryboard Storyboard="{StaticResource TaskbarFlashOff}" />
+                                <BeginStoryboard Storyboard="{DynamicResource TaskbarFlashOff}" />
                             </DataTrigger.ExitActions>
                             <Setter TargetName="Border"
                                     Property="Background"
