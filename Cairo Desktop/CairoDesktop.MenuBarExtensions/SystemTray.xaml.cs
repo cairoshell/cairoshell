@@ -32,6 +32,9 @@ namespace CairoDesktop.MenuBarExtensions
             DataContext = _notificationArea;
             Host = host;
 
+            ((INotifyCollectionChanged)PinnedItems.Items).CollectionChanged += PinnedItems_CollectionChanged;
+            ((INotifyCollectionChanged)UnpinnedItems.Items).CollectionChanged += UnpinnedItems_CollectionChanged;
+
             if (Settings.Instance.SysTrayAlwaysExpanded)
             {
                 PromotedItems.Visibility = Visibility.Collapsed;
@@ -194,9 +197,6 @@ namespace CairoDesktop.MenuBarExtensions
             }
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
-
-            ((INotifyCollectionChanged)PinnedItems.Items).CollectionChanged += PinnedItems_CollectionChanged;
-            ((INotifyCollectionChanged)UnpinnedItems.Items).CollectionChanged += UnpinnedItems_CollectionChanged;
             _notificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
 
             _isLoaded = true;
@@ -210,9 +210,6 @@ namespace CairoDesktop.MenuBarExtensions
             }
 
             Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
-
-            ((INotifyCollectionChanged)PinnedItems.Items).CollectionChanged -= PinnedItems_CollectionChanged;
-            ((INotifyCollectionChanged)UnpinnedItems.Items).CollectionChanged -= UnpinnedItems_CollectionChanged;
             _notificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
 
             _isLoaded = false;
