@@ -21,11 +21,15 @@ InstallDir "$PROGRAMFILES${ARCBITS}\Cairo Shell"
 ; overwrite the old one automatically)
 InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
 
+; Request admin rights on Vista+ (when UAC is turned on)
+RequestExecutionLevel Admin 
+
 ; Minimum .NET Framework release (4.7.1)
 !define MIN_FRA_RELEASE "461308"
 
 !define MUI_ABORTWARNING
 !include "MUI.nsh"
+!include "LogicLib.nsh"
 
 ;--------------------------------
 ; Pages
@@ -59,12 +63,42 @@ InstallDirRegKey HKLM "Software\CairoShell" "Install_Dir"
   !insertmacro MUI_UNPAGE_FINISH
 
 ;--------------------------------
-; Components
+; Languages
 
 !insertmacro MUI_LANGUAGE "English"
 !insertmacro MUI_LANGUAGE "French"
 
-; The stuff to install
+;--------------------------------
+; Initialization
+
+!macro EnsureAllUserRights
+  UserInfo::GetAccountType
+  Pop $0
+  ReadEnvStr $1 "__COMPAT_LAYER"
+  ${If} $0 != "Admin"
+  ${AndIf} $0 != "Power"
+  ${AndIf} $1 != "RunAsInvoker"
+    MessageBox MB_IconStop "Administrator rights required!"
+    SetErrorLevel 740 ; ERROR_ELEVATION_REQUIRED
+    Quit
+  ${EndIf}
+!macroend
+
+Function .onInit
+  SetShellVarContext All
+  !insertmacro EnsureAllUserRights
+  
+  Call InitializeSectionDefaults
+FunctionEnd
+
+Function un.onInit
+  SetShellVarContext All
+  !insertmacro EnsureAllUserRights
+FunctionEnd
+
+;--------------------------------
+; Installer
+    
 Section "$(SECT_cairo)" cairo
 
   SectionIn RO
@@ -85,9 +119,6 @@ Section "$(SECT_cairo)" cairo
   CreateDirectory "$INSTDIR\Themes"
   File /r "..\Cairo Desktop\Build\${ARCNAME}\Release\Themes"
 
-  ; Set shell context to All Users
-  SetShellVarContext all
-
   ; Start menu shortcuts
   CreateShortcut "$SMPROGRAMS\Cairo Desktop.lnk" "$INSTDIR\CairoDesktop.exe"
   
@@ -104,8 +135,6 @@ Section "$(SECT_cairo)" cairo
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\CairoShell" "NoRepair" 1
   WriteUninstaller "$INSTDIR\RemoveCairo.exe"
-
-  Return
 
 SectionEnd
 
@@ -161,11 +190,7 @@ SectionEnd
 ;--------------------------------
 ; Uninstaller
 
-
 Section "Uninstall"
-
-  ; Set shell context to All Users
-  SetShellVarContext all
 
   System::Call 'kernel32::OpenMutex(i 0x100000, i 0, t "CairoShell")p.R1'
   IntPtrCmp $R1 0 notRunning
@@ -207,7 +232,7 @@ Function LaunchCairo
   end_launch:
 FunctionEnd
 
-Function .onInit
+Function InitializeSectionDefaults
   IfSilent +2
     SectionSetFlags ${startupCU} 1
 FunctionEnd
