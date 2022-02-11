@@ -94,6 +94,10 @@ namespace CairoDesktop
                         options.LogsFolderPath = CairoApplication.LogsFolder;
                     });
                 })
+                .ConfigureHostOptions(options =>
+                {
+                    options.ShutdownTimeout = TimeSpan.FromSeconds(10);
+                })
                 .Build();
 
             var app = _host.Services.GetRequiredService<ICairoApplication>();

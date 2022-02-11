@@ -115,6 +115,7 @@ Section "$(SECT_cairo)" cairo
   DetailPrint "Installing Cairo files"
   File "..\Cairo Desktop\Build\${ARCNAME}\Release\CairoDesktop.exe"
   File "..\Cairo Desktop\Build\${ARCNAME}\Release\*.dll"
+  File "..\Cairo Desktop\Build\${ARCNAME}\Release\*.config"
 
   CreateDirectory "$INSTDIR\Themes"
   File /r "..\Cairo Desktop\Build\${ARCNAME}\Release\Themes"
