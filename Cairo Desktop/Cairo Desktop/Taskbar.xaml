@@ -260,7 +260,8 @@
                                   Style="{StaticResource QuickLaunchListStyle}"
                                   Margin="0,0,5,0"
                                   Drop="quickLaunchList_Drop"
-                                  DragEnter="quickLaunchList_DragEnter">
+                                  DragEnter="quickLaunchList_DragEnter"
+                                  SizeChanged="quickLaunchList_SizeChanged">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Horizontal"

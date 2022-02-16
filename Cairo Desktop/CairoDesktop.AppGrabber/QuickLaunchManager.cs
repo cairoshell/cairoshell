@@ -1,4 +1,5 @@
-﻿using ManagedShell.WindowsTasks;
+﻿using CairoDesktop.Configuration;
+using ManagedShell.WindowsTasks;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -9,8 +10,38 @@ namespace CairoDesktop.AppGrabber
         public QuickLaunchManager(IAppGrabber appGrabber)
         {
             _appGrabber = appGrabber;
+
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         }
-        
+
+        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e == null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(e.PropertyName))
+            {
+                return;
+            }
+
+            switch (e.PropertyName)
+            {
+                case "TaskbarIconSize":
+                    updateIconSize();
+                    break;
+            }
+        }
+
+        private void updateIconSize()
+        {
+            foreach (var app in _appGrabber.QuickLaunch)
+            {
+                app.Icon = null;
+            }
+        }
+
         public ApplicationInfo GetQuickLaunchApplicationInfo(ApplicationWindow window)
         {
             // it would be nice to cache this, but need to handle case of user adding/removing app via various means after first access

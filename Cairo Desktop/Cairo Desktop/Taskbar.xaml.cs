@@ -430,6 +430,12 @@ namespace CairoDesktop
             CanAutoHide = true;
         }
 
+        private void quickLaunchList_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // If quick launch size changes, it could change our width such that we should resize buttons
+            setTaskButtonSize();
+        }
+
         private void SetTaskListOffset()
         {
             if (ShellHelper.GetMenuDropAlignment() == 1)
