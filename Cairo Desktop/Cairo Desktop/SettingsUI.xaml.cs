@@ -371,7 +371,7 @@ namespace CairoDesktop
             {
                 NotifyIcon dropData = e.Data.GetData(typeof(NotifyIcon)) as NotifyIcon;
 
-                dropData.Pin(_shellManager.NotificationArea.PinnedNotifyIcons.Length);
+                dropData.Pin();
                 Settings.Instance.PinnedNotifyIcons = _shellManager.NotificationArea.PinnedNotifyIcons;
             }
 
