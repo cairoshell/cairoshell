@@ -772,6 +772,21 @@ namespace CairoDesktop.Configuration
             }
         }
 
+        public bool EnableMenuExtraLayoutSwitcher
+        {
+            get
+            {
+                return cairoSettings.EnableMenuExtraLayoutSwitcher;
+            }
+            set
+            {
+                if (cairoSettings.EnableMenuExtraLayoutSwitcher != value)
+                {
+                    cairoSettings.EnableMenuExtraLayoutSwitcher = value;
+                }
+            }
+        }
+
         public bool EnableMenuExtraSearch
         {
             get
