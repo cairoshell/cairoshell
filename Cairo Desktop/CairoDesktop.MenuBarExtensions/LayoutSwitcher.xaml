@@ -8,10 +8,9 @@
                   ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}"
                   SubmenuOpened="LayoutSwitcherItem_SubmenuOpened">
             <MenuItem.Header>
-                <TextBlock Name="currentLayout"
-                           ToolTipService.Placement="Bottom" />
+                <TextBlock DataContext="{Binding ElementName=CairoLayoutSwitcher, Path=CurrentLayout}" Text="{Binding Path=ThreeLetterName}" ToolTipService.Placement="Bottom" />
             </MenuItem.Header>
-            <ItemsControl ItemsSource="{Binding Path=CurrentLayouts, ElementName=CairoLayoutSwitcher}" Name="LayoutItems">
+            <ItemsControl ItemsSource="{Binding ElementName=CairoLayoutSwitcher, Path=AvaliableLayouts}" Name="LayoutItems">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical"/>
