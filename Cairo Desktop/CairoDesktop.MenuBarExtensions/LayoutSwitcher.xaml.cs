@@ -12,7 +12,12 @@ namespace CairoDesktop.MenuBarExtensions
     public partial class LayoutSwitcher : UserControl
     {
         public ObservableCollection<KeyboardLayout> AvaliableLayouts { get; private set; }
-        public KeyboardLayout CurrentLayout { get; private set; }
+        public static DependencyProperty CurrentLayoutProperty = DependencyProperty.Register("CurrentLayout", typeof(KeyboardLayout), typeof(LayoutSwitcher), new PropertyMetadata(null));
+        public KeyboardLayout CurrentLayout
+        {
+            get => (KeyboardLayout)GetValue(CurrentLayoutProperty);
+            private set => SetValue(CurrentLayoutProperty, value); 
+        }
 
         public LayoutSwitcher()
         {
@@ -36,7 +41,6 @@ namespace CairoDesktop.MenuBarExtensions
         private void LayoutIndicator_Tick()
         {
             CurrentLayout = KeyboardLayoutHelper.GetKeyboardLayout();
-            CurrentLayoutBlock.Text = CurrentLayout.ThreeLetterName;
         }
 
         private void LayoutSwitcherItem_SubmenuOpened(object sender, RoutedEventArgs e)
