@@ -54,6 +54,8 @@ namespace CairoDesktop.MenuBarExtensions
                 }
                 LastZeroLayout = newZeroLayout;
             }
+
+            CurrentLayoutBlock.Text = CurrentLayout.ThreeLetterName;
         }
 
         private void LayoutSwitcherItem_SubmenuOpened(object sender, RoutedEventArgs e)
