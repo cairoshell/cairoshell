@@ -5,15 +5,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using ManagedShell.Common.Structs;
-using CairoDesktop.Configuration;
 
 namespace CairoDesktop.MenuBarExtensions
 {
 
     public partial class LayoutSwitcher : UserControl
     {
-        private KeyboardLayout LastZeroLayout;
-        private KeyboardLayout LastForegroundLayout;
         public ObservableCollection<KeyboardLayout> AvaliableLayouts { get; private set; }
         public KeyboardLayout CurrentLayout { get; private set; }
 
@@ -38,23 +35,7 @@ namespace CairoDesktop.MenuBarExtensions
 
         private void LayoutIndicator_Tick()
         {
-            var newForegroundLayout = KeyboardLayoutHelper.GetKeyboardLayout();
-            if (newForegroundLayout.HKL != LastForegroundLayout.HKL)
-            {
-                CurrentLayout = newForegroundLayout;
-            }
-            LastForegroundLayout = newForegroundLayout;
-
-            if (Settings.Instance.EnableDesktop)
-            {
-                var newZeroLayout = KeyboardLayoutHelper.GetKeyboardLayout(true);
-                if (newZeroLayout.HKL != LastZeroLayout.HKL)
-                {
-                    CurrentLayout = newZeroLayout;
-                }
-                LastZeroLayout = newZeroLayout;
-            }
-
+            CurrentLayout = KeyboardLayoutHelper.GetKeyboardLayout();
             CurrentLayoutBlock.Text = CurrentLayout.ThreeLetterName;
         }
 
