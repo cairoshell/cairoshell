@@ -19,7 +19,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <MenuItem Click="ChangeCurrentLayout"
-                                  Header="{Binding Path=NativeName}"
+                                  Header="{Binding Path=DisplayName}"
                                   Style="{StaticResource {x:Type MenuItem}}">
                         </MenuItem>
                     </DataTemplate>
