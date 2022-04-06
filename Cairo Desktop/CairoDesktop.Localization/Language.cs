@@ -504,7 +504,7 @@ namespace CairoDesktop.Localization
             { "sSettings_Taskbar_DisplayModeOverlap", "Barra de tarefas sobrepõe janelas"},
             { "sSettings_Taskbar_DisplayModeAutoHide", "Barra de tarefas oculta automaticamente"},
             { "sSettings_Taskbar_EnableTaskbarMultiMon", "Mostrar barra de tarefas em vários monitores"},
-            { "sSettings_Taskbar_FullWidthTaskBar", "Usar a largura total da tela para a barra de tarefas"}
+            { "sSettings_Taskbar_FullWidthTaskBar", "Usar a largura total da tela para a barra de tarefas"},
             { "sSettings_Taskbar_MiddleClick", "Ação do clique do meio:" },
             { "sSettings_Taskbar_MiddleClickNewWindow", "Abrir nova janela" },
             { "sSettings_Taskbar_MiddleClickCloseWindow", "Fechar janela" },
