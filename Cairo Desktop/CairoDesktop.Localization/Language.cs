@@ -525,7 +525,7 @@ namespace CairoDesktop.Localization
             { "sSettings_Advanced_ShellChangedText", "Você deve fazer logoff para que as alterações entrem em vigor." },
             { "sSettings_Advanced_LogOffNow", "Fazer logoff agora"},
             { "sSettings_Advanced_LogOffLater", "Fazer logoff depois"},
-            { "sSettings_Advanced_OpenLogsFolder", "Open folder" },
+            { "sSettings_Advanced_OpenLogsFolder", "Abrir pasta" },
             { "sWelcome_StartTour", "Iniciar Tour"},
             { "sWelcome_FinishTour", "Finalizar Tour"},
             { "sWelcome_Welcome", "Bem-vindo ao Cairo"},
