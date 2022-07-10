@@ -2332,7 +2332,7 @@ namespace CairoDesktop.Localization
             { "sSettings_General_ForceSoftwareRendering", "Использовать программную отрисовку" },
             { "sSettings_General_FileManager", "Менеджер файлов:" },
             { "sSettings_General_FoldersOpenDesktopOverlay", "Папки открываются с помощью оверлея рабочего стола" },
-            { "sSettings_MenuBar_DefaultProgramsCategory", "Станлартная категория программ:" },
+            { "sSettings_MenuBar_DefaultProgramsCategory", "Стандартная категория программ:" },
             { "sSettings_MenuBar_EnableMenuBarShadow", "Включить тень верхней панели" },
             { "sSettings_MenuBar_NotificationArea", "Область уведомлений" },
             { "sSettings_MenuBar_EnableNotificationArea", "Включить область уведомлений" },
