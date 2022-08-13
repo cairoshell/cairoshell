@@ -1,12 +1,8 @@
 ;--------------------------------
 ; CairoShell.nsi
 
-!ifndef ARCBITS | ARCNAME
-!error "ARC* defines not set, compile CairoShell_<32|64>.nsi instead!"
-!endif
-
-!ifndef NETTARGET
-!error "NETTARGET not set, compile CairoShell_<32|64>.nsi instead!"
+!ifndef ARCBITS | ARCNAME | NETTARGET | OUTNAME
+!error Defines not set, compile CairoShell_<32|64>.nsi instead!"
 !endif
 
 ; The name of the installer
@@ -16,12 +12,7 @@ Name "Cairo Desktop Environment"
 Unicode True
 
 ; The file to write
-StrCmp ${NETTARGET} "net471" 0 net6_outfile
-  OutFile "CairoSetup_${ARCBITS}bit.exe"
-  goto after_outfile
-net6_outfile:
-  OutFile "CairoSetup_${ARCBITS}bit_net6.exe"
-after_outfile:
+OutFile "${OUTNAME}.exe"
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES${ARCBITS}\Cairo Shell"
