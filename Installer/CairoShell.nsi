@@ -16,7 +16,12 @@ Name "Cairo Desktop Environment"
 Unicode True
 
 ; The file to write
-OutFile "CairoSetup_${ARCBITS}bit.exe"
+StrCmp ${NETTARGET} "net471" 0 net6_outfile
+  OutFile "CairoSetup_${ARCBITS}bit.exe"
+  goto after_outfile
+net6_outfile:
+  OutFile "CairoSetup_${ARCBITS}bit_net6.exe"
+after_outfile:
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES${ARCBITS}\Cairo Shell"
