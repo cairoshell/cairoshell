@@ -5,11 +5,13 @@ using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
+using ManagedShell.ShellFolders.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Data;
 
@@ -253,8 +255,21 @@ namespace CairoDesktop.AppGrabber
 
                 if (fileExt.Equals(".lnk", StringComparison.OrdinalIgnoreCase))
                 {
-                    Link link = new Link(filePath);
-                    target = link.Target;
+                    try
+                    {
+                        // Get the target from the link
+                        IShellLink link = ShellLinkHelper.Load(IntPtr.Zero, filePath);
+
+                        StringBuilder builder = new StringBuilder(260);
+                        link.GetPath(builder, 260, out ManagedShell.ShellFolders.Structs.WIN32_FIND_DATA pfd, ManagedShell.ShellFolders.Enums.SLGP_FLAGS.SLGP_RAWPATH);
+
+                        target = builder.ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        ShellLogger.Error($"AppGrabberService: Error resolving link target for {filePath}", ex);
+                        target = filePath;
+                    }
                 }
                 else
                 {
