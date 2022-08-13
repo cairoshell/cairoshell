@@ -5,6 +5,10 @@
 !error "ARC* defines not set, compile CairoShell_<32|64>.nsi instead!"
 !endif
 
+!ifndef NETTARGET
+!error "NETTARGET not set, compile CairoShell_<32|64>.nsi instead!"
+!endif
+
 ; The name of the installer
 Name "Cairo Desktop Environment"
 
@@ -104,7 +108,9 @@ Section "$(SECT_cairo)" cairo
   SectionIn RO
 
   ; Check .NET version
-  Call AbortIfBadFramework
+  StrCmp ${NETTARGET} "net471" 0 no_net_check
+    Call AbortIfBadFramework
+  no_net_check:
 
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
@@ -113,12 +119,12 @@ Section "$(SECT_cairo)" cairo
   
   ; Put file there
   DetailPrint "Installing Cairo files"
-  File "..\Cairo Desktop\Build\${ARCNAME}\Release\CairoDesktop.exe"
-  File "..\Cairo Desktop\Build\${ARCNAME}\Release\*.dll"
-  File "..\Cairo Desktop\Build\${ARCNAME}\Release\*.config"
+  File "..\Cairo Desktop\Build\${ARCNAME}\Release\${NETTARGET}\CairoDesktop.exe"
+  File "..\Cairo Desktop\Build\${ARCNAME}\Release\${NETTARGET}\*.dll"
+  File "..\Cairo Desktop\Build\${ARCNAME}\Release\${NETTARGET}\*.config"
 
   CreateDirectory "$INSTDIR\Themes"
-  File /r "..\Cairo Desktop\Build\${ARCNAME}\Release\Themes"
+  File /r "..\Cairo Desktop\Build\${ARCNAME}\Release\${NETTARGET}\Themes"
 
   ; Start menu shortcuts
   CreateShortcut "$SMPROGRAMS\Cairo Desktop.lnk" "$INSTDIR\CairoDesktop.exe"

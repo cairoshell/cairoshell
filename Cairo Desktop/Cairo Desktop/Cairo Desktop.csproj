@@ -13,8 +13,7 @@
     <OutputType>WinExe</OutputType>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RootNamespace>CairoDesktop</RootNamespace>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <AssemblyName>CairoDesktop</AssemblyName>
     <AssemblyTitle>Cairo Desktop Environment</AssemblyTitle>
     <Company>Cairo Development Team</Company>

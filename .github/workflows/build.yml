@@ -19,7 +19,9 @@ jobs:
       project: Cairo Desktop.csproj
       installer: Installer\CairoShell.nsi
       installer32: Installer\CairoShell_32.nsi
+      installer32Net6: Installer\CairoShell_32_net6.nsi
       installer64: Installer\CairoShell_64.nsi
+      installer64Net6: Installer\CairoShell_64_net6.nsi
 
     steps:
     - name: Checkout
@@ -57,10 +59,18 @@ jobs:
     - name: Generate installer (64-bit)
       if: matrix.buildplatform == 'x64'
       run: makensis $env:installer64
+
+    - name: Generate .NET 6 installer (64-bit)
+      if: matrix.buildplatform == 'x64'
+      run: makensis $env:installer64Net6
       
     - name: Generate installer (32-bit)
       if: matrix.buildplatform == 'AnyCPU'
       run: makensis $env:installer32
+      
+    - name: Generate .NET 6 installer (32-bit)
+      if: matrix.buildplatform == 'AnyCPU'
+      run: makensis $env:installer32Net6
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
