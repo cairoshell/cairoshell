@@ -47,5 +47,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: Installer ${{ matrix.publishprofile[0] == 'x86' && '32-bit' || matrix.publishprofile[0] == 'x86_net6' && '32-bit .NET 6' || matrix.publishprofile[0] == 'x64' && '64-bit' || '64-bit .NET 6' }}
+        name: Installer ${{ matrix.target[0] == 'x86' && '32-bit' || matrix.target[0] == 'x86_net6' && '32-bit .NET 6' || matrix.target[0] == 'x64' && '64-bit' || '64-bit .NET 6' }}
         path: 'Installer\*.exe'
