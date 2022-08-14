@@ -123,6 +123,11 @@ namespace CairoDesktop
 
         private void setupCairoMenu()
         {
+            if (!_applicationUpdateService.IsAvailable)
+            {
+                OpenCheckForUpdates.Visibility = Visibility.Collapsed;
+            }
+
             // Add CairoMenu MenuItems
             if (_cairoApplication.CairoMenu.Count > 0)
             {

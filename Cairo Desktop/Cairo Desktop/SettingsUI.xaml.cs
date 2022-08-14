@@ -471,7 +471,14 @@ namespace CairoDesktop
         #region Startup checks
         private void checkUpdateConfig()
         {
-            chkEnableAutoUpdates.IsChecked = _applicationUpdateService.AutomaticUpdatesEnabled;
+            if (_applicationUpdateService.IsAvailable)
+            {
+                chkEnableAutoUpdates.IsChecked = _applicationUpdateService.AutomaticUpdatesEnabled;
+            }
+            else
+            {
+                chkEnableAutoUpdates.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void checkTrayStatus()

@@ -15,11 +15,14 @@ namespace CairoDesktop.Infrastructure.Services
         private readonly ILogger<WinSparkleApplicationUpdateService> _logger;
         private readonly ICairoApplication _app;
 
+        private bool _isInitialized;
+
         private WinSparkle.win_sparkle_can_shutdown_callback_t _canShutdownDelegate;
         private WinSparkle.win_sparkle_shutdown_request_callback_t _shutdownDelegate;
 
         public WinSparkleApplicationUpdateService(ILogger<WinSparkleApplicationUpdateService> logger, ICairoApplication app)
         {
+            _isInitialized = false;
             _logger = logger;
             _app = app;
 
@@ -34,6 +37,8 @@ namespace CairoDesktop.Infrastructure.Services
                 WinSparkle.win_sparkle_set_can_shutdown_callback(_canShutdownDelegate);
                 WinSparkle.win_sparkle_set_shutdown_request_callback(_shutdownDelegate);
                 WinSparkle.win_sparkle_init();
+
+                _isInitialized = true;
             }
             catch (Exception e)
             {
@@ -73,6 +78,8 @@ namespace CairoDesktop.Infrastructure.Services
             }
         }
 
+        public bool IsAvailable => _isInitialized;
+
         public void CheckForUpdates()
         {
             try
@@ -100,6 +107,7 @@ namespace CairoDesktop.Infrastructure.Services
             try
             {
                 WinSparkle.win_sparkle_cleanup();
+                _isInitialized = false;
             }
             catch (Exception e)
             {
