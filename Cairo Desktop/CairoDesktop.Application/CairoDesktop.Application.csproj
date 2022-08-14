@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
     <Platforms>x64;AnyCPU</Platforms>
   </PropertyGroup>
 
