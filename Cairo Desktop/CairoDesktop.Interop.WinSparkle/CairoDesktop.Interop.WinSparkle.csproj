@@ -2,7 +2,7 @@
 
   <PropertyGroup>
 	<TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
-    <Platforms>x64;AnyCPU</Platforms>
+    <Platforms>x64;AnyCPU;ARM64</Platforms>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(Platform)' == 'AnyCPU' ">
@@ -11,6 +11,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup Condition=" '$(Platform)' == 'x64' ">
+    <Content Include="..\..\Dependencies\WinSparkle\x64\WinSparkle.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Platform)'=='ARM64'">
     <Content Include="..\..\Dependencies\WinSparkle\x64\WinSparkle.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
