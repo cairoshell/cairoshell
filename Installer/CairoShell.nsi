@@ -42,7 +42,7 @@ RequestExecutionLevel Admin
   !define MUI_UNICON inst_icon.ico
   ;!define MUI_COMPONENTSPAGE_SMALLDESC
   !define MUI_WELCOMEFINISHPAGE_BITMAP left_img.bmp
-  !define MUI_WELCOMEPAGE_TEXT "$(PAGE_Welcome_Text)"
+  !define MUI_WELCOMEPAGE_TEXT "$(PAGE_Welcome_Text_${NETTARGET})"
   !define MUI_WELCOMEPAGE_TITLE_3LINES
   !define MUI_FINISHPAGE_TITLE_3LINES
   !define MUI_FINISHPAGE_RUN
@@ -152,7 +152,9 @@ Section /o "$(SECT_shellCU)" shellCU
 SectionEnd
 
   ;Language strings
-  LangString PAGE_Welcome_Text ${LANG_ENGLISH} "This installer will guide you through the installation of Cairo.\r\n\r\nBefore installing, please ensure .NET Framework 4.7.1 or higher is installed, and that any running instance of Cairo is ended.\r\n\r\nClick Next to continue."
+
+  LangString PAGE_Welcome_Text_net471 ${LANG_ENGLISH} "This installer will guide you through the installation of Cairo.\r\n\r\nBefore installing, please ensure .NET Framework 4.7.1 or higher is installed, and that any running instance of Cairo is ended.\r\n\r\nClick Next to continue."
+  LangString PAGE_Welcome_Text_net6.0-windows ${LANG_ENGLISH} "This installer will guide you through the installation of Cairo.\r\n\r\nBefore installing, please ensure that any running instance of Cairo is ended.\r\n\r\nClick Next to continue."
   LangString PAGE_Finish_RunText ${LANG_ENGLISH} "Start Cairo Desktop Environment"
   LangString PAGE_UnDir_TopText ${LANG_ENGLISH} "Please be sure that you have closed Cairo before uninstalling to ensure that all files are removed. All files in the directory below will be removed."
   LangString DLOG_RunningText ${LANG_ENGLISH} "Cairo is currently running. Please exit Cairo from the Cairo menu and run this installer again."
@@ -165,7 +167,8 @@ SectionEnd
   LangString DESC_startupCU ${LANG_ENGLISH} "Makes Cairo start up when you log in."
   LangString DESC_shellCU ${LANG_ENGLISH} "Run Cairo instead of Windows Explorer. Note: this also disables UWP/Windows Store apps and other features in Windows using that technology."
 
-  LangString PAGE_Welcome_Text ${LANG_FRENCH} "Cet installateur va vous guider au long de l'installation de Cairo.\r\n\r\nAvant d'installer, veuillez vous assurer que le .NET Framework 4.7.1 ou plus récent est installé, et que vous avez quitté toute instance de Cairo encore en cours de fonctionnement.\r\n\r\nCliquez sur Suivant pour continuer."
+  LangString PAGE_Welcome_Text_net471 ${LANG_FRENCH} "Cet installateur va vous guider au long de l'installation de Cairo.\r\n\r\nAvant d'installer, veuillez vous assurer que le .NET Framework 4.7.1 ou plus récent est installé, et que vous avez quitté toute instance de Cairo encore en cours de fonctionnement.\r\n\r\nCliquez sur Suivant pour continuer."
+  LangString PAGE_Welcome_Text_net6.0-windows ${LANG_FRENCH} "Cet installateur va vous guider au long de l'installation de Cairo.\r\n\r\nAvant d'installer, veuillez vous assurer que vous avez quitté toute instance de Cairo encore en cours de fonctionnement.\r\n\r\nCliquez sur Suivant pour continuer."
   LangString PAGE_Finish_RunText ${LANG_FRENCH} "Démarrer l'environnement de bureau Cairo"
   LangString PAGE_UnDir_TopText ${LANG_FRENCH} "Veuillez vérifier que vous avez fermé Cairo avant de le désinstaller pour assurer que tous les fichiers soient supprimés. All files in the directory below will be removed."
   LangString DLOG_RunningText ${LANG_FRENCH} "Cairo est en cours de fonctionnement. Veuillez quitter Cairo depuis le menu Cairo et lancer de nouveau cet installateur."
