@@ -19,7 +19,7 @@
     <Company>Cairo Development Team</Company>
     <Authors>Cairo Development Team</Authors>
     <Product>Cairo Desktop Environment</Product>
-    <Copyright>Copyright © 2021 Cairo Development Team</Copyright>
+    <Copyright>Copyright © 2022 Cairo Development Team</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
@@ -34,7 +34,7 @@
     <DefineConstants>TRACE;DEBUG;ENABLEFIRSTRUN</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release'">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
   </PropertyGroup>
 
