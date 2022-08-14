@@ -29,7 +29,7 @@ jobs:
 
     - name: Publish app
       run: |
-          cd "Cairo Desktop"
+          cd "Cairo Desktop\Cairo Desktop"
           dotnet publish -p:PublishProfile=$env:Profile -f $env:Framework
       env:
         Profile: ${{ matrix.target[0] }}
