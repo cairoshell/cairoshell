@@ -115,12 +115,7 @@ Section "$(SECT_cairo)" cairo
   
   ; Put file there
   DetailPrint "Installing Cairo files"
-  File "..\Cairo Desktop\Build\${ARCNAME}\Release\${NETTARGET}\CairoDesktop.exe"
-  File "..\Cairo Desktop\Build\${ARCNAME}\Release\${NETTARGET}\*.dll"
-  File "..\Cairo Desktop\Build\${ARCNAME}\Release\${NETTARGET}\*.config"
-
-  CreateDirectory "$INSTDIR\Themes"
-  File /r "..\Cairo Desktop\Build\${ARCNAME}\Release\${NETTARGET}\Themes"
+  File /r "..\Cairo Desktop\Cairo Desktop\bin\Release\${NETTARGET}\publish-${ARCNAME}\"
 
   ; Start menu shortcuts
   CreateShortcut "$SMPROGRAMS\Cairo Desktop.lnk" "$INSTDIR\CairoDesktop.exe"
@@ -210,16 +205,10 @@ Section "Uninstall"
   DeleteRegValue HKCU "Software\Microsoft\Windows NT\CurrentVersion\Winlogon" "Shell"
 
   ; Remove files and uninstaller. Includes historical files
-  Delete "$SMPROGRAMS\Cairo Desktop.lnk"
-  Delete "$INSTDIR\*.exe"
-  Delete "$INSTDIR\*.xaml"
-  Delete "$INSTDIR\*.dll"
-  Delete "$INSTDIR\*.config"
-  Delete "$INSTDIR\Themes\*.xaml"
-
-  ; Remove directories used
-  RMDir "$INSTDIR\Themes"
-  RMDir "$INSTDIR"
+  ; If we allowed customizing the install dir, this would be bad
+  ; (e.g. if someone installed into another existing directory)
+  ; If we allow this in the future, need to write an uninstall log.
+  RMDir /r "$INSTDIR"
 
 SectionEnd
 

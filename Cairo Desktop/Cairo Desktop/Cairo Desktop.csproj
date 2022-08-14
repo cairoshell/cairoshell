@@ -30,23 +30,11 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\Build\x86\Debug\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>TRACE;DEBUG;ENABLEFIRSTRUN</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\Build\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutputPath>..\Build\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ENABLEFIRSTRUN</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutputPath>..\Build\x64\Release\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release'">
     <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
   </PropertyGroup>
 
