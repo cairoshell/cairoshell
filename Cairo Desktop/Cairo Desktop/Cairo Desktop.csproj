@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFramework>net471</TargetFramework>
-    <Platforms>x64;AnyCPU</Platforms>
+	<TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
+    <Platforms>x64;AnyCPU;ARM64</Platforms>
     <UseWPF>True</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
@@ -13,14 +13,12 @@
     <OutputType>WinExe</OutputType>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RootNamespace>CairoDesktop</RootNamespace>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AssemblyName>CairoDesktop</AssemblyName>
     <AssemblyTitle>Cairo Desktop Environment</AssemblyTitle>
     <Company>Cairo Development Team</Company>
     <Authors>Cairo Development Team</Authors>
     <Product>Cairo Desktop Environment</Product>
-    <Copyright>Copyright © 2021 Cairo Development Team</Copyright>
+    <Copyright>Copyright © 2022 Cairo Development Team</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
@@ -31,23 +29,15 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\Build\x86\Debug\</OutputPath>
+  <PropertyGroup Condition="'$(Platform)'=='ARM64'">
+    <RuntimeIdentifier>win-arm64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>TRACE;DEBUG;ENABLEFIRSTRUN</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\Build\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutputPath>..\Build\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ENABLEFIRSTRUN</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutputPath>..\Build\x64\Release\</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
   </PropertyGroup>
 

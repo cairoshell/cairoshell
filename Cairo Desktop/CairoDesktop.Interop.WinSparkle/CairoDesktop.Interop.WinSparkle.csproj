@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net471</TargetFramework>
-    <Platforms>x64;AnyCPU</Platforms>
+	<TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
+    <Platforms>x64;AnyCPU;ARM64</Platforms>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(Platform)' == 'AnyCPU' ">

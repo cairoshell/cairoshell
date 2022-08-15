@@ -1,8 +1,8 @@
 ;--------------------------------
 ; CairoShell.nsi
 
-!ifndef ARCBITS | ARCNAME
-!error "ARC* defines not set, compile CairoShell_<32|64>.nsi instead!"
+!ifndef ARCBITS | ARCNAME | NETTARGET | OUTNAME
+!error Defines not set, compile CairoShell_<32|64>.nsi instead!"
 !endif
 
 ; The name of the installer
@@ -12,7 +12,7 @@ Name "Cairo Desktop Environment"
 Unicode True
 
 ; The file to write
-OutFile "CairoSetup_${ARCBITS}bit.exe"
+OutFile "${OUTNAME}.exe"
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES${ARCBITS}\Cairo Shell"
@@ -42,7 +42,7 @@ RequestExecutionLevel Admin
   !define MUI_UNICON inst_icon.ico
   ;!define MUI_COMPONENTSPAGE_SMALLDESC
   !define MUI_WELCOMEFINISHPAGE_BITMAP left_img.bmp
-  !define MUI_WELCOMEPAGE_TEXT "$(PAGE_Welcome_Text)"
+  !define MUI_WELCOMEPAGE_TEXT "$(PAGE_Welcome_Text_${NETTARGET})"
   !define MUI_WELCOMEPAGE_TITLE_3LINES
   !define MUI_FINISHPAGE_TITLE_3LINES
   !define MUI_FINISHPAGE_RUN
@@ -104,7 +104,9 @@ Section "$(SECT_cairo)" cairo
   SectionIn RO
 
   ; Check .NET version
-  Call AbortIfBadFramework
+  StrCmp ${NETTARGET} "net471" 0 no_net_check
+    Call AbortIfBadFramework
+  no_net_check:
 
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
@@ -113,12 +115,7 @@ Section "$(SECT_cairo)" cairo
   
   ; Put file there
   DetailPrint "Installing Cairo files"
-  File "..\Cairo Desktop\Build\${ARCNAME}\Release\CairoDesktop.exe"
-  File "..\Cairo Desktop\Build\${ARCNAME}\Release\*.dll"
-  File "..\Cairo Desktop\Build\${ARCNAME}\Release\*.config"
-
-  CreateDirectory "$INSTDIR\Themes"
-  File /r "..\Cairo Desktop\Build\${ARCNAME}\Release\Themes"
+  File /r "..\Cairo Desktop\Cairo Desktop\bin\Release\${NETTARGET}\publish-${ARCNAME}\"
 
   ; Start menu shortcuts
   CreateShortcut "$SMPROGRAMS\Cairo Desktop.lnk" "$INSTDIR\CairoDesktop.exe"
@@ -155,7 +152,9 @@ Section /o "$(SECT_shellCU)" shellCU
 SectionEnd
 
   ;Language strings
-  LangString PAGE_Welcome_Text ${LANG_ENGLISH} "This installer will guide you through the installation of Cairo.\r\n\r\nBefore installing, please ensure .NET Framework 4.7.1 or higher is installed, and that any running instance of Cairo is ended.\r\n\r\nClick Next to continue."
+
+  LangString PAGE_Welcome_Text_net471 ${LANG_ENGLISH} "This installer will guide you through the installation of Cairo.\r\n\r\nBefore installing, please ensure .NET Framework 4.7.1 or higher is installed, and that any running instance of Cairo is ended.\r\n\r\nClick Next to continue."
+  LangString PAGE_Welcome_Text_net6.0-windows ${LANG_ENGLISH} "This installer will guide you through the installation of Cairo.\r\n\r\nBefore installing, please ensure that any running instance of Cairo is ended.\r\n\r\nClick Next to continue."
   LangString PAGE_Finish_RunText ${LANG_ENGLISH} "Start Cairo Desktop Environment"
   LangString PAGE_UnDir_TopText ${LANG_ENGLISH} "Please be sure that you have closed Cairo before uninstalling to ensure that all files are removed. All files in the directory below will be removed."
   LangString DLOG_RunningText ${LANG_ENGLISH} "Cairo is currently running. Please exit Cairo from the Cairo menu and run this installer again."
@@ -168,7 +167,8 @@ SectionEnd
   LangString DESC_startupCU ${LANG_ENGLISH} "Makes Cairo start up when you log in."
   LangString DESC_shellCU ${LANG_ENGLISH} "Run Cairo instead of Windows Explorer. Note: this also disables UWP/Windows Store apps and other features in Windows using that technology."
 
-  LangString PAGE_Welcome_Text ${LANG_FRENCH} "Cet installateur va vous guider au long de l'installation de Cairo.\r\n\r\nAvant d'installer, veuillez vous assurer que le .NET Framework 4.7.1 ou plus récent est installé, et que vous avez quitté toute instance de Cairo encore en cours de fonctionnement.\r\n\r\nCliquez sur Suivant pour continuer."
+  LangString PAGE_Welcome_Text_net471 ${LANG_FRENCH} "Cet installateur va vous guider au long de l'installation de Cairo.\r\n\r\nAvant d'installer, veuillez vous assurer que le .NET Framework 4.7.1 ou plus récent est installé, et que vous avez quitté toute instance de Cairo encore en cours de fonctionnement.\r\n\r\nCliquez sur Suivant pour continuer."
+  LangString PAGE_Welcome_Text_net6.0-windows ${LANG_FRENCH} "Cet installateur va vous guider au long de l'installation de Cairo.\r\n\r\nAvant d'installer, veuillez vous assurer que vous avez quitté toute instance de Cairo encore en cours de fonctionnement.\r\n\r\nCliquez sur Suivant pour continuer."
   LangString PAGE_Finish_RunText ${LANG_FRENCH} "Démarrer l'environnement de bureau Cairo"
   LangString PAGE_UnDir_TopText ${LANG_FRENCH} "Veuillez vérifier que vous avez fermé Cairo avant de le désinstaller pour assurer que tous les fichiers soient supprimés. All files in the directory below will be removed."
   LangString DLOG_RunningText ${LANG_FRENCH} "Cairo est en cours de fonctionnement. Veuillez quitter Cairo depuis le menu Cairo et lancer de nouveau cet installateur."
@@ -208,16 +208,10 @@ Section "Uninstall"
   DeleteRegValue HKCU "Software\Microsoft\Windows NT\CurrentVersion\Winlogon" "Shell"
 
   ; Remove files and uninstaller. Includes historical files
-  Delete "$SMPROGRAMS\Cairo Desktop.lnk"
-  Delete "$INSTDIR\*.exe"
-  Delete "$INSTDIR\*.xaml"
-  Delete "$INSTDIR\*.dll"
-  Delete "$INSTDIR\*.config"
-  Delete "$INSTDIR\Themes\*.xaml"
-
-  ; Remove directories used
-  RMDir "$INSTDIR\Themes"
-  RMDir "$INSTDIR"
+  ; If we allowed customizing the install dir, this would be bad
+  ; (e.g. if someone installed into another existing directory)
+  ; If we allow this in the future, need to write an uninstall log.
+  RMDir /r "$INSTDIR"
 
 SectionEnd
 
