@@ -1102,7 +1102,7 @@ namespace CairoDesktop.Localization
             { "sRestart_Title", "Si è sicuri di voler riavviare il sistema?" },
             { "sRestart_Info", "Perderai qualsiasi progresso non salvato e il sistema eseguirà un riavvio.." },
             { "sRestart_Restart", "Restart" },
-            { "sShutDown_Title", "Si è sicuri di voler arrestare il sistema? },
+            { "sShutDown_Title", "Si è sicuri di voler arrestare il sistema?" },
             { "sShutDown_Info", "Perderai qualsiasi progresso non salvato e il sistema verrà arrestato.." },
             { "sShutDown_ShutDown", "Arresta il sistema" },
             { "sProgramsMenu_Empty", "Non è stato selezionato alcun programma. Esegui la Ricerca App per iniziare!" },
@@ -1316,6 +1316,7 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarSec2Text", "Le finestre aperte nella tua barra delle applicazioni ora sono organizzate esattamente come avete organizzato i programmi. Tutti i tuoi lavori simili sono raggruppati per un uso semplificato." },
             { "sWelcome_TaskbarSec3Heading", "Lista attività" },
             { "sWelcome_TaskbarSec3Text", "Troppe finestre aperte? La Lista attività mostra le tue finestre in un menù in modo da facilitarne lo spostamento a quella desiderata. Puoi anche aprire il Task View di Windows da questo menù." }
+        };
 
         public static Dictionary<string, string> zh_CN = new Dictionary<string, string>
         {
@@ -3318,6 +3319,7 @@ namespace CairoDesktop.Localization
             { "sWelcome_TaskbarSec3Heading", "Görev Listesi" },
             { "sWelcome_TaskbarSec3Text", "Çok fazla açık pencereniz mi var? Görev listesi, açtığınız pencereleri bir menü halinde gösterir. Bu sayede aradığınız pencereye kolaylıkla geçiş yapabilirsiniz. Ayrıca bu menüden Windows 10'un Görev Görünümü'nü de açabilirsiniz." }
         };
+
         public static Dictionary<string, string> ko_KR = new Dictionary<string, string>
         {
             { "sProgramsMenu", "프로그램" },
