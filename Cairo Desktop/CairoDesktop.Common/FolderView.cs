@@ -65,6 +65,12 @@ namespace CairoDesktop.Common
                     {
                         return false;
                     }
+
+                    // in newer Windows 11 builds, the Desktop also lists itself
+                    if (file.Path == path)
+                    {
+                        return false;
+                    }
                 }
 
                 if (file.Path == @"::{21EC2020-3AEA-1069-A2DD-08002B30309D}\::{98F2AB62-0E29-4E4C-8EE7-B542E66740B1}")
