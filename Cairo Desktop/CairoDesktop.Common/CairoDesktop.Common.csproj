@@ -8,7 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ManagedShell" Version="0.0.186" />
+    <None Remove="Resources\InvertShader\shader_invert.ps" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ManagedShell" Version="0.0.188" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
   </ItemGroup>
@@ -27,6 +31,7 @@
     <Resource Include="Resources\dialogIconLogOff.png" />
     <Resource Include="Resources\dialogIconRestart.png" />
     <Resource Include="Resources\dialogIconShutDown.png" />
+    <Resource Include="Resources\InvertShader\shader_invert.ps" />
   </ItemGroup>
 
 </Project>

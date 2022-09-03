@@ -21,6 +21,7 @@
                 ToolTip="{Binding Path=Title}" 
                 ToolTipService.Placement="Bottom">
             <Image Source="{Binding Path=Icon, Mode=OneWay}"
+                   Name="NotifyIconImage"
                    Style="{DynamicResource NotifyIconImage}" />
         </Border>
         <!-- The width of this border animates to a constant value 0..1 via its style -->

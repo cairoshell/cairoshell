@@ -13,7 +13,9 @@
     <system:Double x:Key="MediumFontSize">12</system:Double>
     <system:Double x:Key="SmallFontSize">10</system:Double>
 
+    <!-- Theme configuration resources -->
     <system:Boolean x:Key="EnableDarkMode">True</system:Boolean>
+    <system:Boolean x:Key="EnableInvertSystemNotifyIcons">False</system:Boolean>
 
     <!-- Menu resources -->
     <system:Boolean x:Key="MenuBarWindowAllowsTransparency">True</system:Boolean>
