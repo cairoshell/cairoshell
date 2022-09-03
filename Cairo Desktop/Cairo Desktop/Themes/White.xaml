@@ -2,7 +2,9 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!-- Theme configuration resources -->
     <system:Boolean x:Key="EnableDarkMode">False</system:Boolean>
+    <system:Boolean x:Key="EnableInvertSystemNotifyIcons">True</system:Boolean>
 
     <!-- Menu resources -->
     <SolidColorBrush Color="#FF000000" x:Key="MenuHeaderForeground" />
