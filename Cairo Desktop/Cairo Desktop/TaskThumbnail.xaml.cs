@@ -1,5 +1,4 @@
-﻿using CairoDesktop.Configuration;
-using ManagedShell.Common.Helpers;
+﻿using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 using System;
@@ -93,6 +92,23 @@ namespace CairoDesktop
             dwmThumbnail.Visibility = Visibility.Collapsed;
         }
 
+        private void CloseWindow()
+        {
+            bool closeThumbWindow = true;
+
+            if (ThumbWindow.TaskButton.WindowGroup.Count > 1)
+            {
+                closeThumbWindow = false;
+            }
+
+            _window.Close();
+
+            if (closeThumbWindow)
+            {
+                ThumbWindow.Close();
+            }
+        }
+
         private void ThumbWindow_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             SetupThumbnail();
@@ -161,6 +177,10 @@ namespace CairoDesktop
                 }
 
                 ThumbWindow.Close();
+            }
+            else if (e.ChangedButton == MouseButton.Middle)
+            {
+                CloseWindow();
             }
         }
 
@@ -249,19 +269,7 @@ namespace CairoDesktop
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            bool closeThumbWindow = true;
-
-            if (ThumbWindow.TaskButton.WindowGroup.Count > 1)
-            {
-                closeThumbWindow = false;
-            }
-
-            _window.Close();
-
-            if (closeThumbWindow)
-            {
-                ThumbWindow.Close();
-            }
+            CloseWindow();
         }
     }
 }
