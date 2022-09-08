@@ -206,6 +206,27 @@ namespace CairoDesktop
                     break;
             }
 
+            switch (Settings.Instance.TaskbarMultiMonMode)
+            {
+                case 0:
+                    radTaskbarMultiMonMode0.IsChecked = true;
+                    radTaskbarMultiMonMode1.IsChecked = false;
+                    radTaskbarMultiMonMode2.IsChecked = false;
+                    break;
+                case 1:
+                    radTaskbarMultiMonMode0.IsChecked = false;
+                    radTaskbarMultiMonMode1.IsChecked = true;
+                    radTaskbarMultiMonMode2.IsChecked = false;
+                    break;
+                case 2:
+                    radTaskbarMultiMonMode0.IsChecked = false;
+                    radTaskbarMultiMonMode1.IsChecked = false;
+                    radTaskbarMultiMonMode2.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+
             switch (Settings.Instance.SysTrayAlwaysExpanded)
             {
                 case false:
@@ -696,6 +717,21 @@ namespace CairoDesktop
         private void radTaskbarGrouping2_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.TaskbarGroupingStyle = 2;
+        }
+
+        private void radTaskbarMultiMonMode0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.TaskbarMultiMonMode = 0;
+        }
+
+        private void radTaskbarMultiMonMode1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.TaskbarMultiMonMode = 1;
+        }
+
+        private void radTaskbarMultiMonMode2_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.TaskbarMultiMonMode = 2;
         }
 
         private void radDesktopLabelPos0_Click(object sender, RoutedEventArgs e)

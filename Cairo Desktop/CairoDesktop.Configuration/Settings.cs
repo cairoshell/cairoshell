@@ -542,6 +542,21 @@ namespace CairoDesktop.Configuration
                 }
             }
         }
+
+        public int TaskbarMultiMonMode
+        {
+            get
+            {
+                return cairoSettings.TaskbarMultiMonMode;
+            }
+            set
+            {
+                if (cairoSettings.TaskbarMultiMonMode != value)
+                {
+                    cairoSettings.TaskbarMultiMonMode = value;
+                }
+            }
+        }
         #endregion
 
         #region Menu Bar
