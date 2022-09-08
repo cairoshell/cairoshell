@@ -97,7 +97,7 @@ namespace CairoDesktop
 
             // setup taskbar item source
 
-            _shellManager.Tasks.Initialize(getTaskCategoryProvider());
+            _shellManager.Tasks.Initialize(getTaskCategoryProvider(), true);
 
             _taskbarItems = new CollectionViewSource { Source = _shellManager.Tasks.GroupedWindows.SourceCollection }.View;
             _taskbarItems.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
