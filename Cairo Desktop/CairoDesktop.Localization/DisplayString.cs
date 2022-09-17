@@ -615,6 +615,14 @@ namespace CairoDesktop.Localization
 
         public static string sSettings_Taskbar_EnableThumbnails => getString();
 
+        public static string sSettings_Taskbar_MultiMonMode => getString();
+
+        public static string sSettings_Taskbar_MultiMonMode_All => getString();
+
+        public static string sSettings_Taskbar_MultiMonMode_Primary => getString();
+
+        public static string sSettings_Taskbar_MultiMonMode_PerMonitor => getString();
+
         public static string sSettings_Advanced_LoggingLevel => getString();
 
         public static string sSettings_Advanced_Shell => getString();

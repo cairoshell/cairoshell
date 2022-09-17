@@ -635,5 +635,17 @@ namespace CairoDesktop.Configuration.Properties {
                 this["TaskbarGroupingStyle"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int TaskbarMultiMonMode {
+            get {
+                return ((int)(this["TaskbarMultiMonMode"]));
+            }
+            set {
+                this["TaskbarMultiMonMode"] = value;
+            }
+        }
     }
 }

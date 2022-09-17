@@ -15,6 +15,7 @@ using ManagedShell.AppBar;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
+using System.Windows.Data;
 
 namespace CairoDesktop
 {
@@ -27,6 +28,7 @@ namespace CairoDesktop
         // Item sources
         internal readonly IAppGrabber _appGrabber;
         private readonly ShellManager _shellManager;
+        private ICollectionView _taskbarItems;
 
         // display properties
         private int addToSize;
@@ -95,9 +97,23 @@ namespace CairoDesktop
 
             // setup taskbar item source
 
-            _shellManager.Tasks.Initialize(getTaskCategoryProvider());
+            _shellManager.Tasks.Initialize(getTaskCategoryProvider(), true);
 
-            TasksList.ItemsSource = _shellManager.Tasks.GroupedWindows;
+            _taskbarItems = new CollectionViewSource { Source = _shellManager.Tasks.GroupedWindows.SourceCollection }.View;
+            _taskbarItems.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+            _taskbarItems.Filter = Tasks_Filter;
+            _taskbarItems.CollectionChanged += Tasks_Changed;
+
+            if (_taskbarItems is ICollectionViewLiveShaping taskbarItemsView)
+            {
+                taskbarItemsView.IsLiveFiltering = true;
+                taskbarItemsView.LiveFilteringProperties.Add("HMonitor");
+                taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
+                taskbarItemsView.IsLiveGrouping = true;
+                taskbarItemsView.LiveGroupingProperties.Add("Category");
+            }
+
+            TasksList.ItemsSource = _taskbarItems;
             TasksList2.ItemsSource = _shellManager.Tasks.GroupedWindows;
             if (_shellManager.Tasks.GroupedWindows != null) _shellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_Changed;
 
@@ -109,6 +125,39 @@ namespace CairoDesktop
 
             // register for settings changes
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        private void Tasks_Changed(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // yup, do nothing. helps prevent a NRE
+        }
+
+        private bool Tasks_Filter(object obj)
+        {
+            if (obj is ApplicationWindow window)
+            {
+                if (!window.ShowInTaskbar)
+                {
+                    return false;
+                }
+
+                if (!Settings.Instance.EnableTaskbarMultiMon || Settings.Instance.TaskbarMultiMonMode == 0)
+                {
+                    return true;
+                }
+
+                if (Settings.Instance.TaskbarMultiMonMode == 2 && Screen.Primary)
+                {
+                    return true;
+                }
+
+                if (window.HMonitor != Screen.HMonitor)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private ITaskCategoryProvider getTaskCategoryProvider()
@@ -314,6 +363,9 @@ namespace CairoDesktop
                 case "TaskbarGroupingStyle":
                     _shellManager.Tasks.SetTaskCategoryProvider(getTaskCategoryProvider());
                     setTaskButtonSize();
+                    break;
+                case "TaskbarMultiMonMode":
+                    _taskbarItems?.Refresh();
                     break;
             }
         }
