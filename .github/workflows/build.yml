@@ -30,10 +30,11 @@ jobs:
     - name: Publish app
       run: |
           cd "Cairo Desktop\Cairo Desktop"
-          dotnet publish -p:PublishProfile=$env:Profile -f $env:Framework
+          dotnet publish -p:PublishProfile=$env:Profile -p:Platform=$env:Platform -f $env:Framework
       env:
         Profile: ${{ matrix.target[0] }}
         Framework: ${{ matrix.target[1] }}
+        Platform: ${{ matrix.target[0] == 'x86' && 'AnyCPU' || matrix.target[0] == 'x86_net6' && 'AnyCPU' || matrix.target[0] == 'x64' && 'x64' || matrix.target[0] == 'x64_net6' && 'x64' || 'ARM64' }}
     
     - name: Set installer version
       uses: datamonsters/replace-action@v2
