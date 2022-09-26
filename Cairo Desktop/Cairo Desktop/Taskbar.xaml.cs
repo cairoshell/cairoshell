@@ -364,6 +364,7 @@ namespace CairoDesktop
                     _shellManager.Tasks.SetTaskCategoryProvider(getTaskCategoryProvider());
                     setTaskButtonSize();
                     break;
+                case "EnableTaskbarMultiMon":
                 case "TaskbarMultiMonMode":
                     _taskbarItems?.Refresh();
                     break;

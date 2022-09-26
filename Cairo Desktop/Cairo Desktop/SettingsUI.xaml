@@ -783,16 +783,19 @@
                                    Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarMultiMonMode"
+                                         IsEnabled="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
                                          Name="radTaskbarMultiMonMode0"
                                          Click="radTaskbarMultiMonMode0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MultiMonMode_All)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoTaskbarMultiMonMode"
+                                         IsEnabled="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
                                          Name="radTaskbarMultiMonMode1"
                                          Click="radTaskbarMultiMonMode1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MultiMonMode_PerMonitor)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoTaskbarMultiMonMode"
+                                         IsEnabled="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
                                          Name="radTaskbarMultiMonMode2"
                                          Click="radTaskbarMultiMonMode2_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MultiMonMode_Primary)}" />
