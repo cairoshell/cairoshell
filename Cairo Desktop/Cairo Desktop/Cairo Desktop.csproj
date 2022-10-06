@@ -42,8 +42,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Page Remove="Themes\FlatAccent.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Themes\Fade.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Include="Themes\FlatAccent.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Generator>MSBuild:Compile</Generator>
     </None>
     <None Include="Themes\Flat.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
