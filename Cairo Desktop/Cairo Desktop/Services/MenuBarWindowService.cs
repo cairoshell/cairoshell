@@ -43,5 +43,8 @@ namespace CairoDesktop.Services
             Windows.Add(newMenuBar);
             newMenuBar.Show();
         }
+
+        protected override bool IsMainScreen(AppBarScreen screen)
+            => _windowManager.IsPreferred(screen, Settings.Instance.MenuBarMonitor);
     }
 }

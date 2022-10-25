@@ -158,5 +158,11 @@
     <Setting Name="TaskbarMultiMonMode" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
+    <Setting Name="TaskbarMonitor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Primary</Value>
+    </Setting>
+    <Setting Name="MenuBarMonitor" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Primary</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

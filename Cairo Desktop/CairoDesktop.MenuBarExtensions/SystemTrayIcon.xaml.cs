@@ -189,7 +189,7 @@ namespace CairoDesktop.MenuBarExtensions
         #region Notify icon balloon notifications
         private void TrayIcon_NotificationBalloonShown(object sender, NotificationBalloonEventArgs e)
         {
-            if (Host != null && Host.Host != null && !Host.Host.GetIsPrimaryDisplay())
+            if (Host != null && Host.Host != null && !Host.Host.IsMainMenuBar())
             {
                 return;
             }

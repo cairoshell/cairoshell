@@ -19,7 +19,7 @@ namespace CairoDesktop.MenuBarExtensions
         {
             InitializeComponent();
 
-            _isPrimaryScreen = host.GetIsPrimaryDisplay();
+            _isPrimaryScreen = host.IsMainMenuBar();
 
             InitializeClock();
         }

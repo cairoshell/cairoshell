@@ -647,5 +647,29 @@ namespace CairoDesktop.Configuration.Properties {
                 this["TaskbarMultiMonMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Primary")]
+        public string TaskbarMonitor {
+            get {
+                return ((string)(this["TaskbarMonitor"]));
+            }
+            set {
+                this["TaskbarMonitor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Primary")]
+        public string MenuBarMonitor {
+            get {
+                return ((string)(this["MenuBarMonitor"]));
+            }
+            set {
+                this["MenuBarMonitor"] = value;
+            }
+        }
     }
 }
