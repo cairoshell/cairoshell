@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 
 namespace CairoDesktop.Services
 {
@@ -33,8 +34,13 @@ namespace CairoDesktop.Services
             _settings = settings;
 
             MigrateSettings();
-
+            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             _settings.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        {
+            SetThemeFromSettings();
         }
 
         private void MigrateSettings()

@@ -8,12 +8,14 @@ using System.Windows.Media;
 using System.Windows.Data;
 using System.Globalization;
 using System.Windows.Markup;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.Themes
 {
     [MarkupExtensionReturnType(typeof(SolidColorBrush))]
     public class WindowsThemeColorManager : MarkupExtension
     {
+
         public double Opacity
         {
             get;
@@ -51,6 +53,9 @@ namespace CairoDesktop.Themes
 
         private Color GetAccent()
         {
+            if (!EnvironmentHelper.IsWindows8OrBetter)
+                return Color.FromArgb((byte)0xDF, (byte)0x00, (byte)0x80, (byte)0xFF);
+
             IMMERSIVE_COLOR_PREFERENCE get = new IMMERSIVE_COLOR_PREFERENCE();
             GetUserColorPreference(ref get, true);
             var res = ToColor(get.crStartColor);
