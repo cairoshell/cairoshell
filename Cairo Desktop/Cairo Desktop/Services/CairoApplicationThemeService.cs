@@ -161,6 +161,7 @@ namespace CairoDesktop.Services
         public void Dispose()
         {
             Dispose(true);
+            SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
             GC.SuppressFinalize(this);
         }
 
