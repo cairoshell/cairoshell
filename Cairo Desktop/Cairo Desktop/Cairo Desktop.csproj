@@ -2,6 +2,7 @@
 
   <PropertyGroup>
 	<TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
+    <LangVersion>10</LangVersion>
     <Platforms>x64;AnyCPU;ARM64</Platforms>
     <UseWPF>True</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
