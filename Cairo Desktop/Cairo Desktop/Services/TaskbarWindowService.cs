@@ -46,6 +46,9 @@ namespace CairoDesktop.Services
                 case "EnableTaskbarMultiMon":
                     HandleEnableMultiMonChanged(Settings.Instance.EnableTaskbarMultiMon);
                     break;
+                case nameof(Settings.Instance.TaskbarMonitor):
+                    HandlePreferredMonitorChanged(Settings.Instance.TaskbarMonitor);
+                    break;
             }
         }
 

@@ -34,6 +34,9 @@ namespace CairoDesktop.Services
                 case "EnableMenuBarMultiMon":
                     HandleEnableMultiMonChanged(Settings.Instance.EnableMenuBarMultiMon);
                     break;
+                case nameof(Settings.Instance.MenuBarMonitor):
+                    HandlePreferredMonitorChanged(Settings.Instance.MenuBarMonitor);
+                    break;
             }
         }
 

@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="CairoDesktop.Common.Views.MonitorPreferenceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             x:Name="Self"
+             xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+             xmlns:vm="clr-namespace:CairoDesktop.Common.ViewModels"
+             Background="Transparent"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance vm:MonitorPreferenceViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type RadioButton}" x:Key="ScreenRadio" >
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border Name="Screen"
+                                CornerRadius="40"
+                                BorderThickness="16" BorderBrush="Transparent"
+                                Background="#606060"
+                                Margin="16"
+                                >
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter TargetName="Screen" Property="Background" Value="#B00000FF"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Screen" Property="BorderBrush" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <RadioButton Margin="0,0,4,4"
+                     GroupName="Screen"
+                     IsChecked="{Binding UsePrimary, Mode=TwoWay}">
+            <Label Content="{Binding UsePrimaryScreenOptionTitle, ElementName=Self, Mode=OneWay}" />
+        </RadioButton>
+        <Viewbox Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <ItemsControl ItemsSource="{Binding Screens}" x:Name="Screens">
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Width" Value="{Binding Bounds.Width, Mode=OneTime}"/>
+                        <Setter Property="Height" Value="{Binding Bounds.Height, Mode=OneTime}"/>
+                        <Setter Property="Canvas.Left" Value="{Binding Path=Bounds.X, Mode=OneTime}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Path=Bounds.Y, Mode=OneTime}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <RadioButton GroupName="Screen"
+                                     Style="{StaticResource ScreenRadio}"
+                                     IsChecked="{Binding IsSelected}"
+                                     />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Width="{Binding DesktopWidth, Mode=OneWay}"
+                            Height="{Binding DesktopHeight, Mode=OneWay}"
+                            >
+                            <Canvas.RenderTransform>
+                                <TranslateTransform X="{Binding PrimaryScreenX, Mode=OneWay}"
+                                                    Y="{Binding PrimaryScreenY, Mode=OneWay}" />
+                            </Canvas.RenderTransform>
+                        </Canvas>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Viewbox>
+    </Grid>
+</UserControl>

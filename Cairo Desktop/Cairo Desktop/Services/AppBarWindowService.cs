@@ -139,6 +139,25 @@ namespace CairoDesktop.Services
             }
         }
 
+        protected void HandlePreferredMonitorChanged(MonitorPreference newValue)
+        {
+            foreach (var screen in _windowManager.ScreenState)
+            {
+                if (IsMainScreen(screen))
+                {
+                    continue;
+                }
+
+                CloseScreenWindow(screen.DeviceName);
+            }
+
+            if (Windows.Count == 0 && EnableService)
+            {
+                var mainScreen = _windowManager.ScreenState.Find(IsMainScreen) ?? AppBarScreen.FromPrimaryScreen();
+                OpenWindow(mainScreen);
+            }
+        }
+
         protected void HandleEnableServiceChanged(bool newValue)
         {
             EnableService = newValue;
