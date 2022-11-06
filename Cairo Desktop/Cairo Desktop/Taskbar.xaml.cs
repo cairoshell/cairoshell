@@ -99,23 +99,12 @@ namespace CairoDesktop
 
             _shellManager.Tasks.Initialize(getTaskCategoryProvider(), true);
 
-            _taskbarItems = new CollectionViewSource { Source = _shellManager.Tasks.GroupedWindows.SourceCollection }.View;
-            _taskbarItems.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+            _taskbarItems = _shellManager.Tasks.CreateGroupedWindowsCollection();
             _taskbarItems.Filter = Tasks_Filter;
-            _taskbarItems.CollectionChanged += Tasks_Changed;
-
-            if (_taskbarItems is ICollectionViewLiveShaping taskbarItemsView)
-            {
-                taskbarItemsView.IsLiveFiltering = true;
-                taskbarItemsView.LiveFilteringProperties.Add("HMonitor");
-                taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
-                taskbarItemsView.IsLiveGrouping = true;
-                taskbarItemsView.LiveGroupingProperties.Add("Category");
-            }
 
             TasksList.ItemsSource = _taskbarItems;
             TasksList2.ItemsSource = _shellManager.Tasks.GroupedWindows;
-            if (_shellManager.Tasks.GroupedWindows != null) _shellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_Changed;
+            if (_taskbarItems != null) _taskbarItems.CollectionChanged += GroupedWindows_Changed;
 
             // setup data contexts
             bdrMain.DataContext = Settings.Instance;
@@ -125,11 +114,6 @@ namespace CairoDesktop
 
             // register for settings changes
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
-        }
-
-        private void Tasks_Changed(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            // yup, do nothing. helps prevent a NRE
         }
 
         private bool Tasks_Filter(object obj)
