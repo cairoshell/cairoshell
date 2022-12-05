@@ -1,7 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:CairoDesktop.Themes;assembly=CairoDesktop">
+                    xmlns:local="clr-namespace:CairoDesktop.Themes;assembly=CairoDesktop"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Theme properties -->
+    <System:Boolean x:Key="FollowThemeColors">True</System:Boolean>
+    <Color x:Key="ThemeColor">#DF0080FF</Color>
+    <StaticResource x:Key="FallbackColor" ResourceKey="ThemeColor"/>
 
     <!-- Menu resources -->
     <SolidColorBrush Color="#BF2a2a2a" x:Key="MenuBarBackground" />
@@ -11,16 +17,16 @@
     <!--<SolidColorBrush Color="{Binding Color, Converter={StaticResource Accent}}" x:Key="MenuItemHoverGradient" />
     <SolidColorBrush Color="{Binding Color, Converter={StaticResource Accent}}" x:Key="MenuHeaderPressedGradient" />
     <SolidColorBrush Color="{Binding Color, Converter={StaticResource Accent}}" x:Key="MenuTopBorderBrush" />-->
-    <local:WindowsThemeColorManager Opacity="0.5" x:Key="MenuItemHoverGradient"/>
-    <local:WindowsThemeColorManager x:Key="MenuHeaderPressedGradient"/>
-    <local:WindowsThemeColorManager x:Key="MenuTopBorderBrush"/>
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="0.5" x:Key="MenuItemHoverGradient"/>
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" x:Key="MenuHeaderPressedGradient"/>
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" x:Key="MenuTopBorderBrush"/>
     <SolidColorBrush Color="#20FFFFFF" x:Key="ProgramsMenuCategoryHoverBackground" />
 
     <!-- Search resources -->
     <SolidColorBrush Color="#FF020200" x:Key="SearchTitleBackground" />
-    <local:WindowsThemeColorManager Opacity="0.7" x:Key="SearchViewAllResultsBackground" />
-    <local:WindowsThemeColorManager Opacity="1.0" x:Key="SearchViewAllResultsHoverBackground" />
-    <local:WindowsThemeColorManager Opacity="0.5" x:Key="SearchViewAllResultsPressedBackground" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="0.7" x:Key="SearchViewAllResultsBackground" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="1.0" x:Key="SearchViewAllResultsHoverBackground" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="0.5" x:Key="SearchViewAllResultsPressedBackground" />
 
     <!-- Folder view resources -->
     <SolidColorBrush Color="#44282828" x:Key="DesktopHoverBackground" />
@@ -43,9 +49,9 @@
            x:Key="TaskbarItemInactiveBackground" />
     <SolidColorBrush Color="{StaticResource TaskbarItemInactiveBackground}" x:Key="TaskbarItemInactiveBackgroundGradient" />
     <SolidColorBrush Color="{StaticResource TaskbarItemInactiveBorder}" x:Key="TaskbarItemInactiveBorderGradient" />
-    <local:WindowsThemeColorManager Opacity="0.6" x:Key="TaskbarItemInactiveHoverBackground" />
-    <local:WindowsThemeColorManager Opacity="1.0" x:Key="TaskbarItemInactiveHoverBorder" />
-    <local:WindowsThemeColorManager Opacity="0.7" x:Key="TaskbarItemInactivePressedBackground" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="0.6" x:Key="TaskbarItemInactiveHoverBackground" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="1.0" x:Key="TaskbarItemInactiveHoverBorder" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="0.7" x:Key="TaskbarItemInactivePressedBackground" />
     <SolidColorBrush Color="#30FFFFFF" x:Key="TaskbarItemActiveBackground" />
     <SolidColorBrush Color="#70FFFFFF" x:Key="TaskbarItemActiveBorder" />
     <SolidColorBrush Color="#43FFFFFF" x:Key="TaskbarItemActiveHoverBackground" />

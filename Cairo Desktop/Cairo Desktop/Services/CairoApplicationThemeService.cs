@@ -11,6 +11,7 @@ using System.Linq;
 using System.Windows;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
+using System.Windows.Media;
 
 namespace CairoDesktop.Services
 {
@@ -32,15 +33,16 @@ namespace CairoDesktop.Services
         {
             _logger = logger;
             _settings = settings;
-
             MigrateSettings();
-            SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             _settings.PropertyChanged += Settings_PropertyChanged;
         }
 
         private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
         {
-            SetThemeFromSettings();
+            if (e.Category == UserPreferenceCategory.General)
+            {
+                SetThemeFromSettings();
+            }
         }
 
         private void MigrateSettings()
@@ -96,6 +98,17 @@ namespace CairoDesktop.Services
                 {
                     Source = new Uri(themeFilePath, UriKind.RelativeOrAbsolute)
                 });
+
+                bool doesThemeFollowColors = CairoApplication.Current.Resources.MergedDictionaries.Where(d => d.Contains("FollowThemeColors") && (Boolean)d["FollowThemeColors"]).LongCount() > 0L;
+                if (doesThemeFollowColors)
+                {
+                    SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
+                    SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+                }
+                else
+                {
+                    SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
+                }
             }
             catch (Exception e)
             {

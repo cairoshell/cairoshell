@@ -22,6 +22,12 @@ namespace CairoDesktop.Themes
             set;
         } = 1.0;
 
+        public Color FallbackColor
+        {
+            get;
+            set;
+        }
+
         [StructLayout(LayoutKind.Sequential)]
         private struct IMMERSIVE_COLOR_PREFERENCE
         {
@@ -54,7 +60,7 @@ namespace CairoDesktop.Themes
         private Color GetAccent()
         {
             if (!EnvironmentHelper.IsWindows8OrBetter)
-                return Color.FromArgb((byte)0xDF, (byte)0x00, (byte)0x80, (byte)0xFF);
+                return FallbackColor;
 
             IMMERSIVE_COLOR_PREFERENCE get = new IMMERSIVE_COLOR_PREFERENCE();
             GetUserColorPreference(ref get, true);
