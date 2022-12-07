@@ -12,6 +12,9 @@ using System.Windows;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using System.Windows.Media;
+using System.Management;
+using System.Security.Principal;
+using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop.Services
 {
@@ -28,6 +31,7 @@ namespace CairoDesktop.Services
         };
         private readonly ILogger<CairoApplicationThemeService> _logger;
         private readonly Settings _settings;
+        private readonly RegistryEventWatcher _watcher;
 
         public CairoApplicationThemeService(ILogger<CairoApplicationThemeService> logger, Settings settings)
         {
@@ -35,14 +39,7 @@ namespace CairoDesktop.Services
             _settings = settings;
             MigrateSettings();
             _settings.PropertyChanged += Settings_PropertyChanged;
-        }
-
-        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
-        {
-            if (e.Category == UserPreferenceCategory.General)
-            {
-                SetThemeFromSettings();
-            }
+            _watcher = new RegistryEventWatcher(this);
         }
 
         private void MigrateSettings()
@@ -102,12 +99,11 @@ namespace CairoDesktop.Services
                 bool doesThemeFollowColors = CairoApplication.Current.Resources.MergedDictionaries.Where(d => d.Contains("FollowThemeColors") && (Boolean)d["FollowThemeColors"]).LongCount() > 0L;
                 if (doesThemeFollowColors)
                 {
-                    SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
-                    SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+                    _watcher.WatchRegistry(true);
                 }
                 else
                 {
-                    SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
+                    _watcher.WatchRegistry(false);
                 }
             }
             catch (Exception e)
@@ -174,7 +170,7 @@ namespace CairoDesktop.Services
         public void Dispose()
         {
             Dispose(true);
-            SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
+            _watcher.Dispose();
             GC.SuppressFinalize(this);
         }
 
