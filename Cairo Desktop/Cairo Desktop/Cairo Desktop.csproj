@@ -90,6 +90,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="System.Management" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Application.ico" />
     <Resource Include="Resources\searchDefault.png" />
     <Resource Include="Resources\controlsBack.png" />

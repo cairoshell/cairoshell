@@ -12,6 +12,7 @@ using System.Windows;
 using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using System.Windows.Media;
+using System.Management;
 
 namespace CairoDesktop.Services
 {
@@ -21,6 +22,9 @@ namespace CairoDesktop.Services
         private const string THEME_DEFAULT = "Default";
         private const string THEME_FOLDER = "Themes";
         private const string THEME_EXT = "xaml";
+        private const string REGISTRY_HIVE = @"HKEY_CURRENT_USER";
+        private const string REGISTRY_KEY = @"Software\Microsoft\Windows\CurrentVersion\Explorer\Accent";
+        private const string REGISTRY_QUERY = "SELECT * FROM RegistryKeyChangeEvent WHERE Hive='" + REGISTRY_HIVE + "' AND KeyPath='" + REGISTRY_KEY + "'";
 
         private static readonly string[] THEME_LOCATIONS = {
             AppDomain.CurrentDomain.BaseDirectory,
@@ -28,6 +32,7 @@ namespace CairoDesktop.Services
         };
         private readonly ILogger<CairoApplicationThemeService> _logger;
         private readonly Settings _settings;
+        private readonly ManagementEventWatcher _watcher;
 
         public CairoApplicationThemeService(ILogger<CairoApplicationThemeService> logger, Settings settings)
         {
@@ -35,14 +40,26 @@ namespace CairoDesktop.Services
             _settings = settings;
             MigrateSettings();
             _settings.PropertyChanged += Settings_PropertyChanged;
+            
+            ManagementScope Scope = new ManagementScope("\\\\.\\root\\default");
+            EventQuery Query = new EventQuery(REGISTRY_QUERY);
+            _watcher = new ManagementEventWatcher(Scope, Query);
+            _watcher.Start();
+            WatchRegistry(true);
         }
 
-        private void SystemEvents_UserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        private void WatchRegistry(bool subscribe)
         {
-            if (e.Category == UserPreferenceCategory.General)
+            _watcher.EventArrived -= new EventArrivedEventHandler(SystemEvents_RegistryChanged);
+            if (subscribe)
             {
-                SetThemeFromSettings();
+                _watcher.EventArrived += new EventArrivedEventHandler(SystemEvents_RegistryChanged);
             }
+        }
+
+        private void SystemEvents_RegistryChanged(object sender, EventArrivedEventArgs e)
+        {
+            SetThemeFromSettings();
         }
 
         private void MigrateSettings()
@@ -102,12 +119,11 @@ namespace CairoDesktop.Services
                 bool doesThemeFollowColors = CairoApplication.Current.Resources.MergedDictionaries.Where(d => d.Contains("FollowThemeColors") && (Boolean)d["FollowThemeColors"]).LongCount() > 0L;
                 if (doesThemeFollowColors)
                 {
-                    SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
-                    SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
+                    WatchRegistry(true);
                 }
                 else
                 {
-                    SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
+                    WatchRegistry(false);
                 }
             }
             catch (Exception e)
@@ -174,7 +190,7 @@ namespace CairoDesktop.Services
         public void Dispose()
         {
             Dispose(true);
-            SystemEvents.UserPreferenceChanged -= SystemEvents_UserPreferenceChanged;
+            _watcher.Dispose();
             GC.SuppressFinalize(this);
         }
 
