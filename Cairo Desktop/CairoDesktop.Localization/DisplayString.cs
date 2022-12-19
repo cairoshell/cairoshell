@@ -17,7 +17,7 @@ namespace CairoDesktop.Localization
             new KeyValuePair<string, string>("Polski", "pl_PL"),
             new KeyValuePair<string, string>("Português (Brasil)", "pt_BR"),
             new KeyValuePair<string, string>("Русский", "ru_RU"),
-            new KeyValuePair<string, string>("Spanish (España)", "es_ES"),
+            new KeyValuePair<string, string>("Español (España)", "es_ES"),
             new KeyValuePair<string, string>("Svenska", "sv_SE"),
             new KeyValuePair<string, string>("Turkish (Türkçe)", "tr_TR"),
             new KeyValuePair<string, string>("한국어", "ko_KR"),
