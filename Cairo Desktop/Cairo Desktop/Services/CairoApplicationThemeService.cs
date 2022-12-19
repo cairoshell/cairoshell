@@ -31,7 +31,7 @@ namespace CairoDesktop.Services
         };
         private readonly ILogger<CairoApplicationThemeService> _logger;
         private readonly Settings _settings;
-        private readonly RegistryEventWatcher _watcher;
+        private RegistryEventWatcher _watcher;
 
         public CairoApplicationThemeService(ILogger<CairoApplicationThemeService> logger, Settings settings)
         {
@@ -39,7 +39,6 @@ namespace CairoDesktop.Services
             _settings = settings;
             MigrateSettings();
             _settings.PropertyChanged += Settings_PropertyChanged;
-            _watcher = new RegistryEventWatcher(this);
         }
 
         private void MigrateSettings()
@@ -95,21 +94,44 @@ namespace CairoDesktop.Services
                 {
                     Source = new Uri(themeFilePath, UriKind.RelativeOrAbsolute)
                 });
-
-                bool doesThemeFollowColors = CairoApplication.Current.Resources.MergedDictionaries.Where(d => d.Contains("FollowThemeColors") && (Boolean)d["FollowThemeColors"]).LongCount() > 0L;
-                if (doesThemeFollowColors)
-                {
-                    _watcher.WatchRegistry(true);
-                }
-                else
-                {
-                    _watcher.WatchRegistry(false);
-                }
+                CheckForDynamicColor();
             }
             catch (Exception e)
             {
                 ShellLogger.Error($"ThemeService: Unable to load theme {theme}: {e.Message}");
             }
+        }
+
+        /// <summary>
+        /// Looks up the merged dictionaries for the <b>FollowThemeColors</b> boolean value.<br/>
+        /// If found, the event watcher is defined and starts looking for changes to the AccentColor<br/>
+        /// in the Windows Registry.
+        /// </summary>
+        private void CheckForDynamicColor()
+        {
+            bool doesThemeFollowColors = CairoApplication.Current.Resources.MergedDictionaries.Where(d =>
+                    d.Contains("FollowThemeColors") && (Boolean)d["FollowThemeColors"]).LongCount() > 0L;
+
+            if (doesThemeFollowColors)
+            {
+                if (_watcher == null) _watcher = new RegistryEventWatcher(RegistryChangedEvent);
+                _watcher.StartWatcher();
+            }
+            else
+            {
+                if(_watcher != null ) _watcher.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Raised by the RegistryEventWatcher.<br/>
+        /// Reloads the theme to update the color
+        /// </summary>
+        /// <param name="sender">The object responsible for raising the event</param>
+        /// <param name="e">Additional arguments passed by the event</param>
+        private void RegistryChangedEvent(object sender, EventArrivedEventArgs e)
+        {
+            this.SetThemeFromSettings();
         }
 
         public List<string> GetThemes()
@@ -170,7 +192,7 @@ namespace CairoDesktop.Services
         public void Dispose()
         {
             Dispose(true);
-            _watcher.Dispose();
+            if(_watcher != null) _watcher.Dispose();
             GC.SuppressFinalize(this);
         }
 

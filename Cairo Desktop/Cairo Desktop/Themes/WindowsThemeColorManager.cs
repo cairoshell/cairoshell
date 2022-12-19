@@ -36,9 +36,6 @@ namespace CairoDesktop.Themes
             public uint crAccentColor;
         }
 
-        //[DllImport("uxtheme.dll", EntryPoint = "#122")]
-        //static extern int SetUserColorPreference(ref IMMERSIVE_COLOR_PREFERENCE pcpPreference, bool fForceSetting);
-
         [DllImport("uxtheme.dll", EntryPoint = "#120")]
         private static extern IntPtr GetUserColorPreference(ref IMMERSIVE_COLOR_PREFERENCE pcpPreference, bool fForceReload);
 
