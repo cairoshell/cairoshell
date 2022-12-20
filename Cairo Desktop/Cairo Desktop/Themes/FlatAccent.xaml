@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:CairoDesktop.Themes;assembly=CairoDesktop"
+                    xmlns:System="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Theme properties -->
+    <System:Boolean x:Key="FollowThemeColors">True</System:Boolean>
+    <Color x:Key="ThemeColor">#DF0080FF</Color>
+    <StaticResource x:Key="FallbackColor" ResourceKey="ThemeColor"/>
+
+    <!-- Menu resources -->
+    <SolidColorBrush Color="#BF2a2a2a" x:Key="MenuBarBackground" />
+    <SolidColorBrush Color="#BF4a4a4a" x:Key="MenuBarBorder" />
+    <SolidColorBrush Color="#cF0f0f0f" x:Key="MenuBackgroundGradient" />
+
+    <!--<SolidColorBrush Color="{Binding Color, Converter={StaticResource Accent}}" x:Key="MenuItemHoverGradient" />
+    <SolidColorBrush Color="{Binding Color, Converter={StaticResource Accent}}" x:Key="MenuHeaderPressedGradient" />
+    <SolidColorBrush Color="{Binding Color, Converter={StaticResource Accent}}" x:Key="MenuTopBorderBrush" />-->
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="0.5" x:Key="MenuItemHoverGradient"/>
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" x:Key="MenuHeaderPressedGradient"/>
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" x:Key="MenuTopBorderBrush"/>
+    <SolidColorBrush Color="#20FFFFFF" x:Key="ProgramsMenuCategoryHoverBackground" />
+
+    <!-- Search resources -->
+    <SolidColorBrush Color="#FF020200" x:Key="SearchTitleBackground" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="0.7" x:Key="SearchViewAllResultsBackground" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="1.0" x:Key="SearchViewAllResultsHoverBackground" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="0.5" x:Key="SearchViewAllResultsPressedBackground" />
+
+    <!-- Folder view resources -->
+    <SolidColorBrush Color="#44282828" x:Key="DesktopHoverBackground" />
+
+    <!-- Desktop toolbar resources -->
+    <SolidColorBrush Color="#C0595959"
+                     x:Key="DesktopNavToolbarBorder" />
+    <SolidColorBrush Color="#CF101010"
+                     x:Key="DesktopNavToolbarBackground" />
+
+    <!-- Taskbar resources -->
+    <SolidColorBrush Color="#CF101010" x:Key="TaskbarBottomBackground" />
+    <SolidColorBrush Color="#C0595959" x:Key="TaskbarBottomBorder" />
+    <SolidColorBrush Color="#9F2a2a2a" x:Key="TaskbarTopBackground" />
+    <SolidColorBrush Color="#AF707070" x:Key="TaskbarTopBorder" />
+    <SolidColorBrush Color="#77000000" x:Key="TaskGroupBorder" />
+    <Color A="48" R="255" G="255" B="255"
+           x:Key="TaskbarItemInactiveBorder" />
+    <Color A="16" R="255" G="255" B="255"
+           x:Key="TaskbarItemInactiveBackground" />
+    <SolidColorBrush Color="{StaticResource TaskbarItemInactiveBackground}" x:Key="TaskbarItemInactiveBackgroundGradient" />
+    <SolidColorBrush Color="{StaticResource TaskbarItemInactiveBorder}" x:Key="TaskbarItemInactiveBorderGradient" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="0.6" x:Key="TaskbarItemInactiveHoverBackground" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="1.0" x:Key="TaskbarItemInactiveHoverBorder" />
+    <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="0.7" x:Key="TaskbarItemInactivePressedBackground" />
+    <SolidColorBrush Color="#30FFFFFF" x:Key="TaskbarItemActiveBackground" />
+    <SolidColorBrush Color="#70FFFFFF" x:Key="TaskbarItemActiveBorder" />
+    <SolidColorBrush Color="#43FFFFFF" x:Key="TaskbarItemActiveHoverBackground" />
+    <SolidColorBrush Color="#53FFFFFF" x:Key="TaskbarItemActivePressedBackground" />
+    <Color A="255" R="203" G="121" B="0"
+           x:Key="TaskbarItemFlashingBorder" />
+    <Color A="95" R="255" G="84" B="0"
+           x:Key="TaskbarItemFlashingBackground" />
+    <SolidColorBrush Color="{StaticResource TaskbarItemFlashingBackground}" x:Key="TaskbarItemFlashingBackgroundGradient" />
+    <SolidColorBrush Color="{StaticResource TaskbarItemFlashingBorder}" x:Key="TaskbarItemFlashingBorderGradient" />
+    <SolidColorBrush Color="#CFDBA715" x:Key="TaskbarItemFlashingDisabledBackground" />
+    <SolidColorBrush Color="#6fff5400" x:Key="TaskbarItemFlashingHoverBackground" />
+    <SolidColorBrush Color="#7fff5400" x:Key="TaskbarItemFlashingPressedBackground" />
+    <Storyboard x:Key="TaskbarFlashOn">
+        <ColorAnimationUsingKeyFrames BeginTime="00:00:00"
+                                      Storyboard.TargetName="Border"
+                                      Storyboard.TargetProperty="Background.Color"
+                                      AccelerationRatio="0.2"
+                                      DecelerationRatio="0.2">
+            <SplineColorKeyFrame KeyTime="00:00:00.5000000"
+                                 Value="{StaticResource TaskbarItemFlashingBackground}" />
+            <SplineColorKeyFrame KeyTime="00:00:00"
+                                 Value="{StaticResource TaskbarItemInactiveBackground}" />
+        </ColorAnimationUsingKeyFrames>
+        <ColorAnimationUsingKeyFrames BeginTime="00:00:00"
+                                      Storyboard.TargetName="Border"
+                                      Storyboard.TargetProperty="BorderBrush.Color"
+                                      AccelerationRatio="0.2"
+                                      DecelerationRatio="0.2">
+            <SplineColorKeyFrame KeyTime="00:00:00.5000000"
+                                 Value="{StaticResource TaskbarItemFlashingBorder}" />
+            <SplineColorKeyFrame KeyTime="00:00:00"
+                                 Value="{StaticResource TaskbarItemInactiveBorder}" />
+        </ColorAnimationUsingKeyFrames>
+    </Storyboard>
+    <Storyboard x:Key="TaskbarFlashOff">
+        <ColorAnimationUsingKeyFrames BeginTime="00:00:00"
+                                      Storyboard.TargetName="Border"
+                                      Storyboard.TargetProperty="Background.Color"
+                                      AccelerationRatio="0.2"
+                                      DecelerationRatio="0.2">
+            <SplineColorKeyFrame KeyTime="00:00:00"
+                                 Value="{StaticResource TaskbarItemFlashingBackground}" />
+            <SplineColorKeyFrame KeyTime="00:00:00.5000000"
+                                 Value="{StaticResource TaskbarItemInactiveBackground}" />
+        </ColorAnimationUsingKeyFrames>
+        <ColorAnimationUsingKeyFrames BeginTime="00:00:00"
+                                      Storyboard.TargetName="Border"
+                                      Storyboard.TargetProperty="BorderBrush.Color"
+                                      AccelerationRatio="0.2"
+                                      DecelerationRatio="0.2">
+            <SplineColorKeyFrame KeyTime="00:00:00"
+                                 Value="{StaticResource TaskbarItemFlashingBorder}" />
+            <SplineColorKeyFrame KeyTime="00:00:00.5000000"
+                                 Value="{StaticResource TaskbarItemInactiveBorder}" />
+        </ColorAnimationUsingKeyFrames>
+    </Storyboard>
+
+    <!-- Dialog resources -->
+    <SolidColorBrush Color="#FFFFFFFF" x:Key="DialogWindowBackground" />
+    <SolidColorBrush Color="#FFF9F9F9" x:Key="DialogButtonNormalBackground" />
+    <SolidColorBrush Color="#602e2e2e" x:Key="DialogButtonNormalBorder" />
+    <SolidColorBrush Color="#FFDCE1E6" x:Key="DialogButtonHoverBackground" />
+    <SolidColorBrush Color="#6028292a" x:Key="DialogButtonHoverBorder" />
+    <SolidColorBrush Color="#FFc6cbcf" x:Key="DialogButtonPressedBackground" />
+    <SolidColorBrush Color="#60242525" x:Key="DialogButtonPressedBorder" />
+    <SolidColorBrush Color="DarkGray" x:Key="DialogButtonDisabledBackground" />
+</ResourceDictionary>

@@ -42,8 +42,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Page Remove="Themes\FlatAccent.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Themes\Fade.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Include="Themes\FlatAccent.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Generator>MSBuild:Compile</Generator>
     </None>
     <None Include="Themes\Flat.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -68,6 +76,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -79,6 +88,10 @@
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
     <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj" />
     <ProjectReference Include="..\CairoDesktop.MenuBarExtensions\CairoDesktop.MenuBarExtensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Management" />
   </ItemGroup>
 
   <ItemGroup>
