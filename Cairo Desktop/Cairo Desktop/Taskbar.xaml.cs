@@ -281,7 +281,7 @@ namespace CairoDesktop
         {
             if (_windowManager.IsSettingDisplays || AllowClose)
             {
-                _shellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_Changed;
+                _taskbarItems.CollectionChanged -= GroupedWindows_Changed;
             }
         }
 
