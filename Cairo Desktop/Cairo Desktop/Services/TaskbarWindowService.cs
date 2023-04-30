@@ -3,6 +3,8 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Interfaces;
+using CairoDesktop.SupportingClasses;
+
 using ManagedShell.AppBar;
 
 namespace CairoDesktop.Services
@@ -44,6 +46,9 @@ namespace CairoDesktop.Services
                 case "EnableTaskbarMultiMon":
                     HandleEnableMultiMonChanged(Settings.Instance.EnableTaskbarMultiMon);
                     break;
+                case nameof(Settings.Instance.TaskbarMonitor):
+                    HandlePreferredMonitorChanged(Settings.Instance.TaskbarMonitor);
+                    break;
             }
         }
 
@@ -83,6 +88,9 @@ namespace CairoDesktop.Services
             Windows.Add(newTaskbar);
             newTaskbar.Show();
         }
+
+        protected override bool IsMainScreen(AppBarScreen screen)
+            => _windowManager.IsPreferred(screen, Settings.Instance.TaskbarMonitor);
 
         public override void Dispose()
         {

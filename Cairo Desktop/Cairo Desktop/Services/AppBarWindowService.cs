@@ -47,9 +47,11 @@ namespace CairoDesktop.Services
             HandleSettingChange(e.PropertyName);
         }
 
+        protected abstract bool IsMainScreen(AppBarScreen screen);
+
         public void HandleScreenAdded(AppBarScreen screen)
         {
-            if (EnableService && (EnableMultiMon || screen.Primary))
+            if (EnableService && (EnableMultiMon || IsMainScreen(screen)))
             {
                 OpenWindow(screen);
             }
@@ -86,7 +88,7 @@ namespace CairoDesktop.Services
             }
             else if (Windows.Count > 0)
             {
-                Windows[0].Screen = AppBarScreen.FromPrimaryScreen();
+                Windows[0].Screen = _windowManager.ScreenState.Find(IsMainScreen) ?? AppBarScreen.FromPrimaryScreen();
                 Windows[0].SetScreenPosition();
             }
         }
@@ -127,13 +129,32 @@ namespace CairoDesktop.Services
             {
                 foreach (var screen in _windowManager.ScreenState)
                 {
-                    if (screen.Primary)
+                    if (IsMainScreen(screen))
                     {
                         continue;
                     }
 
                     CloseScreenWindow(screen.DeviceName);
                 }
+            }
+        }
+
+        protected void HandlePreferredMonitorChanged(MonitorPreference newValue)
+        {
+            foreach (var screen in _windowManager.ScreenState)
+            {
+                if (IsMainScreen(screen))
+                {
+                    continue;
+                }
+
+                CloseScreenWindow(screen.DeviceName);
+            }
+
+            if (Windows.Count == 0 && EnableService)
+            {
+                var mainScreen = _windowManager.ScreenState.Find(IsMainScreen) ?? AppBarScreen.FromPrimaryScreen();
+                OpenWindow(mainScreen);
             }
         }
 

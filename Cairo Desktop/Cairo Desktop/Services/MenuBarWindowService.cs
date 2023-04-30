@@ -34,6 +34,9 @@ namespace CairoDesktop.Services
                 case "EnableMenuBarMultiMon":
                     HandleEnableMultiMonChanged(Settings.Instance.EnableMenuBarMultiMon);
                     break;
+                case nameof(Settings.Instance.MenuBarMonitor):
+                    HandlePreferredMonitorChanged(Settings.Instance.MenuBarMonitor);
+                    break;
             }
         }
 
@@ -43,5 +46,8 @@ namespace CairoDesktop.Services
             Windows.Add(newMenuBar);
             newMenuBar.Show();
         }
+
+        protected override bool IsMainScreen(AppBarScreen screen)
+            => _windowManager.IsPreferred(screen, Settings.Instance.MenuBarMonitor);
     }
 }

@@ -24,7 +24,7 @@ namespace CairoDesktop.MenuBarExtensions
             InitializeComponent();
 
             _cairoApplication = cairoApplication;
-            _isPrimaryScreen = host.GetIsPrimaryDisplay();
+            _isPrimaryScreen = host.IsMainMenuBar();
 
             SetupSearch();
         }

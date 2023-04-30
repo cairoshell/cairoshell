@@ -5,7 +5,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
         xmlns:helpers="clr-namespace:ManagedShell.Common.Helpers;assembly=ManagedShell.Common"
-        xmlns:validator="clr-namespace:CairoDesktop.SupportingClasses"
+        xmlns:validator="clr-namespace:CairoDesktop.SupportingClasses" xmlns:commonViews="clr-namespace:CairoDesktop.Common.Views;assembly=CairoDesktop.Common"
         Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
@@ -216,7 +216,7 @@
             <Setter Property="Height"
                     Value="23" />
         </Style>
-        <Style TargetType="ItemsControl">
+        <Style TargetType="ItemsControl" x:Key="TrayIconItems">
             <Setter Property="Width"
                     Value="160" />
             <Setter Property="AllowDrop"
@@ -374,6 +374,21 @@
                               Name="chkEnableMenuBarMultiMon">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarMultiMon)}" />
                     </CheckBox>
+                    <commonViews:MonitorPreferenceView
+                        Height="100" Margin="5"
+                        UsePrimaryScreenOptionTitle="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_UseSystemMonitor)}"
+                        Preference="{Binding MenuBarMonitor, Source={x:Static Settings:Settings.Instance}, Mode=TwoWay}"
+                        >
+                        <commonViews:MonitorPreferenceView.Style>
+                            <Style TargetType="commonViews:MonitorPreferenceView">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding EnableMenuBarMultiMon, Source={x:Static Settings:Settings.Instance}, Mode=OneWay}" Value="True">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </commonViews:MonitorPreferenceView.Style>
+                    </commonViews:MonitorPreferenceView>
                     <StackPanel Orientation="Horizontal"
                                 Style="{StaticResource RadioGroup}">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ProgramsMenuLayout)}"
@@ -457,11 +472,13 @@
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_CollapsibleIcons)}" />
-                                <ItemsControl x:Name="UnpinnedIcons" DragOver="UnpinnedIcons_DragOver" Drop="UnpinnedIcons_Drop" />
+                                <ItemsControl x:Name="UnpinnedIcons" DragOver="UnpinnedIcons_DragOver" Drop="UnpinnedIcons_Drop"
+                                              Style="{StaticResource TrayIconItems}" />
                             </StackPanel>
                             <StackPanel Orientation="Vertical" Margin="16,0,0,0">
                                 <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_PinnedIcons)}" />
-                                <ItemsControl x:Name="PinnedIcons" DragOver="PinnedIcons_DragOver" Drop="PinnedIcons_Drop" />
+                                <ItemsControl x:Name="PinnedIcons" DragOver="PinnedIcons_DragOver" Drop="PinnedIcons_Drop"
+                                              Style="{StaticResource TrayIconItems}" />
                             </StackPanel>
                         </StackPanel>
                         <TextBlock Width="300"
@@ -745,6 +762,21 @@
                               Name="chkEnableTaskbarMultiMon">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableTaskbarMultiMon)}" />
                     </CheckBox>
+                    <commonViews:MonitorPreferenceView
+                        Height="100" Margin="5"
+                        UsePrimaryScreenOptionTitle="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_UseSystemMonitor)}"
+                        Preference="{Binding TaskbarMonitor, Source={x:Static Settings:Settings.Instance}, Mode=TwoWay}"
+                        >
+                        <commonViews:MonitorPreferenceView.Style>
+                            <Style TargetType="commonViews:MonitorPreferenceView">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding EnableTaskbarMultiMon, Source={x:Static Settings:Settings.Instance}, Mode=OneWay}" Value="True">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </commonViews:MonitorPreferenceView.Style>
+                    </commonViews:MonitorPreferenceView>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=FullWidthTaskBar, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkFullWidthTaskBar">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_FullWidthTaskBar)}" />

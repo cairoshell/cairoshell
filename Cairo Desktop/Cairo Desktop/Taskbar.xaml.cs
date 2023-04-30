@@ -72,7 +72,7 @@ namespace CairoDesktop
             _desktopManager = desktopManager;
             _shellManager = shellManager;
 
-            if (!Screen.Primary && !Settings.Instance.EnableMenuBarMultiMon)
+            if (!IsMainTaskbar() && !Settings.Instance.EnableMenuBarMultiMon)
             {
                 ProcessScreenChanges = true;
             }
@@ -130,7 +130,7 @@ namespace CairoDesktop
                     return true;
                 }
 
-                if (Settings.Instance.TaskbarMultiMonMode == 2 && Screen.Primary)
+                if (Settings.Instance.TaskbarMultiMonMode == 2 && IsMainTaskbar())
                 {
                     return true;
                 }
@@ -273,7 +273,7 @@ namespace CairoDesktop
         {
             // if we are showing but not reserving space, tell the desktop to adjust here
             // since we aren't changing the work area, it doesn't do this on its own
-            if (Settings.Instance.TaskbarMode == 1 && Screen.Primary)
+            if (Settings.Instance.TaskbarMode == 1 && IsMainTaskbar())
                 _desktopManager.ResetPosition(false);
         }
 
@@ -584,5 +584,10 @@ namespace CairoDesktop
             ShellHelper.StartTaskManager();
         }
         #endregion
+
+        public bool IsMainTaskbar()
+        {
+            return _windowManager.IsPreferred(Screen, Settings.Instance.TaskbarMonitor);
+        }
     }
 }

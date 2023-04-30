@@ -480,6 +480,8 @@ namespace CairoDesktop.Localization
 
         public static string sSettings_MenuBar_EnableMenuBarShadow => getString();
 
+        public static string sSettings_MenuBar_UseSystemMonitor => getString();
+
         public static string sSettings_MenuBar_NotificationArea => getString();
 
         public static string sSettings_MenuBar_EnableNotificationArea => getString();
@@ -622,6 +624,8 @@ namespace CairoDesktop.Localization
         public static string sSettings_Taskbar_MultiMonMode_Primary => getString();
 
         public static string sSettings_Taskbar_MultiMonMode_PerMonitor => getString();
+
+        public static string sSettings_Taskbar_UseSystemMonitor => getString();
 
         public static string sSettings_Advanced_LoggingLevel => getString();
 

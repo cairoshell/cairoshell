@@ -185,7 +185,9 @@ namespace CairoDesktop
             registerCairoMenuHotKey();
 
             // Register L+R Windows key to open Programs menu
-            if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary && programsMenuHotKeys.Count < 1)
+            if (EnvironmentHelper.IsAppRunningAsShell
+                && IsMainMenuBar()
+                && programsMenuHotKeys.Count < 1)
             {
                 /*if (keyboardListener == null)
                     keyboardListener = new LowLevelKeyboardListener();
@@ -197,7 +199,7 @@ namespace CairoDesktop
                 programsMenuHotKeys.Add(new HotKey(Key.RWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
                 programsMenuHotKeys.Add(new HotKey(Key.Escape, HotKeyModifier.Ctrl | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
             }
-            else if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary)
+            else if (EnvironmentHelper.IsAppRunningAsShell && IsMainMenuBar())
             {
                 foreach (var hotkey in programsMenuHotKeys)
                 {
@@ -212,11 +214,11 @@ namespace CairoDesktop
 
         private void registerCairoMenuHotKey()
         {
-            if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary && cairoMenuHotKey == null)
+            if (Settings.Instance.EnableCairoMenuHotKey && IsMainMenuBar() && cairoMenuHotKey == null)
             {
                 cairoMenuHotKey = HotKeyManager.RegisterHotKey(Settings.Instance.CairoMenuHotKey, OnShowCairoMenu);
             }
-            else if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary)
+            else if (Settings.Instance.EnableCairoMenuHotKey && IsMainMenuBar())
             {
                 cairoMenuHotKey.Action = OnShowCairoMenu;
             }
@@ -224,11 +226,8 @@ namespace CairoDesktop
 
         private void unregisterCairoMenuHotKey()
         {
-            if (Screen.Primary)
-            {
-                cairoMenuHotKey?.Dispose();
-                cairoMenuHotKey = null;
-            }
+            cairoMenuHotKey?.Dispose();
+            cairoMenuHotKey = null;
         }
 
         private void SetHibernateVisibility()
@@ -402,7 +401,7 @@ namespace CairoDesktop
             {
                 switch (e.PropertyName)
                 {
-                    case "EnableCairoMenuHotKey" when Screen.Primary:
+                    case "EnableCairoMenuHotKey" when IsMainMenuBar():
                         if (Settings.Instance.EnableCairoMenuHotKey)
                         {
                             registerCairoMenuHotKey();
@@ -413,7 +412,7 @@ namespace CairoDesktop
                         }
 
                         break;
-                    case "CairoMenuHotKey" when Screen.Primary:
+                    case "CairoMenuHotKey" when IsMainMenuBar():
                         if (Settings.Instance.EnableCairoMenuHotKey)
                         {
                             unregisterCairoMenuHotKey();
@@ -595,9 +594,9 @@ namespace CairoDesktop
             return Handle;
         }
 
-        public bool GetIsPrimaryDisplay()
+        public bool IsMainMenuBar()
         {
-            return Screen.Primary;
+            return _windowManager.IsPreferred(Screen, Settings.Instance.MenuBarMonitor);
         }
 
         public MenuBarDimensions GetDimensions()

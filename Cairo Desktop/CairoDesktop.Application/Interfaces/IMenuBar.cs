@@ -7,7 +7,7 @@ namespace CairoDesktop.Application.Interfaces
     {
         IntPtr GetHandle();
         
-        bool GetIsPrimaryDisplay();
+        bool IsMainMenuBar();
 
         MenuBarDimensions GetDimensions();
     }
