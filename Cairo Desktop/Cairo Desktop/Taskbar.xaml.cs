@@ -15,7 +15,6 @@ using ManagedShell.AppBar;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
-using System.Windows.Data;
 
 namespace CairoDesktop
 {
@@ -44,13 +43,28 @@ namespace CairoDesktop
             set { SetValue(ButtonWidthProperty, value); }
         }
 
-        public static DependencyProperty CanAutoHideProperty = DependencyProperty.Register("CanAutoHide", typeof(bool), typeof(Taskbar), new PropertyMetadata(new bool()));
         private readonly IDesktopManager _desktopManager;
 
-        public bool CanAutoHide
+        private bool _disableAutoHide;
+        public bool DisableAutoHide
         {
-            get { return (bool)GetValue(CanAutoHideProperty); }
-            set { SetValue(CanAutoHideProperty, value); }
+            get { return _disableAutoHide; }
+            set
+            {
+                _disableAutoHide = value;
+                OnPropertyChanged("AllowAutoHide");
+            }
+        }
+
+        private bool _isPopupOpen;
+        public bool IsPopupOpen
+        {
+            get { return _isPopupOpen; }
+            set
+            {
+                _isPopupOpen = value;
+                OnPropertyChanged("AllowAutoHide");
+            }
         }
         #endregion
 
@@ -60,8 +74,9 @@ namespace CairoDesktop
             IDesktopManager desktopManager,
             IAppGrabber appGrabber, 
             AppBarScreen screen, 
-            AppBarEdge edge) 
-            : base(cairoApplication, shellManager, windowManager, screen, edge, 0)
+            int edgeSetting,
+            int modeSetting) 
+            : base(cairoApplication, shellManager, windowManager, screen, edgeSetting, modeSetting, 0)
         {
             object taskBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["TaskBarWindowAllowsTransparency"];
             if (taskBarWindowAllowsTransparencyResource is bool resourceValue)
@@ -89,11 +104,7 @@ namespace CairoDesktop
         private void setupTaskbar()
         {
             // setup app bar settings
-            if (Settings.Instance.TaskbarMode != 0)
-            {
-                EnableAppBar = false;
-            }
-            CanAutoHide = true;
+            AutoHideElement = bdrMain;
 
             // setup taskbar item source
 
@@ -162,16 +173,15 @@ namespace CairoDesktop
             Left = Screen.Bounds.Left / DpiScale;
             bdrTaskbar.MaxWidth = screenWidth;
             Width = screenWidth;
+            AppBarEdge = SettingToAppBarEdge(Settings.Instance.TaskbarPosition);
 
             // set taskbar edge based on preference
             if (Settings.Instance.TaskbarPosition == 1)
             {
-                AppBarEdge = AppBarEdge.Top;
                 TasksList.Margin = new Thickness(0);
             }
             else
             {
-                AppBarEdge = AppBarEdge.Bottom;
                 TasksList.Margin = new Thickness(-3, -1, 0, 0);
             }
 
@@ -273,13 +283,18 @@ namespace CairoDesktop
         {
             // if we are showing but not reserving space, tell the desktop to adjust here
             // since we aren't changing the work area, it doesn't do this on its own
-            if (Settings.Instance.TaskbarMode == 1 && Screen.Primary)
+            if (AppBarMode == AppBarMode.None && Screen.Primary)
                 _desktopManager.ResetPosition(false);
+        }
+
+        protected override bool ShouldAllowAutoHide()
+        {
+            return !DisableAutoHide && !IsPopupOpen && base.ShouldAllowAutoHide();
         }
 
         protected override void CustomClosing()
         {
-            if (_windowManager.IsSettingDisplays || AllowClose)
+            if (_windowManager?.IsSettingDisplays == true || AllowClose)
             {
                 _taskbarItems.CollectionChanged -= GroupedWindows_Changed;
             }
@@ -310,32 +325,25 @@ namespace CairoDesktop
             {
                 case "ShowTaskbarLabels":
                 case "TaskbarIconSize":
+                    PeekDuringAutoHide();
                     setTaskbarSize();
                     SetScreenPosition();
                     if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                     break;
                 case "TaskbarMode":
-                    if (Settings.Instance.TaskbarMode == 0)
-                    {
-                        EnableAppBar = true;
-                        RegisterAppBar();
-                    }
-                    else
-                    {
-                        EnableAppBar = false;
-                        UnregisterAppBar();
-                    }
-                    if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
+                    AppBarMode = SettingToAppBarMode(Settings.Instance.TaskbarMode);
                     SetDesktopPosition();
                     setTaskbarBlur();
                     break;
                 case "TaskbarPosition":
+                    PeekDuringAutoHide();
                     setupTaskbarAppearance();
                     SetScreenPosition();
-                    if (Settings.Instance.TaskbarMode == 1) SetDesktopPosition();
+                    if (AppBarMode == AppBarMode.None) SetDesktopPosition();
                     if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                     break;
                 case "FullWidthTaskBar":
+                    PeekDuringAutoHide();
                     setTaskbarWidthMode();
                     break;
                 case "EnableDesktop":
@@ -359,7 +367,7 @@ namespace CairoDesktop
         #region Position and appearance
         private void setTaskbarBlur()
         {
-            if (Settings.Instance.EnableMenuBarBlur && useFullWidthAppearance && Settings.Instance.TaskbarMode != 2)
+            if (Settings.Instance.EnableMenuBarBlur && useFullWidthAppearance && AppBarMode != AppBarMode.AutoHide)
             {
                 SetBlur(true);
             }
@@ -464,7 +472,7 @@ namespace CairoDesktop
 
         private void CairoTaskbarTaskList_Closed(object sender, EventArgs e)
         {
-            CanAutoHide = true;
+            IsPopupOpen = false;
         }
 
         private void quickLaunchList_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -524,14 +532,12 @@ namespace CairoDesktop
             SetTaskListOffset();
             takeFocus();
 
-            CanAutoHide = false;
+            IsPopupOpen = true;
         }
 
         private void TaskButton_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             takeFocus();
-
-            CanAutoHide = false;
         }
         #endregion
 
@@ -541,10 +547,8 @@ namespace CairoDesktop
             string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
             if (fileNames != null)
             {
-                _appGrabber.AddByPath(fileNames, AppGrabber.AppCategoryType.QuickLaunch);
+                _appGrabber.AddByPath(fileNames, AppCategoryType.QuickLaunch);
             }
-
-            CanAutoHide = true;
 
             e.Handled = true;
         }
@@ -556,8 +560,6 @@ namespace CairoDesktop
                 e.Effects = DragDropEffects.Copy;
             }
 
-            CanAutoHide = false;
-
             e.Handled = true;
         }
         #endregion
@@ -566,12 +568,6 @@ namespace CairoDesktop
         private void grdTaskbar_ContextMenuOpening(object sender, System.Windows.Controls.ContextMenuEventArgs e)
         {
             takeFocus();
-            CanAutoHide = false;
-        }
-
-        private void ContextMenu_Closed(object sender, RoutedEventArgs e)
-        {
-            CanAutoHide = true;
         }
 
         private void OpenRunWindow(object sender, RoutedEventArgs e)

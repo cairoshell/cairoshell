@@ -52,7 +52,7 @@ namespace CairoDesktop
             TaskButton = parent;
             DataContext = TaskButton;
 
-            TaskButton.SetParentAutoHide(false);
+            TaskButton.SetParentPopupOpen(true);
 
             IsDwmEnabled = NativeMethods.DwmIsCompositionEnabled();
         }
@@ -128,7 +128,7 @@ namespace CairoDesktop
         {
             isClosing = true;
             TaskButton.ThumbWindow = null;
-            TaskButton.SetParentAutoHide(true);
+            TaskButton.SetParentPopupOpen(false);
 
             if (TaskButton != null && TaskButton.WindowGroup != null)
             {

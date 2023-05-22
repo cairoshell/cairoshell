@@ -67,11 +67,11 @@ namespace CairoDesktop.Services
 
                     if (e.Reason == AppBarEventReason.MouseEnter)
                     {
-                        taskbar.CanAutoHide = false;
+                        taskbar.DisableAutoHide = true;
                     }
                     else if (e.Reason == AppBarEventReason.MouseLeave)
                     {
-                        taskbar.CanAutoHide = true;
+                        taskbar.DisableAutoHide = false;
                     }
                 }
             }
@@ -79,7 +79,7 @@ namespace CairoDesktop.Services
 
         protected override void OpenWindow(AppBarScreen screen)
         {
-            Taskbar newTaskbar = new Taskbar(_cairoApplication, _shellManager, _windowManager, _desktopManager, _appGrabber, screen, Settings.Instance.TaskbarPosition == 1 ? AppBarEdge.Top : AppBarEdge.Bottom);
+            Taskbar newTaskbar = new Taskbar(_cairoApplication, _shellManager, _windowManager, _desktopManager, _appGrabber, screen, Settings.Instance.TaskbarPosition, Settings.Instance.TaskbarMode);
             Windows.Add(newTaskbar);
             newTaskbar.Show();
         }
