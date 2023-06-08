@@ -145,8 +145,6 @@ namespace CairoDesktop
                 ParentTaskbar._appGrabber.Save();
             }
 
-            setParentAutoHide(true);
-
             e.Handled = true;
         }
 
@@ -174,8 +172,6 @@ namespace CairoDesktop
                     try
                     {
                         DragDrop.DoDragDrop(button, selectedApp, DragDropEffects.Move);
-
-                        setParentAutoHide(true);
                     }
                     catch { }
 
@@ -195,16 +191,6 @@ namespace CairoDesktop
         }
 
         #endregion
-
-        private void ContextMenu_Closed(object sender, RoutedEventArgs e)
-        {
-            setParentAutoHide(true);
-        }
-
-        private void setParentAutoHide(bool enabled)
-        {
-            if (ParentTaskbar != null) ParentTaskbar.CanAutoHide = enabled;
-        }
 
         private void ContextMenu_Opened(object sender, RoutedEventArgs e)
         {

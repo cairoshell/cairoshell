@@ -87,9 +87,9 @@ namespace CairoDesktop
             closeThumb(true);
         }
 
-        public void SetParentAutoHide(bool enabled)
+        public void SetParentPopupOpen(bool isPopupOpen)
         {
-            if (!ListMode && ParentTaskbar != null) ParentTaskbar.CanAutoHide = enabled;
+            if (!ListMode && ParentTaskbar != null) ParentTaskbar.IsPopupOpen = isPopupOpen;
         }
 
         private void closeWindows()
@@ -327,7 +327,6 @@ namespace CairoDesktop
         private void ContextMenu_Closed(object sender, RoutedEventArgs e)
         {
             if (!IsMouseOver) closeThumb(true);
-            SetParentAutoHide(true);
         }
 
         private void miRestore_Click(object sender, RoutedEventArgs e)
@@ -405,7 +404,6 @@ namespace CairoDesktop
             if (!inDrag)
             {
                 inDrag = true;
-                SetParentAutoHide(false);
                 dragTimer.Start();
             }
         }
@@ -415,7 +413,6 @@ namespace CairoDesktop
             if (inDrag)
             {
                 dragTimer.Stop();
-                SetParentAutoHide(true);
                 inDrag = false;
             }
         }

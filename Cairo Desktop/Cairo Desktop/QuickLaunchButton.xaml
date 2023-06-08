@@ -26,8 +26,7 @@
                    Width="16"
                    Height="16" />
             <Button.ContextMenu>
-                <ContextMenu Closed="ContextMenu_Closed"
-                             Opened="ContextMenu_Opened">
+                <ContextMenu Opened="ContextMenu_Opened">
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Open)}" 
                               Click="programsMenu_Open" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_OpenAsAdministrator)}" 

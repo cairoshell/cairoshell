@@ -35,7 +35,7 @@ namespace CairoDesktop
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, 23)
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge) : base(cairoApplication, shellManager, windowManager, screen, edge, AppBarMode.Normal, 23)
         {
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
