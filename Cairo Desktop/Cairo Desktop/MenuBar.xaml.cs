@@ -172,7 +172,6 @@ namespace CairoDesktop
             {
                 shadow = new MenuBarShadow(_cairoApplication, _windowManager, this);
                 shadow.Show();
-                setShadowPosition();
             }
         }
 
@@ -330,14 +329,14 @@ namespace CairoDesktop
         {
             double top = getDesiredTopPosition();
 
+            setShadowPosition();
+
             if (Top == top)
             {
                 return;
             }
 
             Top = top;
-
-            setShadowPosition();
         }
 
         private double getDesiredTopPosition()

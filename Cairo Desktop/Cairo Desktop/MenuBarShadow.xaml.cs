@@ -3,10 +3,8 @@ using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Media;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Interfaces;
-using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
@@ -33,16 +31,12 @@ namespace CairoDesktop
             _windowManager = windowManager;
 
             InitializeComponent();
-
-            SetPosition();
         }
 
         public void SetPosition()
         {
             if (_menuBar != null)
             {
-                DpiScale = VisualTreeHelper.GetDpi(this).DpiScaleX;
-
                 double desiredTop = _menuBar.Top + _menuBar.ActualHeight;
                 double desiredLeft = _menuBar.Left;
                 double desiredHeight = 14;
@@ -89,6 +83,7 @@ namespace CairoDesktop
             else if (msg == (int)NativeMethods.WM.DPICHANGED)
             {
                 DpiScale = (wparam.ToInt32() & 0xFFFF) / 96d;
+                SetPosition();
             }
             else
             {
@@ -110,6 +105,8 @@ namespace CairoDesktop
             NativeMethods.SetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE, NativeMethods.GetWindowLong(helper.Handle, NativeMethods.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TRANSPARENT);
 
             WindowHelper.ExcludeWindowFromPeek(helper.Handle);
+
+            SetPosition();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
