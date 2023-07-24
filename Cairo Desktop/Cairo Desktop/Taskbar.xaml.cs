@@ -30,7 +30,6 @@ namespace CairoDesktop
         private ICollectionView _taskbarItems;
 
         // display properties
-        private int addToSize;
         private int baseButtonWidth;
         private bool isCondensed;
 
@@ -97,7 +96,7 @@ namespace CairoDesktop
             }
 
             setupTaskbar();
-            setupTaskbarAppearance();
+            setDesiredHeight();
         }
 
         #region Startup and shutdown
@@ -213,8 +212,14 @@ namespace CairoDesktop
             }
         }
 
-        private void setTaskbarSize()
+        private void setDesiredHeight()
         {
+            DesiredHeight = Settings.Instance.TaskbarButtonHeight + getAddToSize();
+        }
+
+        private int getAddToSize()
+        {
+            int addToSize = 0;
             switch ((IconSize)Settings.Instance.TaskbarIconSize)
             {
                 case IconSize.Large:
@@ -228,9 +233,14 @@ namespace CairoDesktop
                     break;
             }
 
-            baseButtonWidth = (Settings.Instance.ShowTaskbarLabels ? Settings.Instance.TaskbarButtonWidth : Settings.Instance.TaskbarButtonHeight) + addToSize;
-            Height = Settings.Instance.TaskbarButtonHeight + addToSize;
-            DesiredHeight = Height;
+            return addToSize;
+        }
+
+        private void setTaskbarSize()
+        {
+            baseButtonWidth = (Settings.Instance.ShowTaskbarLabels ? Settings.Instance.TaskbarButtonWidth : Settings.Instance.TaskbarButtonHeight) + getAddToSize();
+            setDesiredHeight();
+            Height = DesiredHeight;
             Top = getDesiredTopPosition();
 
             if (Settings.Instance.TaskbarPosition == 1)
@@ -303,6 +313,8 @@ namespace CairoDesktop
         protected override void OnSourceInitialized(object sender, EventArgs e)
         {
             base.OnSourceInitialized(sender, e);
+
+            setupTaskbarAppearance();
 
             setTaskButtonSize();
 

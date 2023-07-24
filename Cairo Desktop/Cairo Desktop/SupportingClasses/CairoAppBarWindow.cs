@@ -15,7 +15,10 @@ namespace CairoDesktop.SupportingClasses
 
         public CairoAppBarWindow(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, AppBarScreen screen, int edgeSetting, int modeSetting, double height) : base(
             shellManager.AppBarManager, shellManager.ExplorerHelper, shellManager.FullScreenHelper, screen, SettingToAppBarEdge(edgeSetting), SettingToAppBarMode(modeSetting), height)
-        { }
+        {
+            _cairoApplication = cairoApplication;
+            _windowManager = windowManager;
+        }
 
         public CairoAppBarWindow(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, AppBarScreen screen, AppBarEdge edge, AppBarMode mode, double height) : base(
             shellManager.AppBarManager, shellManager.ExplorerHelper, shellManager.FullScreenHelper, screen, edge, mode, height)
