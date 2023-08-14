@@ -275,7 +275,7 @@ namespace CairoDesktop.AppGrabber
             ai.Path = "appx:" + storeApp.AppUserModelId;
             ai.Target = storeApp.AppUserModelId;
             ai.IconColor = storeApp.IconColor;
-            ai.AllowRunAsAdmin = storeApp.EntryPoint == "Windows.FullTrustApplication";
+            ai.AllowRunAsAdmin = storeApp.EntryPoint?.ToLower() == "windows.fulltrustapplication" || storeApp.HostId?.ToLower() == "pwa";
 
             return ai;
         }

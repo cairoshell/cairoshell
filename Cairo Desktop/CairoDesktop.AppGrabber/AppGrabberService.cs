@@ -371,9 +371,21 @@ namespace CairoDesktop.AppGrabber
                     CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                 }
             }
-            else if (!ShellHelper.StartProcess(app.Path, workingDirectory: getAppParentDirectory(app)))
+            else
             {
-                CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
+                // Store apps that are FullTrust can be activated, which works even without Explorer
+                // Non-FullTrust apps will not launch without Explorer and will hang us, so don't use activation for them
+                if (app.IsStoreApp && app.AllowRunAsAdmin)
+                {
+                    if (!ShellHelper.ActivateApplication(app.Target))
+                    {
+                        CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
+                    }
+                }
+                else if (!ShellHelper.StartProcess(app.Path, workingDirectory: getAppParentDirectory(app)))
+                {
+                    CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
+                }
             }
         }
 
