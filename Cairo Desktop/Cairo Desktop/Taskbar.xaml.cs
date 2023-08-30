@@ -145,6 +145,11 @@ namespace CairoDesktop
                     return true;
                 }
 
+                if (Screen.Primary && !IsValidHMonitor(window.HMonitor))
+                {
+                    return true;
+                }
+
                 if (window.HMonitor != Screen.HMonitor)
                 {
                     return false;
@@ -295,6 +300,19 @@ namespace CairoDesktop
             // since we aren't changing the work area, it doesn't do this on its own
             if (AppBarMode == AppBarMode.None && Screen.Primary)
                 _desktopManager.ResetPosition(false);
+        }
+
+        private bool IsValidHMonitor(IntPtr hMonitor)
+        {
+            foreach (var screen in _windowManager.ScreenState)
+            {
+                if (screen.HMonitor == hMonitor)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         protected override bool ShouldAllowAutoHide()
