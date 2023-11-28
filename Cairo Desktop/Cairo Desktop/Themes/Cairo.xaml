@@ -636,10 +636,16 @@
                 Value="{DynamicResource ResourceKey=MenuBarBorderThickness}" />
         <Setter Property="Margin"
                 Value="0" />
-    </Style>
-    <Style x:Key="MenuBarStyle"
+		<Setter Property="RenderTransform">
+			<Setter.Value>
+				<TranslateTransform X="0"
+									Y="0" />
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style x:Key="MenuBarStyle"
            TargetType="{x:Type DockPanel}">
-        <Setter Property="Background"
+		<Setter Property="Background"
                 Value="{DynamicResource ResourceKey=MenuBarBackground}" />
     </Style>
     <Style x:Key="CairoMenuBarMainContainerStyle"

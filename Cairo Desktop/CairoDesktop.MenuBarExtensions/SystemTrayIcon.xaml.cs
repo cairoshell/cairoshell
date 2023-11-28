@@ -138,6 +138,7 @@ namespace CairoDesktop.MenuBarExtensions
         #region Notify icon image mouse events
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = true;
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
 
             // set current menu bar to return placement for ABM_GETTASKBARPOS message
@@ -148,6 +149,7 @@ namespace CairoDesktop.MenuBarExtensions
 
         private void Image_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = true;
             var trayIcon = (sender as Decorator).DataContext as NotifyIcon;
 
             trayIcon?.IconMouseUp(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);

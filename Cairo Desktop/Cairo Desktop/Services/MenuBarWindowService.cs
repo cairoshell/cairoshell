@@ -39,7 +39,7 @@ namespace CairoDesktop.Services
 
         protected override void OpenWindow(AppBarScreen screen)
         {
-            MenuBar newMenuBar = new MenuBar(_cairoApplication, _shellManager, _windowManager, _appGrabber, _updateService, _settingsUiService, screen, AppBarEdge.Top);
+            MenuBar newMenuBar = new MenuBar(_cairoApplication, _shellManager, _windowManager, _appGrabber, _updateService, _settingsUiService, screen, (int)AppBarEdge.Top, Settings.Instance.TaskbarMode);
             Windows.Add(newMenuBar);
             newMenuBar.Show();
         }
