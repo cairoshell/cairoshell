@@ -655,5 +655,12 @@ namespace CairoDesktop
             };
         }
         #endregion
+
+        #region IMenuBar
+        void IMenuBar.PeekDuringAutoHide(int msToPeek)
+        {
+            PeekDuringAutoHide(msToPeek);
+        }
+        #endregion
     }
 }

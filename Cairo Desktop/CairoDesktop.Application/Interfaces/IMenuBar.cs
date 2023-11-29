@@ -10,5 +10,7 @@ namespace CairoDesktop.Application.Interfaces
         bool GetIsPrimaryDisplay();
 
         MenuBarDimensions GetDimensions();
+
+        void PeekDuringAutoHide(int msToPeek = 500);
     }
 }

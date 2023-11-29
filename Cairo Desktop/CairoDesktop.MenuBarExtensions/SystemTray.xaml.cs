@@ -84,6 +84,12 @@ namespace CairoDesktop.MenuBarExtensions
             }
 
             NotifyIcon notifyIcon = e.Balloon.NotifyIcon;
+            int duration = SystemTrayIcon.GetAdjustedBalloonTimeout(e.Balloon);
+
+            if (Host?.GetIsPrimaryDisplay() == true)
+            {
+                Host.PeekDuringAutoHide(duration);
+            }
 
             if (_notificationArea.PinnedIcons.Contains(notifyIcon))
             {
@@ -101,7 +107,7 @@ namespace CairoDesktop.MenuBarExtensions
 
             DispatcherTimer unpromoteTimer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(SystemTrayIcon.GetAdjustedBalloonTimeout(e.Balloon) + 400) // Keep it around a few ms for the animation to complete
+                Interval = TimeSpan.FromMilliseconds(duration + 400) // Keep it around a few ms for the animation to complete
             };
             unpromoteTimer.Tick += (object timerSender, EventArgs timerE) =>
             {
