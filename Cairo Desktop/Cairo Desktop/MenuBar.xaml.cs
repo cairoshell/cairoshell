@@ -36,7 +36,7 @@ namespace CairoDesktop
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, int edgeSetting, int modeSetting) : base(cairoApplication, shellManager, windowManager, screen, edgeSetting, modeSetting, 23)
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
         {
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
@@ -468,8 +468,8 @@ namespace CairoDesktop
                     case "ShowHibernate":
                         SetHibernateVisibility();
                         break;
-                    case "TaskbarMode":
-                        AppBarMode = SettingToAppBarMode(Settings.Instance.TaskbarMode);
+                    case "EnableMenuBarAutoHide":
+                        AppBarMode = Settings.Instance.EnableMenuBarAutoHide ? AppBarMode.AutoHide : AppBarMode.Normal;
                         if (AppBarMode == AppBarMode.AutoHide)
                         {
                             closeShadow();
