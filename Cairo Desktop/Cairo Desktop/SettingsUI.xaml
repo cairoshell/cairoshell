@@ -5,7 +5,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
         xmlns:helpers="clr-namespace:ManagedShell.Common.Helpers;assembly=ManagedShell.Common"
-        xmlns:validator="clr-namespace:CairoDesktop.SupportingClasses"
+        xmlns:supportingClasses="clr-namespace:CairoDesktop.SupportingClasses"
         Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
@@ -14,6 +14,7 @@
         WindowStyle="SingleBorderWindow"
         SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
+        <supportingClasses:InvertBoolConverter x:Key="invertBoolConverter" />
         <Style x:Key="CairoSettingsBarRestartStyle"
                TargetType="{x:Type TabItem}">
             <Setter Property="Foreground"
@@ -362,11 +363,16 @@
                     </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
                                Style="{StaticResource SettingGroupHeader}" />
+                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarAutoHide, UpdateSourceTrigger=PropertyChanged}"
+                              Name="chkEnableMenuBarAutoHide">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarAutoHide)}" />
+                    </CheckBox>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarBlur, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkEnableMenuBarBlur">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarBlur)}" />
                     </CheckBox>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarShadow, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding IsChecked, ElementName=chkEnableMenuBarAutoHide, Converter={StaticResource invertBoolConverter}}"
                               Name="chkEnableMenuBarShadow">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarShadow)}" />
                     </CheckBox>
@@ -488,7 +494,7 @@
                                          Source="{x:Static Settings:Settings.Instance}"
                                          UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
-                                        <validator:DirectoryPathValidationRule RequireDirectoryExists="True" />
+                                        <supportingClasses:DirectoryPathValidationRule RequireDirectoryExists="True" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
@@ -853,7 +859,7 @@
                                          Source="{x:Static Settings:Settings.Instance}"
                                          UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
-                                        <validator:DateTimeFormatValidationRule />
+                                        <supportingClasses:DateTimeFormatValidationRule />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
@@ -868,7 +874,7 @@
                                          Source="{x:Static Settings:Settings.Instance}"
                                          UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
-                                        <validator:DateTimeFormatValidationRule />
+                                        <supportingClasses:DateTimeFormatValidationRule />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
@@ -889,7 +895,7 @@
                                          Source="{x:Static Settings:Settings.Instance}"
                                          UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
-                                        <validator:FilePathValidationRule RequireFileExists="True" />
+                                        <supportingClasses:FilePathValidationRule RequireFileExists="True" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>

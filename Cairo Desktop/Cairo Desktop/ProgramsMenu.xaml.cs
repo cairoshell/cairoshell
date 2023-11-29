@@ -126,7 +126,7 @@ namespace CairoDesktop
 
             MenuBar._appGrabber.RenameAppDialog(app, (bool? result) =>
             {
-                MenuBar.ProgramsMenu.IsSubmenuOpen = true;
+                MenuBar.OpenProgramsMenu();
             });
         }
 
@@ -135,9 +135,9 @@ namespace CairoDesktop
             MenuItem item = (MenuItem)sender;
             ApplicationInfo app = item.DataContext as ApplicationInfo;
 
-            MenuBar._appGrabber.RemoveAppConfirm(app, (bool? result) => 
+            MenuBar._appGrabber.RemoveAppConfirm(app, (bool? result) =>
             {
-                MenuBar.ProgramsMenu.IsSubmenuOpen = true;
+                MenuBar.OpenProgramsMenu();
             });
         }
 
@@ -224,7 +224,7 @@ namespace CairoDesktop
                         MenuBar._appGrabber.Save();
                     }
 
-                    MenuBar.ProgramsMenu.IsSubmenuOpen = true;
+                    MenuBar.OpenProgramsMenu();
                 });
         }
         #endregion
@@ -276,7 +276,7 @@ namespace CairoDesktop
                         MenuBar._appGrabber.Save();
                     }
 
-                    MenuBar.ProgramsMenu.IsSubmenuOpen = true;
+                    MenuBar.OpenProgramsMenu();
                 });
         }
 
@@ -298,7 +298,7 @@ namespace CairoDesktop
                         MenuBar._appGrabber.Save();
                     }
 
-                    MenuBar.ProgramsMenu.IsSubmenuOpen = true;
+                    MenuBar.OpenProgramsMenu();
                 });
         }
 

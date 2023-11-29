@@ -801,6 +801,21 @@ namespace CairoDesktop.Configuration
                 }
             }
         }
+
+        public bool EnableMenuBarAutoHide
+        {
+            get
+            {
+                return cairoSettings.EnableMenuBarAutoHide;
+            }
+            set
+            {
+                if (cairoSettings.EnableMenuBarAutoHide != value)
+                {
+                    cairoSettings.EnableMenuBarAutoHide = value;
+                }
+            }
+        }
         #endregion
 
         #region Advanced

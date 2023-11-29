@@ -189,6 +189,7 @@ namespace CairoDesktop.Localization
             { "sSettings_General_FileManager", "File manager:" },
             { "sSettings_General_FoldersOpenDesktopOverlay", "Folders open using the dynamic desktop overlay" },
             { "sSettings_MenuBar_DefaultProgramsCategory", "Default programs category:" },
+            { "sSettings_MenuBar_EnableMenuBarAutoHide", "Automatically hide the menu bar" },
             { "sSettings_MenuBar_EnableMenuBarShadow", "Enable menu bar shadow" },
             { "sSettings_MenuBar_NotificationArea", "Notification area" },
             { "sSettings_MenuBar_EnableNotificationArea", "Enable notification area" },

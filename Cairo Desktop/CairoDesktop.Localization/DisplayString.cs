@@ -478,6 +478,8 @@ namespace CairoDesktop.Localization
 
         public static string sSettings_MenuBar_DefaultProgramsCategory => getString();
 
+        public static string sSettings_MenuBar_EnableMenuBarAutoHide => getString();
+
         public static string sSettings_MenuBar_EnableMenuBarShadow => getString();
 
         public static string sSettings_MenuBar_NotificationArea => getString();
