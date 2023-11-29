@@ -37,10 +37,10 @@ jobs:
         Platform: ${{ matrix.target[0] == 'x86' && 'AnyCPU' || matrix.target[0] == 'x86_net6' && 'AnyCPU' || matrix.target[0] == 'x64' && 'x64' || matrix.target[0] == 'x64_net6' && 'x64' || 'ARM64' }}
     
     - name: Set installer version
-      uses: datamonsters/replace-action@v2
-      with:
-        files: '${{ env.installer }}'
-        replacements: 'BUILD_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}'
+      shell: pwsh
+      run: |
+        $fileContent = [System.IO.File]::ReadAllText("${{ env.installer }}").Replace("BUILD_VERSION", "${{ steps.nbgv.outputs.SimpleVersion }}")
+        [System.IO.File]::WriteAllText("${{ env.installer }}", $fileContent)
 
     - name: Generate installer
       run: makensis Installer\CairoShell_${{ matrix.target[0] }}.nsi
