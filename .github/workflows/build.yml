@@ -24,7 +24,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install nbgv
-      uses: dotnet/nbgv@v0.4.1
+      uses: dotnet/nbgv@v0.4.2
       id: nbgv
 
     - name: Publish app
