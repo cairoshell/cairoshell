@@ -273,6 +273,7 @@ namespace CairoDesktop.Localization
             { "sSettings_Advanced_LogOffNow", "Log Off Now" },
             { "sSettings_Advanced_LogOffLater", "Log Off Later" },
             { "sSettings_Advanced_OpenLogsFolder", "Open folder" },
+            { "sSettings_Advanced_AutoHideShowDelayMs", "Auto-hide show delay (ms):" },
             { "sWelcome_StartTour", "Start Tour" },
             { "sWelcome_FinishTour", "Finish Tour" },
             { "sWelcome_Welcome", "Welcome to Cairo" },

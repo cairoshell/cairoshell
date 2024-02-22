@@ -897,6 +897,21 @@ namespace CairoDesktop.Configuration
                 }
             }
         }
+
+        public int AutoHideShowDelayMs
+        {
+            get
+            {
+                return cairoSettings.AutoHideShowDelayMs;
+            }
+            set
+            {
+                if (cairoSettings.AutoHideShowDelayMs != value)
+                {
+                    cairoSettings.AutoHideShowDelayMs = value;
+                }
+            }
+        }
         #endregion
 
         #region Logging

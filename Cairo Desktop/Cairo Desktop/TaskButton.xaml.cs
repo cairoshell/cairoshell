@@ -103,6 +103,12 @@ namespace CairoDesktop
             }
         }
 
+        private TimeSpan getDelayInterval()
+        {
+            int autoHideDelay = Settings.Instance.TaskbarMode == 2 ? Settings.Instance.AutoHideShowDelayMs : 0;
+            return SystemParameters.MouseHoverTime.Add(TimeSpan.FromMilliseconds(autoHideDelay));
+        }
+
         #region Events
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -133,12 +139,13 @@ namespace CairoDesktop
                 ToolTipService.SetPlacement(btn, System.Windows.Controls.Primitives.PlacementMode.Right);
             }
 
+            TimeSpan interval = getDelayInterval();
             // drag support - delayed activation using system setting
-            dragTimer = new DispatcherTimer { Interval = SystemParameters.MouseHoverTime };
+            dragTimer = new DispatcherTimer { Interval = interval };
             dragTimer.Tick += dragTimer_Tick;
 
             // thumbnails - delayed activation using system setting
-            thumbTimer = new DispatcherTimer { Interval = SystemParameters.MouseHoverTime };
+            thumbTimer = new DispatcherTimer { Interval = interval };
             thumbTimer.Tick += thumbTimer_Tick;
         }
 
@@ -172,6 +179,11 @@ namespace CairoDesktop
                         break;
                     case "ShowTaskbarBadges":
                         setIconBadges();
+                        break;
+                    case "AutoHideShowDelayMs":
+                        TimeSpan interval = getDelayInterval();
+                        dragTimer.Interval = interval;
+                        thumbTimer.Interval = interval;
                         break;
                 }
             }

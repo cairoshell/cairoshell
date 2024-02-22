@@ -86,6 +86,7 @@ namespace CairoDesktop
             _desktopManager = desktopManager;
             _shellManager = shellManager;
 
+            AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
             if (!Screen.Primary && !Settings.Instance.EnableMenuBarMultiMon)
             {
                 ProcessScreenChanges = true;
@@ -389,6 +390,12 @@ namespace CairoDesktop
                 case "EnableTaskbarMultiMon":
                 case "TaskbarMultiMonMode":
                     _taskbarItems?.Refresh();
+                    break;
+                case "AutoHideShowDelayMs":
+                    AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
+                    break;
+                case "CairoTheme":
+                    PeekDuringAutoHide();
                     break;
             }
         }

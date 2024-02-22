@@ -647,6 +647,8 @@ namespace CairoDesktop.Localization
 
         public static string sSettings_Advanced_OpenLogsFolder => getString();
 
+        public static string sSettings_Advanced_AutoHideShowDelayMs => getString();
+
         public static string sWelcome_StartTour => getString();
 
         public static string sWelcome_FinishTour => getString();

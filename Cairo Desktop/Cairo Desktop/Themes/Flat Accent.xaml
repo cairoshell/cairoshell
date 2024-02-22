@@ -14,9 +14,6 @@
     <SolidColorBrush Color="#BF4a4a4a" x:Key="MenuBarBorder" />
     <SolidColorBrush Color="#cF0f0f0f" x:Key="MenuBackgroundGradient" />
 
-    <!--<SolidColorBrush Color="{Binding Color, Converter={StaticResource Accent}}" x:Key="MenuItemHoverGradient" />
-    <SolidColorBrush Color="{Binding Color, Converter={StaticResource Accent}}" x:Key="MenuHeaderPressedGradient" />
-    <SolidColorBrush Color="{Binding Color, Converter={StaticResource Accent}}" x:Key="MenuTopBorderBrush" />-->
     <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" Opacity="0.5" x:Key="MenuItemHoverGradient"/>
     <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" x:Key="MenuHeaderPressedGradient"/>
     <local:WindowsThemeColorManager FallbackColor="{StaticResource FallbackColor}" x:Key="MenuTopBorderBrush"/>

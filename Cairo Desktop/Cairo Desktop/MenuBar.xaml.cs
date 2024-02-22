@@ -48,6 +48,7 @@ namespace CairoDesktop
 
             InitializeComponent();
             
+            AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
             RequiresScreenEdge = true;
 
             SetPosition();
@@ -478,6 +479,12 @@ namespace CairoDesktop
                         {
                             setupShadow();
                         }
+                        break;
+                    case "AutoHideShowDelayMs":
+                        AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
+                        break;
+                    case "CairoTheme":
+                        PeekDuringAutoHide();
                         break;
                 }
             }
