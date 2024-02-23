@@ -880,6 +880,21 @@
                             </TextBox.Text>
                         </TextBox>
                     </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Advanced_AutoHideShowDelayMs)}" />
+                        <TextBox Name="autoHideShowDelayMsSetting"
+                                 Width="50">
+                            <TextBox.Text>
+                                <Binding Path="AutoHideShowDelayMs"
+                                         Source="{x:Static Settings:Settings.Instance}"
+                                         UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <supportingClasses:IntegerValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </StackPanel>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ForceSoftwareRendering, UpdateSourceTrigger=PropertyChanged}"
                               Click="CheckBox_Click"
                               Name="chkForceSoftwareRendering">

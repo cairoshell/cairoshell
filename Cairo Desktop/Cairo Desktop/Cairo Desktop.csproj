@@ -42,14 +42,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Page Remove="Themes\FlatAccent.xaml" />
+    <Page Remove="Themes\Flat Accent.xaml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Themes\Fade.xaml">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Include="Themes\FlatAccent.xaml">
+    <None Include="Themes\Flat Accent.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Generator>MSBuild:Compile</Generator>
     </None>
@@ -65,7 +65,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ManagedShell" Version="0.0.231" />
+    <PackageReference Include="ManagedShell" Version="0.0.243" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />

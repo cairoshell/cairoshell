@@ -86,6 +86,7 @@ namespace CairoDesktop
             _desktopManager = desktopManager;
             _shellManager = shellManager;
 
+            AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
             if (!Screen.Primary && !Settings.Instance.EnableMenuBarMultiMon)
             {
                 ProcessScreenChanges = true;
@@ -390,6 +391,12 @@ namespace CairoDesktop
                 case "TaskbarMultiMonMode":
                     _taskbarItems?.Refresh();
                     break;
+                case "AutoHideShowDelayMs":
+                    AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
+                    break;
+                case "CairoTheme":
+                    PeekDuringAutoHide();
+                    break;
             }
         }
         #endregion
@@ -397,7 +404,7 @@ namespace CairoDesktop
         #region Position and appearance
         private void setTaskbarBlur()
         {
-            if (Settings.Instance.EnableMenuBarBlur && useFullWidthAppearance && AppBarMode != AppBarMode.AutoHide)
+            if (Settings.Instance.EnableMenuBarBlur && useFullWidthAppearance)
             {
                 SetBlur(true);
             }

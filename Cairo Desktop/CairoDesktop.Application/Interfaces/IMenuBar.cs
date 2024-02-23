@@ -11,6 +11,6 @@ namespace CairoDesktop.Application.Interfaces
 
         MenuBarDimensions GetDimensions();
 
-        void PeekDuringAutoHide(int msToPeek = 500);
+        void PeekDuringAutoHide(int msToPeek = 1000);
     }
 }

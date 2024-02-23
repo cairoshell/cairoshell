@@ -373,6 +373,12 @@ namespace CairoDesktop.Configuration
             {
                 if (cairoSettings.TaskbarMode != value)
                 {
+                    if (value == 2 && EnableMenuBarAutoHide && TaskbarPosition == 1)
+                    {
+                        // We cannot have multiple auto-hide bars on the same screen edge
+                        EnableMenuBarAutoHide = false;
+                    }
+
                     cairoSettings.TaskbarMode = value;
                 }
             }
@@ -388,6 +394,12 @@ namespace CairoDesktop.Configuration
             {
                 if (cairoSettings.TaskbarPosition != value)
                 {
+                    if (value == 1 && EnableMenuBarAutoHide && TaskbarMode == 2)
+                    {
+                        // We cannot have multiple auto-hide bars on the same screen edge
+                        EnableMenuBarAutoHide = false;
+                    }
+
                     cairoSettings.TaskbarPosition = value;
                 }
             }
@@ -812,6 +824,12 @@ namespace CairoDesktop.Configuration
             {
                 if (cairoSettings.EnableMenuBarAutoHide != value)
                 {
+                    if (value && TaskbarPosition == 1 && TaskbarMode == 2)
+                    {
+                        // We cannot have multiple auto-hide bars on the same screen edge
+                        TaskbarPosition = 0;
+                    }
+
                     cairoSettings.EnableMenuBarAutoHide = value;
                 }
             }
@@ -894,6 +912,21 @@ namespace CairoDesktop.Configuration
                 if (cairoSettings.ForceSoftwareRendering != value)
                 {
                     cairoSettings.ForceSoftwareRendering = value;
+                }
+            }
+        }
+
+        public int AutoHideShowDelayMs
+        {
+            get
+            {
+                return cairoSettings.AutoHideShowDelayMs;
+            }
+            set
+            {
+                if (cairoSettings.AutoHideShowDelayMs != value)
+                {
+                    cairoSettings.AutoHideShowDelayMs = value;
                 }
             }
         }

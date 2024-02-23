@@ -69,6 +69,27 @@ namespace CairoDesktop
             checkTrayStatus();
             checkRunAtLogOn();
             checkIfCanHibernate();
+
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "DesktopLabelPosition":
+                case "DesktopIconSize":
+                case "ProgramsMenuLayout":
+                case "TaskbarMode":
+                case "TaskbarPosition":
+                case "TaskbarIconSize":
+                case "TaskbarMiddleClick":
+                case "TaskbarGroupingStyle":
+                case "TaskbarMultiMonMode":
+                case "SysTrayAlwaysExpanded":
+                    loadRadioGroups();
+                    break;
+            }
         }
 
         private void loadRadioGroups()
