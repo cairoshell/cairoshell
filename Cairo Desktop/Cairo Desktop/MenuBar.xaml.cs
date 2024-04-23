@@ -339,28 +339,7 @@ namespace CairoDesktop
 
         private void Window_LocationChanged(object sender, EventArgs e)
         {
-            double top = getDesiredTopPosition();
-
             setShadowPosition();
-
-            if (Top == top)
-            {
-                return;
-            }
-
-            Top = top;
-        }
-
-        private double getDesiredTopPosition()
-        {
-            double top;
-
-            if (AppBarEdge == AppBarEdge.Bottom) 
-                top = (Screen.Bounds.Bottom / DpiScale) - DesiredHeight;
-            else
-                top = Screen.Bounds.Y / DpiScale;
-
-            return top;
         }
 
         protected override void CustomClosing()

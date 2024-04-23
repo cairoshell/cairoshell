@@ -482,17 +482,6 @@ namespace CairoDesktop
             NativeMethods.SetForegroundWindow(Handle);
         }
 
-        private void TaskbarWindow_LocationChanged(object sender, EventArgs e)
-        {
-            // primarily for win7/8, they will set up the appbar correctly but then put it in the wrong place
-            double desiredTop = getDesiredTopPosition();
-
-            if (Top != desiredTop)
-            {
-                Top = desiredTop;
-            }
-        }
-
         public override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
             base.AfterAppBarPos(isSameCoords, rect);
