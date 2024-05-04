@@ -701,17 +701,17 @@ namespace CairoDesktop
 
         private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Large;
+            Settings.Instance.TaskbarIconSize = IconSize.Large;
         }
 
         private void radTaskbarSize1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Small;
+            Settings.Instance.TaskbarIconSize = IconSize.Small;
         }
 
         private void radTaskbarSize10_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Medium;
+            Settings.Instance.TaskbarIconSize = IconSize.Medium;
         }
 
         private void radTaskbarMiddleClick0_Click(object sender, RoutedEventArgs e)
@@ -766,12 +766,12 @@ namespace CairoDesktop
 
         private void radDesktopIconSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopIconSize = (int)IconSize.Large;
+            Settings.Instance.DesktopIconSize = IconSize.Large;
         }
 
         private void radDesktopIconSize2_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopIconSize = (int)IconSize.ExtraLarge;
+            Settings.Instance.DesktopIconSize = IconSize.ExtraLarge;
         }
 
         private void radTrayMode0_Click(object sender, RoutedEventArgs e)

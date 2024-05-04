@@ -145,7 +145,7 @@ namespace CairoDesktop.SupportingClasses
 
                     Task.Factory.StartNew(() =>
                     {
-                        Icon = IconImageConverter.GetImageFromAssociatedIcon(window.WinFileName, IconHelper.ParseSize(Settings.Instance.TaskbarIconSize) == IconSize.Small ? IconSize.Small : IconSize.Large);
+                        Icon = IconImageConverter.GetImageFromAssociatedIcon(window.WinFileName, Settings.Instance.TaskbarIconSize == IconSize.Small ? IconSize.Small : IconSize.Large);
                     }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
             }

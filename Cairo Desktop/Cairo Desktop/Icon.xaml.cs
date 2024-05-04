@@ -158,7 +158,7 @@ namespace CairoDesktop
             }
 
             string bindingPath = "LargeIcon";
-            if (Settings.Instance.DesktopIconSize == (int)IconSize.ExtraLarge)
+            if (Settings.Instance.DesktopIconSize == IconSize.ExtraLarge)
             {
                 imgIcon.Width = IconHelper.GetSize(IconSize.ExtraLarge);
                 imgIcon.Height = IconHelper.GetSize(IconSize.ExtraLarge);

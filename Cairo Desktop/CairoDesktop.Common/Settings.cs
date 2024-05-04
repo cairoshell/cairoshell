@@ -1,4 +1,5 @@
-﻿using ManagedShell.WindowsTray;
+﻿using ManagedShell.Common.Enums;
+using ManagedShell.WindowsTray;
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -169,11 +170,11 @@ namespace CairoDesktop.Common
             set => Set(ref _desktopLabelPosition, value);
         }
 
-        private int _desktopIconSize = 2;
-        public int DesktopIconSize
+        private IconSize _desktopIconSize = IconSize.ExtraLarge;
+        public IconSize DesktopIconSize
         {
             get => _desktopIconSize;
-            set => Set(ref _desktopIconSize, value);
+            set => SetEnum(ref _desktopIconSize, value);
         }
 
         private bool _enableDesktopOverlayHotKey = true;
@@ -272,11 +273,11 @@ namespace CairoDesktop.Common
             }
         }
 
-        private int _taskbarIconSize = 10;
-        public int TaskbarIconSize
+        private IconSize _taskbarIconSize = IconSize.Medium;
+        public IconSize TaskbarIconSize
         {
             get => _taskbarIconSize;
-            set => Set(ref _taskbarIconSize, value);
+            set => SetEnum(ref _taskbarIconSize, value);
         }
 
         private int _taskbarGroupingStyle;
@@ -576,10 +577,10 @@ namespace CairoDesktop.Common
             DefaultProgramsCategory = legacySettings.DefaultProgramsCategory;
             TaskbarPosition = legacySettings.TaskbarPosition;
             DesktopLabelPosition = legacySettings.DesktopLabelPosition;
-            DesktopIconSize = legacySettings.DesktopIconSize;
+            DesktopIconSize = (IconSize)legacySettings.DesktopIconSize;
             ForceSoftwareRendering = legacySettings.ForceSoftwareRendering;
             Language = legacySettings.Language;
-            TaskbarIconSize = legacySettings.TaskbarIconSize;
+            TaskbarIconSize = (IconSize)legacySettings.TaskbarIconSize;
             EnableDesktopOverlayHotKey = legacySettings.EnableDesktopOverlayHotKey;
             EnableCairoMenuHotKey = legacySettings.EnableCairoMenuHotKey;
             DesktopOverlayHotKey = legacySettings.DesktopOverlayHotKey;
