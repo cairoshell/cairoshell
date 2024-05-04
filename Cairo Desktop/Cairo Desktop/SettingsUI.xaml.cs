@@ -832,7 +832,7 @@ namespace CairoDesktop
 
         private void btnOpenLogsFolder_OnClick(object sender, RoutedEventArgs e)
         {
-            FolderHelper.OpenWithShell("%localappdata%\\Cairo_Development_Team\\Logs");
+            FolderHelper.OpenWithShell(Path.Combine(CairoApplication.CairoApplicationDataFolder, "Logs"));
         }
 
         private void chkRunAtLogOn_Click(object sender, RoutedEventArgs e)
