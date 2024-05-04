@@ -1,6 +1,5 @@
 ﻿using ManagedShell.WindowsTray;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
@@ -394,8 +393,8 @@ namespace CairoDesktop.Common
             set => Set(ref _enableCairoMenuHotKey, value);
         }
 
-        private List<string> _cairoMenuHotKey = new List<string> { "Win", "Shift", "Z" };
-        public List<string> CairoMenuHotKey
+        private string[] _cairoMenuHotKey = { "Win", "Shift", "Z" };
+        public string[] CairoMenuHotKey
         {
             get => _cairoMenuHotKey;
             set => Set(ref _cairoMenuHotKey, value);
@@ -558,5 +557,63 @@ namespace CairoDesktop.Common
         #endregion
 
         #endregion
+
+        public void ImportLegacySettings(Configuration.Settings legacySettings)
+        {
+            EnableDesktop = legacySettings.EnableDesktop;
+            EnableTaskbar = legacySettings.EnableTaskbar;
+            EnableMenuBarShadow = legacySettings.EnableMenuBarShadow;
+            IsFirstRun = legacySettings.IsFirstRun;
+            TimeFormat = legacySettings.TimeFormat;
+            DateFormat = legacySettings.DateFormat;
+            FileManager = legacySettings.FileManager;
+            EnableSysTray = legacySettings.EnableSysTray;
+            EnableDynamicDesktop = legacySettings.EnableDynamicDesktop;
+            CairoTheme = legacySettings.CairoTheme;
+            DesktopDirectory = legacySettings.DesktopDirectory;
+            TaskbarMode = legacySettings.TaskbarMode;
+            SysTrayAlwaysExpanded = legacySettings.SysTrayAlwaysExpanded;
+            DefaultProgramsCategory = legacySettings.DefaultProgramsCategory;
+            TaskbarPosition = legacySettings.TaskbarPosition;
+            DesktopLabelPosition = legacySettings.DesktopLabelPosition;
+            DesktopIconSize = legacySettings.DesktopIconSize;
+            ForceSoftwareRendering = legacySettings.ForceSoftwareRendering;
+            Language = legacySettings.Language;
+            TaskbarIconSize = legacySettings.TaskbarIconSize;
+            EnableDesktopOverlayHotKey = legacySettings.EnableDesktopOverlayHotKey;
+            EnableCairoMenuHotKey = legacySettings.EnableCairoMenuHotKey;
+            DesktopOverlayHotKey = legacySettings.DesktopOverlayHotKey;
+            CairoMenuHotKey = legacySettings.CairoMenuHotKey;
+            FoldersOpenDesktopOverlay = legacySettings.FoldersOpenDesktopOverlay;
+            EnableMenuBarBlur = legacySettings.EnableMenuBarBlur;
+            EnableMenuBarMultiMon = legacySettings.EnableMenuBarMultiMon;
+            EnableTaskbarMultiMon = legacySettings.EnableTaskbarMultiMon;
+            LogSeverity = legacySettings.LogSeverity;
+            FullWidthTaskBar = legacySettings.FullWidthTaskBar;
+            ShowHibernate = legacySettings.ShowHibernate;
+            TaskbarMiddleClick = legacySettings.TaskbarMiddleClick;
+            DesktopBackgroundType = legacySettings.DesktopBackgroundType;
+            BingWallpaperStyle = legacySettings.BingWallpaperStyle;
+            CairoBackgroundImagePath = legacySettings.CairoBackgroundImagePath;
+            CairoBackgroundImageStyle = legacySettings.CairoBackgroundImageStyle;
+            CairoBackgroundVideoPath = legacySettings.CairoBackgroundVideoPath;
+            ProgramsMenuLayout = legacySettings.ProgramsMenuLayout;
+            DesktopNavigationToolbarLocation = legacySettings.DesktopNavigationToolbarLocation;
+            PinnedNotifyIcons = legacySettings.PinnedNotifyIcons;
+            EnableTaskbarThumbnails = legacySettings.EnableTaskbarThumbnails;
+            EnableMenuExtraVolume = legacySettings.EnableMenuExtraVolume;
+            EnableMenuExtraActionCenter = legacySettings.EnableMenuExtraActionCenter;
+            EnableMenuExtraClock = legacySettings.EnableMenuExtraClock;
+            EnableMenuExtraSearch = legacySettings.EnableMenuExtraSearch;
+            EnableMenuBar = legacySettings.EnableMenuBar;
+            ShowTaskbarLabels = legacySettings.ShowTaskbarLabels;
+            TaskbarButtonWidth = legacySettings.TaskbarButtonWidth;
+            TaskbarButtonHeight = legacySettings.TaskbarButtonHeight;
+            ShowTaskbarBadges = legacySettings.ShowTaskbarBadges;
+            TaskbarGroupingStyle = legacySettings.TaskbarGroupingStyle;
+            TaskbarMultiMonMode = legacySettings.TaskbarMultiMonMode;
+            EnableMenuBarAutoHide = legacySettings.EnableMenuBarAutoHide;
+            AutoHideShowDelayMs = legacySettings.AutoHideShowDelayMs;
+        }
     }
 }

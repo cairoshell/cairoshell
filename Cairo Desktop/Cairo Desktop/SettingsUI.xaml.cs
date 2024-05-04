@@ -790,7 +790,7 @@ namespace CairoDesktop
             {
                 return;
             }
-            List<string> hotkey = new List<string> { cboCairoMenuHotKeyMod1.SelectedValue.ToString(), cboCairoMenuHotKeyMod2.SelectedValue.ToString(), cboCairoMenuHotKeyKey.SelectedValue.ToString() };
+            string[] hotkey = { cboCairoMenuHotKeyMod1.SelectedValue.ToString(), cboCairoMenuHotKeyMod2.SelectedValue.ToString(), cboCairoMenuHotKeyKey.SelectedValue.ToString() };
 
             if (Settings.Instance.CairoMenuHotKey[0] == hotkey[0] && Settings.Instance.CairoMenuHotKey[1] == hotkey[1] && Settings.Instance.CairoMenuHotKey[2] == hotkey[2])
             {

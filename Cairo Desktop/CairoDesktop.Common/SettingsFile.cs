@@ -43,7 +43,7 @@ namespace CairoDesktop.Common
             {
                 if (!ShellHelper.Exists(_fileName))
                 {
-                    return false;
+                    return ImportLegacySettings();
                 }
 
                 string jsonString = File.ReadAllText(_fileName);
@@ -86,6 +86,22 @@ namespace CairoDesktop.Common
             }
         }
 
+        private bool ImportLegacySettings()
+        {
+            var legacySettings = Configuration.Settings.Instance;
+
+            if (legacySettings.IsFirstRun)
+            {
+                // No legacy settings to import
+                return false;
+            }
+
+            Settings.ImportLegacySettings(legacySettings);
+
+            SaveToFile();
+            return true;
+        }
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -95,5 +111,6 @@ namespace CairoDesktop.Common
     public interface IMigratableSettings
     {
         bool MigrationPerformed { get; }
+        void ImportLegacySettings(Configuration.Settings legacySettings);
     }
 }
