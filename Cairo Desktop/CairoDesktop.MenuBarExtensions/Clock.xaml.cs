@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using System;
 using System.Windows;
 using System.Windows.Controls;

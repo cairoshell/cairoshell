@@ -1,7 +1,6 @@
 ﻿using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using ManagedShell.Interop;
 using CairoDesktop.SupportingClasses;
 using ManagedShell;
@@ -787,13 +786,31 @@ namespace CairoDesktop
 
         private void cboCairoMenuHotKey_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string[] hotkey = { cboCairoMenuHotKeyMod1.SelectedValue.ToString(), cboCairoMenuHotKeyMod2.SelectedValue.ToString(), cboCairoMenuHotKeyKey.SelectedValue.ToString() };
+            if (cboCairoMenuHotKeyMod1.SelectedValue == null || cboCairoMenuHotKeyMod2.SelectedValue == null || cboCairoMenuHotKeyKey.SelectedValue == null)
+            {
+                return;
+            }
+            List<string> hotkey = new List<string> { cboCairoMenuHotKeyMod1.SelectedValue.ToString(), cboCairoMenuHotKeyMod2.SelectedValue.ToString(), cboCairoMenuHotKeyKey.SelectedValue.ToString() };
+
+            if (Settings.Instance.CairoMenuHotKey[0] == hotkey[0] && Settings.Instance.CairoMenuHotKey[1] == hotkey[1] && Settings.Instance.CairoMenuHotKey[2] == hotkey[2])
+            {
+                return;
+            }
             Settings.Instance.CairoMenuHotKey = hotkey;
         }
 
         private void cboDesktopOverlayHotKey_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (cboDesktopOverlayHotKeyMod1.SelectedValue == null || cboDesktopOverlayHotKeyMod2.SelectedValue == null || cboDesktopOverlayHotKeyKey.SelectedValue == null)
+            {
+                return;
+            }
             string[] hotkey = { cboDesktopOverlayHotKeyMod1.SelectedValue.ToString(), cboDesktopOverlayHotKeyMod2.SelectedValue.ToString(), cboDesktopOverlayHotKeyKey.SelectedValue.ToString() };
+
+            if (Settings.Instance.DesktopOverlayHotKey[0] == hotkey[0] && Settings.Instance.DesktopOverlayHotKey[1] == hotkey[1] && Settings.Instance.DesktopOverlayHotKey[2] == hotkey[2])
+            {
+                return;
+            }
             Settings.Instance.DesktopOverlayHotKey = hotkey;
         }
 

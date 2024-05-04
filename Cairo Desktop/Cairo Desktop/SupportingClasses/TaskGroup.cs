@@ -1,4 +1,4 @@
-﻿using CairoDesktop.Configuration;
+﻿using CairoDesktop.Common;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;

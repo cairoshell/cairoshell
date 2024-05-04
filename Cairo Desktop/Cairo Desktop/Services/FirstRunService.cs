@@ -1,6 +1,6 @@
 ﻿using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.DependencyInjection;
 using CairoDesktop.Infrastructure.Options;
 using Microsoft.Extensions.Logging;

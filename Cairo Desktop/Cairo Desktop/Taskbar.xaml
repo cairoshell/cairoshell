@@ -6,7 +6,7 @@
     x:Class="CairoDesktop.Taskbar"
     xmlns:self="clr-namespace:CairoDesktop"
     xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
-    xmlns:settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration"
+    xmlns:settings="clr-namespace:CairoDesktop.Common;assembly=CairoDesktop.Common"
     xmlns:support="clr-namespace:CairoDesktop.SupportingClasses"
     x:Name="TaskbarWindow"
     Left="0"

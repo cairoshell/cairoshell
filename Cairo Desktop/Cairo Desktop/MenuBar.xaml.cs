@@ -2,7 +2,6 @@ using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Application.Structs;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
 using ManagedShell;
 using System;

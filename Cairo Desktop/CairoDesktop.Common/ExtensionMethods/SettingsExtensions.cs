@@ -1,6 +1,5 @@
 ﻿using System;
 using CairoDesktop.Common.Logging;
-using CairoDesktop.Configuration;
 
 namespace CairoDesktop.Common.ExtensionMethods
 {

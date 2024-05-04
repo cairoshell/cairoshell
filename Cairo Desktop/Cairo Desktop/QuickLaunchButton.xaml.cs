@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop

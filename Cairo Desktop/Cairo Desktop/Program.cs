@@ -2,7 +2,7 @@
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common.ExtensionMethods;
 using CairoDesktop.Common.Logging;
-using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.DependencyInjection;
 using CairoDesktop.Infrastructure.Options;
 using CairoDesktop.MenuBarExtensions;

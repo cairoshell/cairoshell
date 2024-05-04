@@ -6,7 +6,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using CairoDesktop.Localization;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Helpers;

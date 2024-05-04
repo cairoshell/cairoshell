@@ -10,7 +10,6 @@ using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;

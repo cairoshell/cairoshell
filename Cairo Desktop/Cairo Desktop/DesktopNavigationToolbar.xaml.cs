@@ -3,7 +3,6 @@ using System.Windows;
 using System.IO;
 using System.Windows.Interop;
 using ManagedShell.Interop;
-using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using System.Linq;
 using System.ComponentModel;

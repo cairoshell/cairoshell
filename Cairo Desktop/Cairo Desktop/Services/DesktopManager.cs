@@ -1,6 +1,5 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Interfaces;
 using CairoDesktop.SupportingClasses;

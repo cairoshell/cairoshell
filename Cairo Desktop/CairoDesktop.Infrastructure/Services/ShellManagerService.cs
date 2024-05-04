@@ -1,4 +1,4 @@
-﻿using CairoDesktop.Configuration;
+﻿using CairoDesktop.Common;
 using ManagedShell;
 using System;
 using System.ComponentModel;

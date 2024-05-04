@@ -1,5 +1,5 @@
 ﻿using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
@@ -10,10 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
-using System.Windows.Media;
 using System.Management;
-using System.Security.Principal;
 using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop.Services

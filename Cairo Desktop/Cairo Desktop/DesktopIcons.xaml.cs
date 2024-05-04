@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using CairoDesktop.Configuration;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
@@ -9,7 +8,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using CairoDesktop.Common;
 using CairoDesktop.Interfaces;
-using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
 using CairoDesktop.Localization;

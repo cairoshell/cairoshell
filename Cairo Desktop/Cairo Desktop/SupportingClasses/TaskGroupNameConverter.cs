@@ -1,7 +1,6 @@
-﻿using CairoDesktop.Configuration;
+﻿using CairoDesktop.Common;
 using ManagedShell.WindowsTasks;
 using System;
-using System.Diagnostics;
 using System.Windows.Data;
 
 namespace CairoDesktop.SupportingClasses

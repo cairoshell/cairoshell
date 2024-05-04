@@ -1,4 +1,4 @@
-﻿using CairoDesktop.Configuration;
+﻿using CairoDesktop.Common;
 using ManagedShell.WindowsTasks;
 
 namespace CairoDesktop.AppGrabber

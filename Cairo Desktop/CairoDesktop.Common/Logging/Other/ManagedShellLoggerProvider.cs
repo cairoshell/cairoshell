@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common.ExtensionMethods;
-using CairoDesktop.Configuration;
 using ManagedShell.Common.Logging;
 using ManagedShell.Common.Logging.Observers;
 using Microsoft.Extensions.Logging;
