@@ -305,7 +305,7 @@
                         <ComboBox Name="cboThemeSelect"
                                   IsDropDownOpen="False"
                                   IsEditable="False"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoTheme, UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=Theme, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FilesAndFolders)}"
                                Style="{StaticResource SettingGroupHeader}" />

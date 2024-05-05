@@ -90,7 +90,7 @@ namespace CairoDesktop.MenuBarExtensions
                 return;
             }
 
-            if (e.PropertyName == "CairoTheme")
+            if (e.PropertyName == "Theme")
             {
                 applyEffects();
             }

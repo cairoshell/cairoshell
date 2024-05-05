@@ -92,11 +92,11 @@ namespace CairoDesktop.Common
             set => Set(ref _isFirstRun, value);
         }
 
-        private string _cairoTheme = "Default";
-        public string CairoTheme
+        private string _theme = "Default";
+        public string Theme
         {
-            get => _cairoTheme;
-            set => Set(ref _cairoTheme, value);
+            get => _theme;
+            set => Set(ref _theme, value);
         }
 
         private string _language = "";
@@ -542,7 +542,7 @@ namespace CairoDesktop.Common
             set => Set(ref _forceSoftwareRendering, value);
         }
 
-        private int _autoHideShowDelayMs;
+        private int _autoHideShowDelayMs = 250;
         public int AutoHideShowDelayMs
         {
             get => _autoHideShowDelayMs;
@@ -570,7 +570,7 @@ namespace CairoDesktop.Common
             FileManager = legacySettings.FileManager;
             EnableSysTray = legacySettings.EnableSysTray;
             EnableDynamicDesktop = legacySettings.EnableDynamicDesktop;
-            CairoTheme = legacySettings.CairoTheme;
+            Theme = legacySettings.CairoTheme;
             DesktopDirectory = legacySettings.DesktopDirectory;
             TaskbarMode = legacySettings.TaskbarMode;
             SysTrayAlwaysExpanded = legacySettings.SysTrayAlwaysExpanded;
@@ -613,8 +613,6 @@ namespace CairoDesktop.Common
             ShowTaskbarBadges = legacySettings.ShowTaskbarBadges;
             TaskbarGroupingStyle = legacySettings.TaskbarGroupingStyle;
             TaskbarMultiMonMode = legacySettings.TaskbarMultiMonMode;
-            EnableMenuBarAutoHide = legacySettings.EnableMenuBarAutoHide;
-            AutoHideShowDelayMs = legacySettings.AutoHideShowDelayMs;
         }
     }
 }

@@ -394,7 +394,7 @@ namespace CairoDesktop
                 case "AutoHideShowDelayMs":
                     AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
                     break;
-                case "CairoTheme":
+                case "Theme":
                     PeekDuringAutoHide();
                     break;
             }
