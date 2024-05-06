@@ -12,6 +12,13 @@ namespace CairoDesktop.Common
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private static JsonSerializerOptions options = new JsonSerializerOptions()
+        {
+            IgnoreReadOnlyProperties = true,
+            WriteIndented = true,
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+        };
+
         private string _fileName;
 
         private T _settings;
@@ -66,13 +73,6 @@ namespace CairoDesktop.Common
 
         private void SaveToFile()
         {
-            JsonSerializerOptions options = new JsonSerializerOptions()
-            {
-                IgnoreReadOnlyProperties = true,
-                WriteIndented = true,
-                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-            };
-
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(_fileName));
