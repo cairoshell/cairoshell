@@ -1,6 +1,5 @@
 ﻿using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Common.ExtensionMethods;
 using CairoDesktop.Common.Logging;
 using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.DependencyInjection;
@@ -89,7 +88,7 @@ namespace CairoDesktop
 
                     logging.AddManagedShellLogging(options =>
                     {
-                        var severity = Settings.Instance.GetLogSeverity(LogSeverity.Info);
+                        var severity = Settings.Instance.LogSeverity;
                         options.LogLevel = severity.ToLogLevel();
                         options.LogsFolderPath = CairoApplication.LogsFolder;
                     });

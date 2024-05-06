@@ -1,4 +1,5 @@
-﻿using ManagedShell.Common.Enums;
+﻿using CairoDesktop.Common.Logging;
+using ManagedShell.Common.Enums;
 using ManagedShell.WindowsTray;
 using System;
 using System.ComponentModel;
@@ -70,7 +71,7 @@ namespace CairoDesktop.Common
         {
             if (!field.Equals(value))
             {
-                if (Convert.ToInt32(value) < 0)
+                if (!Enum.IsDefined(typeof(T), value))
                 {
                     return;
                 }
@@ -549,11 +550,11 @@ namespace CairoDesktop.Common
             set => Set(ref _autoHideShowDelayMs, value);
         }
         
-        private string _logSeverity = "Info";
-        public string LogSeverity
+        private LogSeverity _logSeverity = LogSeverity.Info;
+        public LogSeverity LogSeverity
         {
             get => _logSeverity;
-            set => Set(ref _logSeverity, value);
+            set => SetEnum(ref _logSeverity, value);
         }
         #endregion
 
@@ -589,7 +590,6 @@ namespace CairoDesktop.Common
             EnableMenuBarBlur = legacySettings.EnableMenuBarBlur;
             EnableMenuBarMultiMon = legacySettings.EnableMenuBarMultiMon;
             EnableTaskbarMultiMon = legacySettings.EnableTaskbarMultiMon;
-            LogSeverity = legacySettings.LogSeverity;
             FullWidthTaskBar = legacySettings.FullWidthTaskBar;
             ShowHibernate = legacySettings.ShowHibernate;
             TaskbarMiddleClick = legacySettings.TaskbarMiddleClick;
@@ -613,6 +613,8 @@ namespace CairoDesktop.Common
             ShowTaskbarBadges = legacySettings.ShowTaskbarBadges;
             TaskbarGroupingStyle = legacySettings.TaskbarGroupingStyle;
             TaskbarMultiMonMode = legacySettings.TaskbarMultiMonMode;
+            if (Enum.TryParse(legacySettings.LogSeverity, out LogSeverity result))
+                LogSeverity = result;
         }
     }
 }

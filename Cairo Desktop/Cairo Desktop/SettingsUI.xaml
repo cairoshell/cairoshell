@@ -14,6 +14,7 @@
         WindowStyle="SingleBorderWindow"
         SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
+        <supportingClasses:EnumStringConverter x:Key="enumStringConverter" />
         <supportingClasses:InvertBoolConverter x:Key="invertBoolConverter" />
         <Style x:Key="CairoSettingsBarRestartStyle"
                TargetType="{x:Type TabItem}">
@@ -839,7 +840,7 @@
                                   IsDropDownOpen="False"
                                   IsEditable="False"
                                   Width="109"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=LogSeverity, UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=LogSeverity, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource enumStringConverter}}" />
                         <Button Height="24"
                                 Padding="10,0"
                                 Margin="5,0,0,0"

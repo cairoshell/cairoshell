@@ -1,5 +1,4 @@
-﻿using CairoDesktop.Common.ExtensionMethods;
-using ManagedShell.Common.Logging;
+﻿using ManagedShell.Common.Logging;
 using ManagedShell.Common.Logging.Observers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -50,7 +49,7 @@ namespace CairoDesktop.Common.Logging.Other
 
         private void SetupLoggingSeverity()
         {
-            var severity = cairoSettings.GetLogSeverity(LogSeverity.Info);
+            var severity = cairoSettings.LogSeverity;
             
             ShellLogger.Severity = severity.ToManagedShellLogSeverity();
             _settings.LogLevel = severity.ToLogLevel();
