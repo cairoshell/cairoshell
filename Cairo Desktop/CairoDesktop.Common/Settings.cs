@@ -146,7 +146,7 @@ namespace CairoDesktop.Common
             set => Set(ref _enableDynamicDesktop, value);
         }
 
-        private System.Windows.Point _desktopNavigationToolbarLocation = new System.Windows.Point(0, 0);
+        private System.Windows.Point _desktopNavigationToolbarLocation = new System.Windows.Point(0.5, 0.8);
         public System.Windows.Point DesktopNavigationToolbarLocation
         {
             get => _desktopNavigationToolbarLocation;
