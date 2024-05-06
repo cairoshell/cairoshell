@@ -15,7 +15,6 @@
     AllowDrop="True"
     Visibility="Visible"
     Loaded="TaskbarWindow_Loaded"
-    LocationChanged="TaskbarWindow_LocationChanged"
     Background="{DynamicResource ResourceKey=TaskBarWindowBackground}"
     HorizontalAlignment="Center">
     <Window.Resources>
