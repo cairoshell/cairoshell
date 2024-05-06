@@ -83,7 +83,6 @@
     <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj" />
     <ProjectReference Include="..\CairoDesktop.Application\CairoDesktop.Application.csproj" />
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj" />
-    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj" />
     <ProjectReference Include="..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj" />
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
     <ProjectReference Include="..\CairoDesktop.MenuBarExtensions\CairoDesktop.MenuBarExtensions.csproj" />

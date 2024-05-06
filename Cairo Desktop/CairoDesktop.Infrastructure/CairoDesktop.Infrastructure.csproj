@@ -21,7 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CairoDesktop.Application\CairoDesktop.Application.csproj" />
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj" />
-    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj" />
     <ProjectReference Include="..\CairoDesktop.Interop.WinSparkle\CairoDesktop.Interop.WinSparkle.csproj" />
   </ItemGroup>
 
