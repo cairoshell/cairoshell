@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections.Specialized;
 using System.Windows.Data;
+using CairoDesktop.Common.Localization;
 
 namespace CairoDesktop.AppGrabber {
 
@@ -94,16 +95,16 @@ namespace CairoDesktop.AppGrabber {
                 switch (Type)
                 {
                     case AppCategoryType.All:
-                        return Localization.DisplayString.sAppGrabber_All;
+                        return DisplayString.sAppGrabber_All;
                     case AppCategoryType.Uncategorized:
-                        return Localization.DisplayString.sAppGrabber_Uncategorized;
+                        return DisplayString.sAppGrabber_Uncategorized;
                     case AppCategoryType.QuickLaunch:
-                        return Localization.DisplayString.sAppGrabber_QuickLaunch;
+                        return DisplayString.sAppGrabber_QuickLaunch;
                     default:
                         if (Name.Length > 0)
                             return Name;
                         else
-                            return Localization.DisplayString.sAppGrabber_Untitled;
+                            return DisplayString.sAppGrabber_Untitled;
                 }
             }
         }

@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="CairoDesktop.Taskbar"
     xmlns:self="clr-namespace:CairoDesktop"
-    xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+    xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
     xmlns:settings="clr-namespace:CairoDesktop.Common;assembly=CairoDesktop.Common"
     xmlns:support="clr-namespace:CairoDesktop.SupportingClasses"
     x:Name="TaskbarWindow"

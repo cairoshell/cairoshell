@@ -176,7 +176,7 @@ namespace CairoDesktop
             iconBinding.TargetNullValue = FindResource("NullIcon") as BitmapImage;
             imgIcon.SetBinding(Image.SourceProperty, iconBinding);
 
-            switch ($"{Settings.Instance.DesktopLabelPosition}{Settings.Instance.DesktopIconSize}")
+            switch ($"{Settings.Instance.DesktopLabelPosition}{(int)Settings.Instance.DesktopIconSize}")
             {
                 case "00": // horizontal small
                     btnFile.Height = 48;

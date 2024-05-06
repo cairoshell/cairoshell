@@ -23,8 +23,8 @@ namespace CairoDesktop.MenuBarExtensions
                 {
                     if (!ShellHelper.StartProcess(searchObj.Path))
                     {
-                        CairoMessage.Show(Localization.DisplayString.sSearch_Error,
-                            Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
+                        CairoMessage.Show(Common.Localization.DisplayString.sSearch_Error,
+                            Common.Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
                     }
                 }
             }

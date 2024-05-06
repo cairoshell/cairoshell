@@ -58,16 +58,14 @@ namespace CairoDesktop.Common
 
         protected void Set<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
-            if (field == null || !field.Equals(value))
+            if (field?.Equals(value) != true)
             {
-                // TODO: Should we log setting change?
-
                 field = value;
                 OnPropertyChanged(propertyName);
             }
         }
 
-        protected void SetEnum<T>(ref T field, T value, [CallerMemberName] string propertyName = "") where T : struct, Enum
+        protected void SetEnum<T>(ref T field, T value, [CallerMemberName] string propertyName = "") where T : Enum
         {
             if (!field.Equals(value))
             {
@@ -75,8 +73,6 @@ namespace CairoDesktop.Common
                 {
                     return;
                 }
-
-                // TODO: Should we log setting change?
 
                 field = value;
                 OnPropertyChanged(propertyName);

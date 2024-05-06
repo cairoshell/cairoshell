@@ -2,6 +2,7 @@ using System;
 using System.Collections.Specialized;
 using System.IO;
 using CairoDesktop.Common;
+using CairoDesktop.Common.Localization;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 
@@ -22,9 +23,9 @@ namespace CairoDesktop.SupportingClasses
                     return;
                 case Actions.Delete:
                     string displayName = ShellHelper.GetDisplayName(fileName);
-                    CairoMessage.ShowOkCancel(string.Format(Localization.DisplayString.sDesktop_DeleteInfo, displayName), 
-                        Localization.DisplayString.sDesktop_DeleteTitle, CairoMessageImage.Warning, 
-                        Localization.DisplayString.sInterface_Delete, Localization.DisplayString.sInterface_Cancel,
+                    CairoMessage.ShowOkCancel(string.Format(DisplayString.sDesktop_DeleteInfo, displayName), 
+                        DisplayString.sDesktop_DeleteTitle, CairoMessageImage.Warning, 
+                        DisplayString.sInterface_Delete, DisplayString.sInterface_Cancel,
                         result =>
                         {
                             if (result == true)

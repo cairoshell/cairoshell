@@ -6,6 +6,7 @@ using CairoDesktop.Infrastructure.DependencyInjection;
 using CairoDesktop.Interfaces;
 using ManagedShell.Common.Helpers;
 using CairoDesktop.SupportingClasses;
+using CairoDesktop.Common.Localization;
 
 namespace CairoDesktop.Services
 {
@@ -45,7 +46,7 @@ namespace CairoDesktop.Services
         
         private void OnWinRCommand(HotKey cmd)
         {
-            ShellHelper.ShowRunDialog(Localization.DisplayString.sRun_Title, Localization.DisplayString.sRun_Info);
+            ShellHelper.ShowRunDialog(DisplayString.sRun_Title, DisplayString.sRun_Info);
         }
 
         private void OnWinECommand(HotKey cmd)

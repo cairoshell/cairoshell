@@ -3,7 +3,7 @@
         xmlns:supportingclasses="clr-namespace:CairoDesktop.SupportingClasses"
         xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+        xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
         xmlns:control="clr-namespace:CairoDesktop"
         x:Class="CairoDesktop.MenuBar"
         x:Name="MenuBarWindow"
