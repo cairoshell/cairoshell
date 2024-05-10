@@ -162,6 +162,8 @@ namespace CairoDesktop
         {
             helper = new WindowInteropHelper(this);
             Handle = helper.Handle;
+
+            WindowHelper.SetWindowNoActivate(Handle);
             HwndSource.FromHwnd(Handle).AddHook(new HwndSourceHook(WndProc));
 
             SetupPostInit();

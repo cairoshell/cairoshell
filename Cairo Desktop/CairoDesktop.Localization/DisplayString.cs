@@ -348,6 +348,8 @@ namespace CairoDesktop.Localization
 
         public static string sMenuBar_OpenDateTimeSettings => getString();
 
+        public static string sMenuBar_OpenKeyboardLayoutSettings => getString();
+
         public static string sMenuBar_OpenActionCenter => getString();
 
         public static string sMenuBar_ToggleNotificationArea => getString();
@@ -521,6 +523,8 @@ namespace CairoDesktop.Localization
         public static string sSettings_MenuBar_EnableMenuExtraActionCenter => getString();
 
         public static string sSettings_MenuBar_EnableMenuExtraClock => getString();
+
+        public static string sSettings_MenuBar_EnableMenuExtraLayoutSwitcher => getString();
 
         public static string sSettings_MenuBar_EnableMenuExtraSearch => getString();
 

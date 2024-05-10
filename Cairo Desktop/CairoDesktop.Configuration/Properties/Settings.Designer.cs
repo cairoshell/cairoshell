@@ -555,6 +555,18 @@ namespace CairoDesktop.Configuration.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableMenuExtraLayoutSwitcher {
+            get {
+                return ((bool)(this["EnableMenuExtraLayoutSwitcher"]));
+            }
+            set {
+                this["EnableMenuExtraLayoutSwitcher"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool EnableMenuExtraSearch {
             get {
                 return ((bool)(this["EnableMenuExtraSearch"]));

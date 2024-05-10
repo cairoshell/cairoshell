@@ -426,6 +426,13 @@
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraActionCenter)}" />
                             </CheckBox>
                         </StackPanel>
+                        <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuExtraLayoutSwitcher, UpdateSourceTrigger=PropertyChanged}"
+                                      Click="CheckBox_Click"
+                                      Name="chkEnableMenuExtraLayoutSwitcher">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraLayoutSwitcher)}" />
+                            </CheckBox>
+                        </StackPanel>
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}"
                                Style="{StaticResource SettingGroupHeader}" />
