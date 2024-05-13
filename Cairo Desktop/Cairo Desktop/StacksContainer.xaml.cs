@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using CairoDesktop.SupportingClasses;
 using System.Windows.Input;
@@ -78,7 +77,7 @@ namespace CairoDesktop {
         {
             if ((!alwaysOpenWithShell && !FolderHelper.OpenLocation(directoryPath)) || (alwaysOpenWithShell && !FolderHelper.OpenWithShell(directoryPath)))
             {
-                CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo, Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
+                CairoMessage.Show(Common.Localization.DisplayString.sError_FileNotFoundInfo, Common.Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
             }
         }
 

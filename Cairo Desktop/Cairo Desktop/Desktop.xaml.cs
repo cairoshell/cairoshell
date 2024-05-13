@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
 using Microsoft.Win32;
 using System;
@@ -695,7 +694,7 @@ namespace CairoDesktop
             builder.AddCommand(new ShellMenuCommand
             {
                 Flags = MFT.BYCOMMAND, // enable this entry always
-                Label = Localization.DisplayString.sStacks_OpenInNewWindow,
+                Label = Common.Localization.DisplayString.sStacks_OpenInNewWindow,
                 UID = (uint)CairoContextMenuItem.OpenInNewWindow
             });
 
@@ -704,7 +703,7 @@ namespace CairoDesktop
                 builder.AddCommand(new ShellMenuCommand
                 {
                     Flags = MFT.BYCOMMAND, // enable this entry always
-                    Label = Localization.DisplayString.sInterface_AddToStacks,
+                    Label = Common.Localization.DisplayString.sInterface_AddToStacks,
                     UID = (uint)CairoContextMenuItem.AddToStacks
                 });
             }
@@ -713,7 +712,7 @@ namespace CairoDesktop
                 builder.AddCommand(new ShellMenuCommand
                 {
                     Flags = MFT.BYCOMMAND, // enable this entry always
-                    Label = Localization.DisplayString.sInterface_RemoveFromStacks,
+                    Label = Common.Localization.DisplayString.sInterface_RemoveFromStacks,
                     UID = (uint)CairoContextMenuItem.RemoveFromStacks
                 });
             }
@@ -722,7 +721,7 @@ namespace CairoDesktop
             builder.AddCommand(new ShellMenuCommand
             {
                 Flags = flags,
-                Label = Localization.DisplayString.sInterface_Paste,
+                Label = Common.Localization.DisplayString.sInterface_Paste,
                 UID = (uint)CommonContextMenuItem.Paste
             });
             builder.AddSeparator();
@@ -740,7 +739,7 @@ namespace CairoDesktop
                 builder.AddCommand(new ShellMenuCommand
                 {
                     Flags = flags,
-                    Label = Localization.DisplayString.sInterface_Properties,
+                    Label = Common.Localization.DisplayString.sInterface_Properties,
                     UID = (uint)CommonContextMenuItem.Properties
                 });
                 builder.AddSeparator();
@@ -752,7 +751,7 @@ namespace CairoDesktop
                 builder.AddCommand(new ShellMenuCommand
                 {
                     Flags = MFT.BYCOMMAND, // enable this entry always
-                    Label = Localization.DisplayString.sDesktop_DisplaySettings,
+                    Label = Common.Localization.DisplayString.sDesktop_DisplaySettings,
                     UID = (uint)CairoContextMenuItem.DisplaySettings
                 });
             }
@@ -760,7 +759,7 @@ namespace CairoDesktop
             builder.AddCommand(new ShellMenuCommand
             {
                 Flags = MFT.BYCOMMAND, // enable this entry always
-                Label = Localization.DisplayString.sDesktop_Personalize,
+                Label = Common.Localization.DisplayString.sDesktop_Personalize,
                 UID = (uint)CairoContextMenuItem.Personalize
             });
 

@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
-using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 

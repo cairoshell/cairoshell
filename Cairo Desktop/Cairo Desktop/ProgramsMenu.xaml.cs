@@ -1,7 +1,6 @@
 ﻿using CairoDesktop.AppGrabber;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
-using CairoDesktop.Localization;
+using CairoDesktop.Common.Localization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;

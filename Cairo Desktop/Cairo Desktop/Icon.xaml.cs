@@ -10,7 +10,6 @@ using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
@@ -159,7 +158,7 @@ namespace CairoDesktop
             }
 
             string bindingPath = "LargeIcon";
-            if (Settings.Instance.DesktopIconSize == (int)IconSize.ExtraLarge)
+            if (Settings.Instance.DesktopIconSize == IconSize.ExtraLarge)
             {
                 imgIcon.Width = IconHelper.GetSize(IconSize.ExtraLarge);
                 imgIcon.Height = IconHelper.GetSize(IconSize.ExtraLarge);
@@ -177,7 +176,7 @@ namespace CairoDesktop
             iconBinding.TargetNullValue = FindResource("NullIcon") as BitmapImage;
             imgIcon.SetBinding(Image.SourceProperty, iconBinding);
 
-            switch ($"{Settings.Instance.DesktopLabelPosition}{Settings.Instance.DesktopIconSize}")
+            switch ($"{Settings.Instance.DesktopLabelPosition}{(int)Settings.Instance.DesktopIconSize}")
             {
                 case "00": // horizontal small
                     btnFile.Height = 48;

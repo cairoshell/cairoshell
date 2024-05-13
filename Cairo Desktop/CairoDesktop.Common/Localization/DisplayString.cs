@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace CairoDesktop.Localization
+namespace CairoDesktop.Common.Localization
 {
     public class DisplayString
     {
@@ -33,7 +33,7 @@ namespace CairoDesktop.Localization
         {
             Dictionary<string, string> lang;
             bool isDefault = false;
-            string useLang = Configuration.Settings.Instance.Language.ToLower();
+            string useLang = Settings.Instance.Language.ToLower();
 
             if (useLang.StartsWith("fr_"))
             {

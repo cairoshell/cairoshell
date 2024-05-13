@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace CairoDesktop.Localization
+namespace CairoDesktop.Common.Localization
 {
     static class Language
     {

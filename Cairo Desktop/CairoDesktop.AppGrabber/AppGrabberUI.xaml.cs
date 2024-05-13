@@ -115,7 +115,7 @@ namespace CairoDesktop.AppGrabber
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            appGrabber.CategoryList.Add(new Category(Localization.DisplayString.sAppGrabber_Untitled));
+            appGrabber.CategoryList.Add(new Category(Common.Localization.DisplayString.sAppGrabber_Untitled));
             scrollViewer.ScrollToEnd();
         }
 
@@ -231,13 +231,13 @@ namespace CairoDesktop.AppGrabber
         #region Auto selection
 
         // categories
-        static string accessories = Localization.DisplayString.sAppGrabber_Category_Accessories;
-        static string productivity = Localization.DisplayString.sAppGrabber_Category_Productivity;
-        static string development = Localization.DisplayString.sAppGrabber_Category_Development;
-        static string graphics = Localization.DisplayString.sAppGrabber_Category_Graphics;
-        static string media = Localization.DisplayString.sAppGrabber_Category_Media;
-        static string internet = Localization.DisplayString.sAppGrabber_Category_Internet;
-        static string games = Localization.DisplayString.sAppGrabber_Category_Games;
+        static string accessories = Common.Localization.DisplayString.sAppGrabber_Category_Accessories;
+        static string productivity = Common.Localization.DisplayString.sAppGrabber_Category_Productivity;
+        static string development = Common.Localization.DisplayString.sAppGrabber_Category_Development;
+        static string graphics = Common.Localization.DisplayString.sAppGrabber_Category_Graphics;
+        static string media = Common.Localization.DisplayString.sAppGrabber_Category_Media;
+        static string internet = Common.Localization.DisplayString.sAppGrabber_Category_Internet;
+        static string games = Common.Localization.DisplayString.sAppGrabber_Category_Games;
 
         string[] autoAppNames = {
             // accessories

@@ -1,5 +1,5 @@
 ﻿using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
@@ -10,10 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using Microsoft.Extensions.Logging;
-using Microsoft.Win32;
-using System.Windows.Media;
 using System.Management;
-using System.Security.Principal;
 using CairoDesktop.SupportingClasses;
 
 namespace CairoDesktop.Services
@@ -43,9 +40,9 @@ namespace CairoDesktop.Services
 
         private void MigrateSettings()
         {
-            if (_settings.CairoTheme.EndsWith(".xaml"))
+            if (_settings.Theme.EndsWith(".xaml"))
             {
-                _settings.CairoTheme = _settings.CairoTheme.Replace(".xaml", "");
+                _settings.Theme = _settings.Theme.Replace(".xaml", "");
             }
         }
 
@@ -53,9 +50,9 @@ namespace CairoDesktop.Services
         {
             SetTheme(THEME_DEFAULT);
 
-            if (_settings.CairoTheme != THEME_DEFAULT)
+            if (_settings.Theme != THEME_DEFAULT)
             {
-                SetTheme(_settings.CairoTheme);
+                SetTheme(_settings.Theme);
             }
 
             SetDarkMode();
@@ -181,7 +178,7 @@ namespace CairoDesktop.Services
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e == null || string.IsNullOrWhiteSpace(e.PropertyName) || e.PropertyName != "CairoTheme")
+            if (e == null || string.IsNullOrWhiteSpace(e.PropertyName) || e.PropertyName != "Theme")
             {
                 return;
             }

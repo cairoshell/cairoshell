@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Interfaces;
 using CairoDesktop.SupportingClasses;

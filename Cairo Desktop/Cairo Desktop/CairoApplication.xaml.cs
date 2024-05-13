@@ -1,5 +1,5 @@
 ﻿using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -243,7 +243,7 @@ namespace CairoDesktop
 
         public static Version ProductVersion => (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Version;
 
-        public static string CairoApplicationDataFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo_Development_Team");
+        public static string CairoApplicationDataFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo Desktop");
 
         public static string LogsFolder => Path.Combine(CairoApplicationDataFolder, "Logs");
 

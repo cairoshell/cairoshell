@@ -1,4 +1,4 @@
-﻿using CairoDesktop.Configuration;
+﻿using CairoDesktop.Common;
 using ManagedShell.Interop;
 using System;
 using System.Windows;
@@ -86,7 +86,7 @@ namespace CairoDesktop
             ResetPosition();
         }
 
-        private void DesktopOverlayWindow_KeyDown(object sender, KeyEventArgs e)
+        private void DesktopOverlayWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             _desktopManager.DesktopWindow?.RaiseEvent(e);
         }

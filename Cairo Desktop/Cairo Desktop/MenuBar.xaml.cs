@@ -2,7 +2,6 @@ using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Application.Structs;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using CairoDesktop.SupportingClasses;
 using ManagedShell;
 using System;
@@ -462,7 +461,7 @@ namespace CairoDesktop
                     case "AutoHideShowDelayMs":
                         AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
                         break;
-                    case "CairoTheme":
+                    case "Theme":
                         PeekDuringAutoHide();
                         break;
                 }
@@ -479,8 +478,8 @@ namespace CairoDesktop
             string version = fvi.FileVersion;
 
             CairoMessage.Show(
-                Localization.DisplayString.sAbout_Version + " " + version + " - " + Localization.DisplayString.sAbout_PreRelease
-                + "\n\n" + String.Format(Localization.DisplayString.sAbout_Copyright, DateTime.Now.Year.ToString()), "Cairo Desktop Environment", CairoMessageImage.Default);
+                Common.Localization.DisplayString.sAbout_Version + " " + version + " - " + Common.Localization.DisplayString.sAbout_PreRelease
+                + "\n\n" + String.Format(Common.Localization.DisplayString.sAbout_Copyright, DateTime.Now.Year.ToString()), "Cairo Desktop Environment", CairoMessageImage.Default);
         }
 
         private void CheckForUpdates(object sender, RoutedEventArgs e)
@@ -505,13 +504,13 @@ namespace CairoDesktop
 
         private void OpenRunWindow(object sender, RoutedEventArgs e)
         {
-            ShellHelper.ShowRunDialog(Localization.DisplayString.sRun_Title, Localization.DisplayString.sRun_Info);
+            ShellHelper.ShowRunDialog(Common.Localization.DisplayString.sRun_Title, Common.Localization.DisplayString.sRun_Info);
         }
 
         private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
         {
-            CairoMessage.ShowOkCancel(Localization.DisplayString.sExitCairo_Info, Localization.DisplayString.sExitCairo_Title,
-                CairoMessageImage.Default, Localization.DisplayString.sExitCairo_ExitCairo, Localization.DisplayString.sInterface_Cancel,
+            CairoMessage.ShowOkCancel(Common.Localization.DisplayString.sExitCairo_Info, Common.Localization.DisplayString.sExitCairo_Title,
+                CairoMessageImage.Default, Common.Localization.DisplayString.sExitCairo_ExitCairo, Common.Localization.DisplayString.sInterface_Cancel,
                 result =>
                 {
                     if (result == true)

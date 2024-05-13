@@ -1,4 +1,4 @@
-﻿using CairoDesktop.Configuration;
+﻿using CairoDesktop.Common;
 using System.Windows.Controls;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.ObjectModel;

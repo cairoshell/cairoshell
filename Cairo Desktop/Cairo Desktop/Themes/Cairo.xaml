@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+                    xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     <!-- Font resources -->
     <FontFamily x:Key="DialogFontFamily">Corbel</FontFamily>

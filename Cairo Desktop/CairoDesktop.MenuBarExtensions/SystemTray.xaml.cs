@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Application.Structs;
-using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;

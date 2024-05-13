@@ -3,7 +3,6 @@ using System.Windows;
 using System.IO;
 using System.Windows.Interop;
 using ManagedShell.Interop;
-using CairoDesktop.Configuration;
 using CairoDesktop.Common;
 using System.Linq;
 using System.ComponentModel;
@@ -16,6 +15,7 @@ using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
+using static ManagedShell.Interop.NativeMethods;
 
 namespace CairoDesktop
 {
@@ -87,7 +87,7 @@ namespace CairoDesktop
             toolbarContextMenu = new ContextMenu();
             MenuItem resetPositionMenuItem = new MenuItem
             {
-                Header = Localization.DisplayString.sDesktop_ResetPosition
+                Header = Common.Localization.DisplayString.sDesktop_ResetPosition
             };
             resetPositionMenuItem.Click += ResetPositionMenuItem_OnClick;
             toolbarContextMenu.Items.Add(resetPositionMenuItem);
@@ -96,7 +96,7 @@ namespace CairoDesktop
             homeContextMenu = new ContextMenu();
             MenuItem setHomeMenuItem = new MenuItem
             {
-                Header = Localization.DisplayString.sDesktop_SetHome
+                Header = Common.Localization.DisplayString.sDesktop_SetHome
             };
             setHomeMenuItem.Click += SetHomeMenuItem_Click;
             homeContextMenu.Items.Add(setHomeMenuItem);
@@ -157,9 +157,7 @@ namespace CairoDesktop
 
                 if (PointExistsOnScreen(desiredLocation))
                 {
-                    Top = desiredLocation.Y;
-                    Left = desiredLocation.X;
-
+                    SetWindowPos(helper.Handle, IntPtr.Zero, Convert.ToInt32(desiredLocation.X * DpiHelper.DpiScale), Convert.ToInt32(desiredLocation.Y * DpiHelper.DpiScale), 0, 0, (int)SetWindowPosFlags.SWP_NOZORDER | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
                     return;
                 }
             }
@@ -182,8 +180,9 @@ namespace CairoDesktop
 
         private void SetPositionDefault(int screenWidth, int screenHeight)
         {
-            Top = PercentToAbsPos(DEFAULT_Y, ActualHeight, screenHeight);
-            Left = PercentToAbsPos(DEFAULT_X, ActualWidth, screenWidth);
+            var top = Convert.ToInt32(PercentToAbsPos(DEFAULT_Y, ActualHeight, screenHeight) * DpiHelper.DpiScale);
+            var left = Convert.ToInt32(PercentToAbsPos(DEFAULT_X, ActualWidth, screenWidth) * DpiHelper.DpiScale);
+            SetWindowPos(helper.Handle, IntPtr.Zero, left, top, 0, 0, (int)SetWindowPosFlags.SWP_NOZORDER | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
         }
 
         private double AbsToPercentPos(double absolutePos, double size, double total)
@@ -249,7 +248,7 @@ namespace CairoDesktop
             {
                 using (System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog
                 {
-                    Description = Localization.DisplayString.sDesktop_BrowseTitle,
+                    Description = Common.Localization.DisplayString.sDesktop_BrowseTitle,
                     ShowNewFolderButton = false,
                     SelectedPath = NavigationManager.CurrentItem.Path
                 })
@@ -299,12 +298,12 @@ namespace CairoDesktop
 
                 browseContextMenu.Items.Add(new Separator());
 
-                MenuItem clearHistoryMenuItem = new MenuItem { Header = Localization.DisplayString.sDesktop_ClearHistory };
+                MenuItem clearHistoryMenuItem = new MenuItem { Header = Common.Localization.DisplayString.sDesktop_ClearHistory };
                 clearHistoryMenuItem.Click += ClearHistoryMenuItem_Click;
 
                 browseContextMenu.Items.Add(clearHistoryMenuItem);
 
-                MenuItem goToFolderMenuItem = new MenuItem { Header = Localization.DisplayString.sDesktop_GoToFolderMenu };
+                MenuItem goToFolderMenuItem = new MenuItem { Header = Common.Localization.DisplayString.sDesktop_GoToFolderMenu };
                 goToFolderMenuItem.Click += GoToFolderMenuItem_Click;
 
                 browseContextMenu.Items.Add(goToFolderMenuItem);
@@ -351,12 +350,12 @@ namespace CairoDesktop
             Common.MessageControls.Input inputControl = new Common.MessageControls.Input();
             inputControl.Initialize(NavigationManager.CurrentItem.Path);
 
-            CairoMessage.ShowControl(Localization.DisplayString.sDesktop_GoToFolderMessage,
-                Localization.DisplayString.sDesktop_GoToFolderTitle,
+            CairoMessage.ShowControl(Common.Localization.DisplayString.sDesktop_GoToFolderMessage,
+                Common.Localization.DisplayString.sDesktop_GoToFolderTitle,
                 CairoMessageImage.Default,
                 inputControl,
-                Localization.DisplayString.sInterface_Go,
-                Localization.DisplayString.sInterface_Cancel,
+                Common.Localization.DisplayString.sInterface_Go,
+                Common.Localization.DisplayString.sInterface_Cancel,
                 (bool? result) =>
                 {
                     string path = Environment.ExpandEnvironmentVariables(inputControl.InputField.Text);
@@ -376,8 +375,8 @@ namespace CairoDesktop
                     }
                     else
                     {
-                        CairoMessage.Show(Localization.DisplayString.sError_FileNotFoundInfo,
-                            Localization.DisplayString.sError_OhNo,
+                        CairoMessage.Show(Common.Localization.DisplayString.sError_FileNotFoundInfo,
+                            Common.Localization.DisplayString.sError_OhNo,
                             MessageBoxButton.OK,
                             CairoMessageImage.Error, (bool? errResult) =>
                             {
@@ -501,8 +500,13 @@ namespace CairoDesktop
 
         private void DesktopToolbar_LocationChanged(object sender, EventArgs e)
         {
-            Settings.Instance.DesktopNavigationToolbarLocation = new Point(AbsToPercentPos(Left, ActualWidth, WindowManager.PrimaryMonitorSize.Width), 
+            var newPoint = new Point(AbsToPercentPos(Left, ActualWidth, WindowManager.PrimaryMonitorSize.Width),
                 AbsToPercentPos(Top, ActualHeight, WindowManager.PrimaryMonitorSize.Height));
+
+            if (!newPoint.Equals(Settings.Instance.DesktopNavigationToolbarLocation))
+            {
+                Settings.Instance.DesktopNavigationToolbarLocation = newPoint;
+            }
         }
         #endregion
 

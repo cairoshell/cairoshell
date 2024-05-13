@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
@@ -91,7 +90,7 @@ namespace CairoDesktop.MenuBarExtensions
                 return;
             }
 
-            if (e.PropertyName == "CairoTheme")
+            if (e.PropertyName == "Theme")
             {
                 applyEffects();
             }

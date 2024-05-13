@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CairoDesktop.Common.Localization;
 using ManagedShell;
 using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
@@ -47,7 +48,7 @@ namespace CairoDesktop.AppGrabber
                     category = "Windows";
                     break;
                 case null:
-                    category = Localization.DisplayString.sAppGrabber_Uncategorized;
+                    category = DisplayString.sAppGrabber_Uncategorized;
                     break;
             }
 

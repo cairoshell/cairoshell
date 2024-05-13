@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Window x:Class="CairoDesktop.SettingsUI"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:Settings="clr-namespace:CairoDesktop.Configuration;assembly=CairoDesktop.Configuration"
+        xmlns:Settings="clr-namespace:CairoDesktop.Common;assembly=CairoDesktop.Common"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:l10n="clr-namespace:CairoDesktop.Localization;assembly=CairoDesktop.Localization"
+        xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
         xmlns:helpers="clr-namespace:ManagedShell.Common.Helpers;assembly=ManagedShell.Common"
         xmlns:supportingClasses="clr-namespace:CairoDesktop.SupportingClasses"
         Title="{Binding Path=(l10n:DisplayString.sCairoMenu_CairoSettings)}"
@@ -14,6 +14,7 @@
         WindowStyle="SingleBorderWindow"
         SourceInitialized="Window_SourceInitialized">
     <Window.Resources>
+        <supportingClasses:EnumStringConverter x:Key="enumStringConverter" />
         <supportingClasses:InvertBoolConverter x:Key="invertBoolConverter" />
         <Style x:Key="CairoSettingsBarRestartStyle"
                TargetType="{x:Type TabItem}">
@@ -305,7 +306,7 @@
                         <ComboBox Name="cboThemeSelect"
                                   IsDropDownOpen="False"
                                   IsEditable="False"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoTheme, UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=Theme, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FilesAndFolders)}"
                                Style="{StaticResource SettingGroupHeader}" />
@@ -339,7 +340,7 @@
                                   Width="55"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboCairoMenuHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboCairoMenuHotKeyMod2"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}"
                                   IsDropDownOpen="False"
@@ -347,7 +348,7 @@
                                   Width="55"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboCairoMenuHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboCairoMenuHotKeyKey"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}"
                                   IsDropDownOpen="False"
@@ -355,7 +356,7 @@
                                   Width="40"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboCairoMenuHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ShowHibernate, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkShowHibernate">
@@ -516,7 +517,7 @@
                                   Width="55"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboDesktopOverlayHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboDesktopOverlayHotKeyMod2"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}"
                                   IsDropDownOpen="False"
@@ -524,7 +525,7 @@
                                   Width="55"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboDesktopOverlayHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboDesktopOverlayHotKeyKey"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}"
                                   IsDropDownOpen="False"
@@ -532,7 +533,7 @@
                                   Width="40"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboDesktopOverlayHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
                                Style="{StaticResource SettingGroupHeader}" />
@@ -839,7 +840,7 @@
                                   IsDropDownOpen="False"
                                   IsEditable="False"
                                   Width="109"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=LogSeverity, UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=LogSeverity, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource enumStringConverter}}" />
                         <Button Height="24"
                                 Padding="10,0"
                                 Margin="5,0,0,0"

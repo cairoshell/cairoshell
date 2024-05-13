@@ -1,4 +1,4 @@
-﻿using CairoDesktop.Configuration;
+﻿using CairoDesktop.Common;
 using ManagedShell.Interop;
 using CairoDesktop.SupportingClasses;
 using System;
@@ -394,7 +394,7 @@ namespace CairoDesktop
                 case "AutoHideShowDelayMs":
                     AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
                     break;
-                case "CairoTheme":
+                case "Theme":
                     PeekDuringAutoHide();
                     break;
             }
@@ -598,7 +598,7 @@ namespace CairoDesktop
 
         private void OpenRunWindow(object sender, RoutedEventArgs e)
         {
-            ShellHelper.ShowRunDialog(Localization.DisplayString.sRun_Title, Localization.DisplayString.sRun_Info);
+            ShellHelper.ShowRunDialog(Common.Localization.DisplayString.sRun_Title, Common.Localization.DisplayString.sRun_Info);
         }
 
         private void OpenTaskManager(object sender, RoutedEventArgs e)

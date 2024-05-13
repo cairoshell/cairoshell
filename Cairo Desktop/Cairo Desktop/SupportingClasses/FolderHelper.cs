@@ -1,5 +1,5 @@
 ﻿using System;
-using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;

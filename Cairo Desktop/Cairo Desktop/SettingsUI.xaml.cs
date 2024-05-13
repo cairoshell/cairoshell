@@ -1,7 +1,6 @@
 ﻿using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
 using ManagedShell.Interop;
 using CairoDesktop.SupportingClasses;
 using ManagedShell;
@@ -273,7 +272,7 @@ namespace CairoDesktop
         {
             cboLangSelect.DisplayMemberPath = "Key";
             cboLangSelect.SelectedValuePath = "Value";
-            foreach (KeyValuePair<string, string> lang in Localization.DisplayString.Languages)
+            foreach (KeyValuePair<string, string> lang in Common.Localization.DisplayString.Languages)
             {
                 cboLangSelect.Items.Add(lang);
             }
@@ -650,7 +649,7 @@ namespace CairoDesktop
         private void btnDesktopHomeSelect_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-            fbd.Description = Localization.DisplayString.sDesktop_BrowseTitle;
+            fbd.Description = Common.Localization.DisplayString.sDesktop_BrowseTitle;
             fbd.ShowNewFolderButton = false;
             fbd.SelectedPath = Settings.Instance.DesktopDirectory;
 
@@ -702,17 +701,17 @@ namespace CairoDesktop
 
         private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Large;
+            Settings.Instance.TaskbarIconSize = IconSize.Large;
         }
 
         private void radTaskbarSize1_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Small;
+            Settings.Instance.TaskbarIconSize = IconSize.Small;
         }
 
         private void radTaskbarSize10_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarIconSize = (int)IconSize.Medium;
+            Settings.Instance.TaskbarIconSize = IconSize.Medium;
         }
 
         private void radTaskbarMiddleClick0_Click(object sender, RoutedEventArgs e)
@@ -767,12 +766,12 @@ namespace CairoDesktop
 
         private void radDesktopIconSize0_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopIconSize = (int)IconSize.Large;
+            Settings.Instance.DesktopIconSize = IconSize.Large;
         }
 
         private void radDesktopIconSize2_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopIconSize = (int)IconSize.ExtraLarge;
+            Settings.Instance.DesktopIconSize = IconSize.ExtraLarge;
         }
 
         private void radTrayMode0_Click(object sender, RoutedEventArgs e)
@@ -787,13 +786,31 @@ namespace CairoDesktop
 
         private void cboCairoMenuHotKey_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (cboCairoMenuHotKeyMod1.SelectedValue == null || cboCairoMenuHotKeyMod2.SelectedValue == null || cboCairoMenuHotKeyKey.SelectedValue == null)
+            {
+                return;
+            }
             string[] hotkey = { cboCairoMenuHotKeyMod1.SelectedValue.ToString(), cboCairoMenuHotKeyMod2.SelectedValue.ToString(), cboCairoMenuHotKeyKey.SelectedValue.ToString() };
+
+            if (Settings.Instance.CairoMenuHotKey[0] == hotkey[0] && Settings.Instance.CairoMenuHotKey[1] == hotkey[1] && Settings.Instance.CairoMenuHotKey[2] == hotkey[2])
+            {
+                return;
+            }
             Settings.Instance.CairoMenuHotKey = hotkey;
         }
 
         private void cboDesktopOverlayHotKey_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (cboDesktopOverlayHotKeyMod1.SelectedValue == null || cboDesktopOverlayHotKeyMod2.SelectedValue == null || cboDesktopOverlayHotKeyKey.SelectedValue == null)
+            {
+                return;
+            }
             string[] hotkey = { cboDesktopOverlayHotKeyMod1.SelectedValue.ToString(), cboDesktopOverlayHotKeyMod2.SelectedValue.ToString(), cboDesktopOverlayHotKeyKey.SelectedValue.ToString() };
+
+            if (Settings.Instance.DesktopOverlayHotKey[0] == hotkey[0] && Settings.Instance.DesktopOverlayHotKey[1] == hotkey[1] && Settings.Instance.DesktopOverlayHotKey[2] == hotkey[2])
+            {
+                return;
+            }
             Settings.Instance.DesktopOverlayHotKey = hotkey;
         }
 
@@ -803,9 +820,9 @@ namespace CairoDesktop
 
             EnvironmentHelper.IsAppConfiguredAsShell = !EnvironmentHelper.IsAppConfiguredAsShell;
 
-            CairoMessage.ShowOkCancel(Localization.DisplayString.sSettings_Advanced_ShellChangedText,
-                Localization.DisplayString.sSettings_Advanced_ShellChanged, CairoMessageImage.LogOff,
-                Localization.DisplayString.sSettings_Advanced_LogOffNow, Localization.DisplayString.sSettings_Advanced_LogOffLater,
+            CairoMessage.ShowOkCancel(Common.Localization.DisplayString.sSettings_Advanced_ShellChangedText,
+                Common.Localization.DisplayString.sSettings_Advanced_ShellChanged, CairoMessageImage.LogOff,
+                Common.Localization.DisplayString.sSettings_Advanced_LogOffNow, Common.Localization.DisplayString.sSettings_Advanced_LogOffLater,
                 result =>
                 {
                     if (result == true)
@@ -815,7 +832,7 @@ namespace CairoDesktop
 
         private void btnOpenLogsFolder_OnClick(object sender, RoutedEventArgs e)
         {
-            FolderHelper.OpenWithShell("%localappdata%\\Cairo_Development_Team\\Logs");
+            FolderHelper.OpenWithShell(CairoApplication.LogsFolder);
         }
 
         private void chkRunAtLogOn_Click(object sender, RoutedEventArgs e)
@@ -856,7 +873,7 @@ namespace CairoDesktop
             ComboBoxItem windowsDefaultBackgroundItem = new ComboBoxItem()
             {
                 Name = "windowsDefaultBackground",
-                Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_windowsDefaultBackground,
+                Content = Common.Localization.DisplayString.sSettings_Desktop_BackgroundType_windowsDefaultBackground,
                 Tag = windowsImageBackgroundStackPanel
             };
 
@@ -903,22 +920,22 @@ namespace CairoDesktop
                 switch (backgroundStyleItem)
                 {
                     case Desktop.CairoWallpaperStyle.Center:
-                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Center;
+                        display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Center;
                         break;
                     case Desktop.CairoWallpaperStyle.Fill:
-                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Fill;
+                        display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Fill;
                         break;
                     case Desktop.CairoWallpaperStyle.Fit:
-                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Fit;
+                        display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Fit;
                         break;
                     case Desktop.CairoWallpaperStyle.Span:
-                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Span;
+                        display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Span;
                         break;
                     case Desktop.CairoWallpaperStyle.Stretch:
-                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Stretch;
+                        display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Stretch;
                         break;
                     case Desktop.CairoWallpaperStyle.Tile:
-                        display = Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Tile;
+                        display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Tile;
                         break;
                     default:
                         display = backgroundStyleItem.ToString();
@@ -965,7 +982,7 @@ namespace CairoDesktop
                 ComboBoxItem cairoImageWallpaperItem = new ComboBoxItem()
                 {
                     Name = "cairoImageWallpaper",
-                    Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_cairoImageWallpaper,
+                    Content = Common.Localization.DisplayString.sSettings_Desktop_BackgroundType_cairoImageWallpaper,
                     Tag = cairoImageBackgroundStackPanel
                 };
                 cboDesktopBackgroundType.Items.Add(cairoImageWallpaperItem);
@@ -976,7 +993,7 @@ namespace CairoDesktop
                 ComboBoxItem cairoVideoWallpaperItem = new ComboBoxItem()
                 {
                     Name = "cairoVideoWallpaper",
-                    Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_cairoVideoWallpaper,
+                    Content = Common.Localization.DisplayString.sSettings_Desktop_BackgroundType_cairoVideoWallpaper,
                     Tag = cairoVideoBackgroundStackPanel
                 };
                 cboDesktopBackgroundType.Items.Add(cairoVideoWallpaperItem);
@@ -987,7 +1004,7 @@ namespace CairoDesktop
                 ComboBoxItem bingWallpaperItem = new ComboBoxItem()
                 {
                     Name = "bingWallpaper",
-                    Content = Localization.DisplayString.sSettings_Desktop_BackgroundType_bingWallpaper,
+                    Content = Common.Localization.DisplayString.sSettings_Desktop_BackgroundType_bingWallpaper,
                     Tag = bingImageBackgroundStackPanel
                 };
                 cboDesktopBackgroundType.Items.Add(bingWallpaperItem);

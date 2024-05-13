@@ -1,5 +1,5 @@
 ﻿using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.Common.Helpers;
 using System.Windows.Controls;

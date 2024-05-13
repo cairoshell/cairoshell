@@ -1,6 +1,5 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Interop;
-using CairoDesktop.Localization;
+using CairoDesktop.Common.Localization;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;

@@ -4,8 +4,7 @@ using System.Windows;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Configuration;
-using CairoDesktop.Localization;
+using CairoDesktop.Common.Localization;
 using CairoDesktop.Services;
 
 namespace CairoDesktop

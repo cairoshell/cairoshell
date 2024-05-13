@@ -9,9 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj" />
-    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj" />
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
-    <ProjectReference Include="..\CairoDesktop.Localization\CairoDesktop.Localization.csproj" />
   </ItemGroup>
 
   <ItemGroup>

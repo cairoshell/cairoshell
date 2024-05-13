@@ -1,12 +1,7 @@
-﻿using CairoDesktop.Services;
-using ManagedShell.Common.Logging;
+﻿using ManagedShell.Common.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CairoDesktop.SupportingClasses
 {
@@ -17,7 +12,6 @@ namespace CairoDesktop.SupportingClasses
         private const string REGISTRY_KEY = @"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Accent";
 
         private readonly ManagementEventWatcher _watcher;
-        private readonly CairoApplicationThemeService _themeService;
         private EventArrivedEventHandler _handler;
         private bool _running = false;
         private bool disposed = false;

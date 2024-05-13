@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Configuration;
+using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.ObjectModel;
 
 namespace CairoDesktop.MenuBarExtensions

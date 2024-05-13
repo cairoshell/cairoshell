@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using CairoDesktop.Common;
+using CairoDesktop.Common.Localization;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 
@@ -74,7 +76,7 @@ namespace CairoDesktop.AppGrabber
             get
             {
                 if (IsStoreApp)
-                    return Localization.DisplayString.sProgramsMenu;
+                    return DisplayString.sProgramsMenu;
                 else
                 {
                     try
@@ -242,7 +244,7 @@ namespace CairoDesktop.AppGrabber
         private ImageSource GetAssociatedIcon()
         {
             IconSize size = IconSize.Small;
-            if (Category != null && Category.Type == AppCategoryType.QuickLaunch && (IconSize)Configuration.Settings.Instance.TaskbarIconSize != IconSize.Small)
+            if (Category != null && Category.Type == AppCategoryType.QuickLaunch && Settings.Instance.TaskbarIconSize != IconSize.Small)
                 size = IconSize.Large;
 
             return GetIconImageSource(size);

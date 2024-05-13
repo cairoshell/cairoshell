@@ -1,4 +1,4 @@
-﻿using CairoDesktop.Localization;
+﻿using CairoDesktop.Common.Localization;
 using System;
 using ManagedShell.Common.Helpers;
 
