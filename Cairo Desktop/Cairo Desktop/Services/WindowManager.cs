@@ -180,7 +180,12 @@ namespace CairoDesktop.Services
                     else
                     {
                         // if this is only a DPI change, screens will be the same but we still need to reposition
-                        RefreshWindows(reason, false);
+                        RefreshWindows(new WindowManagerEventArgs
+                        {
+                            DisplaysChanged = false,
+                            IsFastSetup = false,
+                            Reason = reason
+                        });
                     }
 
                     pendingDisplayEvents--;
@@ -226,7 +231,12 @@ namespace CairoDesktop.Services
             // if we have 1 display before and after, skip setup and just refresh with new primary screen information
             if (openScreens.Count == 1 && sysScreens.Count == 1)
             {
-                RefreshWindows(reason, true);
+                RefreshWindows(new WindowManagerEventArgs
+                {
+                    DisplaysChanged = true,
+                    IsFastSetup = true,
+                    Reason = reason
+                });
 
                 _logger.LogDebug("Completed fast display setup");
                 return;
@@ -263,7 +273,12 @@ namespace CairoDesktop.Services
                 ProcessRemovedScreens(removedScreens);
 
                 // refresh existing window screen properties with updated screen information
-                RefreshWindows(reason, true);
+                RefreshWindows(new WindowManagerEventArgs
+                {
+                    DisplaysChanged = true,
+                    IsFastSetup = false,
+                    Reason = reason
+                });
             }
 
             // open windows on newly added screens
@@ -317,11 +332,9 @@ namespace CairoDesktop.Services
             }
         }
 
-        private void RefreshWindows(ScreenSetupReason reason, bool displaysChanged)
+        private void RefreshWindows(WindowManagerEventArgs args)
         {
             _logger.LogDebug("Refreshing screen information for existing windows");
-
-            WindowManagerEventArgs args = new WindowManagerEventArgs { DisplaysChanged = displaysChanged, Reason = reason };
 
             foreach (var windowService in _windowServices)
             {
