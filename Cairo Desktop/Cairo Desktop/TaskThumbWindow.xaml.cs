@@ -38,6 +38,11 @@ namespace CairoDesktop
             }
         }
 
+        public AppBarEdge AppBarEdge
+        {
+            get => Settings.Instance.TaskbarEdge;
+        }
+
         internal TaskButton TaskButton;
         internal bool IsAnimating = true;
         internal bool IsDwmEnabled;

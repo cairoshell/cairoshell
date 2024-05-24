@@ -391,6 +391,7 @@ namespace CairoDesktop
                     setTaskbarDesktopOverlayButton();
                     break;
                 case "EnableMenuBarAutoHide":
+                case "EnableMenuBarMultiMon":
                     if (!EnvironmentHelper.IsAppRunningAsShell && AppBarMode == AppBarMode.Normal && AppBarEdge == Settings.Instance.MenuBarEdge)
                     {
                         // Allow the system to correctly order the appbars
