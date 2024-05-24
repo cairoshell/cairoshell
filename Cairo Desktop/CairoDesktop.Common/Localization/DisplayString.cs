@@ -581,7 +581,7 @@ namespace CairoDesktop.Common.Localization
 
         public static string sSettings_Taskbar_EnableTaskbar => getString();
 
-        public static string sSettings_Taskbar_TaskbarPosition => getString();
+        public static string sSettings_Taskbar_TaskbarEdge => getString();
 
         public static string sSettings_PositionBottom => getString();
 

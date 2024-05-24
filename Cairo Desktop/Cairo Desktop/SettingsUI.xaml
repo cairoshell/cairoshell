@@ -392,13 +392,13 @@
                                    Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoMenuBarEdge"
-                                         Name="radMenuBarEdge0"
-                                         Click="radMenuBarEdge0_Click">
+                                         Name="radMenuBarEdgeTop"
+                                         Click="radMenuBarEdgeTop_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_PositionTop)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoMenuBarEdge"
-                                         Name="radMenuBarEdge1"
-                                         Click="radMenuBarEdge1_Click">
+                                         Name="radMenuBarEdgeBottom"
+                                         Click="radMenuBarEdgeBottom_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_PositionBottom)}" />
                             </RadioButton>
                         </StackPanel>
@@ -719,19 +719,19 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_TaskbarPosition)}"
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_TaskbarEdge)}"
                                    VerticalAlignment="Top"
                                    Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarPos"
-                                         Name="radTaskbarPos0"
-                                         Click="radTaskbarPos0_Click">
-                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_PositionBottom)}" />
+                                         Name="radTaskbarPosTop"
+                                         Click="radTaskbarPosTop_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_PositionTop)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoTaskbarPos"
-                                         Name="radTaskbarPos1"
-                                         Click="radTaskbarPos1_Click">
-                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_PositionTop)}" />
+                                         Name="radTaskbarPosBottom"
+                                         Click="radTaskbarPosBottom_Click">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sSettings_PositionBottom)}" />
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>

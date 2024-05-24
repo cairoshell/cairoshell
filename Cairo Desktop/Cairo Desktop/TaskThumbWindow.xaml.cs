@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using CairoDesktop.Common;
+using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
@@ -64,7 +65,7 @@ namespace CairoDesktop
             handle = helper.Handle;
             WindowHelper.HideWindowFromTasks(handle);
 
-            if (Settings.Instance.TaskbarPosition == 1)
+            if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
             {
                 // taskbar on top
                 bdrThumb.Style = FindResource("TaskThumbWindowBorderTopStyle") as Style;
@@ -97,7 +98,7 @@ namespace CairoDesktop
 
             Point taskButtonPoint = TaskButton.GetThumbnailAnchor();
 
-            if (Settings.Instance.TaskbarPosition == 1)
+            if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
             {
                 // taskbar on top
                 Top = taskButtonPoint.Y + TaskButton.ActualHeight;

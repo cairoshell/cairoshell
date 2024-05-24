@@ -82,7 +82,7 @@ namespace CairoDesktop
                 case "MenuBarEdge":
                 case "ProgramsMenuLayout":
                 case "TaskbarMode":
-                case "TaskbarPosition":
+                case "TaskbarEdge":
                 case "TaskbarIconSize":
                 case "TaskbarMiddleClick":
                 case "TaskbarGroupingStyle":
@@ -126,12 +126,12 @@ namespace CairoDesktop
             switch (Settings.Instance.MenuBarEdge)
             {
                 case AppBarEdge.Top:
-                    radMenuBarEdge0.IsChecked = true;
-                    radMenuBarEdge1.IsChecked = false;
+                    radMenuBarEdgeTop.IsChecked = true;
+                    radMenuBarEdgeBottom.IsChecked = false;
                     break;
                 case AppBarEdge.Bottom:
-                    radMenuBarEdge0.IsChecked = false;
-                    radMenuBarEdge1.IsChecked = true;
+                    radMenuBarEdgeTop.IsChecked = false;
+                    radMenuBarEdgeBottom.IsChecked = true;
                     break;
                 default:
                     break;
@@ -172,15 +172,15 @@ namespace CairoDesktop
                     break;
             }
 
-            switch (Settings.Instance.TaskbarPosition)
+            switch (Settings.Instance.TaskbarEdge)
             {
-                case 0:
-                    radTaskbarPos0.IsChecked = true;
-                    radTaskbarPos1.IsChecked = false;
+                case AppBarEdge.Bottom:
+                    radTaskbarPosBottom.IsChecked = true;
+                    radTaskbarPosTop.IsChecked = false;
                     break;
-                case 1:
-                    radTaskbarPos0.IsChecked = false;
-                    radTaskbarPos1.IsChecked = true;
+                case AppBarEdge.Top:
+                    radTaskbarPosBottom.IsChecked = false;
+                    radTaskbarPosTop.IsChecked = true;
                     break;
                 default:
                     break;
@@ -680,12 +680,12 @@ namespace CairoDesktop
             }
         }
 
-        private void radMenuBarEdge0_Click(object sender, RoutedEventArgs e)
+        private void radMenuBarEdgeTop_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.MenuBarEdge = AppBarEdge.Top;
         }
 
-        private void radMenuBarEdge1_Click(object sender, RoutedEventArgs e)
+        private void radMenuBarEdgeBottom_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.MenuBarEdge = AppBarEdge.Bottom;
         }
@@ -715,14 +715,14 @@ namespace CairoDesktop
             Settings.Instance.TaskbarMode = 2;
         }
 
-        private void radTaskbarPos0_Click(object sender, RoutedEventArgs e)
+        private void radTaskbarPosBottom_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarPosition = 0;
+            Settings.Instance.TaskbarEdge = AppBarEdge.Bottom;
         }
 
-        private void radTaskbarPos1_Click(object sender, RoutedEventArgs e)
+        private void radTaskbarPosTop_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarPosition = 1;
+            Settings.Instance.TaskbarEdge = AppBarEdge.Top;
         }
 
         private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)

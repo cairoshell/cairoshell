@@ -241,7 +241,7 @@ namespace CairoDesktop.Common
             {
                 if (_taskbarMode != value)
                 {
-                    if (value == 2 && EnableMenuBarAutoHide && ((TaskbarPosition == 1 && MenuBarEdge == AppBarEdge.Top) || (TaskbarPosition == 0 && MenuBarEdge == AppBarEdge.Bottom)))
+                    if (value == 2 && EnableMenuBarAutoHide && TaskbarEdge == MenuBarEdge)
                     {
                         // We cannot have multiple auto-hide bars on the same screen edge
                         EnableMenuBarAutoHide = false;
@@ -252,21 +252,27 @@ namespace CairoDesktop.Common
             }
         }
 
-        private int _taskbarPosition;
-        public int TaskbarPosition
+        private AppBarEdge _TaskbarEdge = AppBarEdge.Bottom;
+        public AppBarEdge TaskbarEdge
         {
-            get => _taskbarPosition;
+            get => _TaskbarEdge;
             set
             {
-                if (_taskbarPosition != value)
+                if (_TaskbarEdge != value)
                 {
-                    if (EnableMenuBarAutoHide && TaskbarMode == 2 && ((value == 1 && MenuBarEdge == AppBarEdge.Top) || (value == 0 && MenuBarEdge == AppBarEdge.Bottom)))
+                    if (value == AppBarEdge.Left || value == AppBarEdge.Right)
+                    {
+                        // Vertical orientation is not supported
+                        return;
+                    }
+
+                    if (EnableMenuBarAutoHide && TaskbarMode == 2 && value == MenuBarEdge)
                     {
                         // We cannot have multiple auto-hide bars on the same screen edge
                         EnableMenuBarAutoHide = false;
                     }
 
-                    Set(ref _taskbarPosition, value);
+                    SetEnum(ref _TaskbarEdge, value);
                 }
             }
         }
@@ -470,10 +476,10 @@ namespace CairoDesktop.Common
             {
                 if (_enableMenuBarAutoHide != value)
                 {
-                    if (value && ((TaskbarPosition == 1 && MenuBarEdge == AppBarEdge.Top) || (TaskbarPosition == 0 && MenuBarEdge == AppBarEdge.Bottom)) && TaskbarMode == 2)
+                    if (value && TaskbarEdge == MenuBarEdge && TaskbarMode == 2)
                     {
                         // We cannot have multiple auto-hide bars on the same screen edge
-                        TaskbarPosition = MenuBarEdge == AppBarEdge.Top ? 0 : 1;
+                        TaskbarEdge = MenuBarEdge == AppBarEdge.Top ? AppBarEdge.Bottom : AppBarEdge.Top;
                     }
 
                     Set(ref _enableMenuBarAutoHide, value);
@@ -489,7 +495,13 @@ namespace CairoDesktop.Common
             {
                 if (_menuBarEdge != value)
                 {
-                    if (EnableMenuBarAutoHide && ((TaskbarPosition == 1 && value == AppBarEdge.Top) || (TaskbarPosition == 0 && value == AppBarEdge.Bottom)) && TaskbarMode == 2)
+                    if (value == AppBarEdge.Left || value == AppBarEdge.Right)
+                    {
+                        // Vertical orientation is not supported
+                        return;
+                    }
+
+                    if (EnableMenuBarAutoHide && TaskbarEdge == value && TaskbarMode == 2)
                     {
                         // We cannot have multiple auto-hide bars on the same screen edge
                         EnableMenuBarAutoHide = false;
@@ -592,7 +604,7 @@ namespace CairoDesktop.Common
             TaskbarMode = legacySettings.TaskbarMode;
             SysTrayAlwaysExpanded = legacySettings.SysTrayAlwaysExpanded;
             DefaultProgramsCategory = legacySettings.DefaultProgramsCategory;
-            TaskbarPosition = legacySettings.TaskbarPosition;
+            TaskbarEdge = legacySettings.TaskbarPosition == 1 ? AppBarEdge.Top : AppBarEdge.Bottom;
             DesktopLabelPosition = legacySettings.DesktopLabelPosition;
             DesktopIconSize = (IconSize)legacySettings.DesktopIconSize;
             ForceSoftwareRendering = legacySettings.ForceSoftwareRendering;
