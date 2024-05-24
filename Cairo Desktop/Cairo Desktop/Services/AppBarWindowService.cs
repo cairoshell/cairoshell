@@ -71,7 +71,7 @@ namespace CairoDesktop.Services
                 return;
             }
 
-            if (EnableMultiMon)
+            if (EnableMultiMon && !args.IsFastSetup)
             {
                 foreach (AppBarScreen screen in _windowManager.ScreenState)
                 {
