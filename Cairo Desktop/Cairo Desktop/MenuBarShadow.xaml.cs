@@ -63,13 +63,7 @@ namespace CairoDesktop
                 }
                 else
                 {
-                    // reset properties so we actually reposition
-                    Top = 0;
-
-                    Top = desiredTop;
-                    Left = desiredLeft;
-                    Height = desiredHeight;
-                    Width = desiredWidth;
+                    NativeMethods.SetWindowPos(Handle, IntPtr.Zero, Convert.ToInt32(desiredLeft * DpiScale), Convert.ToInt32(desiredTop * DpiScale), Convert.ToInt32(desiredWidth * DpiScale), Convert.ToInt32(desiredHeight * DpiScale), (int)NativeMethods.SetWindowPosFlags.SWP_NOZORDER | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
                 }
 
                 if (_menuBar.AppBarEdge == ManagedShell.AppBar.AppBarEdge.Bottom && ShadowImage.RenderTransform != _verticalFlipTransform)
