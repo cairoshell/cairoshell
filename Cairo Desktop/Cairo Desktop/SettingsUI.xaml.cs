@@ -23,6 +23,7 @@ using ManagedShell.Common.Logging;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using ManagedShell.Common.Enums;
 using CairoDesktop.Services;
+using ManagedShell.AppBar;
 
 namespace CairoDesktop
 {
@@ -78,6 +79,7 @@ namespace CairoDesktop
             {
                 case "DesktopLabelPosition":
                 case "DesktopIconSize":
+                case "MenuBarEdge":
                 case "ProgramsMenuLayout":
                 case "TaskbarMode":
                 case "TaskbarPosition":
@@ -107,7 +109,7 @@ namespace CairoDesktop
                     break;
             }
 
-            switch ((IconSize)Settings.Instance.DesktopIconSize)
+            switch (Settings.Instance.DesktopIconSize)
             {
                 case IconSize.Large:
                     radDesktopIconSize0.IsChecked = true;
@@ -116,6 +118,20 @@ namespace CairoDesktop
                 case IconSize.ExtraLarge:
                     radDesktopIconSize0.IsChecked = false;
                     radDesktopIconSize2.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (Settings.Instance.MenuBarEdge)
+            {
+                case AppBarEdge.Top:
+                    radMenuBarEdge0.IsChecked = true;
+                    radMenuBarEdge1.IsChecked = false;
+                    break;
+                case AppBarEdge.Bottom:
+                    radMenuBarEdge0.IsChecked = false;
+                    radMenuBarEdge1.IsChecked = true;
                     break;
                 default:
                     break;
@@ -170,7 +186,7 @@ namespace CairoDesktop
                     break;
             }
 
-            switch ((IconSize)Settings.Instance.TaskbarIconSize)
+            switch (Settings.Instance.TaskbarIconSize)
             {
                 case IconSize.Large:
                     radTaskbarSize0.IsChecked = true;
@@ -662,6 +678,16 @@ namespace CairoDesktop
                     txtDesktopHome.Text = fbd.SelectedPath;
                 }
             }
+        }
+
+        private void radMenuBarEdge0_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.MenuBarEdge = AppBarEdge.Top;
+        }
+
+        private void radMenuBarEdge1_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.MenuBarEdge = AppBarEdge.Bottom;
         }
 
         private void radProgramsMenuLayout0_Click(object sender, RoutedEventArgs e)
