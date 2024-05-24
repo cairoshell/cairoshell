@@ -226,7 +226,7 @@ namespace CairoDesktop
         private int getAddToSize()
         {
             int addToSize = 0;
-            switch ((IconSize)Settings.Instance.TaskbarIconSize)
+            switch (Settings.Instance.TaskbarIconSize)
             {
                 case IconSize.Large:
                     addToSize = 16;
@@ -366,12 +366,22 @@ namespace CairoDesktop
                     SetDesktopPosition();
                     setTaskbarBlur();
                     break;
+                case "MenuBarEdge":
                 case "TaskbarPosition":
-                    PeekDuringAutoHide();
-                    setupTaskbarAppearance();
-                    SetScreenPosition();
-                    if (AppBarMode == AppBarMode.None) SetDesktopPosition();
-                    if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
+                    if (e.PropertyName == "TaskbarPosition" || EnvironmentHelper.IsAppRunningAsShell || AppBarMode != AppBarMode.Normal)
+                    {
+                        PeekDuringAutoHide();
+                        setupTaskbarAppearance();
+                        SetScreenPosition();
+                        if (AppBarMode == AppBarMode.None) SetDesktopPosition();
+                        if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
+                    }
+                    else if (e.PropertyName == "MenuBarEdge" && !EnvironmentHelper.IsAppRunningAsShell && AppBarMode == AppBarMode.Normal)
+                    {
+                        // Allow the system to correctly order the appbars
+                        AppBarMode = AppBarMode.None;
+                        AppBarMode = AppBarMode.Normal;
+                    }
                     break;
                 case "FullWidthTaskBar":
                     PeekDuringAutoHide();
@@ -379,6 +389,14 @@ namespace CairoDesktop
                     break;
                 case "EnableDesktop":
                     setTaskbarDesktopOverlayButton();
+                    break;
+                case "EnableMenuBarAutoHide":
+                    if (!EnvironmentHelper.IsAppRunningAsShell && AppBarMode == AppBarMode.Normal && AppBarEdge == Settings.Instance.MenuBarEdge)
+                    {
+                        // Allow the system to correctly order the appbars
+                        AppBarMode = AppBarMode.None;
+                        AppBarMode = AppBarMode.Normal;
+                    }
                     break;
                 case "EnableMenuBarBlur":
                     setTaskbarBlur();

@@ -16,5 +16,8 @@
     Background="Transparent"
     Loaded="MenuBarShadow_Loaded"
     Closing="Window_Closing">
-    <Image Source="{StaticResource MenubarShadow}" Stretch="Fill" />
+    <Image Source="{StaticResource MenubarShadow}"
+           Stretch="Fill"
+           RenderTransformOrigin="0.5,0.5"
+           x:Name="ShadowImage" />
 </Window>

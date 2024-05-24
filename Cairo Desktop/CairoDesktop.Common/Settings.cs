@@ -1,4 +1,5 @@
 ﻿using CairoDesktop.Common.Logging;
+using ManagedShell.AppBar;
 using ManagedShell.Common.Enums;
 using ManagedShell.WindowsTray;
 using System;
@@ -240,7 +241,7 @@ namespace CairoDesktop.Common
             {
                 if (_taskbarMode != value)
                 {
-                    if (value == 2 && EnableMenuBarAutoHide && TaskbarPosition == 1)
+                    if (value == 2 && EnableMenuBarAutoHide && ((TaskbarPosition == 1 && MenuBarEdge == AppBarEdge.Top) || (TaskbarPosition == 0 && MenuBarEdge == AppBarEdge.Bottom)))
                     {
                         // We cannot have multiple auto-hide bars on the same screen edge
                         EnableMenuBarAutoHide = false;
@@ -259,7 +260,7 @@ namespace CairoDesktop.Common
             {
                 if (_taskbarPosition != value)
                 {
-                    if (value == 1 && EnableMenuBarAutoHide && TaskbarMode == 2)
+                    if (EnableMenuBarAutoHide && TaskbarMode == 2 && ((value == 1 && MenuBarEdge == AppBarEdge.Top) || (value == 0 && MenuBarEdge == AppBarEdge.Bottom)))
                     {
                         // We cannot have multiple auto-hide bars on the same screen edge
                         EnableMenuBarAutoHide = false;
@@ -469,13 +470,32 @@ namespace CairoDesktop.Common
             {
                 if (_enableMenuBarAutoHide != value)
                 {
-                    if (value && TaskbarPosition == 1 && TaskbarMode == 2)
+                    if (value && ((TaskbarPosition == 1 && MenuBarEdge == AppBarEdge.Top) || (TaskbarPosition == 0 && MenuBarEdge == AppBarEdge.Bottom)) && TaskbarMode == 2)
                     {
                         // We cannot have multiple auto-hide bars on the same screen edge
-                        TaskbarPosition = 0;
+                        TaskbarPosition = MenuBarEdge == AppBarEdge.Top ? 0 : 1;
                     }
 
                     Set(ref _enableMenuBarAutoHide, value);
+                }
+            }
+        }
+
+        private AppBarEdge _menuBarEdge = AppBarEdge.Top;
+        public AppBarEdge MenuBarEdge
+        {
+            get => _menuBarEdge;
+            set
+            {
+                if (_menuBarEdge != value)
+                {
+                    if (EnableMenuBarAutoHide && ((TaskbarPosition == 1 && value == AppBarEdge.Top) || (TaskbarPosition == 0 && value == AppBarEdge.Bottom)) && TaskbarMode == 2)
+                    {
+                        // We cannot have multiple auto-hide bars on the same screen edge
+                        EnableMenuBarAutoHide = false;
+                    }
+
+                    SetEnum(ref _menuBarEdge, value);
                 }
             }
         }

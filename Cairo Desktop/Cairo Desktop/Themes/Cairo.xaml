@@ -92,6 +92,12 @@
                       Direction="270"
                       Opacity="0.6"
                       BlurRadius="10" />
+	<DropShadowEffect x:Key="MenuShadowBottom"
+                      Color="Black"
+                      ShadowDepth="4"
+                      Direction="90"
+                      Opacity="0.6"
+                      BlurRadius="10" />
     <DropShadowEffect Color="Black"
                       x:Key="MenuHeaderShadow"
                       ShadowDepth="1"
@@ -679,6 +685,19 @@
                 Value="5,0,5,11" />
         <Setter Property="Effect"
                 Value="{DynamicResource ResourceKey=MenuShadow}" />
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                         Value="Bottom">
+				<DataTrigger.Setters>
+					<Setter Property="BorderThickness"
+							Value="0,0,0,1" />
+					<Setter Property="Margin"
+							Value="5,11,5,0" />
+					<Setter Property="Effect"
+							Value="{DynamicResource ResourceKey=MenuShadowBottom}" />
+				</DataTrigger.Setters>
+			</DataTrigger>
+		</Style.Triggers>
     </Style>
     <Style x:Key="CairoMenuInnerBorderStyle"
            TargetType="{x:Type Border}">
@@ -692,6 +711,17 @@
                 Value="0,0,5,5" />
         <Setter Property="Padding"
                 Value="0,3,0,3" />
+		<Style.Triggers>
+			<DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                         Value="Bottom">
+				<DataTrigger.Setters>
+					<Setter Property="BorderThickness"
+							Value="1,1,1,0" />
+					<Setter Property="CornerRadius"
+							Value="5,5,0,0" />
+				</DataTrigger.Setters>
+			</DataTrigger>
+		</Style.Triggers>
     </Style>
     <Style x:Key="{x:Type MenuItem}"
            TargetType="{x:Type MenuItem}">
@@ -978,91 +1008,99 @@
     </Style>
     <Style x:Key="CairoMenuItemCairoMenuStyle"
            TargetType="{x:Type MenuItem}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type MenuItem}">
-                    <Border x:Name="ContainerBorder"
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type MenuItem}">
+					<Border x:Name="ContainerBorder"
                             Background="Transparent"
                             BorderBrush="Transparent"
                             Padding="13,0,0,0">
-                        <Border x:Name="Border">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"
+						<Border x:Name="Border">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto"
                                                       SharedSizeGroup="MenuTextColumnGroup" />
-                                </Grid.ColumnDefinitions>
-                                <!-- Content for the menu text etc -->
-                                <ContentPresenter Grid.Column="0"
+								</Grid.ColumnDefinitions>
+								<!-- Content for the menu text etc -->
+								<ContentPresenter Grid.Column="0"
                                                   Margin="{TemplateBinding Padding}"
                                                   x:Name="HeaderHost"
                                                   RecognizesAccessKey="True"
                                                   ContentSource="Header" />
-                                <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
-                                <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+								<!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
+								<Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
                                        Placement="Right"
                                        x:Name="SubMenuPopup"
                                        Focusable="false"
                                        PopupAnimation="Fade"
                                        AllowsTransparency="True">
-                                    <Border x:Name="SubMenuBorderTop"
-                                            Style="{StaticResource ResourceKey=CairoMenuBorderStyle}"
-                                            Margin="11,0,5,11">
-                                        <Border x:Name="SubMenuBorder"
-                                                Style="{StaticResource ResourceKey=CairoMenuInnerBorderStyle}">
-                                            <Grid x:Name="SubMenu"
-                                                  Grid.IsSharedSizeScope="True">
-                                                <StackPanel IsItemsHost="True"
-                                                            KeyboardNavigation.DirectionalNavigation="Cycle" />
-                                            </Grid>
-                                        </Border>
-                                    </Border>
-                                </Popup>
-                            </Grid>
-                        </Border>
-                    </Border>
-                    <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
-                    <ControlTemplate.Triggers>
-                        <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
-                        <Trigger Property="Role"
+									<Border x:Name="SubMenuBorderTop"
+											Style="{StaticResource ResourceKey=CairoMenuBorderStyle}"
+											Margin="11,0,5,11">
+										<Border x:Name="SubMenuBorder"
+												Style="{StaticResource ResourceKey=CairoMenuInnerBorderStyle}">
+											<Grid x:Name="SubMenu"
+												  Grid.IsSharedSizeScope="True">
+												<StackPanel IsItemsHost="True"
+															KeyboardNavigation.DirectionalNavigation="Cycle" />
+											</Grid>
+										</Border>
+									</Border>
+								</Popup>
+							</Grid>
+						</Border>
+					</Border>
+					<!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+									 Value="Bottom">
+							<DataTrigger.Setters>
+								<Setter Property="Margin"
+										TargetName="SubMenuBorderTop"
+										Value="11,11,5,0" />
+							</DataTrigger.Setters>
+						</DataTrigger>
+						<!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
+						<Trigger Property="Role"
                                  Value="TopLevelHeader">
-                            <Setter Property="Padding"
+							<Setter Property="Padding"
                                     Value="2,0,2,0" />
-                            <Setter Property="Margin"
+							<Setter Property="Margin"
                                     Value="0,-2,0,0" />
-                            <Setter Property="Placement"
+							<Setter Property="Placement"
                                     Value="Bottom"
                                     TargetName="SubMenuPopup" />
-                            <Setter Property="Height"
+							<Setter Property="Height"
                                     Value="22" />
-                        </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="Role"
+						</Trigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="Role"
                                            Value="TopLevelHeader" />
-                                <Condition Property="IsMouseOver"
+								<Condition Property="IsMouseOver"
                                            Value="True" />
-                                <Condition Property="IsSubmenuOpen"
+								<Condition Property="IsSubmenuOpen"
                                            Value="False" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background"
+							</MultiTrigger.Conditions>
+							<Setter Property="Background"
                                     TargetName="Border"
                                     Value="{DynamicResource ResourceKey=MenuHeaderHoverBackground}" />
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="Role"
+						</MultiTrigger>
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="Role"
                                            Value="TopLevelHeader" />
-                                <Condition Property="IsSubmenuOpen"
+								<Condition Property="IsSubmenuOpen"
                                            Value="True" />
-                            </MultiTrigger.Conditions>
-                            <Setter Property="Background"
+							</MultiTrigger.Conditions>
+							<Setter Property="Background"
                                     TargetName="Border"
                                     Value="{DynamicResource ResourceKey=MenuHeaderPressedGradient}" />
-                        </MultiTrigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+						</MultiTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
     </Style>
     <Style x:Key="CairoMenuItemButtonMenuStyle"
            TargetType="{x:Type MenuItem}">
@@ -1149,7 +1187,8 @@
                                        Focusable="False"
                                        PopupAnimation="Fade"
                                        AllowsTransparency="True">
-                                    <Border Margin="5,0,13,11">
+                                    <Border Margin="5,0,13,11"
+											x:Name="SearchMenuContent">
                                         <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
                                         <StackPanel IsItemsHost="True"
                                                     KeyboardNavigation.DirectionalNavigation="Cycle" />
@@ -1161,6 +1200,17 @@
                                                         Value="0,1,0,0" />
                                                 <Setter Property="Effect"
                                                         Value="{DynamicResource ResourceKey=MenuShadow}" />
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+																 Value="Bottom">
+														<DataTrigger.Setters>
+															<Setter Property="BorderThickness"
+																	Value="0,0,0,1" />
+															<Setter Property="Effect"
+																	Value="{DynamicResource ResourceKey=MenuShadowBottom}" />
+														</DataTrigger.Setters>
+													</DataTrigger>
+												</Style.Triggers>
                                             </Style>
                                         </Border.Style>
                                     </Border>
@@ -1170,6 +1220,14 @@
                     </Border>
                     <!-- These triggers re-configure the four arrangements of MenuItem to show different levels of menu via Role -->
                     <ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+									 Value="Bottom">
+							<DataTrigger.Setters>
+								<Setter Property="Margin"
+										TargetName="SearchMenuContent"
+										Value="5,11,13,0" />
+							</DataTrigger.Setters>
+						</DataTrigger>
                         <!-- Role = TopLevelHeader : this is the root menu item in a menu; the Popup expands down -->
                         <Trigger Property="Role"
                                  Value="TopLevelHeader">
@@ -1389,6 +1447,8 @@
                 Value="true" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
+		<Setter Property="DockPanel.Dock"
+				Value="Top"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -1422,6 +1482,13 @@
                 <Setter Property="Visibility"
                         Value="Collapsed" />
             </DataTrigger>
+			<DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+				 Value="Bottom">
+				<DataTrigger.Setters>
+					<Setter Property="DockPanel.Dock"
+							Value="Bottom"/>
+				</DataTrigger.Setters>
+			</DataTrigger>
         </Style.Triggers>
     </Style>
 
@@ -2354,7 +2421,32 @@
                                    Focusable="false"
                                    PopupAnimation="Slide"
                                    AllowsTransparency="True">
-                                <StackPanel>
+                                <DockPanel>
+									<Image Source="{StaticResource MenubarShadow}"
+										   RenderTransformOrigin="0.5,0.5"
+                                           Stretch="Fill"
+                                           Height="16">
+										<Image.Style>
+											<Style TargetType="{x:Type Image}">
+												<Setter Property="DockPanel.Dock"
+														Value="Bottom" />
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+																 Value="Bottom">
+														<DataTrigger.Setters>
+															<Setter Property="DockPanel.Dock"
+																	Value="Top" />
+															<Setter Property="RenderTransform">
+																<Setter.Value>
+																	<ScaleTransform ScaleY="-1" />
+																</Setter.Value>
+															</Setter>
+														</DataTrigger.Setters>
+													</DataTrigger>
+												</Style.Triggers>
+											</Style>
+										</Image.Style>
+									</Image>
                                     <Border x:Name="SubMenuBorderTop">
                                         <Border.Style>
                                             <Style TargetType="{x:Type Border}">
@@ -2362,6 +2454,15 @@
                                                         Value="{DynamicResource ResourceKey=MenuTopBorderBrush}" />
                                                 <Setter Property="BorderThickness"
                                                         Value="0,1,0,0" />
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+																 Value="Bottom">
+														<DataTrigger.Setters>
+															<Setter Property="BorderThickness"
+																	Value="0,0,0,1" />
+														</DataTrigger.Setters>
+													</DataTrigger>
+												</Style.Triggers>
                                             </Style>
                                         </Border.Style>
                                         <Border x:Name="SubMenuBorder">
@@ -2375,6 +2476,15 @@
                                                             Value="0,0,0,1" />
                                                     <Setter Property="Padding"
                                                             Value="0" />
+													<Style.Triggers>
+														<DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+																	 Value="Bottom">
+															<DataTrigger.Setters>
+																<Setter Property="BorderThickness"
+																		Value="0,1,0,0" />
+															</DataTrigger.Setters>
+														</DataTrigger>
+													</Style.Triggers>
                                                 </Style>
                                             </Border.Style>
                                             <Grid x:Name="SubMenu"
@@ -2385,10 +2495,7 @@
                                             </Grid>
                                         </Border>
                                     </Border>
-                                    <Image Source="{StaticResource MenubarShadow}"
-                                           Stretch="Fill"
-                                           Height="16" />
-                                </StackPanel>
+                                </DockPanel>
                             </Popup>
                         </Grid>
                     </Border>

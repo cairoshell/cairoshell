@@ -14,7 +14,7 @@
                        Width="38"
                        Height="22" />
             </MenuItem.Header>
-            <StackPanel>
+            <DockPanel>
                 <StackPanel Orientation="Horizontal"
                             FocusManager.FocusedElement="{Binding ElementName=searchStr}"
                             Background="{DynamicResource ResourceKey=SearchTitleBackground}">
@@ -42,8 +42,23 @@
                             </StackPanel>
                         </Border>
                     </StackPanel>
+                    <StackPanel.Style>
+                        <Style TargetType="{x:Type StackPanel}">
+                            <Setter Property="DockPanel.Dock"
+                                                Value="Top"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+									 Value="Bottom">
+                                    <DataTrigger.Setters>
+                                        <Setter Property="DockPanel.Dock"
+                                                Value="Bottom"/>
+                                    </DataTrigger.Setters>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
                 </StackPanel>
-                <StackPanel Orientation="Vertical">
+                <DockPanel>
                     <Button Style="{StaticResource CairoSearchResultsButtonStyle}"
                             Name="btnViewResults"
                             Click="btnViewResults_Click"
@@ -75,8 +90,8 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                </StackPanel>
-            </StackPanel>
+                </DockPanel>
+            </DockPanel>
         </MenuItem>
     </Menu>
 </UserControl>

@@ -6,6 +6,7 @@ using System.Windows.Interop;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Interfaces;
 using ManagedShell.Common.Helpers;
+using System.Windows.Media;
 
 namespace CairoDesktop
 {
@@ -23,6 +24,7 @@ namespace CairoDesktop
         public bool AllowClose;
 
         private IntPtr Handle;
+        private ScaleTransform _verticalFlipTransform = new ScaleTransform(1, -1);
 
         public MenuBarShadow(ICairoApplication cairoApplication, IWindowManager windowManager, MenuBar bar)
         {
@@ -37,9 +39,9 @@ namespace CairoDesktop
         {
             if (_menuBar != null)
             {
-                double desiredTop = _menuBar.Top + _menuBar.ActualHeight;
-                double desiredLeft = _menuBar.Left;
                 double desiredHeight = 14;
+                double desiredTop = _menuBar.AppBarEdge == ManagedShell.AppBar.AppBarEdge.Top ? _menuBar.Top + _menuBar.ActualHeight : _menuBar.Top - desiredHeight;
+                double desiredLeft = _menuBar.Left;
                 double desiredWidth = _menuBar.ActualWidth;
 
                 if (DpiScale != _menuBar.DpiScale)
@@ -68,6 +70,15 @@ namespace CairoDesktop
                     Left = desiredLeft;
                     Height = desiredHeight;
                     Width = desiredWidth;
+                }
+
+                if (_menuBar.AppBarEdge == ManagedShell.AppBar.AppBarEdge.Bottom && ShadowImage.RenderTransform != _verticalFlipTransform)
+                {
+                    ShadowImage.RenderTransform = _verticalFlipTransform;
+                }
+                else if (_menuBar.AppBarEdge != ManagedShell.AppBar.AppBarEdge.Bottom && ShadowImage.RenderTransform == _verticalFlipTransform)
+                {
+                    ShadowImage.RenderTransform = null;
                 }
             }
         }
