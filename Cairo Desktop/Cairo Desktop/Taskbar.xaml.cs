@@ -72,10 +72,10 @@ namespace CairoDesktop
             IWindowManager windowManager, 
             IDesktopManager desktopManager,
             IAppGrabber appGrabber, 
-            AppBarScreen screen, 
-            int edgeSetting,
+            AppBarScreen screen,
+            AppBarEdge edge,
             int modeSetting) 
-            : base(cairoApplication, shellManager, windowManager, screen, edgeSetting, modeSetting, 0)
+            : base(cairoApplication, shellManager, windowManager, screen, edge, modeSetting, 0)
         {
             object taskBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["TaskBarWindowAllowsTransparency"];
             if (taskBarWindowAllowsTransparencyResource is bool resourceValue)
@@ -178,10 +178,10 @@ namespace CairoDesktop
             Left = Screen.Bounds.Left / DpiScale;
             bdrTaskbar.MaxWidth = screenWidth;
             Width = screenWidth;
-            AppBarEdge = SettingToAppBarEdge(Settings.Instance.TaskbarPosition);
+            AppBarEdge = Settings.Instance.TaskbarEdge;
 
             // set taskbar edge based on preference
-            if (Settings.Instance.TaskbarPosition == 1)
+            if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
             {
                 TasksList.Margin = new Thickness(0);
             }
@@ -226,7 +226,7 @@ namespace CairoDesktop
         private int getAddToSize()
         {
             int addToSize = 0;
-            switch ((IconSize)Settings.Instance.TaskbarIconSize)
+            switch (Settings.Instance.TaskbarIconSize)
             {
                 case IconSize.Large:
                     addToSize = 16;
@@ -249,7 +249,7 @@ namespace CairoDesktop
             Height = DesiredHeight;
             Top = getDesiredTopPosition();
 
-            if (Settings.Instance.TaskbarPosition == 1)
+            if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
                 bdrTaskListPopup.Margin = new Thickness(5, Top + Height - 1, 5, 11);
             else
                 bdrTaskListPopup.Margin = new Thickness(5, 0, 5, (Screen.Bounds.Bottom / DpiScale) - Top - 1);
@@ -261,7 +261,7 @@ namespace CairoDesktop
             {
                 bdrTaskbar.Width = getDesiredWidth();
 
-                if (Settings.Instance.TaskbarPosition == 1)
+                if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
                 {
                     bdrTaskbar.Style = FindResource("CairoTaskbarTopFullBorderStyle") as Style;
                     btnDesktopOverlay.Style = FindResource("CairoTaskbarTopFullButtonDesktopOverlay") as Style;
@@ -278,7 +278,7 @@ namespace CairoDesktop
             {
                 bdrTaskbar.Width = double.NaN;
 
-                if (Settings.Instance.TaskbarPosition == 1)
+                if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
                 {
                     bdrTaskbar.Style = FindResource("CairoTaskbarTopBorderStyle") as Style;
                     btnDesktopOverlay.Style = FindResource("CairoTaskbarTopButtonDesktopOverlay") as Style;
@@ -366,12 +366,22 @@ namespace CairoDesktop
                     SetDesktopPosition();
                     setTaskbarBlur();
                     break;
-                case "TaskbarPosition":
-                    PeekDuringAutoHide();
-                    setupTaskbarAppearance();
-                    SetScreenPosition();
-                    if (AppBarMode == AppBarMode.None) SetDesktopPosition();
-                    if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
+                case "MenuBarEdge":
+                case "TaskbarEdge":
+                    if (e.PropertyName == "TaskbarEdge" || EnvironmentHelper.IsAppRunningAsShell || AppBarMode != AppBarMode.Normal)
+                    {
+                        PeekDuringAutoHide();
+                        setupTaskbarAppearance();
+                        SetScreenPosition();
+                        if (AppBarMode == AppBarMode.None) SetDesktopPosition();
+                        if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
+                    }
+                    else if (e.PropertyName == "MenuBarEdge" && !EnvironmentHelper.IsAppRunningAsShell && AppBarMode == AppBarMode.Normal)
+                    {
+                        // Allow the system to correctly order the appbars
+                        AppBarMode = AppBarMode.None;
+                        AppBarMode = AppBarMode.Normal;
+                    }
                     break;
                 case "FullWidthTaskBar":
                     PeekDuringAutoHide();
@@ -379,6 +389,15 @@ namespace CairoDesktop
                     break;
                 case "EnableDesktop":
                     setTaskbarDesktopOverlayButton();
+                    break;
+                case "EnableMenuBarAutoHide":
+                case "EnableMenuBarMultiMon":
+                    if (!EnvironmentHelper.IsAppRunningAsShell && AppBarMode == AppBarMode.Normal && AppBarEdge == Settings.Instance.MenuBarEdge)
+                    {
+                        // Allow the system to correctly order the appbars
+                        AppBarMode = AppBarMode.None;
+                        AppBarMode = AppBarMode.Normal;
+                    }
                     break;
                 case "EnableMenuBarBlur":
                     setTaskbarBlur();
@@ -459,7 +478,7 @@ namespace CairoDesktop
 
         private double getDesiredTopPosition()
         {
-            if (Settings.Instance.TaskbarPosition == 1)
+            if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
             {
                 // set to bottom of this display's menu bar
                 return (Screen.Bounds.Y / DpiScale) + _shellManager.AppBarManager.GetAppBarEdgeWindowsHeight(AppBarEdge, Screen);

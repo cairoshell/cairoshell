@@ -23,6 +23,7 @@ using ManagedShell.Common.Logging;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using ManagedShell.Common.Enums;
 using CairoDesktop.Services;
+using ManagedShell.AppBar;
 
 namespace CairoDesktop
 {
@@ -78,9 +79,10 @@ namespace CairoDesktop
             {
                 case "DesktopLabelPosition":
                 case "DesktopIconSize":
+                case "MenuBarEdge":
                 case "ProgramsMenuLayout":
                 case "TaskbarMode":
-                case "TaskbarPosition":
+                case "TaskbarEdge":
                 case "TaskbarIconSize":
                 case "TaskbarMiddleClick":
                 case "TaskbarGroupingStyle":
@@ -107,7 +109,7 @@ namespace CairoDesktop
                     break;
             }
 
-            switch ((IconSize)Settings.Instance.DesktopIconSize)
+            switch (Settings.Instance.DesktopIconSize)
             {
                 case IconSize.Large:
                     radDesktopIconSize0.IsChecked = true;
@@ -116,6 +118,20 @@ namespace CairoDesktop
                 case IconSize.ExtraLarge:
                     radDesktopIconSize0.IsChecked = false;
                     radDesktopIconSize2.IsChecked = true;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (Settings.Instance.MenuBarEdge)
+            {
+                case AppBarEdge.Top:
+                    radMenuBarEdgeTop.IsChecked = true;
+                    radMenuBarEdgeBottom.IsChecked = false;
+                    break;
+                case AppBarEdge.Bottom:
+                    radMenuBarEdgeTop.IsChecked = false;
+                    radMenuBarEdgeBottom.IsChecked = true;
                     break;
                 default:
                     break;
@@ -156,21 +172,21 @@ namespace CairoDesktop
                     break;
             }
 
-            switch (Settings.Instance.TaskbarPosition)
+            switch (Settings.Instance.TaskbarEdge)
             {
-                case 0:
-                    radTaskbarPos0.IsChecked = true;
-                    radTaskbarPos1.IsChecked = false;
+                case AppBarEdge.Bottom:
+                    radTaskbarPosBottom.IsChecked = true;
+                    radTaskbarPosTop.IsChecked = false;
                     break;
-                case 1:
-                    radTaskbarPos0.IsChecked = false;
-                    radTaskbarPos1.IsChecked = true;
+                case AppBarEdge.Top:
+                    radTaskbarPosBottom.IsChecked = false;
+                    radTaskbarPosTop.IsChecked = true;
                     break;
                 default:
                     break;
             }
 
-            switch ((IconSize)Settings.Instance.TaskbarIconSize)
+            switch (Settings.Instance.TaskbarIconSize)
             {
                 case IconSize.Large:
                     radTaskbarSize0.IsChecked = true;
@@ -664,6 +680,16 @@ namespace CairoDesktop
             }
         }
 
+        private void radMenuBarEdgeTop_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.MenuBarEdge = AppBarEdge.Top;
+        }
+
+        private void radMenuBarEdgeBottom_Click(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.MenuBarEdge = AppBarEdge.Bottom;
+        }
+
         private void radProgramsMenuLayout0_Click(object sender, RoutedEventArgs e)
         {
             Settings.Instance.ProgramsMenuLayout = 0;
@@ -689,14 +715,14 @@ namespace CairoDesktop
             Settings.Instance.TaskbarMode = 2;
         }
 
-        private void radTaskbarPos0_Click(object sender, RoutedEventArgs e)
+        private void radTaskbarPosBottom_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarPosition = 0;
+            Settings.Instance.TaskbarEdge = AppBarEdge.Bottom;
         }
 
-        private void radTaskbarPos1_Click(object sender, RoutedEventArgs e)
+        private void radTaskbarPosTop_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.TaskbarPosition = 1;
+            Settings.Instance.TaskbarEdge = AppBarEdge.Top;
         }
 
         private void radTaskbarSize0_Click(object sender, RoutedEventArgs e)

@@ -172,7 +172,7 @@ namespace CairoDesktop
 
         private void setupShadow()
         {
-            if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarEdge != AppBarEdge.Bottom && AppBarMode != AppBarMode.AutoHide)
+            if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarMode != AppBarMode.AutoHide)
             {
                 shadow = new MenuBarShadow(_cairoApplication, _windowManager, this);
                 shadow.Show();
@@ -463,6 +463,12 @@ namespace CairoDesktop
                         break;
                     case "Theme":
                         PeekDuringAutoHide();
+                        break;
+                    case "MenuBarEdge":
+                        PeekDuringAutoHide();
+                        AppBarEdge = Settings.Instance.MenuBarEdge;
+                        SetScreenPosition();
+                        if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                         break;
                 }
             }

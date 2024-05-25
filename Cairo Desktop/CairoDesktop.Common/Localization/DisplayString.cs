@@ -482,6 +482,8 @@ namespace CairoDesktop.Common.Localization
 
         public static string sSettings_MenuBar_EnableMenuBarShadow => getString();
 
+        public static string sSettings_Taskbar_MenuBarEdge => getString();
+
         public static string sSettings_MenuBar_NotificationArea => getString();
 
         public static string sSettings_MenuBar_EnableNotificationArea => getString();
@@ -579,11 +581,11 @@ namespace CairoDesktop.Common.Localization
 
         public static string sSettings_Taskbar_EnableTaskbar => getString();
 
-        public static string sSettings_Taskbar_TaskbarPosition => getString();
+        public static string sSettings_Taskbar_TaskbarEdge => getString();
 
-        public static string sSettings_Taskbar_PositionBottom => getString();
+        public static string sSettings_PositionBottom => getString();
 
-        public static string sSettings_Taskbar_PositionTop => getString();
+        public static string sSettings_PositionTop => getString();
 
         public static string sSettings_Taskbar_DisplayMode => getString();
 

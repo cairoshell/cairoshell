@@ -13,8 +13,8 @@ namespace CairoDesktop.SupportingClasses
         public CairoAppBarWindow() : base(null, null, null, AppBarScreen.FromPrimaryScreen(), AppBarEdge.Bottom, AppBarMode.Normal, 0)
         { }
 
-        public CairoAppBarWindow(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, AppBarScreen screen, int edgeSetting, int modeSetting, double height) : base(
-            shellManager.AppBarManager, shellManager.ExplorerHelper, shellManager.FullScreenHelper, screen, SettingToAppBarEdge(edgeSetting), SettingToAppBarMode(modeSetting), height)
+        public CairoAppBarWindow(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, AppBarScreen screen, AppBarEdge edge, int modeSetting, double height) : base(
+            shellManager.AppBarManager, shellManager.ExplorerHelper, shellManager.FullScreenHelper, screen, edge, SettingToAppBarMode(modeSetting), height)
         {
             _cairoApplication = cairoApplication;
             _windowManager = windowManager;
@@ -32,19 +32,6 @@ namespace CairoDesktop.SupportingClasses
         protected override void SetScreenProperties(ScreenSetupReason reason)
         {
             _windowManager.NotifyDisplayChange(reason); // update Cairo window list based on new screen setup
-        }
-
-        protected static AppBarEdge SettingToAppBarEdge(int setting)
-        {
-            switch (setting)
-            {
-                case 0:
-                    return AppBarEdge.Bottom;
-                case 1:
-                    return AppBarEdge.Top;
-                default:
-                    return AppBarEdge.Bottom;
-            }
         }
 
         protected static AppBarMode SettingToAppBarMode(int setting)

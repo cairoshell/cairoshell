@@ -47,7 +47,7 @@ namespace CairoDesktop
                 taskbarHeight = (screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale;
 
                 // top TaskBar means we should push down
-                if (Settings.Instance.TaskbarPosition == 1)
+                if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
                 {
                     top = workAreaRect.Top / dpiScale;
                 }

@@ -307,7 +307,7 @@ namespace CairoDesktop
 
                 grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale) - ((screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale);
 
-                if (Settings.Instance.TaskbarPosition == 1)
+                if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
                 {
                     top += (workAreaRect.Top - SystemInformation.WorkingArea.Top) / dpiScale;
                 }
