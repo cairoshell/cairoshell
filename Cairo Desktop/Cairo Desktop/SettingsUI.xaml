@@ -386,7 +386,7 @@
                     </CheckBox>
                     <StackPanel Orientation="Horizontal"
                                 Style="{StaticResource RadioGroup}">
-                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MenuBarEdge)}"
+                        <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_MenuBarEdge)}"
                                    MinWidth="165"
                                    VerticalAlignment="Top"
                                    Margin="5,3,5,4" />

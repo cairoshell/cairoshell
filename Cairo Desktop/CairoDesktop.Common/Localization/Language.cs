@@ -191,7 +191,7 @@ namespace CairoDesktop.Common.Localization
             { "sSettings_MenuBar_DefaultProgramsCategory", "Default programs category:" },
             { "sSettings_MenuBar_EnableMenuBarAutoHide", "Automatically hide the menu bar" },
             { "sSettings_MenuBar_EnableMenuBarShadow", "Enable menu bar shadow" },
-            { "sSettings_Taskbar_MenuBarEdge", "Menu bar position:" },
+            { "sSettings_MenuBar_MenuBarEdge", "Menu bar position:" },
             { "sSettings_MenuBar_NotificationArea", "Notification area" },
             { "sSettings_MenuBar_EnableNotificationArea", "Enable notification area" },
             { "sSettings_MenuBar_NotificationAreaTaskbarWarning", "The Cairo notification area will not be displayed due to the Windows taskbar being visible. To use the Cairo notification area, enable the Cairo taskbar and restart Cairo." },

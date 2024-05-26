@@ -482,7 +482,7 @@ namespace CairoDesktop.Common.Localization
 
         public static string sSettings_MenuBar_EnableMenuBarShadow => getString();
 
-        public static string sSettings_Taskbar_MenuBarEdge => getString();
+        public static string sSettings_MenuBar_MenuBarEdge => getString();
 
         public static string sSettings_MenuBar_NotificationArea => getString();
 
