@@ -1,9 +1,8 @@
-﻿namespace CairoDesktop.Application.Interfaces
-{
-    public interface IShellExtension
-    {
-        void Start();
+﻿namespace CairoDesktop.Application.Interfaces;
 
-        void Stop();
-    }
+public interface IShellExtension
+{
+    void Start();
+
+    void Stop();
 }

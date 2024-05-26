@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Application x:Class="CairoDesktop.CairoApplication"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
 </Application>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Window x:Class="CairoDesktop.AppGrabber.AppGrabberUI"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,15 +9,15 @@
         AllowsTransparency="True"
         WindowStyle="None"
         Background="Transparent"
-        WindowStartupLocation="CenterScreen" 
-        UseLayoutRounding="True" 
+        WindowStartupLocation="CenterScreen"
+        UseLayoutRounding="True"
         ContentRendered="Window_ContentRendered"
         Closing="Window_Closing">
     <Window.Resources>
         <ResourceDictionary Source="AppGrabberUIResources.xaml" />
     </Window.Resources>
     <Window.DataContext>
-        <l10n:DisplayString/>
+        <l10n:DisplayString />
     </Window.DataContext>
     <Grid>
         <Border Style="{StaticResource CairoWindowStyle}">
@@ -24,7 +25,8 @@
         <Border Style="{StaticResource CairoWindowContainer}" Name="bdrLoad">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical">
                 <Image Source="Resources\cairoIcon.png" Width="107" Height="105" Margin="0,0,0,20" />
-                <TextBlock Style="{StaticResource AppGrabberHeading}" HorizontalAlignment="Center" Margin="0" Text="{Binding sAppGrabber_PleaseWait}" />
+                <TextBlock Style="{StaticResource AppGrabberHeading}" HorizontalAlignment="Center" Margin="0"
+                           Text="{Binding sAppGrabber_PleaseWait}" />
             </StackPanel>
         </Border>
         <Border Style="{StaticResource CairoWindowContainer}" Name="bdrMain" Visibility="Collapsed">
@@ -47,65 +49,73 @@
                     <ColumnDefinition Width="32" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Row="1"
-                    Grid.Column="1"
-                    Grid.ColumnSpan="3">
+                            Grid.Column="1"
+                            Grid.ColumnSpan="3">
                     <TextBlock Style="{StaticResource AppGrabberHeading}" Text="{Binding sAppGrabber_Page1Title}" />
                     <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page1Line1}" />
-                    <TextBlock Style="{StaticResource AppGrabberSubText}" Margin="0" Text="{Binding sAppGrabber_Page1Line2}" />
+                    <TextBlock Style="{StaticResource AppGrabberSubText}" Margin="0"
+                               Text="{Binding sAppGrabber_Page1Line2}" />
                 </StackPanel>
                 <Border Grid.Row="3"
-                    Grid.Column="1"
-                    BorderThickness="1"
-                    BorderBrush="#FF888888">
+                        Grid.Column="1"
+                        BorderThickness="1"
+                        BorderBrush="#FF888888">
                     <DockPanel DockPanel.Dock="Top" Style="{StaticResource AppGrabberListBoxHeaderStyle}">
                         <Button DockPanel.Dock="Right" Name="btnBrowse" Click="btnBrowse_Click"
-                            Style="{StaticResource AppGrabberListBoxHeaderTextButtonStyle}"
-                            Margin="0,0,5,0" Content="{Binding sInterface_Browse}" />
+                                Style="{StaticResource AppGrabberListBoxHeaderTextButtonStyle}"
+                                Margin="0,0,5,0" Content="{Binding sInterface_Browse}" />
                         <TextBlock Style="{StaticResource AppGrabberListBoxHeaderTextStyle}"
-                            DockPanel.Dock="Top" Text="{Binding sAppGrabber_ProgramsMenuItems}" />
+                                   DockPanel.Dock="Top" Text="{Binding sAppGrabber_ProgramsMenuItems}" />
                     </DockPanel>
                 </Border>
                 <Border Grid.Row="4"
-                    Grid.Column="1"
-                    BorderThickness="1,0,1,1"
-                    BorderBrush="#FF888888">
+                        Grid.Column="1"
+                        BorderThickness="1,0,1,1"
+                        BorderBrush="#FF888888">
                     <ListView x:Name="ProgramsMenuAppsView"
-                        ItemContainerStyle="{StaticResource ApplicationInfoListItemStyle}"
-                        Style="{StaticResource ApplicationInfoListStyle}"
-                        MouseDoubleClick="ProgramsMenuAppsView_MouseDoubleClick"
-                        Width="330"
-                        AlternationCount="2" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" UseLayoutRounding="True" HorizontalContentAlignment="Stretch" />
+                              ItemContainerStyle="{StaticResource ApplicationInfoListItemStyle}"
+                              Style="{StaticResource ApplicationInfoListStyle}"
+                              MouseDoubleClick="ProgramsMenuAppsView_MouseDoubleClick"
+                              Width="330"
+                              AlternationCount="2" VirtualizingStackPanel.VirtualizationMode="Recycling"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto" UseLayoutRounding="True"
+                              HorizontalContentAlignment="Stretch" />
                 </Border>
                 <Border Grid.Row="3"
-                    Grid.Column="3"
-                    BorderThickness="1"
-                    BorderBrush="#FF888888">
+                        Grid.Column="3"
+                        BorderThickness="1"
+                        BorderBrush="#FF888888">
                     <DockPanel DockPanel.Dock="Top" Style="{StaticResource AppGrabberListBoxHeaderStyleGreen}">
-                        <TextBlock Style="{StaticResource AppGrabberListBoxHeaderTextStyle}" Text="{Binding sAppGrabber_InstalledApplications}" />
+                        <TextBlock Style="{StaticResource AppGrabberListBoxHeaderTextStyle}"
+                                   Text="{Binding sAppGrabber_InstalledApplications}" />
                     </DockPanel>
                 </Border>
                 <Border Grid.Row="4"
-                    Grid.Column="3"
-                    BorderThickness="1,0,1,1"
-                    BorderBrush="#FF888888">
+                        Grid.Column="3"
+                        BorderThickness="1,0,1,1"
+                        BorderBrush="#FF888888">
                     <ListView x:Name="InstalledAppsView"
-                        ItemContainerStyle="{StaticResource ApplicationInfoListItemStyle}"
-                        Style="{StaticResource ApplicationInfoDetailListStyle}"
-                        MouseDoubleClick="InstalledAppsView_MouseDoubleClick"
-                        Width="330"
-                        AlternationCount="2" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" UseLayoutRounding="True" HorizontalContentAlignment="Stretch" />
+                              ItemContainerStyle="{StaticResource ApplicationInfoListItemStyle}"
+                              Style="{StaticResource ApplicationInfoDetailListStyle}"
+                              MouseDoubleClick="InstalledAppsView_MouseDoubleClick"
+                              Width="330"
+                              AlternationCount="2" VirtualizingStackPanel.VirtualizationMode="Recycling"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto" UseLayoutRounding="True"
+                              HorizontalContentAlignment="Stretch" />
                 </Border>
                 <StackPanel HorizontalAlignment="Right"
-                    Grid.Row="6"
-                    Grid.Column="1">
+                            Grid.Row="6"
+                            Grid.Column="1">
                     <Button Content="{Binding sInterface_Cancel}" Style="{StaticResource CairoButtonStyle}"
-                        Click="SkipWizard" />
+                            Click="SkipWizard" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Left"
-                    Grid.Row="6"
-                    Grid.Column="3">
+                            Grid.Row="6"
+                            Grid.Column="3">
                     <Button Content="{Binding sInterface_Continue}" Style="{StaticResource CairoButtonStyle}"
-                        Click="btnContinue_Click" IsDefault="True"/>
+                            Click="btnContinue_Click" IsDefault="True" />
                 </StackPanel>
             </Grid>
         </Border>
@@ -127,62 +137,70 @@
                     <ColumnDefinition Width="32" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Row="1"
-                Grid.Column="1"
-                Grid.RowSpan="2">
+                            Grid.Column="1"
+                            Grid.RowSpan="2">
                     <TextBlock Style="{StaticResource AppGrabberHeading}" Text="{Binding sAppGrabber_Page2Title}" />
                     <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page2Line1}" />
                     <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page2Line2}" />
-                    <TextBlock Style="{StaticResource AppGrabberSubHeading}" Text="{Binding sAppGrabber_Page2Directions}" />
+                    <TextBlock Style="{StaticResource AppGrabberSubHeading}"
+                               Text="{Binding sAppGrabber_Page2Directions}" />
                     <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page2Directions1}" />
                     <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page2Directions2}" />
                     <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page2Directions3}" />
                     <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page2Directions4}" />
                     <TextBlock Style="{StaticResource AppGrabberSubText}" Text="{Binding sAppGrabber_Page2Directions5}" />
-                    <TextBlock Style="{StaticResource AppGrabberSubText}" Margin="0" Text="{Binding sAppGrabber_Page2Directions6}" />
+                    <TextBlock Style="{StaticResource AppGrabberSubText}" Margin="0"
+                               Text="{Binding sAppGrabber_Page2Directions6}" />
                 </StackPanel>
                 <Border BorderThickness="1"
-                BorderBrush="#FF888888"
-                Grid.Row="1"
-                Grid.Column="3">
+                        BorderBrush="#FF888888"
+                        Grid.Row="1"
+                        Grid.Column="3">
                     <DockPanel Width="330" DockPanel.Dock="Top" Style="{StaticResource AppGrabberListBoxHeaderStyle}">
                         <Button DockPanel.Dock="Left"
-                            Click="btnAdd_Click"
-                            FontSize="18"
-                            FontFamily="Tahoma"
-                            Style="{StaticResource AppGrabberListBoxHeaderButtonStyle}"
-                            Margin="5,0,0,0">
+                                Click="btnAdd_Click"
+                                FontSize="18"
+                                FontFamily="Tahoma"
+                                Style="{StaticResource AppGrabberListBoxHeaderButtonStyle}"
+                                Margin="5,0,0,0">
                             +
                         </Button>
-                        <ToggleButton DockPanel.Dock="Right" Name="tglHide" Click="tglHide_Click" Style="{StaticResource AppGrabberListBoxHeaderTextToggleButtonStyle}" Margin="0,0,6,0" IsChecked="{Binding bAppsHidden, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, UpdateSourceTrigger=PropertyChanged}" Content="{Binding sAppGrabber_Hide}" />
+                        <ToggleButton DockPanel.Dock="Right" Name="tglHide" Click="tglHide_Click"
+                                      Style="{StaticResource AppGrabberListBoxHeaderTextToggleButtonStyle}"
+                                      Margin="0,0,6,0"
+                                      IsChecked="{Binding bAppsHidden, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, UpdateSourceTrigger=PropertyChanged}"
+                                      Content="{Binding sAppGrabber_Hide}" />
                         <TextBlock Style="{StaticResource AppGrabberListBoxHeaderTextStyle}"
-                            DockPanel.Dock="Top" Text="{Binding sAppGrabber_ProgramCategories}" />
+                                   DockPanel.Dock="Top" Text="{Binding sAppGrabber_ProgramCategories}" />
                     </DockPanel>
                 </Border>
                 <Border BorderThickness="1,0,1,1"
-                BorderBrush="#FF888888"
-                Grid.Row="2"
-                Grid.Column="3">
+                        BorderBrush="#FF888888"
+                        Grid.Row="2"
+                        Grid.Column="3">
                     <ScrollViewer x:Name="scrollViewer" UseLayoutRounding="True"
-                    HorizontalScrollBarVisibility="Disabled"
-                    VerticalScrollBarVisibility="Auto"
-                    CanContentScroll="True"
-                    Background="White"
-                    DragOver="ScrollViewer_DragOver" HorizontalContentAlignment="Stretch">
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto"
+                                  CanContentScroll="True"
+                                  Background="White"
+                                  DragOver="ScrollViewer_DragOver" HorizontalContentAlignment="Stretch">
                         <ItemsControl x:Name="categoryView"
-                        Style="{StaticResource CategoryDisplayStyle}" VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Visibility="Hidden" />
+                                      Style="{StaticResource CategoryDisplayStyle}"
+                                      VirtualizingStackPanel.VirtualizationMode="Recycling"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden" Visibility="Hidden" />
                     </ScrollViewer>
                 </Border>
                 <StackPanel HorizontalAlignment="Right"
-                Grid.Row="4"
-                Grid.Column="1">
+                            Grid.Row="4"
+                            Grid.Column="1">
                     <Button Content="{Binding sInterface_Cancel}" Style="{StaticResource CairoButtonStyle}"
-                    Click="SkipWizard"/>
+                            Click="SkipWizard" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Left"
-                Grid.Row="4"
-                Grid.Column="3">
+                            Grid.Row="4"
+                            Grid.Column="3">
                     <Button Content="{Binding sInterface_Finish}" Style="{StaticResource CairoButtonStyle}"
-                    Click="btnSave_Click" />
+                            Click="btnSave_Click" />
                 </StackPanel>
             </Grid>
         </Border>

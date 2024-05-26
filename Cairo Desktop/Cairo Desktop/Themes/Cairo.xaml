@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
@@ -573,25 +574,35 @@
 
     <!-- Image resources -->
     <BitmapImage x:Key="MenuIcon"
-                 UriSource="..\Resources\cairoMenuDefault.png"></BitmapImage>
+                 UriSource="..\Resources\cairoMenuDefault.png">
+    </BitmapImage>
     <BitmapImage x:Key="SearchIcon"
-                 UriSource="..\Resources\searchDefault.png"></BitmapImage>
+                 UriSource="..\Resources\searchDefault.png">
+    </BitmapImage>
     <BitmapImage x:Key="ActionCenterIcon"
-                 UriSource="..\Resources\actionCenterDefault.png"></BitmapImage>
+                 UriSource="..\Resources\actionCenterDefault.png">
+    </BitmapImage>
     <BitmapImage x:Key="VolumeIcon"
-                 UriSource="..\Resources\volumeIconDefault.png"></BitmapImage>
+                 UriSource="..\Resources\volumeIconDefault.png">
+    </BitmapImage>
     <BitmapImage x:Key="VolumeLowIcon"
-                 UriSource="..\Resources\volumeLowIconDefault.png"></BitmapImage>
+                 UriSource="..\Resources\volumeLowIconDefault.png">
+    </BitmapImage>
     <BitmapImage x:Key="VolumeOffIcon"
-                 UriSource="..\Resources\volumeOffIconDefault.png"></BitmapImage>
+                 UriSource="..\Resources\volumeOffIconDefault.png">
+    </BitmapImage>
     <BitmapImage x:Key="VolumeMuteIcon"
-                 UriSource="..\Resources\volumeMuteIconDefault.png"></BitmapImage>
+                 UriSource="..\Resources\volumeMuteIconDefault.png">
+    </BitmapImage>
     <BitmapImage x:Key="MenubarShadow"
-                 UriSource="..\Resources\menubarShadow.png"></BitmapImage>
+                 UriSource="..\Resources\menubarShadow.png">
+    </BitmapImage>
     <BitmapImage x:Key="NullIcon"
-                 UriSource="..\Resources\nullIcon.png"></BitmapImage>
+                 UriSource="..\Resources\nullIcon.png">
+    </BitmapImage>
     <BitmapImage x:Key="DateTimeIcon"
-                 UriSource="..\Resources\dateTimeIcon.png"></BitmapImage>
+                 UriSource="..\Resources\dateTimeIcon.png">
+    </BitmapImage>
 
     <Style TargetType="{x:Type Control}">
         <Setter Property="Template">
@@ -636,16 +647,16 @@
                 Value="{DynamicResource ResourceKey=MenuBarBorderThickness}" />
         <Setter Property="Margin"
                 Value="0" />
-		<Setter Property="RenderTransform">
-			<Setter.Value>
-				<TranslateTransform X="0"
-									Y="0" />
-			</Setter.Value>
-		</Setter>
-	</Style>
-	<Style x:Key="MenuBarStyle"
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TranslateTransform X="0"
+                                    Y="0" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="MenuBarStyle"
            TargetType="{x:Type DockPanel}">
-		<Setter Property="Background"
+        <Setter Property="Background"
                 Value="{DynamicResource ResourceKey=MenuBarBackground}" />
     </Style>
     <Style x:Key="CairoMenuBarMainContainerStyle"
@@ -768,14 +779,17 @@
                                       Data="M0,0 L0,8 L4,4 z" />
                             </Grid>
                             <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
-                            <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
-                                   Placement="Right"
-                                   x:Name="SubMenuPopup"
-                                   Focusable="false"
-                                   PopupAnimation="Fade"
-                                   AllowsTransparency="True">
-                                <Border x:Name="SubMenuBorderTop" Style="{StaticResource ResourceKey=CairoMenuBorderStyle}">
-                                    <Border x:Name="SubMenuBorder" Style="{StaticResource ResourceKey=CairoMenuInnerBorderStyle}">
+                            <Popup
+                                IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                Placement="Right"
+                                x:Name="SubMenuPopup"
+                                Focusable="false"
+                                PopupAnimation="Fade"
+                                AllowsTransparency="True">
+                                <Border x:Name="SubMenuBorderTop"
+                                        Style="{StaticResource ResourceKey=CairoMenuBorderStyle}">
+                                    <Border x:Name="SubMenuBorder"
+                                            Style="{StaticResource ResourceKey=CairoMenuInnerBorderStyle}">
                                         <Grid x:Name="SubMenu"
                                               Grid.IsSharedSizeScope="True">
                                             <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
@@ -998,12 +1012,13 @@
                                                   RecognizesAccessKey="True"
                                                   ContentSource="Header" />
                                 <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
-                                <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
-                                       Placement="Right"
-                                       x:Name="SubMenuPopup"
-                                       Focusable="false"
-                                       PopupAnimation="Fade"
-                                       AllowsTransparency="True">
+                                <Popup
+                                    IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Placement="Right"
+                                    x:Name="SubMenuPopup"
+                                    Focusable="false"
+                                    PopupAnimation="Fade"
+                                    AllowsTransparency="True">
                                     <Border x:Name="SubMenuBorderTop"
                                             Style="{StaticResource ResourceKey=CairoMenuBorderStyle}"
                                             Margin="11,0,5,11">
@@ -1143,12 +1158,13 @@
                                                   RecognizesAccessKey="True"
                                                   ContentSource="Header" />
                                 <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
-                                <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
-                                       Placement="Left"
-                                       x:Name="SubMenuPopup"
-                                       Focusable="False"
-                                       PopupAnimation="Fade"
-                                       AllowsTransparency="True">
+                                <Popup
+                                    IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Placement="Left"
+                                    x:Name="SubMenuPopup"
+                                    Focusable="False"
+                                    PopupAnimation="Fade"
+                                    AllowsTransparency="True">
                                     <Border Margin="5,0,13,11">
                                         <!-- StackPanel holds children of the menu. This is set by IsItemsHost=True -->
                                         <StackPanel IsItemsHost="True"
@@ -1365,12 +1381,14 @@
             <Trigger Property="ItemsControl.AlternationIndex"
                      Value="0">
                 <Setter Property="Background"
-                        Value="{DynamicResource ResourceKey=SearchResultBackground0}"></Setter>
+                        Value="{DynamicResource ResourceKey=SearchResultBackground0}">
+                </Setter>
             </Trigger>
             <Trigger Property="ItemsControl.AlternationIndex"
                      Value="1">
                 <Setter Property="Background"
-                        Value="{DynamicResource ResourceKey=SearchResultBackground1}"></Setter>
+                        Value="{DynamicResource ResourceKey=SearchResultBackground1}">
+                </Setter>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -1576,8 +1594,9 @@
                                           x:Name="GroupItems" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                                     Value="Top">
+                        <DataTrigger
+                            Binding="{Binding Path=AppBarEdge, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                            Value="Top">
                             <Setter TargetName="GroupBorder"
                                     Property="Margin"
                                     Value="3,0,1,0" />
@@ -2348,12 +2367,13 @@
                                               RecognizesAccessKey="True"
                                               ContentSource="Header" />
                             <!-- The Popup is the body of the menu which expands down or across depending on the level of the item -->
-                            <Popup IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
-                                   Placement="Right"
-                                   x:Name="SubMenuPopup"
-                                   Focusable="false"
-                                   PopupAnimation="Slide"
-                                   AllowsTransparency="True">
+                            <Popup
+                                IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+                                Placement="Right"
+                                x:Name="SubMenuPopup"
+                                Focusable="false"
+                                PopupAnimation="Slide"
+                                AllowsTransparency="True">
                                 <StackPanel>
                                     <Border x:Name="SubMenuBorderTop">
                                         <Border.Style>
@@ -2749,7 +2769,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!-- Desktop navigation toolbar -->
     <Style x:Key="DesktopNavToolbar"
            TargetType="{x:Type Border}">
@@ -3174,17 +3194,17 @@
                                                         <VisualState x:Name="MouseOver">
                                                             <Storyboard>
                                                                 <ColorAnimation Duration="0"
-                                                                                To="#FFA9C822"
-                                                                                Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
-                                                                                Storyboard.TargetName="path" />
+                                                                    To="#FFA9C822"
+                                                                    Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
+                                                                    Storyboard.TargetName="path" />
                                                             </Storyboard>
                                                         </VisualState>
                                                         <VisualState x:Name="Disabled">
                                                             <Storyboard>
                                                                 <DoubleAnimation Duration="0"
-                                                                                 To=".5"
-                                                                                 Storyboard.TargetProperty="(Shape.Fill).(Brush.Opacity)"
-                                                                                 Storyboard.TargetName="path" />
+                                                                    To=".5"
+                                                                    Storyboard.TargetProperty="(Shape.Fill).(Brush.Opacity)"
+                                                                    Storyboard.TargetName="path" />
                                                             </Storyboard>
                                                         </VisualState>
                                                     </VisualStateGroup>
@@ -3217,18 +3237,18 @@
                                                         <VisualState x:Name="MouseOver">
                                                             <Storyboard>
                                                                 <ColorAnimation Duration="0"
-                                                                                To="#FFA9C822"
-                                                                                Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
-                                                                                Storyboard.TargetName="path" />
+                                                                    To="#FFA9C822"
+                                                                    Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)"
+                                                                    Storyboard.TargetName="path" />
                                                             </Storyboard>
                                                         </VisualState>
 
                                                         <VisualState x:Name="Disabled">
                                                             <Storyboard>
                                                                 <DoubleAnimation Duration="0"
-                                                                                 To=".5"
-                                                                                 Storyboard.TargetProperty="(Shape.Fill).(Brush.Opacity)"
-                                                                                 Storyboard.TargetName="path" />
+                                                                    To=".5"
+                                                                    Storyboard.TargetProperty="(Shape.Fill).(Brush.Opacity)"
+                                                                    Storyboard.TargetName="path" />
                                                             </Storyboard>
                                                         </VisualState>
                                                     </VisualStateGroup>
@@ -3261,18 +3281,18 @@
                                                         <VisualState x:Name="MouseOver">
                                                             <Storyboard>
                                                                 <DoubleAnimation Duration="0"
-                                                                                 To=".7"
-                                                                                 Storyboard.TargetProperty="Opacity"
-                                                                                 Storyboard.TargetName="buttonContent" />
+                                                                    To=".7"
+                                                                    Storyboard.TargetProperty="Opacity"
+                                                                    Storyboard.TargetName="buttonContent" />
                                                             </Storyboard>
                                                         </VisualState>
 
                                                         <VisualState x:Name="Disabled">
                                                             <Storyboard>
                                                                 <DoubleAnimation Duration="0"
-                                                                                 To=".5"
-                                                                                 Storyboard.TargetProperty="Opacity"
-                                                                                 Storyboard.TargetName="buttonContent" />
+                                                                    To=".5"
+                                                                    Storyboard.TargetProperty="Opacity"
+                                                                    Storyboard.TargetName="buttonContent" />
                                                             </Storyboard>
                                                         </VisualState>
                                                     </VisualStateGroup>
@@ -3399,8 +3419,9 @@
                                     Value="Visible" />
                         </Trigger>
 
-                        <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Calendar}}}"
-                                     Value="Year">
+                        <DataTrigger
+                            Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Calendar}}}"
+                            Value="Year">
                             <Setter Property="Visibility"
                                     TargetName="PART_MonthView"
                                     Value="Hidden" />
@@ -3409,8 +3430,9 @@
                                     Value="Visible" />
                         </DataTrigger>
 
-                        <DataTrigger Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Calendar}}}"
-                                     Value="Decade">
+                        <DataTrigger
+                            Binding="{Binding DisplayMode, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Calendar}}}"
+                            Value="Decade">
                             <Setter Property="Visibility"
                                     TargetName="PART_MonthView"
                                     Value="Hidden" />
@@ -3929,7 +3951,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <!-- Styles for notification area and balloon notifications -->
     <Style x:Key="NotifyIconBorder"
            TargetType="Border">

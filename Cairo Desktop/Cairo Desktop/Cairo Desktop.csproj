@@ -1,129 +1,130 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <PropertyGroup>
-	<TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
-    <Platforms>x64;AnyCPU;ARM64</Platforms>
-    <UseWPF>True</UseWPF>
-    <UseWindowsForms>True</UseWindowsForms>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
+        <Platforms>x64;AnyCPU;ARM64</Platforms>
+        <UseWPF>True</UseWPF>
+        <UseWindowsForms>True</UseWindowsForms>
+        <LangVersion>10.0</LangVersion>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <ApplicationIcon>Application.ico</ApplicationIcon>
-    <StartupObject>CairoDesktop.Program</StartupObject>
-    <OutputType>WinExe</OutputType>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <RootNamespace>CairoDesktop</RootNamespace>
-    <AssemblyName>CairoDesktop</AssemblyName>
-    <AssemblyTitle>Cairo Desktop Environment</AssemblyTitle>
-    <Company>Cairo Development Team</Company>
-    <Authors>Cairo Development Team</Authors>
-    <Product>Cairo Desktop Environment</Product>
-    <Copyright>Copyright © 2022 Cairo Development Team</Copyright>
-  </PropertyGroup>
+    <PropertyGroup>
+        <ApplicationIcon>Application.ico</ApplicationIcon>
+        <StartupObject>CairoDesktop.Program</StartupObject>
+        <OutputType>WinExe</OutputType>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <RootNamespace>CairoDesktop</RootNamespace>
+        <AssemblyName>CairoDesktop</AssemblyName>
+        <AssemblyTitle>Cairo Desktop Environment</AssemblyTitle>
+        <Company>Cairo Development Team</Company>
+        <Authors>Cairo Development Team</Authors>
+        <Product>Cairo Desktop Environment</Product>
+        <Copyright>Copyright © 2022 Cairo Development Team</Copyright>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
-    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
+        <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Platform)'=='x64'">
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Platform)'=='x64'">
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Platform)'=='ARM64'">
-    <RuntimeIdentifier>win-arm64</RuntimeIdentifier>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Platform)'=='ARM64'">
+        <RuntimeIdentifier>win-arm64</RuntimeIdentifier>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DefineConstants>TRACE;DEBUG;ENABLEFIRSTRUN</DefineConstants>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <DefineConstants>TRACE;DEBUG;ENABLEFIRSTRUN</DefineConstants>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DefineConstants>TRACE;ENABLEFIRSTRUN</DefineConstants>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Page Remove="Themes\Flat Accent.xaml" />
-  </ItemGroup>
+    <ItemGroup>
+        <Page Remove="Themes\Flat Accent.xaml"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Include="Themes\Fade.xaml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Include="Themes\Flat Accent.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Include="Themes\Flat.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Themes\MiniMeow.xaml">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Include="Themes\White.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="Themes\Fade.xaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </None>
+        <None Include="Themes\Flat Accent.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Generator>MSBuild:Compile</Generator>
+        </None>
+        <None Include="Themes\Flat.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Include="Themes\MiniMeow.xaml">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </None>
+        <None Include="Themes\White.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ManagedShell" Version="0.0.249" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="ManagedShell" Version="0.0.249"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.3"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj" />
-    <ProjectReference Include="..\CairoDesktop.Application\CairoDesktop.Application.csproj" />
-    <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj" />
-    <ProjectReference Include="..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj" />
-    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
-    <ProjectReference Include="..\CairoDesktop.MenuBarExtensions\CairoDesktop.MenuBarExtensions.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj"/>
+        <ProjectReference Include="..\CairoDesktop.Application\CairoDesktop.Application.csproj"/>
+        <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj"/>
+        <ProjectReference Include="..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj"/>
+        <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj"/>
+        <ProjectReference Include="..\CairoDesktop.MenuBarExtensions\CairoDesktop.MenuBarExtensions.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Management" />
-  </ItemGroup>
+    <ItemGroup>
+        <Reference Include="System.Management"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Application.ico" />
-    <Resource Include="Resources\searchDefault.png" />
-    <Resource Include="Resources\controlsBack.png" />
-    <Resource Include="Resources\controlsForward.png" />
-    <Resource Include="Resources\controlsHome.png" />
-    <Resource Include="Resources\menubarShadow.png" />
-    <Resource Include="Resources\dateTimeIcon.png" />
-    <Resource Include="Resources\searchBlack.png" />
-    <Resource Include="Resources\menubarWhite.png" />
-    <Resource Include="Resources\nullIcon.png" />
-    <Resource Include="Resources\taskListIcon.png" />
-    <Resource Include="Resources\controlsBrowse.png" />
-    <Resource Include="Resources\taskViewIcon.png" />
-    <Resource Include="Resources\actionCenterDefault.png" />
-    <Resource Include="Resources\actionCenterBlack.png" />
-    <Resource Include="Resources\cairoMenuBlack.png" />
-    <Resource Include="Resources\cairoMenuDefault.png" />
-    <Resource Include="Resources\desktopOverlayIcon.png" />
-    <Resource Include="Resources\Welcome\cairoIcon.png" />
-    <Resource Include="Resources\Welcome\desktop.jpg" />
-    <Resource Include="Resources\Welcome\menuBar.png" />
-    <Resource Include="Resources\Welcome\taskbar.png" />
-    <Resource Include="Resources\volumeIconDefault.png" />
-    <Resource Include="Resources\volumeIconBlack.png" />
-    <Resource Include="Resources\volumeLowIconBlack.png" />
-    <Resource Include="Resources\volumeLowIconDefault.png" />
-    <Resource Include="Resources\volumeMuteIconBlack.png" />
-    <Resource Include="Resources\volumeMuteIconDefault.png" />
-    <Resource Include="Resources\volumeOffIconBlack.png" />
-    <Resource Include="Resources\volumeOffIconDefault.png" />
-    <Resource Include="Resources\controlsUp.png" />
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Application.ico"/>
+        <Resource Include="Resources\searchDefault.png"/>
+        <Resource Include="Resources\controlsBack.png"/>
+        <Resource Include="Resources\controlsForward.png"/>
+        <Resource Include="Resources\controlsHome.png"/>
+        <Resource Include="Resources\menubarShadow.png"/>
+        <Resource Include="Resources\dateTimeIcon.png"/>
+        <Resource Include="Resources\searchBlack.png"/>
+        <Resource Include="Resources\menubarWhite.png"/>
+        <Resource Include="Resources\nullIcon.png"/>
+        <Resource Include="Resources\taskListIcon.png"/>
+        <Resource Include="Resources\controlsBrowse.png"/>
+        <Resource Include="Resources\taskViewIcon.png"/>
+        <Resource Include="Resources\actionCenterDefault.png"/>
+        <Resource Include="Resources\actionCenterBlack.png"/>
+        <Resource Include="Resources\cairoMenuBlack.png"/>
+        <Resource Include="Resources\cairoMenuDefault.png"/>
+        <Resource Include="Resources\desktopOverlayIcon.png"/>
+        <Resource Include="Resources\Welcome\cairoIcon.png"/>
+        <Resource Include="Resources\Welcome\desktop.jpg"/>
+        <Resource Include="Resources\Welcome\menuBar.png"/>
+        <Resource Include="Resources\Welcome\taskbar.png"/>
+        <Resource Include="Resources\volumeIconDefault.png"/>
+        <Resource Include="Resources\volumeIconBlack.png"/>
+        <Resource Include="Resources\volumeLowIconBlack.png"/>
+        <Resource Include="Resources\volumeLowIconDefault.png"/>
+        <Resource Include="Resources\volumeMuteIconBlack.png"/>
+        <Resource Include="Resources\volumeMuteIconDefault.png"/>
+        <Resource Include="Resources\volumeOffIconBlack.png"/>
+        <Resource Include="Resources\volumeOffIconDefault.png"/>
+        <Resource Include="Resources\controlsUp.png"/>
+    </ItemGroup>
 
 </Project>

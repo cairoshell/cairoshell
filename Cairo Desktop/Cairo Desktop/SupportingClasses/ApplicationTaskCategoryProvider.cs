@@ -1,40 +1,39 @@
 ﻿using ManagedShell.WindowsTasks;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.SupportingClasses;
+
+public class ApplicationTaskCategoryProvider : ITaskCategoryProvider
 {
-    public class ApplicationTaskCategoryProvider : ITaskCategoryProvider
+    private TaskCategoryChangeDelegate categoryChangeDelegate;
+
+    public ApplicationTaskCategoryProvider()
     {
-        private TaskCategoryChangeDelegate categoryChangeDelegate;
+    }
 
-        public ApplicationTaskCategoryProvider()
+    public void Dispose()
+    {
+    }
+
+    public string GetCategory(ApplicationWindow window)
+    {
+        if (window.IsUWP)
         {
+            return window.AppUserModelID.ToLower();
         }
 
-        public void Dispose()
+        return window.WinFileName.ToLower();
+    }
+
+    public void SetCategoryChangeDelegate(TaskCategoryChangeDelegate changeDelegate)
+    {
+        if (changeDelegate == null)
         {
+            return;
         }
 
-        public string GetCategory(ApplicationWindow window)
-        {
-            if (window.IsUWP)
-            {
-                return window.AppUserModelID.ToLower();
-            }
+        categoryChangeDelegate = changeDelegate;
 
-            return window.WinFileName.ToLower();
-        }
-
-        public void SetCategoryChangeDelegate(TaskCategoryChangeDelegate changeDelegate)
-        {
-            if (changeDelegate == null)
-            {
-                return;
-            }
-
-            categoryChangeDelegate = changeDelegate;
-
-            // request new categories in case of preference change
-            categoryChangeDelegate?.Invoke();
-        }
+        // request new categories in case of preference change
+        categoryChangeDelegate?.Invoke();
     }
 }

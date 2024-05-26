@@ -4,51 +4,50 @@ using System;
 using System.ComponentModel;
 using ManagedShell.Common.Enums;
 
-namespace CairoDesktop.Infrastructure.Services
+namespace CairoDesktop.Infrastructure.Services;
+
+public class ShellManagerService : IDisposable
 {
-    public class ShellManagerService : IDisposable
+    public ShellManager ShellManager { get; }
+
+    public ShellManagerService()
     {
-        public ShellManager ShellManager { get; }
+        ShellManager = ConfigureShellManager();
 
-        public ShellManagerService()
+        Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+    }
+
+    private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e == null || string.IsNullOrWhiteSpace(e.PropertyName))
+            return;
+
+        switch (e.PropertyName)
         {
-            ShellManager = ConfigureShellManager();
-
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            case "TaskbarIconSize":
+                ShellManager.TasksService.TaskIconSize = (IconSize)Settings.Instance.TaskbarIconSize;
+                break;
         }
+    }
 
-        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    private ShellManager ConfigureShellManager()
+    {
+        ShellConfig config = new ShellConfig()
         {
-            if (e == null || string.IsNullOrWhiteSpace(e.PropertyName))
-                return;
+            EnableTasksService = true,
+            AutoStartTasksService = false,
+            TaskIconSize = (IconSize)Settings.Instance.TaskbarIconSize,
 
-            switch (e.PropertyName)
-            {
-                case "TaskbarIconSize":
-                    ShellManager.TasksService.TaskIconSize = (IconSize)Settings.Instance.TaskbarIconSize;
-                    break;
-            }
-        }
+            EnableTrayService = Settings.Instance.EnableSysTray,
+            AutoStartTrayService = false,
+            PinnedNotifyIcons = Settings.Instance.PinnedNotifyIcons
+        };
 
-        private ShellManager ConfigureShellManager()
-        {
-            ShellConfig config = new ShellConfig()
-            {
-                EnableTasksService = true,
-                AutoStartTasksService = false,
-                TaskIconSize = (IconSize)Settings.Instance.TaskbarIconSize,
+        return new ShellManager(config);
+    }
 
-                EnableTrayService = Settings.Instance.EnableSysTray,
-                AutoStartTrayService = false,
-                PinnedNotifyIcons = Settings.Instance.PinnedNotifyIcons
-            };
-
-            return new ShellManager(config);
-        }
-
-        public void Dispose()
-        {
-            ShellManager.Dispose();
-        }
+    public void Dispose()
+    {
+        ShellManager.Dispose();
     }
 }

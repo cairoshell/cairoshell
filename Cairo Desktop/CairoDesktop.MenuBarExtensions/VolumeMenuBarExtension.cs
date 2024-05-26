@@ -4,21 +4,21 @@ using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.Common.Helpers;
 using System.Windows.Controls;
 
-namespace CairoDesktop.MenuBarExtensions
+namespace CairoDesktop.MenuBarExtensions;
+
+class VolumeMenuBarExtension : UserControlMenuBarExtension
 {
-    class VolumeMenuBarExtension : UserControlMenuBarExtension
+    private Volume _volume;
+
+    public override UserControl StartControl(IMenuBar host)
     {
-        private Volume _volume;
+        if (Enabled)
+            return null;
 
-        public override UserControl StartControl(IMenuBar host)
-        {
-            if (Enabled)
-                return null;
-
-            _volume = new Volume();
-            return _volume;
-        }
-
-        private static bool Enabled => !Settings.Instance.EnableMenuExtraVolume || !EnvironmentHelper.IsWindows10OrBetter || !EnvironmentHelper.IsAppRunningAsShell;
+        _volume = new Volume();
+        return _volume;
     }
+
+    private static bool Enabled => !Settings.Instance.EnableMenuExtraVolume || !EnvironmentHelper.IsWindows10OrBetter ||
+                                   !EnvironmentHelper.IsAppRunningAsShell;
 }

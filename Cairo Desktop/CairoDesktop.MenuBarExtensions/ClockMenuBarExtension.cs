@@ -3,21 +3,20 @@ using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.ObjectModel;
 using System.Windows.Controls;
 
-namespace CairoDesktop.MenuBarExtensions
+namespace CairoDesktop.MenuBarExtensions;
+
+class ClockMenuBarExtension : UserControlMenuBarExtension
 {
-    class ClockMenuBarExtension : UserControlMenuBarExtension
+    private Clock _clock;
+
+    public override UserControl StartControl(IMenuBar host)
     {
-        private Clock _clock;
-
-        public override UserControl StartControl(IMenuBar host)
+        if (!Settings.Instance.EnableMenuExtraClock)
         {
-            if (!Settings.Instance.EnableMenuExtraClock)
-            {
-                return null;
-            }
-
-            _clock = new Clock(host);
-            return _clock;
+            return null;
         }
+
+        _clock = new Clock(host);
+        return _clock;
     }
 }

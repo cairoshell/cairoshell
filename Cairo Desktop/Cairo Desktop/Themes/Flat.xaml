@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- Menu resources -->
     <SolidColorBrush Color="#BF2a2a2a" x:Key="MenuBarBackground" />
     <SolidColorBrush Color="#BF4a4a4a" x:Key="MenuBarBorder" />
@@ -34,7 +36,8 @@
            x:Key="TaskbarItemInactiveBorder" />
     <Color A="16" R="255" G="255" B="255"
            x:Key="TaskbarItemInactiveBackground" />
-    <SolidColorBrush Color="{StaticResource TaskbarItemInactiveBackground}" x:Key="TaskbarItemInactiveBackgroundGradient" />
+    <SolidColorBrush Color="{StaticResource TaskbarItemInactiveBackground}"
+                     x:Key="TaskbarItemInactiveBackgroundGradient" />
     <SolidColorBrush Color="{StaticResource TaskbarItemInactiveBorder}" x:Key="TaskbarItemInactiveBorderGradient" />
     <SolidColorBrush Color="#AF0057a8" x:Key="TaskbarItemInactiveHoverBackground" />
     <SolidColorBrush Color="#DF0f82c2" x:Key="TaskbarItemInactiveHoverBorder" />
@@ -47,7 +50,8 @@
            x:Key="TaskbarItemFlashingBorder" />
     <Color A="95" R="255" G="84" B="0"
            x:Key="TaskbarItemFlashingBackground" />
-    <SolidColorBrush Color="{StaticResource TaskbarItemFlashingBackground}" x:Key="TaskbarItemFlashingBackgroundGradient" />
+    <SolidColorBrush Color="{StaticResource TaskbarItemFlashingBackground}"
+                     x:Key="TaskbarItemFlashingBackgroundGradient" />
     <SolidColorBrush Color="{StaticResource TaskbarItemFlashingBorder}" x:Key="TaskbarItemFlashingBorderGradient" />
     <SolidColorBrush Color="#CFDBA715" x:Key="TaskbarItemFlashingDisabledBackground" />
     <SolidColorBrush Color="#6fff5400" x:Key="TaskbarItemFlashingHoverBackground" />

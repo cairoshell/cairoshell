@@ -10,154 +10,157 @@ using CairoDesktop.Common;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
-namespace CairoDesktop
+namespace CairoDesktop;
+
+/// <summary>
+/// Interaction logic for TaskThumbWindow.xaml
+/// </summary>
+public partial class TaskThumbWindow : Window, INotifyPropertyChanged
 {
-    /// <summary>
-    /// Interaction logic for TaskThumbWindow.xaml
-    /// </summary>
-    public partial class TaskThumbWindow : Window, INotifyPropertyChanged
+    const int MAX_THUMBS = 5;
+
+    public bool ShowThumbnails
     {
-        const int MAX_THUMBS = 5;
-
-        public bool ShowThumbnails
+        get
         {
-            get
+            if (!IsDwmEnabled || !Settings.Instance.EnableTaskbarThumbnails)
             {
-                if (!IsDwmEnabled || !Settings.Instance.EnableTaskbarThumbnails)
-                {
-                    return false;
-                }
-
-                if (TaskButton != null && TaskButton.WindowGroup != null && TaskButton.WindowGroup.Count > MAX_THUMBS)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-        }
-
-        internal TaskButton TaskButton;
-        internal bool IsAnimating = true;
-        internal bool IsDwmEnabled;
-        internal bool IsContextMenuOpen;
-
-        private bool isClosing;
-        private IntPtr handle;
-
-        public TaskThumbWindow(TaskButton parent)
-        {
-            InitializeComponent();
-
-            TaskButton = parent;
-            DataContext = TaskButton;
-
-            TaskButton.SetParentPopupOpen(true);
-
-            IsDwmEnabled = NativeMethods.DwmIsCompositionEnabled();
-        }
-
-        private void Window_SourceInitialized(object sender, EventArgs e)
-        {
-            // hide from alt-tab
-            WindowInteropHelper helper = new WindowInteropHelper(this);
-            handle = helper.Handle;
-            WindowHelper.HideWindowFromTasks(handle);
-
-            if (Settings.Instance.TaskbarPosition == 1)
-            {
-                // taskbar on top
-                bdrThumb.Style = FindResource("TaskThumbWindowBorderTopStyle") as Style;
-                bdrThumbInner.Style = FindResource("TaskThumbWindowInnerBorderTopStyle") as Style;
-
-                bdrTranslate.Y *= -1;
-
-                ToolTipService.SetPlacement(this, System.Windows.Controls.Primitives.PlacementMode.Bottom);
+                return false;
             }
 
-            SetPosition();
-
-            if (TaskButton != null && TaskButton.WindowGroup != null)
+            if (TaskButton != null && TaskButton.WindowGroup != null && TaskButton.WindowGroup.Count > MAX_THUMBS)
             {
-                ((INotifyCollectionChanged)TaskButton.WindowGroup).CollectionChanged += TaskThumbWindow_CollectionChanged;
+                return false;
             }
-        }
 
-        private void TaskThumbWindow_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+            return true;
+        }
+    }
+
+    internal TaskButton TaskButton;
+    internal bool IsAnimating = true;
+    internal bool IsDwmEnabled;
+    internal bool IsContextMenuOpen;
+
+    private bool isClosing;
+    private IntPtr handle;
+
+    public TaskThumbWindow(TaskButton parent)
+    {
+        InitializeComponent();
+
+        TaskButton = parent;
+        DataContext = TaskButton;
+
+        TaskButton.SetParentPopupOpen(true);
+
+        IsDwmEnabled = NativeMethods.DwmIsCompositionEnabled();
+    }
+
+    private void Window_SourceInitialized(object sender, EventArgs e)
+    {
+        // hide from alt-tab
+        WindowInteropHelper helper = new WindowInteropHelper(this);
+        handle = helper.Handle;
+        WindowHelper.HideWindowFromTasks(handle);
+
+        if (Settings.Instance.TaskbarPosition == 1)
         {
-            OnPropertyChanged("ShowThumbnails");
+            // taskbar on top
+            bdrThumb.Style = FindResource("TaskThumbWindowBorderTopStyle") as Style;
+            bdrThumbInner.Style = FindResource("TaskThumbWindowInnerBorderTopStyle") as Style;
+
+            bdrTranslate.Y *= -1;
+
+            ToolTipService.SetPlacement(this, System.Windows.Controls.Primitives.PlacementMode.Bottom);
         }
 
-        private void SetPosition()
+        SetPosition();
+
+        if (TaskButton != null && TaskButton.WindowGroup != null)
         {
-            if (TaskButton == null || TaskButton.ParentTaskbar == null)
-            {
-                return;
-            }
-
-            Point taskButtonPoint = TaskButton.GetThumbnailAnchor();
-
-            if (Settings.Instance.TaskbarPosition == 1)
-            {
-                // taskbar on top
-                Top = taskButtonPoint.Y + TaskButton.ActualHeight;
-            }
-            else
-            {
-                Top = taskButtonPoint.Y - ActualHeight;
-            }
-
-            double desiredLeft = taskButtonPoint.X - ((ActualWidth - TaskButton.ActualWidth) / 2);
-
-            if (desiredLeft < TaskButton.ParentTaskbar.Left)
-            {
-                Left = TaskButton.ParentTaskbar.Left;
-            }
-            else if (desiredLeft + ActualWidth > TaskButton.ParentTaskbar.Left + TaskButton.ParentTaskbar.ActualWidth)
-            {
-                double bump = desiredLeft + ActualWidth - (TaskButton.ParentTaskbar.Left + TaskButton.ParentTaskbar.ActualWidth);
-                Left = desiredLeft - bump;
-            }
-            else
-            {
-                Left = desiredLeft;
-            }
+            ((INotifyCollectionChanged)TaskButton.WindowGroup).CollectionChanged += TaskThumbWindow_CollectionChanged;
         }
+    }
 
-        private void Window_Closing(object sender, CancelEventArgs e)
+    private void TaskThumbWindow_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged("ShowThumbnails");
+    }
+
+    private void SetPosition()
+    {
+        if (TaskButton == null || TaskButton.ParentTaskbar == null)
         {
-            isClosing = true;
-            TaskButton.ThumbWindow = null;
-            TaskButton.SetParentPopupOpen(false);
-
-            if (TaskButton != null && TaskButton.WindowGroup != null)
-            {
-                ((INotifyCollectionChanged)TaskButton.WindowGroup).CollectionChanged -= TaskThumbWindow_CollectionChanged;
-            }
+            return;
         }
 
-        private void Window_MouseLeave(object sender, MouseEventArgs e)
+        Point taskButtonPoint = TaskButton.GetThumbnailAnchor();
+
+        if (Settings.Instance.TaskbarPosition == 1)
         {
-            if (!isClosing && !IsContextMenuOpen && !TaskButton.IsMouseOver)
-                Close();
+            // taskbar on top
+            Top = taskButtonPoint.Y + TaskButton.ActualHeight;
+        }
+        else
+        {
+            Top = taskButtonPoint.Y - ActualHeight;
         }
 
-        private void Storyboard_Completed(object sender, EventArgs e)
-        {
-            IsAnimating = false;
-        }
+        double desiredLeft = taskButtonPoint.X - ((ActualWidth - TaskButton.ActualWidth) / 2);
 
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        if (desiredLeft < TaskButton.ParentTaskbar.Left)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Left = TaskButton.ParentTaskbar.Left;
         }
-        #endregion
+        else if (desiredLeft + ActualWidth > TaskButton.ParentTaskbar.Left + TaskButton.ParentTaskbar.ActualWidth)
+        {
+            double bump = desiredLeft + ActualWidth -
+                          (TaskButton.ParentTaskbar.Left + TaskButton.ParentTaskbar.ActualWidth);
+            Left = desiredLeft - bump;
+        }
+        else
+        {
+            Left = desiredLeft;
+        }
+    }
 
-        private void ThumbWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+    private void Window_Closing(object sender, CancelEventArgs e)
+    {
+        isClosing = true;
+        TaskButton.ThumbWindow = null;
+        TaskButton.SetParentPopupOpen(false);
+
+        if (TaskButton != null && TaskButton.WindowGroup != null)
         {
-            SetPosition();
+            ((INotifyCollectionChanged)TaskButton.WindowGroup).CollectionChanged -= TaskThumbWindow_CollectionChanged;
         }
+    }
+
+    private void Window_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if (!isClosing && !IsContextMenuOpen && !TaskButton.IsMouseOver)
+            Close();
+    }
+
+    private void Storyboard_Completed(object sender, EventArgs e)
+    {
+        IsAnimating = false;
+    }
+
+    #region INotifyPropertyChanged
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    #endregion
+
+    private void ThumbWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        SetPosition();
     }
 }

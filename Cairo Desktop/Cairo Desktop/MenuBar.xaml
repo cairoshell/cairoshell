@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <supportingclasses:CairoAppBarWindow
-        xmlns:supportingclasses="clr-namespace:CairoDesktop.SupportingClasses"
-        xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
-        xmlns:control="clr-namespace:CairoDesktop"
-        x:Class="CairoDesktop.MenuBar"
-        x:Name="MenuBarWindow"
-        Height="23"
-        Top="0"
-        Style="{StaticResource MenuBarWindowStyle}"
-        Left="0"
-        Focusable="False"
-        LocationChanged="Window_LocationChanged"
-        MouseEnter="MenuBar_OnMouseEnter"
-        MouseLeave="MenuBar_OnMouseLeave"
-        MaxHeight="23">
+    xmlns:supportingclasses="clr-namespace:CairoDesktop.SupportingClasses"
+    xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
+    xmlns:control="clr-namespace:CairoDesktop"
+    x:Class="CairoDesktop.MenuBar"
+    x:Name="MenuBarWindow"
+    Height="23"
+    Top="0"
+    Style="{StaticResource MenuBarWindowStyle}"
+    Left="0"
+    Focusable="False"
+    LocationChanged="Window_LocationChanged"
+    MouseEnter="MenuBar_OnMouseEnter"
+    MouseLeave="MenuBar_OnMouseLeave"
+    MaxHeight="23">
     <Window.DataContext>
         <l10n:DisplayString />
     </Window.DataContext>

@@ -1,9 +1,8 @@
-﻿namespace CairoDesktop.Application.Interfaces
-{
-    public interface ISettingsUIService
-    {
-        void Show();
+﻿namespace CairoDesktop.Application.Interfaces;
 
-        void Show(string tabIdentifier);
-    }
+public interface ISettingsUIService
+{
+    void Show();
+
+    void Show(string tabIdentifier);
 }

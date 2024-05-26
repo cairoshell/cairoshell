@@ -1,24 +1,23 @@
 ﻿using System.Windows.Controls;
 
-namespace CairoDesktop.Common.MessageControls
+namespace CairoDesktop.Common.MessageControls;
+
+/// <summary>
+/// Interaction logic for Input.xaml
+/// </summary>
+public partial class Input : UserControl
 {
-    /// <summary>
-    /// Interaction logic for Input.xaml
-    /// </summary>
-    public partial class Input : UserControl
+    public string Text => InputField.Text;
+
+    public Input()
     {
-        public string Text => InputField.Text;
+        InitializeComponent();
+    }
 
-        public Input()
-        {
-            InitializeComponent();
-        }
-
-        public void Initialize(string initialText)
-        {
-            InputField.Text = initialText;
-            InputField.SelectAll();
-            InputField.Focus();
-        }
+    public void Initialize(string initialText)
+    {
+        InputField.Text = initialText;
+        InputField.SelectAll();
+        InputField.Focus();
     }
 }

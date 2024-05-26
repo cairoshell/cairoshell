@@ -1,27 +1,28 @@
 ﻿using System.Windows.Forms;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.SupportingClasses;
+
+public static class DialogExtensionMethods
 {
-    public static class DialogExtensionMethods
+    static DialogExtensionMethods()
     {
-        static DialogExtensionMethods() { }
-        
-        public static DialogResult SafeShowDialog(this OpenFileDialog openFileDialog)
+    }
+
+    public static DialogResult SafeShowDialog(this OpenFileDialog openFileDialog)
+    {
+        DialogResult result;
+
+        try
         {
-            DialogResult result;
-
-            try
-            {
-                result = openFileDialog.ShowDialog();
-            }
-            catch
-            {
-                // show retro dialog if the better one fails to load
-                openFileDialog.AutoUpgradeEnabled = false;
-                result = openFileDialog.ShowDialog();
-            }
-
-            return result;
+            result = openFileDialog.ShowDialog();
         }
+        catch
+        {
+            // show retro dialog if the better one fails to load
+            openFileDialog.AutoUpgradeEnabled = false;
+            result = openFileDialog.ShowDialog();
+        }
+
+        return result;
     }
 }

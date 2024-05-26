@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
@@ -9,20 +10,35 @@
     <!-- Menu resources -->
     <SolidColorBrush Color="#FF000000" x:Key="MenuHeaderForeground" />
     <SolidColorBrush Color="#FF000000" x:Key="SysTrayExpanderColor" />
-    <DropShadowEffect Color="White" x:Key="MenuHeaderShadow" ShadowDepth="1" Direction="270" Opacity="0.3" BlurRadius="0" />
-    
+    <DropShadowEffect Color="White" x:Key="MenuHeaderShadow" ShadowDepth="1" Direction="270" Opacity="0.3"
+                      BlurRadius="0" />
+
     <!-- Image resources -->
-    <BitmapImage x:Key="MenuIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/cairoMenuBlack.png"></BitmapImage>
+    <BitmapImage x:Key="MenuIcon"
+                 UriSource="pack://application:,,,/CairoDesktop;component/Resources/cairoMenuBlack.png">
+    </BitmapImage>
     <BitmapImage x:Key="SearchIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/searchBlack.png"></BitmapImage>
-    <BitmapImage x:Key="ActionCenterIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/actionCenterBlack.png"></BitmapImage>
-    <BitmapImage x:Key="VolumeIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeIconBlack.png"></BitmapImage>
-    <BitmapImage x:Key="VolumeLowIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeLowIconBlack.png"></BitmapImage>
-    <BitmapImage x:Key="VolumeOffIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeOffIconBlack.png"></BitmapImage>
-    <BitmapImage x:Key="VolumeMuteIcon" UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeMuteIconBlack.png"></BitmapImage>
-    <BitmapImage x:Key="WhiteBarBackground" UriSource="pack://application:,,,/CairoDesktop;component/Resources/menubarWhite.png"></BitmapImage>
+    <BitmapImage x:Key="ActionCenterIcon"
+                 UriSource="pack://application:,,,/CairoDesktop;component/Resources/actionCenterBlack.png">
+    </BitmapImage>
+    <BitmapImage x:Key="VolumeIcon"
+                 UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeIconBlack.png">
+    </BitmapImage>
+    <BitmapImage x:Key="VolumeLowIcon"
+                 UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeLowIconBlack.png">
+    </BitmapImage>
+    <BitmapImage x:Key="VolumeOffIcon"
+                 UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeOffIconBlack.png">
+    </BitmapImage>
+    <BitmapImage x:Key="VolumeMuteIcon"
+                 UriSource="pack://application:,,,/CairoDesktop;component/Resources/volumeMuteIconBlack.png">
+    </BitmapImage>
+    <BitmapImage x:Key="WhiteBarBackground"
+                 UriSource="pack://application:,,,/CairoDesktop;component/Resources/menubarWhite.png">
+    </BitmapImage>
 
     <ImageBrush x:Key="MenuBarBackground" ImageSource="{StaticResource WhiteBarBackground}" />
-    
+
     <!-- Desktop -->
     <SolidColorBrush Color="#33DDDDDD" x:Key="DesktopHoverBackground" />
     <SolidColorBrush Color="#88DDDDDD" x:Key="DesktopHoverTopBorder" />

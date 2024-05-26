@@ -1,31 +1,32 @@
 ﻿using System.Collections.Generic;
 
-namespace CairoDesktop.Infrastructure.ExtensionMethods
+namespace CairoDesktop.Infrastructure.ExtensionMethods;
+
+public static class ListExtensions
 {
-    public static class ListExtensions
+    public static void AddRange<TSource>(this IList<TSource> source, params TSource[] items)
     {
-        public static void AddRange<TSource>(this IList<TSource> source, params TSource[] items) 
+        foreach (TSource item in items)
         {
-            foreach (TSource item in items)
-            {
-                source.Add(item);
-            }
+            source.Add(item);
         }
+    }
 
-        public static void RemoveFrom<TSource, TSource2>(this IEnumerable<TSource> source, IList<TSource2> destination) where TSource : TSource2
+    public static void RemoveFrom<TSource, TSource2>(this IEnumerable<TSource> source, IList<TSource2> destination)
+        where TSource : TSource2
+    {
+        foreach (TSource sourceItem in source)
         {
-            foreach (TSource sourceItem in source)
-            {
-                destination.Remove(sourceItem);
-            }
+            destination.Remove(sourceItem);
         }
+    }
 
-        public static void AddTo<TSource, TSource2>(this IEnumerable<TSource> source, IList<TSource2> destination) where TSource : TSource2
+    public static void AddTo<TSource, TSource2>(this IEnumerable<TSource> source, IList<TSource2> destination)
+        where TSource : TSource2
+    {
+        foreach (TSource sourceItem in source)
         {
-            foreach (TSource sourceItem in source)
-            {
-                destination.Add(sourceItem);
-            }
+            destination.Add(sourceItem);
         }
     }
 }

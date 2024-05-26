@@ -1,13 +1,12 @@
-﻿namespace CairoDesktop.Common
+﻿namespace CairoDesktop.Common;
+
+public enum CairoMessageImage
 {
-    public enum CairoMessageImage
-    {
-        Default,
-        LogOff,
-        Restart,
-        ShutDown,
-        Information,
-        Warning,
-        Error
-    }
+    Default,
+    LogOff,
+    Restart,
+    ShutDown,
+    Information,
+    Warning,
+    Error
 }

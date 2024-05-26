@@ -1,8 +1,7 @@
-﻿namespace CairoDesktop.Common
+﻿namespace CairoDesktop.Common;
+
+public class NavigationItem
 {
-    public class NavigationItem
-    {
-        public string DisplayName;
-        public string Path;
-    }
+    public string DisplayName;
+    public string Path;
 }

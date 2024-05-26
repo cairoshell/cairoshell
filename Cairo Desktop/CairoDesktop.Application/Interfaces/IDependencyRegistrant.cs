@@ -1,7 +1,6 @@
-﻿namespace CairoDesktop.Application.Interfaces
+﻿namespace CairoDesktop.Application.Interfaces;
+
+public interface IDependencyRegistrant
 {
-    public interface IDependencyRegistrant
-    {
-        void Register(IDependencyRegistrar registrar);
-    }
+    void Register(IDependencyRegistrar registrar);
 }

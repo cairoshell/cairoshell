@@ -5,70 +5,70 @@ using System.Windows.Interop;
 using ManagedShell.Common.Logging;
 using static ManagedShell.Interop.NativeMethods;
 
-namespace CairoDesktop.Common
+namespace CairoDesktop.Common;
+
+public static class HotKeyManager
 {
-    public static class HotKeyManager
+    internal readonly static Dictionary<int, HotKey> HotKeys = new Dictionary<int, HotKey>();
+
+    static HotKeyManager()
     {
-        internal readonly static Dictionary<int, HotKey> HotKeys = new Dictionary<int, HotKey>();
+        ComponentDispatcher.ThreadFilterMessage +=
+            new ThreadMessageEventHandler(ComponentDispatcherThreadFilterMessage);
+    }
 
-        static HotKeyManager()
+    private static void ComponentDispatcherThreadFilterMessage(ref MSG msg, ref bool handled)
+    {
+        if (!handled)
         {
-            ComponentDispatcher.ThreadFilterMessage += new ThreadMessageEventHandler(ComponentDispatcherThreadFilterMessage);
-        }
-
-        private static void ComponentDispatcherThreadFilterMessage(ref MSG msg, ref bool handled)
-        {
-            if (!handled)
+            if (msg.message == (int)WM.HOTKEY)
             {
-                if (msg.message == (int)WM.HOTKEY)
+                if (HotKeys.TryGetValue((int)msg.wParam, out HotKey hotKey))
                 {
-                    if (HotKeys.TryGetValue((int)msg.wParam, out HotKey hotKey))
+                    if (hotKey.Action != null)
                     {
-                        if (hotKey.Action != null)
-                        {
-                            ShellLogger.Debug(string.Format("HotKey {0} pressed", hotKey.Key.ToString()));
-                            hotKey.Action.Invoke(hotKey);
-                        }
-
-                        handled = true;
+                        ShellLogger.Debug(string.Format("HotKey {0} pressed", hotKey.Key.ToString()));
+                        hotKey.Action.Invoke(hotKey);
                     }
+
+                    handled = true;
                 }
             }
         }
+    }
 
-        public static HotKey RegisterHotKey(IList<string> keys, Action<HotKey> action)
+    public static HotKey RegisterHotKey(IList<string> keys, Action<HotKey> action)
+    {
+        Key key = Key.None;
+
+        Enum.TryParse(keys[0], out HotKeyModifier mod1);
+        HotKeyModifier mod2 = HotKeyModifier.None;
+
+        if (keys.Count > 2)
         {
-            Key key = Key.None;
-
-            Enum.TryParse(keys[0], out HotKeyModifier mod1);
-            HotKeyModifier mod2 = HotKeyModifier.None;
-
-            if (keys.Count > 2)
-            {
-                Enum.TryParse(keys[1], out mod2);
-                Enum.TryParse(keys[2], out key);
-            }
-            else if (keys.Count == 2)
-            {
-                Enum.TryParse(keys[1], out key);
-            }
-
-            HotKey hotkey = null;
-            if (mod1 != HotKeyModifier.None && mod2 != HotKeyModifier.None && key != Key.None)
-            {
-                hotkey = new HotKey(key, mod2 | mod1, action);
-            }
-            else if (mod1 != HotKeyModifier.None && key != Key.None)
-            {
-                hotkey = new HotKey(key, mod1, action);
-            }
-
-            return hotkey;
+            Enum.TryParse(keys[1], out mod2);
+            Enum.TryParse(keys[2], out key);
+        }
+        else if (keys.Count == 2)
+        {
+            Enum.TryParse(keys[1], out key);
         }
 
-        public static void UnregisterHotKey(HotKey hotKey)
+        HotKey hotkey = null;
+        if (mod1 != HotKeyModifier.None && mod2 != HotKeyModifier.None && key != Key.None)
         {
-            hotKey.Unregister();
+            hotkey = new HotKey(key, mod2 | mod1, action);
         }
+        else if (mod1 != HotKeyModifier.None && key != Key.None)
+        {
+            hotkey = new HotKey(key, mod1, action);
+        }
+
+        return hotkey;
+    }
+
+    public static void UnregisterHotKey(HotKey hotKey)
+    {
+        hotKey.Unregister();
     }
 }

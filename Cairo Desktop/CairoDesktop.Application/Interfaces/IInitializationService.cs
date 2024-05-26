@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace CairoDesktop.Application.Interfaces
+namespace CairoDesktop.Application.Interfaces;
+
+public interface IInitializationService
 {
-    public interface IInitializationService
-    {
-        void SetIsCairoRunningAsShell();
+    void SetIsCairoRunningAsShell();
 
-        void WriteApplicationDebugInfoToConsole(Version productVersion);
+    void WriteApplicationDebugInfoToConsole(Version productVersion);
 
-        void LoadExtensions();
+    void LoadExtensions();
 
-        void SetTheme();
+    void SetTheme();
 
-        void SetupWindowServices();
-    }
+    void SetupWindowServices();
 }

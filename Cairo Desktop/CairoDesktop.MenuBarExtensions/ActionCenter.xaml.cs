@@ -6,42 +6,45 @@ using System.Windows.Input;
 using CairoDesktop.Application.Interfaces;
 using ManagedShell.Common.Helpers;
 
-namespace CairoDesktop.MenuBarExtensions
+namespace CairoDesktop.MenuBarExtensions;
+
+/// <summary>
+/// Interaction logic for ActionCenter.xaml
+/// </summary>
+public partial class ActionCenter : UserControl
 {
-    /// <summary>
-    /// Interaction logic for ActionCenter.xaml
-    /// </summary>
-    public partial class ActionCenter : UserControl
+    private IntPtr _parentHwnd;
+
+    public ActionCenter(IMenuBar host)
     {
-        private IntPtr _parentHwnd;
+        InitializeComponent();
 
-        public ActionCenter(IMenuBar host)
+        _parentHwnd = host.GetHandle();
+    }
+
+    private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)
+    {
+        if (EnvironmentHelper.IsWindows11OrBetter)
         {
-            InitializeComponent();
-
-            _parentHwnd = host.GetHandle();
+            ShellHelper.ShowNotificationCenter();
         }
-
-        private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)
+        else
         {
-            if (EnvironmentHelper.IsWindows11OrBetter)
-            {
-                ShellHelper.ShowNotificationCenter();
-            }
-            else
-            {
-                ShellHelper.ShowActionCenter();
-            }
+            ShellHelper.ShowActionCenter();
         }
+    }
 
-        private void miOpenActionCenter_MouseEnter(object sender, MouseEventArgs e)
-        {
-            NativeMethods.SetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE, NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
-        }
+    private void miOpenActionCenter_MouseEnter(object sender, MouseEventArgs e)
+    {
+        NativeMethods.SetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE,
+            NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) |
+            (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
+    }
 
-        private void miOpenActionCenter_MouseLeave(object sender, MouseEventArgs e)
-        {
-            NativeMethods.SetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE, NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) & ~(int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
-        }
+    private void miOpenActionCenter_MouseLeave(object sender, MouseEventArgs e)
+    {
+        NativeMethods.SetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE,
+            NativeMethods.GetWindowLong(_parentHwnd, NativeMethods.GWL_EXSTYLE) &
+            ~(int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
     }
 }

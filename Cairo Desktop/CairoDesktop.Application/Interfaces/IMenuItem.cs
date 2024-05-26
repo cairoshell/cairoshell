@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace CairoDesktop.Application.Interfaces
-{
-    public interface IMenuItem
-    {
-        string Header { get; }
+namespace CairoDesktop.Application.Interfaces;
 
-        void MenuItem_Click<TEventArgs>(object sender, TEventArgs e) where TEventArgs : EventArgs;
-    }
+public interface IMenuItem
+{
+    string Header { get; }
+
+    void MenuItem_Click<TEventArgs>(object sender, TEventArgs e) where TEventArgs : EventArgs;
 }

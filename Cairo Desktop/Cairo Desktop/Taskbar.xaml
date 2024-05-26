@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <supportingclasses:CairoAppBarWindow
     xmlns:supportingclasses="clr-namespace:CairoDesktop.SupportingClasses"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -127,17 +128,18 @@
                                                                 <ControlTemplate>
                                                                     <StackPanel Orientation="Horizontal" Margin="0,3">
                                                                         <Border BorderThickness="0,0,1,0"
-                                                                                BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}"
-                                                                                Width="100" Margin="0,-3">
-                                                                            <TextBlock Text="{Binding Converter={StaticResource groupNameConverter}}"
-                                                                                       Name="CategoryText"
-                                                                                       HorizontalAlignment="Right"
-                                                                                       VerticalAlignment="Top"
-                                                                                       Padding="6,7,6,0"
-                                                                                       TextTrimming="CharacterEllipsis"
-                                                                                       ToolTip="{Binding Converter={StaticResource groupNameConverter}}"
-                                                                                       FontFamily="{DynamicResource ResourceKey=GlobalFontFamily}"
-                                                                                       FontSize="{DynamicResource ResourceKey=MediumFontSize}" />
+                                                                            BorderBrush="{DynamicResource ResourceKey=MenuBorderBrush}"
+                                                                            Width="100" Margin="0,-3">
+                                                                            <TextBlock
+                                                                                Text="{Binding Converter={StaticResource groupNameConverter}}"
+                                                                                Name="CategoryText"
+                                                                                HorizontalAlignment="Right"
+                                                                                VerticalAlignment="Top"
+                                                                                Padding="6,7,6,0"
+                                                                                TextTrimming="CharacterEllipsis"
+                                                                                ToolTip="{Binding Converter={StaticResource groupNameConverter}}"
+                                                                                FontFamily="{DynamicResource ResourceKey=GlobalFontFamily}"
+                                                                                FontSize="{DynamicResource ResourceKey=MediumFontSize}" />
                                                                         </Border>
                                                                         <ItemsPresenter />
                                                                     </StackPanel>
@@ -156,17 +158,17 @@
                                                         <ControlTemplate TargetType="{x:Type ListViewItem}">
                                                             <Border BorderThickness="0" BorderBrush="Transparent">
                                                                 <self:TaskButton ListMode="True"
-                                                                                 ParentTaskbar="{Binding ElementName=TaskbarWindow}">
+                                                                    ParentTaskbar="{Binding ElementName=TaskbarWindow}">
                                                                     <self:TaskButton.Style>
                                                                         <Style TargetType="self:TaskButton">
                                                                             <Setter Property="Visibility"
-                                                                                    Value="Collapsed" />
+                                                                                Value="Collapsed" />
                                                                             <Style.Triggers>
                                                                                 <DataTrigger
                                                                                     Binding="{Binding Path=ShowInTaskbar}"
                                                                                     Value="True">
                                                                                     <Setter Property="Visibility"
-                                                                                            Value="Visible" />
+                                                                                        Value="Visible" />
                                                                                 </DataTrigger>
                                                                             </Style.Triggers>
                                                                         </Style>
@@ -223,30 +225,34 @@
                                                 </Setter.Value>
                                             </Setter>
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Source={x:Static settings:Settings.Instance}, Path=TaskbarGroupingStyle, UpdateSourceTrigger=PropertyChanged}"
-                                                             Value="2">
+                                                <DataTrigger
+                                                    Binding="{Binding Source={x:Static settings:Settings.Instance}, Path=TaskbarGroupingStyle, UpdateSourceTrigger=PropertyChanged}"
+                                                    Value="2">
                                                     <DataTrigger.Setters>
                                                         <Setter Property="Template">
                                                             <Setter.Value>
                                                                 <ControlTemplate TargetType="GroupItem">
-                                                                    <ContentControl Style="{StaticResource TaskbarGroup}">
+                                                                    <ContentControl
+                                                                        Style="{StaticResource TaskbarGroup}">
                                                                         <Border BorderThickness="0"
-                                                                                Margin="0,0,-1,0"
-                                                                                Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}">
+                                                                            Margin="0,0,-1,0"
+                                                                            Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}">
                                                                             <self:TaskButton ListMode="False"
-                                                                                             ParentTaskbar="{Binding ElementName=TaskbarWindow}"
-                                                                                             DataContext="{Binding Converter={StaticResource groupConverter}}" />
+                                                                                ParentTaskbar="{Binding ElementName=TaskbarWindow}"
+                                                                                DataContext="{Binding Converter={StaticResource groupConverter}}" />
                                                                             <Border.Triggers>
                                                                                 <EventTrigger RoutedEvent="Loaded">
                                                                                     <BeginStoryboard>
                                                                                         <Storyboard>
-                                                                                            <DoubleAnimation Storyboard.TargetProperty="Width"
-                                                                                                             From="0"
-                                                                                                             To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}"
-                                                                                                             Duration="0:0:0.2"
-                                                                                                             FillBehavior="Stop">
+                                                                                            <DoubleAnimation
+                                                                                                Storyboard.TargetProperty="Width"
+                                                                                                From="0"
+                                                                                                To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}"
+                                                                                                Duration="0:0:0.2"
+                                                                                                FillBehavior="Stop">
                                                                                                 <DoubleAnimation.EasingFunction>
-                                                                                                    <QuadraticEase EasingMode="EaseInOut" />
+                                                                                                    <QuadraticEase
+                                                                                                        EasingMode="EaseInOut" />
                                                                                                 </DoubleAnimation.EasingFunction>
                                                                                             </DoubleAnimation>
                                                                                         </Storyboard>
@@ -292,10 +298,10 @@
                                                             <BeginStoryboard>
                                                                 <Storyboard>
                                                                     <DoubleAnimation Storyboard.TargetProperty="Width"
-                                                                                     From="0"
-                                                                                     To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}"
-                                                                                     Duration="0:0:0.2"
-                                                                                     FillBehavior="Stop">
+                                                                        From="0"
+                                                                        To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}"
+                                                                        Duration="0:0:0.2"
+                                                                        FillBehavior="Stop">
                                                                         <DoubleAnimation.EasingFunction>
                                                                             <QuadraticEase EasingMode="EaseInOut" />
                                                                         </DoubleAnimation.EasingFunction>

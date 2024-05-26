@@ -1,35 +1,34 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using System.Collections.Generic;
 
-namespace CairoDesktop.Infrastructure.Services
+namespace CairoDesktop.Infrastructure.Services;
+
+public sealed class ExtensionService : IExtensionService
 {
-    public sealed class ExtensionService : IExtensionService
+    private readonly ICairoApplication _app;
+    private readonly IEnumerable<IShellExtension> _extensions;
+
+    public ExtensionService(ICairoApplication app, IEnumerable<IShellExtension> extensions)
     {
-        private readonly ICairoApplication _app;
-        private readonly IEnumerable<IShellExtension> _extensions;
+        _app = app;
+        _extensions = extensions;
+    }
 
-        public ExtensionService(ICairoApplication app, IEnumerable<IShellExtension> extensions)
+    public void Start()
+    {
+        foreach (var shellExtension in _extensions)
         {
-            _app = app;
-            _extensions = extensions;
+            shellExtension.Start();
+            _app.Extensions.Add(shellExtension);
         }
+    }
 
-        public void Start()
+    public void Stop()
+    {
+        foreach (var shellExtension in _extensions)
         {
-            foreach (var shellExtension in _extensions)
-            {
-                shellExtension.Start();
-                _app.Extensions.Add(shellExtension);
-            }
-        }
-
-        public void Stop()
-        {
-            foreach (var shellExtension in _extensions)
-            {
-                _app.Extensions.Remove(shellExtension);
-                shellExtension.Stop();
-            }
+            _app.Extensions.Remove(shellExtension);
+            shellExtension.Stop();
         }
     }
 }

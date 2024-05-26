@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace CairoDesktop.Common.Logging
+namespace CairoDesktop.Common.Logging;
+
+internal class NullScope : IDisposable
 {
-    internal class NullScope : IDisposable
+    public static NullScope Instance { get; } = new NullScope();
+
+    private NullScope()
     {
-        public static NullScope Instance { get; } = new NullScope();
+    }
 
-        private NullScope()
-        {
-        }
-
-        public void Dispose()
-        {
-        }
+    public void Dispose()
+    {
     }
 }

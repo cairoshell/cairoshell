@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CairoDesktop.Application.Interfaces
+namespace CairoDesktop.Application.Interfaces;
+
+public interface ICairoApplication
 {
-    public interface ICairoApplication
-    {
-        List<IMenuItem> CairoMenu { get; }
-        
-        List<IShellExtension> Extensions { get; }
+    List<IMenuItem> CairoMenu { get; }
 
-        List<IMenuBarExtension> MenuBarExtensions { get; }
+    List<IShellExtension> Extensions { get; }
 
-        List<IMenuItem> Places { get; }
+    List<IMenuBarExtension> MenuBarExtensions { get; }
 
-        string AppVersion { get; }
-        
-        bool IsShuttingDown { get; }
+    List<IMenuItem> Places { get; }
 
-        void ExitCairo();
+    string AppVersion { get; }
 
-        void RestartCairo();
+    bool IsShuttingDown { get; }
 
-        int Run();
+    void ExitCairo();
 
-        void Dispatch(Action action);
-    }
+    void RestartCairo();
+
+    int Run();
+
+    void Dispatch(Action action);
 }

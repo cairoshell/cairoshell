@@ -5,43 +5,43 @@ using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.SupportingClasses;
+
+// TODO: Convert this to a service that uses DI to get IDesktopManager and require consumers to get it from ServiceProvider or DI
+class FolderHelper
 {
-    // TODO: Convert this to a service that uses DI to get IDesktopManager and require consumers to get it from ServiceProvider or DI
-    class FolderHelper
+    public static bool OpenLocation(string path)
     {
-        public static bool OpenLocation(string path)
+        if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay &&
+            DesktopManager.IsEnabled)
         {
-            if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay && DesktopManager.IsEnabled)
+            try
             {
-                try
-                {
-                    var desktopManager = CairoApplication.Current.Host.Services.GetService<IDesktopManager>();
+                var desktopManager = CairoApplication.Current.Host.Services.GetService<IDesktopManager>();
 
-                    desktopManager.NavigationManager.NavigateTo(path);
-                    desktopManager.IsOverlayOpen = true;
+                desktopManager.NavigationManager.NavigateTo(path);
+                desktopManager.IsOverlayOpen = true;
 
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                return true;
             }
-
-            return OpenWithShell(path);
+            catch
+            {
+                return false;
+            }
         }
 
-        public static bool OpenWithShell(string path)
-        {                    
-            var desktopManager = CairoApplication.Current.Host.Services.GetService<IDesktopManager>();
+        return OpenWithShell(path);
+    }
 
-            desktopManager.IsOverlayOpen = false;
+    public static bool OpenWithShell(string path)
+    {
+        var desktopManager = CairoApplication.Current.Host.Services.GetService<IDesktopManager>();
 
-            var args = Environment.ExpandEnvironmentVariables(path);
-            var filename = Environment.ExpandEnvironmentVariables(Settings.Instance.FileManager);
+        desktopManager.IsOverlayOpen = false;
 
-            return ShellHelper.StartProcess(filename, $@"""{args}""");
-        }
+        var args = Environment.ExpandEnvironmentVariables(path);
+        var filename = Environment.ExpandEnvironmentVariables(Settings.Instance.FileManager);
+
+        return ShellHelper.StartProcess(filename, $@"""{args}""");
     }
 }

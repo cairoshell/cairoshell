@@ -1,14 +1,13 @@
 ﻿using ManagedShell.ShellFolders.Enums;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.SupportingClasses;
+
+internal enum CairoContextMenuItem : uint
 {
-    internal enum CairoContextMenuItem : uint
-    {
-        AddToStacks = CommonContextMenuItem.Properties + 1,
-        RemoveFromStacks,
-        OpenInNewWindow,
-        OpenOnDesktop,
-        Personalize,
-        DisplaySettings
-    }
+    AddToStacks = CommonContextMenuItem.Properties + 1,
+    RemoveFromStacks,
+    OpenInNewWindow,
+    OpenOnDesktop,
+    Personalize,
+    DisplaySettings
 }

@@ -1,20 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <PropertyGroup>
-	<TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
-    <Platforms>x64;AnyCPU;ARM64</Platforms>
-    <UseWPF>True</UseWPF>
-    <UseWindowsForms>True</UseWindowsForms>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
+        <Platforms>x64;AnyCPU;ARM64</Platforms>
+        <UseWPF>True</UseWPF>
+        <UseWindowsForms>True</UseWindowsForms>
+        <LangVersion>10.0</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj" />
-    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj"/>
+        <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Resources\cairoIcon.png" />
-    <Resource Include="Resources\nullIcon.png" />
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Resources\cairoIcon.png"/>
+        <Resource Include="Resources\nullIcon.png"/>
+    </ItemGroup>
 
 </Project>

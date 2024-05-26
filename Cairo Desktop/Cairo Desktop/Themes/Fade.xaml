@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-   
+
+<ResourceDictionary xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
     <!-- Menu resources -->
     <LinearGradientBrush StartPoint="0,0"
                          EndPoint="0,1"
@@ -8,7 +10,7 @@
         <GradientStop Color="#CF000000"
                       Offset="0.1" />
         <GradientStop
-                      Offset=".9" Color="#02000000" />
+            Offset=".9" Color="#02000000" />
     </LinearGradientBrush>
     <SolidColorBrush Color="#BF4a4a4a" x:Key="MenuBarBorder" />
     <SolidColorBrush Color="#cF0f0f0f" x:Key="MenuBackgroundGradient" />
@@ -40,9 +42,9 @@
         <GradientStop Color="#02000000"
                       Offset="0.1" />
         <GradientStop
-                      Offset="1" Color="#CF000000" />
+            Offset="1" Color="#CF000000" />
     </LinearGradientBrush>
-        <SolidColorBrush Color="#00000000" x:Key="TaskbarBottomBorder" />
+    <SolidColorBrush Color="#00000000" x:Key="TaskbarBottomBorder" />
     <SolidColorBrush Color="#9F2a2a2a" x:Key="TaskbarTopBackground" />
     <SolidColorBrush Color="#AF707070" x:Key="TaskbarTopBorder" />
     <SolidColorBrush Color="#77000000" x:Key="TaskGroupBorder" />

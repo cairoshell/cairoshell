@@ -5,18 +5,17 @@ using ManagedShell.AppBar;
 
 // TODO: Window services should move to the Infrastructure project
 
-namespace CairoDesktop.Services
+namespace CairoDesktop.Services;
+
+public interface IWindowService : IDisposable
 {
-    public interface IWindowService : IDisposable
-    {
-        List<CairoAppBarWindow> Windows { get; }
+    List<CairoAppBarWindow> Windows { get; }
 
-        void Register();
+    void Register();
 
-        void HandleScreenAdded(AppBarScreen screen);
+    void HandleScreenAdded(AppBarScreen screen);
 
-        void RefreshWindows(WindowManagerEventArgs args);
+    void RefreshWindows(WindowManagerEventArgs args);
 
-        void HandleScreenRemoved(string screenDeviceName);
-    }
+    void HandleScreenRemoved(string screenDeviceName);
 }

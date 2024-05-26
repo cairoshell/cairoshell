@@ -1,92 +1,92 @@
 ﻿using CairoDesktop.Common;
 using ManagedShell.WindowsTasks;
 
-namespace CairoDesktop.AppGrabber
+namespace CairoDesktop.AppGrabber;
+
+public class QuickLaunchManager
 {
-    public class QuickLaunchManager
+    private readonly IAppGrabber _appGrabber;
+
+    public QuickLaunchManager(IAppGrabber appGrabber)
     {
-        private readonly IAppGrabber _appGrabber;
-        
-        public QuickLaunchManager(IAppGrabber appGrabber)
-        {
-            _appGrabber = appGrabber;
+        _appGrabber = appGrabber;
 
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+        Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+    }
+
+    private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e == null)
+        {
+            return;
         }
 
-        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        if (string.IsNullOrWhiteSpace(e.PropertyName))
         {
-            if (e == null)
-            {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(e.PropertyName))
-            {
-                return;
-            }
-
-            switch (e.PropertyName)
-            {
-                case "TaskbarIconSize":
-                    updateIconSize();
-                    break;
-            }
+            return;
         }
 
-        private void updateIconSize()
+        switch (e.PropertyName)
         {
-            foreach (var app in _appGrabber.QuickLaunch)
-            {
-                app.Icon = null;
-            }
+            case "TaskbarIconSize":
+                updateIconSize();
+                break;
         }
+    }
 
-        public ApplicationInfo GetQuickLaunchApplicationInfo(ApplicationWindow window)
+    private void updateIconSize()
+    {
+        foreach (var app in _appGrabber.QuickLaunch)
         {
-            // it would be nice to cache this, but need to handle case of user adding/removing app via various means after first access
-            foreach (ApplicationInfo ai in _appGrabber.QuickLaunch)
-            {
-                if (ai.Target.ToLower() == window.WinFileName.ToLower() || (window.IsUWP && ai.Target == window.AppUserModelID))
-                {
-                    return ai;
-                }
-                
-                if (window.Title.ToLower().Contains(ai.Name.ToLower()))
-                {
-                    return ai;
-                }
-            }
-
-            return null;
+            app.Icon = null;
         }
+    }
 
-        public void AddToQuickLaunch(bool isUWP, string path)
+    public ApplicationInfo GetQuickLaunchApplicationInfo(ApplicationWindow window)
+    {
+        // it would be nice to cache this, but need to handle case of user adding/removing app via various means after first access
+        foreach (ApplicationInfo ai in _appGrabber.QuickLaunch)
         {
-            if (isUWP)
+            if (ai.Target.ToLower() == window.WinFileName.ToLower() ||
+                (window.IsUWP && ai.Target == window.AppUserModelID))
             {
-                // store app, do special stuff
-                _appGrabber.AddStoreApp(path, AppCategoryType.QuickLaunch);
+                return ai;
             }
-            else
+
+            if (window.Title.ToLower().Contains(ai.Name.ToLower()))
             {
-                _appGrabber.AddByPath(path, AppCategoryType.QuickLaunch);
+                return ai;
             }
         }
 
-        public void AddToQuickLaunch(ApplicationInfo app)
+        return null;
+    }
+
+    public void AddToQuickLaunch(bool isUWP, string path)
+    {
+        if (isUWP)
         {
-            if (_appGrabber.QuickLaunch.Contains(app))
-            {
-                return;
-            }
-
-            ApplicationInfo appClone = app.Clone();
-            appClone.Icon = null;
-
-            _appGrabber.QuickLaunch.Add(appClone);
-
-            _appGrabber.Save();
+            // store app, do special stuff
+            _appGrabber.AddStoreApp(path, AppCategoryType.QuickLaunch);
         }
+        else
+        {
+            _appGrabber.AddByPath(path, AppCategoryType.QuickLaunch);
+        }
+    }
+
+    public void AddToQuickLaunch(ApplicationInfo app)
+    {
+        if (_appGrabber.QuickLaunch.Contains(app))
+        {
+            return;
+        }
+
+        ApplicationInfo appClone = app.Clone();
+        appClone.Icon = null;
+
+        _appGrabber.QuickLaunch.Add(appClone);
+
+        _appGrabber.Save();
     }
 }

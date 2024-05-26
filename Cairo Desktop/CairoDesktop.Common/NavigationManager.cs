@@ -5,175 +5,176 @@ using System.Runtime.CompilerServices;
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
 
-namespace CairoDesktop.Common
+namespace CairoDesktop.Common;
+
+public class NavigationManager : INotifyPropertyChanged
 {
-    public class NavigationManager : INotifyPropertyChanged
+    private List<NavigationItem> list;
+    private int _currentIndex;
+    private IReadOnlyList<NavigationItem> readOnlyList;
+
+    private int currentIndex
     {
-        private List<NavigationItem> list;
-        private int _currentIndex;
-        private IReadOnlyList<NavigationItem> readOnlyList;
-
-        private int currentIndex
+        get { return _currentIndex; }
+        set
         {
-            get
-            {
-                return _currentIndex;
-            }
-            set
-            {
-                _currentIndex = value;
+            _currentIndex = value;
 
-                OnPropertyChanged("CurrentPath");
-                OnPropertyChanged("CanGoBack");
-                OnPropertyChanged("CanGoForward");
-                OnPropertyChanged("CurrentPathFriendly");
-                OnPropertyChanged("HomePathFriendly");
-            }
+            OnPropertyChanged("CurrentPath");
+            OnPropertyChanged("CanGoBack");
+            OnPropertyChanged("CanGoForward");
+            OnPropertyChanged("CurrentPathFriendly");
+            OnPropertyChanged("HomePathFriendly");
         }
+    }
 
-        public NavigationManager()
+    public NavigationManager()
+    {
+        list = new List<NavigationItem>();
+        currentIndex = 0;
+
+        Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+
+        NavigateHome();
+    }
+
+    private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
         {
-            list = new List<NavigationItem>();
-            currentIndex = 0;
-
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
-
-            NavigateHome();
-        }
-
-        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+            switch (e.PropertyName)
             {
-                switch (e.PropertyName)
-                {
-                    case "DesktopDirectory":
-                        OnPropertyChanged("HomePathFriendly");
-                        break;
-                }
+                case "DesktopDirectory":
+                    OnPropertyChanged("HomePathFriendly");
+                    break;
             }
         }
+    }
 
-        public NavigationItem CurrentItem
+    public NavigationItem CurrentItem
+    {
+        get
         {
-            get
-            {
-                if (list.Count > 0)
-                    return list[currentIndex];
-                
-                return new NavigationItem();
-            }
-        }
+            if (list.Count > 0)
+                return list[currentIndex];
 
-        public IReadOnlyList<NavigationItem> PathHistory
+            return new NavigationItem();
+        }
+    }
+
+    public IReadOnlyList<NavigationItem> PathHistory
+    {
+        get
         {
-            get
-            {
-                if (readOnlyList == null)
-                    readOnlyList = list.AsReadOnly();
+            if (readOnlyList == null)
+                readOnlyList = list.AsReadOnly();
 
-                return readOnlyList;
-            }
+            return readOnlyList;
         }
+    }
 
-        public bool CanGoBack =>
-            list != null &&
-            list.Count > 1 &&
-            currentIndex > 0;
+    public bool CanGoBack =>
+        list != null &&
+        list.Count > 1 &&
+        currentIndex > 0;
 
-        public bool CanGoForward =>
-            list != null &&
-            list.Count > 1 &&
-            currentIndex < list.Count - 1;
+    public bool CanGoForward =>
+        list != null &&
+        list.Count > 1 &&
+        currentIndex < list.Count - 1;
 
-        public string CurrentPathFriendly => Localization.DisplayString.sDesktop_CurrentFolder + " " + CurrentItem.DisplayName;
+    public string CurrentPathFriendly =>
+        Localization.DisplayString.sDesktop_CurrentFolder + " " + CurrentItem.DisplayName;
 
-        public string HomePathFriendly => $"{Localization.DisplayString.sDesktop_Home} ({Settings.Instance.DesktopDirectory})";
+    public string HomePathFriendly =>
+        $"{Localization.DisplayString.sDesktop_Home} ({Settings.Instance.DesktopDirectory})";
 
-        public void Clear()
-        {
-            NavigationItem current = CurrentItem;
-            list.Clear();
-            list.Add(current);
-            currentIndex = 0;
-        }
+    public void Clear()
+    {
+        NavigationItem current = CurrentItem;
+        list.Clear();
+        list.Add(current);
+        currentIndex = 0;
+    }
 
-        public void NavigateTo(string path)
-        {
-            if (path != CurrentItem.Path)
-            {
-                if (CanGoForward)
-                {
-                    // if we went back, then changed directory, items past the new location are no longer valid
-                    int forwardStart = currentIndex + 1;
-                    list.RemoveRange(forwardStart, list.Count - forwardStart);
-                }
-
-                list.Add(new NavigationItem {Path = path});
-                currentIndex = list.Count - 1;
-            }
-        }
-
-        public void NavigateForward()
+    public void NavigateTo(string path)
+    {
+        if (path != CurrentItem.Path)
         {
             if (CanGoForward)
             {
-                currentIndex += 1;
-            }
-        }
-
-        public void NavigateBackward()
-        {
-            if (CanGoBack)
-            {
-                currentIndex -= 1;
-            }
-        }
-
-        public void NavigateToIndex(int index)
-        {
-            if (index < list.Count)
-            {
-                currentIndex = index;
-            }
-        }
-
-        public void NavigateToParent(ShellFolder currentFolder)
-        {
-            string parentPath = string.Empty;
-            if (currentFolder.ParentItem != null)
-            {
-                parentPath = currentFolder.ParentItem.Path;
-                currentFolder.ParentItem.Dispose();
-            }
-            
-            NavigateTo(parentPath);
-        }
-
-        public void NavigateHome()
-        {
-            string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string desktopPath = Settings.Instance.DesktopDirectory;
-
-            // first run won't have desktop directory set
-            if (string.IsNullOrWhiteSpace(desktopPath))
-            {
-                Settings.Instance.DesktopDirectory = defaultDesktopPath;
-                desktopPath = defaultDesktopPath;
+                // if we went back, then changed directory, items past the new location are no longer valid
+                int forwardStart = currentIndex + 1;
+                list.RemoveRange(forwardStart, list.Count - forwardStart);
             }
 
-            if (!ShellHelper.Exists(desktopPath))
-                desktopPath = defaultDesktopPath;
-
-            NavigateTo(desktopPath);
+            list.Add(new NavigationItem { Path = path });
+            currentIndex = list.Count - 1;
         }
-
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
     }
+
+    public void NavigateForward()
+    {
+        if (CanGoForward)
+        {
+            currentIndex += 1;
+        }
+    }
+
+    public void NavigateBackward()
+    {
+        if (CanGoBack)
+        {
+            currentIndex -= 1;
+        }
+    }
+
+    public void NavigateToIndex(int index)
+    {
+        if (index < list.Count)
+        {
+            currentIndex = index;
+        }
+    }
+
+    public void NavigateToParent(ShellFolder currentFolder)
+    {
+        string parentPath = string.Empty;
+        if (currentFolder.ParentItem != null)
+        {
+            parentPath = currentFolder.ParentItem.Path;
+            currentFolder.ParentItem.Dispose();
+        }
+
+        NavigateTo(parentPath);
+    }
+
+    public void NavigateHome()
+    {
+        string defaultDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        string desktopPath = Settings.Instance.DesktopDirectory;
+
+        // first run won't have desktop directory set
+        if (string.IsNullOrWhiteSpace(desktopPath))
+        {
+            Settings.Instance.DesktopDirectory = defaultDesktopPath;
+            desktopPath = defaultDesktopPath;
+        }
+
+        if (!ShellHelper.Exists(desktopPath))
+            desktopPath = defaultDesktopPath;
+
+        NavigateTo(desktopPath);
+    }
+
+    #region INotifyPropertyChanged
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    #endregion
 }

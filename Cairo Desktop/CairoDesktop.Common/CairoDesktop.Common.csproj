@@ -1,37 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <PropertyGroup>
-	<TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
-    <Platforms>x64;AnyCPU;ARM64</Platforms>
-    <UseWPF>True</UseWPF>
-    <UseWindowsForms>True</UseWindowsForms>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
+        <Platforms>x64;AnyCPU;ARM64</Platforms>
+        <UseWPF>True</UseWPF>
+        <UseWindowsForms>True</UseWindowsForms>
+        <LangVersion>10.0</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Resources\InvertShader\shader_invert.ps" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Resources\InvertShader\shader_invert.ps"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ManagedShell" Version="0.0.249" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
-    <PackageReference Include="System.Text.Json" Version="8.0.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="ManagedShell" Version="0.0.249"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1"/>
+        <PackageReference Include="System.Text.Json" Version="8.0.3"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj" />
-    <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj"/>
+        <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Resources\dialogIconCairo.png" />
-    <Resource Include="Resources\dialogIconError.png" />
-    <Resource Include="Resources\dialogIconInformation.png" />
-    <Resource Include="Resources\dialogIconWarning.png" />
-    <Resource Include="Resources\dialogIconLogOff.png" />
-    <Resource Include="Resources\dialogIconRestart.png" />
-    <Resource Include="Resources\dialogIconShutDown.png" />
-    <Resource Include="Resources\InvertShader\shader_invert.ps" />
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Resources\dialogIconCairo.png"/>
+        <Resource Include="Resources\dialogIconError.png"/>
+        <Resource Include="Resources\dialogIconInformation.png"/>
+        <Resource Include="Resources\dialogIconWarning.png"/>
+        <Resource Include="Resources\dialogIconLogOff.png"/>
+        <Resource Include="Resources\dialogIconRestart.png"/>
+        <Resource Include="Resources\dialogIconShutDown.png"/>
+        <Resource Include="Resources\InvertShader\shader_invert.ps"/>
+    </ItemGroup>
 
 </Project>

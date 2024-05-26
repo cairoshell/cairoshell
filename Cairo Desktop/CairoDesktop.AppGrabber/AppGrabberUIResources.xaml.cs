@@ -6,310 +6,326 @@ using System.Windows.Input;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 
-namespace CairoDesktop.AppGrabber
+namespace CairoDesktop.AppGrabber;
+
+partial class AppGrabberUIResources : ResourceDictionary
 {
-    partial class AppGrabberUIResources : ResourceDictionary
+    bool isDragging = false;
+
+    private void DelCatButtonShown(object sender, EventArgs e)
     {
-        bool isDragging = false;
-
-        private void DelCatButtonShown(object sender, EventArgs e)
+        Button button = sender as Button;
+        Category actionableCategory = button.CommandParameter as Category;
+        if (actionableCategory.Type > 0)
         {
-            Button button = sender as Button;
-            Category actionableCategory = button.CommandParameter as Category;
-            if (actionableCategory.Type > 0)
-            {
-                button.Visibility = Visibility.Collapsed;
-            }
+            button.Visibility = Visibility.Collapsed;
         }
+    }
 
-        private void Category_Block_DoubleClick(object sender, MouseEventArgs e)
+    private void Category_Block_DoubleClick(object sender, MouseEventArgs e)
+    {
+        if (e.RightButton == MouseButtonState.Pressed)
         {
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                TextBlock block = sender as TextBlock;
-                // Do not allow special category to be renamed.
-                if ((block.DataContext as Category).Type > 0) return;
+            TextBlock block = sender as TextBlock;
+            // Do not allow special category to be renamed.
+            if ((block.DataContext as Category).Type > 0) return;
 
-                foreach (UIElement peer in (block.Parent as DockPanel).Children)
-                {
-                    if (peer is TextBox)
-                    {
-                        peer.Visibility = Visibility.Visible;
-                        peer.Focus();
-                        (peer as TextBox).ContextMenu = null;
-                        (peer as TextBox).SelectAll();
-                    }
-                }
-                block.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void CategoryButtonClicked(object sender, RoutedEventArgs e)
-        {
-            Button button = sender as Button;
-            Category actionableCategory = button.CommandParameter as Category;
-            CategoryList catList = actionableCategory.ParentCategoryList;
-            switch (button.Content as string)
+            foreach (UIElement peer in (block.Parent as DockPanel).Children)
             {
-                case "5":
-                    catList.MoveCategory(actionableCategory, -1);
-                    break;
-                case "6":
-                    catList.MoveCategory(actionableCategory, 1);
-                    break;
-                case "r":
-                    catList.Remove(actionableCategory);
-                    break;
-            }
-        }
-
-        private void TextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                (sender as TextBox).MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-            }
-        }
-
-        private void Category_Label_Edit_End(object sender, RoutedEventArgs e)
-        {
-            TextBox box = sender as TextBox;
-            foreach (UIElement peer in (box.Parent as DockPanel).Children)
-            {
-                if (peer is TextBlock)
+                if (peer is TextBox)
                 {
                     peer.Visibility = Visibility.Visible;
+                    peer.Focus();
+                    (peer as TextBox).ContextMenu = null;
+                    (peer as TextBox).SelectAll();
                 }
             }
-            box.Visibility = Visibility.Collapsed;
-        }
 
-        private void ListView_Focus_Lost(object sender, RoutedEventArgs e)
-        {
-            ListView view = sender as ListView;
-            view.SelectedIndex = -1;
+            block.Visibility = Visibility.Collapsed;
         }
+    }
 
-        private void ListView_DragEnter(object sender, DragEventArgs e)
+    private void CategoryButtonClicked(object sender, RoutedEventArgs e)
+    {
+        Button button = sender as Button;
+        Category actionableCategory = button.CommandParameter as Category;
+        CategoryList catList = actionableCategory.ParentCategoryList;
+        switch (button.Content as string)
         {
-            if (isDragging && e.Data.GetData(typeof(ApplicationInfo)) is ApplicationInfo)
+            case "5":
+                catList.MoveCategory(actionableCategory, -1);
+                break;
+            case "6":
+                catList.MoveCategory(actionableCategory, 1);
+                break;
+            case "r":
+                catList.Remove(actionableCategory);
+                break;
+        }
+    }
+
+    private void TextBox_KeyUp(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            (sender as TextBox).MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+        }
+    }
+
+    private void Category_Label_Edit_End(object sender, RoutedEventArgs e)
+    {
+        TextBox box = sender as TextBox;
+        foreach (UIElement peer in (box.Parent as DockPanel).Children)
+        {
+            if (peer is TextBlock)
             {
-                e.Effects = DragDropEffects.Move | DragDropEffects.Copy;
+                peer.Visibility = Visibility.Visible;
             }
         }
 
-        private void ListView_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
-            {
-                ShellLogger.Debug(e.Data.GetData(typeof(ApplicationInfo)).ToString());
-                ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
-                ListView dropTarget = sender as ListView;
+        box.Visibility = Visibility.Collapsed;
+    }
 
-                if (dropTarget.ItemsSource is Category)
+    private void ListView_Focus_Lost(object sender, RoutedEventArgs e)
+    {
+        ListView view = sender as ListView;
+        view.SelectedIndex = -1;
+    }
+
+    private void ListView_DragEnter(object sender, DragEventArgs e)
+    {
+        if (isDragging && e.Data.GetData(typeof(ApplicationInfo)) is ApplicationInfo)
+        {
+            e.Effects = DragDropEffects.Move | DragDropEffects.Copy;
+        }
+    }
+
+    private void ListView_Drop(object sender, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
+        {
+            ShellLogger.Debug(e.Data.GetData(typeof(ApplicationInfo)).ToString());
+            ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
+            ListView dropTarget = sender as ListView;
+
+            if (dropTarget.ItemsSource is Category)
+            {
+                Category target = dropTarget.ItemsSource as Category;
+
+                if (target.Type == AppCategoryType.QuickLaunch)
                 {
-                    Category target = dropTarget.ItemsSource as Category;
+                    e.Effects = DragDropEffects.Copy;
 
-                    if (target.Type == AppCategoryType.QuickLaunch)
+                    // Do not duplicate entries
+                    if (!target.Contains(dropData))
                     {
-                        e.Effects = DragDropEffects.Copy;
+                        ApplicationInfo dropClone = dropData.Clone();
 
-                        // Do not duplicate entries
-                        if (!target.Contains(dropData))
-                        {
-                            ApplicationInfo dropClone = dropData.Clone();
-
-                            if (e.OriginalSource != null && e.OriginalSource is FrameworkElement && (e.OriginalSource as FrameworkElement).DataContext != null && (e.OriginalSource as FrameworkElement).DataContext is ApplicationInfo)
-                                target.Insert(target.IndexOf((e.OriginalSource as FrameworkElement).DataContext as ApplicationInfo), dropClone);
-                            else
-                                target.Add(dropClone);
-
-                            dropClone.Icon = null; // icon may differ depending on category
-                        }
+                        if (e.OriginalSource != null && e.OriginalSource is FrameworkElement &&
+                            (e.OriginalSource as FrameworkElement).DataContext != null &&
+                            (e.OriginalSource as FrameworkElement).DataContext is ApplicationInfo)
+                            target.Insert(
+                                target.IndexOf((e.OriginalSource as FrameworkElement).DataContext as ApplicationInfo),
+                                dropClone);
                         else
-                        {
-                            // reorder existing
-                            if (e.OriginalSource != null && e.OriginalSource is FrameworkElement && (e.OriginalSource as FrameworkElement).DataContext != null && (e.OriginalSource as FrameworkElement).DataContext is ApplicationInfo)
-                                target.Move(target.IndexOf(dropData), target.IndexOf((e.OriginalSource as FrameworkElement).DataContext as ApplicationInfo));
-                        }
+                            target.Add(dropClone);
+
+                        dropClone.Icon = null; // icon may differ depending on category
                     }
-                    else if (sourceView != null && sourceView != sender)
+                    else
                     {
-                        e.Effects = DragDropEffects.Move;
-
-                        Category source = sourceView.ItemsSource as Category;
-
-                        source.Remove(dropData);
-
-                        if (source.Type != AppCategoryType.QuickLaunch)
-                        {
-                            target.Add(dropData); // if coming from quick launch, simply remove from quick launch
-
-                            if (dropTarget.Items.Contains(dropData))
-                            {
-                                dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.IndexOf(dropData)]);
-                            }
-                        }
+                        // reorder existing
+                        if (e.OriginalSource != null && e.OriginalSource is FrameworkElement &&
+                            (e.OriginalSource as FrameworkElement).DataContext != null &&
+                            (e.OriginalSource as FrameworkElement).DataContext is ApplicationInfo)
+                            target.Move(target.IndexOf(dropData),
+                                target.IndexOf((e.OriginalSource as FrameworkElement).DataContext as ApplicationInfo));
                     }
                 }
-                else
+                else if (sourceView != null && sourceView != sender)
                 {
                     e.Effects = DragDropEffects.Move;
 
-                    (sourceView.ItemsSource as IList<ApplicationInfo>).Remove(dropData);
-                    (dropTarget.ItemsSource as IList<ApplicationInfo>).Add(dropData);
+                    Category source = sourceView.ItemsSource as Category;
 
-                    if (dropTarget.Items.Contains(dropData))
+                    source.Remove(dropData);
+
+                    if (source.Type != AppCategoryType.QuickLaunch)
                     {
-                        dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.IndexOf(dropData)]);
+                        target.Add(dropData); // if coming from quick launch, simply remove from quick launch
+
+                        if (dropTarget.Items.Contains(dropData))
+                        {
+                            dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.IndexOf(dropData)]);
+                        }
                     }
                 }
             }
-            else if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            else
             {
-                string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
-                if (fileNames != null)
+                e.Effects = DragDropEffects.Move;
+
+                (sourceView.ItemsSource as IList<ApplicationInfo>).Remove(dropData);
+                (dropTarget.ItemsSource as IList<ApplicationInfo>).Add(dropData);
+
+                if (dropTarget.Items.Contains(dropData))
                 {
-                    ListView dropTarget = sender as ListView;
+                    dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.IndexOf(dropData)]);
+                }
+            }
+        }
+        else if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (fileNames != null)
+            {
+                ListView dropTarget = sender as ListView;
 
-                    if (!(dropTarget.ItemsSource is Category))
+                if (!(dropTarget.ItemsSource is Category))
+                {
+                    foreach (String fileName in fileNames)
                     {
-                        foreach (String fileName in fileNames)
+                        ShellLogger.Debug(fileName);
+
+                        if (ShellHelper.Exists(fileName))
                         {
-                            ShellLogger.Debug(fileName);
-
-                            if (ShellHelper.Exists(fileName))
+                            ApplicationInfo customApp = AppGrabberService.PathToApp(fileName, false, false);
+                            if (!object.ReferenceEquals(customApp, null))
                             {
-                                ApplicationInfo customApp = AppGrabberService.PathToApp(fileName, false, false);
-                                if (!object.ReferenceEquals(customApp, null))
-                                {
-                                    (dropTarget.ItemsSource as IList<ApplicationInfo>).Add(customApp);
+                                (dropTarget.ItemsSource as IList<ApplicationInfo>).Add(customApp);
 
-                                    if (dropTarget.Items.Contains(customApp))
-                                    {
-                                        dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.IndexOf(customApp)]);
-                                    }
+                                if (dropTarget.Items.Contains(customApp))
+                                {
+                                    dropTarget.ScrollIntoView(dropTarget.Items[dropTarget.Items.IndexOf(customApp)]);
                                 }
                             }
                         }
                     }
                 }
             }
-
-            sourceView = null;
-            isDragging = false;
         }
 
-        private void ListView_DragLeave(object sender, DragEventArgs e)
-        {
-            (sender as ListView).AllowDrop = true;
-            e.Effects = DragDropEffects.Move | DragDropEffects.Copy;
-        }
+        sourceView = null;
+        isDragging = false;
+    }
 
-        ListView sourceView;
-        private void ListView_MouseMove(object sender, MouseEventArgs e)
+    private void ListView_DragLeave(object sender, DragEventArgs e)
+    {
+        (sender as ListView).AllowDrop = true;
+        e.Effects = DragDropEffects.Move | DragDropEffects.Copy;
+    }
+
+    ListView sourceView;
+
+    private void ListView_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed &&
+            e.OriginalSource.GetType() != typeof(System.Windows.Controls.Primitives.Thumb) &&
+            e.OriginalSource.GetType() != typeof(System.Windows.Controls.Primitives.RepeatButton) &&
+            e.OriginalSource.GetType() != typeof(System.Windows.Controls.Primitives.Track))
         {
-            if (e.LeftButton == MouseButtonState.Pressed && e.OriginalSource.GetType() != typeof(System.Windows.Controls.Primitives.Thumb) && e.OriginalSource.GetType() != typeof(System.Windows.Controls.Primitives.RepeatButton) && e.OriginalSource.GetType() != typeof(System.Windows.Controls.Primitives.Track))
+            sourceView = sender as ListView;
+
+            if (sourceView.SelectedItem != null)
             {
-                sourceView = sender as ListView;
-
-                if (sourceView.SelectedItem != null)
+                isDragging = true;
+                try
                 {
-                    isDragging = true;
-                    try
-                    {
-                        DragDrop.DoDragDrop(sourceView, sourceView.SelectedItem, DragDropEffects.Move | DragDropEffects.Copy);
-                    }
-                    catch (Exception ex)
-                    {
-                        //Output the reason to the debugger
-                        ShellLogger.Error("Error doing Drag-Drop from appgrabber:" + ex.Message, ex);
-                    }
+                    DragDrop.DoDragDrop(sourceView, sourceView.SelectedItem,
+                        DragDropEffects.Move | DragDropEffects.Copy);
+                }
+                catch (Exception ex)
+                {
+                    //Output the reason to the debugger
+                    ShellLogger.Error("Error doing Drag-Drop from appgrabber:" + ex.Message, ex);
                 }
             }
         }
+    }
 
-        // Moving Categories Around
-        private void TextBlock_PreviewDragEnter(object sender, DragEventArgs e)
+    // Moving Categories Around
+    private void TextBlock_PreviewDragEnter(object sender, DragEventArgs e)
+    {
+        string[] formats = e.Data.GetFormats();
+        bool b = e.Data.GetDataPresent(typeof(Category));
+        if (isDragging && e.Data.GetDataPresent(typeof(Category)) &&
+            (e.AllowedEffects & DragDropEffects.Move) == DragDropEffects.Move)
         {
-            string[] formats = e.Data.GetFormats();
-            bool b = e.Data.GetDataPresent(typeof(Category));
-            if (isDragging && e.Data.GetDataPresent(typeof(Category)) && (e.AllowedEffects & DragDropEffects.Move) == DragDropEffects.Move)
-            {
-                if (e.Data.GetData(typeof(Category)) as Category != (sender as TextBlock).DataContext as Category)
-                {
-                    e.Effects = DragDropEffects.Move;
-                }
-            }
-            if (isDragging && e.Data.GetDataPresent(typeof(ApplicationInfo)) && (e.AllowedEffects & DragDropEffects.Move) == DragDropEffects.Move)
+            if (e.Data.GetData(typeof(Category)) as Category != (sender as TextBlock).DataContext as Category)
             {
                 e.Effects = DragDropEffects.Move;
             }
         }
 
-        private void TextBlock_Drop(object sender, DragEventArgs e)
+        if (isDragging && e.Data.GetDataPresent(typeof(ApplicationInfo)) &&
+            (e.AllowedEffects & DragDropEffects.Move) == DragDropEffects.Move)
         {
-            TextBlock dropBlock = sender as TextBlock;
-            Category dropCategory = dropBlock.DataContext as Category;
+            e.Effects = DragDropEffects.Move;
+        }
+    }
 
-            if (e.Data.GetDataPresent(typeof(Category)))
+    private void TextBlock_Drop(object sender, DragEventArgs e)
+    {
+        TextBlock dropBlock = sender as TextBlock;
+        Category dropCategory = dropBlock.DataContext as Category;
+
+        if (e.Data.GetDataPresent(typeof(Category)))
+        {
+            ShellLogger.Debug(e.Data.GetData(typeof(Category)).ToString());
+            Category dropData = e.Data.GetData(typeof(Category)) as Category;
+
+            CategoryList parent = dropCategory.ParentCategoryList;
+            int initialIndex = parent.IndexOf(dropData);
+            int dropIndex = parent.IndexOf(dropCategory);
+            parent.Move(initialIndex, dropIndex);
+        }
+        else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
+        {
+            ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
+            if (dropCategory.Type == AppCategoryType.QuickLaunch)
             {
-                ShellLogger.Debug(e.Data.GetData(typeof(Category)).ToString());
-                Category dropData = e.Data.GetData(typeof(Category)) as Category;
+                e.Effects = DragDropEffects.Copy;
 
-                CategoryList parent = dropCategory.ParentCategoryList;
-                int initialIndex = parent.IndexOf(dropData);
-                int dropIndex = parent.IndexOf(dropCategory);
-                parent.Move(initialIndex, dropIndex);
+                // Do not duplicate entries
+                if (!dropCategory.Contains(dropData))
+                {
+                    ApplicationInfo dropClone = dropData.Clone();
+                    dropCategory.Add(dropClone);
+                    dropClone.Icon = null; // icon may differ depending on category
+                }
             }
-            else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
+            else if (sourceView != null)
             {
-                ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
-                if (dropCategory.Type == AppCategoryType.QuickLaunch)
+                e.Effects = DragDropEffects.Move;
+
+                (sourceView.ItemsSource as Category).Remove(dropData);
+                if ((sourceView.ItemsSource as Category).Type != AppCategoryType.QuickLaunch)
                 {
-                    e.Effects = DragDropEffects.Copy;
-
-                    // Do not duplicate entries
-                    if (!dropCategory.Contains(dropData))
-                    {
-                        ApplicationInfo dropClone = dropData.Clone();
-                        dropCategory.Add(dropClone);
-                        dropClone.Icon = null; // icon may differ depending on category
-                    }
+                    dropCategory.Add(dropData);
                 }
-                else if (sourceView != null)
-                {
-                    e.Effects = DragDropEffects.Move;
-
-                    (sourceView.ItemsSource as Category).Remove(dropData);
-                    if ((sourceView.ItemsSource as Category).Type != AppCategoryType.QuickLaunch)
-                    {
-                        dropCategory.Add(dropData);
-                    }
-                }
-
-                sourceView = null;
             }
 
-            isDragging = false;
+            sourceView = null;
         }
 
-        private void TextBlock_PreviewMouseMove(object sender, MouseEventArgs e)
+        isDragging = false;
+    }
+
+    private void TextBlock_PreviewMouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed && !isDragging)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && !isDragging)
+            isDragging = true;
+            TextBlock sourceBlock = sender as TextBlock;
+            Category selectedCategory = sourceBlock.DataContext as Category;
+            try
             {
-                isDragging = true;
-                TextBlock sourceBlock = sender as TextBlock;
-                Category selectedCategory = sourceBlock.DataContext as Category;
-                try
-                {
-                    DragDrop.DoDragDrop(sourceBlock, selectedCategory, DragDropEffects.Move);
-                }
-                catch (Exception ex)
-                {
-                    //Output the reason to the debugger
-                    ShellLogger.Error("Error doing Drag-Drop from AppGrabber TextBlock. Details: " + ex.Message , ex);
-                }
+                DragDrop.DoDragDrop(sourceBlock, selectedCategory, DragDropEffects.Move);
+            }
+            catch (Exception ex)
+            {
+                //Output the reason to the debugger
+                ShellLogger.Error("Error doing Drag-Drop from AppGrabber TextBlock. Details: " + ex.Message, ex);
             }
         }
     }

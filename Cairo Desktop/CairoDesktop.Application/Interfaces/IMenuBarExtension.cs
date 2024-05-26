@@ -1,6 +1,5 @@
-﻿namespace CairoDesktop.Application.Interfaces
+﻿namespace CairoDesktop.Application.Interfaces;
+
+public interface IMenuBarExtension
 {
-    public interface IMenuBarExtension
-    {
-    }
 }

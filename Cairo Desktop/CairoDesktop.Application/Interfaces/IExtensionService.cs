@@ -1,9 +1,8 @@
-﻿namespace CairoDesktop.Application.Interfaces
-{
-   public interface IExtensionService
-   {
-       void Start();
+﻿namespace CairoDesktop.Application.Interfaces;
 
-       void Stop();
-   }
+public interface IExtensionService
+{
+    void Start();
+
+    void Stop();
 }

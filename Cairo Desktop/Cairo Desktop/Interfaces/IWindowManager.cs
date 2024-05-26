@@ -4,22 +4,21 @@ using ManagedShell.AppBar;
 using System;
 using System.Collections.Generic;
 
-namespace CairoDesktop.Interfaces
+namespace CairoDesktop.Interfaces;
+
+public interface IWindowManager
 {
-    public interface IWindowManager
-    {
-        event EventHandler<WindowManagerEventArgs> DwmChanged;
+    event EventHandler<WindowManagerEventArgs> DwmChanged;
 
-        event EventHandler<WindowManagerEventArgs> ScreensChanged;
+    event EventHandler<WindowManagerEventArgs> ScreensChanged;
 
-        bool IsSettingDisplays { get; set; }
+    bool IsSettingDisplays { get; set; }
 
-        List<AppBarScreen> ScreenState { get; set; }
+    List<AppBarScreen> ScreenState { get; set; }
 
-        void InitialSetup();
+    void InitialSetup();
 
-        void NotifyDisplayChange(ScreenSetupReason reason);
+    void NotifyDisplayChange(ScreenSetupReason reason);
 
-        void RegisterWindowService(IWindowService service);
-    }
+    void RegisterWindowService(IWindowService service);
 }

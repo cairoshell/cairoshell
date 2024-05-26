@@ -2,20 +2,19 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace CairoDesktop.Infrastructure.DependencyInjection
+namespace CairoDesktop.Infrastructure.DependencyInjection;
+
+public abstract class CairoBackgroundService : BackgroundService
 {
-    public abstract class CairoBackgroundService : BackgroundService
+    protected Task ServiceStartTask;
+
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        protected Task ServiceStartTask;
-
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        if (!stoppingToken.IsCancellationRequested)
         {
-            if (!stoppingToken.IsCancellationRequested)
-            {
-                ServiceStartTask.Start();
-            }
-
-            return ServiceStartTask;
+            ServiceStartTask.Start();
         }
+
+        return ServiceStartTask;
     }
 }

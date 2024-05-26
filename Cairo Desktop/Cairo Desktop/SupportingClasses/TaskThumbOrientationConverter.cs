@@ -2,24 +2,23 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.SupportingClasses;
+
+[ValueConversion(typeof(bool), typeof(Orientation))]
+public class TaskThumbOrientationConverter : IValueConverter
 {
-    [ValueConversion(typeof(bool), typeof(Orientation))]
-    public class TaskThumbOrientationConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        if (value is bool showThumbnails)
         {
-            if (value is bool showThumbnails)
-            {
-                return showThumbnails ? Orientation.Horizontal : Orientation.Vertical;
-            }
-
-            return Orientation.Horizontal;
+            return showThumbnails ? Orientation.Horizontal : Orientation.Vertical;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            return Binding.DoNothing;
-        }
+        return Orientation.Horizontal;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        return Binding.DoNothing;
     }
 }

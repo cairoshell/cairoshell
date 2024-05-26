@@ -8,42 +8,42 @@
              ContextMenuOpening="UserControl_ContextMenuOpening">
     <UserControl.ContextMenu>
         <ContextMenu Closed="ContextMenu_Closed">
-            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Restore)}" 
-                          Click="miRestore_Click" 
-                          Name="miRestore">
+            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Restore)}"
+                      Click="miRestore_Click"
+                      Name="miRestore">
                 <MenuItem.Icon>
-                    <TextBlock FontFamily="Marlett" 
-                                   Text="&#x32;" />
+                    <TextBlock FontFamily="Marlett"
+                               Text="&#x32;" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Move)}" 
-                          Click="miMove_Click"  
-                          Name="miMove" />
-            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Size)}" 
-                          Click="miSize_Click"  
-                          Name="miSize" />
-            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Minimize)}" 
-                          Click="miMinimize_Click" 
-                          Name="miMinimize">
+            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Move)}"
+                      Click="miMove_Click"
+                      Name="miMove" />
+            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Size)}"
+                      Click="miSize_Click"
+                      Name="miSize" />
+            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Minimize)}"
+                      Click="miMinimize_Click"
+                      Name="miMinimize">
                 <MenuItem.Icon>
-                    <TextBlock FontFamily="Marlett" 
-                                   Text="&#x30;" />
+                    <TextBlock FontFamily="Marlett"
+                               Text="&#x30;" />
                 </MenuItem.Icon>
             </MenuItem>
-            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Maximize)}" 
-                          Click="miMaximize_Click" 
-                          Name="miMaximize">
+            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Maximize)}"
+                      Click="miMaximize_Click"
+                      Name="miMaximize">
                 <MenuItem.Icon>
-                    <TextBlock FontFamily="Marlett" 
-                                   Text="&#x31;" />
+                    <TextBlock FontFamily="Marlett"
+                               Text="&#x31;" />
                 </MenuItem.Icon>
             </MenuItem>
             <Separator />
-            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Close)}" 
-                          Click="miClose_Click">
+            <MenuItem Header="{Binding Path=(l10n:DisplayString.sTaskbar_Close)}"
+                      Click="miClose_Click">
                 <MenuItem.Icon>
-                    <TextBlock FontFamily="Marlett" 
-                                   Text="&#x72;" />
+                    <TextBlock FontFamily="Marlett"
+                               Text="&#x72;" />
                 </MenuItem.Icon>
             </MenuItem>
         </ContextMenu>
@@ -55,18 +55,19 @@
         <StackPanel>
             <StackPanel Name="pnlTitle"
                         Orientation="Horizontal">
-                <Image Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
-                        Width="16"
-                        Height="16" />
+                <Image
+                    Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}"
+                    Width="16"
+                    Height="16" />
                 <TextBlock Style="{StaticResource TaskThumbTitleStyle}"
                            Text="{Binding Path=Title}"
                            Width="138" />
-                <Button	Name="closeButton" 
+                <Button Name="closeButton"
                         Style="{StaticResource TaskThumbCloseButton}"
                         Visibility="Hidden"
                         Click="Button_Click">
-                    <Path Data="M 18,11 27,20 M 18,20 27,11"	
-                          Stroke="{Binding Path=Foreground,	RelativeSource={RelativeSource AncestorType={x:Type Button}}}"		
+                    <Path Data="M 18,11 27,20 M 18,20 27,11"
+                          Stroke="{Binding Path=Foreground,	RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
                           StrokeThickness="1"
                           Stretch="Fill" />
                 </Button>

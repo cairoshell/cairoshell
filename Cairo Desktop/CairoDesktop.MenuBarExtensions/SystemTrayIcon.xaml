@@ -12,13 +12,13 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel Style="{DynamicResource NotifyIconPanel}">
-        <Border MouseUp="Image_MouseUp" 
-                MouseDown="Image_MouseDown" 
-                MouseEnter="Image_MouseEnter" 
-                MouseLeave="Image_MouseLeave" 
-                MouseMove="Image_MouseMove" 
-                Background="Transparent" 
-                ToolTip="{Binding Path=Title}" 
+        <Border MouseUp="Image_MouseUp"
+                MouseDown="Image_MouseDown"
+                MouseEnter="Image_MouseEnter"
+                MouseLeave="Image_MouseLeave"
+                MouseMove="Image_MouseMove"
+                Background="Transparent"
+                ToolTip="{Binding Path=Title}"
                 ToolTipService.Placement="Bottom">
             <Image Source="{Binding Path=Icon, Mode=OneWay}"
                    Name="NotifyIconImage"
@@ -38,13 +38,16 @@
             <Border Style="{DynamicResource NotifyIconBalloonInlineBorder}"
                     x:Name="BalloonInlineBorder">
                 <StackPanel Style="{DynamicResource NotifyIconBalloonInlinePanel}"
-                             x:Name="BalloonInlinePanel">
-                     <TextBlock Text="{Binding Path=Balloon, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource balloonTitleConverter}}"
-                                Style="{DynamicResource NotifyIconBalloonInlineTitle}"
-                                MouseLeftButtonUp="TextBlock_MouseLeftButtonUp" />
+                            x:Name="BalloonInlinePanel">
+                    <TextBlock
+                        Text="{Binding Path=Balloon, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource balloonTitleConverter}}"
+                        Style="{DynamicResource NotifyIconBalloonInlineTitle}"
+                        MouseLeftButtonUp="TextBlock_MouseLeftButtonUp" />
                     <Button Style="{DynamicResource NotifyIconBalloonInlineCloseButton}"
                             ToolTip="{Binding Path=(l10n:DisplayString.sInterface_Dismiss)}"
-                            Click="Button_Click">r</Button>
+                            Click="Button_Click">
+                        r
+                    </Button>
                 </StackPanel>
             </Border>
             <Border.Width>
@@ -55,21 +58,24 @@
             </Border.Width>
         </Border>
         <Popup AllowsTransparency="True"
-                PopupAnimation="Slide"
-                Name="BalloonPopup"
-                IsOpen="{Binding ElementName=BalloonInlineBorder, Path=IsMouseOver, Mode=OneWay}">
+               PopupAnimation="Slide"
+               Name="BalloonPopup"
+               IsOpen="{Binding ElementName=BalloonInlineBorder, Path=IsMouseOver, Mode=OneWay}">
             <Border Style="{StaticResource ResourceKey=CairoMenuBorderStyle}">
                 <Border Style="{StaticResource ResourceKey=NotifyIconBalloonPopupInnerBorder}">
                     <StackPanel Orientation="Vertical">
                         <DockPanel>
-                            <Image Source="{Binding Path=Balloon.Icon, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"
-                                    Style="{DynamicResource NotifyIconBalloonImage}"
-                                    DockPanel.Dock="Left" />
-                            <TextBlock Text="{Binding Path=Balloon.Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    Style="{DynamicResource NotifyIconBalloonTitle}" />
+                            <Image
+                                Source="{Binding Path=Balloon.Icon, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=OneWay}"
+                                Style="{DynamicResource NotifyIconBalloonImage}"
+                                DockPanel.Dock="Left" />
+                            <TextBlock
+                                Text="{Binding Path=Balloon.Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                Style="{DynamicResource NotifyIconBalloonTitle}" />
                         </DockPanel>
-                        <TextBlock Text="{Binding Path=Balloon.Info, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                    Style="{DynamicResource NotifyIconBalloonContent}" />
+                        <TextBlock
+                            Text="{Binding Path=Balloon.Info, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                            Style="{DynamicResource NotifyIconBalloonContent}" />
                     </StackPanel>
                 </Border>
             </Border>

@@ -2,37 +2,36 @@
 using System;
 using System.Windows.Data;
 
-namespace CairoDesktop.MenuBarExtensions
+namespace CairoDesktop.MenuBarExtensions;
+
+[ValueConversion(typeof(NotificationBalloon), typeof(string))]
+public class NotificationBalloonTitleConverter : IValueConverter
 {
-    [ValueConversion(typeof(NotificationBalloon), typeof(string))]
-    public class NotificationBalloonTitleConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            string title = string.Empty;
+        string title = string.Empty;
 
-            if (value is NotificationBalloon balloon)
+        if (value is NotificationBalloon balloon)
+        {
+            if (balloon.Info != string.Empty)
             {
-                if (balloon.Info != string.Empty)
-                {
-                    title = balloon.Info;
-                }
-                else if (balloon.Title != string.Empty)
-                {
-                    title = balloon.Title;
-                }
-                else
-                {
-                    title = balloon.NotifyIcon.Title;
-                }
+                title = balloon.Info;
             }
-
-            return title.Replace('\n', ' ').Replace('\r', ' ');
+            else if (balloon.Title != string.Empty)
+            {
+                title = balloon.Title;
+            }
+            else
+            {
+                title = balloon.NotifyIcon.Title;
+            }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            return Binding.DoNothing;
-        }
+        return title.Replace('\n', ' ').Replace('\r', ' ');
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        return Binding.DoNothing;
     }
 }

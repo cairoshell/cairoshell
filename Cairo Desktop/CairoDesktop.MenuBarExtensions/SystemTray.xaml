@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
@@ -37,7 +38,9 @@
     </UserControl.Resources>
     <StackPanel Orientation="Horizontal">
         <ItemsControl ItemsSource="{Binding Path=UnpinnedIcons}" Name="UnpinnedItems" Visibility="Collapsed" />
-        <ToggleButton Name="btnToggle" Click="btnToggle_Click" Visibility="Collapsed" ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_ToggleNotificationArea)}" ToolTipService.Placement="Bottom" Style="{StaticResource CairoSystrayExpanderStyle}" />
+        <ToggleButton Name="btnToggle" Click="btnToggle_Click" Visibility="Collapsed"
+                      ToolTip="{Binding Path=(l10n:DisplayString.sMenuBar_ToggleNotificationArea)}"
+                      ToolTipService.Placement="Bottom" Style="{StaticResource CairoSystrayExpanderStyle}" />
         <ItemsControl ItemsSource="{Binding Path=PromotedIcons, ElementName=CairoSystemTray}" Name="PromotedItems" />
         <ItemsControl ItemsSource="{Binding Path=PinnedIcons}" Name="PinnedItems" />
     </StackPanel>

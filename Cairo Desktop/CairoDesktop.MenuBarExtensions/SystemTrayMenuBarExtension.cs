@@ -4,27 +4,26 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.WindowsTray;
 
-namespace CairoDesktop.MenuBarExtensions
+namespace CairoDesktop.MenuBarExtensions;
+
+class SystemTrayMenuBarExtension : UserControlMenuBarExtension
 {
-    class SystemTrayMenuBarExtension : UserControlMenuBarExtension
+    private readonly NotificationArea _notificationArea;
+    private SystemTray _systemTray;
+
+    internal SystemTrayMenuBarExtension(NotificationArea notificationArea)
     {
-        private readonly NotificationArea _notificationArea;
-        private SystemTray _systemTray;
+        _notificationArea = notificationArea;
+    }
 
-        internal SystemTrayMenuBarExtension(NotificationArea notificationArea)
+    public override UserControl StartControl(IMenuBar host)
+    {
+        if (!Settings.Instance.EnableSysTray)
         {
-            _notificationArea = notificationArea;
+            return null;
         }
 
-        public override UserControl StartControl(IMenuBar host)
-        {
-            if (!Settings.Instance.EnableSysTray)
-            {
-                return null;
-            }
-
-            _systemTray = new SystemTray(host, _notificationArea);
-            return _systemTray;
-        }
+        _systemTray = new SystemTray(host, _notificationArea);
+        return _systemTray;
     }
 }

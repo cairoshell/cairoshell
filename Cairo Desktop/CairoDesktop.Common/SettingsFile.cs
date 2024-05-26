@@ -6,111 +6,111 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
-namespace CairoDesktop.Common
+namespace CairoDesktop.Common;
+
+public class SettingsFile<T> : INotifyPropertyChanged where T : IMigratableSettings
 {
-    public class SettingsFile<T> : INotifyPropertyChanged where T : IMigratableSettings
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    private static JsonSerializerOptions options = new JsonSerializerOptions()
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        IgnoreReadOnlyProperties = true,
+        WriteIndented = true,
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+    };
 
-        private static JsonSerializerOptions options = new JsonSerializerOptions()
+    private string _fileName;
+
+    private T _settings;
+
+    public T Settings
+    {
+        get => _settings;
+        set
         {
-            IgnoreReadOnlyProperties = true,
-            WriteIndented = true,
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-        };
+            _settings = value;
+            OnPropertyChanged();
+            SaveToFile();
+        }
+    }
 
-        private string _fileName;
+    public SettingsFile(string fileName, T defaultSettings)
+    {
+        _fileName = fileName;
+        _settings = defaultSettings;
 
-        private T _settings;
-        public T Settings
+        if (!LoadFromFile())
         {
-            get => _settings;
-            set
+            ShellLogger.Info("SettingsFile: Using default settings");
+        }
+    }
+
+    private bool LoadFromFile()
+    {
+        try
+        {
+            if (!ShellHelper.Exists(_fileName))
             {
-                _settings = value;
-                OnPropertyChanged();
+                return ImportLegacySettings();
+            }
+
+            string jsonString = File.ReadAllText(_fileName);
+            _settings = JsonSerializer.Deserialize<T>(jsonString);
+
+            if (_settings.MigrationPerformed)
+            {
+                // Save post-migration state so that we don't need to migrate every startup
                 SaveToFile();
             }
-        }
 
-        public SettingsFile(string fileName, T defaultSettings)
-        {
-            _fileName = fileName;
-            _settings = defaultSettings;
-
-            if (!LoadFromFile())
-            {
-                ShellLogger.Info("SettingsFile: Using default settings");
-            }
-        }
-
-        private bool LoadFromFile()
-        {
-            try
-            {
-                if (!ShellHelper.Exists(_fileName))
-                {
-                    return ImportLegacySettings();
-                }
-
-                string jsonString = File.ReadAllText(_fileName);
-                _settings = JsonSerializer.Deserialize<T>(jsonString);
-
-                if (_settings.MigrationPerformed)
-                {
-                    // Save post-migration state so that we don't need to migrate every startup
-                    SaveToFile();
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                ShellLogger.Error($"SettingsFile: Error loading settings file: {ex.Message}");
-                return false;
-            }
-        }
-
-        private void SaveToFile()
-        {
-            try
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(_fileName));
-
-                string jsonString = JsonSerializer.Serialize(Settings, options);
-                File.WriteAllText(_fileName, jsonString);
-            }
-            catch (Exception ex)
-            {
-                ShellLogger.Error($"SettingsFile: Error saving settings file: {ex.Message}");
-            }
-        }
-
-        private bool ImportLegacySettings()
-        {
-            var legacySettings = Configuration.Settings.Instance;
-
-            if (legacySettings.IsFirstRun)
-            {
-                // No legacy settings to import
-                return false;
-            }
-
-            Settings.ImportLegacySettings(legacySettings);
-
-            SaveToFile();
             return true;
         }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        catch (Exception ex)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            ShellLogger.Error($"SettingsFile: Error loading settings file: {ex.Message}");
+            return false;
         }
     }
 
-    public interface IMigratableSettings
+    private void SaveToFile()
     {
-        bool MigrationPerformed { get; }
-        void ImportLegacySettings(Configuration.Settings legacySettings);
+        try
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(_fileName));
+
+            string jsonString = JsonSerializer.Serialize(Settings, options);
+            File.WriteAllText(_fileName, jsonString);
+        }
+        catch (Exception ex)
+        {
+            ShellLogger.Error($"SettingsFile: Error saving settings file: {ex.Message}");
+        }
     }
+
+    private bool ImportLegacySettings()
+    {
+        var legacySettings = Configuration.Settings.Instance;
+
+        if (legacySettings.IsFirstRun)
+        {
+            // No legacy settings to import
+            return false;
+        }
+
+        Settings.ImportLegacySettings(legacySettings);
+
+        SaveToFile();
+        return true;
+    }
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+
+public interface IMigratableSettings
+{
+    bool MigrationPerformed { get; }
+    void ImportLegacySettings(Configuration.Settings legacySettings);
 }

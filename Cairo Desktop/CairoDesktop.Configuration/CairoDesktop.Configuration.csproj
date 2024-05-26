@@ -1,28 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <PropertyGroup>
-	<TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
-    <Platforms>x64;AnyCPU;ARM64</Platforms>
-    <UseWPF>True</UseWPF>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
+        <Platforms>x64;AnyCPU;ARM64</Platforms>
+        <UseWPF>True</UseWPF>
+        <LangVersion>10.0</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net471'">
-    <Reference Include="System.Configuration" />
-  </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net471'">
+        <Reference Include="System.Configuration"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Properties\Settings.Designer.cs">
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
+    </ItemGroup>
 
 </Project>

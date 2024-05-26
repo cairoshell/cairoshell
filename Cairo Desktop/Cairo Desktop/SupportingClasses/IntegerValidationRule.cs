@@ -2,37 +2,36 @@
 using System.Globalization;
 using System.Windows.Controls;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.SupportingClasses;
+
+public class IntegerValidationRule : ValidationRule
 {
-    public class IntegerValidationRule : ValidationRule
+    public override ValidationResult Validate(object value, CultureInfo cultureInfo)
     {
-        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        try
         {
-            try
+            if (value is string @string)
             {
-                if (value is string @string)
-                {
-                    if (!int.TryParse(@string, out int result))
-                    {
-                        return new ValidationResult(false, "Unrecognized value.");
-                    }
-
-                    if (result < 0)
-                    {
-                        return new ValidationResult(false, "Negative value.");
-                    }
-
-                    return new ValidationResult(true, null);
-                }
-                else
+                if (!int.TryParse(@string, out int result))
                 {
                     return new ValidationResult(false, "Unrecognized value.");
                 }
+
+                if (result < 0)
+                {
+                    return new ValidationResult(false, "Negative value.");
+                }
+
+                return new ValidationResult(true, null);
             }
-            catch (Exception e)
+            else
             {
-                return new ValidationResult(false, "Error: " + e.Message);
+                return new ValidationResult(false, "Unrecognized value.");
             }
+        }
+        catch (Exception e)
+        {
+            return new ValidationResult(false, "Error: " + e.Message);
         }
     }
 }

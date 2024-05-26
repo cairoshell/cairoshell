@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace CairoDesktop.Application.Interfaces
+namespace CairoDesktop.Application.Interfaces;
+
+public interface IThemeService
 {
-    public interface IThemeService
-    {
-        List<string> GetThemes();
+    List<string> GetThemes();
 
-        void SetTheme(string theme);
+    void SetTheme(string theme);
 
-        void SetThemeFromSettings();
-    }
+    void SetThemeFromSettings();
 }

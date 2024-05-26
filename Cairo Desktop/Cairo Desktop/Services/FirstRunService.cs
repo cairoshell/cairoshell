@@ -8,49 +8,46 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
-namespace CairoDesktop.Services
+namespace CairoDesktop.Services;
+
+class FirstRunService : CairoBackgroundService
 {
-    class FirstRunService : CairoBackgroundService
+    private readonly IAppGrabber _appGrabber;
+    private readonly ICairoApplication _cairoApplication;
+    private readonly ILogger<FirstRunService> _logger;
+
+    private readonly bool _forceTour;
+
+    public FirstRunService(ICairoApplication cairoApplication, IAppGrabber appGrabber, ILogger<FirstRunService> logger,
+        IOptionsMonitor<CommandLineOptions> options)
     {
-        private readonly IAppGrabber _appGrabber;
-        private readonly ICairoApplication _cairoApplication;
-        private readonly ILogger<FirstRunService> _logger;
+        _appGrabber = appGrabber;
+        _cairoApplication = cairoApplication;
+        _logger = logger;
 
-        private readonly bool _forceTour;
-
-        public FirstRunService(ICairoApplication cairoApplication, IAppGrabber appGrabber, ILogger<FirstRunService> logger, IOptionsMonitor<CommandLineOptions> options)
+        try
         {
-            _appGrabber = appGrabber;
-            _cairoApplication = cairoApplication;
-            _logger = logger;
-
-            try
-            {
-                _forceTour = options.CurrentValue.Tour;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"Unable to read tour command line option: {e.Message}");
-            }
-
-            ServiceStartTask = new Task(FirstRun);
+            _forceTour = options.CurrentValue.Tour;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Unable to read tour command line option: {e.Message}");
         }
 
-        private void FirstRun()
-        {
-            if (Settings.Instance.IsFirstRun || _forceTour)
-            {
-                _cairoApplication.Dispatch(() =>
-                {
-                    ShowWelcome();
-                });
-            }
-        }
+        ServiceStartTask = new Task(FirstRun);
+    }
 
-        private void ShowWelcome()
+    private void FirstRun()
+    {
+        if (Settings.Instance.IsFirstRun || _forceTour)
         {
-            Welcome welcome = new Welcome(_cairoApplication, _appGrabber);
-            welcome.Show();
+            _cairoApplication.Dispatch(() => { ShowWelcome(); });
         }
+    }
+
+    private void ShowWelcome()
+    {
+        Welcome welcome = new Welcome(_cairoApplication, _appGrabber);
+        welcome.Show();
     }
 }

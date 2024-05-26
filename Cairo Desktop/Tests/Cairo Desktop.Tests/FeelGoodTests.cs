@@ -1,21 +1,20 @@
 ﻿using Xunit;
 
-namespace CairoDesktop.Tests
+namespace CairoDesktop.Tests;
+
+public class FeelGoodTests
 {
-    public class FeelGoodTests
+    [Fact]
+    public void Int_Parse_Succeeds()
     {
-        [Fact]
-        public void Int_Parse_Succeeds()
-        {
-            // Arrange
-            string tenString = "10";
-            int tenInt = 10;
+        // Arrange
+        string tenString = "10";
+        int tenInt = 10;
 
-            // Act
-            int result = int.Parse(tenString);
+        // Act
+        int result = int.Parse(tenString);
 
-            // Assert
-            Assert.Equal(tenInt, result);
-        }
+        // Assert
+        Assert.Equal(tenInt, result);
     }
 }

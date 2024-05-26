@@ -3,39 +3,40 @@ using System.Windows;
 using System.Windows.Data;
 using ManagedShell.WindowsTasks;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.SupportingClasses;
+
+[ValueConversion(typeof(bool), typeof(Style))]
+public class TaskButtonStyleConverter : IMultiValueConverter
 {
-    [ValueConversion(typeof(bool), typeof(Style))]
-    public class TaskButtonStyleConverter : IMultiValueConverter
+    public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        if (!(values[0] is FrameworkElement fxElement))
         {
-            if (!(values[0] is FrameworkElement fxElement))
-            {
-                return null;
-            }
+            return null;
+        }
 
-            // Default style is Inactive...
-            var fxStyle = fxElement.FindResource("CairoTaskbarButtonInactiveStyle");
-            if (values[1] == DependencyProperty.UnsetValue || values[1] == null)
-            {
-                // Default - couldn't get window state.
-                return fxStyle;
-            }
-
-            EnumUtility.TryCast(values[1], out ApplicationWindow.WindowState winState, ApplicationWindow.WindowState.Inactive);
-
-            if (winState == ApplicationWindow.WindowState.Active)
-            {
-                fxStyle = fxElement.FindResource("CairoTaskbarButtonActiveStyle");
-            }
-
+        // Default style is Inactive...
+        var fxStyle = fxElement.FindResource("CairoTaskbarButtonInactiveStyle");
+        if (values[1] == DependencyProperty.UnsetValue || values[1] == null)
+        {
+            // Default - couldn't get window state.
             return fxStyle;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+        EnumUtility.TryCast(values[1], out ApplicationWindow.WindowState winState,
+            ApplicationWindow.WindowState.Inactive);
+
+        if (winState == ApplicationWindow.WindowState.Active)
         {
-            throw new NotImplementedException();
+            fxStyle = fxElement.FindResource("CairoTaskbarButtonActiveStyle");
         }
+
+        return fxStyle;
+    }
+
+    public object[] ConvertBack(object value, Type[] targetTypes, object parameter,
+        System.Globalization.CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

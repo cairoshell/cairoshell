@@ -21,61 +21,65 @@ using ManagedShell.Common.Enums;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 using System.Windows.Threading;
 
-namespace CairoDesktop
+namespace CairoDesktop;
+
+public partial class MenuBar : CairoAppBarWindow, IMenuBar
 {
-    public partial class MenuBar : CairoAppBarWindow, IMenuBar
+    internal readonly IAppGrabber _appGrabber;
+    private readonly IApplicationUpdateService _applicationUpdateService;
+    private readonly ISettingsUIService _settingsUiService;
+
+    private MenuBarShadow shadow;
+    private static HotKey cairoMenuHotKey;
+    private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
+
+    //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
+
+    public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager,
+        IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService,
+        ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(
+        cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
     {
-        internal readonly IAppGrabber _appGrabber;
-        private readonly IApplicationUpdateService _applicationUpdateService;
-        private readonly ISettingsUIService _settingsUiService;
+        _appGrabber = appGrabber;
+        _applicationUpdateService = applicationUpdateService;
+        _settingsUiService = settingsUiService;
 
-        private MenuBarShadow shadow;
-        private static HotKey cairoMenuHotKey;
-        private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
+        object menuBarWindowAllowsTransparencyResource =
+            CairoApplication.Current.Resources["MenuBarWindowAllowsTransparency"];
+        if (menuBarWindowAllowsTransparencyResource is bool resourceValue)
+            AllowsTransparency = resourceValue;
 
-        //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
+        InitializeComponent();
+
+        AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
+        RequiresScreenEdge = true;
+
+        SetPosition();
+
+        setupChildren();
+
+        setupMenu();
+
+        setupCairoMenu();
+
+        setupPlacesMenu();
+
+        Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+    }
+
+    private void setupChildren()
+    {
+        stacksContainer.MenuBar = this;
+        programsMenuControl.MenuBar = this;
+    }
+
+    private void setupMenu()
+    {
+        if (EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
         {
-            _appGrabber = appGrabber;
-            _applicationUpdateService = applicationUpdateService;
-            _settingsUiService = settingsUiService;
-
-            object menuBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["MenuBarWindowAllowsTransparency"];
-            if (menuBarWindowAllowsTransparencyResource is bool resourceValue)
-                AllowsTransparency = resourceValue;
-
-            InitializeComponent();
-            
-            AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
-            RequiresScreenEdge = true;
-
-            SetPosition();
-
-            setupChildren();
-
-            setupMenu();
-
-            setupCairoMenu();
-
-            setupPlacesMenu();
-
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            // show Windows 10 features
+            miOpenUWPSettings.Visibility = Visibility.Visible;
         }
-
-        private void setupChildren()
-        {
-            stacksContainer.MenuBar = this;
-            programsMenuControl.MenuBar = this;
-        }
-
-        private void setupMenu()
-        {
-            if (EnvironmentHelper.IsWindows10OrBetter && !EnvironmentHelper.IsAppRunningAsShell)
-            {
-                // show Windows 10 features
-                miOpenUWPSettings.Visibility = Visibility.Visible;
-            }
 
 #if !DEBUG
             // I didnt like the Exit Cairo option available when Cairo was set as Shell
@@ -85,567 +89,597 @@ namespace CairoDesktop
             }
 #endif
 
-            // Fix for concurrent seperators
-            Type previousType = null;
-            foreach (UIElement item in CairoMenu.Items)
+        // Fix for concurrent seperators
+        Type previousType = null;
+        foreach (UIElement item in CairoMenu.Items)
+        {
+            if (item.Visibility == Visibility.Visible)
             {
-                if (item.Visibility == Visibility.Visible)
+                Type currentType = item.GetType();
+                if (previousType == typeof(Separator) && currentType == typeof(Separator))
                 {
-                    Type currentType = item.GetType();
-                    if (previousType == typeof(Separator) && currentType == typeof(Separator))
-                    {
-                        ((Separator)item).Visibility = Visibility.Collapsed;
-                    }
-
-                    previousType = currentType;
+                    ((Separator)item).Visibility = Visibility.Collapsed;
                 }
+
+                previousType = currentType;
             }
-
-            // Show power options depending on system support
-            SetHibernateVisibility();
-
-            if (!PowerHelper.CanSleep())
-            {
-                miSleep.Visibility = Visibility.Collapsed;
-            }
-
-            // Set element that should be transformed for auto-hide
-            AutoHideElement = MenuBarWindow;
         }
 
-        private void SetupMenuBarExtensions()
+        // Show power options depending on system support
+        SetHibernateVisibility();
+
+        if (!PowerHelper.CanSleep())
         {
-            foreach (var userControlMenuBarExtension in _cairoApplication.MenuBarExtensions.OfType<UserControlMenuBarExtension>())
-            {
-                var menuExtra = userControlMenuBarExtension.StartControl(this);
-                if (menuExtra != null)
-                {
-                    MenuExtrasHost.Children.Add(menuExtra);
-                }
-            }
+            miSleep.Visibility = Visibility.Collapsed;
         }
 
-        private void setupCairoMenu()
+        // Set element that should be transformed for auto-hide
+        AutoHideElement = MenuBarWindow;
+    }
+
+    private void SetupMenuBarExtensions()
+    {
+        foreach (var userControlMenuBarExtension in _cairoApplication.MenuBarExtensions
+                     .OfType<UserControlMenuBarExtension>())
         {
-            if (!_applicationUpdateService.IsAvailable)
+            var menuExtra = userControlMenuBarExtension.StartControl(this);
+            if (menuExtra != null)
             {
-                OpenCheckForUpdates.Visibility = Visibility.Collapsed;
-            }
-
-            // Add CairoMenu MenuItems
-            if (_cairoApplication.CairoMenu.Count > 0)
-            {
-                CairoMenu.Items.Insert(7, new Separator());
-                foreach (var cairoMenuItem in _cairoApplication.CairoMenu)
-                {
-                    var menuItem = new MenuItem { Header = cairoMenuItem.Header };
-                    menuItem.Click += cairoMenuItem.MenuItem_Click;
-                    CairoMenu.Items.Insert(8, menuItem);
-                }
+                MenuExtrasHost.Children.Add(menuExtra);
             }
         }
+    }
 
-        private void setupPlacesMenu()
+    private void setupCairoMenu()
+    {
+        if (!_applicationUpdateService.IsAvailable)
         {
-            string username = Environment.UserName.Replace("_", "__");
-            miUserName.Header = username;
-
-            // Only show Downloads folder on Vista or greater
-            if (!EnvironmentHelper.IsWindowsVistaOrBetter)
-            {
-                PlacesDownloadsItem.Visibility = Visibility.Collapsed;
-                PlacesVideosItem.Visibility = Visibility.Collapsed;
-            }
-
-            // Add PlacesMenu MenuItems
-            if (_cairoApplication.Places.Count > 0)
-            {
-                PlacesMenu.Items.Add(new Separator());
-                foreach (var placesMenuItem in _cairoApplication.Places)
-                {
-                    var menuItem = new MenuItem { Header = placesMenuItem.Header };
-                    menuItem.Click += placesMenuItem.MenuItem_Click;
-                    PlacesMenu.Items.Add(menuItem);
-                }
-            }
+            OpenCheckForUpdates.Visibility = Visibility.Collapsed;
         }
 
-        private void setupShadow()
+        // Add CairoMenu MenuItems
+        if (_cairoApplication.CairoMenu.Count > 0)
         {
-            if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarEdge != AppBarEdge.Bottom && AppBarMode != AppBarMode.AutoHide)
+            CairoMenu.Items.Insert(7, new Separator());
+            foreach (var cairoMenuItem in _cairoApplication.CairoMenu)
             {
-                shadow = new MenuBarShadow(_cairoApplication, _windowManager, this);
-                shadow.Show();
+                var menuItem = new MenuItem { Header = cairoMenuItem.Header };
+                menuItem.Click += cairoMenuItem.MenuItem_Click;
+                CairoMenu.Items.Insert(8, menuItem);
             }
         }
+    }
 
-        protected override void OnSourceInitialized(object sender, EventArgs e)
+    private void setupPlacesMenu()
+    {
+        string username = Environment.UserName.Replace("_", "__");
+        miUserName.Header = username;
+
+        // Only show Downloads folder on Vista or greater
+        if (!EnvironmentHelper.IsWindowsVistaOrBetter)
         {
-            base.OnSourceInitialized(sender, e);
-            
-            SetupMenuBarExtensions();
-
-            registerCairoMenuHotKey();
-
-            // Register L+R Windows key to open Programs menu
-            if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary && programsMenuHotKeys.Count < 1)
-            {
-                /*if (keyboardListener == null)
-                    keyboardListener = new LowLevelKeyboardListener();
-
-                keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
-                keyboardListener.HookKeyboard();*/
-
-                programsMenuHotKeys.Add(new HotKey(Key.LWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
-                programsMenuHotKeys.Add(new HotKey(Key.RWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
-                programsMenuHotKeys.Add(new HotKey(Key.Escape, HotKeyModifier.Ctrl | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
-            }
-            else if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary)
-            {
-                foreach (var hotkey in programsMenuHotKeys)
-                {
-                    hotkey.Action = OnShowProgramsMenu;
-                }
-            }
-
-            SetBlur(Settings.Instance.EnableMenuBarBlur);
-
-            setupShadow();
+            PlacesDownloadsItem.Visibility = Visibility.Collapsed;
+            PlacesVideosItem.Visibility = Visibility.Collapsed;
         }
 
-        private void registerCairoMenuHotKey()
+        // Add PlacesMenu MenuItems
+        if (_cairoApplication.Places.Count > 0)
         {
-            if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary && cairoMenuHotKey == null)
+            PlacesMenu.Items.Add(new Separator());
+            foreach (var placesMenuItem in _cairoApplication.Places)
             {
-                cairoMenuHotKey = HotKeyManager.RegisterHotKey(Settings.Instance.CairoMenuHotKey, OnShowCairoMenu);
-            }
-            else if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary)
-            {
-                cairoMenuHotKey.Action = OnShowCairoMenu;
+                var menuItem = new MenuItem { Header = placesMenuItem.Header };
+                menuItem.Click += placesMenuItem.MenuItem_Click;
+                PlacesMenu.Items.Add(menuItem);
             }
         }
+    }
 
-        private void unregisterCairoMenuHotKey()
+    private void setupShadow()
+    {
+        if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarEdge != AppBarEdge.Bottom &&
+            AppBarMode != AppBarMode.AutoHide)
         {
-            if (Screen.Primary)
-            {
-                cairoMenuHotKey?.Dispose();
-                cairoMenuHotKey = null;
-            }
+            shadow = new MenuBarShadow(_cairoApplication, _windowManager, this);
+            shadow.Show();
         }
+    }
 
-        private void SetHibernateVisibility()
+    protected override void OnSourceInitialized(object sender, EventArgs e)
+    {
+        base.OnSourceInitialized(sender, e);
+
+        SetupMenuBarExtensions();
+
+        registerCairoMenuHotKey();
+
+        // Register L+R Windows key to open Programs menu
+        if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary && programsMenuHotKeys.Count < 1)
         {
-            if (Settings.Instance.ShowHibernate && PowerHelper.CanHibernate())
-            {
-                miHibernate.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                miHibernate.Visibility = Visibility.Collapsed;
-            }
-        }
+            /*if (keyboardListener == null)
+                keyboardListener = new LowLevelKeyboardListener();
 
-        #region Programs menu
-        internal void OpenProgramsMenu()
+            keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
+            keyboardListener.HookKeyboard();*/
+
+            programsMenuHotKeys.Add(new HotKey(Key.LWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat,
+                OnShowProgramsMenu));
+            programsMenuHotKeys.Add(new HotKey(Key.RWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat,
+                OnShowProgramsMenu));
+            programsMenuHotKeys.Add(new HotKey(Key.Escape, HotKeyModifier.Ctrl | HotKeyModifier.NoRepeat,
+                OnShowProgramsMenu));
+        }
+        else if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary)
         {
-            if (ProgramsMenu.IsSubmenuOpen) { return; }
-
-            NativeMethods.SetForegroundWindow(Handle);
-            UnAutoHideBeforeAction(() => ProgramsMenu.IsSubmenuOpen = true);
-        }
-
-        private void OnShowProgramsMenu(HotKey hotKey)
-        {
-            ToggleProgramsMenu();
-        }
-
-        private void ToggleProgramsMenu()
-        {
-            if (!ProgramsMenu.IsSubmenuOpen)
+            foreach (var hotkey in programsMenuHotKeys)
             {
-                OpenProgramsMenu();
-            }
-            else
-            {
-                ProgramsMenu.IsSubmenuOpen = false;
+                hotkey.Action = OnShowProgramsMenu;
             }
         }
 
-        private void ProgramsMenu_DragOver(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effects = DragDropEffects.Link;
-            }
-            else if (!e.Data.GetDataPresent(typeof(ApplicationInfo)))
-            {
-                e.Effects = DragDropEffects.None;
-            }
+        SetBlur(Settings.Instance.EnableMenuBarBlur);
 
-            e.Handled = true;
+        setupShadow();
+    }
+
+    private void registerCairoMenuHotKey()
+    {
+        if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary && cairoMenuHotKey == null)
+        {
+            cairoMenuHotKey = HotKeyManager.RegisterHotKey(Settings.Instance.CairoMenuHotKey, OnShowCairoMenu);
+        }
+        else if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary)
+        {
+            cairoMenuHotKey.Action = OnShowCairoMenu;
+        }
+    }
+
+    private void unregisterCairoMenuHotKey()
+    {
+        if (Screen.Primary)
+        {
+            cairoMenuHotKey?.Dispose();
+            cairoMenuHotKey = null;
+        }
+    }
+
+    private void SetHibernateVisibility()
+    {
+        if (Settings.Instance.ShowHibernate && PowerHelper.CanHibernate())
+        {
+            miHibernate.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            miHibernate.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    #region Programs menu
+
+    internal void OpenProgramsMenu()
+    {
+        if (ProgramsMenu.IsSubmenuOpen)
+        {
+            return;
         }
 
-        private void ProgramsMenu_Drop(object sender, DragEventArgs e)
-        {
-            string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
-            if (fileNames != null)
-            {
-                _appGrabber.AddByPath(fileNames, AppCategoryType.Uncategorized);
-            }
-            else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
-            {
-                ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
+        NativeMethods.SetForegroundWindow(Handle);
+        UnAutoHideBeforeAction(() => ProgramsMenu.IsSubmenuOpen = true);
+    }
 
-                _appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
-            }
+    private void OnShowProgramsMenu(HotKey hotKey)
+    {
+        ToggleProgramsMenu();
+    }
+
+    private void ToggleProgramsMenu()
+    {
+        if (!ProgramsMenu.IsSubmenuOpen)
+        {
+            OpenProgramsMenu();
         }
-        #endregion
-
-        #region Events
-
-        public override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
+        else
         {
-            base.AfterAppBarPos(isSameCoords, rect);
-
-            if (!isSameCoords)
-            {
-                setShadowPosition();
-            }
+            ProgramsMenu.IsSubmenuOpen = false;
         }
+    }
 
-        public override void SetPosition()
+    private void ProgramsMenu_DragOver(object sender, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {
-            base.SetPosition();
-            
-            setShadowPosition();
+            e.Effects = DragDropEffects.Link;
+        }
+        else if (!e.Data.GetDataPresent(typeof(ApplicationInfo)))
+        {
+            e.Effects = DragDropEffects.None;
         }
 
-        private void setShadowPosition()
-        {
-            shadow?.SetPosition();
-        }
+        e.Handled = true;
+    }
 
-        private void closeShadow()
+    private void ProgramsMenu_Drop(object sender, DragEventArgs e)
+    {
+        string[] fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+        if (fileNames != null)
         {
-            if (shadow != null && !shadow.IsClosing)
-            {
-                shadow.AllowClose = true;
-                shadow.Close();
-                shadow = null;
-            }
+            _appGrabber.AddByPath(fileNames, AppCategoryType.Uncategorized);
         }
+        else if (e.Data.GetDataPresent(typeof(ApplicationInfo)))
+        {
+            ApplicationInfo dropData = e.Data.GetData(typeof(ApplicationInfo)) as ApplicationInfo;
 
-        private void Window_LocationChanged(object sender, EventArgs e)
+            _appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
+        }
+    }
+
+    #endregion
+
+    #region Events
+
+    public override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
+    {
+        base.AfterAppBarPos(isSameCoords, rect);
+
+        if (!isSameCoords)
         {
             setShadowPosition();
         }
+    }
 
-        protected override void CustomClosing()
+    public override void SetPosition()
+    {
+        base.SetPosition();
+
+        setShadowPosition();
+    }
+
+    private void setShadowPosition()
+    {
+        shadow?.SetPosition();
+    }
+
+    private void closeShadow()
+    {
+        if (shadow != null && !shadow.IsClosing)
         {
-            if (!_windowManager.IsSettingDisplays && !AllowClose)
-            {
-                return;
-            }
+            shadow.AllowClose = true;
+            shadow.Close();
+            shadow = null;
+        }
+    }
 
-            closeShadow();
-            Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+    private void Window_LocationChanged(object sender, EventArgs e)
+    {
+        setShadowPosition();
+    }
+
+    protected override void CustomClosing()
+    {
+        if (!_windowManager.IsSettingDisplays && !AllowClose)
+        {
+            return;
         }
 
-        private void UnAutoHideBeforeAction(Action action)
-        {
-            if (AppBarMode == AppBarMode.AutoHide && AllowAutoHide)
-            {
-                DispatcherTimer timer = new DispatcherTimer();
-                timer.Interval = TimeSpan.FromMilliseconds(AutoHideShowAnimationMs);
-                timer.Tick += (object sender, EventArgs e) =>
-                {
-                    action();
-                    timer.Stop();
-                };
+        closeShadow();
+        Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+    }
 
-                PeekDuringAutoHide();
-                timer.Start();
-            }
-            else
+    private void UnAutoHideBeforeAction(Action action)
+    {
+        if (AppBarMode == AppBarMode.AutoHide && AllowAutoHide)
+        {
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(AutoHideShowAnimationMs);
+            timer.Tick += (object sender, EventArgs e) =>
             {
                 action();
-            }
-        }
-
-        private void OnShowCairoMenu(HotKey hotKey)
-        {
-            if (!CairoMenu.IsSubmenuOpen)
-            {
-                NativeMethods.SetForegroundWindow(Handle);
-                UnAutoHideBeforeAction(() => CairoMenu.IsSubmenuOpen = true);
-            }
-            else
-            {
-                CairoMenu.IsSubmenuOpen = false;
-            }
-        }
-
-        private void keyboardListener_OnKeyPressed(object sender, Common.KeyEventArgs e)
-        {
-            if (e.Key == Key.LWin || e.Key == Key.RWin)
-            {
-                ShellLogger.Debug(e.Key.ToString() + " Key Pressed");
-                ToggleProgramsMenu();
-                e.Handled = true;
-            }
-        }
-
-        private void MenuBar_OnMouseEnter(object sender, MouseEventArgs e)
-        {
-            _appBarManager.NotifyAppBarEvent(this, AppBarEventReason.MouseEnter);
-        }
-
-        private void MenuBar_OnMouseLeave(object sender, MouseEventArgs e)
-        {
-            _appBarManager.NotifyAppBarEvent(this, AppBarEventReason.MouseLeave);
-        }
-
-        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
-            {
-                switch (e.PropertyName)
-                {
-                    case "EnableCairoMenuHotKey" when Screen.Primary:
-                        if (Settings.Instance.EnableCairoMenuHotKey)
-                        {
-                            registerCairoMenuHotKey();
-                        }
-                        else
-                        {
-                            unregisterCairoMenuHotKey();
-                        }
-
-                        break;
-                    case "CairoMenuHotKey" when Screen.Primary:
-                        if (Settings.Instance.EnableCairoMenuHotKey)
-                        {
-                            unregisterCairoMenuHotKey();
-                            registerCairoMenuHotKey();
-                        }
-
-                        break;
-                    case "EnableMenuBarBlur":
-                        SetBlur(Settings.Instance.EnableMenuBarBlur);
-                        break;
-                    case "EnableMenuBarShadow":
-                        if (Settings.Instance.EnableMenuBarShadow)
-                        {
-                            setupShadow();
-                        }
-                        else
-                        {
-                            closeShadow();
-                        }
-                        break;
-                    case "ShowHibernate":
-                        SetHibernateVisibility();
-                        break;
-                    case "EnableMenuBarAutoHide":
-                        AppBarMode = Settings.Instance.EnableMenuBarAutoHide ? AppBarMode.AutoHide : AppBarMode.Normal;
-                        if (AppBarMode == AppBarMode.AutoHide)
-                        {
-                            closeShadow();
-                        }
-                        else
-                        {
-                            setupShadow();
-                        }
-                        break;
-                    case "AutoHideShowDelayMs":
-                        AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
-                        break;
-                    case "Theme":
-                        PeekDuringAutoHide();
-                        break;
-                }
-            }
-        }
-
-        #endregion
-
-        #region Cairo menu items
-        private void AboutCairo(object sender, RoutedEventArgs e)
-        {
-            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            string version = fvi.FileVersion;
-
-            CairoMessage.Show(
-                Common.Localization.DisplayString.sAbout_Version + " " + version + " - " + Common.Localization.DisplayString.sAbout_PreRelease
-                + "\n\n" + String.Format(Common.Localization.DisplayString.sAbout_Copyright, DateTime.Now.Year.ToString()), "Cairo Desktop Environment", CairoMessageImage.Default);
-        }
-
-        private void CheckForUpdates(object sender, RoutedEventArgs e)
-        {
-            _applicationUpdateService?.CheckForUpdates();
-        }
-
-        private void OpenLogoffBox(object sender, RoutedEventArgs e)
-        {
-            SystemPower.ShowLogOffConfirmation();
-        }
-
-        private void OpenRebootBox(object sender, RoutedEventArgs e)
-        {
-            SystemPower.ShowRebootConfirmation();
-        }
-
-        private void OpenShutDownBox(object sender, RoutedEventArgs e)
-        {
-            SystemPower.ShowShutdownConfirmation();
-        }
-
-        private void OpenRunWindow(object sender, RoutedEventArgs e)
-        {
-            ShellHelper.ShowRunDialog(Common.Localization.DisplayString.sRun_Title, Common.Localization.DisplayString.sRun_Info);
-        }
-
-        private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
-        {
-            CairoMessage.ShowOkCancel(Common.Localization.DisplayString.sExitCairo_Info, Common.Localization.DisplayString.sExitCairo_Title,
-                CairoMessageImage.Default, Common.Localization.DisplayString.sExitCairo_ExitCairo, Common.Localization.DisplayString.sInterface_Cancel,
-                result =>
-                {
-                    if (result == true)
-                    {
-                        if (KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
-                        {
-                            _cairoApplication.RestartCairo();
-                        }
-                        else
-                        {
-                            _cairoApplication.ExitCairo();
-                        }
-                    }
-                });
-        }
-
-        private void OpenControlPanel(object sender, RoutedEventArgs e)
-        {
-            //ShellHelper.StartProcess("control.exe");
-            FolderHelper.OpenLocation(ShellFolderPath.ControlPanelFolder.Value);
-        }
-
-        private void miOpenUWPSettings_Click(object sender, RoutedEventArgs e)
-        {
-            ShellHelper.StartProcess("ms-settings://");
-        }
-
-        private void OpenTaskManager(object sender, RoutedEventArgs e)
-        {
-            ShellHelper.StartTaskManager();
-        }
-
-        private void SysHibernate(object sender, RoutedEventArgs e)
-        {
-            PowerHelper.Hibernate();
-        }
-
-        private void SysSleep(object sender, RoutedEventArgs e)
-        {
-            PowerHelper.Sleep();
-        }
-
-        private void SysLock(object sender, RoutedEventArgs e)
-        {
-            ShellHelper.Lock();
-        }
-
-        private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
-        {
-            _settingsUiService.Show();
-        }
-
-        private void InitAppGrabberWindow(object sender, RoutedEventArgs e)
-        {
-            _appGrabber.ShowDialog();
-        }
-        #endregion
-
-        #region Places menu items
-        private void OpenMyDocs(object sender, RoutedEventArgs e)
-        {
-            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments, Environment.SpecialFolderOption.DoNotVerify));
-        }
-
-        private void OpenMyPics(object sender, RoutedEventArgs e)
-        {
-            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures, Environment.SpecialFolderOption.DoNotVerify));
-        }
-
-        private void OpenMyMusic(object sender, RoutedEventArgs e)
-        {
-            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic, Environment.SpecialFolderOption.DoNotVerify));
-        }
-
-        private void OpenMyVideos(object sender, RoutedEventArgs e)
-        {
-            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos, Environment.SpecialFolderOption.DoNotVerify));
-        }
-
-        private void OpenDownloads(object sender, RoutedEventArgs e)
-        {
-            FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Downloads));
-        }
-
-        private void OpenMyComputer(object sender, RoutedEventArgs e)
-        {
-            FolderHelper.OpenLocation(ShellFolderPath.ComputerFolder.Value);
-        }
-
-        private void OpenUserFolder(object sender, RoutedEventArgs e)
-        {
-            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile, Environment.SpecialFolderOption.DoNotVerify));
-        }
-
-        private void OpenProgramFiles(object sender, RoutedEventArgs e)
-        {
-            FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles, Environment.SpecialFolderOption.DoNotVerify));
-        }
-
-        private void OpenRecycleBin(object sender, RoutedEventArgs e)
-        {
-            FolderHelper.OpenWithShell(ShellFolderPath.RecycleBinFolder.Value);
-        }
-        #endregion
-        
-        #region IMenuExtraHost
-        public IntPtr GetHandle()
-        {
-            return Handle;
-        }
-
-        public bool GetIsPrimaryDisplay()
-        {
-            return Screen.Primary;
-        }
-
-        public MenuBarDimensions GetDimensions()
-        {
-            return new MenuBarDimensions
-            {
-                ScreenEdge = (int)AppBarEdge,
-                DpiScale = DpiScale,
-                Height = Height,
-                Width = Width,
-                Left = Left,
-                Top = Top
+                timer.Stop();
             };
-        }
-        #endregion
 
-        #region IMenuBar
-        void IMenuBar.PeekDuringAutoHide(int msToPeek)
-        {
-            PeekDuringAutoHide(msToPeek);
+            PeekDuringAutoHide();
+            timer.Start();
         }
-        #endregion
+        else
+        {
+            action();
+        }
     }
+
+    private void OnShowCairoMenu(HotKey hotKey)
+    {
+        if (!CairoMenu.IsSubmenuOpen)
+        {
+            NativeMethods.SetForegroundWindow(Handle);
+            UnAutoHideBeforeAction(() => CairoMenu.IsSubmenuOpen = true);
+        }
+        else
+        {
+            CairoMenu.IsSubmenuOpen = false;
+        }
+    }
+
+    private void keyboardListener_OnKeyPressed(object sender, Common.KeyEventArgs e)
+    {
+        if (e.Key == Key.LWin || e.Key == Key.RWin)
+        {
+            ShellLogger.Debug(e.Key.ToString() + " Key Pressed");
+            ToggleProgramsMenu();
+            e.Handled = true;
+        }
+    }
+
+    private void MenuBar_OnMouseEnter(object sender, MouseEventArgs e)
+    {
+        _appBarManager.NotifyAppBarEvent(this, AppBarEventReason.MouseEnter);
+    }
+
+    private void MenuBar_OnMouseLeave(object sender, MouseEventArgs e)
+    {
+        _appBarManager.NotifyAppBarEvent(this, AppBarEventReason.MouseLeave);
+    }
+
+    private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e != null && !string.IsNullOrWhiteSpace(e.PropertyName))
+        {
+            switch (e.PropertyName)
+            {
+                case "EnableCairoMenuHotKey" when Screen.Primary:
+                    if (Settings.Instance.EnableCairoMenuHotKey)
+                    {
+                        registerCairoMenuHotKey();
+                    }
+                    else
+                    {
+                        unregisterCairoMenuHotKey();
+                    }
+
+                    break;
+                case "CairoMenuHotKey" when Screen.Primary:
+                    if (Settings.Instance.EnableCairoMenuHotKey)
+                    {
+                        unregisterCairoMenuHotKey();
+                        registerCairoMenuHotKey();
+                    }
+
+                    break;
+                case "EnableMenuBarBlur":
+                    SetBlur(Settings.Instance.EnableMenuBarBlur);
+                    break;
+                case "EnableMenuBarShadow":
+                    if (Settings.Instance.EnableMenuBarShadow)
+                    {
+                        setupShadow();
+                    }
+                    else
+                    {
+                        closeShadow();
+                    }
+
+                    break;
+                case "ShowHibernate":
+                    SetHibernateVisibility();
+                    break;
+                case "EnableMenuBarAutoHide":
+                    AppBarMode = Settings.Instance.EnableMenuBarAutoHide ? AppBarMode.AutoHide : AppBarMode.Normal;
+                    if (AppBarMode == AppBarMode.AutoHide)
+                    {
+                        closeShadow();
+                    }
+                    else
+                    {
+                        setupShadow();
+                    }
+
+                    break;
+                case "AutoHideShowDelayMs":
+                    AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
+                    break;
+                case "Theme":
+                    PeekDuringAutoHide();
+                    break;
+            }
+        }
+    }
+
+    #endregion
+
+    #region Cairo menu items
+
+    private void AboutCairo(object sender, RoutedEventArgs e)
+    {
+        System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+        FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+        string version = fvi.FileVersion;
+
+        CairoMessage.Show(
+            Common.Localization.DisplayString.sAbout_Version + " " + version + " - " +
+            Common.Localization.DisplayString.sAbout_PreRelease
+            + "\n\n" + String.Format(Common.Localization.DisplayString.sAbout_Copyright, DateTime.Now.Year.ToString()),
+            "Cairo Desktop Environment", CairoMessageImage.Default);
+    }
+
+    private void CheckForUpdates(object sender, RoutedEventArgs e)
+    {
+        _applicationUpdateService?.CheckForUpdates();
+    }
+
+    private void OpenLogoffBox(object sender, RoutedEventArgs e)
+    {
+        SystemPower.ShowLogOffConfirmation();
+    }
+
+    private void OpenRebootBox(object sender, RoutedEventArgs e)
+    {
+        SystemPower.ShowRebootConfirmation();
+    }
+
+    private void OpenShutDownBox(object sender, RoutedEventArgs e)
+    {
+        SystemPower.ShowShutdownConfirmation();
+    }
+
+    private void OpenRunWindow(object sender, RoutedEventArgs e)
+    {
+        ShellHelper.ShowRunDialog(Common.Localization.DisplayString.sRun_Title,
+            Common.Localization.DisplayString.sRun_Info);
+    }
+
+    private void OpenCloseCairoBox(object sender, RoutedEventArgs e)
+    {
+        CairoMessage.ShowOkCancel(Common.Localization.DisplayString.sExitCairo_Info,
+            Common.Localization.DisplayString.sExitCairo_Title,
+            CairoMessageImage.Default, Common.Localization.DisplayString.sExitCairo_ExitCairo,
+            Common.Localization.DisplayString.sInterface_Cancel,
+            result =>
+            {
+                if (result == true)
+                {
+                    if (KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
+                    {
+                        _cairoApplication.RestartCairo();
+                    }
+                    else
+                    {
+                        _cairoApplication.ExitCairo();
+                    }
+                }
+            });
+    }
+
+    private void OpenControlPanel(object sender, RoutedEventArgs e)
+    {
+        //ShellHelper.StartProcess("control.exe");
+        FolderHelper.OpenLocation(ShellFolderPath.ControlPanelFolder.Value);
+    }
+
+    private void miOpenUWPSettings_Click(object sender, RoutedEventArgs e)
+    {
+        ShellHelper.StartProcess("ms-settings://");
+    }
+
+    private void OpenTaskManager(object sender, RoutedEventArgs e)
+    {
+        ShellHelper.StartTaskManager();
+    }
+
+    private void SysHibernate(object sender, RoutedEventArgs e)
+    {
+        PowerHelper.Hibernate();
+    }
+
+    private void SysSleep(object sender, RoutedEventArgs e)
+    {
+        PowerHelper.Sleep();
+    }
+
+    private void SysLock(object sender, RoutedEventArgs e)
+    {
+        ShellHelper.Lock();
+    }
+
+    private void InitCairoSettingsWindow(object sender, RoutedEventArgs e)
+    {
+        _settingsUiService.Show();
+    }
+
+    private void InitAppGrabberWindow(object sender, RoutedEventArgs e)
+    {
+        _appGrabber.ShowDialog();
+    }
+
+    #endregion
+
+    #region Places menu items
+
+    private void OpenMyDocs(object sender, RoutedEventArgs e)
+    {
+        FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments,
+            Environment.SpecialFolderOption.DoNotVerify));
+    }
+
+    private void OpenMyPics(object sender, RoutedEventArgs e)
+    {
+        FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures,
+            Environment.SpecialFolderOption.DoNotVerify));
+    }
+
+    private void OpenMyMusic(object sender, RoutedEventArgs e)
+    {
+        FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic,
+            Environment.SpecialFolderOption.DoNotVerify));
+    }
+
+    private void OpenMyVideos(object sender, RoutedEventArgs e)
+    {
+        FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos,
+            Environment.SpecialFolderOption.DoNotVerify));
+    }
+
+    private void OpenDownloads(object sender, RoutedEventArgs e)
+    {
+        FolderHelper.OpenLocation(KnownFolders.GetPath(KnownFolder.Downloads));
+    }
+
+    private void OpenMyComputer(object sender, RoutedEventArgs e)
+    {
+        FolderHelper.OpenLocation(ShellFolderPath.ComputerFolder.Value);
+    }
+
+    private void OpenUserFolder(object sender, RoutedEventArgs e)
+    {
+        FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile,
+            Environment.SpecialFolderOption.DoNotVerify));
+    }
+
+    private void OpenProgramFiles(object sender, RoutedEventArgs e)
+    {
+        FolderHelper.OpenLocation(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles,
+            Environment.SpecialFolderOption.DoNotVerify));
+    }
+
+    private void OpenRecycleBin(object sender, RoutedEventArgs e)
+    {
+        FolderHelper.OpenWithShell(ShellFolderPath.RecycleBinFolder.Value);
+    }
+
+    #endregion
+
+    #region IMenuExtraHost
+
+    public IntPtr GetHandle()
+    {
+        return Handle;
+    }
+
+    public bool GetIsPrimaryDisplay()
+    {
+        return Screen.Primary;
+    }
+
+    public MenuBarDimensions GetDimensions()
+    {
+        return new MenuBarDimensions
+        {
+            ScreenEdge = (int)AppBarEdge,
+            DpiScale = DpiScale,
+            Height = Height,
+            Width = Width,
+            Left = Left,
+            Top = Top
+        };
+    }
+
+    #endregion
+
+    #region IMenuBar
+
+    void IMenuBar.PeekDuringAutoHide(int msToPeek)
+    {
+        PeekDuringAutoHide(msToPeek);
+    }
+
+    #endregion
 }

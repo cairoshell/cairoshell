@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace CairoDesktop.Application.Interfaces
+namespace CairoDesktop.Application.Interfaces;
+
+public interface IApplicationUpdateService
 {
-    public interface IApplicationUpdateService
-    {
-        bool AutomaticUpdatesEnabled { get; set; }
+    bool AutomaticUpdatesEnabled { get; set; }
 
-        bool IsAvailable { get; }
+    bool IsAvailable { get; }
 
-        void CheckForUpdates();
-    }
+    void CheckForUpdates();
 }

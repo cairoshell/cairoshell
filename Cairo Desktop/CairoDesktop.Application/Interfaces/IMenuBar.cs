@@ -1,16 +1,15 @@
 ﻿using System;
 using CairoDesktop.Application.Structs;
 
-namespace CairoDesktop.Application.Interfaces
+namespace CairoDesktop.Application.Interfaces;
+
+public interface IMenuBar
 {
-    public interface IMenuBar
-    {
-        IntPtr GetHandle();
-        
-        bool GetIsPrimaryDisplay();
+    IntPtr GetHandle();
 
-        MenuBarDimensions GetDimensions();
+    bool GetIsPrimaryDisplay();
 
-        void PeekDuringAutoHide(int msToPeek = 1000);
-    }
+    MenuBarDimensions GetDimensions();
+
+    void PeekDuringAutoHide(int msToPeek = 1000);
 }
