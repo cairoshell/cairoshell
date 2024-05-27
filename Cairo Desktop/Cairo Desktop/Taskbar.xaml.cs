@@ -248,11 +248,6 @@ namespace CairoDesktop
             setDesiredHeight();
             Height = DesiredHeight;
             Top = getDesiredTopPosition();
-
-            if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
-                bdrTaskListPopup.Margin = new Thickness(5, Top + Height - 1, 5, 11);
-            else
-                bdrTaskListPopup.Margin = new Thickness(5, 0, 5, (Screen.Bounds.Bottom / DpiScale) - Top - 1);
         }
 
         private void setTaskbarWidthMode()
@@ -536,6 +531,11 @@ namespace CairoDesktop
             {
                 CairoTaskbarTaskList.HorizontalOffset = -426;
             }
+
+            if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
+                bdrTaskListPopup.Margin = new Thickness(5, Top + Height - 1, 5, 11);
+            else
+                bdrTaskListPopup.Margin = new Thickness(5, 0, 5, (Screen.Bounds.Bottom / DpiScale) - Top - 1);
         }
         #endregion
 
