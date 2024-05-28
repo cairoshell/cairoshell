@@ -7,7 +7,6 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using ManagedShell.Common;
-using ConsoleLog = ManagedShell.Common.Logging.Observers.ConsoleLog;
 
 namespace CairoDesktop.Common.Logging.Other
 {
@@ -35,8 +34,7 @@ namespace CairoDesktop.Common.Logging.Other
 
             _fileLog = new FileLog(_filename);
             _fileLog.Open();
-            ShellLogger.Attach(_fileLog);
-            ShellLogger.Attach(new ConsoleLog());
+            ShellLogger.Attach(new ILog[] { _fileLog, new ConsoleLog() }, true);
         }
 
         private void CairoSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

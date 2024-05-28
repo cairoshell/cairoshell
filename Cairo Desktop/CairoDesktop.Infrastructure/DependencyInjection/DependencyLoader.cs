@@ -56,12 +56,11 @@ namespace CairoDesktop.Infrastructure.DependencyInjection
                     builder.AppendFormat("{0}\n", loaderException.Message);
                 }
 
-                // TODO: Logging isn't set up at this point in startup
-                ShellLogger.Error($"DependencyLoader: Error registering module {typeLoadException.TargetSite?.Module.FullyQualifiedName}: {builder}");
+                ShellLogger.Error($"DependencyLoader: Error registering module: {builder}");
             }
             catch (Exception ex)
             {
-                ShellLogger.Error($"DependencyLoader: Error registering module {ex.TargetSite?.Module.FullyQualifiedName}: {ex.Message}");
+                ShellLogger.Error($"DependencyLoader: Error registering module: {ex.Message}");
             }
 
             return serviceCollection;
