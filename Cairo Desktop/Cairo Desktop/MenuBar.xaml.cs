@@ -117,10 +117,17 @@ namespace CairoDesktop
         {
             foreach (var userControlMenuBarExtension in _cairoApplication.MenuBarExtensions.OfType<UserControlMenuBarExtension>())
             {
-                var menuExtra = userControlMenuBarExtension.StartControl(this);
-                if (menuExtra != null)
+                try
                 {
-                    MenuExtrasHost.Children.Add(menuExtra);
+                    var menuExtra = userControlMenuBarExtension.StartControl(this);
+                    if (menuExtra != null)
+                    {
+                        MenuExtrasHost.Children.Add(menuExtra);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ShellLogger.Error($"Unable to start UserControl menu bar extension due to exception in {ex.TargetSite?.Module}: {ex.Message}");
                 }
             }
         }
@@ -135,12 +142,13 @@ namespace CairoDesktop
             // Add CairoMenu MenuItems
             if (_cairoApplication.CairoMenu.Count > 0)
             {
-                CairoMenu.Items.Insert(7, new Separator());
+                var extensionsStartIndex = CairoMenu.Items.IndexOf(CairoMenuExtensionsSeparator);
+                CairoMenu.Items.Insert(extensionsStartIndex, new Separator());
                 foreach (var cairoMenuItem in _cairoApplication.CairoMenu)
                 {
                     var menuItem = new MenuItem { Header = cairoMenuItem.Header };
                     menuItem.Click += cairoMenuItem.MenuItem_Click;
-                    CairoMenu.Items.Insert(8, menuItem);
+                    CairoMenu.Items.Insert(extensionsStartIndex + 1, menuItem);
                 }
             }
         }

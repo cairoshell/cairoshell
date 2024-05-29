@@ -52,7 +52,7 @@
                               Visibility="Collapsed"
                               Name="miOpenUWPSettings"
                               Click="miOpenUWPSettings_Click" />
-                    <Separator />
+                    <Separator Name="CairoMenuExtensionsSeparator" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Run)}"
                               Click="OpenRunWindow" />
                     <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_TaskManager)}"

@@ -52,8 +52,15 @@ namespace CairoDesktop
 
         void IInitializationService.LoadExtensions()
         {
-            var pluginService = _host.Services.GetService<IExtensionService>();
-            pluginService?.Start();
+            try
+            {
+                var pluginService = _host.Services.GetService<IExtensionService>();
+                pluginService?.Start();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Unable to start extension service due to exception in {ex.TargetSite?.Module}: {ex.Message}");
+            }
         }
 
         void IInitializationService.WriteApplicationDebugInfoToConsole(Version productVersion)
