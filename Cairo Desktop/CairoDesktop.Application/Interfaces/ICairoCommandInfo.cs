@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
+using CairoDesktop.Application.Structs;
 
 namespace CairoDesktop.Application.Interfaces
 {
-    public interface ICairoCommandInfo : INotifyPropertyChanged
+    public interface ICairoCommandInfo
     {
         /// <summary>
         /// Unique identifier for the command. If already in use, the command will not be registered.
@@ -29,6 +28,6 @@ namespace CairoDesktop.Application.Interfaces
         /// <summary>
         /// List of parameters that can be passed when invoking the command.
         /// </summary>
-        List<ICairoCommandParameter> Parameters { get; }
+        List<CairoCommandParameter> Parameters { get; }
     }
 }
