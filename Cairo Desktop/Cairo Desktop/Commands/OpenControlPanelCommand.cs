@@ -15,7 +15,7 @@ namespace CairoDesktop.Commands
 
         public void Setup() { }
 
-        public bool Execute(params object[] parameters)
+        public bool Execute(List<CairoCommandParameter> parameters)
         {
             // TODO: Call via command
             return FolderHelper.OpenLocation(ShellFolderPath.ControlPanelFolder.Value);
@@ -34,6 +34,6 @@ namespace CairoDesktop.Commands
 
         public bool IsAvailable => true;
 
-        public List<CairoCommandParameter> Parameters => new List<CairoCommandParameter>();
+        public IReadOnlyCollection<CairoCommandParameter> Parameters => null;
     }
 }

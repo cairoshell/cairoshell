@@ -20,7 +20,7 @@ namespace CairoDesktop.Commands
 
         public void Setup() { }
 
-        public bool Execute(params object[] parameters)
+        public bool Execute(List<CairoCommandParameter> parameters)
         {
             CairoMessage.ShowOkCancel(DisplayString.sExitCairo_Info, DisplayString.sExitCairo_Title,
                 CairoMessageImage.Default, DisplayString.sExitCairo_ExitCairo, DisplayString.sInterface_Cancel,
@@ -59,6 +59,6 @@ namespace CairoDesktop.Commands
         public bool IsAvailable => !EnvironmentHelper.IsAppRunningAsShell;
 #endif
 
-        public List<CairoCommandParameter> Parameters => new List<CairoCommandParameter>();
+        public IReadOnlyCollection<CairoCommandParameter> Parameters => null;
     }
 }

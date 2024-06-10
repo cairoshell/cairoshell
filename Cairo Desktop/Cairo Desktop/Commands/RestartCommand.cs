@@ -14,7 +14,7 @@ namespace CairoDesktop.Commands
 
         public void Setup() { }
 
-        public bool Execute(params object[] parameters)
+        public bool Execute(List<CairoCommandParameter> parameters)
         {
             SystemPower.ShowRebootConfirmation();
 
@@ -34,6 +34,6 @@ namespace CairoDesktop.Commands
 
         public bool IsAvailable => true;
 
-        public List<CairoCommandParameter> Parameters => new List<CairoCommandParameter>();
+        public IReadOnlyCollection<CairoCommandParameter> Parameters => null;
     }
 }

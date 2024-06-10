@@ -19,9 +19,23 @@ namespace CairoDesktop.Commands
 
         public void Setup() { }
 
-        public bool Execute(params object[] parameters)
+        public bool Execute(List<CairoCommandParameter> parameters)
         {
-            if (parameters.Length > 0 && parameters[0] is string tabIdentifier)
+            string tabIdentifier = null;
+            foreach (var parameter in parameters)
+            {
+                switch (parameter.Name)
+                {
+                    case "TabIdentifier":
+                        if (parameter.Value is string _tabIdentifier)
+                        {
+                            tabIdentifier = _tabIdentifier;
+                        }
+                        break;
+                }
+            }
+
+            if (tabIdentifier != null)
             {
                 _settingsUIService?.Show(tabIdentifier);
             }
@@ -54,12 +68,15 @@ namespace CairoDesktop.Commands
             }
         }
 
-        public List<CairoCommandParameter> Parameters => new List<CairoCommandParameter>()
+        private List<CairoCommandParameter> _parameters = new List<CairoCommandParameter>()
         {
             new CairoCommandParameter {
                 Name = "TabIdentifier",
-                Description = "Specific tab to open (optional)"
+                Description = "Settings tab to open",
+                IsRequired = false
             }
         };
+
+        public IReadOnlyCollection<CairoCommandParameter> Parameters => _parameters;
     }
 }

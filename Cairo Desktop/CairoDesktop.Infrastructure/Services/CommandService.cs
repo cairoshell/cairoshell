@@ -54,7 +54,7 @@ namespace CairoDesktop.Infrastructure.Services
             }
         }
 
-        public bool InvokeCommand(string identifier, params object[] parameters)
+        public bool InvokeCommand(string identifier, List<CairoCommandParameter> parameters = null)
         {
             if (_commands == null)
             {

@@ -19,7 +19,7 @@ namespace CairoDesktop.Commands
 
         public void Setup() { }
 
-        public bool Execute(params object[] parameters)
+        public bool Execute(List<CairoCommandParameter> parameters)
         {
             _applicationUpdateService?.CheckForUpdates();
 
@@ -47,6 +47,6 @@ namespace CairoDesktop.Commands
             }
         }
 
-        public List<CairoCommandParameter> Parameters => new List<CairoCommandParameter>();
+        public IReadOnlyCollection<CairoCommandParameter> Parameters => null;
     }
 }

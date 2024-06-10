@@ -28,6 +28,6 @@ namespace CairoDesktop.Application.Interfaces
         /// <summary>
         /// List of parameters that can be passed when invoking the command.
         /// </summary>
-        List<CairoCommandParameter> Parameters { get; }
+        IReadOnlyCollection<CairoCommandParameter> Parameters { get; }
     }
 }

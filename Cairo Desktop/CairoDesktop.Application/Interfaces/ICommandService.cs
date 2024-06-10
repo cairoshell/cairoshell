@@ -1,5 +1,6 @@
 ﻿using CairoDesktop.Application.Structs;
 using System;
+using System.Collections.Generic;
 
 namespace CairoDesktop.Application.Interfaces
 {
@@ -16,7 +17,7 @@ namespace CairoDesktop.Application.Interfaces
         /// <param name="identifier">Unique identifier of command to invoke</param>
         /// <param name="parameters">Parameters to pass to the command, as defined in the command info</param>
         /// <returns></returns>
-        bool InvokeCommand(string identifier, params object[] parameters);
+        bool InvokeCommand(string identifier, List<CairoCommandParameter> parameters = null);
 
         /// <summary>
         /// Emitted after a command is invoked.
