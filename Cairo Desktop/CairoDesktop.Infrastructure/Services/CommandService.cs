@@ -11,17 +11,18 @@ namespace CairoDesktop.Infrastructure.Services
 {
     public class CommandService : ICommandService
     {
-        private readonly ICairoApplication _app;
         private readonly IHost _host;
         private readonly ILogger<CommandService> _logger;
 
         private IEnumerable<ICairoCommand> _commands;
+        private IReadOnlyCollection<ICairoCommandInfo> _registeredCommands = new List<ICairoCommandInfo>().AsReadOnly();
+
+        public IReadOnlyCollection<ICairoCommandInfo> Commands => _registeredCommands;
 
         public event EventHandler<CommandInvokedEventArgs> CommandInvoked;
 
-        public CommandService(ICairoApplication app, ILogger<CommandService> logger, IHost host)
+        public CommandService(ILogger<CommandService> logger, IHost host)
         {
-            _app = app;
             _host = host;
             _logger = logger;
         }
@@ -32,9 +33,15 @@ namespace CairoDesktop.Infrastructure.Services
             // when a command depends on a service that also invokes commands.
             _commands = _host.Services.GetServices<ICairoCommand>();
             var identifiers = new List<string>();
+            var registeredCommands = new List<ICairoCommandInfo>();
 
             foreach (var command in _commands)
             {
+                if (string.IsNullOrEmpty(command.Info.Identifier))
+                {
+                    _logger.LogError($"Unable to register command with missing identifier");
+                    continue;
+                }
                 if (identifiers.Contains(command.Info.Identifier))
                 {
                     _logger.LogError($"Unable to register command with duplicate identifier {command.Info.Identifier}");
@@ -43,7 +50,7 @@ namespace CairoDesktop.Infrastructure.Services
                 try
                 {
                     command.Setup();
-                    _app.Commands.Add(command.Info);
+                    registeredCommands.Add(command.Info);
                     identifiers.Add(command.Info.Identifier);
                     _logger.LogDebug($"Registered command {command.Info.Identifier}");
                 }
@@ -52,6 +59,8 @@ namespace CairoDesktop.Infrastructure.Services
                     _logger.LogError($"Unable to register command {command.Info.Identifier}: {ex.Message}");
                 }
             }
+
+            _registeredCommands = registeredCommands.AsReadOnly();
         }
 
         public bool InvokeCommand(string identifier, List<CairoCommandParameter> parameters = null)
@@ -100,9 +109,10 @@ namespace CairoDesktop.Infrastructure.Services
 
             foreach (var command in _commands)
             {
-                _app.Commands.Remove(command.Info);
                 command.Dispose();
             }
+
+            _registeredCommands = new List<ICairoCommandInfo>().AsReadOnly();
         }
     }
 }

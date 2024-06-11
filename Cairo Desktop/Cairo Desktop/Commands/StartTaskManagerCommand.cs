@@ -25,7 +25,7 @@ namespace CairoDesktop.Commands
 
     public class StartTaskManagerCommandInfo : ICairoCommandInfo
     {
-        public string Identifier => "StartTaskManagerCommand";
+        public string Identifier => "StartTaskManager";
 
         public string Description => "Starts Task Manager.";
 

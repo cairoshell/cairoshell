@@ -5,7 +5,12 @@ using System.Collections.Generic;
 namespace CairoDesktop.Application.Interfaces
 {
    public interface ICommandService : IDisposable
-   {
+    {
+        /// <summary>
+        /// List of registered commands which can be invoked via the InvokeCommand method
+        /// </summary>
+        IReadOnlyCollection<ICairoCommandInfo> Commands { get; }
+
         /// <summary>
         /// Retrieves and registers all commands so that they are available.
         /// </summary>

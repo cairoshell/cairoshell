@@ -46,7 +46,6 @@ namespace CairoDesktop
 
             Extensions = new List<IShellExtension>();
 
-            Commands = new List<ICairoCommandInfo>();
             CairoMenu = new List<IMenuItem>();
             Places = new List<IMenuItem>();
             MenuBarExtensions = new List<IMenuBarExtension>();
@@ -252,8 +251,6 @@ namespace CairoDesktop
         public IHost Host { get; }
 
         public List<IShellExtension> Extensions { get; }
-
-        public List<ICairoCommandInfo> Commands { get; }
 
         public List<IMenuItem> CairoMenu { get; }
 

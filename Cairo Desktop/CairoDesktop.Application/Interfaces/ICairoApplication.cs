@@ -7,8 +7,6 @@ namespace CairoDesktop.Application.Interfaces
     {
         List<IMenuItem> CairoMenu { get; }
 
-        List<ICairoCommandInfo> Commands { get; }
-
         List<IShellExtension> Extensions { get; }
 
         List<IMenuBarExtension> MenuBarExtensions { get; }
