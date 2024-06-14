@@ -41,6 +41,7 @@ namespace CairoDesktop.Services
         private readonly ICairoApplication _cairoApplication;
         private readonly ILogger<DesktopManager> _logger;
         private readonly ISettingsUIService _settingsUiService;
+        private readonly ICommandService _commandService;
 
         public DesktopIcons DesktopIconsControl { get; private set; }
 
@@ -73,7 +74,7 @@ namespace CairoDesktop.Services
 
         public ShellFolder DesktopLocation => DesktopIconsControl?.Location;
 
-        public DesktopManager(ILogger<DesktopManager> logger, ICairoApplication cairoApplication, ShellManagerService shellManagerService, ISettingsUIService settingsUiService)
+        public DesktopManager(ILogger<DesktopManager> logger, ICairoApplication cairoApplication, ShellManagerService shellManagerService, ISettingsUIService settingsUiService, ICommandService commandService)
         {
             // DesktopManager is always created on startup by WindowManager, regardless of desktop preferences
             // this allows for dynamic creation and destruction of the desktop per user preference
@@ -82,6 +83,7 @@ namespace CairoDesktop.Services
             _logger = logger;
             _settingsUiService = settingsUiService;
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            _commandService = commandService;
         }
 
         public void Initialize(IWindowManager manager)
@@ -549,7 +551,7 @@ namespace CairoDesktop.Services
 
         private void OnShowDesktop(HotKey hotKey)
         {
-            ToggleOverlay();
+            _commandService.InvokeCommand("ToggleDesktopOverlay");
         }
         #endregion
 
