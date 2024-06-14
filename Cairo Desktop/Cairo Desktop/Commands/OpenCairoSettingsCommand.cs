@@ -19,22 +19,20 @@ namespace CairoDesktop.Commands
 
         public void Setup() { }
 
-        public bool Execute(List<CairoCommandParameter> parameters)
+        public bool Execute(params (string name, object value)[] parameters)
         {
             string tabIdentifier = null;
-            if (parameters != null)
+
+            foreach (var parameter in parameters)
             {
-                foreach (var parameter in parameters)
+                switch (parameter.name)
                 {
-                    switch (parameter.Name)
-                    {
-                        case "TabIdentifier":
-                            if (parameter.Value is string _tabIdentifier)
-                            {
-                                tabIdentifier = _tabIdentifier;
-                            }
-                            break;
-                    }
+                    case "TabIdentifier":
+                        if (parameter.value is string _tabIdentifier)
+                        {
+                            tabIdentifier = _tabIdentifier;
+                        }
+                        break;
                 }
             }
 

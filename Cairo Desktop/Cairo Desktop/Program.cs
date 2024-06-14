@@ -100,6 +100,7 @@ namespace CairoDesktop
                     services.AddSingleton<ICairoCommand, SleepCommand>();
                     services.AddSingleton<ICairoCommand, StartTaskManagerCommand>();
                     services.AddSingleton<ICairoCommand, ToggleDesktopOverlayCommand>();
+                    services.AddSingleton<ICairoCommand, OpenLocationCommand>();
                 })
                 .ConfigureLogging((context, logging) =>
                 {

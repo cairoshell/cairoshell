@@ -22,7 +22,7 @@ namespace CairoDesktop.Application.Interfaces
         /// <param name="identifier">Unique identifier of command to invoke</param>
         /// <param name="parameters">Parameters to pass to the command, as defined in the command info</param>
         /// <returns></returns>
-        bool InvokeCommand(string identifier, List<CairoCommandParameter> parameters = null);
+        bool InvokeCommand(string identifier, params (string name, object value)[] parameters);
 
         /// <summary>
         /// Emitted after a command is invoked.

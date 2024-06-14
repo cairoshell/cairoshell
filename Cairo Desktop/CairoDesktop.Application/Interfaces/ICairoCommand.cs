@@ -1,6 +1,4 @@
-﻿using CairoDesktop.Application.Structs;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace CairoDesktop.Application.Interfaces
 {
@@ -21,6 +19,6 @@ namespace CairoDesktop.Application.Interfaces
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        bool Execute(List<CairoCommandParameter> parameters);
+        bool Execute(params (string name, object value)[] parameters);
     }
 }

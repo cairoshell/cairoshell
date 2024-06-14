@@ -63,7 +63,7 @@ namespace CairoDesktop.Infrastructure.Services
             _registeredCommands = registeredCommands.AsReadOnly();
         }
 
-        public bool InvokeCommand(string identifier, List<CairoCommandParameter> parameters = null)
+        public bool InvokeCommand(string identifier, params (string name, object value)[] parameters)
         {
             if (_commands == null)
             {

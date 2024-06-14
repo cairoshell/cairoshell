@@ -14,7 +14,7 @@ namespace CairoDesktop.Commands
 
         public void Setup() { }
 
-        public bool Execute(List<CairoCommandParameter> parameters)
+        public bool Execute(params (string name, object value)[] parameters)
         {
             PowerHelper.Sleep();
 
