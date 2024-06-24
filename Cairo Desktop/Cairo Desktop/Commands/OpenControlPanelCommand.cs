@@ -1,7 +1,6 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Application.Structs;
 using CairoDesktop.Common.Localization;
-using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Enums;
 using System.Collections.Generic;
 
@@ -11,14 +10,19 @@ namespace CairoDesktop.Commands
     {
         public ICairoCommandInfo Info => _info;
 
+        private readonly ICommandService _commandService;
         private readonly OpenControlPanelCommandInfo _info = new OpenControlPanelCommandInfo();
+
+        public OpenControlPanelCommand(ICommandService commandService)
+        {
+            _commandService = commandService;
+        }
 
         public void Setup() { }
 
         public bool Execute(params (string name, object value)[] parameters)
         {
-            // TODO: Call via command
-            return FolderHelper.OpenLocation(ShellFolderPath.ControlPanelFolder.Value);
+            return _commandService.InvokeCommand("OpenLocation", ("Path", ShellFolderPath.ControlPanelFolder.Value));
         }
 
         public void Dispose() { }

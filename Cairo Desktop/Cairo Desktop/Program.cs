@@ -95,12 +95,24 @@ namespace CairoDesktop
                     services.AddSingleton<ICairoCommand, OpenControlPanelCommand>();
                     services.AddSingleton<ICairoCommand, OpenWindowsSettingsCommand>();
                     services.AddSingleton<ICairoCommand, RestartCommand>();
+                    services.AddSingleton<ICairoCommand, ShowFilePropertiesCommand>();
                     services.AddSingleton<ICairoCommand, ShowRunDialogCommand>();
                     services.AddSingleton<ICairoCommand, ShutDownCommand>();
                     services.AddSingleton<ICairoCommand, SleepCommand>();
                     services.AddSingleton<ICairoCommand, StartTaskManagerCommand>();
                     services.AddSingleton<ICairoCommand, ToggleDesktopOverlayCommand>();
                     services.AddSingleton<ICairoCommand, OpenLocationCommand>();
+                    services.AddSingleton<ICairoCommand, OpenLocationInWindowCommand>();
+                    services.AddSingleton<ICairoCommand, AddStackCommand>();
+                    services.AddSingleton<ICairoCommand, RemoveStackCommand>();
+                    services.AddSingleton<ICairoCommand, CopyFileCommand>();
+                    services.AddSingleton<ICairoCommand, DeleteFileCommand>();
+                    services.AddSingleton<ICairoCommand, OpenFileCommand>();
+                    services.AddSingleton<ICairoCommand, OpenDateTimeControlPanelCommand>();
+                    services.AddSingleton<ICairoCommand, OpenDisplayControlPanelCommand>();
+                    services.AddSingleton<ICairoCommand, OpenPersonalizeControlPanelCommand>();
+                    services.AddSingleton<ICairoCommand, OpenProgramsControlPanelCommand>();
+                    services.AddSingleton<ICairoCommand, TaskViewCommand>();
                 })
                 .ConfigureLogging((context, logging) =>
                 {

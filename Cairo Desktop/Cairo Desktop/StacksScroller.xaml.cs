@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Localization;
-using CairoDesktop.SupportingClasses;
+using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
@@ -28,9 +30,11 @@ namespace CairoDesktop
         }
 
         public MenuItem ParentMenuItem;
+        internal ICommandService _commandService;
         
         private bool isLoaded;
         private Icon LastIconSelected;
+        private Dictionary<uint, string> ContextMenuCommandUIDs = new Dictionary<uint, string>();
 
         public StacksScroller()
         {
@@ -180,44 +184,35 @@ namespace CairoDesktop
 
             ShellMenuCommandBuilder builder = new ShellMenuCommandBuilder();
 
-            if (file.IsNavigableFolder)
+            var commands = _commandService.Commands.Where(command => command is ICairoShellItemCommandInfo);
+            uint uid = (uint)Enum.GetValues(typeof(CommonContextMenuItem)).Cast<CommonContextMenuItem>().Max();
+
+            ContextMenuCommandUIDs.Clear();
+
+            foreach (var command in commands)
             {
-                if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay && 
-                    Settings.Instance.EnableDesktop && !GroupPolicyHelper.NoDesktop)
+                if (command is ICairoShellItemCommandInfo fileCommand && fileCommand.IsAvailableForShellItem(file))
                 {
+                    uid++;
+                    ContextMenuCommandUIDs.Add(uid, command.Identifier);
                     builder.AddCommand(new ShellMenuCommand
                     {
-                        Flags = MFT.BYCOMMAND, // enable this entry always
-                        Label = DisplayString.sStacks_OpenOnDesktop,
-                        UID = (uint) CairoContextMenuItem.OpenOnDesktop
+                        Flags = MFT.BYCOMMAND,
+                        Label = fileCommand.LabelForShellItem(file),
+                        UID = uid
                     });
+                }
+            }
 
-                    // If the [SHIFT] key is held, don't change the default action to ours
-                    // Only set as the default action for filesystem items because we don't support all shell views
-                    if (file.IsFileSystem && !KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
-                    {
-                        builder.DefaultItemUID = (uint) CairoContextMenuItem.OpenOnDesktop;
-                    }
+            if (builder.Commands.Count > 0)
+            {
+                // If the [SHIFT] key is held, don't change the default action to ours
+                // Only set as the default action for filesystem items because we don't support all shell views
+                if (Settings.Instance.FoldersOpenDesktopOverlay && ContextMenuCommandUIDs.ContainsValue("OpenLocation") && !KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey))
+                {
+                    builder.DefaultItemUID = ContextMenuCommandUIDs.FirstOrDefault(item => item.Value == "OpenLocation").Key;
                 }
 
-                if (StacksManager.Instance.StackLocations.All(i => i.Path != file.Path))
-                {
-                    builder.AddCommand(new ShellMenuCommand
-                    {
-                        Flags = MFT.BYCOMMAND, // enable this entry always
-                        Label = DisplayString.sInterface_AddToStacks,
-                        UID = (uint)CairoContextMenuItem.AddToStacks
-                    });
-                }
-                else
-                {
-                    builder.AddCommand(new ShellMenuCommand
-                    {
-                        Flags = MFT.BYCOMMAND, // enable this entry always
-                        Label = DisplayString.sInterface_RemoveFromStacks,
-                        UID = (uint)CairoContextMenuItem.RemoveFromStacks
-                    });
-                }
                 builder.AddSeparator();
             }
 
@@ -237,7 +232,6 @@ namespace CairoDesktop
 
         private bool HandleFileAction(string action, ShellItem[] items, bool allFolders)
         {
-            // TODO: Use command system
             if (items.Length < 1)
             {
                 return false;
@@ -246,28 +240,15 @@ namespace CairoDesktop
             bool handled = false;
             switch (action)
             {
-                case CustomCommands.Actions.Rename:
+                case CommonContextMenuVerb.Rename:
                     LastIconSelected?.BeginRename();
                     return true; // don't reset LastIconSelected yet so that we can tell that it entered rename mode
                 default:
                     // handle Cairo actions
-                    if (uint.TryParse(action, out uint cairoAction))
+                    if (uint.TryParse(action, out uint cairoAction) && ContextMenuCommandUIDs.TryGetValue(cairoAction, out string identifier))
                     {
-                        switch ((CairoContextMenuItem)cairoAction)
-                        {
-                            case CairoContextMenuItem.AddToStacks:
-                                CustomCommands.PerformAction(CustomCommands.Actions.AddStack, items[0].Path);
-                                handled = true;
-                                break;
-                            case CairoContextMenuItem.RemoveFromStacks:
-                                CustomCommands.PerformAction(CustomCommands.Actions.RemoveStack, items[0].Path);
-                                handled = true;
-                                break;
-                            case CairoContextMenuItem.OpenOnDesktop:
-                                FolderHelper.OpenLocation(items[0].Path);
-                                handled = true;
-                                break;
-                        }
+                        _commandService.InvokeCommand(identifier, ("Path", items[0].Path));
+                        handled = true;
                     }
                     break;
             }

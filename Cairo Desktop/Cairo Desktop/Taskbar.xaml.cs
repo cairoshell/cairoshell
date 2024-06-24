@@ -27,6 +27,7 @@ namespace CairoDesktop
         // Item sources
         internal readonly IAppGrabber _appGrabber;
         private readonly ShellManager _shellManager;
+        internal readonly ICommandService _commandService;
         private ICollectionView _taskbarItems;
 
         // display properties
@@ -71,7 +72,8 @@ namespace CairoDesktop
             ShellManager shellManager, 
             IWindowManager windowManager, 
             IDesktopManager desktopManager,
-            IAppGrabber appGrabber, 
+            IAppGrabber appGrabber,
+            ICommandService commandService,
             AppBarScreen screen,
             AppBarEdge edge,
             int modeSetting) 
@@ -85,6 +87,7 @@ namespace CairoDesktop
             _appGrabber = appGrabber;
             _desktopManager = desktopManager;
             _shellManager = shellManager;
+            _commandService = commandService;
 
             AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
             if (!Screen.Primary && !Settings.Instance.EnableMenuBarMultiMon)
@@ -564,12 +567,12 @@ namespace CairoDesktop
         #region Button clicks
         private void TaskView_Click(object sender, RoutedEventArgs e)
         {
-            ShellHelper.ShowWindowSwitcher();
+            _commandService.InvokeCommand("TaskView");
         }
 
         private void btnDesktopOverlay_Click(object sender, RoutedEventArgs e)
         {
-            _desktopManager.IsOverlayOpen = (bool)(sender as ToggleButton).IsChecked;
+            _commandService.InvokeCommand("ToggleDesktopOverlay");
         }
 
         private void btnTaskList_Click(object sender, RoutedEventArgs e)

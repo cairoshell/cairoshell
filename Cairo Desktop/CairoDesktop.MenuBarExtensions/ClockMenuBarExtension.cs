@@ -7,7 +7,13 @@ namespace CairoDesktop.MenuBarExtensions
 {
     class ClockMenuBarExtension : UserControlMenuBarExtension
     {
+        private readonly ICommandService _commandService;
         private Clock _clock;
+
+        internal ClockMenuBarExtension(ICommandService commandService)
+        {
+            _commandService = commandService;
+        }
 
         public override UserControl StartControl(IMenuBar host)
         {
@@ -16,7 +22,7 @@ namespace CairoDesktop.MenuBarExtensions
                 return null;
             }
 
-            _clock = new Clock(host);
+            _clock = new Clock(host, _commandService);
             return _clock;
         }
     }

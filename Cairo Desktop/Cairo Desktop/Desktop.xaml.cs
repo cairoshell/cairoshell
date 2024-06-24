@@ -26,6 +26,8 @@ using ManagedShell.ShellFolders.Enums;
 using DataFormats = System.Windows.DataFormats;
 using DragDropEffects = System.Windows.DragDropEffects;
 using DragEventArgs = System.Windows.DragEventArgs;
+using CairoDesktop.Infrastructure.ObjectModel;
+using System.Collections.Generic;
 
 namespace CairoDesktop
 {
@@ -37,6 +39,7 @@ namespace CairoDesktop
         private WindowInteropHelper helper;
         private bool altF4Pressed;
         private readonly AppBarManager _appBarManager;
+        private readonly ICommandService _commandService;
         private readonly IDesktopManager _desktopManager;
         private readonly FullScreenHelper _fullScreenHelper;
         private readonly FileOperationWorker _fileWorker;
@@ -47,12 +50,14 @@ namespace CairoDesktop
         public EventHandler WorkAreaChanged;
 
         private Brush BackgroundBrush { get; set; }
+        private Dictionary<uint, string> ContextMenuCommandUIDs = new Dictionary<uint, string>();
 
-        public Desktop(IDesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService)
+        public Desktop(IDesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService, ICommandService commandService)
         {
             InitializeComponent();
 
             _appBarManager = appBarManager;
+            _commandService = commandService;
             _desktopManager = desktopManager;
             _fullScreenHelper = fullScreenHelper;
             _fileWorker = new FileOperationWorker();
@@ -691,31 +696,26 @@ namespace CairoDesktop
                 flags |= MFT.DISABLED;
             }
 
-            builder.AddCommand(new ShellMenuCommand
-            {
-                Flags = MFT.BYCOMMAND, // enable this entry always
-                Label = Common.Localization.DisplayString.sStacks_OpenInNewWindow,
-                UID = (uint)CairoContextMenuItem.OpenInNewWindow
-            });
+            var commands = _commandService.Commands.Where(command => command is ICairoShellFolderCommandInfo);
+            uint uid = (uint)Enum.GetValues(typeof(CommonContextMenuItem)).Cast<CommonContextMenuItem>().Max();
 
-            if (StacksManager.Instance.StackLocations.All(i => i.Path != _desktopManager.DesktopLocation.Path))
+            ContextMenuCommandUIDs.Clear();
+
+            foreach (var command in commands)
             {
-                builder.AddCommand(new ShellMenuCommand
+                if (command is ICairoShellFolderCommandInfo fileCommand && fileCommand.IsAvailableForShellFolder(_desktopManager.DesktopLocation))
                 {
-                    Flags = MFT.BYCOMMAND, // enable this entry always
-                    Label = Common.Localization.DisplayString.sInterface_AddToStacks,
-                    UID = (uint)CairoContextMenuItem.AddToStacks
-                });
+                    uid++;
+                    ContextMenuCommandUIDs.Add(uid, command.Identifier);
+                    builder.AddCommand(new ShellMenuCommand
+                    {
+                        Flags = MFT.BYCOMMAND,
+                        Label = fileCommand.LabelForShellFolder(_desktopManager.DesktopLocation),
+                        UID = uid
+                    });
+                }
             }
-            else
-            {
-                builder.AddCommand(new ShellMenuCommand
-                {
-                    Flags = MFT.BYCOMMAND, // enable this entry always
-                    Label = Common.Localization.DisplayString.sInterface_RemoveFromStacks,
-                    UID = (uint)CairoContextMenuItem.RemoveFromStacks
-                });
-            }
+
             builder.AddSeparator();
 
             builder.AddCommand(new ShellMenuCommand
@@ -745,30 +745,29 @@ namespace CairoDesktop
                 builder.AddSeparator();
             }
 
-            if (!EnvironmentHelper.IsAppRunningAsShell)
-            {
-                // Don't show this if we are shell, since this launches a UWP app
-                builder.AddCommand(new ShellMenuCommand
-                {
-                    Flags = MFT.BYCOMMAND, // enable this entry always
-                    Label = Common.Localization.DisplayString.sDesktop_DisplaySettings,
-                    UID = (uint)CairoContextMenuItem.DisplaySettings
-                });
-            }
+            var desktopCommands = new string[] { "OpenDisplayControlPanel", "OpenPersonalizeControlPanel" };
 
-            builder.AddCommand(new ShellMenuCommand
+            foreach (var identifier in desktopCommands)
             {
-                Flags = MFT.BYCOMMAND, // enable this entry always
-                Label = Common.Localization.DisplayString.sDesktop_Personalize,
-                UID = (uint)CairoContextMenuItem.Personalize
-            });
+                var command = _commandService.Commands.FirstOrDefault(cmd => cmd.Identifier == identifier);
+                if (command != null && command is ICairoCommandInfo commandInfo && commandInfo.IsAvailable)
+                {
+                    uid++;
+                    ContextMenuCommandUIDs.Add(uid, command.Identifier);
+                    builder.AddCommand(new ShellMenuCommand
+                    {
+                        Flags = MFT.BYCOMMAND,
+                        Label = commandInfo.Label,
+                        UID = uid
+                    });
+                }
+            }
 
             return builder;
         }
         
         private void HandleFolderAction(uint action, string path)
         {
-            // TODO: Use command system
             switch (action)
             {
                 case (uint)CommonContextMenuItem.Paste:
@@ -776,31 +775,16 @@ namespace CairoDesktop
                     break;
                 case (uint)CommonContextMenuItem.Properties:
                     _desktopManager.IsOverlayOpen = false;
-                    CustomCommands.PerformAction(CustomCommands.Actions.Properties, path);
-                    break;
-                case (uint)CairoContextMenuItem.OpenInNewWindow:
-                    _desktopManager.IsOverlayOpen = false;
-                    CustomCommands.PerformAction(CustomCommands.Actions.OpenWithShell, path);
-                    break;
-                case (uint)CairoContextMenuItem.DisplaySettings:
-                    _desktopManager.IsOverlayOpen = false;
-                    CustomCommands.PerformAction(CustomCommands.Actions.DisplaySettings, path);
-                    break;
-                case (uint)CairoContextMenuItem.Personalize when EnvironmentHelper.IsAppRunningAsShell:
-                    _desktopManager.IsOverlayOpen = false;
-                    _settingsUiService?.Show("desktop");
-                    break;
-                case (uint)CairoContextMenuItem.Personalize:
-                    _desktopManager.IsOverlayOpen = false;
-                    CustomCommands.PerformAction(CustomCommands.Actions.Personalize, path);
-                    break;
-                case (uint)CairoContextMenuItem.AddToStacks:
-                    CustomCommands.PerformAction(CustomCommands.Actions.AddStack, path);
-                    break;
-                case (uint)CairoContextMenuItem.RemoveFromStacks:
-                    CustomCommands.PerformAction(CustomCommands.Actions.RemoveStack, path);
+                    _commandService.InvokeCommand("ShowFileProperties", ("Path", path));
                     break;
                 default:
+                    // handle Cairo actions
+                    if (ContextMenuCommandUIDs.TryGetValue(action, out string identifier))
+                    {
+                        _desktopManager.IsOverlayOpen = false;
+                        _commandService.InvokeCommand(identifier, ("Path", path));
+                        break;
+                    }
                     // must be "New" menu
                     CairoApplication.Current.Dispatcher.Invoke(() =>
                     {

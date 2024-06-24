@@ -29,8 +29,10 @@ namespace CairoDesktop
         internal readonly IAppGrabber _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ISettingsUIService _settingsUiService;
-        private readonly ICommandService _commandService;
+        internal readonly ICommandService _commandService;
 
+        private bool isCairoMenuInitialized;
+        private bool isPlacesMenuInitialized;
         private MenuBarShadow shadow;
         private static HotKey cairoMenuHotKey;
         private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
@@ -56,10 +58,6 @@ namespace CairoDesktop
             SetPosition();
 
             setupChildren();
-
-            setupCairoMenu();
-
-            setupPlacesMenu();
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
 
@@ -92,8 +90,15 @@ namespace CairoDesktop
             }
         }
 
-        private void setupCairoMenu()
+        private void CairoMenu_Opened(object sender, RoutedEventArgs e)
         {
+            if (isCairoMenuInitialized)
+            {
+                return;
+            }
+
+            CairoMenu.Items.Clear();
+
             // TODO: Make configurable
             var cairoMenuItems = new string[]
             {
@@ -137,16 +142,16 @@ namespace CairoDesktop
                     Header = command.Label,
                     Visibility = command.IsAvailable ? Visibility.Visible : Visibility.Collapsed
                 };
-                menuItem.Click += (sender, e) => _commandService.InvokeCommand(command.Identifier);
+                menuItem.Click += (_sender, _e) => _commandService.InvokeCommand(command.Identifier);
                 if (command is INotifyPropertyChanged notifyPropertyChangedCommand)
                 {
-                    notifyPropertyChangedCommand.PropertyChanged += (sender, e) =>
+                    notifyPropertyChangedCommand.PropertyChanged += (_sender, _e) =>
                     {
-                        if (e.PropertyName == "Label")
+                        if (_e.PropertyName == "Label")
                         {
                             menuItem.Header = command.Label;
                         }
-                        if (e.PropertyName == "IsAvailable")
+                        if (_e.PropertyName == "IsAvailable")
                         {
                             menuItem.Visibility = command.IsAvailable ? Visibility.Visible : Visibility.Collapsed;
                         }
@@ -169,10 +174,19 @@ namespace CairoDesktop
                     CairoMenu.Items.Insert(insertIndex, menuItem);
                 }
             }
+
+            isCairoMenuInitialized = true;
         }
 
-        private void setupPlacesMenu()
+        private void PlacesMenu_Opened(object sender, RoutedEventArgs e)
         {
+            if (isPlacesMenuInitialized)
+            {
+                return;
+            }
+
+            PlacesMenu.Items.Clear();
+
             // TODO: Make configurable
             var placesMenuItems = new string[]
             {
@@ -219,7 +233,7 @@ namespace CairoDesktop
                     Header = folder.DisplayName.Replace("_", "__"),
                     FontWeight = boldItems.Contains(path) ? FontWeights.Bold : FontWeights.Normal
                 };
-                menuItem.Click += (sender, e) => _commandService.InvokeCommand("OpenLocation", ("Path", path), ("OpenInWindow", openInWindowItems.Contains(path)));
+                menuItem.Click += (_sender, _e) => _commandService.InvokeCommand(!Settings.Instance.FoldersOpenDesktopOverlay || openInWindowItems.Contains(path) ? "OpenLocationInWindow" : "OpenLocation", ("Path", path));
                 PlacesMenu.Items.Add(menuItem);
             }
 
@@ -234,6 +248,8 @@ namespace CairoDesktop
                     PlacesMenu.Items.Add(menuItem);
                 }
             }
+
+            isPlacesMenuInitialized = true;
         }
 
         private void setupShadow()

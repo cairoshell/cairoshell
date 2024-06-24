@@ -119,7 +119,7 @@ namespace CairoDesktop.Services
 
             if (DesktopIconsControl == null)
             {
-                DesktopIconsControl = new DesktopIcons(this);
+                DesktopIconsControl = new DesktopIcons(this, _commandService);
             }
 
             RegisterHotKey();
@@ -132,7 +132,7 @@ namespace CairoDesktop.Services
             if (DesktopWindow != null)
                 return;
 
-            DesktopWindow = new Desktop(this, _shellManager.AppBarManager, _shellManager.FullScreenHelper, _settingsUiService);
+            DesktopWindow = new Desktop(this, _shellManager.AppBarManager, _shellManager.FullScreenHelper, _settingsUiService, _commandService);
             DesktopWindow.WorkAreaChanged += WorkAreaChanged;
             DesktopWindow.Show();
         }

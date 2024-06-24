@@ -12,7 +12,8 @@ namespace CairoDesktop.Commands
         private readonly ISettingsUIService _settingsUIService;
         private readonly OpenCairoSettingsCommandInfo _info = new OpenCairoSettingsCommandInfo();
 
-        public OpenCairoSettingsCommand(ISettingsUIService settingsUIService) {
+        public OpenCairoSettingsCommand(ISettingsUIService settingsUIService)
+        {
             _settingsUIService = settingsUIService;
             _info.IsAvailable = _settingsUIService != null;
         }

@@ -28,13 +28,15 @@
                     x:Name="CairoMenuBar">
             <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
                 <MenuItem Style="{StaticResource CairoMenuItemCairoMenuStyle}"
-                          Name="CairoMenu">
+                          Name="CairoMenu"
+						  SubmenuOpened="CairoMenu_Opened">
                     <MenuItem.Header>
                         <Image Name="MenuIcon"
                                Source="{DynamicResource MenuIcon}"
                                Width="38"
                                Height="22" />
                     </MenuItem.Header>
+					<MenuItem />
                 </MenuItem>
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu)}"
                           Name="ProgramsMenu"
@@ -50,9 +52,12 @@
                         </MenuItem.Header>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem Name="PlacesMenu"
-                          Header="{Binding Path=(l10n:DisplayString.sPlacesMenu)}"
-                          TextBlock.FontWeight="SemiBold" />
+				<MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu)}"
+						  Name="PlacesMenu"
+						  SubmenuOpened="PlacesMenu_Opened"
+                          TextBlock.FontWeight="SemiBold">
+					<MenuItem />
+				</MenuItem>
             </Menu>
         </StackPanel>
         <StackPanel Orientation="Horizontal"
