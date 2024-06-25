@@ -320,22 +320,6 @@ namespace CairoDesktop.Common.Localization
 
         public static string sProgramsMenu_RenameCategoryInfo => getString();
 
-        public static string sPlacesMenu_Documents => getString();
-
-        public static string sPlacesMenu_Downloads => getString();
-
-        public static string sPlacesMenu_Music => getString();
-
-        public static string sPlacesMenu_Pictures => getString();
-
-        public static string sPlacesMenu_Videos => getString();
-
-        public static string sPlacesMenu_ThisPC => getString();
-
-        public static string sPlacesMenu_ProgramFiles => getString();
-
-        public static string sPlacesMenu_RecycleBin => getString();
-
         public static string sStacks_Tooltip => getString();
 
         public static string sStacks_OpenInNewWindow => getString();
@@ -718,5 +702,13 @@ namespace CairoDesktop.Common.Localization
         public static string sWelcome_TaskbarSec3Heading => getString();
 
         public static string sWelcome_TaskbarSec3Text => getString();
+
+        public static string sCommand_OpenFile => getString();
+
+        public static string sCommand_OpenLocation => getString();
+
+        public static string sCommand_OpenDesktopOverlay => getString();
+
+        public static string sCommand_CloseDesktopOverlay => getString();
     }
 }

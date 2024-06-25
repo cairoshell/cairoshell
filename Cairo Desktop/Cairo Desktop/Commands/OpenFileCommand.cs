@@ -1,5 +1,6 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Application.Structs;
+using CairoDesktop.Common.Localization;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using System;
@@ -80,7 +81,7 @@ namespace CairoDesktop.Commands
 
         public string Description => "Opens the specified file.";
 
-        public string Label => "Open File";
+        public string Label => DisplayString.sCommand_OpenFile;
 
         public bool IsAvailable => true;
 

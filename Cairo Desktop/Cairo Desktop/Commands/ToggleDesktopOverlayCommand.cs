@@ -1,5 +1,6 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Application.Structs;
+using CairoDesktop.Common.Localization;
 using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace CairoDesktop.Commands
 
         private void SetLabel(ToggleDesktopOverlayCommandInfo info, bool isOpen)
         {
-            info.Label = isOpen ? "Close desktop overlay" : "Open desktop overlay";
+            info.Label = isOpen ? DisplayString.sCommand_CloseDesktopOverlay : DisplayString.sCommand_OpenDesktopOverlay;
         }
 
         public void Setup() { }

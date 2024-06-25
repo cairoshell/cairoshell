@@ -88,7 +88,7 @@ namespace CairoDesktop.Commands
 
         public string Description => "Opens the specified location on the desktop if possible, otherwise in a new window.";
 
-        public string Label => "Open Location";
+        public string Label => DisplayString.sCommand_OpenLocation;
 
         public bool IsAvailable => true;
 
