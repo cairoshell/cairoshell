@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly SleepCommandInfo _info = new SleepCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             PowerHelper.Sleep();

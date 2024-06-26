@@ -27,8 +27,6 @@ namespace CairoDesktop.Commands
             _info = new OpenLocationCommandInfo(desktopManager, settings);
         }
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             string path = null;

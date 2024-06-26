@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly TaskViewCommandInfo _info = new TaskViewCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             ShellHelper.ShowWindowSwitcher();

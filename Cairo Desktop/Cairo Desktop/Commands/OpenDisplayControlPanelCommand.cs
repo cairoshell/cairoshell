@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly OpenDisplayControlPanelCommandInfo _info = new OpenDisplayControlPanelCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             return ShellHelper.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,3");

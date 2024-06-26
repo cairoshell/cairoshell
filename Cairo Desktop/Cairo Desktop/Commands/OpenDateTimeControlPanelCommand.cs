@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly OpenDateTimeControlPanelCommandInfo _info = new OpenDateTimeControlPanelCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             return ShellHelper.StartProcess("timedate.cpl");

@@ -14,8 +14,6 @@ namespace CairoDesktop.Commands
 
         private readonly AboutCairoCommandInfo _info = new AboutCairoCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();

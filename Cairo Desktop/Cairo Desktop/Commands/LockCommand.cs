@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly LockCommandInfo _info = new LockCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             ShellHelper.Lock();

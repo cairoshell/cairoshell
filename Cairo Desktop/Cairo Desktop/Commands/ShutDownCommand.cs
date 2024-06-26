@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly ShutDownCommandInfo _info = new ShutDownCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             SystemPower.ShowShutdownConfirmation();

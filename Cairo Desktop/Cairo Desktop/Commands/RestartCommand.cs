@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly RestartCommandInfo _info = new RestartCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             SystemPower.ShowRebootConfirmation();

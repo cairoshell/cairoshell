@@ -18,8 +18,6 @@ namespace CairoDesktop.Commands
             _info.IsAvailable = _appGrabber != null;
         }
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             _appGrabber?.ShowDialog();

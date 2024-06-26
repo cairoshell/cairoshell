@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly ShowRunDialogCommandInfo _info = new ShowRunDialogCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             ShellHelper.ShowRunDialog(DisplayString.sRun_Title, DisplayString.sRun_Info);

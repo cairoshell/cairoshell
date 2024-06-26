@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly OpenProgramsControlPanelCommandInfo _info = new OpenProgramsControlPanelCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             return ShellHelper.StartProcess("appwiz.cpl");

@@ -15,8 +15,6 @@ namespace CairoDesktop.Commands
 
         private readonly RemoveStackCommandInfo _info = new RemoveStackCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             string path = "";

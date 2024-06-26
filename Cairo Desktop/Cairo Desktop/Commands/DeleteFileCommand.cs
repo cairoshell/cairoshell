@@ -13,8 +13,6 @@ namespace CairoDesktop.Commands
 
         private readonly DeleteFileCommandInfo _info = new DeleteFileCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             string path = "";

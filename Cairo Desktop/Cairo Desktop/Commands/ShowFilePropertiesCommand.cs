@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly ShowFilePropertiesCommandInfo _info = new ShowFilePropertiesCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             string path = "";

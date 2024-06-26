@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly LogOffCommandInfo _info = new LogOffCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             SystemPower.ShowLogOffConfirmation();

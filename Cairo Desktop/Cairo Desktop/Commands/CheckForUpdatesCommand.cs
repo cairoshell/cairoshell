@@ -17,8 +17,6 @@ namespace CairoDesktop.Commands
             _info.IsAvailable = _applicationUpdateService?.IsAvailable == true;
         }
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             _applicationUpdateService?.CheckForUpdates();

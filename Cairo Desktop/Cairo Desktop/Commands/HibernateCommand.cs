@@ -36,8 +36,6 @@ namespace CairoDesktop.Commands
             }
         }
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             PowerHelper.Hibernate();

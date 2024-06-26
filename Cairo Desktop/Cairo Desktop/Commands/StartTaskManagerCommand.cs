@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly StartTaskManagerCommandInfo _info = new StartTaskManagerCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             ShellHelper.StartTaskManager();

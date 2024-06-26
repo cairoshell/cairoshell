@@ -22,8 +22,6 @@ namespace CairoDesktop.Commands
             _desktopManager = desktopManager;
         }
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             string path = null;

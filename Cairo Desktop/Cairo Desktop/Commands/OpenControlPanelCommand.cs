@@ -18,8 +18,6 @@ namespace CairoDesktop.Commands
             _commandService = commandService;
         }
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             return _commandService.InvokeCommand("OpenLocation", ("Path", ShellFolderPath.ControlPanelFolder.Value));

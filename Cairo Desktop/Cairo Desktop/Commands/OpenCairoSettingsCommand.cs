@@ -18,8 +18,6 @@ namespace CairoDesktop.Commands
             _info.IsAvailable = _settingsUIService != null;
         }
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             string tabIdentifier = null;

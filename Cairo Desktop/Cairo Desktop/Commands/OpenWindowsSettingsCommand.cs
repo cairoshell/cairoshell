@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly OpenWindowsSettingsCommandInfo _info = new OpenWindowsSettingsCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             return ShellHelper.StartProcess("ms-settings://");

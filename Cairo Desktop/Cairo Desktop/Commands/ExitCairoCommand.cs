@@ -18,8 +18,6 @@ namespace CairoDesktop.Commands
             _cairoApplication = cairoApplication;
         }
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             CairoMessage.ShowOkCancel(DisplayString.sExitCairo_Info, DisplayString.sExitCairo_Title,

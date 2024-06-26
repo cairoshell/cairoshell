@@ -12,8 +12,6 @@ namespace CairoDesktop.Commands
 
         private readonly CopyFileCommandInfo _info = new CopyFileCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             string path = "";

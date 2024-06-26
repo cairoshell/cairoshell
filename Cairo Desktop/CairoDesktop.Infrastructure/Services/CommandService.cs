@@ -49,7 +49,6 @@ namespace CairoDesktop.Infrastructure.Services
                 }
                 try
                 {
-                    command.Setup();
                     registeredCommands.Add(command.Info);
                     identifiers.Add(command.Info.Identifier);
                     _logger.LogDebug($"Registered command {command.Info.Identifier}");

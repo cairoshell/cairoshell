@@ -41,8 +41,6 @@ namespace CairoDesktop.Commands
             info.Label = isOpen ? DisplayString.sCommand_CloseDesktopOverlay : DisplayString.sCommand_OpenDesktopOverlay;
         }
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             _desktopManager?.ToggleOverlay();

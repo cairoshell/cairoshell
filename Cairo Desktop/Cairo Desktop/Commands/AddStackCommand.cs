@@ -15,8 +15,6 @@ namespace CairoDesktop.Commands
 
         private readonly AddStackCommandInfo _info = new AddStackCommandInfo();
 
-        public void Setup() { }
-
         public bool Execute(params (string name, object value)[] parameters)
         {
             string path = "";
