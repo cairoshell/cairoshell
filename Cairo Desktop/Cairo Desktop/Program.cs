@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using CairoDesktop.Interfaces;
+using CairoDesktop.Commands;
 
 namespace CairoDesktop
 {
@@ -81,6 +82,37 @@ namespace CairoDesktop
 
                     // Inbox extensions below
                     services.AddSingleton<IShellExtension, MenuBarExtensionsShellExtension>();
+
+                    // Inbox commands below
+                    services.AddSingleton<ICairoCommand, AboutCairoCommand>();
+                    services.AddSingleton<ICairoCommand, CheckForUpdatesCommand>();
+                    services.AddSingleton<ICairoCommand, ExitCairoCommand>();
+                    services.AddSingleton<ICairoCommand, HibernateCommand>();
+                    services.AddSingleton<ICairoCommand, LockCommand>();
+                    services.AddSingleton<ICairoCommand, LogOffCommand>();
+                    services.AddSingleton<ICairoCommand, OpenAppGrabberCommand>();
+                    services.AddSingleton<ICairoCommand, OpenCairoSettingsCommand>();
+                    services.AddSingleton<ICairoCommand, OpenControlPanelCommand>();
+                    services.AddSingleton<ICairoCommand, OpenWindowsSettingsCommand>();
+                    services.AddSingleton<ICairoCommand, RestartCommand>();
+                    services.AddSingleton<ICairoCommand, ShowFilePropertiesCommand>();
+                    services.AddSingleton<ICairoCommand, ShowRunDialogCommand>();
+                    services.AddSingleton<ICairoCommand, ShutDownCommand>();
+                    services.AddSingleton<ICairoCommand, SleepCommand>();
+                    services.AddSingleton<ICairoCommand, StartTaskManagerCommand>();
+                    services.AddSingleton<ICairoCommand, ToggleDesktopOverlayCommand>();
+                    services.AddSingleton<ICairoCommand, OpenLocationCommand>();
+                    services.AddSingleton<ICairoCommand, OpenLocationInWindowCommand>();
+                    services.AddSingleton<ICairoCommand, AddStackCommand>();
+                    services.AddSingleton<ICairoCommand, RemoveStackCommand>();
+                    services.AddSingleton<ICairoCommand, CopyFileCommand>();
+                    services.AddSingleton<ICairoCommand, DeleteFileCommand>();
+                    services.AddSingleton<ICairoCommand, OpenFileCommand>();
+                    services.AddSingleton<ICairoCommand, OpenDateTimeControlPanelCommand>();
+                    services.AddSingleton<ICairoCommand, OpenDisplayControlPanelCommand>();
+                    services.AddSingleton<ICairoCommand, OpenPersonalizeControlPanelCommand>();
+                    services.AddSingleton<ICairoCommand, OpenProgramsControlPanelCommand>();
+                    services.AddSingleton<ICairoCommand, TaskViewCommand>();
                 })
                 .ConfigureLogging((context, logging) =>
                 {

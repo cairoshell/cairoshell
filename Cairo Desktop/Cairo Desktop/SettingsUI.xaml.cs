@@ -35,6 +35,7 @@ namespace CairoDesktop
         private readonly IAppGrabber _appGrabber;
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ICairoApplication _cairoApplication;
+        private readonly ICommandService _commandService;
         private readonly ShellManager _shellManager;
         private readonly IThemeService _themeService;
         private readonly SettingsUIService _uiService;
@@ -44,13 +45,15 @@ namespace CairoDesktop
             ShellManagerService shellManagerService,
             IApplicationUpdateService applicationUpdateService,
             IAppGrabber appGrabber,
-            IThemeService themeService)
+            IThemeService themeService,
+            ICommandService commandService)
         {
             InitializeComponent();
 
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
             _cairoApplication = cairoApplication;
+            _commandService = commandService;
             _shellManager = shellManagerService.ShellManager;
             _themeService = themeService;
             _uiService = uiService;
@@ -71,6 +74,7 @@ namespace CairoDesktop
             checkIfCanHibernate();
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            _commandService = commandService;
         }
 
         private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -858,7 +862,7 @@ namespace CairoDesktop
 
         private void btnOpenLogsFolder_OnClick(object sender, RoutedEventArgs e)
         {
-            FolderHelper.OpenWithShell(CairoApplication.LogsFolder);
+            _commandService.InvokeCommand("OpenLocationInWindow", ("Path", CairoApplication.LogsFolder));
         }
 
         private void chkRunAtLogOn_Click(object sender, RoutedEventArgs e)

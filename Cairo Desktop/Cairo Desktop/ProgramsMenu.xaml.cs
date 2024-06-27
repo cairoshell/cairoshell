@@ -58,7 +58,7 @@ namespace CairoDesktop
             // Buttons capture the mouse; need to release so that mouse events go to the intended recipient after closing
             Mouse.Capture(null);
 
-            if (!ShellHelper.StartProcess("appwiz.cpl"))
+            if (!MenuBar._commandService.InvokeCommand("OpenProgramsControlPanel"))
                 CairoMessage.Show(DisplayString.sError_CantOpenAppWiz, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
         }
         #endregion

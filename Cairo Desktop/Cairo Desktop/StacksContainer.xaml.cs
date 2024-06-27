@@ -75,7 +75,7 @@ namespace CairoDesktop {
         /// <param name="alwaysOpenWithShell">If true, user preferences will not be honored and the shell will always be used to open the directory.</param>
         internal void OpenDir(string directoryPath, bool alwaysOpenWithShell) 
         {
-            if ((!alwaysOpenWithShell && !FolderHelper.OpenLocation(directoryPath)) || (alwaysOpenWithShell && !FolderHelper.OpenWithShell(directoryPath)))
+            if (!MenuBar._commandService.InvokeCommand(alwaysOpenWithShell ? "OpenLocationInWindow" : "OpenLocation", ("Path", directoryPath)))
             {
                 CairoMessage.Show(Common.Localization.DisplayString.sError_FileNotFoundInfo, Common.Localization.DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
             }
@@ -268,7 +268,8 @@ namespace CairoDesktop {
                     {
                         DataContext = menuItem.DataContext,
                         ParentContainer = this,
-                        ParentMenuItem = menuItem
+                        ParentMenuItem = menuItem,
+                        _commandService = MenuBar._commandService
                     };
                     subMenuItem.Header = scroller;
                 }

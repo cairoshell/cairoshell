@@ -6,7 +6,7 @@ namespace CairoDesktop.Application.Interfaces
     public interface ICairoApplication
     {
         List<IMenuItem> CairoMenu { get; }
-        
+
         List<IShellExtension> Extensions { get; }
 
         List<IMenuBarExtension> MenuBarExtensions { get; }

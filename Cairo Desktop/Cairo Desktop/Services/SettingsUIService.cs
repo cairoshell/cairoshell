@@ -8,6 +8,7 @@ namespace CairoDesktop.Services
     {
         private readonly IAppGrabber _appGrabber;
         private readonly ICairoApplication _cairoApplication;
+        private readonly ICommandService _commandService;
         private readonly ShellManagerService _shellManager;
         private readonly IThemeService _themeService;
         private readonly IApplicationUpdateService _updateService;
@@ -15,10 +16,11 @@ namespace CairoDesktop.Services
         internal SettingsUI SettingsUi;
         
         public SettingsUIService(ICairoApplication cairoApplication, IAppGrabber appGrabber, IApplicationUpdateService updateService,
-            ShellManagerService shellManager, IThemeService themeService)
+            ShellManagerService shellManager, IThemeService themeService, ICommandService commandService)
         {
             _appGrabber = appGrabber;
             _cairoApplication = cairoApplication;
+            _commandService = commandService;
             _shellManager = shellManager;
             _themeService = themeService;
             _updateService = updateService;
@@ -28,7 +30,7 @@ namespace CairoDesktop.Services
         {
             if (SettingsUi == null)
             {
-                SettingsUi = new SettingsUI(_cairoApplication, this, _shellManager, _updateService, _appGrabber, _themeService);
+                SettingsUi = new SettingsUI(_cairoApplication, this, _shellManager, _updateService, _appGrabber, _themeService, _commandService);
             }
             
             SettingsUi.Show();

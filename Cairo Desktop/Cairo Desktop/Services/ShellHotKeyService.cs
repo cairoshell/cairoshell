@@ -5,8 +5,6 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.DependencyInjection;
 using CairoDesktop.Interfaces;
 using ManagedShell.Common.Helpers;
-using CairoDesktop.SupportingClasses;
-using CairoDesktop.Common.Localization;
 
 namespace CairoDesktop.Services
 {
@@ -14,13 +12,15 @@ namespace CairoDesktop.Services
     {
         private readonly ICairoApplication _cairoApplication;
         private readonly IDesktopManager _desktopManager;
+        private readonly ICommandService _commandService;
 
-        public ShellHotKeyService(ICairoApplication cairoApplication, IDesktopManager desktopManager)
+        public ShellHotKeyService(ICairoApplication cairoApplication, IDesktopManager desktopManager, ICommandService commandService)
         {
             _cairoApplication = cairoApplication;
             _desktopManager = desktopManager;
-            
+
             ServiceStartTask = new Task(RegisterSystemHotkeys);
+            _commandService = commandService;
         }
 
         private void RegisterSystemHotkeys()
@@ -41,22 +41,22 @@ namespace CairoDesktop.Services
 
         private void OnWinDCommand(HotKey obj)
         {
-            _desktopManager.ToggleOverlay();
+            _commandService.InvokeCommand("ToggleDesktopOverlay");
         }
         
         private void OnWinRCommand(HotKey cmd)
         {
-            ShellHelper.ShowRunDialog(DisplayString.sRun_Title, DisplayString.sRun_Info);
+            _commandService.InvokeCommand("ShowRunDialog");
         }
 
         private void OnWinECommand(HotKey cmd)
         {
-            FolderHelper.OpenLocation("::{20D04FE0-3AEA-1069-A2D8-08002B30309D}");
+            _commandService.InvokeCommand("OpenLocation", ("Path", "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"));
         }
 
         private void OnWinICommand(HotKey cmd)
         {
-            ShellHelper.StartProcess("control.exe");
+            _commandService.InvokeCommand("OpenControlPanel");
         }
 
         private void OnWinPauseCommand(HotKey cmd)

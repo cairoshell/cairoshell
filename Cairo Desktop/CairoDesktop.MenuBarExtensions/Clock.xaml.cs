@@ -11,13 +11,15 @@ namespace CairoDesktop.MenuBarExtensions
 {
     public partial class Clock : UserControl
     {
+        private readonly ICommandService _commandService;
         private readonly bool _isPrimaryScreen;
         private static bool isClockHotkeyRegistered;
 
-        public Clock(IMenuBar host)
+        public Clock(IMenuBar host, ICommandService commandService)
         {
             InitializeComponent();
 
+            _commandService = commandService;
             _isPrimaryScreen = host.GetIsPrimaryDisplay();
 
             InitializeClock();
@@ -81,7 +83,7 @@ namespace CairoDesktop.MenuBarExtensions
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
         {
-            ShellHelper.StartProcess("timedate.cpl");
+            _commandService.InvokeCommand("OpenDateTimeControlPanel");
         }
 
         private void ClockMenuItem_SubmenuOpened(object sender, RoutedEventArgs e)

@@ -8,6 +8,8 @@ namespace CairoDesktop.Application.Interfaces
 
         void WriteApplicationDebugInfoToConsole(Version productVersion);
 
+        void LoadCommands();
+
         void LoadExtensions();
 
         void SetTheme();
