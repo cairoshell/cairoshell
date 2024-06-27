@@ -125,6 +125,9 @@ namespace CairoDesktop
 
             // register for settings changes
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+
+            // register for screen changes so that we can re-filter tasks if necessary
+            _windowManager.ScreensChanged += WindowManager_ScreensChanged;
         }
 
         private bool Tasks_Filter(object obj)
@@ -321,6 +324,8 @@ namespace CairoDesktop
             if (_windowManager?.IsSettingDisplays == true || AllowClose)
             {
                 _taskbarItems.CollectionChanged -= GroupedWindows_Changed;
+                _windowManager.ScreensChanged -= WindowManager_ScreensChanged;
+                Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
             }
         }
 
@@ -412,6 +417,13 @@ namespace CairoDesktop
                     PeekDuringAutoHide();
                     break;
             }
+        }
+
+        private void WindowManager_ScreensChanged(object sender, WindowManagerEventArgs e)
+        {
+            if (!e.DisplaysChanged || !Settings.Instance.EnableTaskbarMultiMon || Settings.Instance.TaskbarMultiMonMode == 0) return;
+            // Re-filter taskbar items to pick up cases where a task's screen no longer exists
+            _taskbarItems?.Refresh();
         }
         #endregion
 
