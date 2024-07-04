@@ -2361,7 +2361,9 @@ namespace CairoDesktop.Common.Localization
             { "sSettings_General_FileManager", "Administrador de archivos:" },
             { "sSettings_General_FoldersOpenDesktopOverlay", "Abrir carpetas con la superposición de escritorio dinámico" },
             { "sSettings_MenuBar_DefaultProgramsCategory", "Categoría predeterminada de programas:" },
+            { "sSettings_MenuBar_EnableMenuBarAutoHide", "Ocultar automáticamente la barra de menús" },
             { "sSettings_MenuBar_EnableMenuBarShadow", "Mostrar sombra bajo la barra de menús" },
+            { "sSettings_MenuBar_MenuBarEdge", "Posición de la barra de menús:" },
             { "sSettings_MenuBar_NotificationArea", "Área de notificación" },
             { "sSettings_MenuBar_EnableNotificationArea", "Habilitar el área de notificación" },
             { "sSettings_MenuBar_NotificationAreaTaskbarWarning", "EL área de notificación de Cairo no se mostrará debido a que la barra de tareas de Windows está visible. Para usar el área de notificación de Cairo, habilite la barra de tareas de Cairo y reinicie Cairo." },
@@ -2410,7 +2412,7 @@ namespace CairoDesktop.Common.Localization
             { "sSettings_IconSizeMedium", "Medianos" },
             { "sSettings_IconSizeSmall", "Pequeños" },
             { "sSettings_Taskbar_EnableTaskbar", "Habilitar la barra de tareas" },
-            { "sSettings_Taskbar_TaskbarEdge", "Posición de la barra de las tareas:" },
+            { "sSettings_Taskbar_TaskbarEdge", "Posición de la barra de tareas:" },
             { "sSettings_PositionBottom", "Inferior" },
             { "sSettings_PositionTop", "Superior" },
             { "sSettings_Taskbar_DisplayMode", "Modo de visualización:" },
@@ -2418,7 +2420,7 @@ namespace CairoDesktop.Common.Localization
             { "sSettings_Taskbar_DisplayModeOverlap", "La barra superpone las ventanas" },
             { "sSettings_Taskbar_DisplayModeAutoHide", "La barra se esconde automáticamente" },
             { "sSettings_Taskbar_EnableTaskbarMultiMon", "Mostrar la barra de tareas en varias pantallas" },
-			{ "sSettings_Taskbar_FullWidthTaskBar", "Utilizar el ancho completo de la pantalla para la barra" },
+			{ "sSettings_Taskbar_FullWidthTaskBar", "Utilizar el ancho completo de la pantalla para la barra de tareas" },
             { "sSettings_Taskbar_MiddleClick", "Acción de clic medio:" },
             { "sSettings_Taskbar_MiddleClickNewWindow", "Abrir nueva ventana" },
             { "sSettings_Taskbar_MiddleClickCloseWindow", "Cerrar ventana" },
@@ -2444,6 +2446,7 @@ namespace CairoDesktop.Common.Localization
             { "sSettings_Advanced_LogOffNow", "Cerrar sesión ahora" },
             { "sSettings_Advanced_LogOffLater", "Cerrar sesión más tarde" },
 			{ "sSettings_Advanced_OpenLogsFolder", "Abrir carpeta" },
+            { "sSettings_Advanced_AutoHideShowDelayMs", "Espera de reaparición de barra oculta (ms):" },
             { "sWelcome_StartTour", "Iniciar el recorrido" },
             { "sWelcome_FinishTour", "Finalizar el recorrido" },
             { "sWelcome_Welcome", "Le damos la bienvenida a Cairo" },
@@ -2463,7 +2466,7 @@ namespace CairoDesktop.Common.Localization
             { "sWelcome_MenuBarSec4Heading", "Pilas" },
             { "sWelcome_MenuBarSec4Text", "Arrastre cualquier carpeta a la barra de menús para crear una pila de fácil acceso." },
             { "sWelcome_MenuBarSec5Heading", "Área de notificación" },
-            { "sWelcome_MenuBarSec5Text", "Haga clic en la flecha para ver todos los iconos de notificacion." },
+            { "sWelcome_MenuBarSec5Text", "Haga clic en la flecha para ver todos los iconos de notificación." },
             { "sWelcome_MenuBarSec6Heading", "Buscar" },
             { "sWelcome_MenuBarSec6Text", "Encuentre archivos, carpetas, configuraciones del sistema y más." },
             { "sWelcome_DesktopText", "El escritorio dinámico de Cairo transforma su escritorio de un entorno estático a un navegador de archivos interactivo. Simplemente haga doble clic en una carpeta para navegar o también puede utilizar la barra de navegación." },
@@ -2477,7 +2480,7 @@ namespace CairoDesktop.Common.Localization
             { "sWelcome_TaskbarSec2Heading", "Ventanas categorizadas" },
             { "sWelcome_TaskbarSec2Text", "Las ventanas abiertas de la barra de tareas ahora están organizadas de la misma forma que el menú de Programas. Ahora, todas sus tareas relacionadas están agrupadas juntas para su acceso rápido y sencillo." },
             { "sWelcome_TaskbarSec3Heading", "Lista de tareas" },
-            { "sWelcome_TaskbarSec3Text", "¿Con muchas ventanas abiertas? La lista de tareas muestra sus ventanas en un menú para que usted pueda cambiar a la que está buscando. También puede activar la vista de tareas de Windows 10 desde este menú." }
+            { "sWelcome_TaskbarSec3Text", "¿Tiene muchas ventanas abiertas? La lista de tareas muestra sus ventanas en un menú para que usted pueda cambiar a la que está buscando. También puede activar la vista de tareas de Windows 10 desde este menú." }
         };
 
         public static Dictionary<string, string> nl_NL = new Dictionary<string, string>
