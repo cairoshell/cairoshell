@@ -62,7 +62,7 @@ namespace CairoDesktop {
                 ICommandSource cmdsrc = sender as ICommandSource;
                 if (cmdsrc?.CommandParameter is ShellFolder cmdparam)
                 {
-                    OpenDir(cmdparam.Path, false); 
+                    OpenDir(cmdparam.Path, !Settings.Instance.FoldersOpenDesktopOverlay); 
                     e.Handled = true;
                 }
             }

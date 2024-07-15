@@ -50,7 +50,7 @@ namespace CairoDesktop
 
             Close();
 
-            ParentContainer?.OpenDir((sender as ICommandSource).CommandParameter.ToString(), KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey));
+            ParentContainer?.OpenDir((sender as ICommandSource).CommandParameter.ToString(), !Settings.Instance.FoldersOpenDesktopOverlay || KeyboardUtilities.IsKeyDown(System.Windows.Forms.Keys.ShiftKey));
         }
 
         private void Scroller_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
