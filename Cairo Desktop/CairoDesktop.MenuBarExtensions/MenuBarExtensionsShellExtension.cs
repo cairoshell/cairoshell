@@ -9,13 +9,15 @@ namespace CairoDesktop.MenuBarExtensions
     public sealed class MenuBarExtensionsShellExtension : IShellExtension
     {
         private readonly ICairoApplication _cairoApplication;
+        private readonly ICommandService _commandService;
         private readonly ShellManager _shellManager;
 
         public List<IMenuBarExtension> MenuExtras { get; private set; }
 
-        public MenuBarExtensionsShellExtension(ICairoApplication cairoApplication, ShellManagerService shellManagerService)
+        public MenuBarExtensionsShellExtension(ICairoApplication cairoApplication, ShellManagerService shellManagerService, ICommandService commandService)
         {
             _cairoApplication = cairoApplication;
+            _commandService = commandService;
             _shellManager = shellManagerService.ShellManager;
             MenuExtras = new List<IMenuBarExtension>();
         }
@@ -25,7 +27,7 @@ namespace CairoDesktop.MenuBarExtensions
             MenuExtras.AddRange(new SystemTrayMenuBarExtension(_shellManager.NotificationArea),
                                 new VolumeMenuBarExtension(),
                                 new ActionCenterMenuBarExtension(),
-                                new ClockMenuBarExtension(),
+                                new ClockMenuBarExtension(_commandService),
                                 new SearchMenuBarExtension(_cairoApplication));
 
             MenuExtras.AddTo(_cairoApplication.MenuBarExtensions);

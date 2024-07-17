@@ -9,13 +9,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.SupportingClasses;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop
 {
@@ -410,18 +411,19 @@ namespace CairoDesktop
             {
                 return;
             }
-            
+
+            var commandService = CairoApplication.Current.Host.Services.GetService<ICommandService>();
+
             switch (e.Key)
             {
                 // [Ctrl] + [C] => Copy
                 case Key.C when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
-                    CustomCommands.PerformAction(CustomCommands.Actions.Copy, file.Path);
+                    commandService.InvokeCommand("CopyFile", ("Path", file.Path));
                     break;
 
                 // [Ctrl] + [X] => Cut
                 case Key.X when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
                     // TODO: Not yet implemented
-                    //CustomCommands.PerformAction(CustomCommands.Actions.Cut, file.Path);
                     break;
 
                 // [Ctrl] + [V] => Paste
@@ -432,29 +434,24 @@ namespace CairoDesktop
                     }
                     break;
 
-                // TODO: [Shift] + [Delete]  => Delete an item permanently without placing it into the Recycle Bin
-                case Key.Delete when Keyboard.Modifiers.HasFlag(ModifierKeys.Shift):
-                    CustomCommands.PerformAction(CustomCommands.Actions.Delete, file.Path);
-                    break;
-
                 // [Delete] => Delete an item and place it into the Recycle Bin
                 case Key.Delete:
-                    CustomCommands.PerformAction(CustomCommands.Actions.Delete, file.Path);
+                    commandService.InvokeCommand("DeleteFile", ("Path", file.Path));
                     break;
 
                 // TODO: [Alt] + [Enter] => Open file properties
                 case Key.Enter when Keyboard.Modifiers.HasFlag(ModifierKeys.Alt):
-                    CustomCommands.PerformAction(CustomCommands.Actions.Properties, file.Path);
+                    commandService.InvokeCommand("ShowFileProperties", ("Path", file.Path));
                     break;
 
                 // [Enter] => Open file
                 case Key.Enter:
-                    CustomCommands.PerformAction(CustomCommands.Actions.Open, file.Path);
+                    commandService.InvokeCommand(file.IsFolder ? "OpenLocation" : "OpenFile", ("Path", file.Path));
                     break;
 
                 // TODO: [F2] => Rename Item. Select name excluding file extension
                 case Key.F2:
-                    CustomCommands.PerformAction(CustomCommands.Actions.Rename, file.Path);
+                    // TODO: Not yet implemented
                     break;
             }
         }

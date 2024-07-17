@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.Services;
 using ManagedShell.Common.SupportingClasses;
 using ManagedShell.ShellFolders;
 

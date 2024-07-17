@@ -50,6 +50,19 @@ namespace CairoDesktop
             EnvironmentHelper.IsAppRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !forceNoShell) || forceShell;
         }
 
+        void IInitializationService.LoadCommands()
+        {
+            try
+            {
+                var commandService = _host.Services.GetService<ICommandService>();
+                commandService?.Start();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Unable to start command service due to exception in {ex.TargetSite?.Module}: {ex.Message}");
+            }
+        }
+
         void IInitializationService.LoadExtensions()
         {
             try

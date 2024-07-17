@@ -11,7 +11,6 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -47,7 +46,6 @@ namespace CairoDesktop
 
             Extensions = new List<IShellExtension>();
 
-            Commands = new List<ICommand>();
             CairoMenu = new List<IMenuItem>();
             Places = new List<IMenuItem>();
             MenuBarExtensions = new List<IMenuBarExtension>();
@@ -67,6 +65,7 @@ namespace CairoDesktop
             _initializationService.WriteApplicationDebugInfoToConsole(productVersion: ProductVersion);
 
             _initializationService.LoadExtensions();
+            _initializationService.LoadCommands();
 
             _initializationService.SetTheme();
 
@@ -252,8 +251,6 @@ namespace CairoDesktop
         public IHost Host { get; }
 
         public List<IShellExtension> Extensions { get; }
-
-        public List<ICommand> Commands { get; }
 
         public List<IMenuItem> CairoMenu { get; }
 
