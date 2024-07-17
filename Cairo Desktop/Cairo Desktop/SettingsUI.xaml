@@ -426,6 +426,11 @@
                                Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Vertical">
+                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnablePlacesMenu, UpdateSourceTrigger=PropertyChanged}"
+                                      Click="CheckBox_Click"
+                                      Name="chkEnablePlacesMenu">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sPlacesMenu)}" />
+                            </CheckBox>
                             <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuExtraClock, UpdateSourceTrigger=PropertyChanged}"
                                       Click="CheckBox_Click"
                                       Name="chkEnableMenuExtraClock">
@@ -438,6 +443,11 @@
                             </CheckBox>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableProgramsMenu, UpdateSourceTrigger=PropertyChanged}"
+                                      Click="CheckBox_Click"
+                                      Name="chkEnablePrgoramsMenu">
+                                <Label Content="{Binding Path=(l10n:DisplayString.sProgramsMenu)}" />
+                            </CheckBox>
                             <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuExtraVolume, UpdateSourceTrigger=PropertyChanged}"
                                       Click="CheckBox_Click"
                                       Name="chkEnableMenuExtraVolume">

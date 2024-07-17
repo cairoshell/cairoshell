@@ -69,6 +69,12 @@ namespace CairoDesktop
         {
             stacksContainer.MenuBar = this;
             programsMenuControl.MenuBar = this;
+
+            if (!Settings.Instance.EnableProgramsMenu)
+                ProgramsMenu.Visibility = Visibility.Collapsed;
+
+            if (!Settings.Instance.EnablePlacesMenu)
+                PlacesMenu.Visibility = Visibility.Collapsed;
         }
 
         private void SetupMenuBarExtensions()
@@ -319,7 +325,7 @@ namespace CairoDesktop
         #region Programs menu
         internal void OpenProgramsMenu()
         {
-            if (ProgramsMenu.IsSubmenuOpen) { return; }
+            if (ProgramsMenu.IsSubmenuOpen || !Settings.Instance.EnableProgramsMenu) { return; }
 
             NativeMethods.SetForegroundWindow(Handle);
             UnAutoHideBeforeAction(() => ProgramsMenu.IsSubmenuOpen = true);
