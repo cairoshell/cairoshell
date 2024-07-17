@@ -18,8 +18,6 @@ namespace CairoDesktop.Commands
 
             return true;
         }
-
-        public void Dispose() { }
     }
 
     public class LockCommandInfo : ICairoCommandInfo

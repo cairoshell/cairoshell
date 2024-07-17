@@ -46,8 +46,6 @@ namespace CairoDesktop.Commands
 
             return _settingsUIService != null;
         }
-
-        public void Dispose() { }
     }
 
     public class OpenCairoSettingsCommandInfo : ICairoCommandInfo

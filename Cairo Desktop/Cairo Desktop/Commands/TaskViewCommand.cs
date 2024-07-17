@@ -17,8 +17,6 @@ namespace CairoDesktop.Commands
             ShellHelper.ShowWindowSwitcher();
             return true;
         }
-
-        public void Dispose() { }
     }
 
     public class TaskViewCommandInfo : ICairoCommandInfo

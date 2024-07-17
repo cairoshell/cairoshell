@@ -16,8 +16,6 @@ namespace CairoDesktop.Commands
         {
             return ShellHelper.StartProcess("timedate.cpl");
         }
-
-        public void Dispose() { }
     }
 
     public class OpenDateTimeControlPanelCommandInfo : ICairoCommandInfo

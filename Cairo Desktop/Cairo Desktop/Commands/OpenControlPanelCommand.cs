@@ -25,8 +25,6 @@ namespace CairoDesktop.Commands
         {
             return _commandService.InvokeCommand(_settings.FoldersOpenDesktopOverlay ? "OpenLocation" : "OpenLocationInWindow", ("Path", ShellFolderPath.ControlPanelFolder.Value));
         }
-
-        public void Dispose() { }
     }
 
     public class OpenControlPanelCommandInfo : ICairoCommandInfo

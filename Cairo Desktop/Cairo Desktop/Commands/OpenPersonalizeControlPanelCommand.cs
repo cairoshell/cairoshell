@@ -27,8 +27,6 @@ namespace CairoDesktop.Commands
 
             return ShellHelper.StartProcess("Rundll32.exe", "shell32.dll,Control_RunDLL desk.cpl,,2");
         }
-
-        public void Dispose() { }
     }
 
     public class OpenPersonalizeControlPanelCommandInfo : ICairoCommandInfo

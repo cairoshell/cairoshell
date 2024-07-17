@@ -3,13 +3,14 @@ using CairoDesktop.Application.Structs;
 using CairoDesktop.Common.Localization;
 using CairoDesktop.Interfaces;
 using CairoDesktop.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace CairoDesktop.Commands
 {
-    public class ToggleDesktopOverlayCommand : ICairoCommand
+    public class ToggleDesktopOverlayCommand : ICairoCommand, IDisposable
     {
         public ICairoCommandInfo Info => _info;
 
@@ -47,7 +48,8 @@ namespace CairoDesktop.Commands
             return _desktopManager != null;
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             if (_desktopManager is DesktopManager desktopOverlayManager)
             {
                 desktopOverlayManager.PropertyChanged -= _desktopManager_PropertyChanged;

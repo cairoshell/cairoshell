@@ -3,13 +3,14 @@ using CairoDesktop.Application.Structs;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Localization;
 using ManagedShell.Common.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace CairoDesktop.Commands
 {
-    public class HibernateCommand : ICairoCommand
+    public class HibernateCommand : ICairoCommand, IDisposable
     {
         public ICairoCommandInfo Info => _info;
 

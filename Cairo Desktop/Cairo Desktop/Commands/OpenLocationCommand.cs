@@ -76,8 +76,6 @@ namespace CairoDesktop.Commands
 
             return _commandService.InvokeCommand("OpenLocationInWindow", ("Path", path));
         }
-
-        public void Dispose() { }
     }
 
     public class OpenLocationCommandInfo : ICairoShellItemCommandInfo

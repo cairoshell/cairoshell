@@ -51,8 +51,6 @@ namespace CairoDesktop.Commands
 
             return ShellHelper.StartProcess(filename, $@"""{args}""");
         }
-
-        public void Dispose() { }
     }
 
     public class OpenLocationInWindowCommandInfo : ICairoShellFolderCommandInfo

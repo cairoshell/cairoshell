@@ -39,8 +39,6 @@ namespace CairoDesktop.Commands
 
             return _cairoApplication != null;
         }
-
-        public void Dispose() { }
     }
 
     public class ExitCairoCommandInfo : ICairoCommandInfo

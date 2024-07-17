@@ -17,8 +17,6 @@ namespace CairoDesktop.Commands
             ShellHelper.ShowRunDialog(DisplayString.sRun_Title, DisplayString.sRun_Info);
             return true;
         }
-
-        public void Dispose() { }
     }
 
     public class ShowRunDialogCommandInfo : ICairoCommandInfo

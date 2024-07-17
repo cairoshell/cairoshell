@@ -108,7 +108,10 @@ namespace CairoDesktop.Infrastructure.Services
 
             foreach (var command in _commands)
             {
-                command.Dispose();
+                if (command is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
             }
 
             _registeredCommands = new List<ICairoCommandInfo>().AsReadOnly();
