@@ -370,6 +370,20 @@ namespace CairoDesktop.Common
             set => Set(ref _enableMenuBar, value);
         }
 
+        private bool _enablePlacesMenu = true;
+        public bool EnablePlacesMenu
+        {
+            get => _enablePlacesMenu;
+            set => Set(ref _enablePlacesMenu, value);
+        }
+
+        private bool _enableProgramsMenu = true;
+        public bool EnableProgramsMenu
+        {
+            get => _enableProgramsMenu;
+            set => Set(ref _enableProgramsMenu, value);
+        }
+
         private bool _enableMenuBarShadow = true;
         public bool EnableMenuBarShadow
         {
