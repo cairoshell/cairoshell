@@ -39,8 +39,6 @@ namespace CairoDesktop.Commands
 
             return StacksManager.Instance.AddLocation(path);
         }
-
-        public void Dispose() { }
     }
 
     public class AddStackCommandInfo : ICairoShellItemCommandInfo, ICairoShellFolderCommandInfo

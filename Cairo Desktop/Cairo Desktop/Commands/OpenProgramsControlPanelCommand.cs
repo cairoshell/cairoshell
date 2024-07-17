@@ -16,8 +16,6 @@ namespace CairoDesktop.Commands
         {
             return ShellHelper.StartProcess("appwiz.cpl");
         }
-
-        public void Dispose() { }
     }
 
     public class OpenProgramsControlPanelCommandInfo : ICairoCommandInfo

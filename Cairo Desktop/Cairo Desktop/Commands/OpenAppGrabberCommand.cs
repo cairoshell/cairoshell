@@ -24,8 +24,6 @@ namespace CairoDesktop.Commands
 
             return _appGrabber != null;
         }
-
-        public void Dispose() { }
     }
 
     public class OpenAppGrabberCommandInfo : ICairoCommandInfo

@@ -36,8 +36,6 @@ namespace CairoDesktop.Commands
 
             return ShellHelper.ShowFileProperties(path);
         }
-
-        public void Dispose() { }
     }
 
     public class ShowFilePropertiesCommandInfo : ICairoCommandInfo

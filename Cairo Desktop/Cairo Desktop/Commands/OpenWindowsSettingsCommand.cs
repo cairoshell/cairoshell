@@ -16,8 +16,6 @@ namespace CairoDesktop.Commands
         {
             return ShellHelper.StartProcess("ms-settings://");
         }
-
-        public void Dispose() { }
     }
 
     public class OpenWindowsSettingsCommandInfo : ICairoCommandInfo

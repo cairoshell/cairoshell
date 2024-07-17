@@ -17,8 +17,6 @@ namespace CairoDesktop.Commands
             ShellHelper.StartTaskManager();
             return true;
         }
-
-        public void Dispose() { }
     }
 
     public class StartTaskManagerCommandInfo : ICairoCommandInfo

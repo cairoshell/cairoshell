@@ -69,8 +69,6 @@ namespace CairoDesktop.Commands
 
             return parent;
         }
-
-        public void Dispose() { }
     }
 
     public class OpenFileCommandInfo : ICairoCommandInfo

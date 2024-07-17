@@ -23,8 +23,6 @@ namespace CairoDesktop.Commands
 
             return _applicationUpdateService != null;
         }
-
-        public void Dispose() { }
     }
 
     public class CheckForUpdatesCommandInfo : ICairoCommandInfo

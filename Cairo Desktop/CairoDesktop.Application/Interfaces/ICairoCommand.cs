@@ -2,7 +2,7 @@
 
 namespace CairoDesktop.Application.Interfaces
 {
-    public interface ICairoCommand : IDisposable
+    public interface ICairoCommand
     {
         /// <summary>
         /// Metadata to describe the command, including its unique identifier

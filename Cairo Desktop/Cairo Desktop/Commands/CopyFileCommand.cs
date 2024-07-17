@@ -38,8 +38,6 @@ namespace CairoDesktop.Commands
 
             return true;
         }
-
-        public void Dispose() { }
     }
 
     public class CopyFileCommandInfo : ICairoCommandInfo
