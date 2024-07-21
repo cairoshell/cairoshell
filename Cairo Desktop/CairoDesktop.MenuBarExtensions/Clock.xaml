@@ -8,6 +8,8 @@
                   SubmenuOpened="ClockMenuItem_SubmenuOpened">
             <MenuItem.Header>
                 <TextBlock Name="dateText"
+                           FontSize="15"
+                           FontFamily="JetBrains Mono"
                            ToolTipService.Placement="Bottom" />
             </MenuItem.Header>
             <MenuItem StaysOpenOnClick="True">

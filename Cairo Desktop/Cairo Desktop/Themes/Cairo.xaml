@@ -650,7 +650,7 @@
 		</Setter>
 	</Style>
 	<Style x:Key="MenuBarStyle"
-           TargetType="{x:Type DockPanel}">
+           TargetType="{x:Type Grid}">
 		<Setter Property="Background"
                 Value="{DynamicResource ResourceKey=MenuBarBackground}" />
     </Style>

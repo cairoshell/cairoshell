@@ -42,7 +42,7 @@ namespace CairoDesktop.MenuBarExtensions
             }
 
             // Don't allow showing both the Windows TaskBar and the Cairo tray
-            if (Settings.Instance.EnableSysTray && (Settings.Instance.EnableTaskbar || EnvironmentHelper.IsAppRunningAsShell) && _notificationArea.Handle == IntPtr.Zero)
+            if (Settings.Instance.EnableSysTray && _notificationArea.Handle == IntPtr.Zero)
             {
                 _notificationArea.Initialize();
             }
