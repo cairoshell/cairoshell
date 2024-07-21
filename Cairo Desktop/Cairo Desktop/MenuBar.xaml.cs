@@ -20,6 +20,7 @@ using ManagedShell.Interop;
 using ManagedShell.Common.Enums;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 using System.Windows.Threading;
+using CairoDesktop.MenuBarExtensions;
 using ManagedShell.ShellFolders;
 
 namespace CairoDesktop
@@ -38,7 +39,7 @@ namespace CairoDesktop
         private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        
+
         public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, ICommandService commandService, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
         {
             _appGrabber = appGrabber;
@@ -51,7 +52,7 @@ namespace CairoDesktop
                 AllowsTransparency = resourceValue;
 
             InitializeComponent();
-            
+
             AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
             RequiresScreenEdge = true;
 
@@ -84,6 +85,11 @@ namespace CairoDesktop
                 try
                 {
                     var menuExtra = userControlMenuBarExtension.StartControl(this);
+                    if (menuExtra is Clock)
+                    {
+                        CenteredPanel.Children.Add(menuExtra);
+                        continue;
+                    }
                     if (menuExtra != null)
                     {
                         MenuExtrasHost.Children.Add(menuExtra);
@@ -270,7 +276,7 @@ namespace CairoDesktop
         protected override void OnSourceInitialized(object sender, EventArgs e)
         {
             base.OnSourceInitialized(sender, e);
-            
+
             SetupMenuBarExtensions();
 
             registerCairoMenuHotKey();
@@ -323,6 +329,7 @@ namespace CairoDesktop
         }
 
         #region Programs menu
+
         internal void OpenProgramsMenu()
         {
             if (ProgramsMenu.IsSubmenuOpen || !Settings.Instance.EnableProgramsMenu) { return; }
@@ -376,6 +383,7 @@ namespace CairoDesktop
                 _appGrabber.AddByPath(dropData.Path, AppCategoryType.Uncategorized);
             }
         }
+
         #endregion
 
         #region Events
@@ -393,7 +401,7 @@ namespace CairoDesktop
         public override void SetPosition()
         {
             base.SetPosition();
-            
+
             setShadowPosition();
         }
 
@@ -548,8 +556,9 @@ namespace CairoDesktop
         }
 
         #endregion
-        
+
         #region IMenuExtraHost
+
         public IntPtr GetHandle()
         {
             return Handle;
@@ -572,13 +581,16 @@ namespace CairoDesktop
                 Top = Top
             };
         }
+
         #endregion
 
         #region IMenuBar
+
         void IMenuBar.PeekDuringAutoHide(int msToPeek)
         {
             PeekDuringAutoHide(msToPeek);
         }
+
         #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CairoDesktop.Common;
 using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -78,7 +79,7 @@ namespace CairoDesktop.MenuBarExtensions
 
         private void UpdateText()
         {
-            dateText.Text = DateTime.Now.ToString(Settings.Instance.TimeFormat);
+            dateText.Text = DateTime.Now.ToString(Settings.Instance.TimeFormat, new CultureInfo("en"));
         }
 
         private void OpenTimeDateCPL(object sender, RoutedEventArgs e)
