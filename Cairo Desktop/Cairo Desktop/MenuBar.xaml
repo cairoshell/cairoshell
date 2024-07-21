@@ -79,6 +79,7 @@
                 HorizontalAlignment="Left"
                 x:Name="stacksContainer" />
         </StackPanel>
+        <!-- New centered panel -->
         <StackPanel Grid.Column="1"
                     Orientation="Horizontal"
                     VerticalAlignment="Top"
