@@ -15,14 +15,16 @@ namespace CairoDesktop.Services
         private readonly IAppGrabber _appGrabber;
         private readonly ICairoApplication _cairoApplication;
         private readonly ILogger<FirstRunService> _logger;
+        private readonly Settings _settings;
 
         private readonly bool _forceTour;
 
-        public FirstRunService(ICairoApplication cairoApplication, IAppGrabber appGrabber, ILogger<FirstRunService> logger, IOptionsMonitor<CommandLineOptions> options)
+        public FirstRunService(ICairoApplication cairoApplication, IAppGrabber appGrabber, ILogger<FirstRunService> logger, IOptionsMonitor<CommandLineOptions> options, Settings settings)
         {
             _appGrabber = appGrabber;
             _cairoApplication = cairoApplication;
             _logger = logger;
+            _settings = settings;
 
             try
             {
@@ -38,7 +40,7 @@ namespace CairoDesktop.Services
 
         private void FirstRun()
         {
-            if (Settings.Instance.IsFirstRun || _forceTour)
+            if (_settings.IsFirstRun || _forceTour)
             {
                 _cairoApplication.Dispatch(() =>
                 {
@@ -49,7 +51,7 @@ namespace CairoDesktop.Services
 
         private void ShowWelcome()
         {
-            Welcome welcome = new Welcome(_cairoApplication, _appGrabber);
+            Welcome welcome = new Welcome(_cairoApplication, _appGrabber, _settings);
             welcome.Show();
         }
     }

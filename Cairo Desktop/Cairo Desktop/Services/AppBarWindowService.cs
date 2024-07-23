@@ -20,14 +20,16 @@ namespace CairoDesktop.Services
         protected readonly ICairoApplication _cairoApplication;
         protected readonly ShellManager _shellManager;
         protected readonly IWindowManager _windowManager;
+        protected readonly Settings _settings;
 
-        protected AppBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, IWindowManager windowManager)
+        protected AppBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, IWindowManager windowManager, Settings settings)
         {
             _cairoApplication = cairoApplication;
             _shellManager = shellManagerService.ShellManager;
             _windowManager = windowManager;
+            _settings = settings;
 
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            _settings.PropertyChanged += Settings_PropertyChanged;
         }
 
         public void Register()
@@ -37,7 +39,7 @@ namespace CairoDesktop.Services
 
         public virtual void Dispose()
         {
-            Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+            _settings.PropertyChanged -= Settings_PropertyChanged;
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)

@@ -16,16 +16,20 @@ namespace CairoDesktop
     {
         private readonly IAppGrabber _appGrabber;
         private readonly ICairoApplication _cairoApplication;
+        private readonly Settings _settings;
 
         const int maxSize = 780;
         string _initialLanguage = "en_US";
 
-        public Welcome(ICairoApplication cairoApplication, IAppGrabber appGrabber)
+        public Welcome(ICairoApplication cairoApplication, IAppGrabber appGrabber, Settings settings)
         {
             _appGrabber = appGrabber;
             _cairoApplication = cairoApplication;
+            _settings = settings;
 
             InitializeComponent();
+
+            cboLangSelect.DataContext = _settings;
 
             SetSizeAndLocation();
 
@@ -63,7 +67,7 @@ namespace CairoDesktop
 
         private void LoadLanguages()
         {
-            _initialLanguage = Settings.Instance.Language;
+            _initialLanguage = _settings.Language;
 
             cboLangSelect.DisplayMemberPath = "Key";
             cboLangSelect.SelectedValuePath = "Value";
@@ -73,7 +77,7 @@ namespace CairoDesktop
                 cboLangSelect.Items.Add(lang);
             }
 
-            cboLangSelect.SelectedValue = Settings.Instance.Language;
+            cboLangSelect.SelectedValue = _settings.Language;
         }
 
         private void btnGoPage2_Click(object sender, RoutedEventArgs e)
@@ -96,14 +100,14 @@ namespace CairoDesktop
 
         private void btnAppGrabber_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.IsFirstRun = false;
+            _settings.IsFirstRun = false;
             _appGrabber?.ShowDialog();
             Close();
         }
 
         private void cboLangSelect_DropDownClosed(object sender, EventArgs e)
         {
-            if (Settings.Instance.Language != _initialLanguage)
+            if (_settings.Language != _initialLanguage)
             {
                 CairoMessage.Show(DisplayString.sWelcome_ChangingLanguageText, DisplayString.sWelcome_ChangingLanguage, MessageBoxButton.OK, CairoMessageImage.Information,
                     result =>

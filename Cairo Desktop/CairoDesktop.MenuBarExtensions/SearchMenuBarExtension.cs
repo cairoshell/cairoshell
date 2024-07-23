@@ -8,16 +8,18 @@ namespace CairoDesktop.MenuBarExtensions
     class SearchMenuBarExtension : UserControlMenuBarExtension
     {
         private readonly ICairoApplication _cairoApplication;
+        private readonly Settings _settings;
         private Search _search;
 
-        internal SearchMenuBarExtension(ICairoApplication cairoApplication)
+        internal SearchMenuBarExtension(ICairoApplication cairoApplication, Settings settings)
         {
             _cairoApplication = cairoApplication;
+            _settings = settings;
         }
 
         public override UserControl StartControl(IMenuBar host)
         {
-            if (!Settings.Instance.EnableMenuExtraSearch) 
+            if (!_settings.EnableMenuExtraSearch) 
                 return null;
 
             _search = new Search(_cairoApplication, host);

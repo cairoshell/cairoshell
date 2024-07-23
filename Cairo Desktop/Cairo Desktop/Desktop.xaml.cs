@@ -44,6 +44,7 @@ namespace CairoDesktop
         private readonly FullScreenHelper _fullScreenHelper;
         private readonly FileOperationWorker _fileWorker;
         private readonly ISettingsUIService _settingsUiService;
+        private readonly Settings _settings;
 
         public bool AllowClose;
         public IntPtr Handle;
@@ -52,7 +53,7 @@ namespace CairoDesktop
         private Brush BackgroundBrush { get; set; }
         private Dictionary<uint, string> ContextMenuCommandUIDs = new Dictionary<uint, string>();
 
-        public Desktop(IDesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService, ICommandService commandService)
+        public Desktop(IDesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings)
         {
             InitializeComponent();
 
@@ -62,6 +63,7 @@ namespace CairoDesktop
             _fullScreenHelper = fullScreenHelper;
             _fileWorker = new FileOperationWorker();
             _settingsUiService = settingsUiService;
+            _settings = settings;
 
             if (_desktopManager.ShellWindow != null)
             {
@@ -72,7 +74,7 @@ namespace CairoDesktop
             setGridPosition();
             setBackground();
 
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            _settings.PropertyChanged += Settings_PropertyChanged;
 
             _fullScreenHelper.FullScreenApps.CollectionChanged += FullScreenApps_CollectionChanged;
         }
@@ -149,7 +151,7 @@ namespace CairoDesktop
             if (!e.Cancel)
             {
                 // unsubscribe from things
-                Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+                _settings.PropertyChanged -= Settings_PropertyChanged;
                 _fullScreenHelper.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
             }
         }
@@ -236,7 +238,7 @@ namespace CairoDesktop
 
         private void FullScreenApps_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (Settings.Instance.DesktopBackgroundType == "cairoVideoWallpaper")
+            if (_settings.DesktopBackgroundType == "cairoVideoWallpaper")
             {
                 // pause video if we see a full screen app to preserve system performance.
 
@@ -301,7 +303,7 @@ namespace CairoDesktop
 
             grid.Width = WindowManager.PrimaryMonitorWorkArea.Width / DpiHelper.DpiScale;
 
-            if (Settings.Instance.TaskbarMode == 1)
+            if (_settings.TaskbarMode == 1)
             {
                 // special case, since work area is not reduced with this setting
                 // this keeps the desktop going beneath the TaskBar
@@ -312,7 +314,7 @@ namespace CairoDesktop
 
                 grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale) - ((screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale);
 
-                if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
+                if (_settings.TaskbarEdge == AppBarEdge.Top)
                 {
                     top += (workAreaRect.Top - SystemInformation.WorkingArea.Top) / dpiScale;
                 }
@@ -353,7 +355,7 @@ namespace CairoDesktop
 
         private Brush GetCairoBackgroundBrush()
         {
-            switch (Settings.Instance.DesktopBackgroundType)
+            switch (_settings.DesktopBackgroundType)
             {
                 case "cairoImageWallpaper":
                     return GetCairoBackgroundBrush_Image();
@@ -415,11 +417,11 @@ namespace CairoDesktop
 
         private Brush GetCairoBackgroundBrush_Image()
         {
-            string wallpaper = Settings.Instance.CairoBackgroundImagePath;
+            string wallpaper = _settings.CairoBackgroundImagePath;
 
             CairoWallpaperStyle wallpaperStyle = CairoWallpaperStyle.Stretch;
-            if (Enum.IsDefined(typeof(CairoWallpaperStyle), Settings.Instance.CairoBackgroundImageStyle))
-                wallpaperStyle = (CairoWallpaperStyle)Settings.Instance.CairoBackgroundImageStyle;
+            if (Enum.IsDefined(typeof(CairoWallpaperStyle), _settings.CairoBackgroundImageStyle))
+                wallpaperStyle = (CairoWallpaperStyle)_settings.CairoBackgroundImageStyle;
 
             return GetCairoBackgroundBrush_Image(wallpaper, wallpaperStyle) ?? GetCairoBackgroundBrush_Windows();
         }
@@ -450,7 +452,7 @@ namespace CairoDesktop
 
         private Brush GetCairoBackgroundBrush_Video()
         {
-            string wallpaper = Settings.Instance.CairoBackgroundVideoPath;
+            string wallpaper = _settings.CairoBackgroundVideoPath;
             if (File.Exists(wallpaper))
             {
                 // https://docs.microsoft.com/en-us/dotnet/framework/wpf/graphics-multimedia/how-to-paint-an-area-with-a-video
@@ -556,8 +558,8 @@ namespace CairoDesktop
                 backgroundImageBrush = new ImageBrush(backgroundBitmapImage);
 
                 CairoWallpaperStyle wallpaperStyle = CairoWallpaperStyle.Stretch;
-                if (Enum.IsDefined(typeof(CairoWallpaperStyle), Settings.Instance.BingWallpaperStyle))
-                    wallpaperStyle = (CairoWallpaperStyle)Settings.Instance.BingWallpaperStyle;
+                if (Enum.IsDefined(typeof(CairoWallpaperStyle), _settings.BingWallpaperStyle))
+                    wallpaperStyle = (CairoWallpaperStyle)_settings.BingWallpaperStyle;
 
                 switch (wallpaperStyle)
                 {
@@ -621,8 +623,8 @@ namespace CairoDesktop
                 backgroundImageBrush = new ImageBrush(backgroundBitmapImage);
 
                 CairoWallpaperStyle wallpaperStyle = CairoWallpaperStyle.Stretch;
-                if (Enum.IsDefined(typeof(CairoWallpaperStyle), Settings.Instance.BingWallpaperStyle))
-                    wallpaperStyle = (CairoWallpaperStyle)Settings.Instance.BingWallpaperStyle;
+                if (Enum.IsDefined(typeof(CairoWallpaperStyle), _settings.BingWallpaperStyle))
+                    wallpaperStyle = (CairoWallpaperStyle)_settings.BingWallpaperStyle;
 
                 switch (wallpaperStyle)
                 {

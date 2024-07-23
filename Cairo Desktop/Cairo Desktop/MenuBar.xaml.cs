@@ -30,6 +30,7 @@ namespace CairoDesktop
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ISettingsUIService _settingsUiService;
         internal readonly ICommandService _commandService;
+        private readonly Settings _settings;
 
         private bool isCairoMenuInitialized;
         private bool isPlacesMenuInitialized;
@@ -39,12 +40,13 @@ namespace CairoDesktop
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, ICommandService commandService, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
         {
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
             _settingsUiService = settingsUiService;
             _commandService = commandService;
+            _settings = settings;
 
             object menuBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["MenuBarWindowAllowsTransparency"];
             if (menuBarWindowAllowsTransparencyResource is bool resourceValue)
@@ -52,14 +54,14 @@ namespace CairoDesktop
 
             InitializeComponent();
             
-            AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
+            AutoHideShowDelayMs = _settings.AutoHideShowDelayMs;
             RequiresScreenEdge = true;
 
             SetPosition();
 
             setupChildren();
 
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            _settings.PropertyChanged += Settings_PropertyChanged;
 
             // Set element that should be transformed for auto-hide
             AutoHideElement = MenuBarWindow;
@@ -70,10 +72,10 @@ namespace CairoDesktop
             stacksContainer.MenuBar = this;
             programsMenuControl.MenuBar = this;
 
-            if (!Settings.Instance.EnableProgramsMenu)
+            if (!_settings.EnableProgramsMenu)
                 ProgramsMenu.Visibility = Visibility.Collapsed;
 
-            if (!Settings.Instance.EnablePlacesMenu)
+            if (!_settings.EnablePlacesMenu)
                 PlacesMenu.Visibility = Visibility.Collapsed;
         }
 
@@ -239,7 +241,7 @@ namespace CairoDesktop
                     Header = folder.DisplayName.Replace("_", "__"),
                     FontWeight = boldItems.Contains(path) ? FontWeights.Bold : FontWeights.Normal
                 };
-                menuItem.Click += (_sender, _e) => _commandService.InvokeCommand(!Settings.Instance.FoldersOpenDesktopOverlay || openInWindowItems.Contains(path) ? "OpenLocationInWindow" : "OpenLocation", ("Path", path));
+                menuItem.Click += (_sender, _e) => _commandService.InvokeCommand(!_settings.FoldersOpenDesktopOverlay || openInWindowItems.Contains(path) ? "OpenLocationInWindow" : "OpenLocation", ("Path", path));
                 PlacesMenu.Items.Add(menuItem);
             }
 
@@ -260,7 +262,7 @@ namespace CairoDesktop
 
         private void setupShadow()
         {
-            if (Settings.Instance.EnableMenuBarShadow && shadow == null && AppBarMode != AppBarMode.AutoHide)
+            if (_settings.EnableMenuBarShadow && shadow == null && AppBarMode != AppBarMode.AutoHide)
             {
                 shadow = new MenuBarShadow(_cairoApplication, _windowManager, this);
                 shadow.Show();
@@ -296,18 +298,18 @@ namespace CairoDesktop
                 }
             }
 
-            SetBlur(Settings.Instance.EnableMenuBarBlur);
+            SetBlur(_settings.EnableMenuBarBlur);
 
             setupShadow();
         }
 
         private void registerCairoMenuHotKey()
         {
-            if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary && cairoMenuHotKey == null)
+            if (_settings.EnableCairoMenuHotKey && Screen.Primary && cairoMenuHotKey == null)
             {
-                cairoMenuHotKey = HotKeyManager.RegisterHotKey(Settings.Instance.CairoMenuHotKey, OnShowCairoMenu);
+                cairoMenuHotKey = HotKeyManager.RegisterHotKey(_settings.CairoMenuHotKey, OnShowCairoMenu);
             }
-            else if (Settings.Instance.EnableCairoMenuHotKey && Screen.Primary)
+            else if (_settings.EnableCairoMenuHotKey && Screen.Primary)
             {
                 cairoMenuHotKey.Action = OnShowCairoMenu;
             }
@@ -325,7 +327,7 @@ namespace CairoDesktop
         #region Programs menu
         internal void OpenProgramsMenu()
         {
-            if (ProgramsMenu.IsSubmenuOpen || !Settings.Instance.EnableProgramsMenu) { return; }
+            if (ProgramsMenu.IsSubmenuOpen || !_settings.EnableProgramsMenu) { return; }
 
             NativeMethods.SetForegroundWindow(Handle);
             UnAutoHideBeforeAction(() => ProgramsMenu.IsSubmenuOpen = true);
@@ -425,7 +427,7 @@ namespace CairoDesktop
             }
 
             closeShadow();
-            Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+            _settings.PropertyChanged -= Settings_PropertyChanged;
         }
 
         private void UnAutoHideBeforeAction(Action action)
@@ -489,7 +491,7 @@ namespace CairoDesktop
                 switch (e.PropertyName)
                 {
                     case "EnableCairoMenuHotKey" when Screen.Primary:
-                        if (Settings.Instance.EnableCairoMenuHotKey)
+                        if (_settings.EnableCairoMenuHotKey)
                         {
                             registerCairoMenuHotKey();
                         }
@@ -500,7 +502,7 @@ namespace CairoDesktop
 
                         break;
                     case "CairoMenuHotKey" when Screen.Primary:
-                        if (Settings.Instance.EnableCairoMenuHotKey)
+                        if (_settings.EnableCairoMenuHotKey)
                         {
                             unregisterCairoMenuHotKey();
                             registerCairoMenuHotKey();
@@ -508,10 +510,10 @@ namespace CairoDesktop
 
                         break;
                     case "EnableMenuBarBlur":
-                        SetBlur(Settings.Instance.EnableMenuBarBlur);
+                        SetBlur(_settings.EnableMenuBarBlur);
                         break;
                     case "EnableMenuBarShadow":
-                        if (Settings.Instance.EnableMenuBarShadow)
+                        if (_settings.EnableMenuBarShadow)
                         {
                             setupShadow();
                         }
@@ -521,7 +523,7 @@ namespace CairoDesktop
                         }
                         break;
                     case "EnableMenuBarAutoHide":
-                        AppBarMode = Settings.Instance.EnableMenuBarAutoHide ? AppBarMode.AutoHide : AppBarMode.Normal;
+                        AppBarMode = _settings.EnableMenuBarAutoHide ? AppBarMode.AutoHide : AppBarMode.Normal;
                         if (AppBarMode == AppBarMode.AutoHide)
                         {
                             closeShadow();
@@ -532,14 +534,14 @@ namespace CairoDesktop
                         }
                         break;
                     case "AutoHideShowDelayMs":
-                        AutoHideShowDelayMs = Settings.Instance.AutoHideShowDelayMs;
+                        AutoHideShowDelayMs = _settings.AutoHideShowDelayMs;
                         break;
                     case "Theme":
                         PeekDuringAutoHide();
                         break;
                     case "MenuBarEdge":
                         PeekDuringAutoHide();
-                        AppBarEdge = Settings.Instance.MenuBarEdge;
+                        AppBarEdge = _settings.MenuBarEdge;
                         SetScreenPosition();
                         if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                         break;

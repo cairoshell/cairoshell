@@ -18,15 +18,16 @@ namespace CairoDesktop.Services
             IWindowManager windowManager,
             IDesktopManager desktopManager, 
             IAppGrabber appGrabber,
-            ICommandService commandService) 
-            : base(cairoApplication, shellManagerService, windowManager)
+            ICommandService commandService,
+            Settings settings) 
+            : base(cairoApplication, shellManagerService, windowManager, settings)
         {
             _appGrabber = appGrabber;
             _desktopManager = desktopManager;
             _commandService = commandService;
 
-            EnableMultiMon = Settings.Instance.EnableTaskbarMultiMon;
-            EnableService = Settings.Instance.EnableTaskbar;
+            EnableMultiMon = _settings.EnableTaskbarMultiMon;
+            EnableService = _settings.EnableTaskbar;
 
             if (EnableService)
             {
@@ -40,19 +41,19 @@ namespace CairoDesktop.Services
             switch (setting)
             {
                 case "EnableTaskbar":
-                    _shellManager.ExplorerHelper.HideExplorerTaskbar = Settings.Instance.EnableTaskbar;
+                    _shellManager.ExplorerHelper.HideExplorerTaskbar = _settings.EnableTaskbar;
 
-                    HandleEnableServiceChanged(Settings.Instance.EnableTaskbar);
+                    HandleEnableServiceChanged(_settings.EnableTaskbar);
                     break;
                 case "EnableTaskbarMultiMon":
-                    HandleEnableMultiMonChanged(Settings.Instance.EnableTaskbarMultiMon);
+                    HandleEnableMultiMonChanged(_settings.EnableTaskbarMultiMon);
                     break;
             }
         }
 
         private void AppBarEvent(object sender, AppBarEventArgs e)
         {
-            if (Settings.Instance.TaskbarMode == 2)
+            if (_settings.TaskbarMode == 2)
             {
                 if (sender is MenuBar menuBar)
                 {
@@ -82,7 +83,7 @@ namespace CairoDesktop.Services
 
         protected override void OpenWindow(AppBarScreen screen)
         {
-            Taskbar newTaskbar = new Taskbar(_cairoApplication, _shellManager, _windowManager, _desktopManager, _appGrabber, _commandService, screen, Settings.Instance.TaskbarEdge, Settings.Instance.TaskbarMode);
+            Taskbar newTaskbar = new Taskbar(_cairoApplication, _shellManager, _windowManager, _desktopManager, _appGrabber, _commandService, _settings, screen, _settings.TaskbarEdge, _settings.TaskbarMode);
             Windows.Add(newTaskbar);
             newTaskbar.Show();
         }

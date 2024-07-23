@@ -301,7 +301,7 @@
                                   DropDownClosed="DropDown_Changed"
                                   IsDropDownOpen="False"
                                   IsEditable="False"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=Language, UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Path=Language, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_Theme)}"
@@ -309,11 +309,11 @@
                         <ComboBox Name="cboThemeSelect"
                                   IsDropDownOpen="False"
                                   IsEditable="False"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=Theme, UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Path=Theme, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_General_FilesAndFolders)}"
                                Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=FoldersOpenDesktopOverlay, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=FoldersOpenDesktopOverlay, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkFoldersOpenDesktopOverlay">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_FoldersOpenDesktopOverlay)}" />
                     </CheckBox>
@@ -328,11 +328,11 @@
                         <ComboBox Name="cboDefaultProgramsCategory"
                                   IsDropDownOpen="False"
                                   IsEditable="False"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=DefaultProgramsCategory, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedValue="{Binding Path=DefaultProgramsCategory, UpdateSourceTrigger=PropertyChanged}"
                                   Width="170" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableCairoMenuHotKey, UpdateSourceTrigger=PropertyChanged}"
+                        <CheckBox IsChecked="{Binding Path=EnableCairoMenuHotKey, UpdateSourceTrigger=PropertyChanged}"
                                   Name="chkEnableCairoMenuHotKey">
                             <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableCairoMenuHotKey)}" />
                         </CheckBox>
@@ -343,7 +343,7 @@
                                   Width="55"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboCairoMenuHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Path=CairoMenuHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboCairoMenuHotKeyMod2"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}"
                                   IsDropDownOpen="False"
@@ -351,7 +351,7 @@
                                   Width="55"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboCairoMenuHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Path=CairoMenuHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboCairoMenuHotKeyKey"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableCairoMenuHotKey}"
                                   IsDropDownOpen="False"
@@ -359,28 +359,28 @@
                                   Width="40"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboCairoMenuHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=CairoMenuHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Path=CairoMenuHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ShowHibernate, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=ShowHibernate, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkShowHibernate">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowHibernate)}" />
                     </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
                                Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarAutoHide, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=EnableMenuBarAutoHide, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkEnableMenuBarAutoHide">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarAutoHide)}" />
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarBlur, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=EnableMenuBarBlur, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkEnableMenuBarBlur">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarBlur)}" />
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarShadow, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=EnableMenuBarShadow, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsChecked, ElementName=chkEnableMenuBarAutoHide, Converter={StaticResource invertBoolConverter}}"
                               Name="chkEnableMenuBarShadow">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarShadow)}" />
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuBarMultiMon, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=EnableMenuBarMultiMon, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkEnableMenuBarMultiMon">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuBarMultiMon)}" />
                     </CheckBox>
@@ -426,34 +426,34 @@
                                Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Vertical">
-                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnablePlacesMenu, UpdateSourceTrigger=PropertyChanged}"
+                            <CheckBox IsChecked="{Binding Path=EnablePlacesMenu, UpdateSourceTrigger=PropertyChanged}"
                                       Click="CheckBox_Click"
                                       Name="chkEnablePlacesMenu">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sPlacesMenu)}" />
                             </CheckBox>
-                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuExtraClock, UpdateSourceTrigger=PropertyChanged}"
+                            <CheckBox IsChecked="{Binding Path=EnableMenuExtraClock, UpdateSourceTrigger=PropertyChanged}"
                                       Click="CheckBox_Click"
                                       Name="chkEnableMenuExtraClock">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraClock)}" />
                             </CheckBox>
-                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuExtraSearch, UpdateSourceTrigger=PropertyChanged}"
+                            <CheckBox IsChecked="{Binding Path=EnableMenuExtraSearch, UpdateSourceTrigger=PropertyChanged}"
                                       Click="CheckBox_Click"
                                       Name="chkEnableMenuExtraSearch">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraSearch)}" />
                             </CheckBox>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Margin="10,0,0,0">
-                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableProgramsMenu, UpdateSourceTrigger=PropertyChanged}"
+                            <CheckBox IsChecked="{Binding Path=EnableProgramsMenu, UpdateSourceTrigger=PropertyChanged}"
                                       Click="CheckBox_Click"
                                       Name="chkEnablePrgoramsMenu">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sProgramsMenu)}" />
                             </CheckBox>
-                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuExtraVolume, UpdateSourceTrigger=PropertyChanged}"
+                            <CheckBox IsChecked="{Binding Path=EnableMenuExtraVolume, UpdateSourceTrigger=PropertyChanged}"
                                       Click="CheckBox_Click"
                                       Name="chkEnableMenuExtraVolume">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraVolume)}" />
                             </CheckBox>
-                            <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableMenuExtraActionCenter, UpdateSourceTrigger=PropertyChanged}"
+                            <CheckBox IsChecked="{Binding Path=EnableMenuExtraActionCenter, UpdateSourceTrigger=PropertyChanged}"
                                       Click="CheckBox_Click"
                                       Name="chkEnableMenuExtraActionCenter">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraActionCenter)}" />
@@ -462,7 +462,7 @@
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_NotificationArea)}"
                                Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableSysTray, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=EnableSysTray, UpdateSourceTrigger=PropertyChanged}"
                               Click="CheckBox_Click"
                               Name="chkEnableSysTray">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableNotificationArea)}" />
@@ -515,7 +515,7 @@
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Desktop)}"
                      Name="TabDesktop">
                 <StackPanel Orientation="Vertical">
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDesktop, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=EnableDesktop, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkEnableDesktop">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDesktop)}" />
                     </CheckBox>
@@ -524,7 +524,6 @@
                         <TextBox Name="txtDesktopHome">
                             <TextBox.Text>
                                 <Binding Path="DesktopDirectory"
-                                         Source="{x:Static Settings:Settings.Instance}"
                                          UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <supportingClasses:DirectoryPathValidationRule RequireDirectoryExists="True" />
@@ -538,7 +537,7 @@
                                 Padding="10,0">...</Button>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDesktopOverlayHotKey, UpdateSourceTrigger=PropertyChanged}"
+                        <CheckBox IsChecked="{Binding Path=EnableDesktopOverlayHotKey, UpdateSourceTrigger=PropertyChanged}"
                                   Name="chkEnableDesktopOverlayHotKey">
                             <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDesktopOverlayHotKey)}" />
                         </CheckBox>
@@ -549,7 +548,7 @@
                                   Width="55"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboDesktopOverlayHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Path=DesktopOverlayHotKey[0], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboDesktopOverlayHotKeyMod2"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}"
                                   IsDropDownOpen="False"
@@ -557,7 +556,7 @@
                                   Width="55"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboDesktopOverlayHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Path=DesktopOverlayHotKey[1], UpdateSourceTrigger=PropertyChanged}" />
                         <ComboBox Name="cboDesktopOverlayHotKeyKey"
                                   IsEnabled="{Binding IsChecked, ElementName=chkEnableDesktopOverlayHotKey}"
                                   IsDropDownOpen="False"
@@ -565,7 +564,7 @@
                                   Width="40"
                                   Margin="5,-1,0,0"
                                   SelectionChanged="cboDesktopOverlayHotKey_OnSelectionChanged"
-                                  SelectedValue="{Binding Mode=OneWay, Source={x:Static Settings:Settings.Instance}, Path=DesktopOverlayHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Mode=OneWay, Path=DesktopOverlayHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
                                Style="{StaticResource SettingGroupHeader}" />
@@ -607,7 +606,7 @@
                     </StackPanel>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Desktop_DynamicDesktop)}"
                                Style="{StaticResource SettingGroupHeader}" />
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableDynamicDesktop, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=EnableDynamicDesktop, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkEnableDynamicDesktop">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Desktop_EnableDynamicDesktop)}" />
                     </CheckBox>
@@ -698,7 +697,7 @@
 
             <TabItem Header="{Binding Path=(l10n:DisplayString.sSettings_Taskbar)}">
                 <StackPanel Orientation="Vertical">
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbar, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=EnableTaskbar, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkEnableTaskbar">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableTaskbar)}" />
                     </CheckBox>
@@ -768,23 +767,23 @@
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ShowTaskbarBadges, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=ShowTaskbarBadges, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkHideTaskbarBadges">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_ShowBadges)}" />
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ShowTaskbarLabels, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=ShowTaskbarLabels, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkHideTaskbarLabels">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_ShowLabels)}" />
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarThumbnails, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=EnableTaskbarThumbnails, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkEnableTaskbarThumbnails">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableThumbnails)}" />
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkEnableTaskbarMultiMon">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_EnableTaskbarMultiMon)}" />
                     </CheckBox>
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=FullWidthTaskBar, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=FullWidthTaskBar, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkFullWidthTaskBar">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_FullWidthTaskBar)}" />
                     </CheckBox>
@@ -822,19 +821,19 @@
                                    Margin="5,3,5,4" />
                         <StackPanel Orientation="Vertical">
                             <RadioButton GroupName="rdoTaskbarMultiMonMode"
-                                         IsEnabled="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
                                          Name="radTaskbarMultiMonMode0"
                                          Click="radTaskbarMultiMonMode0_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MultiMonMode_All)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoTaskbarMultiMonMode"
-                                         IsEnabled="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
                                          Name="radTaskbarMultiMonMode1"
                                          Click="radTaskbarMultiMonMode1_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MultiMonMode_PerMonitor)}" />
                             </RadioButton>
                             <RadioButton GroupName="rdoTaskbarMultiMonMode"
-                                         IsEnabled="{Binding Source={x:Static Settings:Settings.Instance}, Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding Path=EnableTaskbarMultiMon, UpdateSourceTrigger=PropertyChanged}"
                                          Name="radTaskbarMultiMonMode2"
                                          Click="radTaskbarMultiMonMode2_Click">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_Taskbar_MultiMonMode_Primary)}" />
@@ -872,7 +871,7 @@
                                   IsDropDownOpen="False"
                                   IsEditable="False"
                                   Width="109"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=LogSeverity, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource enumStringConverter}}" />
+                                  SelectedValue="{Binding Path=LogSeverity, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource enumStringConverter}}" />
                         <Button Height="24"
                                 Padding="10,0"
                                 Margin="5,0,0,0"
@@ -889,7 +888,6 @@
                                  ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_TimeFormatTooltip)}">
                             <TextBox.Text>
                                 <Binding Path="TimeFormat"
-                                         Source="{x:Static Settings:Settings.Instance}"
                                          UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <supportingClasses:DateTimeFormatValidationRule />
@@ -904,7 +902,6 @@
                                  ToolTip="{Binding Path=(l10n:DisplayString.sSettings_General_DateFormatTooltip)}">
                             <TextBox.Text>
                                 <Binding Path="DateFormat"
-                                         Source="{x:Static Settings:Settings.Instance}"
                                          UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <supportingClasses:DateTimeFormatValidationRule />
@@ -919,7 +916,6 @@
                                  Width="50">
                             <TextBox.Text>
                                 <Binding Path="AutoHideShowDelayMs"
-                                         Source="{x:Static Settings:Settings.Instance}"
                                          UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <supportingClasses:IntegerValidationRule />
@@ -928,7 +924,7 @@
                             </TextBox.Text>
                         </TextBox>
                     </StackPanel>
-                    <CheckBox IsChecked="{Binding Source={x:Static Settings:Settings.Instance}, Path=ForceSoftwareRendering, UpdateSourceTrigger=PropertyChanged}"
+                    <CheckBox IsChecked="{Binding Path=ForceSoftwareRendering, UpdateSourceTrigger=PropertyChanged}"
                               Click="CheckBox_Click"
                               Name="chkForceSoftwareRendering">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_General_ForceSoftwareRendering)}" />
@@ -940,7 +936,6 @@
                         <TextBox Name="fileManager">
                             <TextBox.Text>
                                 <Binding Path="FileManager"
-                                         Source="{x:Static Settings:Settings.Instance}"
                                          UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <supportingClasses:FilePathValidationRule RequireFileExists="True" />

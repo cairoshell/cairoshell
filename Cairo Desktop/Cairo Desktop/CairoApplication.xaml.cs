@@ -26,6 +26,7 @@ namespace CairoDesktop
         private readonly ILogger<CairoApplication> _logger;
         private readonly IOptionsMonitor<CommandLineOptions> _options;
         private readonly IInitializationService _initializationService;
+        private readonly Settings _settings;
 
         public new static CairoApplication Current => System.Windows.Application.Current as CairoApplication;
 
@@ -36,12 +37,13 @@ namespace CairoDesktop
 
         public CairoApplication(IHost host, ILogger<CairoApplication> logger,
             IOptionsMonitor<CommandLineOptions> options,
-            IInitializationService initializationService)
+            IInitializationService initializationService, Settings settings)
         {
             Host = host;
             _logger = logger;
             _options = options;
             _initializationService = initializationService;
+            _settings = settings;
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             Extensions = new List<IShellExtension>();
@@ -53,6 +55,7 @@ namespace CairoDesktop
             AppVersion = ProductVersion.ToString();
 
             InitializeComponent();
+            _settings = settings;
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -69,7 +72,7 @@ namespace CairoDesktop
 
             _initializationService.SetTheme();
 
-            if (Settings.Instance.ForceSoftwareRendering)
+            if (_settings.ForceSoftwareRendering)
             {
                 RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
             }
