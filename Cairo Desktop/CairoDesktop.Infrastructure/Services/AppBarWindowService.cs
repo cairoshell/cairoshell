@@ -2,13 +2,11 @@
 using System.ComponentModel;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
-using CairoDesktop.Infrastructure.Services;
-using CairoDesktop.Interfaces;
-using CairoDesktop.SupportingClasses;
+using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell;
 using ManagedShell.AppBar;
 
-namespace CairoDesktop.Services
+namespace CairoDesktop.Infrastructure.Services
 {
     public abstract class AppBarWindowService : IWindowService
     {

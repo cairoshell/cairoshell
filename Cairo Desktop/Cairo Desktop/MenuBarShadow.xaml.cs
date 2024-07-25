@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Interfaces;
+using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.Common.Helpers;
 using System.Windows.Media;
 

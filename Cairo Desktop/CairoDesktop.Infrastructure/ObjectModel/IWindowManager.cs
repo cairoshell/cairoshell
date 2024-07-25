@@ -1,10 +1,8 @@
-﻿using CairoDesktop.Services;
-using CairoDesktop.SupportingClasses;
-using ManagedShell.AppBar;
+﻿using ManagedShell.AppBar;
 using System;
 using System.Collections.Generic;
 
-namespace CairoDesktop.Interfaces
+namespace CairoDesktop.Infrastructure.ObjectModel
 {
     public interface IWindowManager
     {

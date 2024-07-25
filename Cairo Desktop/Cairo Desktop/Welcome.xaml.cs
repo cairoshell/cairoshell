@@ -5,7 +5,7 @@ using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Localization;
-using CairoDesktop.Services;
+using CairoDesktop.Infrastructure.Services;
 
 namespace CairoDesktop
 {

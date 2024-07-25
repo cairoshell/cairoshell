@@ -2,10 +2,10 @@
 using System.Windows;
 using System.Windows.Controls;
 using CairoDesktop.Common;
-using CairoDesktop.SupportingClasses;
 using System.Windows.Input;
-using CairoDesktop.Services;
+using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.ShellFolders;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CairoDesktop {
     /// <summary>
@@ -236,8 +236,9 @@ namespace CairoDesktop {
         {
             startPoint = null;
             ctxOpen = true;
+            var desktopManager = CairoApplication.Current.Host.Services.GetService<IDesktopManager>();
 
-            if (!Settings.Instance.EnableDynamicDesktop || !DesktopManager.IsEnabled)
+            if (!Settings.Instance.EnableDynamicDesktop || !desktopManager.IsEnabled)
             {
                 ContextMenu menu = (sender as ContextMenu);
                 foreach (Control item in menu.Items)

@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
-using CairoDesktop.Infrastructure.Services;
-using CairoDesktop.Interfaces;
-using CairoDesktop.SupportingClasses;
+using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.Logging;
 
-namespace CairoDesktop.Services
+namespace CairoDesktop.Infrastructure.Services
 {
     public sealed class WindowManager : IWindowManager, IDisposable
     {
@@ -71,14 +69,12 @@ namespace CairoDesktop.Services
 
         public List<AppBarScreen> ScreenState { get; set; }
 
-        public WindowManager(ILogger<WindowManager> logger, ShellManagerService shellManagerService, IDesktopManager desktopManager)
+        public WindowManager(ILogger<WindowManager> logger, ShellManagerService shellManagerService)
         {
             ScreenState = new List<AppBarScreen>();
 
             _appBarManager = shellManagerService.ShellManager.AppBarManager;
             _logger = logger;
-
-            desktopManager.Initialize(this);
 
             // start a timer to handle orphaned display events
             DispatcherTimer notificationCheckTimer = new DispatcherTimer();

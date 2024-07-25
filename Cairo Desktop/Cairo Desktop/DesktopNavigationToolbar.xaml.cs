@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Controls;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Interfaces;
+using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -32,7 +32,7 @@ namespace CairoDesktop
         private readonly ContextMenu toolbarContextMenu;
         private LowLevelKeyboardListener lowLevelKeyboardListener;
         private readonly ICairoApplication _cairoApplication;
-        private readonly IDesktopManager _desktopManager;
+        private readonly DesktopManager _desktopManager;
         private readonly Settings _settings;
 
         private static DependencyProperty navigationManagerProperty = DependencyProperty.Register("NavigationManager", typeof(NavigationManager), typeof(DesktopNavigationToolbar));
@@ -74,7 +74,7 @@ namespace CairoDesktop
             }
         }
 
-        public DesktopNavigationToolbar(ICairoApplication cairoApplication, IDesktopManager manager, Settings settings)
+        public DesktopNavigationToolbar(ICairoApplication cairoApplication, DesktopManager manager, Settings settings)
         {
             InitializeComponent();
 

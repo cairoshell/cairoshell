@@ -1,8 +1,8 @@
 ﻿using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
+using CairoDesktop.Infrastructure.ObjectModel;
 using CairoDesktop.Infrastructure.Services;
-using CairoDesktop.Interfaces;
 using ManagedShell.AppBar;
 
 namespace CairoDesktop.Services

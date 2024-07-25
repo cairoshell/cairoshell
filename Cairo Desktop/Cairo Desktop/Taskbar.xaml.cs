@@ -7,8 +7,7 @@ using System.ComponentModel;
 using System.Windows;
 using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Interfaces;
-using CairoDesktop.Services;
+using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Enums;
@@ -210,7 +209,7 @@ namespace CairoDesktop
 
         private void setTaskbarDesktopOverlayButton()
         {
-            if (DesktopManager.IsEnabled)
+            if (_desktopManager.IsEnabled)
             {
                 btnDesktopOverlay.Visibility = Visibility.Visible;
                 btnDesktopOverlay.DataContext = _desktopManager;

@@ -3,8 +3,6 @@ using CairoDesktop.Application.Structs;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Localization;
 using CairoDesktop.Infrastructure.ObjectModel;
-using CairoDesktop.Interfaces;
-using CairoDesktop.Services;
 using ManagedShell.ShellFolders;
 using System.Collections.Generic;
 
@@ -56,11 +54,11 @@ namespace CairoDesktop.Commands
                 return false;
             }
 
-            if (_settings.EnableDynamicDesktop && DesktopManager.IsEnabled)
+            if (_settings.EnableDynamicDesktop && _desktopManager.IsEnabled)
             {
                 try
                 {
-                    _desktopManager.NavigationManager.NavigateTo(path);
+                    _desktopManager.SetPath(path);
                     if (!noOverlay)
                     {
                         _desktopManager.IsOverlayOpen = true;
@@ -115,13 +113,13 @@ namespace CairoDesktop.Commands
 
         public string LabelForShellItem(ShellItem item)
         {
-            return _settings.EnableDynamicDesktop && DesktopManager.IsEnabled ?
+            return _settings.EnableDynamicDesktop && _desktopManager.IsEnabled ?
                 DisplayString.sStacks_OpenOnDesktop : DisplayString.sStacks_OpenInNewWindow;
         }
 
         public bool IsAvailableForShellItem(ShellItem item)
         {
-            return item.IsNavigableFolder && _settings.EnableDynamicDesktop && DesktopManager.IsEnabled;
+            return item.IsNavigableFolder && _settings.EnableDynamicDesktop && _desktopManager.IsEnabled;
         }
     }
 }

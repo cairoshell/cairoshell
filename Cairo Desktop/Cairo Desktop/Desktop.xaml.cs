@@ -15,7 +15,8 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Interfaces;
+using CairoDesktop.Infrastructure.ObjectModel;
+using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Services;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
@@ -26,7 +27,6 @@ using ManagedShell.ShellFolders.Enums;
 using DataFormats = System.Windows.DataFormats;
 using DragDropEffects = System.Windows.DragDropEffects;
 using DragEventArgs = System.Windows.DragEventArgs;
-using CairoDesktop.Infrastructure.ObjectModel;
 using System.Collections.Generic;
 
 namespace CairoDesktop
@@ -40,7 +40,7 @@ namespace CairoDesktop
         private bool altF4Pressed;
         private readonly AppBarManager _appBarManager;
         private readonly ICommandService _commandService;
-        private readonly IDesktopManager _desktopManager;
+        private readonly DesktopManager _desktopManager;
         private readonly FullScreenHelper _fullScreenHelper;
         private readonly FileOperationWorker _fileWorker;
         private readonly ISettingsUIService _settingsUiService;
@@ -53,7 +53,7 @@ namespace CairoDesktop
         private Brush BackgroundBrush { get; set; }
         private Dictionary<uint, string> ContextMenuCommandUIDs = new Dictionary<uint, string>();
 
-        public Desktop(IDesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings)
+        public Desktop(DesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings)
         {
             InitializeComponent();
 

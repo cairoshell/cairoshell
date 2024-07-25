@@ -1,7 +1,7 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Application.Structs;
 using CairoDesktop.Common.Localization;
-using CairoDesktop.Interfaces;
+using CairoDesktop.Infrastructure.ObjectModel;
 using CairoDesktop.Services;
 using System;
 using System.Collections.Generic;
