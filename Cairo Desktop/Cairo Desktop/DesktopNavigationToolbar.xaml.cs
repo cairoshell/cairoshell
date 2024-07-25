@@ -33,6 +33,7 @@ namespace CairoDesktop
         private LowLevelKeyboardListener lowLevelKeyboardListener;
         private readonly ICairoApplication _cairoApplication;
         private readonly IDesktopManager _desktopManager;
+        private readonly Settings _settings;
 
         private static DependencyProperty navigationManagerProperty = DependencyProperty.Register("NavigationManager", typeof(NavigationManager), typeof(DesktopNavigationToolbar));
         private static DependencyProperty isShiftKeyHeldProperty = DependencyProperty.Register("isShiftKeyHeld", typeof(bool), typeof(DesktopNavigationToolbar), new PropertyMetadata(new bool()));
@@ -73,12 +74,13 @@ namespace CairoDesktop
             }
         }
 
-        public DesktopNavigationToolbar(ICairoApplication cairoApplication, IDesktopManager manager)
+        public DesktopNavigationToolbar(ICairoApplication cairoApplication, IDesktopManager manager, Settings settings)
         {
             InitializeComponent();
 
             _cairoApplication = cairoApplication;
             _desktopManager = manager;
+            _settings = settings;
 
             // set up browse context menu (is dynamically constructed)
             browseContextMenu = new ContextMenu();
@@ -147,12 +149,12 @@ namespace CairoDesktop
 
         private void SetPosition(uint x = 0, uint y = 0)
         {
-            if (Settings.Instance.DesktopNavigationToolbarLocation != default)
+            if (_settings.DesktopNavigationToolbarLocation != default)
             {
                 Point desiredLocation = new Point()
                 {
-                    X = PercentToAbsPos(Settings.Instance.DesktopNavigationToolbarLocation.X, ActualWidth, WindowManager.PrimaryMonitorSize.Width),
-                    Y = PercentToAbsPos(Settings.Instance.DesktopNavigationToolbarLocation.Y, ActualHeight, WindowManager.PrimaryMonitorSize.Height)
+                    X = PercentToAbsPos(_settings.DesktopNavigationToolbarLocation.X, ActualWidth, WindowManager.PrimaryMonitorSize.Width),
+                    Y = PercentToAbsPos(_settings.DesktopNavigationToolbarLocation.Y, ActualHeight, WindowManager.PrimaryMonitorSize.Height)
                 };
 
                 if (PointExistsOnScreen(desiredLocation))
@@ -323,7 +325,7 @@ namespace CairoDesktop
         #region Home menu
         private void SetHomeMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.DesktopDirectory = NavigationManager.CurrentItem.Path;
+            _settings.DesktopDirectory = NavigationManager.CurrentItem.Path;
         }
         #endregion
 
@@ -503,9 +505,9 @@ namespace CairoDesktop
             var newPoint = new Point(AbsToPercentPos(Left, ActualWidth, WindowManager.PrimaryMonitorSize.Width),
                 AbsToPercentPos(Top, ActualHeight, WindowManager.PrimaryMonitorSize.Height));
 
-            if (!newPoint.Equals(Settings.Instance.DesktopNavigationToolbarLocation))
+            if (!newPoint.Equals(_settings.DesktopNavigationToolbarLocation))
             {
-                Settings.Instance.DesktopNavigationToolbarLocation = newPoint;
+                _settings.DesktopNavigationToolbarLocation = newPoint;
             }
         }
         #endregion

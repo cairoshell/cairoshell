@@ -2,19 +2,22 @@
 using ManagedShell;
 using System;
 using System.ComponentModel;
-using ManagedShell.Common.Enums;
 
 namespace CairoDesktop.Infrastructure.Services
 {
     public class ShellManagerService : IDisposable
     {
+        private readonly Settings _settings;
+
         public ShellManager ShellManager { get; }
 
-        public ShellManagerService()
+        public ShellManagerService(Settings settings)
         {
+            _settings = settings;
+
             ShellManager = ConfigureShellManager();
 
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            _settings.PropertyChanged += Settings_PropertyChanged;
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -25,7 +28,7 @@ namespace CairoDesktop.Infrastructure.Services
             switch (e.PropertyName)
             {
                 case "TaskbarIconSize":
-                    ShellManager.TasksService.TaskIconSize = (IconSize)Settings.Instance.TaskbarIconSize;
+                    ShellManager.TasksService.TaskIconSize = _settings.TaskbarIconSize;
                     break;
             }
         }
@@ -36,11 +39,11 @@ namespace CairoDesktop.Infrastructure.Services
             {
                 EnableTasksService = true,
                 AutoStartTasksService = false,
-                TaskIconSize = (IconSize)Settings.Instance.TaskbarIconSize,
+                TaskIconSize = _settings.TaskbarIconSize,
 
-                EnableTrayService = Settings.Instance.EnableSysTray,
+                EnableTrayService = _settings.EnableSysTray,
                 AutoStartTrayService = false,
-                PinnedNotifyIcons = Settings.Instance.PinnedNotifyIcons
+                PinnedNotifyIcons = _settings.PinnedNotifyIcons
             };
 
             return new ShellManager(config);

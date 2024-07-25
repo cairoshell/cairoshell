@@ -18,14 +18,16 @@ namespace CairoDesktop
     {
         private readonly IDesktopManager _desktopManager;
         private readonly AppBarManager _appBarManager;
+        private readonly Settings _settings;
         public IntPtr Handle;
 
-        public DesktopOverlay(IDesktopManager manager, AppBarManager appBarManager)
+        public DesktopOverlay(IDesktopManager manager, AppBarManager appBarManager, Settings settings)
         {
             InitializeComponent();
             
             _desktopManager = manager;
             _appBarManager = appBarManager;
+            _settings = settings;
 
             ResetPosition();
         }
@@ -35,7 +37,7 @@ namespace CairoDesktop
             double top = System.Windows.Forms.SystemInformation.WorkingArea.Top / DpiHelper.DpiScale;
             double taskbarHeight = 0;
 
-            if (Settings.Instance.TaskbarMode == 1)
+            if (_settings.TaskbarMode == 1)
             {
                 // special case, since work area is not reduced with this setting
                 // this keeps the desktop going beneath the TaskBar
@@ -47,7 +49,7 @@ namespace CairoDesktop
                 taskbarHeight = (screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale;
 
                 // top TaskBar means we should push down
-                if (Settings.Instance.TaskbarEdge == AppBarEdge.Top)
+                if (_settings.TaskbarEdge == AppBarEdge.Top)
                 {
                     top = workAreaRect.Top / dpiScale;
                 }

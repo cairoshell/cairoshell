@@ -8,17 +8,21 @@ namespace CairoDesktop.MenuBarExtensions
 {
     class VolumeMenuBarExtension : UserControlMenuBarExtension
     {
+        private readonly Settings _settings;
         private Volume _volume;
+
+        internal VolumeMenuBarExtension(Settings settings)
+        {
+            _settings = settings;
+        }
 
         public override UserControl StartControl(IMenuBar host)
         {
-            if (Enabled)
+            if (!_settings.EnableMenuExtraVolume || !EnvironmentHelper.IsWindows10OrBetter || !EnvironmentHelper.IsAppRunningAsShell)
                 return null;
 
             _volume = new Volume();
             return _volume;
         }
-
-        private static bool Enabled => !Settings.Instance.EnableMenuExtraVolume || !EnvironmentHelper.IsWindows10OrBetter || !EnvironmentHelper.IsAppRunningAsShell;
     }
 }

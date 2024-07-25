@@ -121,7 +121,7 @@ namespace CairoDesktop.Commands
 
         public bool IsAvailableForShellItem(ShellItem item)
         {
-            return item.IsNavigableFolder && Settings.Instance.EnableDynamicDesktop && DesktopManager.IsEnabled;
+            return item.IsNavigableFolder && _settings.EnableDynamicDesktop && DesktopManager.IsEnabled;
         }
     }
 }

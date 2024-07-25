@@ -26,6 +26,7 @@ namespace CairoDesktop
     {
         private readonly ICommandService _commandService;
         private readonly IDesktopManager _desktopManager;
+        private readonly Settings _settings;
 
         internal bool RenameNewIcon;
         private Icon LastIconSelected;
@@ -60,14 +61,15 @@ namespace CairoDesktop
             }
         }
 
-        public DesktopIcons(IDesktopManager manager, ICommandService commandService)
+        public DesktopIcons(IDesktopManager manager, ICommandService commandService, Settings settings)
         {
             InitializeComponent();
 
             _commandService = commandService;
             _desktopManager = manager;
+            _settings = settings;
 
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            _settings.PropertyChanged += Settings_PropertyChanged;
 
             setPosition();
             SetIconLocation();
@@ -118,7 +120,7 @@ namespace CairoDesktop
             int xOffset = 7;
             int yOffset = 13;
 
-            if (Settings.Instance.DesktopLabelPosition == 1)
+            if (_settings.DesktopLabelPosition == 1)
                 xOffset = 0;
 
             panel.Margin = new Thickness(xOffset, yOffset, 0, 0);

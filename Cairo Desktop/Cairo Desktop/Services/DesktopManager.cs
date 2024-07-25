@@ -42,6 +42,7 @@ namespace CairoDesktop.Services
         private readonly ILogger<DesktopManager> _logger;
         private readonly ISettingsUIService _settingsUiService;
         private readonly ICommandService _commandService;
+        private readonly Settings _settings;
 
         public DesktopIcons DesktopIconsControl { get; private set; }
 
@@ -74,7 +75,7 @@ namespace CairoDesktop.Services
 
         public ShellFolder DesktopLocation => DesktopIconsControl?.Location;
 
-        public DesktopManager(ILogger<DesktopManager> logger, ICairoApplication cairoApplication, ShellManagerService shellManagerService, ISettingsUIService settingsUiService, ICommandService commandService)
+        public DesktopManager(ILogger<DesktopManager> logger, ICairoApplication cairoApplication, ShellManagerService shellManagerService, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings)
         {
             // DesktopManager is always created on startup by WindowManager, regardless of desktop preferences
             // this allows for dynamic creation and destruction of the desktop per user preference
@@ -82,8 +83,10 @@ namespace CairoDesktop.Services
             _shellManager = shellManagerService.ShellManager;
             _logger = logger;
             _settingsUiService = settingsUiService;
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
             _commandService = commandService;
+            _settings = settings;
+
+            _settings.PropertyChanged += Settings_PropertyChanged;
         }
 
         public void Initialize(IWindowManager manager)
@@ -119,7 +122,7 @@ namespace CairoDesktop.Services
 
             if (DesktopIconsControl == null)
             {
-                DesktopIconsControl = new DesktopIcons(this, _commandService);
+                DesktopIconsControl = new DesktopIcons(this, _commandService, _settings);
             }
 
             RegisterHotKey();
@@ -132,19 +135,19 @@ namespace CairoDesktop.Services
             if (DesktopWindow != null)
                 return;
 
-            DesktopWindow = new Desktop(this, _shellManager.AppBarManager, _shellManager.FullScreenHelper, _settingsUiService, _commandService);
+            DesktopWindow = new Desktop(this, _shellManager.AppBarManager, _shellManager.FullScreenHelper, _settingsUiService, _commandService, _settings);
             DesktopWindow.WorkAreaChanged += WorkAreaChanged;
             DesktopWindow.Show();
         }
 
         private void CreateToolbar()
         {
-            if (Settings.Instance.EnableDynamicDesktop && DesktopWindow != null && NavigationManager != null)
+            if (_settings.EnableDynamicDesktop && DesktopWindow != null && NavigationManager != null)
             {
-                DesktopToolbar = new DesktopNavigationToolbar(_cairoApplication, this) { Owner = DesktopWindow, NavigationManager = NavigationManager };
+                DesktopToolbar = new DesktopNavigationToolbar(_cairoApplication, this, _settings) { Owner = DesktopWindow, NavigationManager = NavigationManager };
                 DesktopToolbar.Show();
             }
-            else if (Settings.Instance.EnableDynamicDesktop && DesktopWindow == null) // NavigationManager can be expected null
+            else if (_settings.EnableDynamicDesktop && DesktopWindow == null) // NavigationManager can be expected null
             {
                 _logger.LogWarning("Attempted to create ToolBar with uninitialized properties");
             }
@@ -210,9 +213,9 @@ namespace CairoDesktop.Services
 
         private void RegisterHotKey()
         {
-            if (IsEnabled && Settings.Instance.EnableDesktopOverlayHotKey && _overlayHotKey == null)
+            if (IsEnabled && _settings.EnableDesktopOverlayHotKey && _overlayHotKey == null)
             {
-                _overlayHotKey = HotKeyManager.RegisterHotKey(Settings.Instance.DesktopOverlayHotKey, OnShowDesktop);
+                _overlayHotKey = HotKeyManager.RegisterHotKey(_settings.DesktopOverlayHotKey, OnShowDesktop);
             }
         }
 
@@ -315,7 +318,7 @@ namespace CairoDesktop.Services
         {
             if (DesktopOverlayWindow == null && DesktopWindow != null && DesktopIconsControl != null)
             {
-                DesktopOverlayWindow = new DesktopOverlay(this, _shellManager.AppBarManager);
+                DesktopOverlayWindow = new DesktopOverlay(this, _shellManager.AppBarManager, _settings);
 
                 // create mask image to show while the icons control is rendered on the overlay window
                 Image maskImage = new Image
@@ -470,7 +473,7 @@ namespace CairoDesktop.Services
                 case "EnableDesktop":
                     if (EnvironmentHelper.IsAppRunningAsShell)
                     {
-                        if (Settings.Instance.EnableDesktop)
+                        if (_settings.EnableDesktop)
                         {
                             CreateDesktopBrowser();
                         }
@@ -481,7 +484,7 @@ namespace CairoDesktop.Services
                     }
                     else
                     {
-                        if (Settings.Instance.EnableDesktop)
+                        if (_settings.EnableDesktop)
                         {
                             InitDesktop();
                         }
@@ -493,7 +496,7 @@ namespace CairoDesktop.Services
 
                     break;
                 case "EnableDynamicDesktop" when IsEnabled:
-                    if (Settings.Instance.EnableDynamicDesktop)
+                    if (_settings.EnableDynamicDesktop)
                     {
                         CreateToolbar();
                     }
@@ -505,7 +508,7 @@ namespace CairoDesktop.Services
 
                     break;
                 case "EnableDesktopOverlayHotKey" when IsEnabled:
-                    if (Settings.Instance.EnableDesktopOverlayHotKey)
+                    if (_settings.EnableDesktopOverlayHotKey)
                     {
                         RegisterHotKey();
                     }
@@ -516,7 +519,7 @@ namespace CairoDesktop.Services
 
                     break;
                 case "DesktopOverlayHotKey" when IsEnabled:
-                    if (Settings.Instance.EnableDesktopOverlayHotKey)
+                    if (_settings.EnableDesktopOverlayHotKey)
                     {
                         UnregisterHotKey();
                         RegisterHotKey();
