@@ -209,10 +209,10 @@ namespace CairoDesktop
                 case MouseButton.Middle:
                     break;
                 case MouseButton.XButton1:
-                    _desktopManager.NavigationManager.NavigateBackward();
+                    if (_settings.EnableDynamicDesktop) _desktopManager.NavigationManager.NavigateBackward();
                     break;
                 case MouseButton.XButton2:
-                    _desktopManager.NavigationManager.NavigateForward();
+                    if (_settings.EnableDynamicDesktop) _desktopManager.NavigationManager.NavigateForward();
                     break;
             }
         }
