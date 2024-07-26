@@ -10,7 +10,6 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Controls;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -147,14 +146,16 @@ namespace CairoDesktop
             return result;
         }
 
-        private void SetPosition(uint x = 0, uint y = 0)
+        private void SetPosition(uint width = 0, uint height = 0)
         {
+            var screenSize = ScreenHelper.PrimaryMonitorDeviceSize;
+
             if (_settings.DesktopNavigationToolbarLocation != default)
             {
                 Point desiredLocation = new Point()
                 {
-                    X = PercentToAbsPos(_settings.DesktopNavigationToolbarLocation.X, ActualWidth, WindowManager.PrimaryMonitorSize.Width),
-                    Y = PercentToAbsPos(_settings.DesktopNavigationToolbarLocation.Y, ActualHeight, WindowManager.PrimaryMonitorSize.Height)
+                    X = PercentToAbsPos(_settings.DesktopNavigationToolbarLocation.X, ActualWidth, screenSize.Width / DpiHelper.DpiScale),
+                    Y = PercentToAbsPos(_settings.DesktopNavigationToolbarLocation.Y, ActualHeight, screenSize.Height / DpiHelper.DpiScale)
                 };
 
                 if (PointExistsOnScreen(desiredLocation))
@@ -164,17 +165,13 @@ namespace CairoDesktop
                 }
             }
 
-            int sWidth;
-            int sHeight;
-            if (x != 0 && y != 0)
+            int sWidth = (int)width;
+            int sHeight = (int)height;
+            if (width == 0 && height == 0)
             {
-                // use size from wndproc and adjust for dpi
-                DpiHelper.TransformFromPixels(x, y, out sWidth, out sHeight);
-            }
-            else
-            {
-                sWidth = WindowManager.PrimaryMonitorSize.Width;
-                sHeight = WindowManager.PrimaryMonitorSize.Height;
+
+                sWidth = screenSize.Width;
+                sHeight = screenSize.Height;
             }
 
             SetPositionDefault(sWidth, sHeight);
@@ -182,8 +179,8 @@ namespace CairoDesktop
 
         private void SetPositionDefault(int screenWidth, int screenHeight)
         {
-            var top = Convert.ToInt32(PercentToAbsPos(DEFAULT_Y, ActualHeight, screenHeight) * DpiHelper.DpiScale);
-            var left = Convert.ToInt32(PercentToAbsPos(DEFAULT_X, ActualWidth, screenWidth) * DpiHelper.DpiScale);
+            var top = Convert.ToInt32(PercentToAbsPos(DEFAULT_Y, ActualHeight, screenHeight / DpiHelper.DpiScale) * DpiHelper.DpiScale);
+            var left = Convert.ToInt32(PercentToAbsPos(DEFAULT_X, ActualWidth, screenWidth / DpiHelper.DpiScale) * DpiHelper.DpiScale);
             SetWindowPos(helper.Handle, IntPtr.Zero, left, top, 0, 0, (int)SetWindowPosFlags.SWP_NOZORDER | (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOSIZE);
         }
 
@@ -212,7 +209,8 @@ namespace CairoDesktop
 
         private void ResetPositionMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            SetPositionDefault(WindowManager.PrimaryMonitorSize.Width, WindowManager.PrimaryMonitorSize.Height);
+            var screenSize = ScreenHelper.PrimaryMonitorDeviceSize;
+            SetPositionDefault(screenSize.Width, screenSize.Height);
         }
         #endregion
 
@@ -432,7 +430,7 @@ namespace CairoDesktop
                 SetPosition(((uint)lParam & 0xffff), ((uint)lParam >> 16));
                 handled = true;
             }
-            else if (msg == (int)NativeMethods.WM.DPICHANGED || msg == (int)NativeMethods.WM.DISPLAYCHANGE)
+            else if (msg == (int)NativeMethods.WM.DPICHANGED)
             {
                 SetPosition();
             }
@@ -502,8 +500,9 @@ namespace CairoDesktop
 
         private void DesktopToolbar_LocationChanged(object sender, EventArgs e)
         {
-            var newPoint = new Point(AbsToPercentPos(Left, ActualWidth, WindowManager.PrimaryMonitorSize.Width),
-                AbsToPercentPos(Top, ActualHeight, WindowManager.PrimaryMonitorSize.Height));
+            var screenSize = ScreenHelper.PrimaryMonitorDeviceSize;
+            var newPoint = new Point(AbsToPercentPos(Left, ActualWidth, screenSize.Width / DpiHelper.DpiScale),
+                AbsToPercentPos(Top, ActualHeight, screenSize.Height / DpiHelper.DpiScale));
 
             if (!newPoint.Equals(_settings.DesktopNavigationToolbarLocation))
             {

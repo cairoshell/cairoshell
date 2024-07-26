@@ -57,7 +57,7 @@ namespace CairoDesktop.Services
             {
                 if (sender is MenuBar menuBar)
                 {
-                    var taskbar = (Taskbar)WindowManager.GetScreenWindow(Windows, menuBar.Screen);
+                    var taskbar = (Taskbar)_windowManager.GetScreenWindow(Windows, menuBar.Screen);
 
                     if (taskbar == null)
                     {

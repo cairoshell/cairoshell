@@ -16,7 +16,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.ObjectModel;
-using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Services;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
@@ -301,7 +300,7 @@ namespace CairoDesktop
                 left = (0 - SystemInformation.VirtualScreen.Left + SystemInformation.WorkingArea.Left) / DpiHelper.DpiScale;
             }
 
-            grid.Width = WindowManager.PrimaryMonitorWorkArea.Width / DpiHelper.DpiScale;
+            grid.Width = (SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left) / DpiHelper.DpiScale;
 
             if (_settings.TaskbarMode == 1)
             {
@@ -312,7 +311,7 @@ namespace CairoDesktop
                 AppBarScreen screen = AppBarScreen.FromPrimaryScreen();
                 NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(ref dpiScale, screen, false, false);
 
-                grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale) - ((screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale);
+                grid.Height = ((SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale) - ((screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale);
 
                 if (_settings.TaskbarEdge == AppBarEdge.Top)
                 {
@@ -321,7 +320,7 @@ namespace CairoDesktop
             }
             else
             {
-                grid.Height = WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale;
+                grid.Height = (SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale;
             }
 
             grid.Margin = new Thickness(left, top, 0, 0);

@@ -19,5 +19,7 @@ namespace CairoDesktop.Infrastructure.ObjectModel
         void NotifyDisplayChange(ScreenSetupReason reason);
 
         void RegisterWindowService(IWindowService service);
+
+        T GetScreenWindow<T>(List<T> windowList, AppBarScreen screen) where T : AppBarWindow;
     }
 }

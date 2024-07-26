@@ -4,10 +4,10 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
-using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Services;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using System.Windows.Forms;
 
 namespace CairoDesktop
 {
@@ -34,7 +34,7 @@ namespace CairoDesktop
 
         public void ResetPosition()
         {
-            double top = System.Windows.Forms.SystemInformation.WorkingArea.Top / DpiHelper.DpiScale;
+            double top = SystemInformation.WorkingArea.Top / DpiHelper.DpiScale;
             double taskbarHeight = 0;
 
             if (_settings.TaskbarMode == 1)
@@ -55,14 +55,14 @@ namespace CairoDesktop
                 }
             }
 
-            Width = WindowManager.PrimaryMonitorWorkArea.Width / DpiHelper.DpiScale;
-            Height = (WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale) - taskbarHeight;
+            Width = (SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left) / DpiHelper.DpiScale;
+            Height = ((SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale) - taskbarHeight;
 
             grid.Width = Width;
             grid.Height = Height;
 
             Top = top;
-            Left = System.Windows.Forms.SystemInformation.WorkingArea.Left / DpiHelper.DpiScale;
+            Left = SystemInformation.WorkingArea.Left / DpiHelper.DpiScale;
         }
 
         public void BringToFront()
@@ -103,12 +103,12 @@ namespace CairoDesktop
             _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
-        private void DesktopOverlayWindow_DragOver(object sender, DragEventArgs e)
+        private void DesktopOverlayWindow_DragOver(object sender, System.Windows.DragEventArgs e)
         {
             _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
-        private void DesktopOverlayWindow_Drop(object sender, DragEventArgs e)
+        private void DesktopOverlayWindow_Drop(object sender, System.Windows.DragEventArgs e)
         {
             _desktopManager.DesktopWindow?.RaiseEvent(e);
         }

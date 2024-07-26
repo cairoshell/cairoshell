@@ -1,35 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.AppBar;
-using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.Logging;
 
 namespace CairoDesktop.Infrastructure.Services
 {
     public sealed class WindowManager : IWindowManager, IDisposable
     {
-        // TODO: Do something better with these static properties
-        public static System.Drawing.Size PrimaryMonitorSize
-        {
-            get
-            {
-                return new System.Drawing.Size(Convert.ToInt32(SystemParameters.PrimaryScreenWidth / DpiHelper.DpiScaleAdjustment), Convert.ToInt32(SystemParameters.PrimaryScreenHeight / DpiHelper.DpiScaleAdjustment));
-            }
-        }
-
-        public static System.Drawing.Size PrimaryMonitorWorkArea
-        {
-            get
-            {
-                return new System.Drawing.Size(SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left, SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top);
-            }
-        }
-
-
         private bool _isSettingDisplays;
         private bool hasCompletedInitialDisplaySetup;
         private int pendingDisplayEvents;
@@ -356,7 +336,7 @@ namespace CairoDesktop.Infrastructure.Services
             }
         }
 
-        public static T GetScreenWindow<T>(List<T> windowList, AppBarScreen screen) where T : AppBarWindow
+        public T GetScreenWindow<T>(List<T> windowList, AppBarScreen screen) where T : AppBarWindow
         {
             foreach (AppBarWindow window in windowList)
             {
