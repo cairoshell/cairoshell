@@ -309,7 +309,7 @@ namespace CairoDesktop
 
         private void Icon_OnKeyUp(object sender, KeyEventArgs e)
         {
-            // Close desktop overlay if certain key commands invoked. Icon control handles the remainder of the behavior
+            // Close desktop overlay if certain key commands invoked.
             
             Icon icon = sender as Icon;
 
@@ -325,14 +325,44 @@ namespace CairoDesktop
 
             switch (e.Key)
             {
-                // [Alt] + [Enter] => Open file properties
+                // [Ctrl] + [C] => Copy
+                case Key.C when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
+                    _commandService.InvokeCommand("CopyFile", ("Path", icon.File.Path));
+                    break;
+
+                // [Ctrl] + [X] => Cut
+                case Key.X when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
+                    // TODO: Not yet implemented
+                    break;
+
+                // [Ctrl] + [V] => Paste
+                case Key.V when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
+                    if (icon.File.IsFolder)
+                    {
+                        // TODO: Paste item into folder?
+                    }
+                    break;
+
+                // [Delete] => Delete an item and place it into the Recycle Bin
+                case Key.Delete:
+                    _commandService.InvokeCommand("DeleteFile", ("Path", icon.File.Path));
+                    break;
+
+                // TODO: [Alt] + [Enter] => Open file properties
                 case Key.Enter when Keyboard.Modifiers.HasFlag(ModifierKeys.Alt):
                     _desktopManager.IsOverlayOpen = false;
+                    _commandService.InvokeCommand("ShowFileProperties", ("Path", icon.File.Path));
                     break;
 
                 // [Enter] => Open file
                 case Key.Enter:
-                    _desktopManager.IsOverlayOpen = false;
+                    if (!icon.File.IsFolder) _desktopManager.IsOverlayOpen = false;
+                    _commandService.InvokeCommand(icon.File.IsFolder ? "OpenLocation" : "OpenFile", ("Path", icon.File.Path), ("NoOverlay", true));
+                    break;
+
+                // TODO: [F2] => Rename Item. Select name excluding file extension
+                case Key.F2:
+                    // TODO: Not yet implemented
                     break;
             }
         }
