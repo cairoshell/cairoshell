@@ -3,12 +3,10 @@ using System.ComponentModel;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.Services;
-using CairoDesktop.Interfaces;
-using CairoDesktop.SupportingClasses;
 using ManagedShell;
 using ManagedShell.AppBar;
 
-namespace CairoDesktop.Services
+namespace CairoDesktop.Infrastructure.ObjectModel
 {
     public abstract class AppBarWindowService : IWindowService
     {
@@ -77,7 +75,7 @@ namespace CairoDesktop.Services
             {
                 foreach (AppBarScreen screen in _windowManager.ScreenState)
                 {
-                    CairoAppBarWindow window = WindowManager.GetScreenWindow(Windows, screen);
+                    CairoAppBarWindow window = _windowManager.GetScreenWindow(Windows, screen);
 
                     if (window != null)
                     {

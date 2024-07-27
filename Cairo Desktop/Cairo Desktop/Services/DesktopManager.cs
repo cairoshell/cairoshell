@@ -1,8 +1,7 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
+using CairoDesktop.Infrastructure.ObjectModel;
 using CairoDesktop.Infrastructure.Services;
-using CairoDesktop.Interfaces;
-using CairoDesktop.SupportingClasses;
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
@@ -20,9 +19,7 @@ namespace CairoDesktop.Services
 {
     public class DesktopManager : IDesktopManager, INotifyPropertyChanged, IDisposable
     {
-        // TODO: find a better solution for these static properties
-        public static bool IsEnabled => Settings.Instance.EnableDesktop && !GroupPolicyHelper.NoDesktop;
-
+        public bool IsEnabled => _settings.EnableDesktop && !GroupPolicyHelper.NoDesktop;
 
         public Desktop DesktopWindow { get; private set; }
 
@@ -75,30 +72,24 @@ namespace CairoDesktop.Services
 
         public ShellFolder DesktopLocation => DesktopIconsControl?.Location;
 
-        public DesktopManager(ILogger<DesktopManager> logger, ICairoApplication cairoApplication, ShellManagerService shellManagerService, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings)
+        public DesktopManager(ILogger<DesktopManager> logger, ICairoApplication cairoApplication, ShellManagerService shellManagerService, ISettingsUIService settingsUiService, ICommandService commandService, IWindowManager windowManager, Settings settings)
         {
-            // DesktopManager is always created on startup by WindowManager, regardless of desktop preferences
+            // DesktopManager is always created on startup, regardless of desktop preferences
             // this allows for dynamic creation and destruction of the desktop per user preference
             _cairoApplication = cairoApplication;
             _shellManager = shellManagerService.ShellManager;
             _logger = logger;
             _settingsUiService = settingsUiService;
             _commandService = commandService;
+            _windowManager = windowManager;
             _settings = settings;
 
             _settings.PropertyChanged += Settings_PropertyChanged;
-        }
-
-        public void Initialize(IWindowManager manager)
-        {
-            _windowManager = manager;
             _windowManager.DwmChanged += DwmChanged;
             _windowManager.ScreensChanged += ScreensChanged;
-
-            InitDesktop();
         }
 
-        private void InitDesktop()
+        public void Initialize()
         {
             if (!IsEnabled && !EnvironmentHelper.IsAppRunningAsShell)
                 return;
@@ -263,6 +254,11 @@ namespace CairoDesktop.Services
             {
                 DesktopToolbar.Owner = DesktopWindow;
             }
+        }
+
+        public void SetPath(string path)
+        {
+            NavigationManager.NavigateTo(path);
         }
 
         public void ResetPosition(bool displayChanged)
@@ -486,7 +482,7 @@ namespace CairoDesktop.Services
                     {
                         if (_settings.EnableDesktop)
                         {
-                            InitDesktop();
+                            Initialize();
                         }
                         else
                         {

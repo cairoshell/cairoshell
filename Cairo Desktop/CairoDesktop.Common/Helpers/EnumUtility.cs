@@ -1,7 +1,7 @@
 ﻿using System;
 using ManagedShell.Common.Logging;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Common.Helpers
 {
     public static class EnumUtility
     {

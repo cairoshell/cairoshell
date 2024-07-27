@@ -1,9 +1,8 @@
 ﻿using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Interfaces;
 using ManagedShell;
 using ManagedShell.AppBar;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Infrastructure.ObjectModel
 {
     public class CairoAppBarWindow : AppBarWindow
     {

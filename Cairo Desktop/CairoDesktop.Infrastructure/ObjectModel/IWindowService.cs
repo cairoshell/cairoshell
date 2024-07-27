@@ -1,11 +1,8 @@
-﻿using CairoDesktop.SupportingClasses;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using ManagedShell.AppBar;
 
-// TODO: Window services should move to the Infrastructure project
-
-namespace CairoDesktop.Services
+namespace CairoDesktop.Infrastructure.ObjectModel
 {
     public interface IWindowService : IDisposable
     {

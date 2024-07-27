@@ -5,7 +5,7 @@ using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Localization;
-using CairoDesktop.Services;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
@@ -44,7 +44,8 @@ namespace CairoDesktop
 
         private void SetSize()
         {
-            double size = WindowManager.PrimaryMonitorSize.Height - 100;
+            double screenHeight = ScreenHelper.PrimaryMonitorDeviceSize.Height / DpiHelper.DpiScale;
+            double size = screenHeight - 100;
             if (size >= maxSize)
             {
                 Height = maxSize;
@@ -54,13 +55,14 @@ namespace CairoDesktop
                 Height = size;
             }
 
-            MaxHeight = WindowManager.PrimaryMonitorSize.Height;
+            MaxHeight = screenHeight;
         }
 
         private void SetLocation()
         {
-            Left = (SystemParameters.FullPrimaryScreenWidth - Width) / 2;
-            Top = (SystemParameters.FullPrimaryScreenHeight - Height) / 2;
+            var screenSize = ScreenHelper.PrimaryMonitorDeviceSize;
+            Left = ((screenSize.Width / DpiHelper.DpiScale) - Width) / 2;
+            Top = ((screenSize.Height / DpiHelper.DpiScale) - Height) / 2;
 
             WindowStartupLocation = WindowStartupLocation.Manual;
         }

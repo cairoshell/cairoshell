@@ -1,37 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
-using CairoDesktop.Infrastructure.Services;
-using CairoDesktop.Interfaces;
-using CairoDesktop.SupportingClasses;
+using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.AppBar;
-using ManagedShell.Common.Helpers;
 using Microsoft.Extensions.Logging;
 
-namespace CairoDesktop.Services
+namespace CairoDesktop.Infrastructure.Services
 {
     public sealed class WindowManager : IWindowManager, IDisposable
     {
-        // TODO: Do something better with these static properties
-        public static System.Drawing.Size PrimaryMonitorSize
-        {
-            get
-            {
-                return new System.Drawing.Size(Convert.ToInt32(SystemParameters.PrimaryScreenWidth / DpiHelper.DpiScaleAdjustment), Convert.ToInt32(SystemParameters.PrimaryScreenHeight / DpiHelper.DpiScaleAdjustment));
-            }
-        }
-
-        public static System.Drawing.Size PrimaryMonitorWorkArea
-        {
-            get
-            {
-                return new System.Drawing.Size(SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left, SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top);
-            }
-        }
-
-
         private bool _isSettingDisplays;
         private bool hasCompletedInitialDisplaySetup;
         private int pendingDisplayEvents;
@@ -71,14 +49,12 @@ namespace CairoDesktop.Services
 
         public List<AppBarScreen> ScreenState { get; set; }
 
-        public WindowManager(ILogger<WindowManager> logger, ShellManagerService shellManagerService, IDesktopManager desktopManager)
+        public WindowManager(ILogger<WindowManager> logger, ShellManagerService shellManagerService)
         {
             ScreenState = new List<AppBarScreen>();
 
             _appBarManager = shellManagerService.ShellManager.AppBarManager;
             _logger = logger;
-
-            desktopManager.Initialize(this);
 
             // start a timer to handle orphaned display events
             DispatcherTimer notificationCheckTimer = new DispatcherTimer();
@@ -360,7 +336,7 @@ namespace CairoDesktop.Services
             }
         }
 
-        public static T GetScreenWindow<T>(List<T> windowList, AppBarScreen screen) where T : AppBarWindow
+        public T GetScreenWindow<T>(List<T> windowList, AppBarScreen screen) where T : AppBarWindow
         {
             foreach (AppBarWindow window in windowList)
             {

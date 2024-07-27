@@ -15,7 +15,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Interfaces;
+using CairoDesktop.Infrastructure.ObjectModel;
 using CairoDesktop.Services;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
@@ -26,7 +26,6 @@ using ManagedShell.ShellFolders.Enums;
 using DataFormats = System.Windows.DataFormats;
 using DragDropEffects = System.Windows.DragDropEffects;
 using DragEventArgs = System.Windows.DragEventArgs;
-using CairoDesktop.Infrastructure.ObjectModel;
 using System.Collections.Generic;
 
 namespace CairoDesktop
@@ -40,7 +39,7 @@ namespace CairoDesktop
         private bool altF4Pressed;
         private readonly AppBarManager _appBarManager;
         private readonly ICommandService _commandService;
-        private readonly IDesktopManager _desktopManager;
+        private readonly DesktopManager _desktopManager;
         private readonly FullScreenHelper _fullScreenHelper;
         private readonly FileOperationWorker _fileWorker;
         private readonly ISettingsUIService _settingsUiService;
@@ -53,7 +52,7 @@ namespace CairoDesktop
         private Brush BackgroundBrush { get; set; }
         private Dictionary<uint, string> ContextMenuCommandUIDs = new Dictionary<uint, string>();
 
-        public Desktop(IDesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings)
+        public Desktop(DesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings)
         {
             InitializeComponent();
 
@@ -301,7 +300,7 @@ namespace CairoDesktop
                 left = (0 - SystemInformation.VirtualScreen.Left + SystemInformation.WorkingArea.Left) / DpiHelper.DpiScale;
             }
 
-            grid.Width = WindowManager.PrimaryMonitorWorkArea.Width / DpiHelper.DpiScale;
+            grid.Width = (SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left) / DpiHelper.DpiScale;
 
             if (_settings.TaskbarMode == 1)
             {
@@ -312,7 +311,7 @@ namespace CairoDesktop
                 AppBarScreen screen = AppBarScreen.FromPrimaryScreen();
                 NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(ref dpiScale, screen, false, false);
 
-                grid.Height = (WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale) - ((screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale);
+                grid.Height = ((SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale) - ((screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale);
 
                 if (_settings.TaskbarEdge == AppBarEdge.Top)
                 {
@@ -321,7 +320,7 @@ namespace CairoDesktop
             }
             else
             {
-                grid.Height = WindowManager.PrimaryMonitorWorkArea.Height / DpiHelper.DpiScale;
+                grid.Height = (SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale;
             }
 
             grid.Margin = new Thickness(left, top, 0, 0);

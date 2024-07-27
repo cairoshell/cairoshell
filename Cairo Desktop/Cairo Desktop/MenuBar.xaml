@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<supportingclasses:CairoAppBarWindow
-        xmlns:supportingclasses="clr-namespace:CairoDesktop.SupportingClasses"
+<objectModel:CairoAppBarWindow
+        xmlns:objectModel="clr-namespace:CairoDesktop.Infrastructure.ObjectModel;assembly=CairoDesktop.Infrastructure"
         xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
@@ -71,4 +71,4 @@
         <!-- Last item added to DockPanel fills the remaining space! -->
         <control:StacksContainer x:Name="stacksContainer" />
     </DockPanel>
-</supportingclasses:CairoAppBarWindow>
+</objectModel:CairoAppBarWindow>

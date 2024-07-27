@@ -9,16 +9,13 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
-using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Common;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace CairoDesktop
+namespace CairoDesktop.Common
 {
     /// <summary>
     /// Interaction logic for Icon.xaml
@@ -42,9 +39,9 @@ namespace CairoDesktop
         public event EventHandler IconLoaded;
         public event EventHandler IconUnloaded;
 
-        internal bool IsRenaming;
-        private ShellFile file;
-        
+        public bool IsRenaming { get; private set; }
+        public ShellFile File { get; private set; }
+
         private readonly FileOperationWorker _fileWorker;
 
         public Icon()
@@ -77,8 +74,8 @@ namespace CairoDesktop
             Settings.Instance.PropertyChanged += Instance_PropertyChanged;
 
             // set ShellFile from binding
-            file = DataContext as ShellFile;
-            if (file != null)
+            File = DataContext as ShellFile;
+            if (File != null)
             {
                 // adjust appearance based on settings and usage
                 if (Location == "Desktop")
@@ -110,7 +107,7 @@ namespace CairoDesktop
                     imgIcon.SetBinding(Image.SourceProperty, iconBinding);
                 }
                 
-                if (!file.IsFolder && ImageFileTypes.Contains(Path.GetExtension(file.Path).ToLower()))
+                if (!File.IsFolder && ImageFileTypes.Contains(Path.GetExtension(File.Path).ToLower()))
                 {
                     // set icon thumbnail shadow
                     imgIcon.Effect = new DropShadowEffect
@@ -195,7 +192,7 @@ namespace CairoDesktop
         }
 
         #region Rename
-        internal void BeginRename()
+        public void BeginRename()
         {
             txtRename.Visibility = Visibility.Visible;
             bdrFilename.Visibility = Visibility.Collapsed;
@@ -216,18 +213,18 @@ namespace CairoDesktop
         {
             TextBox box = sender as TextBox;
 
-            if (box == null || file == null)
+            if (box == null || File == null)
             {
                 return;
             }
             
             try
             {
-                file.Rename(box.Text);
+                File.Rename(box.Text);
             }
             catch (Exception exception)
             {
-                box.Text = file.FileName;
+                box.Text = File.FileName;
                 CairoMessage.Show("The file was unable to be renamed because: " + exception.Message, "Unable to rename", MessageBoxButton.OK, CairoMessageImage.Error);
             }
 
@@ -297,7 +294,7 @@ namespace CairoDesktop
                 {
                     _fileWorker.PerformOperation(isDropMove ? FileOperation.Move : FileOperation.Copy, 
                         fileNames, 
-                        file.IsFolder ? file.Path : Path.GetDirectoryName(file.Path));
+                        File.IsFolder ? File.Path : Path.GetDirectoryName(File.Path));
 
                     e.Handled = true;
                 }
@@ -329,12 +326,12 @@ namespace CairoDesktop
 
         private void btnFile_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (file == null)
+            if (File == null)
             {
                 return;
             }
 
-            if (!file.IsFileSystem)
+            if (!File.IsFileSystem)
             {
                 // we can only perform file operations on filesystem objects
                 return;
@@ -368,7 +365,7 @@ namespace CairoDesktop
                         try
                         {
                             dragObject.SetFileDropList(
-                                new System.Collections.Specialized.StringCollection { file.Path });
+                                new System.Collections.Specialized.StringCollection { File.Path });
                             
                             DragDrop.DoDragDrop(button, dragObject,
                                 (e.RightButton == MouseButtonState.Pressed
@@ -403,57 +400,6 @@ namespace CairoDesktop
             Settings.Instance.PropertyChanged -= Instance_PropertyChanged;
 
             IconUnloaded?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void UserControl_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (IsRenaming)
-            {
-                return;
-            }
-
-            var commandService = CairoApplication.Current.Host.Services.GetService<ICommandService>();
-
-            switch (e.Key)
-            {
-                // [Ctrl] + [C] => Copy
-                case Key.C when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
-                    commandService.InvokeCommand("CopyFile", ("Path", file.Path));
-                    break;
-
-                // [Ctrl] + [X] => Cut
-                case Key.X when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
-                    // TODO: Not yet implemented
-                    break;
-
-                // [Ctrl] + [V] => Paste
-                case Key.V when Keyboard.Modifiers.HasFlag(ModifierKeys.Control):
-                    if(file.IsFolder)
-                    {
-                        // TODO: Paste item into folder?
-                    }
-                    break;
-
-                // [Delete] => Delete an item and place it into the Recycle Bin
-                case Key.Delete:
-                    commandService.InvokeCommand("DeleteFile", ("Path", file.Path));
-                    break;
-
-                // TODO: [Alt] + [Enter] => Open file properties
-                case Key.Enter when Keyboard.Modifiers.HasFlag(ModifierKeys.Alt):
-                    commandService.InvokeCommand("ShowFileProperties", ("Path", file.Path));
-                    break;
-
-                // [Enter] => Open file
-                case Key.Enter:
-                    commandService.InvokeCommand(file.IsFolder ? "OpenLocation" : "OpenFile", ("Path", file.Path));
-                    break;
-
-                // TODO: [F2] => Rename Item. Select name excluding file extension
-                case Key.F2:
-                    // TODO: Not yet implemented
-                    break;
-            }
         }
     }
 }

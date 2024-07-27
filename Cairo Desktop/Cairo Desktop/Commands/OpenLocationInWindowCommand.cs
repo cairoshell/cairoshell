@@ -3,7 +3,6 @@ using CairoDesktop.Application.Structs;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Localization;
 using CairoDesktop.Infrastructure.ObjectModel;
-using CairoDesktop.Interfaces;
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
 using System;
