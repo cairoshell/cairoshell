@@ -55,16 +55,21 @@ namespace CairoDesktop.Services
         {
             if (_settings.TaskbarMode == 2)
             {
-                if (sender is MenuBar menuBar)
+                if (sender is Taskbar)
                 {
-                    var taskbar = (Taskbar)_windowManager.GetScreenWindow(Windows, menuBar.Screen);
+                    return;
+                }
+
+                if (sender is CairoAppBarWindow otherBar)
+                {
+                    var taskbar = (Taskbar)_windowManager.GetScreenWindow(Windows, otherBar.Screen);
 
                     if (taskbar == null)
                     {
                         return;
                     }
 
-                    if (taskbar.AppBarEdge != menuBar.AppBarEdge)
+                    if (taskbar.AppBarEdge != otherBar.AppBarEdge)
                     {
                         return;
                     }
