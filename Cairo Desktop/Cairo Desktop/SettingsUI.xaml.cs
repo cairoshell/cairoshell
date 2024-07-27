@@ -919,28 +919,28 @@ namespace CairoDesktop
             string regWallpaperStyle = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "WallpaperStyle", "") as string;
             string regTileWallpaper = Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\Desktop", "TileWallpaper", "") as string;
 
-            Desktop.CairoWallpaperStyle style = Desktop.CairoWallpaperStyle.Stretch;
+            CairoWallpaperStyle style = CairoWallpaperStyle.Stretch;
             // https://docs.microsoft.com/en-us/windows/desktop/Controls/themesfileformat-overview
             switch ($"{regWallpaperStyle}{regTileWallpaper}")
             {
                 case "01": // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
-                    style = Desktop.CairoWallpaperStyle.Tile;
+                    style = CairoWallpaperStyle.Tile;
                     break;
                 case "00": // Centered { WallpaperStyle = 1; TileWallpaper = 0 }
-                    style = Desktop.CairoWallpaperStyle.Center;
+                    style = CairoWallpaperStyle.Center;
                     break;
                 case "60": // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
-                    style = Desktop.CairoWallpaperStyle.Fit;
+                    style = CairoWallpaperStyle.Fit;
                     break;
                 case "100": // Fill { WallpaperStyle = 10; TileWallpaper = 0 }
-                    style = Desktop.CairoWallpaperStyle.Fill;
+                    style = CairoWallpaperStyle.Fill;
                     break;
                 case "220": // Span { WallpaperStyle = 10; TileWallpaper = 0 }
-                    style = Desktop.CairoWallpaperStyle.Span;
+                    style = CairoWallpaperStyle.Span;
                     break;
                 case "20": // Stretched { WallpaperStyle = 2; TileWallpaper = 0 }
                 default:
-                    style = Desktop.CairoWallpaperStyle.Stretch;
+                    style = CairoWallpaperStyle.Stretch;
                     break;
             }
 
@@ -948,28 +948,28 @@ namespace CairoDesktop
 
             #endregion
 
-            foreach (var backgroundStyleItem in Enum.GetValues(typeof(Desktop.CairoWallpaperStyle)).Cast<Desktop.CairoWallpaperStyle>())
+            foreach (var backgroundStyleItem in Enum.GetValues(typeof(CairoWallpaperStyle)).Cast<CairoWallpaperStyle>())
             {
                 string display;
 
                 switch (backgroundStyleItem)
                 {
-                    case Desktop.CairoWallpaperStyle.Center:
+                    case CairoWallpaperStyle.Center:
                         display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Center;
                         break;
-                    case Desktop.CairoWallpaperStyle.Fill:
+                    case CairoWallpaperStyle.Fill:
                         display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Fill;
                         break;
-                    case Desktop.CairoWallpaperStyle.Fit:
+                    case CairoWallpaperStyle.Fit:
                         display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Fit;
                         break;
-                    case Desktop.CairoWallpaperStyle.Span:
+                    case CairoWallpaperStyle.Span:
                         display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Span;
                         break;
-                    case Desktop.CairoWallpaperStyle.Stretch:
+                    case CairoWallpaperStyle.Stretch:
                         display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Stretch;
                         break;
-                    case Desktop.CairoWallpaperStyle.Tile:
+                    case CairoWallpaperStyle.Tile:
                         display = Common.Localization.DisplayString.sSettings_Desktop_BackgroundStyle_Tile;
                         break;
                     default:
@@ -997,7 +997,7 @@ namespace CairoDesktop
                     };
                     cboCairoBackgroundStyle.Items.Add(cboImageItem);
 
-                    if (backgroundStyleItem == (Desktop.CairoWallpaperStyle)_settings.CairoBackgroundImageStyle) cboImageItem.IsSelected = true;
+                    if (backgroundStyleItem == (CairoWallpaperStyle)_settings.CairoBackgroundImageStyle) cboImageItem.IsSelected = true;
 
                     // bing
                     ComboBoxItem cboBingItem = new ComboBoxItem()
@@ -1007,7 +1007,7 @@ namespace CairoDesktop
                     };
                     cboBingBackgroundStyle.Items.Add(cboBingItem);
 
-                    if (backgroundStyleItem == (Desktop.CairoWallpaperStyle)_settings.BingWallpaperStyle) cboBingItem.IsSelected = true;
+                    if (backgroundStyleItem == (CairoWallpaperStyle)_settings.BingWallpaperStyle) cboBingItem.IsSelected = true;
                 }
             }
 
@@ -1178,23 +1178,23 @@ namespace CairoDesktop
 
                 switch ((cboWindowsBackgroundStyle.SelectedItem as ComboBoxItem).Tag)
                 {
-                    case Desktop.CairoWallpaperStyle.Tile: // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
+                    case CairoWallpaperStyle.Tile: // Tiled { WallpaperStyle = 0; TileWallpaper = 1 }
                         wallpaperStyle = "0";
                         tileWallpaper = "1";
                         break;
-                    case Desktop.CairoWallpaperStyle.Center: // Centered { WallpaperStyle = 0; TileWallpaper = 0 }
+                    case CairoWallpaperStyle.Center: // Centered { WallpaperStyle = 0; TileWallpaper = 0 }
                         wallpaperStyle = "0";
                         tileWallpaper = "0";
                         break;
-                    case Desktop.CairoWallpaperStyle.Fit: // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
+                    case CairoWallpaperStyle.Fit: // Fit { WallpaperStyle = 6; TileWallpaper = 0 }
                         wallpaperStyle = "6";
                         tileWallpaper = "0";
                         break;
-                    case Desktop.CairoWallpaperStyle.Fill: // Fill { WallpaperStyle = 10; TileWallpaper = 0 }
+                    case CairoWallpaperStyle.Fill: // Fill { WallpaperStyle = 10; TileWallpaper = 0 }
                         wallpaperStyle = "10";
                         tileWallpaper = "0";
                         break;
-                    case Desktop.CairoWallpaperStyle.Span: // Span { WallpaperStyle = 22; TileWallpaper = 0 }
+                    case CairoWallpaperStyle.Span: // Span { WallpaperStyle = 22; TileWallpaper = 0 }
                         wallpaperStyle = "22";
                         tileWallpaper = "0";
                         break;
