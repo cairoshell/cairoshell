@@ -281,7 +281,7 @@ namespace CairoDesktop
                 /*if (keyboardListener == null)
                     keyboardListener = new LowLevelKeyboardListener();
 
-                keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
+                keyboardListener.OnKeyReleased += keyboardListener_OnKeyReleased;
                 keyboardListener.HookKeyboard();*/
 
                 programsMenuHotKeys.Add(new HotKey(Key.LWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
@@ -462,7 +462,7 @@ namespace CairoDesktop
             }
         }
 
-        private void keyboardListener_OnKeyPressed(object sender, Common.KeyEventArgs e)
+        private void keyboardListener_OnKeyReleased(object sender, Common.KeyEventArgs e)
         {
             if (e.Key == Key.LWin || e.Key == Key.RWin)
             {
