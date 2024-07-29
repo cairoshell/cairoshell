@@ -239,16 +239,14 @@ namespace CairoDesktop.MenuBar {
             // TODO: When this becomes an extension, use injected IDesktopManager
             var desktopManager = MenuBar?._host.Services.GetService<IDesktopManager>();
 
-            if (!Settings.Instance.EnableDynamicDesktop || desktopManager?.IsEnabled != true)
+            ContextMenu menu = (sender as ContextMenu);
+            foreach (Control item in menu.Items)
             {
-                ContextMenu menu = (sender as ContextMenu);
-                foreach (Control item in menu.Items)
+                if (item.Name == "miOpenOnDesktop")
                 {
-                    if (item.Name == "miOpenOnDesktop")
-                    {
-                        item.Visibility = Visibility.Collapsed;
-                        return;
-                    }
+                    item.Visibility = (!Settings.Instance.EnableDynamicDesktop || desktopManager?.IsEnabled != true) ?
+                        Visibility.Collapsed : Visibility.Visible;
+                    return;
                 }
             }
         }
