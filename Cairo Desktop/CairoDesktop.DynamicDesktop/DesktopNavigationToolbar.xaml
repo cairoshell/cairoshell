@@ -1,4 +1,4 @@
-﻿<Window x:Class="CairoDesktop.DesktopNavigationToolbar"
+﻿<Window x:Class="CairoDesktop.DynamicDesktop.DesktopNavigationToolbar"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
@@ -75,7 +75,7 @@
                     Click="btnBack_Click"
                     MouseRightButtonDown="btnBack_MouseRightButtonDown"
                     ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Back)}">
-                <Image Source="Resources\controlsBack.png"
+                <Image Source="{DynamicResource DesktopToolbarBackIcon}"
                        Width="16"
                        Height="18" />
             </Button>
@@ -84,7 +84,7 @@
                     Margin="22,0,-1,0"
                     Click="btnUp_Click"
                     ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Up)}">
-                <Image Source="Resources\controlsUp.png"
+                <Image Source="{DynamicResource DesktopToolbarUpIcon}"
                        Width="18"
                        Height="16" />
             </Button>
@@ -93,7 +93,7 @@
                     Click="btnHome_Click"
                     MouseRightButtonDown="btnHome_MouseRightButtonDown"
                     ToolTip="{Binding Path=NavigationManager.HomePathFriendly}">
-                <Image Source="Resources\controlsHome.png"
+                <Image Source="{DynamicResource DesktopToolbarHomeIcon}"
                        Width="19"
                        Height="19" />
             </Button>
@@ -102,7 +102,7 @@
                     Click="btnBrowse_Click"
                     MouseRightButtonDown="btnBrowse_MouseRightButtonDown"
                     ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Browse)}">
-                <Image Source="Resources\controlsBrowse.png"
+                <Image Source="{DynamicResource DesktopToolbarBrowseIcon}"
                        Width="21"
                        Height="17" />
             </Button>
@@ -111,7 +111,7 @@
                     Click="btnFwd_Click"
                     ToolTip="{Binding Path=(l10n:DisplayString.sDesktop_Forward)}"
                     IsEnabled="{Binding Path=NavigationManager.CanGoForward}">
-                <Image Source="Resources\controlsForward.png"
+                <Image Source="{DynamicResource DesktopToolbarForwardIcon}"
                        Width="16"
                        Height="18" />
             </Button>

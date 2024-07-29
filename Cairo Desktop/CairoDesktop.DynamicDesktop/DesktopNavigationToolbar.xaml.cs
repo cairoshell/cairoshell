@@ -10,13 +10,13 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Controls;
 using CairoDesktop.Application.Interfaces;
-using CairoDesktop.Services;
+using CairoDesktop.DynamicDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
 using static ManagedShell.Interop.NativeMethods;
 
-namespace CairoDesktop
+namespace CairoDesktop.DynamicDesktop
 {
     /// <summary>
     /// Interaction logic for DesktopNavigationToolbar.xaml

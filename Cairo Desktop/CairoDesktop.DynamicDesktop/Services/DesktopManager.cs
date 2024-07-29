@@ -15,7 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
-namespace CairoDesktop.Services
+namespace CairoDesktop.DynamicDesktop.Services
 {
     public class DesktopManager : IDesktopManager, INotifyPropertyChanged, IDisposable
     {
@@ -126,7 +126,7 @@ namespace CairoDesktop.Services
             if (DesktopWindow != null)
                 return;
 
-            DesktopWindow = new Desktop(this, _shellManager.AppBarManager, _shellManager.FullScreenHelper, _settingsUiService, _commandService, _settings);
+            DesktopWindow = new Desktop(this, _cairoApplication, _shellManager.AppBarManager, _shellManager.FullScreenHelper, _settingsUiService, _commandService, _settings);
             DesktopWindow.WorkAreaChanged += WorkAreaChanged;
             DesktopWindow.Show();
         }

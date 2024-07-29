@@ -2,13 +2,13 @@
 using CairoDesktop.Application.Structs;
 using CairoDesktop.Common.Localization;
 using CairoDesktop.Infrastructure.ObjectModel;
-using CairoDesktop.Services;
+using CairoDesktop.DynamicDesktop.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace CairoDesktop.Commands
+namespace CairoDesktop.DynamicDesktop.Commands
 {
     public class ToggleDesktopOverlayCommand : ICairoCommand, IDisposable
     {

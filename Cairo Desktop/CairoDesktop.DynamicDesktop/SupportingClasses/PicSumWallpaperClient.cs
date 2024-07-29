@@ -5,7 +5,7 @@ using System.Net;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.DynamicDesktop.SupportingClasses
 {
     /// <summary>
     /// https://picsum.photos/

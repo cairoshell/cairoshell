@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Localization;
-using CairoDesktop.Services;
+using CairoDesktop.DynamicDesktop.Services;
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
@@ -17,7 +17,7 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.ObjectModel;
 using System.Collections.Generic;
 
-namespace CairoDesktop
+namespace CairoDesktop.DynamicDesktop
 {
     /// <summary>
     /// Interaction logic for DesktopIcons.xaml

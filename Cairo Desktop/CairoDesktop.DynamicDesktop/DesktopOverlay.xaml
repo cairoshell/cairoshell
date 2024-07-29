@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Window x:Class="CairoDesktop.DesktopOverlay" 
+<Window x:Class="CairoDesktop.DynamicDesktop.DesktopOverlay" 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         Title=""

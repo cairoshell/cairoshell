@@ -1,4 +1,4 @@
-﻿namespace CairoDesktop.SupportingClasses
+﻿namespace CairoDesktop.DynamicDesktop.SupportingClasses
 {
     using System;
     using System.Drawing;

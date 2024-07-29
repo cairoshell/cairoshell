@@ -1,5 +1,4 @@
 ﻿using CairoDesktop.Common;
-using CairoDesktop.SupportingClasses;
 using Microsoft.Win32;
 using System;
 using System.Collections.Specialized;
@@ -16,7 +15,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.ObjectModel;
-using CairoDesktop.Services;
+using CairoDesktop.DynamicDesktop.Services;
+using CairoDesktop.DynamicDesktop.SupportingClasses;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -28,7 +28,7 @@ using DragDropEffects = System.Windows.DragDropEffects;
 using DragEventArgs = System.Windows.DragEventArgs;
 using System.Collections.Generic;
 
-namespace CairoDesktop
+namespace CairoDesktop.DynamicDesktop
 {
     /// <summary>
     /// Interaction logic for Desktop.xaml
@@ -38,6 +38,7 @@ namespace CairoDesktop
         private WindowInteropHelper helper;
         private bool altF4Pressed;
         private readonly AppBarManager _appBarManager;
+        private readonly ICairoApplication _cairoApplication;
         private readonly ICommandService _commandService;
         private readonly DesktopManager _desktopManager;
         private readonly FullScreenHelper _fullScreenHelper;
@@ -52,11 +53,12 @@ namespace CairoDesktop
         private Brush BackgroundBrush { get; set; }
         private Dictionary<uint, string> ContextMenuCommandUIDs = new Dictionary<uint, string>();
 
-        public Desktop(DesktopManager desktopManager, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings)
+        public Desktop(DesktopManager desktopManager, ICairoApplication cairoApplication, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings)
         {
             InitializeComponent();
 
             _appBarManager = appBarManager;
+            _cairoApplication = cairoApplication;
             _commandService = commandService;
             _desktopManager = desktopManager;
             _fullScreenHelper = fullScreenHelper;
@@ -787,7 +789,7 @@ namespace CairoDesktop
                         break;
                     }
                     // must be "New" menu
-                    CairoApplication.Current.Dispatcher.Invoke(() =>
+                    _cairoApplication.Dispatch(() =>
                     {
                         if (_desktopManager.IsOverlayOpen)
                         {
@@ -807,7 +809,7 @@ namespace CairoDesktop
         private void ShellNew_FileCreated(object sender, NotifyCollectionChangedEventArgs e)
         {
             // file was created due to usage of the shell new menu
-            CairoApplication.Current.Dispatcher.Invoke(() =>
+            _cairoApplication.Dispatch(() =>
             {
                 _desktopManager.DesktopLocation.Files.CollectionChanged -= ShellNew_FileCreated;
 
