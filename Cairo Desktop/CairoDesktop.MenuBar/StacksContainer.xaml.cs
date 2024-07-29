@@ -7,11 +7,11 @@ using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.ShellFolders;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CairoDesktop {
+namespace CairoDesktop.MenuBar {
     /// <summary>
     /// Interaction logic for StacksContainer.xaml
     /// </summary>
-    public partial class StacksContainer : UserControl 
+    public partial class StacksContainer : UserControl
     {
         public MenuBar MenuBar;
 
@@ -236,9 +236,10 @@ namespace CairoDesktop {
         {
             startPoint = null;
             ctxOpen = true;
-            var desktopManager = CairoApplication.Current.Host.Services.GetService<IDesktopManager>();
+            // TODO: When this becomes an extension, use injected IDesktopManager
+            var desktopManager = MenuBar?._host.Services.GetService<IDesktopManager>();
 
-            if (!Settings.Instance.EnableDynamicDesktop || !desktopManager.IsEnabled)
+            if (!Settings.Instance.EnableDynamicDesktop || desktopManager?.IsEnabled != true)
             {
                 ContextMenu menu = (sender as ContextMenu);
                 foreach (Control item in menu.Items)

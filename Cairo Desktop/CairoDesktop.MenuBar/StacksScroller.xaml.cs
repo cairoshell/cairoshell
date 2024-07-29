@@ -15,7 +15,7 @@ using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
 
-namespace CairoDesktop
+namespace CairoDesktop.MenuBar
 {
     /// <summary>
     /// Interaction logic for StacksScroller.xaml

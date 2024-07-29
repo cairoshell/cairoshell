@@ -4,9 +4,8 @@ using CairoDesktop.Common.Localization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ManagedShell.Common.Helpers;
 
-namespace CairoDesktop
+namespace CairoDesktop.MenuBar
 {
     /// <summary>
     /// Interaction logic for ProgramsMenu.xaml

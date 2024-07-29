@@ -19,8 +19,9 @@ using ManagedShell.Common.Enums;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 using System.Windows.Threading;
 using ManagedShell.ShellFolders;
+using Microsoft.Extensions.Hosting;
 
-namespace CairoDesktop
+namespace CairoDesktop.MenuBar
 {
     public partial class MenuBar : CairoAppBarWindow, IMenuBar
     {
@@ -28,6 +29,7 @@ namespace CairoDesktop
         private readonly IApplicationUpdateService _applicationUpdateService;
         private readonly ISettingsUIService _settingsUiService;
         internal readonly ICommandService _commandService;
+        internal readonly IHost _host;
         private readonly Settings _settings;
 
         private bool isCairoMenuInitialized;
@@ -38,15 +40,16 @@ namespace CairoDesktop
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
+        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IHost host, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
         {
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
             _settingsUiService = settingsUiService;
             _commandService = commandService;
+            _host = host;
             _settings = settings;
 
-            object menuBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["MenuBarWindowAllowsTransparency"];
+            object menuBarWindowAllowsTransparencyResource = TryFindResource("MenuBarWindowAllowsTransparency");
             if (menuBarWindowAllowsTransparencyResource is bool resourceValue)
                 AllowsTransparency = resourceValue;
 

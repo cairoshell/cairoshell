@@ -8,7 +8,7 @@ using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.Common.Helpers;
 using System.Windows.Media;
 
-namespace CairoDesktop
+namespace CairoDesktop.MenuBar
 {
     /// <summary>
     /// Interaction logic for MenuBarShadow.xaml
