@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Interop;
 using ManagedShell.Interop;
 
-namespace CairoDesktop
+namespace CairoDesktop.Taskbar
 {
     /// <summary>
     /// Interaction logic for DwmThumbnail.xaml

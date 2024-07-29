@@ -1,7 +1,8 @@
-﻿using System;
+﻿using CairoDesktop.Taskbar.SupportingClasses;
+using System;
 using System.Windows.Data;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Taskbar.Converters
 {
     [ValueConversion(typeof(CollectionViewGroup), typeof(TaskGroup))]
     public class TaskGroupConverter : IValueConverter

@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              mc:Ignorable="d" 
              xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
-             x:Class="CairoDesktop.QuickLaunchButton"
+             x:Class="CairoDesktop.Taskbar.QuickLaunchButton"
              x:Name="UserControl"
              d:DesignWidth="26"
              d:DesignHeight="29">

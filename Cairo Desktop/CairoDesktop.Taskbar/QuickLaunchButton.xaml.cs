@@ -7,7 +7,7 @@ using CairoDesktop.AppGrabber;
 using CairoDesktop.Common;
 using ManagedShell.Common.Helpers;
 
-namespace CairoDesktop
+namespace CairoDesktop.Taskbar
 {
 	public partial class QuickLaunchButton
 	{

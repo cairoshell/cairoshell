@@ -1,6 +1,6 @@
 ﻿using ManagedShell.WindowsTasks;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Taskbar.SupportingClasses
 {
     public class ApplicationTaskCategoryProvider : ITaskCategoryProvider
     {

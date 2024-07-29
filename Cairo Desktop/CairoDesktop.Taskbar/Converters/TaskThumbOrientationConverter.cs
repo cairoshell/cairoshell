@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Taskbar.Converters
 {
     [ValueConversion(typeof(bool), typeof(Orientation))]
     public class TaskThumbOrientationConverter : IValueConverter

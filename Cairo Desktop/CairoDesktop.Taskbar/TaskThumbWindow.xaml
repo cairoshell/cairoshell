@@ -1,8 +1,8 @@
-﻿<Window x:Class="CairoDesktop.TaskThumbWindow"
+﻿<Window x:Class="CairoDesktop.Taskbar.TaskThumbWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:CairoDesktop"
-        xmlns:support="clr-namespace:CairoDesktop.SupportingClasses" 
+        xmlns:local="clr-namespace:CairoDesktop.Taskbar"
+        xmlns:converters="clr-namespace:CairoDesktop.Taskbar.Converters" 
         Title="TaskThumbWindow"
         SizeToContent="WidthAndHeight"
         Focusable="False"
@@ -22,7 +22,7 @@
         x:Name="ThumbWindow">
     <Window.Resources>
         <ResourceDictionary>
-            <support:TaskThumbOrientationConverter x:Key="orientationConverter" />
+            <converters:TaskThumbOrientationConverter x:Key="orientationConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <Border Name="bdrThumb"

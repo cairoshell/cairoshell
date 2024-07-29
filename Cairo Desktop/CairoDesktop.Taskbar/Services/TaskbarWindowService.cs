@@ -5,7 +5,7 @@ using CairoDesktop.Infrastructure.ObjectModel;
 using CairoDesktop.Infrastructure.Services;
 using ManagedShell.AppBar;
 
-namespace CairoDesktop.Services
+namespace CairoDesktop.Taskbar.Services
 {
     public class TaskbarWindowService : AppBarWindowService
     {

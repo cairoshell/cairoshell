@@ -85,7 +85,8 @@
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj" />
     <ProjectReference Include="..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj" />
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
-    <ProjectReference Include="..\CairoDesktop.MenuBarExtensions\CairoDesktop.MenuBarExtensions.csproj" />
+	<ProjectReference Include="..\CairoDesktop.MenuBarExtensions\CairoDesktop.MenuBarExtensions.csproj" />
+	<ProjectReference Include="..\CairoDesktop.Taskbar\CairoDesktop.Taskbar.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -103,14 +104,14 @@
     <Resource Include="Resources\searchBlack.png" />
     <Resource Include="Resources\menubarWhite.png" />
     <Resource Include="Resources\nullIcon.png" />
-    <Resource Include="Resources\taskListIcon.png" />
-    <Resource Include="Resources\controlsBrowse.png" />
-    <Resource Include="Resources\taskViewIcon.png" />
-    <Resource Include="Resources\actionCenterDefault.png" />
-    <Resource Include="Resources\actionCenterBlack.png" />
-    <Resource Include="Resources\cairoMenuBlack.png" />
-    <Resource Include="Resources\cairoMenuDefault.png" />
-    <Resource Include="Resources\desktopOverlayIcon.png" />
+	<Resource Include="Resources\taskListIcon.png" />
+	<Resource Include="Resources\controlsBrowse.png" />
+	<Resource Include="Resources\taskViewIcon.png" />
+	<Resource Include="Resources\actionCenterDefault.png" />
+	<Resource Include="Resources\actionCenterBlack.png" />
+	<Resource Include="Resources\cairoMenuBlack.png" />
+	<Resource Include="Resources\cairoMenuDefault.png" />
+	<Resource Include="Resources\desktopOverlayIcon.png" />
     <Resource Include="Resources\Welcome\cairoIcon.png" />
     <Resource Include="Resources\Welcome\desktop.jpg" />
     <Resource Include="Resources\Welcome\menuBar.png" />

@@ -1,6 +1,6 @@
 ﻿using CairoDesktop.Common;
 using ManagedShell.Interop;
-using CairoDesktop.SupportingClasses;
+using CairoDesktop.Taskbar.SupportingClasses;
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -14,7 +14,7 @@ using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
 
-namespace CairoDesktop
+namespace CairoDesktop.Taskbar
 {
     /// <summary>
     /// Interaction logic for Taskbar.xaml
@@ -79,7 +79,7 @@ namespace CairoDesktop
             int modeSetting) 
             : base(cairoApplication, shellManager, windowManager, screen, edge, modeSetting, 0)
         {
-            object taskBarWindowAllowsTransparencyResource = CairoApplication.Current.Resources["TaskBarWindowAllowsTransparency"];
+            object taskBarWindowAllowsTransparencyResource = TryFindResource("TaskBarWindowAllowsTransparency");
             if (taskBarWindowAllowsTransparencyResource is bool resourceValue)
                 AllowsTransparency = resourceValue;
 

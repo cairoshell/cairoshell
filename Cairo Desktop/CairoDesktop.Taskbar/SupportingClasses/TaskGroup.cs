@@ -14,7 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Taskbar.SupportingClasses
 {
     public class TaskGroup : INotifyPropertyChanged, IDisposable
     {

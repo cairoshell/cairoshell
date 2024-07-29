@@ -10,9 +10,9 @@ using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
 using System.Collections.ObjectModel;
-using CairoDesktop.SupportingClasses;
+using CairoDesktop.Taskbar.SupportingClasses;
 
-namespace CairoDesktop
+namespace CairoDesktop.Taskbar
 {
     public partial class TaskButton
     {

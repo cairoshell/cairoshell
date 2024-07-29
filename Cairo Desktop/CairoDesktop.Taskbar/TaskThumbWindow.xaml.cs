@@ -11,7 +11,7 @@ using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
-namespace CairoDesktop
+namespace CairoDesktop.Taskbar
 {
     /// <summary>
     /// Interaction logic for TaskThumbWindow.xaml

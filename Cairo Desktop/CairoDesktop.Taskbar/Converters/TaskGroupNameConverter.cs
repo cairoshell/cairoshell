@@ -3,7 +3,7 @@ using ManagedShell.WindowsTasks;
 using System;
 using System.Windows.Data;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Taskbar.Converters
 {
     [ValueConversion(typeof(CollectionViewGroup), typeof(string))]
     public class TaskGroupNameConverter : IValueConverter

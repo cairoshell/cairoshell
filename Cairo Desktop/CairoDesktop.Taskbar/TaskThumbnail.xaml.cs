@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace CairoDesktop
+namespace CairoDesktop.Taskbar
 {
     /// <summary>
     /// Interaction logic for TaskThumbnail.xaml

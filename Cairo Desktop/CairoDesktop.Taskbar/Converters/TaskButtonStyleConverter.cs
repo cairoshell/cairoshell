@@ -4,7 +4,7 @@ using System.Windows.Data;
 using CairoDesktop.Common.Helpers;
 using ManagedShell.WindowsTasks;
 
-namespace CairoDesktop.SupportingClasses
+namespace CairoDesktop.Taskbar.Converters
 {
     [ValueConversion(typeof(bool), typeof(Style))]
     public class TaskButtonStyleConverter : IMultiValueConverter

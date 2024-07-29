@@ -14,6 +14,7 @@ using System;
 using System.IO;
 using CairoDesktop.Commands;
 using CairoDesktop.Infrastructure.ObjectModel;
+using CairoDesktop.Taskbar.Services;
 
 namespace CairoDesktop
 {
