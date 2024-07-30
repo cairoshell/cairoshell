@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<objectModel:CairoAppBarWindow
+        xmlns:objectModel="clr-namespace:CairoDesktop.Infrastructure.ObjectModel;assembly=CairoDesktop.Infrastructure"
+        xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
+        xmlns:control="clr-namespace:CairoDesktop.MenuBar"
+        x:Class="CairoDesktop.MenuBar.MenuBar"
+        x:Name="MenuBarWindow"
+        Height="23"
+        Top="0"
+        Style="{StaticResource MenuBarWindowStyle}"
+        Left="0"
+        Focusable="False"
+        LocationChanged="Window_LocationChanged"
+        MouseEnter="MenuBar_OnMouseEnter"
+        MouseLeave="MenuBar_OnMouseLeave"
+        MaxHeight="23">
+    <Window.DataContext>
+        <l10n:DisplayString />
+    </Window.DataContext>
+    <DockPanel Style="{StaticResource MenuBarStyle}"
+               x:Name="CairoMenuBarContainer">
+        <StackPanel Orientation="Horizontal"
+                    VerticalAlignment="Top"
+                    Height="24"
+                    Width="Auto"
+                    x:Name="CairoMenuBar">
+            <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
+                <MenuItem Style="{StaticResource CairoMenuItemCairoMenuStyle}"
+                          Name="CairoMenu"
+						  SubmenuOpened="CairoMenu_Opened">
+                    <MenuItem.Header>
+                        <Image Name="MenuIcon"
+                               Source="{DynamicResource MenuIcon}"
+                               Width="38"
+                               Height="22" />
+                    </MenuItem.Header>
+					<MenuItem />
+                </MenuItem>
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu)}"
+                          Name="ProgramsMenu"
+                          AllowDrop="True"
+                          Drop="ProgramsMenu_Drop"
+                          DragOver="ProgramsMenu_DragOver"
+                          ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}"
+                          TextBlock.FontWeight="SemiBold"
+                          StaysOpenOnClick="True">
+                    <MenuItem StaysOpenOnClick="True">
+                        <MenuItem.Header>
+                            <control:ProgramsMenu x:Name="programsMenuControl" />
+                        </MenuItem.Header>
+                    </MenuItem>
+                </MenuItem>
+				<MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu)}"
+						  Name="PlacesMenu"
+						  SubmenuOpened="PlacesMenu_Opened"
+                          TextBlock.FontWeight="SemiBold">
+					<MenuItem />
+				</MenuItem>
+            </Menu>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    DockPanel.Dock="Right"
+                    VerticalAlignment="Top"
+                    Height="24"
+                    HorizontalAlignment="Right"
+                    x:Name="MenuExtrasHost"
+                    Margin="0,0,0,0">
+        </StackPanel>
+        <!-- Last item added to DockPanel fills the remaining space! -->
+        <control:StacksContainer x:Name="stacksContainer" />
+    </DockPanel>
+</objectModel:CairoAppBarWindow>

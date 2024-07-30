@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="CairoDesktop.Taskbar.DwmThumbnail"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="120" 
+             Width="180" 
+             SizeChanged="UserControl_SizeChanged"
+             LayoutUpdated="UserControl_LayoutUpdated"
+             Initialized="UserControl_Initialized" 
+             Unloaded="UserControl_Unloaded" />
