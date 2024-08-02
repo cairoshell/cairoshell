@@ -8,9 +8,9 @@ namespace CairoDesktop.Application.Interfaces
 
         void WriteApplicationDebugInfoToConsole(Version productVersion);
 
-        void LoadCommands();
+        bool LoadCommands();
 
-        void LoadExtensions();
+        bool LoadExtensions();
 
         void SetTheme();
 

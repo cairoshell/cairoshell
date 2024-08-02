@@ -49,29 +49,45 @@ namespace CairoDesktop
             EnvironmentHelper.IsAppRunningAsShell = (NativeMethods.GetShellWindow() == IntPtr.Zero && !forceNoShell) || forceShell;
         }
 
-        void IInitializationService.LoadCommands()
+        bool IInitializationService.LoadCommands()
         {
             try
             {
                 var commandService = _host.Services.GetService<ICommandService>();
                 commandService?.Start();
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Unable to start command service due to exception in {ex.TargetSite?.Module}: {ex.Message}");
+                return false;
             }
         }
 
-        void IInitializationService.LoadExtensions()
+        bool IInitializationService.LoadExtensions()
         {
+            try
+            {
+                if (_options.CurrentValue.NoExtensions)
+                {
+                    _logger.LogInformation("Starting without custom extensions");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Unable to read extensions command line option: {e.Message}");
+            }
+
             try
             {
                 var pluginService = _host.Services.GetService<IExtensionService>();
                 pluginService?.Start();
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Unable to start extension service due to exception in {ex.TargetSite?.Module}: {ex.Message}");
+                return false;
             }
         }
 

@@ -9,5 +9,7 @@
         public bool Shell { get; set; }
 
         public bool NoShell { get; set; }
+
+        public bool NoExtensions { get; set; }
     }
 }

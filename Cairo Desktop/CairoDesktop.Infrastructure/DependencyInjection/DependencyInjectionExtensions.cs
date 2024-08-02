@@ -32,9 +32,18 @@ namespace CairoDesktop.Infrastructure.DependencyInjection
 
         public static IServiceCollection AddDependencyLoadingServices(this IServiceCollection services, IConfiguration configuration, string[] paths, string pattern = null)
         {
+            int numLoaded = 0;
+
             foreach (string path in paths)
             {
+                // The first path is always the inbox extensions path. If extensions are disabled, we want to skip loading all other paths.
+                if (numLoaded > 0 && configuration["NoExtensions"] == "true")
+                {
+                    continue;
+                }
+
                 services.AddDependencyLoadingServices(configuration, path, pattern);
+                numLoaded++;
             }
 
             return services;

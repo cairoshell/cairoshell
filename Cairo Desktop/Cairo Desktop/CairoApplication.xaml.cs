@@ -67,8 +67,7 @@ namespace CairoDesktop
 
             _initializationService.WriteApplicationDebugInfoToConsole(productVersion: ProductVersion);
 
-            _initializationService.LoadExtensions();
-            _initializationService.LoadCommands();
+            bool extensibilityLoaded = LoadExtensibility();
 
             _initializationService.SetTheme();
 
@@ -78,6 +77,13 @@ namespace CairoDesktop
             }
 
             base.OnStartup(e);
+
+            if (!extensibilityLoaded)
+            {
+                // Skip initializing anything else; we are going to restart.
+                RestartAfterExtensionsFailed();
+                return;
+            }
 
             _initializationService.SetupWindowServices();
 
@@ -209,7 +215,31 @@ namespace CairoDesktop
             return null;
         }
 
-        public void RestartCairo()
+        private bool LoadExtensibility()
+        {
+            bool extensionsLoaded = _initializationService.LoadExtensions();
+            bool commandsLoaded = _initializationService.LoadCommands();
+
+            try
+            {
+                // Ignore result if custom extensions are disabled.
+                if (_options.CurrentValue.NoExtensions) return true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Unable to read extensions command line option: {e.Message}");
+            }
+
+            return extensionsLoaded && commandsLoaded;
+        }
+
+        private void RestartAfterExtensionsFailed()
+        {
+            MessageBox.Show("One or more custom extensions failed to load. Try removing or updating custom extensions and restarting Cairo. More information may be available in Cairo logs.\r\n\r\nCairo will now start without custom extensions.", "Cairo Desktop Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            RestartCairo("/noextensions=true");
+        }
+
+        public void RestartCairo(string args = "")
         {
             try
             {
@@ -217,6 +247,12 @@ namespace CairoDesktop
                 Process current = new Process();
                 current.StartInfo.FileName = AppDomain.CurrentDomain.BaseDirectory + "CairoDesktop.exe";
                 current.StartInfo.Arguments = "/restart=true";
+
+                if (!string.IsNullOrEmpty(args))
+                {
+                    current.StartInfo.Arguments += $" {args}";
+                }
+
                 current.Start();
 
                 // close this instance

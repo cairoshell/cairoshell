@@ -19,7 +19,7 @@ namespace CairoDesktop.Application.Interfaces
 
         void ExitCairo();
 
-        void RestartCairo();
+        void RestartCairo(string args = "");
 
         int Run();
 
