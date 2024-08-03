@@ -106,15 +106,24 @@ namespace CairoDesktop
             _themeService.SetThemeFromSettings();
         }
 
-        void IInitializationService.SetupWindowServices()
+        bool IInitializationService.SetupWindowServices()
         {
-            foreach (var service in _host.Services.GetServices<IWindowService>())
+            try
             {
-                service.Register();
-            }
+                foreach (var service in _host.Services.GetServices<IWindowService>())
+                {
+                    service.Register();
+                }
 
-            _host.Services.GetService<IDesktopManager>()?.Initialize();
-            _host.Services.GetService<IWindowManager>()?.InitialSetup();
+                _host.Services.GetService<IDesktopManager>()?.Initialize();
+                _host.Services.GetService<IWindowManager>()?.InitialSetup();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Unable to start window services due to exception in {ex.TargetSite?.Module}: {ex.Message}");
+                return false;
+            }
         }
     }
 }

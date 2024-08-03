@@ -67,7 +67,8 @@ namespace CairoDesktop
 
             _initializationService.WriteApplicationDebugInfoToConsole(productVersion: ProductVersion);
 
-            bool extensibilityLoaded = LoadExtensibility();
+            bool extensionsLoaded = _initializationService.LoadExtensions();
+            bool commandsLoaded = _initializationService.LoadCommands();
 
             _initializationService.SetTheme();
 
@@ -78,14 +79,19 @@ namespace CairoDesktop
 
             base.OnStartup(e);
 
-            if (!extensibilityLoaded)
+            if ((!extensionsLoaded || !commandsLoaded) && !IsCustomExtensionsOff())
             {
-                // Skip initializing anything else; we are going to restart.
                 RestartAfterExtensionsFailed();
                 return;
             }
 
-            _initializationService.SetupWindowServices();
+            bool windowServicesLoaded = _initializationService.SetupWindowServices();
+
+            if (!windowServicesLoaded && !IsCustomExtensionsOff())
+            {
+                RestartAfterExtensionsFailed();
+                return;
+            }
 
             ShellHelper.SetShellReadyEvent();
 
@@ -215,22 +221,18 @@ namespace CairoDesktop
             return null;
         }
 
-        private bool LoadExtensibility()
+        private bool IsCustomExtensionsOff()
         {
-            bool extensionsLoaded = _initializationService.LoadExtensions();
-            bool commandsLoaded = _initializationService.LoadCommands();
-
             try
             {
-                // Ignore result if custom extensions are disabled.
-                if (_options.CurrentValue.NoExtensions) return true;
+                return _options.CurrentValue.NoExtensions;
             }
             catch (Exception e)
             {
                 _logger.LogError($"Unable to read extensions command line option: {e.Message}");
             }
 
-            return extensionsLoaded && commandsLoaded;
+            return false;
         }
 
         private void RestartAfterExtensionsFailed()

@@ -14,6 +14,6 @@ namespace CairoDesktop.Application.Interfaces
 
         void SetTheme();
 
-        void SetupWindowServices();
+        bool SetupWindowServices();
     }
 }
