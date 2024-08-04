@@ -3,6 +3,7 @@ using CairoDesktop.Infrastructure.ExtensionMethods;
 using ManagedShell;
 using System.Collections.Generic;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.Common;
 
 namespace CairoDesktop.MenuBarExtensions
 {
@@ -10,25 +11,27 @@ namespace CairoDesktop.MenuBarExtensions
     {
         private readonly ICairoApplication _cairoApplication;
         private readonly ICommandService _commandService;
+        private readonly Settings _settings;
         private readonly ShellManager _shellManager;
 
         public List<IMenuBarExtension> MenuExtras { get; private set; }
 
-        public MenuBarExtensionsShellExtension(ICairoApplication cairoApplication, ShellManagerService shellManagerService, ICommandService commandService)
+        public MenuBarExtensionsShellExtension(ICairoApplication cairoApplication, ShellManagerService shellManagerService, ICommandService commandService, Settings settings)
         {
             _cairoApplication = cairoApplication;
             _commandService = commandService;
+            _settings = settings;
             _shellManager = shellManagerService.ShellManager;
             MenuExtras = new List<IMenuBarExtension>();
         }
 
         public void Start()
         {
-            MenuExtras.AddRange(new ClockMenuBarExtension(_commandService),
-                new SystemTrayMenuBarExtension(_shellManager.NotificationArea),
-                new VolumeMenuBarExtension(),
-                new ActionCenterMenuBarExtension(),
-                new SearchMenuBarExtension(_cairoApplication));
+            MenuExtras.AddRange(new SystemTrayMenuBarExtension(_shellManager.NotificationArea, _settings),
+                                new VolumeMenuBarExtension(_settings),
+                                new ActionCenterMenuBarExtension(_settings),
+                                new ClockMenuBarExtension(_commandService, _settings),
+                                new SearchMenuBarExtension(_cairoApplication, _settings));
 
             MenuExtras.AddTo(_cairoApplication.MenuBarExtensions);
         }

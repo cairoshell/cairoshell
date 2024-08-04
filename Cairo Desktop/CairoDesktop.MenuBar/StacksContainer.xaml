@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="CairoDesktop.MenuBar.StacksContainer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
+             Width="Auto"
+             AllowDrop="True"
+             DragEnter="locationDisplay_DragEnter"
+             DragOver="locationDisplay_DragOver"
+             Drop="locationDisplay_Drop"
+             Background="Transparent"
+             ToolTip="{Binding Path=(l10n:DisplayString.sStacks_Tooltip)}"
+             ToolTipService.ShowDuration="1000"
+             ToolTipService.InitialShowDelay="1000">
+    <DockPanel Margin="0">
+        <ItemsControl ItemsSource="{Binding Path=StackLocations}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}" DataContext="{Binding}" Drop="StackMenu_Drop" PreviewMouseLeftButtonDown="StackMenu_PreviewMouseLeftButtonDown" PreviewMouseMove="StackMenu_PreviewMouseMove" Name="StackMenu" PreviewMouseLeftButtonUp="StackMenu_PreviewMouseLeftButtonUp">
+                        <Menu.ContextMenu>
+                            <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
+                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_OpenInNewWindow)}" Click="Open_Click" CommandParameter="{Binding Path=Path}" />
+                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_OpenOnDesktop)}" Name="miOpenOnDesktop" Click="OpenDesktop_Click"  CommandParameter="{Binding Path=Path}" />
+                                <Separator />
+                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_Remove)}" Click="Remove_Click" CommandParameter="{Binding}" />
+                            </ContextMenu>
+                        </Menu.ContextMenu>
+                        <MenuItem Header="{Binding Path=DisplayName, Mode=OneTime}" CommandParameter="{Binding}" Style="{StaticResource CairoStacksStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Margin="0" PreviewMouseUp="NameLabel_PreviewMouseUp" PreviewMouseDown="NameLabel_PreviewMouseDown" SubmenuOpened="MenuItem_OnSubmenuOpened">
+                            <MenuItem></MenuItem>
+                        </MenuItem>
+                    </Menu>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
+</UserControl>

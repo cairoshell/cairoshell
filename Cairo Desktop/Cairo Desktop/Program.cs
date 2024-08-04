@@ -12,8 +12,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
-using CairoDesktop.Interfaces;
 using CairoDesktop.Commands;
+using CairoDesktop.Infrastructure.ObjectModel;
+using CairoDesktop.DynamicDesktop.Commands;
+using CairoDesktop.DynamicDesktop.Services;
+using CairoDesktop.MenuBar.Services;
+using CairoDesktop.Taskbar.Services;
 
 namespace CairoDesktop
 {
@@ -62,7 +66,6 @@ namespace CairoDesktop
                     services.AddSingleton<IThemeService, CairoApplicationThemeService>();
 
                     services.AddSingleton<IDesktopManager, DesktopManager>();
-                    services.AddSingleton<IWindowManager, WindowManager>();
                     services.AddSingleton<IWindowService, MenuBarWindowService>();
                     services.AddSingleton<IWindowService, TaskbarWindowService>();
 

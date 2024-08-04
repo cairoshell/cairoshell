@@ -17,32 +17,34 @@ namespace CairoDesktop.MenuBarExtensions
     {
         private bool _isLoaded;
         private readonly NotificationArea _notificationArea;
+        private readonly Settings _settings;
 
         internal readonly IMenuBar Host;
 
         public ObservableCollection<NotifyIcon> PromotedIcons { get; private set; }
 
-        public SystemTray(IMenuBar host, NotificationArea notificationArea)
+        public SystemTray(IMenuBar host, NotificationArea notificationArea, Settings settings)
         {
             PromotedIcons = new ObservableCollection<NotifyIcon>();
 
             InitializeComponent();
             
             _notificationArea = notificationArea;
+            _settings = settings;
             DataContext = _notificationArea;
             Host = host;
 
             ((INotifyCollectionChanged)PinnedItems.Items).CollectionChanged += PinnedItems_CollectionChanged;
             ((INotifyCollectionChanged)UnpinnedItems.Items).CollectionChanged += UnpinnedItems_CollectionChanged;
 
-            if (Settings.Instance.SysTrayAlwaysExpanded)
+            if (_settings.SysTrayAlwaysExpanded)
             {
                 PromotedItems.Visibility = Visibility.Collapsed;
                 UnpinnedItems.Visibility = Visibility.Visible;
             }
 
-            // Don't allow showing both the Windows TaskBar and the Cairo tray
-            if (Settings.Instance.EnableSysTray && _notificationArea.Handle == IntPtr.Zero)
+            // Allow showing both the Windows TaskBar and the Cairo tray
+            if (_settings.EnableSysTray && _notificationArea.Handle == IntPtr.Zero)
             {
                 _notificationArea.Initialize();
             }
@@ -136,7 +138,7 @@ namespace CairoDesktop.MenuBarExtensions
 
         private void SetToggleVisibility()
         {
-            if (Settings.Instance.SysTrayAlwaysExpanded)
+            if (_settings.SysTrayAlwaysExpanded)
             {
                 return;
             }
@@ -180,7 +182,7 @@ namespace CairoDesktop.MenuBarExtensions
                 return;
             }
 
-            if (Settings.Instance.SysTrayAlwaysExpanded)
+            if (_settings.SysTrayAlwaysExpanded)
             {
                 btnToggle.Visibility = Visibility.Collapsed;
                 PromotedItems.Visibility = Visibility.Collapsed;
@@ -202,7 +204,7 @@ namespace CairoDesktop.MenuBarExtensions
                 return;
             }
 
-            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            _settings.PropertyChanged += Settings_PropertyChanged;
             _notificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
 
             _isLoaded = true;
@@ -215,7 +217,7 @@ namespace CairoDesktop.MenuBarExtensions
                 return;
             }
 
-            Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+            _settings.PropertyChanged -= Settings_PropertyChanged;
             _notificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
 
             _isLoaded = false;

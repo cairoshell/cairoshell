@@ -3,7 +3,6 @@ using CairoDesktop.Application.Structs;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Localization;
 using CairoDesktop.Infrastructure.ObjectModel;
-using CairoDesktop.Interfaces;
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
 using System;
@@ -16,10 +15,13 @@ namespace CairoDesktop.Commands
         public ICairoCommandInfo Info => _info;
 
         private readonly IDesktopManager _desktopManager;
+        private readonly Settings _settings;
         private readonly OpenLocationInWindowCommandInfo _info = new OpenLocationInWindowCommandInfo();
 
-        public OpenLocationInWindowCommand(IDesktopManager desktopManager) {
+        public OpenLocationInWindowCommand(IDesktopManager desktopManager, Settings settings)
+        {
             _desktopManager = desktopManager;
+            _settings = settings;
         }
 
         public bool Execute(params (string name, object value)[] parameters)
@@ -47,7 +49,7 @@ namespace CairoDesktop.Commands
             _desktopManager.IsOverlayOpen = false;
 
             var args = Environment.ExpandEnvironmentVariables(path);
-            var filename = Environment.ExpandEnvironmentVariables(Settings.Instance.FileManager);
+            var filename = Environment.ExpandEnvironmentVariables(_settings.FileManager);
 
             return ShellHelper.StartProcess(filename, $@"""{args}""");
         }

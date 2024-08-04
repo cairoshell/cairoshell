@@ -598,6 +598,22 @@
                  UriSource="..\Resources\nullIcon.png"></BitmapImage>
     <BitmapImage x:Key="DateTimeIcon"
                  UriSource="..\Resources\dateTimeIcon.png"></BitmapImage>
+	<BitmapImage x:Key="DesktopOverlayIcon"
+                 UriSource="..\Resources\desktopOverlayIcon.png"></BitmapImage>
+	<BitmapImage x:Key="TaskListMenuIcon"
+                 UriSource="..\Resources\taskListIcon.png"></BitmapImage>
+	<BitmapImage x:Key="TaskViewIcon"
+                 UriSource="..\Resources\taskViewIcon.png"></BitmapImage>
+	<BitmapImage x:Key="DesktopToolbarBackIcon"
+                 UriSource="..\Resources\controlsBack.png"></BitmapImage>
+	<BitmapImage x:Key="DesktopToolbarUpIcon"
+                 UriSource="..\Resources\controlsUp.png"></BitmapImage>
+	<BitmapImage x:Key="DesktopToolbarForwardIcon"
+                 UriSource="..\Resources\controlsForward.png"></BitmapImage>
+	<BitmapImage x:Key="DesktopToolbarBrowseIcon"
+                 UriSource="..\Resources\controlsBrowse.png"></BitmapImage>
+	<BitmapImage x:Key="DesktopToolbarHomeIcon"
+                 UriSource="..\Resources\controlsHome.png"></BitmapImage>
 
     <Style TargetType="{x:Type Control}">
         <Setter Property="Template">

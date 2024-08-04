@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             mc:Ignorable="d" 
+             xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
+             x:Class="CairoDesktop.Taskbar.QuickLaunchButton"
+             x:Name="UserControl"
+             d:DesignWidth="26"
+             d:DesignHeight="29">
+    <Grid x:Name="LayoutRoot">
+        <Button x:Name="btn"
+                CommandParameter="{Binding Path=Path}"
+                Click="LaunchProgram"
+                Style="{StaticResource CairoQuickLaunchButtonStyle}"
+                ToolTip="{Binding Path=Name}" 
+                ToolTipService.Placement="Top"
+                ToolTipService.VerticalOffset="-1"
+                DragOver="btn_DragOver" 
+                Drop="btn_Drop" 
+                PreviewMouseLeftButtonDown="btn_PreviewMouseLeftButtonDown" 
+                PreviewMouseMove="btn_PreviewMouseMove">
+            <Image Name="imgIcon"
+                   Source="{Binding Path=Icon, Mode=OneWay, FallbackValue={StaticResource NullIcon}, TargetNullValue={StaticResource NullIcon}}" 
+                   Width="16"
+                   Height="16" />
+            <Button.ContextMenu>
+                <ContextMenu Opened="ContextMenu_Opened">
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Open)}" 
+                              Click="programsMenu_Open" />
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_OpenAsAdministrator)}" 
+                              Name="miProgramsItemAdmin"
+                              Click="programsMenu_OpenAsAdmin" />
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_RunAsUser)}"
+                              Click="programsMenu_OpenRunAs"
+                              Visibility="Collapsed"
+                              Name="miProgramsItemRunAs" />
+                    <Separator />
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Rename)}" 
+                              Click="programsMenu_Rename" />
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu_RemoveFromMenu)}" 
+                              Click="programsMenu_Remove" />
+                    <Separator />
+                    <MenuItem Header="{Binding Path=(l10n:DisplayString.sInterface_Properties)}" 
+                              Click="programsMenu_Properties" />
+                </ContextMenu>
+            </Button.ContextMenu>
+        </Button>
+    </Grid>
+</UserControl>

@@ -6,21 +6,23 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using CairoDesktop.Application.Interfaces;
-using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop.MenuBarExtensions
 {
     public partial class Clock : UserControl
     {
         private readonly ICommandService _commandService;
+        private readonly Settings _settings;
         private readonly bool _isPrimaryScreen;
         private static bool isClockHotkeyRegistered;
 
-        public Clock(IMenuBar host, ICommandService commandService)
+        public Clock(IMenuBar host, ICommandService commandService, Settings settings)
         {
             InitializeComponent();
 
             _commandService = commandService;
+            _settings = settings;
+
             _isPrimaryScreen = host.GetIsPrimaryDisplay();
 
             InitializeClock();
@@ -74,7 +76,7 @@ namespace CairoDesktop.MenuBarExtensions
 
         private void UpdateToolTip()
         {
-            dateText.ToolTip = DateTime.Now.ToString(Settings.Instance.DateFormat);
+            dateText.ToolTip = DateTime.Now.ToString(_settings.DateFormat);
         }
 
         private void UpdateText()

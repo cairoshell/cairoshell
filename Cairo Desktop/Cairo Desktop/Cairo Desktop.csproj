@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-	<TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
+    <TargetFrameworks>net471;net6.0-windows</TargetFrameworks>
     <Platforms>x64;AnyCPU;ARM64</Platforms>
     <UseWPF>True</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
@@ -83,9 +83,12 @@
     <ProjectReference Include="..\CairoDesktop.AppGrabber\CairoDesktop.AppGrabber.csproj" />
     <ProjectReference Include="..\CairoDesktop.Application\CairoDesktop.Application.csproj" />
     <ProjectReference Include="..\CairoDesktop.Common\CairoDesktop.Common.csproj" />
+    <ProjectReference Include="..\CairoDesktop.DynamicDesktop\CairoDesktop.DynamicDesktop.csproj" />
     <ProjectReference Include="..\CairoDesktop.Infrastructure\CairoDesktop.Infrastructure.csproj" />
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
+    <ProjectReference Include="..\CairoDesktop.MenuBar\CairoDesktop.MenuBar.csproj" />
     <ProjectReference Include="..\CairoDesktop.MenuBarExtensions\CairoDesktop.MenuBarExtensions.csproj" />
+    <ProjectReference Include="..\CairoDesktop.Taskbar\CairoDesktop.Taskbar.csproj" />
   </ItemGroup>
 
   <ItemGroup>

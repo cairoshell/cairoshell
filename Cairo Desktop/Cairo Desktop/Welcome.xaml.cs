@@ -5,7 +5,7 @@ using CairoDesktop.AppGrabber;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Common.Localization;
-using CairoDesktop.Services;
+using ManagedShell.Common.Helpers;
 
 namespace CairoDesktop
 {
@@ -16,16 +16,20 @@ namespace CairoDesktop
     {
         private readonly IAppGrabber _appGrabber;
         private readonly ICairoApplication _cairoApplication;
+        private readonly Settings _settings;
 
         const int maxSize = 780;
         string _initialLanguage = "en_US";
 
-        public Welcome(ICairoApplication cairoApplication, IAppGrabber appGrabber)
+        public Welcome(ICairoApplication cairoApplication, IAppGrabber appGrabber, Settings settings)
         {
             _appGrabber = appGrabber;
             _cairoApplication = cairoApplication;
+            _settings = settings;
 
             InitializeComponent();
+
+            cboLangSelect.DataContext = _settings;
 
             SetSizeAndLocation();
 
@@ -40,7 +44,8 @@ namespace CairoDesktop
 
         private void SetSize()
         {
-            double size = WindowManager.PrimaryMonitorSize.Height - 100;
+            double screenHeight = ScreenHelper.PrimaryMonitorDeviceSize.Height / DpiHelper.DpiScale;
+            double size = screenHeight - 100;
             if (size >= maxSize)
             {
                 Height = maxSize;
@@ -50,20 +55,21 @@ namespace CairoDesktop
                 Height = size;
             }
 
-            MaxHeight = WindowManager.PrimaryMonitorSize.Height;
+            MaxHeight = screenHeight;
         }
 
         private void SetLocation()
         {
-            Left = (SystemParameters.FullPrimaryScreenWidth - Width) / 2;
-            Top = (SystemParameters.FullPrimaryScreenHeight - Height) / 2;
+            var screenSize = ScreenHelper.PrimaryMonitorDeviceSize;
+            Left = ((screenSize.Width / DpiHelper.DpiScale) - Width) / 2;
+            Top = ((screenSize.Height / DpiHelper.DpiScale) - Height) / 2;
 
             WindowStartupLocation = WindowStartupLocation.Manual;
         }
 
         private void LoadLanguages()
         {
-            _initialLanguage = Settings.Instance.Language;
+            _initialLanguage = _settings.Language;
 
             cboLangSelect.DisplayMemberPath = "Key";
             cboLangSelect.SelectedValuePath = "Value";
@@ -73,7 +79,7 @@ namespace CairoDesktop
                 cboLangSelect.Items.Add(lang);
             }
 
-            cboLangSelect.SelectedValue = Settings.Instance.Language;
+            cboLangSelect.SelectedValue = _settings.Language;
         }
 
         private void btnGoPage2_Click(object sender, RoutedEventArgs e)
@@ -96,14 +102,14 @@ namespace CairoDesktop
 
         private void btnAppGrabber_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.IsFirstRun = false;
+            _settings.IsFirstRun = false;
             _appGrabber?.ShowDialog();
             Close();
         }
 
         private void cboLangSelect_DropDownClosed(object sender, EventArgs e)
         {
-            if (Settings.Instance.Language != _initialLanguage)
+            if (_settings.Language != _initialLanguage)
             {
                 CairoMessage.Show(DisplayString.sWelcome_ChangingLanguageText, DisplayString.sWelcome_ChangingLanguage, MessageBoxButton.OK, CairoMessageImage.Information,
                     result =>
