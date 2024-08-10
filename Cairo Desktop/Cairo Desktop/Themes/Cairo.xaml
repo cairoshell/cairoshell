@@ -619,7 +619,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Control}">
-                    <Grid Margin="3 2">
+                    <Grid Margin="0 2">
                         <Border Name="border"
                                 Width="{TemplateBinding ActualWidth}"
                                 Height="{TemplateBinding ActualHeight}"
@@ -698,7 +698,7 @@
         <Setter Property="BorderThickness"
                 Value="0,1,0,0" />
         <Setter Property="Margin"
-                Value="5,0,5,11" />
+                Value="0,0,0,0" />
         <Setter Property="Effect"
                 Value="{DynamicResource ResourceKey=MenuShadow}" />
 		<Style.Triggers>
@@ -708,7 +708,7 @@
 					<Setter Property="BorderThickness"
 							Value="0,0,0,1" />
 					<Setter Property="Margin"
-							Value="5,11,5,0" />
+							Value="0,11,0,0" />
 					<Setter Property="Effect"
 							Value="{DynamicResource ResourceKey=MenuShadowBottom}" />
 				</DataTrigger.Setters>
@@ -774,7 +774,7 @@
                             </Grid.ColumnDefinitions>
                             <!-- ContentPresenter to show an Icon if needed -->
                             <ContentPresenter Grid.Column="0"
-                                              Margin="8,0,6,0"
+                                              Margin="0,0,0,0"
                                               x:Name="Icon"
                                               VerticalAlignment="Center"
                                               ContentSource="Icon" />
@@ -1087,7 +1087,7 @@
                                     Value="Bottom"
                                     TargetName="SubMenuPopup" />
 							<Setter Property="Height"
-                                    Value="22" />
+                                    Value="19" />
 						</Trigger>
 						<MultiTrigger>
 							<MultiTrigger.Conditions>
@@ -1127,7 +1127,7 @@
         <Setter Property="Margin"
                 Value="0,-2,0,0" />
         <Setter Property="Height"
-                Value="22" />
+                Value="19" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type MenuItem}">
@@ -1255,7 +1255,7 @@
                                     Value="Bottom"
                                     TargetName="SubMenuPopup" />
                             <Setter Property="Height"
-                                    Value="22" />
+                                    Value="19" />
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -2528,7 +2528,7 @@
                                     Value="Bottom"
                                     TargetName="SubMenuPopup" />
                             <Setter Property="Height"
-                                    Value="22" />
+                                    Value="19" />
                             <Setter Property="FontSize"
                                     Value="{DynamicResource ResourceKey=LargeFontSize}" />
                             <Setter Property="Effect"
@@ -2605,7 +2605,7 @@
         <Setter Property="Width"
                 Value="20" />
         <Setter Property="Height"
-                Value="20" />
+                Value="19" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
         <Setter Property="Template">
@@ -2658,7 +2658,7 @@
         <Setter Property="Width"
                 Value="20" />
         <Setter Property="Height"
-                Value="20" />
+                Value="19" />
         <Setter Property="VerticalAlignment"
                 Value="Top" />
         <Setter Property="HorizontalAlignment"
@@ -3099,7 +3099,7 @@
         <Setter Property="FontSize"
                 Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="Height"
-                Value="24" />
+                Value="19" />
         <Setter Property="MinWidth"
                 Value="140" />
         <Setter Property="OverridesDefaultStyle"
@@ -3149,7 +3149,7 @@
         <Setter Property="FontSize"
                 Value="{DynamicResource ResourceKey=MediumFontSize}" />
         <Setter Property="Height"
-                Value="24" />
+                Value="19" />
         <Setter Property="MinWidth"
                 Value="140" />
         <Setter Property="MaxWidth"
@@ -3429,7 +3429,7 @@
                                                 Grid.Column="0"
                                                 Focusable="False"
                                                 HorizontalAlignment="Left"
-                                                Height="20"
+                                                Height="19"
                                                 Grid.Row="0"
                                                 Margin="20,0,0,0"
                                                 Template="{StaticResource PreviousButtonTemplate}"
@@ -3447,7 +3447,7 @@
                                                 Grid.Column="2"
                                                 Focusable="False"
                                                 HorizontalAlignment="Right"
-                                                Height="20"
+                                                Height="19"
                                                 Grid.Row="0"
                                                 Margin="0,0,20,0"
                                                 Template="{StaticResource NextButtonTemplate}"
@@ -3989,7 +3989,7 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="true" />
         <Setter Property="Height"
-                Value="22" />
+                Value="19" />
         <Setter Property="Foreground"
                 Value="{DynamicResource ResourceKey=SysTrayExpanderColor}" />
         <Setter Property="FontSize"
@@ -4004,7 +4004,7 @@
                             BorderBrush="Transparent"
                             Opacity="0.7">
                         <Path x:Name="Path"
-                              Margin="5,-2,5,0"
+                              Margin="0,-2,0,0"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"
                               Fill="{TemplateBinding Foreground}"
@@ -4207,7 +4207,7 @@
         <Setter Property="FontSize"
                 Value="{DynamicResource SmallFontSize}" />
         <Setter Property="Margin"
-                Value="5,-1,5,2" />
+                Value="0,-1,0,2" />
         <Setter Property="MaxWidth"
                 Value="120" />
         <Setter Property="TextTrimming"
@@ -4236,7 +4236,7 @@
            TargetType="Image"
            BasedOn="{StaticResource NotifyIconImage}">
         <Setter Property="Margin"
-                Value="0,0,5,5" />
+                Value="0,0,0,5" />
         <Setter Property="VerticalAlignment"
                 Value="Center" />
     </Style>
@@ -4246,6 +4246,6 @@
         <Setter Property="MaxWidth"
                 Value="260" />
         <Setter Property="Padding"
-                Value="10,7" />
+                Value="0,0" />
     </Style>
 </ResourceDictionary>

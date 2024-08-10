@@ -463,7 +463,7 @@
             <Setter Property="OverridesDefaultStyle"
                 Value="true" />
             <Setter Property="Height"
-                Value="23" />
+                Value="19" />
             <Setter Property="Width"
                 Value="150" />
             <Setter Property="FontFamily"
@@ -519,9 +519,9 @@
             <Setter Property="OverridesDefaultStyle"
                 Value="true" />
             <Setter Property="Height"
-                Value="23" />
+                Value="19" />
             <Setter Property="Width"
-                Value="23" />
+                Value="19" />
             <Setter Property="FontFamily"
                 Value="Segoe UI" />
             <Setter Property="FontSize"
@@ -588,12 +588,12 @@
                                     x:Name="ImageWrapper"
                                     Background="{x:Null}"
                                     Grid.Column="0"
-                                    Height="22"></Border>
+                                    Height="19"></Border>
                                 <Border Grid.Column="1"
                                     x:Name="NameWrapper"
                                     HorizontalAlignment="Stretch"
                                     Padding="0,5,2,0"
-                                    Height="22"
+                                    Height="19"
                                     Background="{x:Null}">
                                     <TextBlock Text="{TemplateBinding MenuItem.Header}"
                                         x:Name="Name"
@@ -602,14 +602,14 @@
                                         HorizontalAlignment="Stretch"
                                         Background="{x:Null}"
                                         Margin="0,0,0,0"
-                                        Height="22"></TextBlock>
+                                        Height="19"></TextBlock>
                                 </Border>
                                 <Border HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
                                     x:Name="RightSpacer"
                                     Background="{x:Null}"
                                     Grid.Column="2"
-                                    Height="22"></Border>
+                                    Height="19"></Border>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>

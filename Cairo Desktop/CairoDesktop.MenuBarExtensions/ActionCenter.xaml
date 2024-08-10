@@ -15,7 +15,7 @@
                 <Image Name="ActionCenterIcon"
                        Source="{DynamicResource ActionCenterIcon}"
                        Width="38"
-                       Height="22" />
+                       Height="19" />
             </MenuItem.Header>
         </MenuItem>
     </Menu>

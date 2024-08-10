@@ -209,7 +209,7 @@
             <Setter Property="Width"
                     Value="200" />
             <Setter Property="Height"
-                    Value="24" />
+                    Value="19" />
         </Style>
         <Style TargetType="{x:Type ComboBox}">
             <Setter Property="Margin"
@@ -533,7 +533,7 @@
                         </TextBox>
                         <Button Name="btnDesktopHomeSelect"
                                 Click="btnDesktopHomeSelect_Click"
-                                Height="24"
+                                Height="19"
                                 Padding="10,0">...</Button>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
@@ -632,7 +632,7 @@
                                 <TextBox Name="txtWindowsBackgroundPath"
                                          IsReadOnly="True" />
                                 <Button Name="btnWindowsBackgroundFileBrowse"
-                                        Height="24"
+                                        Height="19"
                                         Padding="10,0"
                                         Click="btnWindowsBackgroundFileBrowse_Click">...</Button>
                             </StackPanel>
@@ -653,7 +653,7 @@
                                 <TextBox Name="txtCairoBackgroundPath"
                                          IsReadOnly="True" />
                                 <Button Name="btnCairoBackgroundFileBrowse"
-                                        Height="24"
+                                        Height="19"
                                         Padding="10,0"
                                         Click="btnCairoBackgroundFileBrowse_Click">...</Button>
                             </StackPanel>
@@ -673,7 +673,7 @@
                                 <TextBox Name="txtCairoVideoBackgroundPath"
                                          IsReadOnly="True" />
                                 <Button Name="btnCairoVideoBackgroundFileBrowse"
-                                        Height="24"
+                                        Height="19"
                                         Padding="10,0"
                                         Click="btnCairoVideoFileBrowse_Click">...</Button>
                             </StackPanel>
@@ -872,7 +872,7 @@
                                   IsEditable="False"
                                   Width="109"
                                   SelectedValue="{Binding Path=LogSeverity, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource enumStringConverter}}" />
-                        <Button Height="24"
+                        <Button Height="19"
                                 Padding="10,0"
                                 Margin="5,0,0,0"
                                 HorizontalAlignment="Left"
@@ -968,7 +968,7 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
-                        <Button Height="24"
+                        <Button Height="19"
                                 Padding="10,0"
                                 Margin="5,4"
                                 HorizontalAlignment="Left"

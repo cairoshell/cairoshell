@@ -12,7 +12,7 @@
                 <Image Name="CairoSearchMenuIcon"
                        Source="{DynamicResource SearchIcon}"
                        Width="38"
-                       Height="22" />
+                       Height="19" />
             </MenuItem.Header>
             <DockPanel>
                 <StackPanel Orientation="Horizontal"
