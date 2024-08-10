@@ -12,7 +12,7 @@
             <MenuItem.Header>
                 <Image Source="{DynamicResource VolumeIcon}"
                        Width="38"
-                       Height="22"
+                       Height="19"
                        Name="imgOpenVolume" />
             </MenuItem.Header>
             <MenuItem.ContextMenu>

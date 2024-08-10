@@ -5,7 +5,7 @@
              xmlns:local="clr-namespace:CairoDesktop.MenuBarExtensions"
              x:Class="CairoDesktop.MenuBarExtensions.SystemTray"
              x:Name="CairoSystemTray"
-             Height="23"
+             Height="19"
              Margin="8,0,8,0"
              Loaded="CairoSystemTray_Loaded"
              Unloaded="CairoSystemTray_Unloaded">
