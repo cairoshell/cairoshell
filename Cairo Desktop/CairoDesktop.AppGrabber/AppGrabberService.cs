@@ -206,7 +206,15 @@ namespace CairoDesktop.AppGrabber
 
             try
             {
-                parent = Directory.GetParent(app.Path).FullName;
+                string path = app.Path;
+
+                if (path.EndsWith(".lnk") && !ShellHelper.Exists(app.Path) && !string.IsNullOrEmpty(app.Target) && ShellHelper.Exists(app.Target))
+                {
+                    // Use target if the shortcut has been deleted
+                    path = app.Target;
+                }
+
+                parent = Directory.GetParent(path).FullName;
             }
             catch (Exception e)
             {
@@ -224,7 +232,11 @@ namespace CairoDesktop.AppGrabber
             {
                 try
                 {
-                    fileDisplayName = FileVersionInfo.GetVersionInfo(filePath).FileDescription;
+                    string fileDescription = FileVersionInfo.GetVersionInfo(filePath).FileDescription;
+                    if (!string.IsNullOrEmpty(fileDescription))
+                    {
+                        fileDisplayName = fileDescription;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -383,7 +395,11 @@ namespace CairoDesktop.AppGrabber
                 }
                 else if (!ShellHelper.StartProcess(app.Path, workingDirectory: getAppParentDirectory(app)))
                 {
-                    CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
+                    // Retry with target if this is a shortcut
+                    if (!app.Path.EndsWith(".lnk") || string.IsNullOrEmpty(app.Target) || !ShellHelper.StartProcess(app.Target, workingDirectory: getAppParentDirectory(app)))
+                    {
+                        CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
+                    }
                 }
             }
         }
@@ -395,7 +411,15 @@ namespace CairoDesktop.AppGrabber
                 return;
             }
 
-            if (!ShellHelper.StartProcess(app.Path, "", verb, getAppParentDirectory(app)))
+            string path = app.Path;
+
+            if (path.EndsWith(".lnk") && !ShellHelper.Exists(app.Path) && !string.IsNullOrEmpty(app.Target) && ShellHelper.Exists(app.Target))
+            {
+                // Use target if the shortcut has been deleted
+                path = app.Target;
+            }
+
+            if (!ShellHelper.StartProcess(path, "", verb, getAppParentDirectory(app)))
             {
                 CairoMessage.Show(DisplayString.sError_FileNotFoundInfo, DisplayString.sError_OhNo, MessageBoxButton.OK, CairoMessageImage.Error);
             }
@@ -520,7 +544,29 @@ namespace CairoDesktop.AppGrabber
             if (app.IsStoreApp)
                 CairoMessage.Show(DisplayString.sProgramsMenu_UWPInfo, app.Name, app.GetIconImageSource(IconSize.Jumbo), true);
             else
-                ShellHelper.ShowFileProperties(app.Path);
+            {
+                string path = app.Path;
+
+                if (path.EndsWith(".lnk") && !ShellHelper.Exists(app.Path) && !string.IsNullOrEmpty(app.Target) && ShellHelper.Exists(app.Target))
+                {
+                    // Use target if the shortcut has been deleted
+                    path = app.Target;
+                }
+
+                ShellHelper.ShowFileProperties(path);
+            }
+        }
+
+        public bool CanAddPathToCategory(string fileName, AppCategoryType categoryType)
+        {
+            ApplicationInfo customApp = PathToApp(fileName, false, false);
+            if (ReferenceEquals(customApp, null))
+            {
+                return false;
+            }
+
+            Category category = CategoryList.GetSpecialCategory(categoryType);
+            return !category.Contains(customApp);
         }
 
         public void InsertByPath(string[] fileNames, int index, AppCategoryType categoryType)
@@ -618,6 +664,7 @@ namespace CairoDesktop.AppGrabber
         void AddByPath(string fileName, AppCategoryType categoryType);
         void AddStoreApp(string appUserModelId, AppCategoryType categoryType);
         void InsertByPath(string[] fileNames, int index, AppCategoryType categoryType);
+        bool CanAddPathToCategory(string fileName, AppCategoryType categoryType);
         void LaunchProgram(ApplicationInfo app);
         void LaunchProgramAdmin(ApplicationInfo app);
         void LaunchProgramVerb(ApplicationInfo app, string verb);
