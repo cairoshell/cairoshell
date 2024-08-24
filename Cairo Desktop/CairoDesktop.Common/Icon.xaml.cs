@@ -370,7 +370,7 @@ namespace CairoDesktop.Common
                             DragDrop.DoDragDrop(button, dragObject,
                                 (e.RightButton == MouseButtonState.Pressed
                                     ? DragDropEffects.All
-                                    : DragDropEffects.Move));
+                                    : DragDropEffects.Move) | DragDropEffects.Link);
                         }
                         catch (Exception exception)
                         {
