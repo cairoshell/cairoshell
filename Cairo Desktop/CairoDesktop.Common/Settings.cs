@@ -525,6 +525,13 @@ namespace CairoDesktop.Common
                 }
             }
         }
+
+        private bool _showStacksRemovableDrives = true;
+        public bool ShowStacksRemovableDrives
+        {
+            get => _showStacksRemovableDrives;
+            set => Set(ref _showStacksRemovableDrives, value);
+        }
         #endregion
 
         #region Advanced
