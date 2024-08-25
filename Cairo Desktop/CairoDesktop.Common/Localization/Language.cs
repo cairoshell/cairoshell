@@ -1362,7 +1362,7 @@ namespace CairoDesktop.Common.Localization
             { "sAppGrabber_Page2Directions3", "点击 “X” 按钮来删除该分类（已删除分类中的应用程序会变为未分类）；" },
             { "sAppGrabber_Page2Directions4", "右键点击分类来进行重命名；" },
             { "sAppGrabber_Page2Directions5", "点击 “折叠” 按钮来隐藏所有已分类的应用程序；" },
-            { "sAppGrabber_Page2Directions6", "放在 “快速启动” 分类中的应用程序将会出现在 Cairo 任务栏的快速启动区中，并不会在 "程序" 菜单中分类。要移除某项，请将其从 “快速启动” 分类中拖出。" },
+            { "sAppGrabber_Page2Directions6", "放在 “快速启动” 分类中的应用程序将会出现在 Cairo 任务栏的快速启动区中，并不会在 “程序” 菜单中分类。要移除某项，请将其从 “快速启动” 分类中拖出。" },
             { "sAppGrabber_ProgramCategories", "应用程序分类" },
             { "sAppGrabber_Hide", "折叠" },
             { "sAppGrabber_QuickLaunch", "快速启动" },
