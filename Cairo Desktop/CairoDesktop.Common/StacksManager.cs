@@ -22,6 +22,7 @@ namespace CairoDesktop.Common
         const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
         const int DBT_DEVTYP_VOLUME = 0x2;
         const int DBT_DEVTYP_HANDLE = 0x6;
+        const int FILE_FLAG_BACKUP_SEMANTICS = 0x02000000;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr RegisterDeviceNotification(IntPtr recipient, IntPtr notificationFilter, int flags);
@@ -134,7 +135,7 @@ namespace CairoDesktop.Common
             try
             {
                 using (var dirHandle = CreateFile(path, FileAccess.Read, FileShare.ReadWrite,
-                    IntPtr.Zero, FileMode.Open, (FileAttributes)0x02000000, IntPtr.Zero))
+                    IntPtr.Zero, FileMode.Open, (FileAttributes)FILE_FLAG_BACKUP_SEMANTICS, IntPtr.Zero))
                 {
                     DEV_BROADCAST_HANDLE dbi = new DEV_BROADCAST_HANDLE
                     {
