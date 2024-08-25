@@ -17,12 +17,36 @@ namespace CairoDesktop.Common
     public class StacksManager : DependencyObject
     {
         const int DBT_DEVICEARRIVAL = 0x8000;
+        const int DBT_DEVICEQUERYREMOVE = 0x8001;
+        const int DBT_DEVICEQUERYREMOVEFAILED = 0x8002;
         const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
         const int DBT_DEVTYP_VOLUME = 0x2;
+        const int DBT_DEVTYP_HANDLE = 0x6;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr RegisterDeviceNotification(IntPtr recipient, IntPtr notificationFilter, int flags);
+
+        [DllImport("user32.dll")]
+        private static extern bool UnregisterDeviceNotification(IntPtr handle);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct DEV_BROADCAST_HANDLE
+        {
+            public int dbch_size;
+            public int dbch_devicetype;
+            public int dbch_reserved;
+            public IntPtr dbch_handle;
+            public IntPtr dbch_hdevnotify;
+            public Guid dbch_eventguid;
+            public int dbch_nameoffset;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1, ArraySubType = UnmanagedType.I1)]
+            public byte[] dbch_data;
+        }
 
         private readonly string stackConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoStacksConfig.xml";
         private System.Xml.Serialization.XmlSerializer serializer;
         private NativeWindowEx _messageWindow;
+        private Dictionary<string, IntPtr> _notificationHandles = new Dictionary<string, IntPtr>();
 
         private InvokingObservableCollection<ShellFolder> _stackLocations = new InvokingObservableCollection<ShellFolder>(Application.Current.Dispatcher);
         private InvokingObservableCollection<ShellFolder> _removableDrives = new InvokingObservableCollection<ShellFolder>(Application.Current.Dispatcher);
@@ -105,6 +129,52 @@ namespace CairoDesktop.Common
             }
         }
 
+        private void registerRemovableDriveNotification(string path)
+        {
+            try
+            {
+                using (var dirHandle = CreateFile(path, FileAccess.Read, FileShare.ReadWrite,
+                    IntPtr.Zero, FileMode.Open, (FileAttributes)0x02000000, IntPtr.Zero))
+                {
+                    DEV_BROADCAST_HANDLE dbi = new DEV_BROADCAST_HANDLE
+                    {
+                        dbch_devicetype = DBT_DEVTYP_HANDLE,
+                        dbch_reserved = 0,
+                        dbch_handle = dirHandle.DangerousGetHandle(),
+                        dbch_hdevnotify = IntPtr.Zero,
+                        dbch_nameoffset = 0
+                    };
+
+                    dbi.dbch_size = Marshal.SizeOf(dbi);
+                    IntPtr buffer = Marshal.AllocHGlobal(dbi.dbch_size);
+                    Marshal.StructureToPtr(dbi, buffer, true);
+
+                    _notificationHandles.Add(path, RegisterDeviceNotification(_messageWindow.Handle, buffer, 0));
+                }
+            }
+            catch (Exception e)
+            {
+                ShellLogger.Warning($"StacksManager: Unable to register notifications for device: {e.Message}");
+            }
+        }
+
+        private void unregisterRemovableDriveNotification(string path)
+        {
+            try
+            {
+                IntPtr handle;
+                if (_notificationHandles.TryGetValue(path, out handle))
+                {
+                    UnregisterDeviceNotification(handle);
+                    _notificationHandles.Remove(path);
+                }
+            }
+            catch (Exception e)
+            {
+                ShellLogger.Warning($"StacksManager: Unable to unregister notifications for device: {e.Message}");
+            }
+        }
+
         private void setupRemovableDrives()
         {
             if (_messageWindow == null)
@@ -141,6 +211,11 @@ namespace CairoDesktop.Common
                 }
             }
 
+            foreach (ShellFolder drive in RemovableDrives)
+            {
+                unregisterRemovableDriveNotification(drive.Path);
+            }
+
             RemovableDrives.Clear();
         }
 
@@ -153,17 +228,44 @@ namespace CairoDesktop.Common
                 return;
             }
 
-            if (msg.WParam != (IntPtr)DBT_DEVICEARRIVAL && msg.WParam != (IntPtr)DBT_DEVICEREMOVECOMPLETE)
+            if (msg.WParam == (IntPtr)DBT_DEVICEQUERYREMOVE)
             {
+                // A device is being removed for a drive we're watching
+                // Stop watchers, as they prevent device removal
+                foreach (ShellFolder drive in RemovableDrives)
+                {
+                    drive.StopWatchingChanges();
+                }
+                return;
+            }
+            else if (msg.WParam == (IntPtr)DBT_DEVICEQUERYREMOVEFAILED)
+            {
+                // No changes, resume watchers that we stopped above
+                foreach (ShellFolder drive in RemovableDrives)
+                {
+                    drive.BeginWatchingChanges();
+                }
                 return;
             }
 
-            if (Marshal.ReadInt32(msg.LParam, 4) != DBT_DEVTYP_VOLUME)
+            if ((msg.WParam != (IntPtr)DBT_DEVICEARRIVAL && msg.WParam != (IntPtr)DBT_DEVICEREMOVECOMPLETE) ||
+                Marshal.ReadInt32(msg.LParam, 4) != DBT_DEVTYP_VOLUME)
             {
+                // We only want to proceed further for volumes added or removed
                 return;
             }
 
             populateRemovableDrives();
+
+            if (msg.WParam == (IntPtr)DBT_DEVICEREMOVECOMPLETE)
+            {
+                // Resume watchers that we stopped above, now that we have removed the drive from the list
+                foreach (ShellFolder drive in RemovableDrives)
+                {
+                    drive.BeginWatchingChanges();
+                }
+                return;
+            }
         }
 
         private void populateRemovableDrives()
@@ -197,15 +299,13 @@ namespace CairoDesktop.Common
 
                 foreach (DriveInfo drive in drivesToAdd)
                 {
-                    // TODO: change watcher disabled so as to not prevent device removal
-                    // Need to use RegisterDeviceNotification to receive DBT_DEVICEQUERYREMOVE
-                    // and stop change watchers, then resume after DBT_DEVICEQUERYREMOVEFAILED
-                    // or DBT_DEVICEREMOVECOMPLETE. ManagedShell needs to expose this
-                    RemovableDrives.Add(new ShellFolder(drive.Name, IntPtr.Zero, true, false));
+                    RemovableDrives.Add(new ShellFolder(drive.Name, IntPtr.Zero, true));
+                    registerRemovableDriveNotification(drive.Name);
                 }
 
                 foreach (ShellFolder drive in drivesToRemove)
                 {
+                    unregisterRemovableDriveNotification(drive.Path);
                     RemovableDrives.Remove(drive);
                     drive.Dispose();
                 }
