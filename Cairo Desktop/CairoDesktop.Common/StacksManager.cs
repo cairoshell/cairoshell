@@ -16,34 +16,6 @@ namespace CairoDesktop.Common
 {
     public class StacksManager : DependencyObject
     {
-        const int DBT_DEVICEARRIVAL = 0x8000;
-        const int DBT_DEVICEQUERYREMOVE = 0x8001;
-        const int DBT_DEVICEQUERYREMOVEFAILED = 0x8002;
-        const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
-        const int DBT_DEVTYP_VOLUME = 0x2;
-        const int DBT_DEVTYP_HANDLE = 0x6;
-        const int FILE_FLAG_BACKUP_SEMANTICS = 0x02000000;
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern IntPtr RegisterDeviceNotification(IntPtr recipient, IntPtr notificationFilter, int flags);
-
-        [DllImport("user32.dll")]
-        private static extern bool UnregisterDeviceNotification(IntPtr handle);
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct DEV_BROADCAST_HANDLE
-        {
-            public int dbch_size;
-            public int dbch_devicetype;
-            public int dbch_reserved;
-            public IntPtr dbch_handle;
-            public IntPtr dbch_hdevnotify;
-            public Guid dbch_eventguid;
-            public int dbch_nameoffset;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1, ArraySubType = UnmanagedType.I1)]
-            public byte[] dbch_data;
-        }
-
         private readonly string stackConfigFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\CairoStacksConfig.xml";
         private System.Xml.Serialization.XmlSerializer serializer;
         private NativeWindowEx _messageWindow;
