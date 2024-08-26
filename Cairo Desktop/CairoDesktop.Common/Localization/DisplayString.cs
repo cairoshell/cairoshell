@@ -710,5 +710,9 @@ namespace CairoDesktop.Common.Localization
         public static string sCommand_OpenDesktopOverlay => getString();
 
         public static string sCommand_CloseDesktopOverlay => getString();
+
+        public static string sCommand_AddToPrograms => getString();
+
+        public static string sCommand_AddToQuickLaunch => getString();
     }
 }
