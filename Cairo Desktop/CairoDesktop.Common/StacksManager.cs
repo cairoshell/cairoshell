@@ -122,7 +122,15 @@ namespace CairoDesktop.Common
                     IntPtr buffer = Marshal.AllocHGlobal(dbi.dbch_size);
                     Marshal.StructureToPtr(dbi, buffer, true);
 
-                    _notificationHandles.Add(path, RegisterDeviceNotification(_messageWindow.Handle, buffer, 0));
+                    IntPtr hNotification = RegisterDeviceNotification(_messageWindow.Handle, buffer, 0);
+
+                    if (hNotification == IntPtr.Zero)
+                    {
+                        ShellLogger.Warning($"StacksManager: Unable to register notifications for device.");
+                        return;
+                    }
+
+                    _notificationHandles.Add(path, hNotification);
                 }
             }
             catch (Exception e)
