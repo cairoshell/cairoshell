@@ -526,7 +526,7 @@ namespace CairoDesktop.Common
             }
         }
 
-        private bool _showStacksRemovableDrives = true;
+        private bool _showStacksRemovableDrives = false;
         public bool ShowStacksRemovableDrives
         {
             get => _showStacksRemovableDrives;
