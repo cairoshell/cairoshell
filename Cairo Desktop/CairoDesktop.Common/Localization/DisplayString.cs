@@ -494,6 +494,8 @@ namespace CairoDesktop.Common.Localization
 
         public static string sSettings_MenuBar_ShowHibernate => getString();
 
+        public static string sSettings_MenuBar_ShowStacksRemovableDrives => getString();
+
         public static string sSettings_MenuBar_ProgramsMenuLayout => getString();
 
         public static string sSettings_MenuBar_ProgramsMenuLayoutRight => getString();

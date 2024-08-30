@@ -365,6 +365,10 @@
                               Name="chkShowHibernate">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowHibernate)}" />
                     </CheckBox>
+                    <CheckBox IsChecked="{Binding Path=ShowStacksRemovableDrives, UpdateSourceTrigger=PropertyChanged}"
+                              Name="chkShowStacksRemovableDrives">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowStacksRemovableDrives)}" />
+                    </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_Appearance)}"
                                Style="{StaticResource SettingGroupHeader}" />
                     <CheckBox IsChecked="{Binding Path=EnableMenuBarAutoHide, UpdateSourceTrigger=PropertyChanged}"
