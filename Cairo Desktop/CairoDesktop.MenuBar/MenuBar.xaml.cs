@@ -163,6 +163,7 @@ namespace CairoDesktop.MenuBar
                         if (_e.PropertyName == "IsAvailable")
                         {
                             menuItem.Visibility = command.IsAvailable ? Visibility.Visible : Visibility.Collapsed;
+                            DeduplicateSeparators();
                         }
                     };
                 }
@@ -184,7 +185,31 @@ namespace CairoDesktop.MenuBar
                 }
             }
 
+            DeduplicateSeparators();
+
             isCairoMenuInitialized = true;
+        }
+
+        private void DeduplicateSeparators()
+        {
+            Type previousType = null;
+            foreach (UIElement item in CairoMenu.Items)
+            {
+                Type currentType = item.GetType();
+                if (previousType == typeof(Separator) && currentType == typeof(Separator))
+                {
+                    ((Separator)item).Visibility = Visibility.Collapsed;
+                }
+                else if (currentType == typeof(Separator))
+                {
+                    ((Separator)item).Visibility = Visibility.Visible;
+                }
+
+                if (item.Visibility == Visibility.Visible)
+                {
+                    previousType = currentType;
+                }
+            }
         }
 
         private void PlacesMenu_Opened(object sender, RoutedEventArgs e)
