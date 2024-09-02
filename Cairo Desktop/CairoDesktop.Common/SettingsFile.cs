@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace CairoDesktop.Common
 {
-    public class SettingsFile<T> : INotifyPropertyChanged where T : IMigratableSettings
+    public class SettingsFile<T> : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -48,19 +48,8 @@ namespace CairoDesktop.Common
         {
             try
             {
-                if (!ShellHelper.Exists(_fileName))
-                {
-                    return ImportLegacySettings();
-                }
-
                 string jsonString = File.ReadAllText(_fileName);
                 _settings = JsonSerializer.Deserialize<T>(jsonString);
-
-                if (_settings.MigrationPerformed)
-                {
-                    // Save post-migration state so that we don't need to migrate every startup
-                    SaveToFile();
-                }
 
                 return true;
             }
@@ -86,31 +75,9 @@ namespace CairoDesktop.Common
             }
         }
 
-        private bool ImportLegacySettings()
-        {
-            var legacySettings = Configuration.Settings.Instance;
-
-            if (legacySettings.IsFirstRun)
-            {
-                // No legacy settings to import
-                return false;
-            }
-
-            Settings.ImportLegacySettings(legacySettings);
-
-            SaveToFile();
-            return true;
-        }
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-    }
-
-    public interface IMigratableSettings
-    {
-        bool MigrationPerformed { get; }
-        void ImportLegacySettings(Configuration.Settings legacySettings);
     }
 }
