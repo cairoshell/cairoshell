@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        target: [ [x64, net471], [x86, net471], [x64_net6, net6.0-windows], [x86_net6, net6.0-windows], [arm64_net6, net6.0-windows] ]
+        target: [ [x64, net6.0-windows], [x86, net6.0-windows], [x64_net471, net471], [x86_net471, net471], [arm64, net6.0-windows] ]
 
     runs-on: windows-latest
 
@@ -34,7 +34,7 @@ jobs:
       env:
         Profile: ${{ matrix.target[0] }}
         Framework: ${{ matrix.target[1] }}
-        Platform: ${{ matrix.target[0] == 'x86' && 'AnyCPU' || matrix.target[0] == 'x86_net6' && 'AnyCPU' || matrix.target[0] == 'x64' && 'x64' || matrix.target[0] == 'x64_net6' && 'x64' || 'ARM64' }}
+        Platform: ${{ matrix.target[0] == 'x86' && 'AnyCPU' || matrix.target[0] == 'x86_net471' && 'AnyCPU' || matrix.target[0] == 'x64' && 'x64' || matrix.target[0] == 'x64_net471' && 'x64' || 'ARM64' }}
     
     - name: Set installer version
       shell: pwsh
@@ -48,5 +48,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Installer ${{ matrix.target[0] == 'x86' && '32-bit' || matrix.target[0] == 'x86_net6' && '32-bit .NET 6' || matrix.target[0] == 'x64' && '64-bit' || matrix.target[0] == 'x64_net6' && '64-bit .NET 6' || 'ARM64' }}
+        name: Installer ${{ matrix.target[0] == 'x86' && '32-bit' || matrix.target[0] == 'x86_net471' && '32-bit .NET 4.7.1' || matrix.target[0] == 'x64' && '64-bit' || matrix.target[0] == 'x64_net471' && '64-bit .NET 4.7.1' || 'ARM64' }}
         path: 'Installer\*.exe'
