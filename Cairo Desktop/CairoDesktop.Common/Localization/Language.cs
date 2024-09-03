@@ -1829,7 +1829,7 @@ namespace CairoDesktop.Common.Localization
             { "sWelcome_TaskbarSec3Text", "Spousta otevřených oken? Seznam úkolů zobrazuje okna v nabídce, takže můžete snadno přepínat na požadované okno." }
         };
 
-public static Dictionary<string, string> de_DE = new Dictionary<string, string>
+        public static Dictionary<string, string> de_DE = new Dictionary<string, string>
         {
             { "sProgramsMenu", "Programme" },
             { "sPlacesMenu", "Orte" },
