@@ -2721,7 +2721,7 @@ namespace CairoDesktop.Common.Localization
             { "sAppGrabber_Category_Internet", "Интернет" },
             { "sAppGrabber_Category_Games", "Игры" },
             { "sRun_Title", "Выполнить" },
-            { "sRun_Info", "Введите название программы, папки, документа или интернет-ресурса, и Cairo откроет его для вас." },
+            { "sRun_Info", "Введите название программы, папки, документа или интернет-ресурса, и Cairo откроет это для вас." },
             { "sExitCairo_Title", "Вы действительно хотите выйти из Cairo?" },
             { "sExitCairo_Info", "Чтобы снова запустить Cairo, вам нужно перезагрузить систему или воспользоваться ярлыком в меню Пуск." },
             { "sExitCairo_ExitCairo", "Выйти из Cairo" },
