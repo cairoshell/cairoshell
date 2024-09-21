@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="CairoDesktop.MenuBarExtensions.LanguagePane"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <MenuItem x:Name="LangMenuItem"
+              ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}">
+        <MenuItem.Header>
+            <TextBlock Margin="-15,-3,-20,0"
+                       Padding="0"
+                       Name="LangText"
+                       FontSize="15"
+                       FontFamily="JetBrains Mono"
+                       ToolTipService.Placement="Bottom" />
+        </MenuItem.Header>
+    </MenuItem>
+</UserControl>

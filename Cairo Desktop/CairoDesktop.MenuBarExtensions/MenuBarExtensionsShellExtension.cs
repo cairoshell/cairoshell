@@ -28,10 +28,11 @@ namespace CairoDesktop.MenuBarExtensions
         public void Start()
         {
             MenuExtras.AddRange(new SystemTrayMenuBarExtension(_shellManager.NotificationArea, _settings),
-                                new VolumeMenuBarExtension(_settings),
-                                new ActionCenterMenuBarExtension(_settings),
-                                new ClockMenuBarExtension(_commandService, _settings),
-                                new SearchMenuBarExtension(_cairoApplication, _settings));
+                new VolumeMenuBarExtension(_settings),
+                new ActionCenterMenuBarExtension(_settings),
+                new ClockMenuBarExtension(_commandService, _settings),
+                new LangMenuBarExtension(_commandService, _settings),
+                new SearchMenuBarExtension(_cairoApplication, _settings));
 
             MenuExtras.AddTo(_cairoApplication.MenuBarExtensions);
         }

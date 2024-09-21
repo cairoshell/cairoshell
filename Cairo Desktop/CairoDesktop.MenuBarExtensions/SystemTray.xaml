@@ -6,7 +6,7 @@
              x:Class="CairoDesktop.MenuBarExtensions.SystemTray"
              x:Name="CairoSystemTray"
              Height="19"
-             Margin="8,0,8,0"
+             Margin="0"
              Loaded="CairoSystemTray_Loaded"
              Unloaded="CairoSystemTray_Unloaded">
     <UserControl.Resources>
