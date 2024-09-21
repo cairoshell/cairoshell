@@ -13,6 +13,28 @@
              ToolTipService.ShowDuration="1000"
              ToolTipService.InitialShowDelay="1000">
     <DockPanel Margin="0">
+        <ItemsControl ItemsSource="{Binding Path=RemovableDrives}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}" DataContext="{Binding}" Name="DrivesMenu">
+                        <Menu.ContextMenu>
+                            <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed">
+                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_OpenInNewWindow)}" Click="Open_Click" CommandParameter="{Binding Path=Path}" />
+                                <MenuItem Header="{Binding Path=(l10n:DisplayString.sStacks_OpenOnDesktop)}" Name="miOpenOnDesktop" Click="OpenDesktop_Click"  CommandParameter="{Binding Path=Path}" />
+                            </ContextMenu>
+                        </Menu.ContextMenu>
+                        <MenuItem Header="{Binding Path=DisplayName, Mode=OneTime}" CommandParameter="{Binding}" Style="{StaticResource CairoStacksStyle}" ItemContainerStyle="{StaticResource CairoMenuItemContainerStyle}" Margin="0" PreviewMouseUp="NameLabel_PreviewMouseUp" PreviewMouseDown="NameLabel_PreviewMouseDown" SubmenuOpened="MenuItem_OnSubmenuOpened">
+                            <MenuItem></MenuItem>
+                        </MenuItem>
+                    </Menu>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
         <ItemsControl ItemsSource="{Binding Path=StackLocations}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

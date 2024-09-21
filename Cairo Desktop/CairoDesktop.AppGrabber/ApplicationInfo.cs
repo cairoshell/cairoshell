@@ -266,8 +266,15 @@ namespace CairoDesktop.AppGrabber
 
                 return storeApp.GetIconImageSource(size);
             }
-            
-            return IconImageConverter.GetImageFromAssociatedIcon(Path, size);
+
+            IntPtr hIcon = IconHelper.GetIconByFilename(Path, size);
+            if (hIcon == IntPtr.Zero && Path.EndsWith(".lnk") && !string.IsNullOrEmpty(Target))
+            {
+                // Retry with target if this is a shortcut
+                hIcon = IconHelper.GetIconByFilename(Target, size);
+            }
+
+            return IconImageConverter.GetImageFromHIcon(hIcon);
         }
 
         public static ApplicationInfo FromStoreApp(ManagedShell.UWPInterop.StoreApp storeApp)

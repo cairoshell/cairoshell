@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace CairoDesktop.Common
 {
-    public class Settings : INotifyPropertyChanged, IMigratableSettings
+    public class Settings : INotifyPropertyChanged
     {
         private static Settings instance;
 
@@ -31,9 +31,7 @@ namespace CairoDesktop.Common
         private static string _settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Cairo Desktop", "settings.json");
         private static bool _isInitializing = true;
         private static SettingsFile<Settings> _settingsFile = new SettingsFile<Settings>(_settingsPath, new Settings());
-
-        private bool _migrationPerformed = false;
-        public bool MigrationPerformed { get => _migrationPerformed; }
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         // This should not be used directly! Unfortunately it must be public for JsonSerializer.
@@ -525,6 +523,13 @@ namespace CairoDesktop.Common
                 }
             }
         }
+
+        private bool _showStacksRemovableDrives = false;
+        public bool ShowStacksRemovableDrives
+        {
+            get => _showStacksRemovableDrives;
+            set => Set(ref _showStacksRemovableDrives, value);
+        }
         #endregion
 
         #region Advanced
@@ -601,62 +606,5 @@ namespace CairoDesktop.Common
         #endregion
 
         #endregion
-
-        public void ImportLegacySettings(Configuration.Settings legacySettings)
-        {
-            EnableDesktop = legacySettings.EnableDesktop;
-            EnableTaskbar = legacySettings.EnableTaskbar;
-            EnableMenuBarShadow = legacySettings.EnableMenuBarShadow;
-            IsFirstRun = legacySettings.IsFirstRun;
-            TimeFormat = legacySettings.TimeFormat;
-            DateFormat = legacySettings.DateFormat;
-            FileManager = legacySettings.FileManager;
-            EnableSysTray = legacySettings.EnableSysTray;
-            EnableDynamicDesktop = legacySettings.EnableDynamicDesktop;
-            Theme = legacySettings.CairoTheme;
-            DesktopDirectory = legacySettings.DesktopDirectory;
-            TaskbarMode = legacySettings.TaskbarMode;
-            SysTrayAlwaysExpanded = legacySettings.SysTrayAlwaysExpanded;
-            DefaultProgramsCategory = legacySettings.DefaultProgramsCategory;
-            TaskbarEdge = legacySettings.TaskbarPosition == 1 ? AppBarEdge.Top : AppBarEdge.Bottom;
-            DesktopLabelPosition = legacySettings.DesktopLabelPosition;
-            DesktopIconSize = (IconSize)legacySettings.DesktopIconSize;
-            ForceSoftwareRendering = legacySettings.ForceSoftwareRendering;
-            Language = legacySettings.Language;
-            TaskbarIconSize = (IconSize)legacySettings.TaskbarIconSize;
-            EnableDesktopOverlayHotKey = legacySettings.EnableDesktopOverlayHotKey;
-            EnableCairoMenuHotKey = legacySettings.EnableCairoMenuHotKey;
-            DesktopOverlayHotKey = legacySettings.DesktopOverlayHotKey;
-            CairoMenuHotKey = legacySettings.CairoMenuHotKey;
-            FoldersOpenDesktopOverlay = legacySettings.FoldersOpenDesktopOverlay;
-            EnableMenuBarBlur = legacySettings.EnableMenuBarBlur;
-            EnableMenuBarMultiMon = legacySettings.EnableMenuBarMultiMon;
-            EnableTaskbarMultiMon = legacySettings.EnableTaskbarMultiMon;
-            FullWidthTaskBar = legacySettings.FullWidthTaskBar;
-            ShowHibernate = legacySettings.ShowHibernate;
-            TaskbarMiddleClick = legacySettings.TaskbarMiddleClick;
-            DesktopBackgroundType = legacySettings.DesktopBackgroundType;
-            BingWallpaperStyle = legacySettings.BingWallpaperStyle;
-            CairoBackgroundImagePath = legacySettings.CairoBackgroundImagePath;
-            CairoBackgroundImageStyle = legacySettings.CairoBackgroundImageStyle;
-            CairoBackgroundVideoPath = legacySettings.CairoBackgroundVideoPath;
-            ProgramsMenuLayout = legacySettings.ProgramsMenuLayout;
-            DesktopNavigationToolbarLocation = legacySettings.DesktopNavigationToolbarLocation;
-            PinnedNotifyIcons = legacySettings.PinnedNotifyIcons;
-            EnableTaskbarThumbnails = legacySettings.EnableTaskbarThumbnails;
-            EnableMenuExtraVolume = legacySettings.EnableMenuExtraVolume;
-            EnableMenuExtraActionCenter = legacySettings.EnableMenuExtraActionCenter;
-            EnableMenuExtraClock = legacySettings.EnableMenuExtraClock;
-            EnableMenuExtraSearch = legacySettings.EnableMenuExtraSearch;
-            EnableMenuBar = legacySettings.EnableMenuBar;
-            ShowTaskbarLabels = legacySettings.ShowTaskbarLabels;
-            TaskbarButtonWidth = legacySettings.TaskbarButtonWidth;
-            TaskbarButtonHeight = legacySettings.TaskbarButtonHeight;
-            ShowTaskbarBadges = legacySettings.ShowTaskbarBadges;
-            TaskbarGroupingStyle = legacySettings.TaskbarGroupingStyle;
-            TaskbarMultiMonMode = legacySettings.TaskbarMultiMonMode;
-            if (Enum.TryParse(legacySettings.LogSeverity, out LogSeverity result))
-                LogSeverity = result;
-        }
     }
 }

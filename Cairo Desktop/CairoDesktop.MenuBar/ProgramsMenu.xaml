@@ -3,9 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
              xmlns:Settings="clr-namespace:CairoDesktop.Common;assembly=CairoDesktop.Common"
+             xmlns:converters="clr-namespace:CairoDesktop.MenuBar.Converters"
              Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <ResourceDictionary>
+            <converters:ProgramsMenuHeightConverter x:Key="ProgramsMenuHeightConverter" />
             <Style x:Key="InnerProgramsListStyle"
                 TargetType="ItemsControl">
                 <Setter Property="ItemTemplate">
@@ -44,7 +46,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ItemsControl">
-                            <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" MaxHeight="576" Width="240" VerticalScrollBarVisibility="Auto">
+                            <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" MaxHeight="576" Width="240" Height="{Binding Converter={StaticResource ProgramsMenuHeightConverter}}" VerticalScrollBarVisibility="Auto">
                                 <VirtualizingStackPanel IsItemsHost="True" />
                             </ScrollViewer>
                         </ControlTemplate>

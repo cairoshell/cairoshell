@@ -18,6 +18,7 @@ using CairoDesktop.DynamicDesktop.Commands;
 using CairoDesktop.DynamicDesktop.Services;
 using CairoDesktop.MenuBar.Services;
 using CairoDesktop.Taskbar.Services;
+using CairoDesktop.AppGrabber.Commands;
 
 namespace CairoDesktop
 {
@@ -116,6 +117,8 @@ namespace CairoDesktop
                     services.AddSingleton<ICairoCommand, OpenPersonalizeControlPanelCommand>();
                     services.AddSingleton<ICairoCommand, OpenProgramsControlPanelCommand>();
                     services.AddSingleton<ICairoCommand, TaskViewCommand>();
+                    services.AddSingleton<ICairoCommand, AddToProgramsCommand>();
+                    services.AddSingleton<ICairoCommand, AddToQuickLaunchCommand>();
                 })
                 .ConfigureLogging((context, logging) =>
                 {

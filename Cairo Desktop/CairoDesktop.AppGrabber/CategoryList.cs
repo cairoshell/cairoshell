@@ -240,8 +240,9 @@ namespace CairoDesktop.AppGrabber {
                     if (appElement.ChildNodes.Count > 2)
                         app.Target = appElement.ChildNodes[2].InnerText;
 
-                    if (!app.IsStoreApp && !ShellHelper.Exists(app.Path)) {
-                        ShellLogger.Debug(app.Path + " does not exist");
+                    if (!app.IsStoreApp && !ShellHelper.Exists(app.Path) && (!app.Path.EndsWith(".lnk") || string.IsNullOrEmpty(app.Target) || !ShellHelper.Exists(app.Target)))
+                    {
+                        ShellLogger.Debug($"[AppGrabber] {app.Path} does not exist");
                         continue;
                     }
 

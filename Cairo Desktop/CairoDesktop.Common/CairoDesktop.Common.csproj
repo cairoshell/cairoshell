@@ -12,14 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ManagedShell" Version="0.0.258" />
+    <PackageReference Include="ManagedShell" Version="0.0.264" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
     <PackageReference Include="System.Text.Json" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CairoDesktop.Configuration\CairoDesktop.Configuration.csproj" />
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
   </ItemGroup>
 
