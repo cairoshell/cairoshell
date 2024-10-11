@@ -2132,7 +2132,7 @@ namespace CairoDesktop.Common.Localization
             { "sCommand_OpenDesktopOverlay", "Desktop-Overlay öffnen" },
             { "sCommand_CloseDesktopOverlay", "Desktop-Overlay schließen" },
             { "sCommand_AddToPrograms", "Zum Programmmenü hinzufügen" },
-            { "sCommand_AddToQuickLaunch", "Zum Schnellstart hinzufügen" },
+            { "sCommand_AddToQuickLaunch", "Zum Schnellstart hinzufügen" }
         };
 
         public static Dictionary<string, string> es_ES = new Dictionary<string, string>
