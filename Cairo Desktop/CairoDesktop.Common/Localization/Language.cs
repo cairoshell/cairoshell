@@ -2006,8 +2006,9 @@ namespace CairoDesktop.Common.Localization
             { "sSettings_General_FileManager", "Dateiverwaltung:" },
             { "sSettings_General_FoldersOpenDesktopOverlay", "Ordner werden mit dem dynamischen Desktop-Overlay geöffnet" },
             { "sSettings_MenuBar_DefaultProgramsCategory", "Standardkategorie für Programme:" },
-	    { "sSettings_MenuBar_EnableMenuBarAutoHide", "Menüleiste automatisch ausblenden" },
+            { "sSettings_MenuBar_EnableMenuBarAutoHide", "Menüleiste automatisch ausblenden" },
             { "sSettings_MenuBar_EnableMenuBarShadow", "Schatten der Menüleiste aktivieren" },
+            { "sSettings_MenuBar_MenuBarEdge", "Position der Menüleiste:" },
             { "sSettings_MenuBar_NotificationArea", "Infobereich" },
             { "sSettings_MenuBar_EnableNotificationArea", "Infobereich aktivieren" },
             { "sSettings_MenuBar_NotificationAreaTaskbarWarning", "Der Infobereich von Cairo wird nicht angezeigt, da die Windows-Taskleiste sichtbar ist. Um den Infobereich von Cairo zu verwenden, aktivieren Sie die Taskleiste von Cairo und starten Sie Cairo neu." },
@@ -2021,6 +2022,7 @@ namespace CairoDesktop.Common.Localization
             { "sSettings_MenuBar_EnableMenuBarBlur", "Unschärfe hinter der Menüleiste" },
             { "sSettings_MenuBar_EnableMenuBarMultiMon", "Menüleiste auf mehreren Monitoren anzeigen" },
             { "sSettings_MenuBar_ShowHibernate", "Ruhezustand im Cairo-Menü anzeigen" },
+            { "sSettings_MenuBar_ShowStacksRemovableDrives", "Wechseldatenträger anzeigen" },
             { "sSettings_MenuBar_ProgramsMenuLayout", "Layout des Programmmenüs:" },
             { "sSettings_MenuBar_ProgramsMenuLayoutRight", "Registerkarten rechts" },
             { "sSettings_MenuBar_ProgramsMenuLayoutLeft", "Registerkarten links" },
@@ -2090,7 +2092,7 @@ namespace CairoDesktop.Common.Localization
             { "sSettings_Advanced_LogOffNow", "Jetzt abmelden" },
             { "sSettings_Advanced_LogOffLater", "Später abmelden" },
             { "sSettings_Advanced_OpenLogsFolder", "Ordner öffnen" },
-	    { "sSettings_Advanced_AutoHideShowDelayMs", "Verzögerung beim automatischen Ausblenden (ms):" },
+            { "sSettings_Advanced_AutoHideShowDelayMs", "Verzögerung beim automatischen Ausblenden (ms):" },
             { "sWelcome_StartTour", "Tour starten" },
             { "sWelcome_FinishTour", "Tour beenden" },
             { "sWelcome_Welcome", "Willkommen zu Cairo" },
@@ -2124,7 +2126,13 @@ namespace CairoDesktop.Common.Localization
             { "sWelcome_TaskbarSec2Heading", "Kategorisierte Fenster" },
             { "sWelcome_TaskbarSec2Text", "Geöffnete Fenster in Ihrer Taskleiste sind jetzt genauso organisiert, wie Sie Ihr Programmmenü kategorisiert haben. Jetzt sind alle Ihre verwandten Tasks für eine schnelle und einfache Verwendung gruppiert." },
             { "sWelcome_TaskbarSec3Heading", "Taskliste" },
-            { "sWelcome_TaskbarSec3Text", "Viele offene Fenster? Die Taskliste zeigt Ihre Fenster in einem Menü, so dass Sie einfach zu dem wechseln können, nach dem Sie suchen. Sie können auch die Windows 10-Taskansicht über dieses Menü öffnen." }
+            { "sWelcome_TaskbarSec3Text", "Viele offene Fenster? Die Taskliste zeigt Ihre Fenster in einem Menü, so dass Sie einfach zu dem wechseln können, nach dem Sie suchen. Sie können auch die Windows 10-Taskansicht über dieses Menü öffnen." },
+            { "sCommand_OpenFile", "Datei öffnen" },
+            { "sCommand_OpenLocation", "Verzeichnis öffnen" },
+            { "sCommand_OpenDesktopOverlay", "Desktop-Overlay öffnen" },
+            { "sCommand_CloseDesktopOverlay", "Desktop-Overlay schließen" },
+            { "sCommand_AddToPrograms", "Zum Programmmenü hinzufügen" },
+            { "sCommand_AddToQuickLaunch", "Zum Schnellstart hinzufügen" }
         };
 
         public static Dictionary<string, string> es_ES = new Dictionary<string, string>
