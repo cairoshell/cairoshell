@@ -884,7 +884,7 @@ namespace CairoDesktop
                 }
                 else
                 {
-                    string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                    string exePath = ExePath.GetExecutablePath();
                     //Write SubKey
                     rKey.SetValue("CairoShell", exePath);
                 }
