@@ -4,6 +4,11 @@ namespace CairoDesktop.Common.Localization
 {
     static class Language
     {
+
+        /// <summary>
+        /// English should always be hardcoded as base language and not loaded from file.
+        /// Should make an editor or something
+        /// </summary>
         public static Dictionary<string, string> en_US = new Dictionary<string, string>
         {
             { "sProgramsMenu", "Programs" },
@@ -308,9 +313,9 @@ namespace CairoDesktop.Common.Localization
             { "sCommand_CloseDesktopOverlay", "Close Desktop Overlay" },
             { "sCommand_AddToPrograms", "Add to programs menu" },
             { "sCommand_AddToQuickLaunch", "Add to quick launch" },
-        };
+        };    
 
-        public static Dictionary<string, string> pt_BR = new Dictionary<string, string>
+       /* public static Dictionary<string, string> pt_BR = new Dictionary<string, string>
         {
             { "sProgramsMenu", "Programas"},
             { "sPlacesMenu", "Lugares"},
@@ -4087,8 +4092,6 @@ namespace CairoDesktop.Common.Localization
             { "sWelcome_TaskbarSec2Text", "A megnyitott ablakok csoportosítása hasonló a Programok menü kategorizálásához. Az összes kapcsolódó ablak csoportosítva van a könnyebb hozzáférés érdekében." },
             { "sWelcome_TaskbarSec3Heading", "Feladat lista" },
             { "sWelcome_TaskbarSec3Text", "Túl sok a megnyitott ablak? A feladatlista menübe foglalja a megnyitott ablakokat, hogy könnyebben találja meg, amit keres. A Windows saját feladatlistáját is elérheti ebből a menüből." }
-        };
-
-
+        };*/
     }
 }
