@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+
 
 namespace CairoDesktop.Common.Localization
 {
@@ -7,10 +9,10 @@ namespace CairoDesktop.Common.Localization
     {
         public static List<KeyValuePair<string, string>> Languages = new List<KeyValuePair<string, string>>()
         {
-            new KeyValuePair<string, string>("Chinese (Simplified) 简体中文", "zh_CN"),
+            new KeyValuePair<string, string>("English", "en_US")
+           /* new KeyValuePair<string, string>("Chinese (Simplified) 简体中文", "zh_CN"),
             new KeyValuePair<string, string>("Czech", "cs_CZ"),
-            new KeyValuePair<string, string>("Dutch (Nederlands)", "nl_NL"),
-            new KeyValuePair<string, string>("English", "en_US"),
+            new KeyValuePair<string, string>("Dutch (Nederlands)", "nl_NL"),            
             new KeyValuePair<string, string>("Français", "fr_FR"),
             new KeyValuePair<string, string>("German", "de_DE"),
             new KeyValuePair<string, string>("Italiano", "it_IT"),
@@ -21,24 +23,159 @@ namespace CairoDesktop.Common.Localization
             new KeyValuePair<string, string>("Svenska", "sv_SE"),
             new KeyValuePair<string, string>("Turkish (Türkçe)", "tr_TR"),
             new KeyValuePair<string, string>("한국어", "ko_KR"),
-            new KeyValuePair<string, string>("Magyar (Hungarian)", "hu_HU")
+            new KeyValuePair<string, string>("Magyar (Hungarian)", "hu_HU")*/
         };
+
+        public static Dictionary<string, string> Translation = new Dictionary<string, string>();
+
 
         public DisplayString()
         {
+            /*
+            //extract languages
+            foreach (KeyValuePair<string, string> kvp in Languages)
+            {
+                using (StreamWriter sw = File.CreateText(kvp.Key + ".lng"))
+                {
+                    sw.WriteLine("sLanguageId=" + kvp.Value);
+                    sw.WriteLine("sLanguageName" + kvp.Key);
+                    sw.WriteLine("sLanguageTranslationAuthor=Cairo devs");
+                    sw.WriteLine("sLanguageCairoVersion=0.4");
+                    Dictionary<string, string> lang = null;
+                    if (kvp.Value.StartsWith("fr_"))
+                    {
+                        lang = Language.fr_FR;
+                    }
+                    else if (kvp.Value.StartsWith("en_"))
+                    {
+                        lang = Language.en_US;
+                    }
+                    else if (kvp.Value.StartsWith("it_"))
+                    {
+                        lang = Language.it_IT;
+                    }
+                    else if (kvp.Value.StartsWith("pt_"))
+                    {
+                        lang = Language.pt_BR;
+                    }
+                    else if (kvp.Value.StartsWith("sv_"))
+                    {
+                        lang = Language.sv_SE;
+                    }
+                    else if (kvp.Value.StartsWith("zh_"))
+                    {
+                        lang = Language.zh_CN;
+                    }
+                    else if (kvp.Value.StartsWith("cs_"))
+                    {
+                        lang = Language.cs_CZ;
+                    }
+                    else if (kvp.Value.StartsWith("de_"))
+                    {
+                        lang = Language.de_DE;
+                    }
+                    else if (kvp.Value.StartsWith("es_"))
+                    {
+                        lang = Language.es_ES;
+                    }
+                    else if (kvp.Value.StartsWith("nl_"))
+                    {
+                        lang = Language.nl_NL;
+                    }
+                    else if (kvp.Value.StartsWith("ru_"))
+                    {
+                        lang = Language.ru_RU;
+                    }
+                    else if (kvp.Value.StartsWith("pl_"))
+                    {
+                        lang = Language.pl_PL;
+                    }
+                    else if (kvp.Value.StartsWith("tr_"))
+                    {
+                        lang = Language.tr_TR;
+                    }
+                    else if (kvp.Value.StartsWith("ko_"))
+                    {
+                        lang = Language.ko_KR;
+                    }
+                    else if (kvp.Value.StartsWith("hu_"))
+                    {
+                        lang = Language.hu_HU;
+                    }
+                    if (lang != null)
+                    {
+                        for (int i = 0; i < lang.Count; i++)
+                        {
+                            sw.WriteLine(lang.ElementAt(i).Key + "=" + lang.ElementAt(i).Value);
+                        }
+                    }
+                }
+            }
+            //extract languages*/
 
+            if (System.IO.Directory.Exists(System.AppDomain.CurrentDomain.BaseDirectory+ "\\Localization"))
+            {
+                Languages.Clear();
+                string[] lngFiles = System.IO.Directory.GetFiles(System.AppDomain.CurrentDomain.BaseDirectory + "\\Localization", "*.lng");
+                for(int i=0; i< lngFiles.Length; i++) 
+                {
+                    Languages.Add(new KeyValuePair<string, string>(new System.IO.FileInfo(lngFiles[i]).Name.Replace(".lng", ""), new System.IO.FileInfo(lngFiles[i]).Name));
+                }
+            }
+            string lngFile = System.AppDomain.CurrentDomain.BaseDirectory + "\\Localization\\" + Settings.Instance.Language;
+            if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "\\Localization\\" + Settings.Instance.Language))
+            {
+                Translation= LoadTranslations(lngFile);
+            }  
         }
 
-        private static string getString([CallerMemberName]string stringName = null)
+        static Dictionary<string, string> LoadTranslations(string filePath)
         {
-            Dictionary<string, string> lang;
+            var dictionary = new Dictionary<string, string>();
+
+            // Ensure the file exists before reading
+            if (System.IO.File.Exists(filePath))
+            {
+                // Read each line from the file
+                foreach (var line in System.IO.File.ReadAllLines(filePath))
+                {
+                    // Ignore empty lines and comments (lines starting with #)
+                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                        continue;
+
+                    // Split the line into key and value based on '='
+                    
+                    string[] parts = line.Split('=');
+                    
+                    if (parts.Length == 2)
+                    {
+                        string key = parts[0].Trim();
+                        string value = parts[1].Trim();
+
+                        // Add to dictionary if the key is not empty
+                        if (!string.IsNullOrEmpty(key))
+                            dictionary[key] = value;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"File not found: {filePath}");
+            }
+
+            return dictionary;
+        }
+
+        private static string getString([CallerMemberName] string stringName = null)
+        {           
             bool isDefault = false;
             string useLang = Settings.Instance.Language.ToLower();
-
+            /*
             if (useLang.StartsWith("fr_"))
             {
                 lang = Language.fr_FR;
-            }else if (useLang.StartsWith("it_"))
+            }
+            else if (useLang.StartsWith("it_"))
             {
                 lang = Language.it_IT;
             }
@@ -90,22 +227,22 @@ namespace CairoDesktop.Common.Localization
             {
                 lang = Language.hu_HU;
             }
+
             else
             {
                 lang = Language.en_US;
                 isDefault = true;
-            }
+            }*/
 
-            if (lang.ContainsKey(stringName))
-                return lang[stringName];
+            if (Translation!=null && Translation.ContainsKey(stringName))
+                return Translation[stringName];
             else
             {
                 // default is en_US - return string from there if not found in set language
                 if (!isDefault)
                 {
-                    lang = Language.en_US;
-                    if (lang.ContainsKey(stringName))
-                        return lang[stringName];
+                    if (Language.en_US.ContainsKey(stringName))
+                        return Language.en_US[stringName];
                 }
             }
 
