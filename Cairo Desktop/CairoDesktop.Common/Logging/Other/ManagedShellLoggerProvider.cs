@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.IO;
 using ManagedShell.Common;
 
@@ -18,7 +17,7 @@ namespace CairoDesktop.Common.Logging.Other
         private readonly IDisposable _settingsChangeToken;
         private ManagedShellFileLoggerOptions _settings;
         private string _filename;
-        private FileLog _fileLog;
+        private FileLog _fileLog = null;
 
         public ManagedShellLoggerProvider(ManagedShellFileLoggerOptions settings, Settings cairoSettings)
         {
@@ -32,9 +31,24 @@ namespace CairoDesktop.Common.Logging.Other
 
             cairoSettings.PropertyChanged += CairoSettings_PropertyChanged;
 
-            _fileLog = new FileLog(_filename);
-            _fileLog.Open();
-            ShellLogger.Attach(new ILog[] { _fileLog, new ConsoleLog() }, true);
+            try
+            {
+                _fileLog = new FileLog(_filename);
+                _fileLog.Open();
+            }
+            catch (Exception ex)
+            {
+                ShellLogger.Error($"Unable to initialize file logger: {ex}");
+            }
+
+            if (_fileLog == null)
+            {
+                ShellLogger.Attach(new ConsoleLog(), true);
+            }
+            else
+            {
+                ShellLogger.Attach(new ILog[] { _fileLog, new ConsoleLog() }, true);
+            }
         }
 
         private void CairoSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -104,7 +118,7 @@ namespace CairoDesktop.Common.Logging.Other
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                ShellLogger.Error($"Unable to create Logs folder: {ex}");
             }
             return true;
         }
@@ -131,7 +145,7 @@ namespace CairoDesktop.Common.Logging.Other
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                ShellLogger.Error($"Unable to back up the previous log file: {ex}");
             }
         }
 
@@ -161,7 +175,7 @@ namespace CairoDesktop.Common.Logging.Other
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex);
+                ShellLogger.Error($"Unable to delete old log files: {ex}");
             }
         }
 
@@ -181,7 +195,7 @@ namespace CairoDesktop.Common.Logging.Other
 
         protected override void DisposeOfManagedResources()
         {
-            _fileLog.Dispose();
+            _fileLog?.Dispose();
 
             base.DisposeOfManagedResources();
         }
