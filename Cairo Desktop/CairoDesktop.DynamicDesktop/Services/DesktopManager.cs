@@ -541,7 +541,10 @@ namespace CairoDesktop.DynamicDesktop.Services
 
         private void TaskbarCreated(object sender, EventArgs e)
         {
-            ResetPosition(true);
+            if (AllowProgmanChild)
+            {
+                ResetPosition(true);
+            }
         }
 
         private void DwmChanged(object sender, WindowManagerEventArgs e)
