@@ -8,6 +8,7 @@ namespace CairoDesktop.Common.Localization
         public static List<KeyValuePair<string, string>> Languages = new List<KeyValuePair<string, string>>()
         {
             new KeyValuePair<string, string>("Chinese (Simplified) 简体中文", "zh_CN"),
+            new KeyValuePair<string, string>("Chinese (Traditional) 繁體中文", "zh_TW"),
             new KeyValuePair<string, string>("Czech", "cs_CZ"),
             new KeyValuePair<string, string>("Dutch (Nederlands)", "nl_NL"),
             new KeyValuePair<string, string>("English", "en_US"),
@@ -52,7 +53,10 @@ namespace CairoDesktop.Common.Localization
             }
             else if (useLang.StartsWith("zh_"))
             {
-                lang = Language.zh_CN;
+                if (useLang.StartsWith("zh_tw"))
+                    lang = Language.zh_TW;
+                else
+                    lang = Language.zh_CN;
             }
             else if (useLang.StartsWith("cs_"))
             {
