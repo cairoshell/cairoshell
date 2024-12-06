@@ -1809,7 +1809,7 @@ namespace CairoDesktop.Common.Localization
             { "sSettings_MenuBar_EnableMenuBarMultiMon", "在所有螢幕上顯示選單列" },
             { "sSettings_MenuBar_ShowHibernate", "在 Cairo 主選單中顯示 \"休眠\" 選項" },
             { "sSettings_MenuBar_ShowStacksRemovableDrives", "在常用堆疊中顯示可卸除的裝置" },
-aero            { "sSettings_MenuBar_ProgramsMenuLayout", "\"應用程式\"選單配置: " },
+            { "sSettings_MenuBar_ProgramsMenuLayout", "\"應用程式\"選單配置: " },
             { "sSettings_MenuBar_ProgramsMenuLayoutRight", "分類介面在右" },
             { "sSettings_MenuBar_ProgramsMenuLayoutLeft", "分類介面在左" },
             { "sSettings_MenuBar_MenuExtras", "選單列項目" },
