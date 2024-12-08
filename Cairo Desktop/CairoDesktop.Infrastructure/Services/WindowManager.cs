@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Windows.Threading;
+using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.AppBar;
+using ManagedShell.Interop;
 using Microsoft.Extensions.Logging;
 
 namespace CairoDesktop.Infrastructure.Services
@@ -13,15 +15,18 @@ namespace CairoDesktop.Infrastructure.Services
         private bool _isSettingDisplays;
         private bool hasCompletedInitialDisplaySetup;
         private int pendingDisplayEvents;
+        private TaskbarCreatedMonitor _taskbarCreatedMonitor;
         private static readonly object displaySetupLock = new object();
 
+        private readonly ICairoApplication _app;
         private readonly List<IWindowService> _windowServices = new List<IWindowService>();
         private readonly AppBarManager _appBarManager;
         private readonly ILogger<WindowManager> _logger;
 
         public event EventHandler<WindowManagerEventArgs> DwmChanged;
         public event EventHandler<WindowManagerEventArgs> ScreensChanged;
-        
+        public event EventHandler<EventArgs> TaskbarCreated;
+
         public bool IsSettingDisplays
         {
             get => _isSettingDisplays;
@@ -49,10 +54,11 @@ namespace CairoDesktop.Infrastructure.Services
 
         public List<AppBarScreen> ScreenState { get; set; }
 
-        public WindowManager(ILogger<WindowManager> logger, ShellManagerService shellManagerService)
+        public WindowManager(ICairoApplication app, ILogger<WindowManager> logger, ShellManagerService shellManagerService)
         {
             ScreenState = new List<AppBarScreen>();
 
+            _app = app;
             _appBarManager = shellManagerService.ShellManager.AppBarManager;
             _logger = logger;
 
@@ -87,6 +93,7 @@ namespace CairoDesktop.Infrastructure.Services
             IsSettingDisplays = true;
 
             DisplaySetup(ScreenSetupReason.FirstRun);
+            _taskbarCreatedMonitor = new TaskbarCreatedMonitor(this);
 
             hasCompletedInitialDisplaySetup = true;
             IsSettingDisplays = false;
@@ -350,8 +357,49 @@ namespace CairoDesktop.Infrastructure.Services
         }
         #endregion
 
+        #region TaskbarCreatedMonitor
+        private class TaskbarCreatedMonitor : NativeWindow, IDisposable
+        {
+            private readonly WindowManager _windowManagerRef;
+            private static readonly int WM_TASKBARCREATEDMESSAGE = NativeMethods.RegisterWindowMessage("TaskbarCreated");
+
+            public TaskbarCreatedMonitor(WindowManager windowManagerRef)
+            {
+                _windowManagerRef = windowManagerRef;
+                CreateHandle(new CreateParams());
+            }
+
+            protected override void WndProc(ref Message m)
+            {
+                if (m.Msg == WM_TASKBARCREATEDMESSAGE)
+                {
+                    _windowManagerRef._app.Dispatch(() => {
+                        try
+                        {
+                            _windowManagerRef._logger.LogDebug("TaskbarCreated message received, informing handlers");
+                            _windowManagerRef.TaskbarCreated?.Invoke(this, new EventArgs());
+                        }
+                        catch (Exception ex)
+                        {
+                            _windowManagerRef._logger.LogWarning($"Error handling TaskbarCreated message on TaskbarCreatedMonitor: {ex.Message}");
+                        }
+                    });
+                }
+
+                base.WndProc(ref m); // Call the base class to process other messages so we dont accidentally cause crashes or bugs.
+            }
+
+            public void Dispose()
+            {
+                DestroyHandle();
+            }
+        }
+
+        #endregion
+
         public void Dispose()
         {
+            _taskbarCreatedMonitor?.Dispose();
         }
     }
 }

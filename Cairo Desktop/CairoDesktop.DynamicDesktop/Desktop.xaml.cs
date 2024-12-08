@@ -148,13 +148,13 @@ namespace CairoDesktop.DynamicDesktop
             {
                 e.Cancel = true;
             }
+        }
 
-            if (!e.Cancel)
-            {
-                // unsubscribe from things
-                _settings.PropertyChanged -= Settings_PropertyChanged;
-                _fullScreenHelper.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
-            }
+        private void CairoDesktopWindow_Closed(object sender, EventArgs e)
+        {
+            // unsubscribe from things
+            _settings.PropertyChanged -= Settings_PropertyChanged;
+            _fullScreenHelper.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
         }
 
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)

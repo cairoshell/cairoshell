@@ -10,6 +10,8 @@ namespace CairoDesktop.Infrastructure.ObjectModel
 
         event EventHandler<WindowManagerEventArgs> ScreensChanged;
 
+        event EventHandler<EventArgs> TaskbarCreated;
+
         bool IsSettingDisplays { get; set; }
 
         List<AppBarScreen> ScreenState { get; set; }

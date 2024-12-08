@@ -477,18 +477,18 @@ namespace CairoDesktop.DynamicDesktop
 
         private void DesktopToolbar_Closing(object sender, CancelEventArgs e)
         {
-
             if (!_cairoApplication.IsShuttingDown && !AllowClose)
             {
                 e.Cancel = true;
             }
-            else
-            {
-                lowLevelKeyboardListener.OnKeyDown -= LowLevelKeyboardListener_OnKeyDown;
-                lowLevelKeyboardListener.OnKeyUp -= LowLevelKeyboardListener_OnKeyUp;
-                lowLevelKeyboardListener.UnHookKeyboard();
-                lowLevelKeyboardListener = null;
-            }
+        }
+
+        private void DesktopToolbar_Closed(object sender, EventArgs e)
+        {
+            lowLevelKeyboardListener.OnKeyDown -= LowLevelKeyboardListener_OnKeyDown;
+            lowLevelKeyboardListener.OnKeyUp -= LowLevelKeyboardListener_OnKeyUp;
+            lowLevelKeyboardListener.UnHookKeyboard();
+            lowLevelKeyboardListener = null;
         }
         #endregion
 

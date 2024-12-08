@@ -87,6 +87,7 @@ namespace CairoDesktop.DynamicDesktop.Services
             _settings.PropertyChanged += Settings_PropertyChanged;
             _windowManager.DwmChanged += DwmChanged;
             _windowManager.ScreensChanged += ScreensChanged;
+            _windowManager.TaskbarCreated += TaskbarCreated;
         }
 
         public void Initialize()
@@ -538,6 +539,14 @@ namespace CairoDesktop.DynamicDesktop.Services
             }
         }
 
+        private void TaskbarCreated(object sender, EventArgs e)
+        {
+            if (AllowProgmanChild)
+            {
+                ResetPosition(true);
+            }
+        }
+
         private void DwmChanged(object sender, WindowManagerEventArgs e)
         {
             if (DesktopWindow == null || !AllowProgmanChild)
@@ -568,6 +577,7 @@ namespace CairoDesktop.DynamicDesktop.Services
             {
                 _windowManager.DwmChanged -= DwmChanged;
                 _windowManager.ScreensChanged -= ScreensChanged;
+                _windowManager.TaskbarCreated -= TaskbarCreated;
             }
 
             TeardownDesktop();
