@@ -16,7 +16,8 @@
         MouseRightButtonDown="DesktopNavigationToolbar_OnMouseRightButtonDown"
         PreviewMouseUp="DesktopToolbar_PreviewMouseUp"
         LocationChanged="DesktopToolbar_LocationChanged"
-        Closing="DesktopToolbar_Closing">
+        Closing="DesktopToolbar_Closing"
+        Closed="DesktopToolbar_Closed">
     <Window.Resources>
         <Style x:Key="CairoDesktopBackNavItemStyle"
                TargetType="{x:Type Button}"
