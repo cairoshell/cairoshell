@@ -4,13 +4,11 @@ using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
-using ManagedShell.ShellFolders.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Data;
 
@@ -269,12 +267,7 @@ namespace CairoDesktop.AppGrabber
                     try
                     {
                         // Get the target from the link
-                        IShellLink link = ShellLinkHelper.Load(IntPtr.Zero, filePath);
-
-                        StringBuilder builder = new StringBuilder(260);
-                        link.GetPath(builder, 260, out ManagedShell.ShellFolders.Structs.WIN32_FIND_DATA pfd, ManagedShell.ShellFolders.Enums.SLGP_FLAGS.SLGP_RAWPATH);
-
-                        target = builder.ToString();
+                        target = ShellLinkHelper.GetLinkTarget(IntPtr.Zero, filePath);
                     }
                     catch (Exception ex)
                     {
@@ -292,7 +285,7 @@ namespace CairoDesktop.AppGrabber
                 // remove items that we can't execute.
                 if (!allowNonApps)
                 {
-                    if (!string.IsNullOrEmpty(target) && !ExecutableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
+                    if (!string.IsNullOrEmpty(target) && !target.StartsWith("::") && !ExecutableExtensions.Contains(Path.GetExtension(target), StringComparer.OrdinalIgnoreCase))
                     {
                         ShellLogger.Debug($"AppGrabberService: Not an app: {filePath}: {target}");
                         return null;
