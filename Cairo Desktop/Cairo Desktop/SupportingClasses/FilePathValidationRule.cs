@@ -25,6 +25,8 @@ namespace CairoDesktop.SupportingClasses
                         return new ValidationResult(false, "Path is Blank");
                     }
 
+                    stringValue = Environment.ExpandEnvironmentVariables(stringValue);
+
                     if (CheckPathLength)
                     {
                         try
@@ -41,8 +43,7 @@ namespace CairoDesktop.SupportingClasses
                     // Check for Invalid Path Chars.
                     if (CheckInvalidPathChars)
                     {
-                        if (Path.GetDirectoryName(stringValue).Any(Path.GetInvalidPathChars().Contains) && // TODO: Should invalid chars in dir and filename be an OR?
-                            Path.GetFileName(stringValue).Any(Path.GetInvalidPathChars().Contains))
+                        if (stringValue.Any(Path.GetInvalidPathChars().Contains))
                         {
                             return new ValidationResult(false, "Invalid Path Chars.");
                         }
