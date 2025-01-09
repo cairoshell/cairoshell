@@ -10,6 +10,7 @@
         Background="Transparent"
         WindowStartupLocation="CenterScreen" 
         UseLayoutRounding="True" 
+        SourceInitialized="Window_SourceInitialized"
         ContentRendered="Window_ContentRendered"
         Closing="Window_Closing">
     <Window.Resources>

@@ -1,10 +1,9 @@
-﻿using CairoDesktop.AppGrabber;
-using CairoDesktop.Application.Interfaces;
+﻿using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Application.Structs;
 using CairoDesktop.Common.Localization;
 using System.Collections.Generic;
 
-namespace CairoDesktop.Commands
+namespace CairoDesktop.AppGrabber.Commands
 {
     public class OpenAppGrabberCommand : ICairoCommand
     {
