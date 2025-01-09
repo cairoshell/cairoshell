@@ -62,7 +62,7 @@ namespace CairoDesktop.Infrastructure.ObjectModel
 
         public void HandleScreenAdded(AppBarScreen screen)
         {
-            if (EnableService && (EnableMultiMon || screen.Primary))
+            if (EnableService && (EnableMultiMon || (screen.Primary && Windows.Count < 1)))
             {
                 OpenWindow(screen);
             }
