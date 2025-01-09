@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using System.Windows.Interop;
+using System.Drawing;
 
 namespace CairoDesktop.AppGrabber
 {
@@ -56,9 +58,22 @@ namespace CairoDesktop.AppGrabber
         {
             this.appGrabber = appGrabber;
             InitializeComponent();
+        }
 
-            Height = (SystemParameters.MaximizedPrimaryScreenHeight / DpiHelper.DpiScaleAdjustment) - 100;
-            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight / DpiHelper.DpiScaleAdjustment;
+        private void Window_SourceInitialized(object sender, EventArgs e)
+        {
+            WindowInteropHelper helper = new WindowInteropHelper(this);
+
+            Screen screen = Screen.FromHandle(helper.Handle);
+            double dpiScale = 1.0;
+            using (Graphics g = Graphics.FromHwnd(helper.Handle))
+            {
+                dpiScale = g.DpiX / 96;
+            }
+
+            MaxHeight = screen.WorkingArea.Height / dpiScale;
+            Height = MaxHeight - 100;
+            Top = (screen.WorkingArea.Top / dpiScale) + ((MaxHeight - Height) / 2);
         }
 
         #region Button Clicks
