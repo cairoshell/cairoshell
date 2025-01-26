@@ -14,7 +14,6 @@
     ShowActivated="False"
     AllowDrop="True"
     Visibility="Visible"
-    Loaded="TaskbarWindow_Loaded"
     Background="{DynamicResource ResourceKey=TaskBarWindowBackground}"
     HorizontalAlignment="Center">
     <Window.Resources>
@@ -46,7 +45,7 @@
                 </Style>
             </Border.Style>
             <StackPanel Orientation="Horizontal" x:Name="grdTaskbar" HorizontalAlignment="Center"
-                        VerticalAlignment="Stretch" ContextMenuOpening="grdTaskbar_ContextMenuOpening">
+                        VerticalAlignment="Stretch">
                 <StackPanel.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="{Binding Path=(l10n:DisplayString.sCairoMenu_Run)}"
@@ -85,9 +84,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                <self:QuickLaunchButton
-                                                    MouseRightButtonUp="TaskButton_MouseRightButtonUp"
-                                                    ParentTaskbar="{Binding ElementName=TaskbarWindow}" />
+                                                <self:QuickLaunchButton ParentTaskbar="{Binding ElementName=TaskbarWindow}" />
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>
@@ -274,7 +271,6 @@
                                                 <Border BorderThickness="0" Margin="0,0,-1,0" BorderBrush="Transparent"
                                                         Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}">
                                                     <self:TaskButton ListMode="False"
-                                                                     MouseRightButtonUp="TaskButton_MouseRightButtonUp"
                                                                      ParentTaskbar="{Binding ElementName=TaskbarWindow}" />
                                                     <Border.Style>
                                                         <Style TargetType="{x:Type Border}">

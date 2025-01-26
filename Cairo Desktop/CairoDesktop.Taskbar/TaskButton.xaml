@@ -20,6 +20,7 @@
             ContextMenuOpening="ContextMenu_Opening"
             DragEnter="btn_DragEnter" 
             DragLeave="btn_DragLeave"
+            PreviewMouseDown="btn_PreviewMouseDown"
             MouseEnter="btn_MouseEnter"
             MouseLeave="btn_MouseLeave">
         <Button.Style>

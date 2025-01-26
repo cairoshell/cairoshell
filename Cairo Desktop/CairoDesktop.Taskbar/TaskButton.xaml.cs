@@ -36,6 +36,7 @@ namespace CairoDesktop.Taskbar
         private DispatcherTimer dragTimer;
         private DispatcherTimer thumbTimer;
         public TaskThumbWindow ThumbWindow;
+        private ApplicationWindow.WindowState PressedWindowState = ApplicationWindow.WindowState.Inactive;
 
         private bool _isGroup => WindowGroup != null && WindowGroup.Count > 1;
 
@@ -74,7 +75,7 @@ namespace CairoDesktop.Taskbar
                     return;
                 }
 
-                if (window.State == ApplicationWindow.WindowState.Active)
+                if (PressedWindowState == ApplicationWindow.WindowState.Active)
                 {
                     window.Minimize();
                 }
@@ -239,7 +240,7 @@ namespace CairoDesktop.Taskbar
 
         private void setIconBadges()
         {
-            if (ListMode || (IconSize)Settings.Instance.TaskbarIconSize == IconSize.Small || !Settings.Instance.ShowTaskbarBadges)
+            if (ListMode || Settings.Instance.TaskbarIconSize == IconSize.Small || !Settings.Instance.ShowTaskbarBadges)
             {
                 overlayIcon.Visibility = Visibility.Collapsed;
             }
@@ -252,6 +253,14 @@ namespace CairoDesktop.Taskbar
         private void btnClick(object sender, RoutedEventArgs e)
         {
             SelectWindow();
+        }
+
+        private void btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left && getWindow() is ApplicationWindow window)
+            {
+                PressedWindowState = window.State;
+            }
         }
 
         private void btn_MouseUp(object sender, MouseButtonEventArgs e)

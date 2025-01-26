@@ -344,13 +344,6 @@ namespace CairoDesktop.Taskbar
             SetDesktopPosition();
         }
 
-        private void TaskbarWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            //Set the window style to noactivate.
-            NativeMethods.SetWindowLong(Handle, NativeMethods.GWL_EXSTYLE,
-                NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
-        }
-
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e == null || string.IsNullOrWhiteSpace(e.PropertyName))
@@ -506,12 +499,6 @@ namespace CairoDesktop.Taskbar
             return Screen.Bounds.Width / DpiScale;
         }
 
-        private void takeFocus()
-        {
-            // because we are setting WS_EX_NOACTIVATE, popups won't go away when clicked outside, since they are not losing focus (they never got it). calling this fixes that.
-            NativeMethods.SetForegroundWindow(Handle);
-        }
-
         public override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
         {
             base.AfterAppBarPos(isSameCoords, rect);
@@ -555,21 +542,6 @@ namespace CairoDesktop.Taskbar
         }
         #endregion
 
-        #region Window procedure
-        protected override IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            base.WndProc(hwnd, msg, wParam, lParam, ref handled);
-
-            if (msg == (int)NativeMethods.WM.MOUSEACTIVATE)
-            {
-                handled = true;
-                return new IntPtr(NativeMethods.MA_NOACTIVATE);
-            }
-
-            return IntPtr.Zero;
-        }
-        #endregion
-
         #region Data
         private void GroupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -591,14 +563,8 @@ namespace CairoDesktop.Taskbar
         private void btnTaskList_Click(object sender, RoutedEventArgs e)
         {
             SetTaskListOffset();
-            takeFocus();
 
             IsPopupOpen = true;
-        }
-
-        private void TaskButton_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            takeFocus();
         }
         #endregion
 
@@ -626,11 +592,6 @@ namespace CairoDesktop.Taskbar
         #endregion
 
         #region Taskbar context menu items
-        private void grdTaskbar_ContextMenuOpening(object sender, System.Windows.Controls.ContextMenuEventArgs e)
-        {
-            takeFocus();
-        }
-
         private void OpenRunWindow(object sender, RoutedEventArgs e)
         {
             ShellHelper.ShowRunDialog(Common.Localization.DisplayString.sRun_Title, Common.Localization.DisplayString.sRun_Info);
