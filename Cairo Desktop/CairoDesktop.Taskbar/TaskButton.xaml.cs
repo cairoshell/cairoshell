@@ -37,6 +37,7 @@ namespace CairoDesktop.Taskbar
         private DispatcherTimer thumbTimer;
         public TaskThumbWindow ThumbWindow;
         private ApplicationWindow.WindowState PressedWindowState = ApplicationWindow.WindowState.Inactive;
+        private TaskGroup taskGroup;
 
         private bool _isGroup => WindowGroup != null && WindowGroup.Count > 1;
 
@@ -75,7 +76,7 @@ namespace CairoDesktop.Taskbar
                     return;
                 }
 
-                if (PressedWindowState == ApplicationWindow.WindowState.Active)
+                if (PressedWindowState == ApplicationWindow.WindowState.Active && window.CanMinimize)
                 {
                     window.Minimize();
                 }
@@ -115,12 +116,15 @@ namespace CairoDesktop.Taskbar
         {
             if (DataContext is TaskGroup group)
             {
-                WindowGroup = group.Windows;
-                group.PropertyChanged += Data_PropertyChanged;
+                taskGroup = group;
+                WindowGroup = taskGroup.Windows;
+                taskGroup.GetButtonRect += Data_GetButtonRect;
+                taskGroup.PropertyChanged += Data_PropertyChanged;
             }
             else if (DataContext is ApplicationWindow window)
             {
                 WindowGroup = new ReadOnlyObservableCollection<object>(new ObservableCollection<object>() { window });
+                window.GetButtonRect += Data_GetButtonRect;
                 window.PropertyChanged += Data_PropertyChanged;
             }
 
@@ -152,12 +156,14 @@ namespace CairoDesktop.Taskbar
 
         private void TaskButton_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            if (DataContext is TaskGroup group)
+            if (taskGroup != null)
             {
-                group.PropertyChanged -= Data_PropertyChanged;
+                taskGroup.GetButtonRect -= Data_GetButtonRect;
+                taskGroup.PropertyChanged -= Data_PropertyChanged;
             }
-            else if (DataContext is ApplicationWindow window)
+            else if (getWindow() is ApplicationWindow window)
             {
+                window.GetButtonRect -= Data_GetButtonRect;
                 window.PropertyChanged -= Data_PropertyChanged;
             }
 
@@ -188,6 +194,22 @@ namespace CairoDesktop.Taskbar
                         break;
                 }
             }
+        }
+
+        private void Data_GetButtonRect(ref NativeMethods.ShortRect rect)
+        {
+            if (ParentTaskbar.Screen.Primary != true && Settings.Instance.TaskbarMultiMonMode != 1)
+            {
+                // If there are multiple instances of a button, use the button on the primary display only
+                return;
+            }
+
+            Point buttonTopLeft = PointToScreen(new Point(0, 0));
+            Point buttonBottomRight = PointToScreen(new Point(ActualWidth, ActualHeight));
+            rect.Top = (short)buttonTopLeft.Y;
+            rect.Left = (short)buttonTopLeft.X;
+            rect.Bottom = (short)buttonBottomRight.Y;
+            rect.Right = (short)buttonBottomRight.X;
         }
 
         private void Data_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -221,7 +243,7 @@ namespace CairoDesktop.Taskbar
         {
             if (!ListMode)
             {
-                WinTitle.Visibility = Settings.Instance.ShowTaskbarLabels? Visibility.Visible : Visibility.Collapsed;
+                WinTitle.Visibility = Settings.Instance.ShowTaskbarLabels ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -338,7 +360,7 @@ namespace CairoDesktop.Taskbar
             {
                 // disable window operations depending on current window state. originally tried implementing via bindings but found there is no notification we get regarding maximized state
                 miMaximize.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowMaximized && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0;
-                miMinimize.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowMinimized && (ws & (int)NativeMethods.WindowStyles.WS_MINIMIZEBOX) != 0;
+                miMinimize.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowMinimized && window.CanMinimize;
                 miRestore.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowNormal;
                 miMove.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal;
                 miSize.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0;

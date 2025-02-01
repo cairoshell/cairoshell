@@ -167,7 +167,7 @@ namespace CairoDesktop.Taskbar
                     return;
                 }
 
-                if (_window.State == ApplicationWindow.WindowState.Active)
+                if (_window.State == ApplicationWindow.WindowState.Active && _window.CanMinimize)
                 {
                     _window.Minimize();
                 }
@@ -198,7 +198,7 @@ namespace CairoDesktop.Taskbar
             int ws = _window.WindowStyles;
 
             miMaximize.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowMaximized && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0;
-            miMinimize.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowMinimized && (ws & (int)NativeMethods.WindowStyles.WS_MINIMIZEBOX) != 0;
+            miMinimize.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowMinimized && _window.CanMinimize;
             miRestore.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowNormal;
             miMove.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal;
             miSize.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0;
