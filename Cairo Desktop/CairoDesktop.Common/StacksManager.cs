@@ -200,7 +200,7 @@ namespace CairoDesktop.Common
             RemovableDrives.Clear();
         }
 
-        private void MessageWindowProc(System.Windows.Forms.Message msg)
+        private void MessageWindowProc(ref System.Windows.Forms.Message msg, ref bool handled)
         {
             // Update our drive list when a volume is added or removed
 
