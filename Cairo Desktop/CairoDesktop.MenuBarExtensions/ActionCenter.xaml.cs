@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using CairoDesktop.Application.Interfaces;
 using ManagedShell.Common.Helpers;
+using ManagedShell.UWPInterop;
 
 namespace CairoDesktop.MenuBarExtensions
 {
@@ -24,9 +25,9 @@ namespace CairoDesktop.MenuBarExtensions
 
         private void miOpenActionCenter_Click(object sender, RoutedEventArgs e)
         {
-            if (EnvironmentHelper.IsWindows11OrBetter)
+            if (EnvironmentHelper.IsWindows10RS4OrBetter)
             {
-                ShellHelper.ShowNotificationCenter();
+                ImmersiveShellHelper.ShowActionCenter();
             }
             else
             {

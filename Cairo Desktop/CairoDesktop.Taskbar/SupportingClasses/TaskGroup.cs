@@ -22,6 +22,10 @@ namespace CairoDesktop.Taskbar.SupportingClasses
 
         private string _title;
 
+        public delegate void GetButtonRectEventHandler(ref NativeMethods.ShortRect rect);
+
+        public event GetButtonRectEventHandler GetButtonRect;
+
         public string Title
         {
             get
@@ -108,6 +112,7 @@ namespace CairoDesktop.Taskbar.SupportingClasses
             {
                 if (aWindow is ApplicationWindow appWindow)
                 {
+                    appWindow.GetButtonRect += ApplicationWindow_GetButtonRect;
                     appWindow.PropertyChanged += ApplicationWindow_PropertyChanged;
                 }
             }
@@ -285,6 +290,11 @@ namespace CairoDesktop.Taskbar.SupportingClasses
             return total / count;
         }
 
+        private void ApplicationWindow_GetButtonRect(ref NativeMethods.ShortRect rect)
+        {
+            GetButtonRect?.Invoke(ref rect);
+        }
+
         private void ApplicationWindow_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -327,6 +337,7 @@ namespace CairoDesktop.Taskbar.SupportingClasses
                 {
                     if (newItem is ApplicationWindow appWindow)
                     {
+                        appWindow.GetButtonRect += ApplicationWindow_GetButtonRect;
                         appWindow.PropertyChanged += ApplicationWindow_PropertyChanged;
                     }
                 }
@@ -338,6 +349,7 @@ namespace CairoDesktop.Taskbar.SupportingClasses
                 {
                     if (oldItem is ApplicationWindow appWindow)
                     {
+                        appWindow.GetButtonRect -= ApplicationWindow_GetButtonRect;
                         appWindow.PropertyChanged -= ApplicationWindow_PropertyChanged;
                     }
                 }
@@ -365,6 +377,7 @@ namespace CairoDesktop.Taskbar.SupportingClasses
             {
                 if (aWindow is ApplicationWindow appWindow)
                 {
+                    appWindow.GetButtonRect -= ApplicationWindow_GetButtonRect;
                     appWindow.PropertyChanged -= ApplicationWindow_PropertyChanged;
                 }
             }
