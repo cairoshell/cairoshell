@@ -93,14 +93,14 @@ namespace CairoDesktop.Infrastructure.ObjectModel
                     if (window != null)
                     {
                         window.Screen = screen;
-                        window.SetScreenPosition();
+                        window.UpdatePosition();
                     }
                 }
             }
             else if (Windows.Count > 0)
             {
                 Windows[0].Screen = AppBarScreen.FromPrimaryScreen();
-                Windows[0].SetScreenPosition();
+                Windows[0].UpdatePosition();
             }
         }
 

@@ -43,15 +43,14 @@ namespace CairoDesktop.DynamicDesktop
                 // this keeps the desktop going beneath the TaskBar
 
                 // get the TaskBar's height
-                double dpiScale = 1;
                 AppBarScreen screen = AppBarScreen.FromPrimaryScreen();
-                NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(ref dpiScale, screen, false, false);
-                taskbarHeight = (screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale;
+                NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(screen, false, false, IntPtr.Zero);
+                taskbarHeight = (screen.Bounds.Bottom - workAreaRect.Bottom) / DpiHelper.DpiScale;
 
                 // top TaskBar means we should push down
                 if (_settings.TaskbarEdge == AppBarEdge.Top)
                 {
-                    top = workAreaRect.Top / dpiScale;
+                    top = workAreaRect.Top / DpiHelper.DpiScale;
                 }
             }
 

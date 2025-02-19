@@ -58,8 +58,6 @@ namespace CairoDesktop.MenuBar
             AutoHideShowDelayMs = _settings.AutoHideShowDelayMs;
             RequiresScreenEdge = true;
 
-            SetPosition();
-
             setupChildren();
 
             _settings.PropertyChanged += Settings_PropertyChanged;
@@ -408,21 +406,16 @@ namespace CairoDesktop.MenuBar
 
         #region Events
 
-        public override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
+        public override bool UpdatePosition()
         {
-            base.AfterAppBarPos(isSameCoords, rect);
+            var changed = base.UpdatePosition();
 
-            if (!isSameCoords)
+            if (changed)
             {
                 setShadowPosition();
             }
-        }
 
-        public override void SetPosition()
-        {
-            base.SetPosition();
-            
-            setShadowPosition();
+            return changed;
         }
 
         private void setShadowPosition()
@@ -568,7 +561,7 @@ namespace CairoDesktop.MenuBar
                     case "MenuBarEdge":
                         PeekDuringAutoHide();
                         AppBarEdge = _settings.MenuBarEdge;
-                        SetScreenPosition();
+                        UpdatePosition();
                         if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                         break;
                 }
