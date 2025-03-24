@@ -153,12 +153,13 @@ namespace CairoDesktop.Taskbar
                     return true;
                 }
 
-                if (Screen.Primary && !IsValidHMonitor(window.HMonitor))
+                IntPtr hMonitor = window.HMonitor;
+                if (Screen.Primary && !IsValidHMonitor(hMonitor))
                 {
                     return true;
                 }
 
-                if (window.HMonitor != Screen.HMonitor)
+                if (hMonitor != Screen.HMonitor)
                 {
                     return false;
                 }
@@ -528,15 +529,13 @@ namespace CairoDesktop.Taskbar
         #region Window procedure
         protected override IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            base.WndProc(hwnd, msg, wParam, lParam, ref handled);
-
             if (msg == (int)NativeMethods.WM.MOUSEACTIVATE)
             {
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
 
-            return IntPtr.Zero;
+            return base.WndProc(hwnd, msg, wParam, lParam, ref handled);
         }
         #endregion
 

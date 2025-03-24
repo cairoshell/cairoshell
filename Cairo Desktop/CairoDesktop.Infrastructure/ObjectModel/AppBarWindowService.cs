@@ -16,13 +16,15 @@ namespace CairoDesktop.Infrastructure.ObjectModel
 
         public List<CairoAppBarWindow> Windows { get; } = new List<CairoAppBarWindow>();
 
+        protected readonly AppBarEventService _appBarEventService;
         protected readonly ICairoApplication _cairoApplication;
         protected readonly ShellManager _shellManager;
         protected readonly IWindowManager _windowManager;
         protected readonly Settings _settings;
 
-        protected AppBarWindowService(ICairoApplication cairoApplication, ShellManagerService shellManagerService, IWindowManager windowManager, Settings settings)
+        protected AppBarWindowService(ICairoApplication cairoApplication, AppBarEventService appBarEventService, ShellManagerService shellManagerService, IWindowManager windowManager, Settings settings)
         {
+            _appBarEventService = appBarEventService;
             _cairoApplication = cairoApplication;
             _shellManager = shellManagerService.ShellManager;
             _windowManager = windowManager;

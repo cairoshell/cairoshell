@@ -14,13 +14,14 @@ namespace CairoDesktop.Taskbar.Services
         private readonly ICommandService _commandService;
 
         public TaskbarWindowService(ICairoApplication cairoApplication,
+            AppBarEventService appBarEventService,
             ShellManagerService shellManagerService,
             IWindowManager windowManager,
             IDesktopManager desktopManager, 
             IAppGrabber appGrabber,
             ICommandService commandService,
             Settings settings) 
-            : base(cairoApplication, shellManagerService, windowManager, settings)
+            : base(cairoApplication, appBarEventService, shellManagerService, windowManager, settings)
         {
             _appGrabber = appGrabber;
             _desktopManager = desktopManager;
@@ -29,10 +30,11 @@ namespace CairoDesktop.Taskbar.Services
             EnableMultiMon = _settings.EnableTaskbarMultiMon;
             EnableService = _settings.EnableTaskbar;
 
+            _appBarEventService.AppBarEvent += AppBarEvent;
+
             if (EnableService)
             {
                 _shellManager.ExplorerHelper.HideExplorerTaskbar = true;
-                _shellManager.AppBarManager.AppBarEvent += AppBarEvent;
             }
         }
 
@@ -53,7 +55,7 @@ namespace CairoDesktop.Taskbar.Services
 
         private void AppBarEvent(object sender, AppBarEventArgs e)
         {
-            if (_settings.TaskbarMode == 2)
+            if (EnableService && _settings.TaskbarMode == 2)
             {
                 if (sender is Taskbar)
                 {
@@ -97,9 +99,10 @@ namespace CairoDesktop.Taskbar.Services
         {
             base.Dispose();
 
+            _appBarEventService.AppBarEvent -= AppBarEvent;
+
             if (EnableService)
             {
-                _shellManager.AppBarManager.AppBarEvent -= AppBarEvent;
                 _shellManager.ExplorerHelper.HideExplorerTaskbar = false;
             }
         }

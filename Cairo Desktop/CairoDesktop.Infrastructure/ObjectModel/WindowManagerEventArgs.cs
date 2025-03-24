@@ -1,5 +1,4 @@
 ﻿using System;
-using ManagedShell.AppBar;
 
 namespace CairoDesktop.Infrastructure.ObjectModel
 {
@@ -7,6 +6,6 @@ namespace CairoDesktop.Infrastructure.ObjectModel
     {
         public bool DisplaysChanged;
         public bool IsFastSetup;
-        public ScreenSetupReason Reason;
+        public WindowManagerEventReason Reason;
     }
 }

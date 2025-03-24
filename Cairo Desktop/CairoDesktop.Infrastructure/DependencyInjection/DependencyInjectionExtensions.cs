@@ -16,6 +16,7 @@ namespace CairoDesktop.Infrastructure.DependencyInjection
         {
             services.AddSingleton<IExtensionService, ExtensionService>();
             services.AddSingleton<IApplicationUpdateService, WinSparkleApplicationUpdateService>();
+            services.AddSingleton<AppBarEventService>();
             services.AddSingleton<ShellManagerService>();
             services.AddSingleton<ICommandService, CommandService>();
             services.AddSingleton<IWindowManager, WindowManager>();
