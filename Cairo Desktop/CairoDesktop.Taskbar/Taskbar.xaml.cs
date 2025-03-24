@@ -153,12 +153,13 @@ namespace CairoDesktop.Taskbar
                     return true;
                 }
 
-                if (Screen.Primary && !IsValidHMonitor(window.HMonitor))
+                IntPtr hMonitor = window.HMonitor;
+                if (Screen.Primary && !IsValidHMonitor(hMonitor))
                 {
                     return true;
                 }
 
-                if (window.HMonitor != Screen.HMonitor)
+                if (hMonitor != Screen.HMonitor)
                 {
                     return false;
                 }
@@ -253,15 +254,14 @@ namespace CairoDesktop.Taskbar
         {
             baseButtonWidth = (_settings.ShowTaskbarLabels ? _settings.TaskbarButtonWidth : _settings.TaskbarButtonHeight) + getAddToSize();
             setDesiredHeight();
-            Height = DesiredHeight;
-            Top = getDesiredTopPosition();
+            UpdatePosition();
         }
 
         private void setTaskbarWidthMode()
         {
             if (useFullWidthAppearance)
             {
-                bdrTaskbar.Width = getDesiredWidth();
+                bdrTaskbar.Width = ActualWidth;
 
                 if (_settings.TaskbarEdge == AppBarEdge.Top)
                 {
@@ -362,7 +362,6 @@ namespace CairoDesktop.Taskbar
                 case "TaskbarIconSize":
                     PeekDuringAutoHide();
                     setTaskbarSize();
-                    SetScreenPosition();
                     if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                     break;
                 case "TaskbarMode":
@@ -376,7 +375,6 @@ namespace CairoDesktop.Taskbar
                     {
                         PeekDuringAutoHide();
                         setupTaskbarAppearance();
-                        SetScreenPosition();
                         if (AppBarMode == AppBarMode.None) SetDesktopPosition();
                         if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                     }
@@ -476,54 +474,27 @@ namespace CairoDesktop.Taskbar
             }
         }
 
-        public override void SetPosition()
+        public override bool UpdatePosition()
         {
-            base.SetPosition();
+            var changed = base.UpdatePosition();
 
-            setTaskButtonSize();
-            setTaskbarWidthMode();
-
-            // set maxwidth always
-            bdrTaskbar.MaxWidth = getDesiredWidth();
-        }
-
-        private double getDesiredTopPosition()
-        {
-            if (_settings.TaskbarEdge == AppBarEdge.Top)
+            if (changed)
             {
-                // set to bottom of this display's menu bar
-                return (Screen.Bounds.Y / DpiScale) + _shellManager.AppBarManager.GetAppBarEdgeWindowsHeight(AppBarEdge, Screen);
-            }
-            else
-            {
-                // set to bottom of workspace
-                return (Screen.Bounds.Bottom / DpiScale) - Height - _shellManager.AppBarManager.GetAppBarEdgeWindowsHeight(AppBarEdge, Screen);
-            }
-        }
+                // set these since available space may have changed
+                setTaskButtonSize();
+                setTaskbarWidthMode();
 
-        private double getDesiredWidth()
-        {
-            return Screen.Bounds.Width / DpiScale;
+                // set maxwidth always
+                bdrTaskbar.MaxWidth = ActualWidth;
+            }
+
+            return changed;
         }
 
         private void takeFocus()
         {
             // because we are setting WS_EX_NOACTIVATE, popups won't go away when clicked outside, since they are not losing focus (they never got it). calling this fixes that.
             NativeMethods.SetForegroundWindow(Handle);
-        }
-
-        public override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
-        {
-            base.AfterAppBarPos(isSameCoords, rect);
-
-            if (useFullWidthAppearance)
-                bdrTaskbar.Width = getDesiredWidth();
-
-            // set maxwidth always
-            bdrTaskbar.MaxWidth = getDesiredWidth();
-
-            // set button size since available space may have changed
-            setTaskButtonSize();
         }
 
         private void CairoTaskbarTaskList_Closed(object sender, EventArgs e)
@@ -558,15 +529,13 @@ namespace CairoDesktop.Taskbar
         #region Window procedure
         protected override IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            base.WndProc(hwnd, msg, wParam, lParam, ref handled);
-
             if (msg == (int)NativeMethods.WM.MOUSEACTIVATE)
             {
                 handled = true;
                 return new IntPtr(NativeMethods.MA_NOACTIVATE);
             }
 
-            return IntPtr.Zero;
+            return base.WndProc(hwnd, msg, wParam, lParam, ref handled);
         }
         #endregion
 

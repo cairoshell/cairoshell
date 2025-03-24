@@ -79,7 +79,7 @@ namespace CairoDesktop.Infrastructure.Services
             if (!IsSettingDisplays && pendingDisplayEvents > 0)
             {
                 _logger.LogDebug("Processing additional display events");
-                ProcessDisplayChanges(ScreenSetupReason.Reconciliation);
+                ProcessDisplayChanges(WindowManagerEventReason.Reconciliation);
             }
         }
         
@@ -92,18 +92,18 @@ namespace CairoDesktop.Infrastructure.Services
         {
             IsSettingDisplays = true;
 
-            DisplaySetup(ScreenSetupReason.FirstRun);
+            DisplaySetup(WindowManagerEventReason.FirstRun);
             _taskbarCreatedMonitor = new TaskbarCreatedMonitor(this);
 
             hasCompletedInitialDisplaySetup = true;
             IsSettingDisplays = false;
         }
 
-        public void NotifyDisplayChange(ScreenSetupReason reason)
+        public void NotifyDisplayChange(WindowManagerEventReason reason)
         {
             _logger.LogDebug($"Received {reason} notification");
 
-            if (reason == ScreenSetupReason.DwmChange)
+            if (reason == WindowManagerEventReason.DwmChange)
             {
                 lock (displaySetupLock)
                 {
@@ -131,7 +131,7 @@ namespace CairoDesktop.Infrastructure.Services
                 for (int i = 0; i < Screen.AllScreens.Length; i++)
                 {
                     Screen current = Screen.AllScreens[i];
-                    if (!(ScreenState[i].Bounds == current.Bounds && ScreenState[i].DeviceName == current.DeviceName && ScreenState[i].Primary == current.Primary && ScreenState[i].WorkingArea == current.WorkingArea))
+                    if (!(ScreenState[i].Bounds == current.Bounds && ScreenState[i].DeviceName == current.DeviceName && ScreenState[i].Primary == current.Primary))
                     {
                         same = false;
                         break;
@@ -148,7 +148,7 @@ namespace CairoDesktop.Infrastructure.Services
             return true;
         }
 
-        private void ProcessDisplayChanges(ScreenSetupReason reason)
+        private void ProcessDisplayChanges(WindowManagerEventReason reason)
         {
             lock (displaySetupLock)
             {
@@ -160,7 +160,7 @@ namespace CairoDesktop.Infrastructure.Services
                     {
                         DisplaySetup(reason);
                     }
-                    else
+                    else if (reason != WindowManagerEventReason.WorkArea)
                     {
                         // if this is only a DPI change, screens will be the same but we still need to reposition
                         RefreshWindows(new WindowManagerEventArgs
@@ -188,9 +188,9 @@ namespace CairoDesktop.Infrastructure.Services
         /// Compares the system screen list to the screens associated with Cairo windows, then creates or destroys windows as necessary.
         /// Runs at startup and when a WM_DEVICECHANGE, WM_DISPLAYCHANGE, or WM_DPICHANGED message is received by the MenuBar window on the primary display.
         /// </summary>
-        private void DisplaySetup(ScreenSetupReason reason)
+        private void DisplaySetup(WindowManagerEventReason reason)
         {
-            if (reason != ScreenSetupReason.FirstRun && !hasCompletedInitialDisplaySetup)
+            if (reason != WindowManagerEventReason.FirstRun && !hasCompletedInitialDisplaySetup)
             {
                 _logger.LogDebug("Display setup ran before startup completed, aborting");
                 return;
@@ -234,7 +234,7 @@ namespace CairoDesktop.Infrastructure.Services
                 }
             }
 
-            if (reason != ScreenSetupReason.FirstRun)
+            if (reason != WindowManagerEventReason.FirstRun)
             {
                 // figure out which screens have been removed
                 foreach (string name in openScreens)

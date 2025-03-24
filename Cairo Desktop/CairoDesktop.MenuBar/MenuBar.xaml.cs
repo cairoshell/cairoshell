@@ -20,6 +20,7 @@ using NativeMethods = ManagedShell.Interop.NativeMethods;
 using System.Windows.Threading;
 using ManagedShell.ShellFolders;
 using Microsoft.Extensions.Hosting;
+using CairoDesktop.Infrastructure.Services;
 
 namespace CairoDesktop.MenuBar
 {
@@ -31,6 +32,7 @@ namespace CairoDesktop.MenuBar
         internal readonly ICommandService _commandService;
         internal readonly IHost _host;
         private readonly Settings _settings;
+        private readonly AppBarEventService _appBarEventService;
 
         private bool isCairoMenuInitialized;
         private bool isPlacesMenuInitialized;
@@ -40,8 +42,9 @@ namespace CairoDesktop.MenuBar
 
         //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
         
-        public MenuBar(ICairoApplication cairoApplication, ShellManager shellManager, IWindowManager windowManager, IHost host, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
+        public MenuBar(ICairoApplication cairoApplication, AppBarEventService appBarEventService, ShellManager shellManager, IWindowManager windowManager, IHost host, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
         {
+            _appBarEventService = appBarEventService;
             _appGrabber = appGrabber;
             _applicationUpdateService = applicationUpdateService;
             _settingsUiService = settingsUiService;
@@ -57,8 +60,6 @@ namespace CairoDesktop.MenuBar
             
             AutoHideShowDelayMs = _settings.AutoHideShowDelayMs;
             RequiresScreenEdge = true;
-
-            SetPosition();
 
             setupChildren();
 
@@ -408,21 +409,16 @@ namespace CairoDesktop.MenuBar
 
         #region Events
 
-        public override void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
+        public override bool UpdatePosition()
         {
-            base.AfterAppBarPos(isSameCoords, rect);
+            var changed = base.UpdatePosition();
 
-            if (!isSameCoords)
+            if (changed)
             {
                 setShadowPosition();
             }
-        }
 
-        public override void SetPosition()
-        {
-            base.SetPosition();
-            
-            setShadowPosition();
+            return changed;
         }
 
         private void setShadowPosition()
@@ -502,12 +498,12 @@ namespace CairoDesktop.MenuBar
 
         private void MenuBar_OnMouseEnter(object sender, MouseEventArgs e)
         {
-            _appBarManager.NotifyAppBarEvent(this, AppBarEventReason.MouseEnter);
+            _appBarEventService.NotifyAppBarEvent(this, AppBarEventReason.MouseEnter);
         }
 
         private void MenuBar_OnMouseLeave(object sender, MouseEventArgs e)
         {
-            _appBarManager.NotifyAppBarEvent(this, AppBarEventReason.MouseLeave);
+            _appBarEventService.NotifyAppBarEvent(this, AppBarEventReason.MouseLeave);
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -568,7 +564,7 @@ namespace CairoDesktop.MenuBar
                     case "MenuBarEdge":
                         PeekDuringAutoHide();
                         AppBarEdge = _settings.MenuBarEdge;
-                        SetScreenPosition();
+                        UpdatePosition();
                         if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                         break;
                 }

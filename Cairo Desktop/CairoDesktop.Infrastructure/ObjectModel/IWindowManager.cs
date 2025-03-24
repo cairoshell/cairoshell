@@ -18,7 +18,7 @@ namespace CairoDesktop.Infrastructure.ObjectModel
 
         void InitialSetup();
 
-        void NotifyDisplayChange(ScreenSetupReason reason);
+        void NotifyDisplayChange(WindowManagerEventReason reason);
 
         void RegisterWindowService(IWindowService service);
 

@@ -3,7 +3,6 @@ using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.ObjectModel;
 using CairoDesktop.Infrastructure.Services;
 using ManagedShell;
-using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.SupportingClasses;
 using ManagedShell.ShellFolders;
@@ -528,7 +527,7 @@ namespace CairoDesktop.DynamicDesktop.Services
 
         private void ScreensChanged(object sender, WindowManagerEventArgs e)
         {
-            if (e.Reason == ScreenSetupReason.DpiChange)
+            if (e.Reason == WindowManagerEventReason.DpiChange)
             {
                 // treat dpi change as display change
                 ResetPosition(true);
