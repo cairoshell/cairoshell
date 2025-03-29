@@ -519,7 +519,7 @@ namespace CairoDesktop.DynamicDesktop
                             backgroundImageBrush.Stretch = Stretch.Uniform;
                             break;
                         case CairoWallpaperStyle.Fill:
-                        case CairoWallpaperStyle.Span: // TODO: Impliment multiple monitor backgrounds
+                        case CairoWallpaperStyle.Span: // TODO: Implement multiple monitor backgrounds
                             backgroundImageBrush.AlignmentX = AlignmentX.Center;
                             backgroundImageBrush.AlignmentY = AlignmentY.Center;
                             backgroundImageBrush.TileMode = TileMode.None;
@@ -585,7 +585,7 @@ namespace CairoDesktop.DynamicDesktop
                         backgroundImageBrush.Stretch = Stretch.Uniform;
                         break;
                     case CairoWallpaperStyle.Fill:
-                    case CairoWallpaperStyle.Span: // TODO: Impliment multiple monitor backgrounds
+                    case CairoWallpaperStyle.Span: // TODO: Implement multiple monitor backgrounds
                         backgroundImageBrush.AlignmentX = AlignmentX.Center;
                         backgroundImageBrush.AlignmentY = AlignmentY.Center;
                         backgroundImageBrush.TileMode = TileMode.None;
@@ -650,7 +650,7 @@ namespace CairoDesktop.DynamicDesktop
                         backgroundImageBrush.Stretch = Stretch.Uniform;
                         break;
                     case CairoWallpaperStyle.Fill:
-                    case CairoWallpaperStyle.Span: // TODO: Impliment multiple monitor backgrounds
+                    case CairoWallpaperStyle.Span: // TODO: Implement multiple monitor backgrounds
                         backgroundImageBrush.AlignmentX = AlignmentX.Center;
                         backgroundImageBrush.AlignmentY = AlignmentY.Center;
                         backgroundImageBrush.TileMode = TileMode.None;

@@ -17,7 +17,7 @@ namespace CairoDesktop.Common
         /// <param name="targetType">The targeted type.</param>
         /// <param name="parameter">The parameter passed to the converter.</param>
         /// <param name="culture">The cultuer to convert against.</param>
-        /// <returns>Visibilty of the button calling the converter.</returns>
+        /// <returns>Visibility of the button calling the converter.</returns>
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (parameter == null)

@@ -123,7 +123,7 @@ namespace CairoDesktop.AppGrabber {
         /// Object that represents a named list of ApplicationInfos.
         /// </summary>
         /// <param name="name">The name of the category - retrievable from the Name property.</param>
-        /// <param name="apps">An IList of AppliationInfo objects to initialize this list to. (Internally uses the AddRange function to set the list)</param>
+        /// <param name="apps">An IList of ApplicationInfo objects to initialize this list to. (Internally uses the AddRange function to set the list)</param>
         public Category(String name, IList<ApplicationInfo> apps) {
             this.Name = name;
             this.ShowInMenu = true;
@@ -223,7 +223,7 @@ namespace CairoDesktop.AppGrabber {
         #region IList<ApplicationInfo> Members
 
         /// <summary>
-        /// Gets the index of the 1st occurance of item
+        /// Gets the index of the 1st occurrence of item
         /// </summary>
         /// <param name="item">ApplicationInfo object to look for.</param>
         /// <returns>Zero-based index of the item or -1 if not found.</returns>
@@ -369,7 +369,7 @@ namespace CairoDesktop.AppGrabber {
         }
 
         /// <summary>
-        /// Removes the first occurance of the specified item.
+        /// Removes the first occurrence of the specified item.
         /// </summary>
         /// <param name="item">Item to remove.</param>
         /// <returns>True is successful. Otherwise, False. </returns>

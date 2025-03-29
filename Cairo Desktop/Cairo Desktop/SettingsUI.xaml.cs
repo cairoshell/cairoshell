@@ -70,7 +70,7 @@ namespace CairoDesktop
             loadDesktopBackgroundSettings();
             loadHotKeys();
             loadLoggingLevels();
-            loadNotficationSettings();
+            loadNotificationSettings();
             loadVersionDependentSettings();
 
             checkUpdateConfig();
@@ -346,7 +346,7 @@ namespace CairoDesktop
             }
         }
 
-        private void loadNotficationSettings()
+        private void loadNotificationSettings()
         {
             if (_settings.EnableSysTray)
             {
