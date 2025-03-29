@@ -2,39 +2,62 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches:
+    - master
   pull_request:
-    branches: [ master ]
+    branches:
+    - master
 
 jobs:
   build:
     strategy:
       matrix:
-        target: [ [x64, net6.0-windows], [x86, net6.0-windows], [x64_net471, net471], [x86_net471, net471], [arm64, net6.0-windows] ]
+        include:
+        -
+          profile: x64
+          framework: net6.0-windows
+          platform: x64
+          installer: 64-bit
+        -
+          profile: x86
+          framework: net6.0-windows
+          platform: AnyCPU
+          installer: 32-bit
+        -
+          profile: x64_net471
+          framework: net471
+          platform: x64
+          installer: "64-bit .NET 4.7.1"
+        -
+          profile: x86_net471
+          framework: net471
+          platform: AnyCPU
+          installer: "32-bit .NET 4.7.1"
+        -
+          profile: arm64
+          framework: net6.0-windows
+          platform: ARM64
+          installer: ARM64
 
     runs-on: windows-latest
 
     env:
-      installer: Installer\CairoShell.nsi
+      installer: "Installer\\CairoShell.nsi"
 
     steps:
-    - name: Checkout
+    - name: Checkout repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    - name: Install nbgv
+    - name: Install Nerdbank.GitVersioning
       uses: dotnet/nbgv@v0.4.2
       id: nbgv
 
     - name: Publish app
       run: |
-          cd "Cairo Desktop\Cairo Desktop"
-          dotnet publish -p:PublishProfile=$env:Profile -p:Platform=$env:Platform -f $env:Framework
-      env:
-        Profile: ${{ matrix.target[0] }}
-        Framework: ${{ matrix.target[1] }}
-        Platform: ${{ matrix.target[0] == 'x86' && 'AnyCPU' || matrix.target[0] == 'x86_net471' && 'AnyCPU' || matrix.target[0] == 'x64' && 'x64' || matrix.target[0] == 'x64_net471' && 'x64' || 'ARM64' }}
+          cd "Cairo Desktop\\Cairo Desktop"
+          dotnet publish -p:PublishProfile=${{ matrix.profile }} -p:Platform=${{ matrix.platform }} -f ${{ matrix.framework }}
     
     - name: Set installer version
       shell: pwsh
@@ -43,10 +66,10 @@ jobs:
         [System.IO.File]::WriteAllText("${{ env.installer }}", $fileContent)
 
     - name: Generate installer
-      run: makensis Installer\CairoShell_${{ matrix.target[0] }}.nsi
+      run: makensis Installer\CairoShell_${{ matrix.profile }}.nsi
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: Installer ${{ matrix.target[0] == 'x86' && '32-bit' || matrix.target[0] == 'x86_net471' && '32-bit .NET 4.7.1' || matrix.target[0] == 'x64' && '64-bit' || matrix.target[0] == 'x64_net471' && '64-bit .NET 4.7.1' || 'ARM64' }}
-        path: 'Installer\*.exe'
+        name: "Installer ${{ matrix.installer }}"
+        path: "Installer\\*.exe"
