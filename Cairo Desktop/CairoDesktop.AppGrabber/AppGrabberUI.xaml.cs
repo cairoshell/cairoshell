@@ -226,13 +226,13 @@ namespace CairoDesktop.AppGrabber
 
         private void ScrollViewer_DragOver(object sender, System.Windows.DragEventArgs e)
         {
-            int scrollTollerance = 12;
+            int scrollTolerance = 12;
             ScrollViewer scroller = sender as ScrollViewer;
-            if (e.GetPosition(scroller).Y > scroller.ActualHeight - scrollTollerance)
+            if (e.GetPosition(scroller).Y > scroller.ActualHeight - scrollTolerance)
             {
                 scroller.LineDown();
             }
-            else if (e.GetPosition(scroller).Y < scrollTollerance)
+            else if (e.GetPosition(scroller).Y < scrollTolerance)
             {
                 scroller.LineUp();
             }

@@ -16,7 +16,7 @@ namespace CairoDesktop.Common
         /// </summary>
         /// <param name="value">The CairoMessageImage specified.</param>
         /// <param name="targetType">The target type to convert to.</param>
-        /// <param name="parameter">The paramater for converter.</param>
+        /// <param name="parameter">The parameter for converter.</param>
         /// <param name="culture">The culture to convert for.</param>
         /// <returns>An image source representing the CairoMessageImage.</returns>
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

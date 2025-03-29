@@ -12,7 +12,7 @@ namespace CairoDesktop.Common
         /// <summary>
         /// Determines if a particular key is depressed on the keyboard
         /// </summary>
-        /// <param name="key">The key whos state will be determined to be down or not</param>
+        /// <param name="key">The key whose state will be determined to be down or not</param>
         /// <returns></returns>
         public static bool IsKeyDown(System.Windows.Forms.Keys key)
         {
