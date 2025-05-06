@@ -74,7 +74,6 @@ namespace CairoDesktop
             loadVersionDependentSettings();
 
             checkUpdateConfig();
-            checkTrayStatus();
             checkRunAtLogOn();
             checkIfCanHibernate();
 
@@ -544,15 +543,6 @@ namespace CairoDesktop
             else
             {
                 chkEnableAutoUpdates.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void checkTrayStatus()
-        {
-            if (!_settings.EnableTaskbar && !EnvironmentHelper.IsAppRunningAsShell)
-            {
-                // if taskbar is disabled and we aren't running as shell, then Explorer tray is visible. Show warning.
-                lblTrayTaskbarWarning.Visibility = Visibility.Visible;
             }
         }
 
