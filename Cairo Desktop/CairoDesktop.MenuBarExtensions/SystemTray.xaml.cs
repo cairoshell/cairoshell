@@ -43,8 +43,7 @@ namespace CairoDesktop.MenuBarExtensions
                 UnpinnedItems.Visibility = Visibility.Visible;
             }
 
-            // Don't allow showing both the Windows TaskBar and the Cairo tray
-            if (_settings.EnableSysTray && (_settings.EnableTaskbar || EnvironmentHelper.IsAppRunningAsShell) && _notificationArea.Handle == IntPtr.Zero)
+            if (_settings.EnableSysTray && _notificationArea.Handle == IntPtr.Zero)
             {
                 _notificationArea.Initialize();
             }
