@@ -303,27 +303,7 @@ namespace CairoDesktop.MenuBar
             SetupMenuBarExtensions();
 
             registerCairoMenuHotKey();
-
-            // Register L+R Windows key to open Programs menu
-            if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary && programsMenuHotKeys.Count < 1)
-            {
-                /*if (keyboardListener == null)
-                    keyboardListener = new LowLevelKeyboardListener();
-
-                keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
-                keyboardListener.HookKeyboard();*/
-
-                programsMenuHotKeys.Add(new HotKey(Key.LWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
-                programsMenuHotKeys.Add(new HotKey(Key.RWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
-                programsMenuHotKeys.Add(new HotKey(Key.Escape, HotKeyModifier.Ctrl | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
-            }
-            else if (EnvironmentHelper.IsAppRunningAsShell && Screen.Primary)
-            {
-                foreach (var hotkey in programsMenuHotKeys)
-                {
-                    hotkey.Action = OnShowProgramsMenu;
-                }
-            }
+            registerWinKey();
 
             SetBlur(_settings.EnableMenuBarBlur);
 
@@ -349,6 +329,51 @@ namespace CairoDesktop.MenuBar
                 cairoMenuHotKey?.Dispose();
                 cairoMenuHotKey = null;
             }
+        }
+
+        private void registerWinKey()
+        {
+            if (!EnvironmentHelper.IsAppRunningAsShell || !Screen.Primary || !_settings.EnableWinKey)
+            {
+                return;
+            }
+
+            // Register L+R Windows key to open Programs menu
+            if (programsMenuHotKeys.Count < 1)
+            {
+                /*if (keyboardListener == null)
+                    keyboardListener = new LowLevelKeyboardListener();
+
+                keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
+                keyboardListener.HookKeyboard();*/
+
+                programsMenuHotKeys.Add(new HotKey(Key.LWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
+                programsMenuHotKeys.Add(new HotKey(Key.RWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
+                programsMenuHotKeys.Add(new HotKey(Key.Escape, HotKeyModifier.Ctrl | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
+            }
+            else
+            {
+                // We replaced another primary monitor instance, register our handler instead
+                foreach (var hotkey in programsMenuHotKeys)
+                {
+                    hotkey.Action = OnShowProgramsMenu;
+                }
+            }
+        }
+
+        private void unregisterWinKey()
+        {
+            if (!Screen.Primary)
+            {
+                return;
+            }
+
+            foreach (var hotkey in programsMenuHotKeys)
+            {
+                hotkey.Unregister();
+            }
+
+            programsMenuHotKeys.Clear();
         }
 
         #region Programs menu
@@ -530,6 +555,16 @@ namespace CairoDesktop.MenuBar
                             registerCairoMenuHotKey();
                         }
 
+                        break;
+                    case "EnableWinKey":
+                        if (_settings.EnableWinKey)
+                        {
+                            registerWinKey();
+                        }
+                        else
+                        {
+                            unregisterWinKey();
+                        }
                         break;
                     case "EnableMenuBarBlur":
                         SetBlur(_settings.EnableMenuBarBlur);

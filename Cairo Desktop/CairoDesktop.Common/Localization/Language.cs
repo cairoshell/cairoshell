@@ -194,6 +194,7 @@ namespace CairoDesktop.Common.Localization
             { "sSettings_MenuBar_PinnedIcons", "Pinned icons:" },
             { "sSettings_MenuBar_NotificationAreaPinHelp", "To pin a notification area icon, drag it to the pinned icons area. To unpin an icon, drag it to the collapsible icons area." },
             { "sSettings_MenuBar_EnableCairoMenuHotKey", "Enable Cairo menu hotkey:" },
+            { "sSettings_MenuBar_EnableWinKey", "Open the Programs menu with the Windows key" },
             { "sSettings_MenuBar_EnableMenuBarBlur", "Blur behind the menu bar" },
             { "sSettings_MenuBar_EnableMenuBarMultiMon", "Show menu bar on multiple monitors" },
             { "sSettings_MenuBar_ShowHibernate", "Show Hibernate option in the Cairo menu" },
