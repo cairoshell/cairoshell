@@ -71,6 +71,7 @@ namespace CairoDesktop
             loadHotKeys();
             loadLoggingLevels();
             loadNotificationSettings();
+            loadShellDependentSettings();
             loadVersionDependentSettings();
 
             checkUpdateConfig();
@@ -373,6 +374,14 @@ namespace CairoDesktop
             else if (EnvironmentHelper.IsWindows10OrBetter && EnvironmentHelper.IsAppRunningAsShell)
             {
                 chkEnableMenuExtraActionCenter.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void loadShellDependentSettings()
+        {
+            if (EnvironmentHelper.IsAppRunningAsShell)
+            {
+                chkEnableWinKey.Visibility = Visibility.Visible;
             }
         }
 

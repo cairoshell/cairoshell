@@ -361,6 +361,11 @@
                                   SelectionChanged="cboCairoMenuHotKey_OnSelectionChanged"
                                   SelectedValue="{Binding Mode=OneWay, Path=CairoMenuHotKey[2], UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
+                    <CheckBox IsChecked="{Binding Path=EnableWinKey, UpdateSourceTrigger=PropertyChanged}"
+                              Name="chkEnableWinKey"
+                              Visibility="Collapsed">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableWinKey)}" />
+                    </CheckBox>
                     <CheckBox IsChecked="{Binding Path=ShowHibernate, UpdateSourceTrigger=PropertyChanged}"
                               Name="chkShowHibernate">
                         <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_ShowHibernate)}" />

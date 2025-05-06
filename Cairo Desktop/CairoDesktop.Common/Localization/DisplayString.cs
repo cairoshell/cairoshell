@@ -490,6 +490,8 @@ namespace CairoDesktop.Common.Localization
 
         public static string sSettings_MenuBar_EnableCairoMenuHotKey => getString();
 
+        public static string sSettings_MenuBar_EnableWinKey => getString();
+
         public static string sSettings_MenuBar_EnableMenuBarBlur => getString();
 
         public static string sSettings_MenuBar_EnableMenuBarMultiMon => getString();

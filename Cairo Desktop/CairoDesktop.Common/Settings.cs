@@ -530,6 +530,13 @@ namespace CairoDesktop.Common
             get => _showStacksRemovableDrives;
             set => Set(ref _showStacksRemovableDrives, value);
         }
+
+        private bool _enableWinKey = true;
+        public bool EnableWinKey
+        {
+            get => _enableWinKey;
+            set => Set(ref _enableWinKey, value);
+        }
         #endregion
 
         #region Advanced
