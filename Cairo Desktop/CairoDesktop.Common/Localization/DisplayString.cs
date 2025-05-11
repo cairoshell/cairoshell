@@ -15,6 +15,7 @@ namespace CairoDesktop.Common.Localization
             new KeyValuePair<string, string>("Français", "fr_FR"),
             new KeyValuePair<string, string>("German", "de_DE"),
             new KeyValuePair<string, string>("Italiano", "it_IT"),
+            new KeyValuePair<string, string>("Norsk bokmål", "nb_NO"),
             new KeyValuePair<string, string>("Polski", "pl_PL"),
             new KeyValuePair<string, string>("Português (Brasil)", "pt_BR"),
             new KeyValuePair<string, string>("Русский", "ru_RU"),
@@ -70,6 +71,10 @@ namespace CairoDesktop.Common.Localization
             else if (useLang.StartsWith("es_"))
             {
                 lang = Language.es_ES;
+            }
+            else if (useLang.StartsWith("nb_"))
+            {
+                lang = Language.nb_NO;
             }
             else if (useLang.StartsWith("nl_"))
             {
