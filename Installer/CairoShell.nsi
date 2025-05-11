@@ -181,6 +181,20 @@ SectionEnd
   LangString DESC_startupCU ${LANG_FRENCH} "Démarrer Cairo lorsque vous vous connectez."
   LangString DESC_shellCU ${LANG_FRENCH} "Lancer Cairo au lieu de l'Explorateur Windows. Notez que cela désactive également de nombreuses fonctionnalités nouvelles dans Windows."
 
+ LangString PAGE_Welcome_Text_net471 ${LANG_NORWEGIAN} "Denne installasjonsveiviseren hjelper deg med å installere Cairo.\r\n\r\nFør installasjon, sørg for at .NET Framework 4.7.1 eller nyere er installert, og at alle kjørende Cairo-prosesser er avsluttet.\r\n\r\nKlikk Neste for å fortsette."
+LangString PAGE_Welcome_Text_net6.0-windows ${LANG_NORWEGIAN} "Denne installasjonsveiviseren hjelper deg med å installere Cairo.\r\n\r\nFør installasjon, sørg for at alle kjørende Cairo-prosesser er avsluttet.\r\n\r\nKlikk Neste for å fortsette."
+LangString PAGE_Finish_RunText ${LANG_NORWEGIAN} "Start Cairo Desktop-miljø"
+LangString PAGE_UnDir_TopText ${LANG_NORWEGIAN} "Vennligst sørg for at Cairo er avsluttet før du avinstallerer, for å sikre at alle filer fjernes. Alle filer i katalogen nedenfor vil bli slettet."
+LangString DLOG_RunningText ${LANG_NORWEGIAN} "Cairo kjører for øyeblikket. Lukk Cairo fra Cairo-menyen og kjør installasjonsprogrammet igjen."
+LangString DLOG_RunningText2 ${LANG_NORWEGIAN} "Cairo kjører for øyeblikket. Lukk Cairo fra Cairo-menyen."
+LangString DLOG_DotNetText ${LANG_NORWEGIAN} "Cairo krever Microsoft .NET Framework 4.7.1 eller nyere. Installer dette fra Microsofts nettside og prøv igjen."
+LangString SECT_cairo ${LANG_NORWEGIAN} "Cairo Desktop (påkrevd)"
+LangString SECT_startupCU ${LANG_NORWEGIAN} "Start ved oppstart (gjeldende bruker)"
+LangString SECT_shellCU ${LANG_NORWEGIAN} "Avansert: Deaktiver Explorer (gjeldende bruker)"
+LangString DESC_cairo ${LANG_NORWEGIAN} "Installerer Cairo og nødvendige komponenter."
+LangString DESC_startupCU ${LANG_NORWEGIAN} "Starter Cairo automatisk når du logger inn."
+LangString DESC_shellCU ${LANG_NORWEGIAN} "Kjører Cairo i stedet for Windows Utforsker. Merk: dette deaktiverer også UWP/Windows Store-apper og andre funksjoner som bruker denne teknologien."
+
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${cairo} $(DESC_cairo)
