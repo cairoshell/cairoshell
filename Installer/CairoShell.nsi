@@ -67,6 +67,7 @@ RequestExecutionLevel Admin
 
 !insertmacro MUI_LANGUAGE "English"
 !insertmacro MUI_LANGUAGE "French"
+!insertmacro MUI_LANGUAGE "Slovenian"
 
 ;--------------------------------
 ; Initialization
