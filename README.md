@@ -7,4 +7,14 @@
 Cairo is a desktop environment for Windows. Our goal is to develop a desktop experience that increases productivity and advances current technology standards. With a focus on stability, performance, and productivity, Cairo aims to deliver an interface that exceeds expectations and delivers superior ease of use.
 
 ## Download
-Shiny new Cairo Shell builds are available **[on the Releases page](https://github.com/cairoshell/cairoshell/releases)**.
+The latest version of Cairo can be downloaded **[on the Releases page](https://github.com/cairoshell/cairoshell/releases/latest)**.
+
+## Requirements
+Windows 7 SP1, Windows 8.1, Windows 10, or Windows 11
+
+## More information
+- For an overview of Cairo features, [visit our website](https://cairodesktop.com/).
+- Further information for advanced users and developers is available [on our wiki](https://github.com/cairoshell/cairoshell/wiki).
+
+### Powered by
+[![JetBrains logo.](https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg)](https://jb.gg/OpenSource)
