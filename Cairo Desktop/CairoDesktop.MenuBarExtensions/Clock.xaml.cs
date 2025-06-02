@@ -15,6 +15,8 @@ namespace CairoDesktop.MenuBarExtensions
         private readonly bool _isPrimaryScreen;
         private static bool isClockHotkeyRegistered;
 
+        private DispatcherTimer _clock;
+
         public Clock(IMenuBar host, ICommandService commandService, Settings settings)
         {
             InitializeComponent();
@@ -32,13 +34,12 @@ namespace CairoDesktop.MenuBarExtensions
             UpdateTextAndToolTip();
 
             // Create our timer for clock
-            DispatcherTimer clock = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 500), DispatcherPriority.Background, Clock_Tick, Dispatcher);
+            _clock = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 500), DispatcherPriority.Background, Clock_Tick, Dispatcher);
 
             if (_isPrimaryScreen)
             {
                 // register time changed handler to receive time zone updates for the clock to update correctly
                 Microsoft.Win32.SystemEvents.TimeChanged += new EventHandler(TimeChanged);
-                Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
 
                 try
                 {
@@ -55,11 +56,6 @@ namespace CairoDesktop.MenuBarExtensions
         private void OnShowClock(HotKey hotKey)
         {
             ToggleClockDisplay();
-        }
-
-        private void Dispatcher_ShutdownStarted(object sender, EventArgs e)
-        {
-            Microsoft.Win32.SystemEvents.TimeChanged -= new EventHandler(TimeChanged);
         }
 
         private void Clock_Tick(object sender, EventArgs args)
@@ -101,6 +97,12 @@ namespace CairoDesktop.MenuBarExtensions
         public void ToggleClockDisplay()
         {
             ClockMenuItem.IsSubmenuOpen = !ClockMenuItem.IsSubmenuOpen;
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.SystemEvents.TimeChanged -= new EventHandler(TimeChanged);
+            _clock.Stop();
         }
     }
 }

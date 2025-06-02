@@ -149,7 +149,12 @@ namespace CairoDesktop.DynamicDesktop.Services
             DesktopOverlayWindow?.Close();
             DesktopOverlayWindow = null;
             DestroyToolbar();
-            NavigationManager = null;
+            if (NavigationManager != null)
+            {
+                NavigationManager.PropertyChanged -= NavigationManager_PropertyChanged;
+                NavigationManager.Dispose();
+                NavigationManager = null;
+            }
 
             // remove desktop icons control
             DesktopWindow?.grid.Children.Clear();

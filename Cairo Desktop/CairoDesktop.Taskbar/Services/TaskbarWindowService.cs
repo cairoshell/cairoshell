@@ -3,7 +3,9 @@ using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.ObjectModel;
 using CairoDesktop.Infrastructure.Services;
+using CairoDesktop.Taskbar.SupportingClasses;
 using ManagedShell.AppBar;
+using ManagedShell.WindowsTasks;
 
 namespace CairoDesktop.Taskbar.Services
 {
@@ -12,6 +14,8 @@ namespace CairoDesktop.Taskbar.Services
         private readonly IAppGrabber _appGrabber;
         private readonly IDesktopManager _desktopManager;
         private readonly ICommandService _commandService;
+
+        private bool tasksInitialized;
 
         public TaskbarWindowService(ICairoApplication cairoApplication,
             AppBarEventService appBarEventService,
@@ -34,6 +38,7 @@ namespace CairoDesktop.Taskbar.Services
 
             if (EnableService)
             {
+                initTasks();
                 _shellManager.ExplorerHelper.HideExplorerTaskbar = true;
             }
         }
@@ -43,12 +48,19 @@ namespace CairoDesktop.Taskbar.Services
             switch (setting)
             {
                 case "EnableTaskbar":
+                    if (_settings.EnableTaskbar)
+                    {
+                        initTasks();
+                    }
                     _shellManager.ExplorerHelper.HideExplorerTaskbar = _settings.EnableTaskbar;
 
                     HandleEnableServiceChanged(_settings.EnableTaskbar);
                     break;
                 case "EnableTaskbarMultiMon":
                     HandleEnableMultiMonChanged(_settings.EnableTaskbarMultiMon);
+                    break;
+                case "TaskbarGroupingStyle":
+                    _shellManager.Tasks.SetTaskCategoryProvider(getTaskCategoryProvider());
                     break;
             }
         }
@@ -104,6 +116,29 @@ namespace CairoDesktop.Taskbar.Services
             if (EnableService)
             {
                 _shellManager.ExplorerHelper.HideExplorerTaskbar = false;
+            }
+        }
+
+        private void initTasks()
+        {
+            if (tasksInitialized)
+            {
+                return;
+            }
+
+            _shellManager.Tasks.Initialize(getTaskCategoryProvider(), true);
+            tasksInitialized = true;
+        }
+
+        private ITaskCategoryProvider getTaskCategoryProvider()
+        {
+            if (_settings.TaskbarGroupingStyle == 0)
+            {
+                return new AppGrabberTaskCategoryProvider(_appGrabber, _shellManager);
+            }
+            else
+            {
+                return new ApplicationTaskCategoryProvider();
             }
         }
     }

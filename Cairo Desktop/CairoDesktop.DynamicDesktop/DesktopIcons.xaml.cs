@@ -366,5 +366,10 @@ namespace CairoDesktop.DynamicDesktop
                     break;
             }
         }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _settings.PropertyChanged -= Settings_PropertyChanged;
+        }
     }
 }
