@@ -212,5 +212,10 @@ namespace CairoDesktop.Taskbar
                 }
             }
         }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Settings.Instance.PropertyChanged -= Instance_PropertyChanged;
+        }
     }
 }

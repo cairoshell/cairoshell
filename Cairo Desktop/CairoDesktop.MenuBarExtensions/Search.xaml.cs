@@ -16,8 +16,10 @@ namespace CairoDesktop.MenuBarExtensions
     public partial class Search : UserControl
     {
         private readonly ICairoApplication _cairoApplication;
-        public bool _isPrimaryScreen;
         private static bool isSearchHotkeyRegistered;
+
+        public bool _isPrimaryScreen;
+        private DispatcherTimer _searchCheck;
 
         public Search(ICairoApplication cairoApplication, IMenuBar host)
         {
@@ -39,12 +41,12 @@ namespace CairoDesktop.MenuBarExtensions
             else
             {
                 CairoSearchMenu.Visibility = Visibility.Collapsed;
-                DispatcherTimer searchcheck = new DispatcherTimer(DispatcherPriority.Background, Dispatcher)
+                _searchCheck = new DispatcherTimer(DispatcherPriority.Background, Dispatcher)
                 {
                     Interval = new TimeSpan(0, 0, 5)
                 };
-                searchcheck.Tick += searchcheck_Tick;
-                searchcheck.Start();
+                _searchCheck.Tick += searchcheck_Tick;
+                _searchCheck.Start();
             }
         }
 
@@ -160,6 +162,11 @@ namespace CairoDesktop.MenuBarExtensions
         internal void ToggleSearch()
         {
             CairoSearchMenu.IsSubmenuOpen = !CairoSearchMenu.IsSubmenuOpen;
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _searchCheck?.Stop();
         }
     }
 }

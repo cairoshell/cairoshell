@@ -231,28 +231,11 @@
                                                                 <ControlTemplate TargetType="GroupItem">
                                                                     <ContentControl Style="{StaticResource TaskbarGroup}">
                                                                         <Border BorderThickness="0"
-                                                                                Margin="0,0,-1,0"
-                                                                                Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}">
+                                                                                Margin="0,0,-1,0">
                                                                             <self:TaskButton ListMode="False"
                                                                                              ParentTaskbar="{Binding ElementName=TaskbarWindow}"
-                                                                                             DataContext="{Binding Converter={StaticResource groupConverter}}" />
-                                                                            <Border.Triggers>
-                                                                                <EventTrigger RoutedEvent="Loaded">
-                                                                                    <BeginStoryboard>
-                                                                                        <Storyboard>
-                                                                                            <DoubleAnimation Storyboard.TargetProperty="Width"
-                                                                                                             From="0"
-                                                                                                             To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}"
-                                                                                                             Duration="0:0:0.2"
-                                                                                                             FillBehavior="Stop">
-                                                                                                <DoubleAnimation.EasingFunction>
-                                                                                                    <QuadraticEase EasingMode="EaseInOut" />
-                                                                                                </DoubleAnimation.EasingFunction>
-                                                                                            </DoubleAnimation>
-                                                                                        </Storyboard>
-                                                                                    </BeginStoryboard>
-                                                                                </EventTrigger>
-                                                                            </Border.Triggers>
+                                                                                             DataContext="{Binding Converter={StaticResource groupConverter}}"
+                                                                                             Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}" />
                                                                         </Border>
                                                                     </ContentControl>
                                                                 </ControlTemplate>
@@ -271,11 +254,11 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                <Border BorderThickness="0" Margin="0,0,-1,0" BorderBrush="Transparent"
-                                                        Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}">
+                                                <Border BorderThickness="0" Margin="0,0,-1,0" BorderBrush="Transparent">
                                                     <self:TaskButton ListMode="False"
                                                                      MouseRightButtonUp="TaskButton_MouseRightButtonUp"
-                                                                     ParentTaskbar="{Binding ElementName=TaskbarWindow}" />
+                                                                     ParentTaskbar="{Binding ElementName=TaskbarWindow}"
+                                                                     Width="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}" />
                                                     <Border.Style>
                                                         <Style TargetType="{x:Type Border}">
                                                             <Setter Property="Visibility" Value="Collapsed" />
@@ -287,23 +270,6 @@
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Border.Style>
-                                                    <Border.Triggers>
-                                                        <EventTrigger RoutedEvent="Loaded">
-                                                            <BeginStoryboard>
-                                                                <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetProperty="Width"
-                                                                                     From="0"
-                                                                                     To="{Binding Path=ButtonWidth, ElementName=TaskbarWindow}"
-                                                                                     Duration="0:0:0.2"
-                                                                                     FillBehavior="Stop">
-                                                                        <DoubleAnimation.EasingFunction>
-                                                                            <QuadraticEase EasingMode="EaseInOut" />
-                                                                        </DoubleAnimation.EasingFunction>
-                                                                    </DoubleAnimation>
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </EventTrigger>
-                                                    </Border.Triggers>
                                                 </Border>
                                             </ControlTemplate>
                                         </Setter.Value>

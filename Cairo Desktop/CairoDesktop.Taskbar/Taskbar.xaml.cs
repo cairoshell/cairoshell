@@ -112,8 +112,6 @@ namespace CairoDesktop.Taskbar
 
             // setup taskbar item source
 
-            _shellManager.Tasks.Initialize(getTaskCategoryProvider(), true);
-
             _taskbarItems = _shellManager.Tasks.CreateGroupedWindowsCollection();
             _taskbarItems.Filter = Tasks_Filter;
 
@@ -166,18 +164,6 @@ namespace CairoDesktop.Taskbar
             }
 
             return true;
-        }
-
-        private ITaskCategoryProvider getTaskCategoryProvider()
-        {
-            if (_settings.TaskbarGroupingStyle == 0)
-            {
-                return new AppGrabberTaskCategoryProvider(_appGrabber, _shellManager);
-            }
-            else
-            {
-                return new ApplicationTaskCategoryProvider();
-            }
         }
 
         private void setupTaskbarAppearance()
@@ -327,6 +313,7 @@ namespace CairoDesktop.Taskbar
         {
             if (_windowManager?.IsSettingDisplays == true || AllowClose)
             {
+                _taskbarItems.Filter = null;
                 _taskbarItems.CollectionChanged -= GroupedWindows_Changed;
                 _windowManager.ScreensChanged -= WindowManager_ScreensChanged;
                 _settings.PropertyChanged -= Settings_PropertyChanged;
@@ -405,7 +392,6 @@ namespace CairoDesktop.Taskbar
                     setTaskbarBlur();
                     break;
                 case "TaskbarGroupingStyle":
-                    _shellManager.Tasks.SetTaskCategoryProvider(getTaskCategoryProvider());
                     setTaskButtonSize();
                     break;
                 case "EnableTaskbarMultiMon":

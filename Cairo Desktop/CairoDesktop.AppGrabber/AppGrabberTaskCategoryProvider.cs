@@ -33,6 +33,12 @@ namespace CairoDesktop.AppGrabber
             {
                 category.PropertyChanged -= Category_PropertyChanged;
             }
+
+            if (categoryChangeDelegate != null)
+            {
+                _appGrabber.CategoryList.CategoryChanged -= CategoryList_CategoryChanged;
+                _appGrabber.CategoryList.CollectionChanged -= CategoryList_CollectionChanged;
+            }
         }
 
         public string GetCategory(ApplicationWindow window)
@@ -62,9 +68,13 @@ namespace CairoDesktop.AppGrabber
                 return;
             }
 
+            if (categoryChangeDelegate == null)
+            {
+                _appGrabber.CategoryList.CategoryChanged += CategoryList_CategoryChanged;
+                _appGrabber.CategoryList.CollectionChanged += CategoryList_CollectionChanged;
+            }
+
             categoryChangeDelegate = changeDelegate;
-            _appGrabber.CategoryList.CategoryChanged += (sender, args) => categoryChangeDelegate();
-            _appGrabber.CategoryList.CollectionChanged += CategoryList_CollectionChanged;
 
             // request new categories in case of preference change
             // nullify all existing categories so we don't attempt reuse
@@ -72,6 +82,16 @@ namespace CairoDesktop.AppGrabber
             {
                 window.Category = null;
             }
+            categoryChangeDelegate?.Invoke();
+        }
+
+        private void CategoryList_CategoryChanged(object sender, EventArgs args)
+        {
+            if (sender is Category category && category.Type == AppCategoryType.All)
+            {
+                return;
+            }
+
             categoryChangeDelegate?.Invoke();
         }
 
@@ -141,7 +161,7 @@ namespace CairoDesktop.AppGrabber
         {
             var applicationWindows = _shellManager.Tasks.GroupedWindows.Cast<ApplicationWindow>();
             category = applicationWindows
-                .FirstOrDefault(ai => ai.ProcId == window.ProcId && ai.Category != null)
+                .FirstOrDefault(ai => ai.ProcId == window.ProcId && ai.Handle != window.Handle && ai.Category != null)
                 ?.Category;
             return category != null;
         }

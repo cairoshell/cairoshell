@@ -7,7 +7,7 @@ using ManagedShell.ShellFolders;
 
 namespace CairoDesktop.Common
 {
-    public class NavigationManager : INotifyPropertyChanged
+    public class NavigationManager : INotifyPropertyChanged, IDisposable
     {
         private List<NavigationItem> list;
         private int _currentIndex;
@@ -39,6 +39,11 @@ namespace CairoDesktop.Common
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
 
             NavigateHome();
+        }
+
+        public void Dispose()
+        {
+            Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)

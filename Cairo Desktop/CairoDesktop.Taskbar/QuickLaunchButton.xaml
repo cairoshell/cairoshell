@@ -8,7 +8,8 @@
              x:Class="CairoDesktop.Taskbar.QuickLaunchButton"
              x:Name="UserControl"
              d:DesignWidth="26"
-             d:DesignHeight="29">
+             d:DesignHeight="29"
+             Unloaded="UserControl_Unloaded">
     <Grid x:Name="LayoutRoot">
         <Button x:Name="btn"
                 CommandParameter="{Binding Path=Path}"

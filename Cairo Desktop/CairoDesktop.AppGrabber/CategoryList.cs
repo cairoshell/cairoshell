@@ -105,7 +105,7 @@ namespace CairoDesktop.AppGrabber {
 
         private void Category_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            OnCategoryChanged(new EventArgs());
+            OnCategoryChanged(sender, new EventArgs());
         }
 
         /// <summary>
@@ -276,9 +276,9 @@ namespace CairoDesktop.AppGrabber {
             return catList;
         }
 
-        protected virtual void OnCategoryChanged(EventArgs e)
+        protected virtual void OnCategoryChanged(object sender, EventArgs e)
         {
-            CategoryChanged?.Invoke(this, e);
+            CategoryChanged?.Invoke(sender, e);
         }
     }
 }

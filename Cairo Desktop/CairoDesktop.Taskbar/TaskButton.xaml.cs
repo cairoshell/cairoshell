@@ -11,6 +11,7 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
 using System.Collections.ObjectModel;
 using CairoDesktop.Taskbar.SupportingClasses;
+using System.Windows.Media.Animation;
 
 namespace CairoDesktop.Taskbar
 {
@@ -110,6 +111,25 @@ namespace CairoDesktop.Taskbar
             return SystemParameters.MouseHoverTime.Add(TimeSpan.FromMilliseconds(autoHideDelay));
         }
 
+        private void animate()
+        {
+            var ease = new SineEase();
+            ease.EasingMode = EasingMode.EaseInOut;
+
+            DoubleAnimation animation = new DoubleAnimation();
+            animation.From = 0;
+            animation.To = ParentTaskbar?.ButtonWidth ?? ActualWidth;
+            animation.Duration = new Duration(TimeSpan.FromMilliseconds(250));
+            animation.FillBehavior = FillBehavior.Stop;
+            animation.EasingFunction = ease;
+            Storyboard.SetTarget(animation, this);
+            Storyboard.SetTargetProperty(animation, new PropertyPath(WidthProperty));
+
+            Storyboard storyboard = new Storyboard();
+            storyboard.Children.Add(animation);
+            storyboard.Begin();
+        }
+
         #region Events
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -132,6 +152,7 @@ namespace CairoDesktop.Taskbar
                 setLabelVisibility();
                 setIconSize();
                 setToolTip();
+                animate();
             }
             else
             {
