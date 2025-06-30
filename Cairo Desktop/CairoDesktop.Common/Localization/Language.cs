@@ -3149,6 +3149,7 @@ namespace CairoDesktop.Common.Localization
             { "sSettings_MenuBar_PinnedIcons", "Закреплённые иконки" },
             { "sSettings_MenuBar_NotificationAreaPinHelp", "Чтобы прикрепить иконку в области уведомлений, перетащите её в область «Закреплённые иконки» или перетащите её в область «Спрятанные иконоки», чтобы спрятать." },
             { "sSettings_MenuBar_EnableCairoMenuHotKey", "Включить горячую клавишу меню Cairo:" },
+	    { "sSettings_MenuBar_EnableWinKey", "Открывать меню "Программы" с помощью клавиши Windows" },
             { "sSettings_MenuBar_EnableMenuBarBlur", "Размытие фона панели меню" },
             { "sSettings_MenuBar_EnableMenuBarMultiMon", "Показывать панель меню на нескольких мониторах" },
             { "sSettings_MenuBar_ShowHibernate", "Добавить гибернацию в меню Cairo" },
