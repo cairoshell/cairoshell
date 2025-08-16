@@ -1,13 +1,14 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using CairoDesktop.Common;
-using System.Windows.Input;
+﻿using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.ShellFolders;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
-namespace CairoDesktop.MenuBar {
+namespace CairoDesktop.MenuBar
+{
     /// <summary>
     /// Interaction logic for StacksContainer.xaml
     /// </summary>
@@ -22,7 +23,7 @@ namespace CairoDesktop.MenuBar {
             set { SetValue(PopupWidthProperty, value); }
         }
 
-        public StacksContainer() 
+        public StacksContainer()
         {
             InitializeComponent();
 
@@ -33,7 +34,7 @@ namespace CairoDesktop.MenuBar {
         {
             StacksManager.Instance.RemoveLocation((sender as MenuItem).CommandParameter as ShellFolder);
         }
-        
+
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             OpenDir((sender as ICommandSource).CommandParameter.ToString(), true);
@@ -50,6 +51,27 @@ namespace CairoDesktop.MenuBar {
             if (e.ChangedButton == MouseButton.Left && MenuBar != null)
             {
                 PopupWidth = MenuBar.Width;
+                // ensure the quick preview uses the scroller (so sorting is applied) by wiring the scroller early
+                try
+                {
+                    if (sender is ICommandSource cmdsrc && cmdsrc.CommandParameter is ShellFolder)
+                    {
+                        // the template creates an empty MenuItem as the submenu placeholder; replace its Header with the scroller
+                        if (cmdsrc is MenuItem menuItem && menuItem.Items.Count > 0 && menuItem.Items[0] is MenuItem subMenuItem)
+                        {
+                            if (!(subMenuItem.Header is StacksScroller))
+                            {
+                                if (menuItem.DataContext is ShellFolder sf)
+                                {
+                                    sf.Refresh(); // ensure contents are up-to-date
+                                    StacksScroller scroller = new StacksScroller(sf, this, menuItem, MenuBar._commandService);
+                                    subMenuItem.Header = scroller;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch { }
             }
         }
 
@@ -62,7 +84,7 @@ namespace CairoDesktop.MenuBar {
                 ICommandSource cmdsrc = sender as ICommandSource;
                 if (cmdsrc?.CommandParameter is ShellFolder cmdparam)
                 {
-                    OpenDir(cmdparam.Path, !Settings.Instance.FoldersOpenDesktopOverlay); 
+                    OpenDir(cmdparam.Path, !Settings.Instance.FoldersOpenDesktopOverlay);
                     e.Handled = true;
                 }
             }
@@ -73,7 +95,7 @@ namespace CairoDesktop.MenuBar {
         /// </summary>
         /// <param name="directoryPath">Directory to open.</param>
         /// <param name="alwaysOpenWithShell">If true, user preferences will not be honored and the shell will always be used to open the directory.</param>
-        internal void OpenDir(string directoryPath, bool alwaysOpenWithShell) 
+        internal void OpenDir(string directoryPath, bool alwaysOpenWithShell)
         {
             if (!MenuBar._commandService.InvokeCommand(alwaysOpenWithShell ? "OpenLocationInWindow" : "OpenLocation", ("Path", directoryPath)))
             {
@@ -264,14 +286,19 @@ namespace CairoDesktop.MenuBar {
             {
                 if (menuItem.Items.Count > 0 && menuItem.Items[0] is MenuItem subMenuItem)
                 {
-                    StacksScroller scroller = new StacksScroller()
+                    if (!(subMenuItem.Header is StacksScroller))
                     {
-                        DataContext = menuItem.DataContext,
-                        ParentContainer = this,
-                        ParentMenuItem = menuItem,
-                        _commandService = MenuBar._commandService
-                    };
-                    subMenuItem.Header = scroller;
+                        try
+                        {
+                            if (menuItem.DataContext is ShellFolder sf)
+                            {
+                                sf.Refresh(); // ensure contents are up-to-date
+                                StacksScroller scroller = new StacksScroller(sf, this, menuItem, MenuBar._commandService);
+                                subMenuItem.Header = scroller;
+                            }
+                        }
+                        catch { }
+                    }
                 }
             }
         }

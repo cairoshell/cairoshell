@@ -35,10 +35,36 @@ namespace CairoDesktop.MenuBar
         private bool isLoaded;
         private Icon LastIconSelected;
         private Dictionary<uint, string> ContextMenuCommandUIDs = new Dictionary<uint, string>();
+        private FolderView _folderView;
 
         public StacksScroller()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Initialize scroller synchronously for the provided folder so it is ready for quick-preview popups.
+        /// </summary>
+        public StacksScroller(ShellFolder folder, StacksContainer parentContainer, MenuItem parentMenuItem, ICommandService commandService)
+        {
+            InitializeComponent();
+
+            ParentContainer = parentContainer;
+            ParentMenuItem = parentMenuItem;
+            _commandService = commandService;
+
+            if (folder != null)
+            {
+                DataContext = folder;
+                try
+                {
+                    _folderView = new FolderView(folder);
+                    _folderView.ApplySort(FolderView.SortMode.DateDesc);
+                    Scroller.ItemsSource = _folderView.DisplayItems;
+                }
+                catch { }
+            }
+            isLoaded = true;
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -81,7 +107,9 @@ namespace CairoDesktop.MenuBar
 
                 if (DataContext is ShellFolder folder)
                 {
-                    Scroller.ItemsSource = new FolderView(folder).DisplayItems;
+                    _folderView = new FolderView(folder);
+                    _folderView.ApplySort(FolderView.SortMode.DateDesc);
+                    Scroller.ItemsSource = _folderView.DisplayItems;
                 }
 
                 if (Settings.Instance.EnableDynamicDesktop && Settings.Instance.FoldersOpenDesktopOverlay &&
@@ -93,6 +121,8 @@ namespace CairoDesktop.MenuBar
                 isLoaded = true;
             }
         }
+
+        // Sort button removed: stacks are always newest-first
 
         private void Close()
         {
