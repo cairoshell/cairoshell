@@ -36,6 +36,7 @@ namespace CairoDesktop.Taskbar
 
         private DispatcherTimer dragTimer;
         private DispatcherTimer thumbTimer;
+        private DispatcherTimer closeThumbTimer;
         public TaskThumbWindow ThumbWindow;
         private TaskGroup taskGroup;
 
@@ -172,6 +173,10 @@ namespace CairoDesktop.Taskbar
             // thumbnails - delayed activation using system setting
             thumbTimer = new DispatcherTimer { Interval = interval };
             thumbTimer.Tick += thumbTimer_Tick;
+
+            // thumbnails - delayed closing
+            closeThumbTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
+            closeThumbTimer.Tick += closeThumbTimer_Tick;
         }
 
         private void TaskButton_OnUnloaded(object sender, RoutedEventArgs e)
@@ -330,7 +335,7 @@ namespace CairoDesktop.Taskbar
             if (!ListMode)
             {
                 thumbTimer.Stop();
-                closeThumb();
+                closeThumbTimer.Start();
             }
         }
         #endregion
@@ -478,6 +483,14 @@ namespace CairoDesktop.Taskbar
         {
             thumbTimer.Stop();
             if (IsMouseOver) openThumb();
+        }
+
+        private void closeThumbTimer_Tick(object sender, EventArgs e)
+        {
+            closeThumbTimer.Stop();
+
+            if (!IsMouseOver)
+                closeThumb();
         }
 
         private void openThumb()
