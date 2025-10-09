@@ -39,7 +39,7 @@ jobs:
           platform: ARM64
           installer: ARM64
 
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     env:
       installer: "Installer\\CairoShell.nsi"
