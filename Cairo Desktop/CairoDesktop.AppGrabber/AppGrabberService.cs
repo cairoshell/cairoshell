@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Data;
@@ -275,6 +276,7 @@ namespace CairoDesktop.AppGrabber
                         link.GetPath(builder, 260, out ManagedShell.ShellFolders.Structs.WIN32_FIND_DATA pfd, ManagedShell.ShellFolders.Enums.SLGP_FLAGS.SLGP_RAWPATH);
 
                         target = builder.ToString();
+                        Marshal.FinalReleaseComObject(link);
                     }
                     catch (Exception ex)
                     {
