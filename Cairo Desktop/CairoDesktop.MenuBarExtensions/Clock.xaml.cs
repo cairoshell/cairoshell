@@ -25,7 +25,10 @@ namespace CairoDesktop.MenuBarExtensions
             _settings = settings;
 
             _isPrimaryScreen = host.GetIsPrimaryDisplay();
+        }
 
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
             InitializeClock();
         }
 
