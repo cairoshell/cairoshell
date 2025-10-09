@@ -175,7 +175,7 @@ namespace CairoDesktop.Taskbar
             thumbTimer.Tick += thumbTimer_Tick;
 
             // thumbnails - delayed closing
-            closeThumbTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
+            closeThumbTimer = new DispatcherTimer { Interval = TimeSpan.FromTicks(interval.Ticks / 2) };
             closeThumbTimer.Tick += closeThumbTimer_Tick;
         }
 
