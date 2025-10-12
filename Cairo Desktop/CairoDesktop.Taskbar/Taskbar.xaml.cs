@@ -464,15 +464,12 @@ namespace CairoDesktop.Taskbar
         {
             var changed = base.UpdatePosition();
 
-            if (changed)
-            {
-                // set these since available space may have changed
-                setTaskButtonSize();
-                setTaskbarWidthMode();
+            // set these since available space may have changed
+            setTaskButtonSize();
+            setTaskbarWidthMode();
 
-                // set maxwidth always
-                bdrTaskbar.MaxWidth = ActualWidth;
-            }
+            // set maxwidth always
+            bdrTaskbar.MaxWidth = ActualWidth;
 
             return changed;
         }
