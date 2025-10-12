@@ -28,40 +28,42 @@ namespace CairoDesktop.DynamicDesktop
             _desktopManager = manager;
             _appBarManager = appBarManager;
             _settings = settings;
-
-            ResetPosition();
         }
 
         public void ResetPosition()
         {
-            double top = SystemInformation.WorkingArea.Top / DpiHelper.DpiScale;
-            double taskbarHeight = 0;
+            int top = SystemInformation.WorkingArea.Top;
+            int taskbarHeight = 0;
 
-            if (_settings.TaskbarMode == 1)
+            if (_settings.TaskbarMode != 0)
             {
                 // special case, since work area is not reduced with this setting
-                // this keeps the desktop going beneath the TaskBar
-
+                // this keeps the desktop from going beneath the TaskBar
                 // get the TaskBar's height
                 AppBarScreen screen = AppBarScreen.FromPrimaryScreen();
                 NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(screen, false, false, IntPtr.Zero);
-                taskbarHeight = (screen.Bounds.Bottom - workAreaRect.Bottom) / DpiHelper.DpiScale;
+                taskbarHeight = screen.Bounds.Bottom - workAreaRect.Bottom;
 
                 // top TaskBar means we should push down
                 if (_settings.TaskbarEdge == AppBarEdge.Top)
                 {
-                    top = workAreaRect.Top / DpiHelper.DpiScale;
+                    top = workAreaRect.Top;
                 }
             }
 
-            Width = (SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left) / DpiHelper.DpiScale;
-            Height = ((SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale) - taskbarHeight;
+            int width = SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left;
+            int height = SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top - taskbarHeight;
 
-            grid.Width = Width;
-            grid.Height = Height;
+            int swp = (int)NativeMethods.SetWindowPosFlags.SWP_NOZORDER | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE;
+            if (width < 0 || height < 0)
+            {
+                swp |= (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE;
+            }
 
-            Top = top;
-            Left = SystemInformation.WorkingArea.Left / DpiHelper.DpiScale;
+            grid.Width = width / DpiHelper.DpiScale;
+            grid.Height = height / DpiHelper.DpiScale;
+
+            NativeMethods.SetWindowPos(Handle, IntPtr.Zero, SystemInformation.WorkingArea.Left, top, width, height, swp);
         }
 
         public void BringToFront()
@@ -80,6 +82,8 @@ namespace CairoDesktop.DynamicDesktop
             Handle = helper.Handle;
 
             WindowHelper.HideWindowFromTasks(Handle);
+
+            ResetPosition();
         }
 
         private void DesktopOverlayWindow_LocationChanged(object sender, EventArgs e)

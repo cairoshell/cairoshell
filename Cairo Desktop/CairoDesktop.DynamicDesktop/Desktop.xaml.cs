@@ -71,8 +71,6 @@ namespace CairoDesktop.DynamicDesktop
                 AllowsTransparency = false;
             }
 
-            setSize();
-            setGridPosition();
             setBackground();
 
             _settings.PropertyChanged += Settings_PropertyChanged;
@@ -84,6 +82,7 @@ namespace CairoDesktop.DynamicDesktop
         {
             WindowHelper.HideWindowFromTasks(Handle);
 
+            ResetPosition();
             SendToBottom();
 
             _desktopManager.ConfigureDesktop();
@@ -278,17 +277,22 @@ namespace CairoDesktop.DynamicDesktop
 
         public void ResetPosition()
         {
-            Top = 0;
-            Left = 0;
-
             setSize();
             setGridPosition();
         }
 
         private void setSize()
         {
-            Width = SystemInformation.VirtualScreen.Width / DpiHelper.DpiScale;
-            Height = (SystemInformation.VirtualScreen.Height / DpiHelper.DpiScale) - (EnvironmentHelper.IsAppRunningAsShell ? 0 : 1); // making size of screen causes explorer to send ABN_FULLSCREENAPP
+            int width = SystemInformation.VirtualScreen.Width;
+            int height = SystemInformation.VirtualScreen.Height - (EnvironmentHelper.IsAppRunningAsShell ? 0 : 1); // making size of screen causes explorer to send ABN_FULLSCREENAPP
+
+            int swp = (int)NativeMethods.SetWindowPosFlags.SWP_NOZORDER | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE;
+            if (width < 0 || height < 0)
+            {
+                swp |= (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE;
+            }
+
+            NativeMethods.SetWindowPos(Handle, IntPtr.Zero, 0, 0, width, height, swp);
         }
 
         private void setGridPosition()
@@ -304,10 +308,10 @@ namespace CairoDesktop.DynamicDesktop
 
             grid.Width = (SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left) / DpiHelper.DpiScale;
 
-            if (_settings.TaskbarMode == 1)
+            if (_settings.TaskbarMode != 0)
             {
                 // special case, since work area is not reduced with this setting
-                // this keeps the desktop going beneath the TaskBar
+                // this keeps the desktop from going beneath the TaskBar
                 // get the TaskBar's height
                 AppBarScreen screen = AppBarScreen.FromPrimaryScreen();
                 NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(screen, false, false, IntPtr.Zero);
