@@ -287,7 +287,7 @@ namespace CairoDesktop.Taskbar
         {
             // if we are showing but not reserving space, tell the desktop to adjust here
             // since we aren't changing the work area, it doesn't do this on its own
-            if (AppBarMode == AppBarMode.None && Screen.Primary)
+            if (AppBarMode != AppBarMode.Normal && Screen.Primary)
                 _desktopManager.ResetPosition(false);
         }
 
@@ -362,7 +362,7 @@ namespace CairoDesktop.Taskbar
                     {
                         PeekDuringAutoHide();
                         setupTaskbarAppearance();
-                        if (AppBarMode == AppBarMode.None) SetDesktopPosition();
+                        SetDesktopPosition();
                         if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
                     }
                     else if (e.PropertyName == "MenuBarEdge" && !EnvironmentHelper.IsAppRunningAsShell && AppBarMode == AppBarMode.Normal)

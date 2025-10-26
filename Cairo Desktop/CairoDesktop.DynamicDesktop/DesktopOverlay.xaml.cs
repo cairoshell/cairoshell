@@ -1,13 +1,10 @@
-﻿using CairoDesktop.Common;
-using ManagedShell.Interop;
+﻿using ManagedShell.Interop;
 using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using CairoDesktop.DynamicDesktop.Services;
-using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
-using System.Windows.Forms;
 
 namespace CairoDesktop.DynamicDesktop
 {
@@ -17,51 +14,29 @@ namespace CairoDesktop.DynamicDesktop
     public partial class DesktopOverlay : Window
     {
         private readonly DesktopManager _desktopManager;
-        private readonly AppBarManager _appBarManager;
-        private readonly Settings _settings;
         public IntPtr Handle;
 
-        public DesktopOverlay(DesktopManager manager, AppBarManager appBarManager, Settings settings)
+        public DesktopOverlay(DesktopManager manager)
         {
             InitializeComponent();
             
             _desktopManager = manager;
-            _appBarManager = appBarManager;
-            _settings = settings;
-
-            ResetPosition();
         }
 
         public void ResetPosition()
         {
-            double top = SystemInformation.WorkingArea.Top / DpiHelper.DpiScale;
-            double taskbarHeight = 0;
+            Rect posRect = _desktopManager.GetUsableDesktopRect();
 
-            if (_settings.TaskbarMode == 1)
+            int swp = (int)NativeMethods.SetWindowPosFlags.SWP_NOZORDER | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE;
+            if (posRect.Width < 0 || posRect.Height < 0)
             {
-                // special case, since work area is not reduced with this setting
-                // this keeps the desktop going beneath the TaskBar
-
-                // get the TaskBar's height
-                AppBarScreen screen = AppBarScreen.FromPrimaryScreen();
-                NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(screen, false, false, IntPtr.Zero);
-                taskbarHeight = (screen.Bounds.Bottom - workAreaRect.Bottom) / DpiHelper.DpiScale;
-
-                // top TaskBar means we should push down
-                if (_settings.TaskbarEdge == AppBarEdge.Top)
-                {
-                    top = workAreaRect.Top / DpiHelper.DpiScale;
-                }
+                swp |= (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE;
             }
 
-            Width = (SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left) / DpiHelper.DpiScale;
-            Height = ((SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale) - taskbarHeight;
+            grid.Width = posRect.Width / DpiHelper.DpiScale;
+            grid.Height = posRect.Height / DpiHelper.DpiScale;
 
-            grid.Width = Width;
-            grid.Height = Height;
-
-            Top = top;
-            Left = SystemInformation.WorkingArea.Left / DpiHelper.DpiScale;
+            NativeMethods.SetWindowPos(Handle, IntPtr.Zero, (int)posRect.X, (int)posRect.Top, (int)posRect.Width, (int)posRect.Height, swp);
         }
 
         public void BringToFront()
@@ -80,6 +55,8 @@ namespace CairoDesktop.DynamicDesktop
             Handle = helper.Handle;
 
             WindowHelper.HideWindowFromTasks(Handle);
+
+            ResetPosition();
         }
 
         private void DesktopOverlayWindow_LocationChanged(object sender, EventArgs e)
@@ -87,7 +64,7 @@ namespace CairoDesktop.DynamicDesktop
             ResetPosition();
         }
 
-        private void DesktopOverlayWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void DesktopOverlayWindow_KeyDown(object sender, KeyEventArgs e)
         {
             _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
@@ -102,12 +79,12 @@ namespace CairoDesktop.DynamicDesktop
             _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
-        private void DesktopOverlayWindow_DragOver(object sender, System.Windows.DragEventArgs e)
+        private void DesktopOverlayWindow_DragOver(object sender, DragEventArgs e)
         {
             _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
-        private void DesktopOverlayWindow_Drop(object sender, System.Windows.DragEventArgs e)
+        private void DesktopOverlayWindow_Drop(object sender, DragEventArgs e)
         {
             _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
