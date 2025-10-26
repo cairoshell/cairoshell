@@ -37,13 +37,11 @@ namespace CairoDesktop.DynamicDesktop
     {
         private WindowInteropHelper helper;
         private bool altF4Pressed;
-        private readonly AppBarManager _appBarManager;
         private readonly ICairoApplication _cairoApplication;
         private readonly ICommandService _commandService;
         private readonly DesktopManager _desktopManager;
         private readonly FullScreenHelper _fullScreenHelper;
         private readonly FileOperationWorker _fileWorker;
-        private readonly ISettingsUIService _settingsUiService;
         private readonly Settings _settings;
 
         public bool AllowClose;
@@ -53,17 +51,15 @@ namespace CairoDesktop.DynamicDesktop
         private Brush BackgroundBrush { get; set; }
         private Dictionary<uint, string> ContextMenuCommandUIDs = new Dictionary<uint, string>();
 
-        public Desktop(DesktopManager desktopManager, ICairoApplication cairoApplication, AppBarManager appBarManager, FullScreenHelper fullScreenHelper, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings)
+        public Desktop(DesktopManager desktopManager, ICairoApplication cairoApplication, FullScreenHelper fullScreenHelper, ICommandService commandService, Settings settings)
         {
             InitializeComponent();
 
-            _appBarManager = appBarManager;
             _cairoApplication = cairoApplication;
             _commandService = commandService;
             _desktopManager = desktopManager;
             _fullScreenHelper = fullScreenHelper;
             _fileWorker = new FileOperationWorker();
-            _settingsUiService = settingsUiService;
             _settings = settings;
 
             if (_desktopManager.ShellWindow != null)
@@ -286,47 +282,36 @@ namespace CairoDesktop.DynamicDesktop
             int width = SystemInformation.VirtualScreen.Width;
             int height = SystemInformation.VirtualScreen.Height - (EnvironmentHelper.IsAppRunningAsShell ? 0 : 1); // making size of screen causes explorer to send ABN_FULLSCREENAPP
 
+            int top = SystemInformation.VirtualScreen.Y;
+            int left = SystemInformation.VirtualScreen.X;
+
+            if (_desktopManager.ShellWindow != null || _desktopManager.AllowProgmanChild)
+            {
+                // We are positioned relative to our owner, which is already in the right place
+                top = 0;
+                left = 0;
+            }
+
             int swp = (int)NativeMethods.SetWindowPosFlags.SWP_NOZORDER | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE;
             if (width < 0 || height < 0)
             {
                 swp |= (int)NativeMethods.SetWindowPosFlags.SWP_NOSIZE;
             }
 
-            NativeMethods.SetWindowPos(Handle, IntPtr.Zero, 0, 0, width, height, swp);
+            NativeMethods.SetWindowPos(Handle, IntPtr.Zero, left, top, width, height, swp);
         }
 
         private void setGridPosition()
         {
-            double top = SystemInformation.WorkingArea.Top / DpiHelper.DpiScale;
-            double left = SystemInformation.WorkingArea.Left / DpiHelper.DpiScale;
+            Rect posRect = _desktopManager.GetUsableDesktopRect();
+            // Because the desktop spans monitors, which may each have different DPI, our DPI may not match the primary monitor DPI, so get our DPI.
+            double dpiScale = PresentationSource.FromVisual(this)?.CompositionTarget.TransformToDevice.M11 ?? DpiHelper.DpiScale;
 
-            if (_desktopManager.ShellWindow != null || _desktopManager.AllowProgmanChild)
-            {
-                top = (0 - SystemInformation.VirtualScreen.Top + SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale;
-                left = (0 - SystemInformation.VirtualScreen.Left + SystemInformation.WorkingArea.Left) / DpiHelper.DpiScale;
-            }
+            double top = (0 - SystemInformation.VirtualScreen.Top + posRect.Y) / dpiScale;
+            double left = (0 - SystemInformation.VirtualScreen.Left + posRect.X) / dpiScale;
 
-            grid.Width = (SystemInformation.WorkingArea.Right - SystemInformation.WorkingArea.Left) / DpiHelper.DpiScale;
-
-            if (_settings.TaskbarMode != 0)
-            {
-                // special case, since work area is not reduced with this setting
-                // this keeps the desktop from going beneath the TaskBar
-                // get the TaskBar's height
-                AppBarScreen screen = AppBarScreen.FromPrimaryScreen();
-                NativeMethods.Rect workAreaRect = _appBarManager.GetWorkArea(screen, false, false, IntPtr.Zero);
-
-                grid.Height = ((SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale) - ((screen.Bounds.Bottom - workAreaRect.Bottom) / DpiHelper.DpiScale);
-
-                if (_settings.TaskbarEdge == AppBarEdge.Top)
-                {
-                    top += (workAreaRect.Top - SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale;
-                }
-            }
-            else
-            {
-                grid.Height = (SystemInformation.WorkingArea.Bottom - SystemInformation.WorkingArea.Top) / DpiHelper.DpiScale;
-            }
+            grid.Width = posRect.Width / dpiScale;
+            grid.Height = posRect.Height / dpiScale;
 
             grid.Margin = new Thickness(left, top, 0, 0);
         }

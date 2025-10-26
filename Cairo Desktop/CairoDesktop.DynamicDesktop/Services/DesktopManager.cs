@@ -3,6 +3,7 @@ using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.ObjectModel;
 using CairoDesktop.Infrastructure.Services;
 using ManagedShell;
+using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.SupportingClasses;
 using ManagedShell.ShellFolders;
@@ -10,7 +11,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Media;
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
@@ -36,7 +39,6 @@ namespace CairoDesktop.DynamicDesktop.Services
         private readonly ShellManager _shellManager;
         private readonly ICairoApplication _cairoApplication;
         private readonly ILogger<DesktopManager> _logger;
-        private readonly ISettingsUIService _settingsUiService;
         private readonly ICommandService _commandService;
         private readonly Settings _settings;
 
@@ -71,14 +73,13 @@ namespace CairoDesktop.DynamicDesktop.Services
 
         public ShellFolder DesktopLocation => DesktopIconsControl?.Location;
 
-        public DesktopManager(ILogger<DesktopManager> logger, ICairoApplication cairoApplication, ShellManagerService shellManagerService, ISettingsUIService settingsUiService, ICommandService commandService, IWindowManager windowManager, Settings settings)
+        public DesktopManager(ILogger<DesktopManager> logger, ICairoApplication cairoApplication, ShellManagerService shellManagerService, ICommandService commandService, IWindowManager windowManager, Settings settings)
         {
             // DesktopManager is always created on startup, regardless of desktop preferences
             // this allows for dynamic creation and destruction of the desktop per user preference
             _cairoApplication = cairoApplication;
             _shellManager = shellManagerService.ShellManager;
             _logger = logger;
-            _settingsUiService = settingsUiService;
             _commandService = commandService;
             _windowManager = windowManager;
             _settings = settings;
@@ -126,7 +127,7 @@ namespace CairoDesktop.DynamicDesktop.Services
             if (DesktopWindow != null)
                 return;
 
-            DesktopWindow = new Desktop(this, _cairoApplication, _shellManager.AppBarManager, _shellManager.FullScreenHelper, _settingsUiService, _commandService, _settings);
+            DesktopWindow = new Desktop(this, _cairoApplication, _shellManager.FullScreenHelper, _commandService, _settings);
             DesktopWindow.WorkAreaChanged += WorkAreaChanged;
             DesktopWindow.Show();
         }
@@ -284,6 +285,37 @@ namespace CairoDesktop.DynamicDesktop.Services
             }
         }
 
+        public Rect GetUsableDesktopRect()
+        {
+            Rect rect = new Rect();
+
+            int top = SystemInformation.WorkingArea.Top;
+            int taskbarHeight = 0;
+
+            if (_settings.TaskbarMode != 0)
+            {
+                // special case, since work area is not reduced with this setting
+                // this keeps the desktop from going beneath the TaskBar
+                // get the TaskBar's height
+                AppBarScreen screen = AppBarScreen.FromPrimaryScreen();
+                NativeMethods.Rect workAreaRect = _shellManager.AppBarManager.GetWorkArea(screen, false, false, IntPtr.Zero);
+                taskbarHeight = screen.Bounds.Bottom - workAreaRect.Bottom;
+
+                // top TaskBar means we should push down
+                if (_settings.TaskbarEdge == AppBarEdge.Top)
+                {
+                    top = workAreaRect.Top;
+                }
+            }
+
+            rect.X = SystemInformation.WorkingArea.Left;
+            rect.Y = top;
+            rect.Width = SystemInformation.WorkingArea.Width;
+            rect.Height = SystemInformation.WorkingArea.Height - taskbarHeight;
+
+            return rect;
+        }
+
         #region Shell window
         private void CreateShellWindow()
         {
@@ -319,7 +351,7 @@ namespace CairoDesktop.DynamicDesktop.Services
         {
             if (DesktopOverlayWindow == null && DesktopWindow != null && DesktopIconsControl != null)
             {
-                DesktopOverlayWindow = new DesktopOverlay(this, _shellManager.AppBarManager, _settings);
+                DesktopOverlayWindow = new DesktopOverlay(this);
 
                 // create mask image to show while the icons control is rendered on the overlay window
                 Image maskImage = new Image
