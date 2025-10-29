@@ -10,6 +10,15 @@ namespace CairoDesktop.Common
     {
         public ICollectionView DisplayItems;
 
+        public enum SortMode
+        {
+            NameAsc,
+            DateDesc,
+            DateAsc
+        }
+
+        public SortMode CurrentSort { get; private set; } = SortMode.DateDesc;
+
         private readonly bool isDesktop;
         private readonly string path;
 
@@ -35,23 +44,66 @@ namespace CairoDesktop.Common
 
             if (location.IsFileSystem)
             {
-                cvs.SortDescriptions.Add(new SortDescription("IsFolder", ListSortDirection.Descending));
+                // default to newest first for filesystem folders
+                cvs.SortDescriptions.Add(new SortDescription("DateModified", ListSortDirection.Descending));
+                cvs.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
             }
-            cvs.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+            else
+            {
+                // non-filesystem fall back to name
+                cvs.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+            }
 
-            cvs.Filter += IconsSource_Filter;
-
+            // expose DateModified live sorting when available
             if (cvs is ICollectionViewLiveShaping cvls)
             {
-                cvls.IsLiveSorting = true;
                 if (location.IsFileSystem)
                 {
-                    cvls.LiveSortingProperties.Add("IsFolder");
+                    cvls.LiveSortingProperties.Add("DateModified");
                 }
                 cvls.LiveSortingProperties.Add("DisplayName");
             }
 
+            cvs.Filter += IconsSource_Filter;
+
             return cvs;
+        }
+
+        /// <summary>
+        /// Change the current sort mode for the view.
+        /// </summary>
+        public void ApplySort(SortMode mode)
+        {
+            if (DisplayItems == null)
+            {
+                CurrentSort = mode;
+                return;
+            }
+
+            DisplayItems.SortDescriptions.Clear();
+
+            switch (mode)
+            {
+                case SortMode.NameAsc:
+                    DisplayItems.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+                    break;
+                case SortMode.DateDesc:
+                    // DateModified may not exist for non-filesystem items; fallback to name
+                    DisplayItems.SortDescriptions.Add(new SortDescription("DateModified", ListSortDirection.Descending));
+                    DisplayItems.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+                    break;
+                case SortMode.DateAsc:
+                    DisplayItems.SortDescriptions.Add(new SortDescription("DateModified", ListSortDirection.Ascending));
+                    DisplayItems.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+                    break;
+            }
+
+            if (DisplayItems is ICollectionViewLiveShaping cvls)
+            {
+                cvls.IsLiveSorting = true;
+            }
+
+            CurrentSort = mode;
         }
 
         private bool IconsSource_Filter(object obj)
