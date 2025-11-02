@@ -1,4 +1,6 @@
-﻿using CairoDesktop.Common;
+﻿using CairoDesktop.Application.Interfaces;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 using System;
 using System.Threading;
 using System.Windows;
@@ -6,27 +8,23 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
-using CairoDesktop.Application.Interfaces;
-using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
-using ManagedShell.Interop;
 
 namespace CairoDesktop.MenuBarExtensions
 {
     public partial class Search : UserControl
     {
         private readonly ICairoApplication _cairoApplication;
-        private static bool isSearchHotkeyRegistered;
 
-        public bool _isPrimaryScreen;
         private DispatcherTimer _searchCheck;
+        internal IMenuBar Host;
 
         public Search(ICairoApplication cairoApplication, IMenuBar host)
         {
             InitializeComponent();
 
+            Host = host;
+
             _cairoApplication = cairoApplication;
-            _isPrimaryScreen = host.GetIsPrimaryDisplay();
 
             SetupSearch();
         }
@@ -48,11 +46,6 @@ namespace CairoDesktop.MenuBarExtensions
                 _searchCheck.Tick += searchcheck_Tick;
                 _searchCheck.Start();
             }
-        }
-
-        private void OnShowSearchHotkey(HotKey hotKey)
-        {
-            ToggleSearch();
         }
 
         private void searchcheck_Tick(object sender, EventArgs e)
@@ -105,19 +98,6 @@ namespace CairoDesktop.MenuBarExtensions
 
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-
-            try
-            {
-                if (_isPrimaryScreen && !isSearchHotkeyRegistered)
-                {
-                    new HotKey(Key.S, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowSearchHotkey);
-                    isSearchHotkeyRegistered = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                ShellLogger.Warning($"Search: Unable to bind hotkey: {ex.Message}");
-            }
         }
 
         private void btnViewResults_Click(object sender, RoutedEventArgs e)
@@ -161,6 +141,11 @@ namespace CairoDesktop.MenuBarExtensions
 
         internal void ToggleSearch()
         {
+            if (CairoSearchMenu.Visibility != Visibility.Visible)
+            {
+                return;
+            }
+
             CairoSearchMenu.IsSubmenuOpen = !CairoSearchMenu.IsSubmenuOpen;
         }
 

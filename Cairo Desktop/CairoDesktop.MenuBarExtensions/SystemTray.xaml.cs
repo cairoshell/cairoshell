@@ -5,7 +5,6 @@ using System.ComponentModel;
 using CairoDesktop.Application.Interfaces;
 using CairoDesktop.Application.Structs;
 using CairoDesktop.Common;
-using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
 using System.Collections.ObjectModel;
@@ -19,7 +18,7 @@ namespace CairoDesktop.MenuBarExtensions
         private readonly NotificationArea _notificationArea;
         private readonly Settings _settings;
 
-        internal readonly IMenuBar Host;
+        internal IMenuBar Host;
 
         public ObservableCollection<NotifyIcon> PromotedIcons { get; private set; }
 
