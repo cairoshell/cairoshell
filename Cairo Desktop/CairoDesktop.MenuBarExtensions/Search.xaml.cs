@@ -1,8 +1,6 @@
 ﻿using CairoDesktop.Application.Interfaces;
 using ManagedShell.Common.Helpers;
-using ManagedShell.Interop;
 using System;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -13,91 +11,42 @@ namespace CairoDesktop.MenuBarExtensions
 {
     public partial class Search : UserControl
     {
-        private readonly ICairoApplication _cairoApplication;
-
-        private DispatcherTimer _searchCheck;
         internal IMenuBar Host;
 
-        public Search(ICairoApplication cairoApplication, IMenuBar host)
+        public Search(IMenuBar host, ObjectDataProvider provider)
         {
             InitializeComponent();
 
             Host = host;
 
-            _cairoApplication = cairoApplication;
-
-            SetupSearch();
+            SetSearchProvider(provider);
         }
 
-        private void SetupSearch()
+        internal void SetSearchProvider(ObjectDataProvider provider)
         {
-            // Show the search button only if the service is running
-            if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
+            if (provider == null)
             {
-                SetSearchProvider();
+                return;
             }
-            else
+
+            CairoSearchMenu.DataContext = provider;
+
+            Binding bSearchText = new Binding("SearchText")
             {
-                CairoSearchMenu.Visibility = Visibility.Collapsed;
-                _searchCheck = new DispatcherTimer(DispatcherPriority.Background, Dispatcher)
-                {
-                    Interval = new TimeSpan(0, 0, 5)
-                };
-                _searchCheck.Tick += searchcheck_Tick;
-                _searchCheck.Start();
-            }
-        }
-
-        private void searchcheck_Tick(object sender, EventArgs e)
-        {
-            if (WindowsServices.QueryStatus("WSearch") == ServiceStatus.Running)
-            {
-                SetSearchProvider();
-                CairoSearchMenu.Visibility = Visibility.Visible;
-                (sender as DispatcherTimer).Stop();
-            }
-            else
-            {
-                CairoSearchMenu.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        private void SetSearchProvider()
-        {
-            var thread = new Thread(() =>
-            {
-                // this sometimes takes a while
-                Type provider = typeof(SearchHelper);
-
-                _cairoApplication.Dispatch(() =>
-                {
-                    CairoSearchMenu.DataContext = new ObjectDataProvider
-                    {
-                        ObjectType = provider
-                    };
-
-                    Binding bSearchText = new Binding("SearchText")
-                    {
-                        Mode = BindingMode.Default,
-                        UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
-                    };
-
-                    Binding bSearchResults = new Binding("Results")
-                    {
-                        Mode = BindingMode.Default,
-                        IsAsync = true
-                    };
-
-                    searchStr.SetBinding(TextBox.TextProperty, bSearchText);
-                    lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
-                });
-            })
-            {
-                IsBackground = true
+                Mode = BindingMode.Default,
+                UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
             };
 
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
+            Binding bSearchResults = new Binding("Results")
+            {
+                Mode = BindingMode.OneWay,
+                IsAsync = true
+            };
+
+            searchStr.SetBinding(TextBox.TextProperty, bSearchText);
+            lstSearchResults.SetBinding(ListView.ItemsSourceProperty, bSearchResults);
+
+            CairoSearchMenu.Visibility = Visibility.Visible;
         }
 
         private void btnViewResults_Click(object sender, RoutedEventArgs e)
@@ -147,11 +96,6 @@ namespace CairoDesktop.MenuBarExtensions
             }
 
             CairoSearchMenu.IsSubmenuOpen = !CairoSearchMenu.IsSubmenuOpen;
-        }
-
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {
-            _searchCheck?.Stop();
         }
     }
 }
