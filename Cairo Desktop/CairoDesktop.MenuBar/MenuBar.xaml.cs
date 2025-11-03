@@ -20,6 +20,7 @@ using System.Windows.Threading;
 using ManagedShell.ShellFolders;
 using Microsoft.Extensions.Hosting;
 using CairoDesktop.Infrastructure.Services;
+using System.Collections.Generic;
 
 namespace CairoDesktop.MenuBar
 {
@@ -36,7 +37,8 @@ namespace CairoDesktop.MenuBar
         private bool isCairoMenuInitialized;
         private bool isPlacesMenuInitialized;
         private MenuBarShadow shadow;
-        
+        private Dictionary<INotifyPropertyChanged, PropertyChangedEventHandler> _commandPropertyChangedHandlers = new Dictionary<INotifyPropertyChanged, PropertyChangedEventHandler>();
+
         public MenuBar(ICairoApplication cairoApplication, AppBarEventService appBarEventService, ShellManager shellManager, IWindowManager windowManager, IHost host, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
         {
             _appBarEventService = appBarEventService;
@@ -114,6 +116,17 @@ namespace CairoDesktop.MenuBar
             }
         }
 
+        private void ClearCommandHandlers()
+        {
+            foreach (var handler in _commandPropertyChangedHandlers)
+            {
+                (handler.Key).PropertyChanged -= handler.Value;
+            }
+
+            _commandPropertyChangedHandlers.Clear();
+            isCairoMenuInitialized = false;
+        }
+
         private void CairoMenu_Opened(object sender, RoutedEventArgs e)
         {
             if (isCairoMenuInitialized)
@@ -169,7 +182,7 @@ namespace CairoDesktop.MenuBar
                 menuItem.Click += (_sender, _e) => _commandService.InvokeCommand(command.Identifier);
                 if (command is INotifyPropertyChanged notifyPropertyChangedCommand)
                 {
-                    notifyPropertyChangedCommand.PropertyChanged += (_sender, _e) =>
+                    PropertyChangedEventHandler changeHandler = (_sender, _e) =>
                     {
                         if (_e.PropertyName == "Label")
                         {
@@ -181,6 +194,8 @@ namespace CairoDesktop.MenuBar
                             DeduplicateSeparators();
                         }
                     };
+                    notifyPropertyChangedCommand.PropertyChanged += changeHandler;
+                    _commandPropertyChangedHandlers.Add(notifyPropertyChangedCommand, changeHandler);
                 }
                 CairoMenu.Items.Add(menuItem);
             }
@@ -421,6 +436,7 @@ namespace CairoDesktop.MenuBar
             closeShadow();
             _settings.PropertyChanged -= Settings_PropertyChanged;
             StopMenuBarExtensions();
+            ClearCommandHandlers();
         }
 
         private void UnAutoHideBeforeAction(Action action)
