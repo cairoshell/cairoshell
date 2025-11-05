@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+using CairoDesktop.Common.Helpers;
 
 namespace CairoDesktop.MenuBarExtensions
 {
@@ -135,17 +136,11 @@ namespace CairoDesktop.MenuBarExtensions
 
         private void OnShowSearchHotkey(HotKey hotKey)
         {
-            int x = System.Windows.Forms.Cursor.Position.X;
-            int y = System.Windows.Forms.Cursor.Position.Y;
-
             foreach (Search search in _searchList)
             {
                 if (_settings.EnableMenuBarMultiMon)
                 {
-                    var clockScreen = System.Windows.Forms.Screen.FromHandle(search.Host.GetHandle());
-
-                    if (x >= clockScreen.Bounds.Left && x <= clockScreen.Bounds.Right &&
-                        y >= clockScreen.Bounds.Top && y <= clockScreen.Bounds.Bottom)
+                    if (CursorHelper.IsCursorOnScreen(System.Windows.Forms.Screen.FromHandle(search.Host.GetHandle())))
                     {
                         search.ToggleSearch();
                         return;

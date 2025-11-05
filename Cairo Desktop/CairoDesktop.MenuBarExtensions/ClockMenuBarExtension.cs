@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CairoDesktop.Common.Helpers;
 
 namespace CairoDesktop.MenuBarExtensions
 {
@@ -52,17 +53,11 @@ namespace CairoDesktop.MenuBarExtensions
 
         private void OnShowClock(HotKey hotKey)
         {
-            int x = System.Windows.Forms.Cursor.Position.X;
-            int y = System.Windows.Forms.Cursor.Position.Y;
-
             foreach (Clock clock in _clocks)
             {
                 if (_settings.EnableMenuBarMultiMon)
                 {
-                    System.Windows.Forms.Screen clockScreen = System.Windows.Forms.Screen.FromHandle(clock.Host.GetHandle());
-
-                    if (x >= clockScreen.Bounds.Left && x <= clockScreen.Bounds.Right &&
-                        y >= clockScreen.Bounds.Top && y <= clockScreen.Bounds.Bottom)
+                    if (CursorHelper.IsCursorOnScreen(System.Windows.Forms.Screen.FromHandle(clock.Host.GetHandle())))
                     {
                         clock.ToggleClockDisplay();
                         return;

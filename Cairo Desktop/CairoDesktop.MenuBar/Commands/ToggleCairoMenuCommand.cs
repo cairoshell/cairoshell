@@ -5,7 +5,7 @@ using CairoDesktop.Common.Localization;
 using CairoDesktop.Infrastructure.ObjectModel;
 using CairoDesktop.MenuBar.Services;
 using System.Collections.Generic;
-using System.Windows.Forms;
+using CairoDesktop.Common.Helpers;
 
 namespace CairoDesktop.MenuBar.Commands
 {
@@ -37,14 +37,9 @@ namespace CairoDesktop.MenuBar.Commands
                 return false;
             }
 
-            int x = Cursor.Position.X;
-            int y = Cursor.Position.Y;
-
             foreach (MenuBar menuBar in _windowService.Windows)
             {
-                if (!_settings.EnableMenuBarMultiMon || 
-                    (x >= menuBar.Screen.Bounds.Left && x <= menuBar.Screen.Bounds.Right &&
-                    y >= menuBar.Screen.Bounds.Top && y <= menuBar.Screen.Bounds.Bottom))
+                if (!_settings.EnableMenuBarMultiMon || CursorHelper.IsCursorOnScreen(menuBar.Screen))
                 {
                     menuBar.ToggleCairoMenu();
                     return true;
