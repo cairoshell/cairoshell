@@ -12,7 +12,7 @@ namespace CairoDesktop.MenuBarExtensions
     {
         private readonly ICommandService _commandService;
         private readonly Settings _settings;
-        private List<Clock> _clocks = new List<Clock>();
+        private readonly List<Clock> _clocks = new List<Clock>();
 
         internal ClockMenuBarExtension(ICommandService commandService, Settings settings)
         {
@@ -41,27 +41,13 @@ namespace CairoDesktop.MenuBarExtensions
             return clock;
         }
 
-        public override void StopControl(IMenuBar host)
+        public override void StopControl(IMenuBar host, UserControl control)
         {
-            List<Clock> toRemove = new List<Clock>();
-
-            foreach (Clock clock in _clocks)
+            if (control is Clock clock && _clocks.Contains(clock))
             {
-                if (clock.Host != host)
-                {
-                    continue;
-                }
-
                 clock.Host = null;
-                toRemove.Add(clock);
-            }
-
-            foreach (Clock clock in toRemove)
-            {
                 _clocks.Remove(clock);
             }
-
-            toRemove.Clear();
         }
 
         private void OnShowClock(HotKey hotKey)

@@ -8,6 +8,6 @@ namespace CairoDesktop.Infrastructure.ObjectModel
         public abstract UserControl StartControl(IMenuBar host);
 
         // Optional as some controls may not need to do anything to stop
-        public virtual void StopControl(IMenuBar host) { }
+        public virtual void StopControl(IMenuBar host, UserControl control) { }
     }
 }

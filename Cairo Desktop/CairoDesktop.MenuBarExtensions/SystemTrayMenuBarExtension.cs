@@ -11,7 +11,7 @@ namespace CairoDesktop.MenuBarExtensions
     {
         private readonly NotificationArea _notificationArea;
         private readonly Settings _settings;
-        private List<SystemTray> _systemTrays = new List<SystemTray>();
+        private readonly List<SystemTray> _systemTrays = new List<SystemTray>();
 
         internal SystemTrayMenuBarExtension(NotificationArea notificationArea, Settings settings)
         {
@@ -31,27 +31,13 @@ namespace CairoDesktop.MenuBarExtensions
             return tray;
         }
 
-        public override void StopControl(IMenuBar host)
+        public override void StopControl(IMenuBar host, UserControl control)
         {
-            List<SystemTray> toRemove = new List<SystemTray>();
-
-            foreach (SystemTray tray in _systemTrays)
+            if (control is SystemTray tray && _systemTrays.Contains(tray))
             {
-                if (tray.Host != host)
-                {
-                    continue;
-                }
-
                 tray.Host = null;
-                toRemove.Add(tray);
-            }
-
-            foreach (SystemTray tray in toRemove)
-            {
                 _systemTrays.Remove(tray);
             }
-
-            toRemove.Clear();
         }
     }
 }

@@ -64,27 +64,13 @@ namespace CairoDesktop.MenuBarExtensions
             return search;
         }
 
-        public override void StopControl(IMenuBar host)
+        public override void StopControl(IMenuBar host, UserControl control)
         {
-            List<Search> toRemove = new List<Search>();
-
-            foreach (Search search in _searchList)
+            if (control is Search search && _searchList.Contains(search))
             {
-                if (search.Host != host)
-                {
-                    continue;
-                }
-
                 search.Host = null;
-                toRemove.Add(search);
-            }
-
-            foreach (Search search in toRemove)
-            {
                 _searchList.Remove(search);
             }
-
-            toRemove.Clear();
         }
 
         private void SetupSearch()

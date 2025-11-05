@@ -33,11 +33,12 @@ namespace CairoDesktop.MenuBar
         internal readonly IHost _host;
         private readonly Settings _settings;
         private readonly AppBarEventService _appBarEventService;
+        private readonly Dictionary<INotifyPropertyChanged, PropertyChangedEventHandler> _commandPropertyChangedHandlers = new Dictionary<INotifyPropertyChanged, PropertyChangedEventHandler>();
+        private readonly Dictionary<UserControlMenuBarExtension, UserControl> _loadedMenuExtras = new Dictionary<UserControlMenuBarExtension, UserControl>();
 
         private bool isCairoMenuInitialized;
         private bool isPlacesMenuInitialized;
         private MenuBarShadow shadow;
-        private Dictionary<INotifyPropertyChanged, PropertyChangedEventHandler> _commandPropertyChangedHandlers = new Dictionary<INotifyPropertyChanged, PropertyChangedEventHandler>();
 
         public MenuBar(ICairoApplication cairoApplication, AppBarEventService appBarEventService, ShellManager shellManager, IWindowManager windowManager, IHost host, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
         {
@@ -90,6 +91,7 @@ namespace CairoDesktop.MenuBar
                     if (menuExtra != null)
                     {
                         MenuExtrasHost.Children.Add(menuExtra);
+                        _loadedMenuExtras.Add(userControlMenuBarExtension, menuExtra);
                     }
                 }
                 catch (Exception ex)
@@ -103,24 +105,26 @@ namespace CairoDesktop.MenuBar
         {
             MenuExtrasHost.Children.Clear();
 
-            foreach (var userControlMenuBarExtension in _cairoApplication.MenuBarExtensions.OfType<UserControlMenuBarExtension>())
+            foreach (var extra in _loadedMenuExtras)
             {
                 try
                 {
-                    userControlMenuBarExtension.StopControl(this);
+                    extra.Key.StopControl(this, extra.Value);
                 }
                 catch (Exception ex)
                 {
                     ShellLogger.Error($"Unable to stop UserControl menu bar extension due to exception in {ex.TargetSite?.Module}: {ex.Message}");
                 }
             }
+
+            _loadedMenuExtras.Clear();
         }
 
         private void ClearCommandHandlers()
         {
             foreach (var handler in _commandPropertyChangedHandlers)
             {
-                (handler.Key).PropertyChanged -= handler.Value;
+                handler.Key.PropertyChanged -= handler.Value;
             }
 
             _commandPropertyChangedHandlers.Clear();
