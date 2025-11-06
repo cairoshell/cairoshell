@@ -308,6 +308,8 @@ namespace CairoDesktop.Common.Localization
             { "sCommand_CloseDesktopOverlay", "Close Desktop Overlay" },
             { "sCommand_AddToPrograms", "Add to programs menu" },
             { "sCommand_AddToQuickLaunch", "Add to quick launch" },
+            { "sCommand_ToggleCairoMenu", "Toggle Cairo Menu" },
+            { "sCommand_ToggleProgramsMenu", "Toggle Programs Menu" },
         };
 
         public static Dictionary<string, string> pt_BR = new Dictionary<string, string>

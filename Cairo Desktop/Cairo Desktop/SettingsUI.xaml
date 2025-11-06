@@ -436,34 +436,28 @@
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Vertical">
                             <CheckBox IsChecked="{Binding Path=EnablePlacesMenu, UpdateSourceTrigger=PropertyChanged}"
-                                      Click="CheckBox_Click"
                                       Name="chkEnablePlacesMenu">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sPlacesMenu)}" />
                             </CheckBox>
                             <CheckBox IsChecked="{Binding Path=EnableMenuExtraClock, UpdateSourceTrigger=PropertyChanged}"
-                                      Click="CheckBox_Click"
                                       Name="chkEnableMenuExtraClock">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraClock)}" />
                             </CheckBox>
                             <CheckBox IsChecked="{Binding Path=EnableMenuExtraSearch, UpdateSourceTrigger=PropertyChanged}"
-                                      Click="CheckBox_Click"
                                       Name="chkEnableMenuExtraSearch">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraSearch)}" />
                             </CheckBox>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Margin="10,0,0,0">
                             <CheckBox IsChecked="{Binding Path=EnableProgramsMenu, UpdateSourceTrigger=PropertyChanged}"
-                                      Click="CheckBox_Click"
                                       Name="chkEnablePrgoramsMenu">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sProgramsMenu)}" />
                             </CheckBox>
                             <CheckBox IsChecked="{Binding Path=EnableMenuExtraVolume, UpdateSourceTrigger=PropertyChanged}"
-                                      Click="CheckBox_Click"
                                       Name="chkEnableMenuExtraVolume">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraVolume)}" />
                             </CheckBox>
                             <CheckBox IsChecked="{Binding Path=EnableMenuExtraActionCenter, UpdateSourceTrigger=PropertyChanged}"
-                                      Click="CheckBox_Click"
                                       Name="chkEnableMenuExtraActionCenter">
                                 <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_EnableMenuExtraActionCenter)}" />
                             </CheckBox>

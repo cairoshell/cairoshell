@@ -4,7 +4,6 @@ using CairoDesktop.Application.Structs;
 using CairoDesktop.Common;
 using ManagedShell;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -21,6 +20,7 @@ using System.Windows.Threading;
 using ManagedShell.ShellFolders;
 using Microsoft.Extensions.Hosting;
 using CairoDesktop.Infrastructure.Services;
+using System.Collections.Generic;
 
 namespace CairoDesktop.MenuBar
 {
@@ -33,15 +33,13 @@ namespace CairoDesktop.MenuBar
         internal readonly IHost _host;
         private readonly Settings _settings;
         private readonly AppBarEventService _appBarEventService;
+        private readonly Dictionary<INotifyPropertyChanged, PropertyChangedEventHandler> _commandPropertyChangedHandlers = new Dictionary<INotifyPropertyChanged, PropertyChangedEventHandler>();
+        private readonly Dictionary<UserControlMenuBarExtension, UserControl> _loadedMenuExtras = new Dictionary<UserControlMenuBarExtension, UserControl>();
 
         private bool isCairoMenuInitialized;
         private bool isPlacesMenuInitialized;
         private MenuBarShadow shadow;
-        private static HotKey cairoMenuHotKey;
-        private static List<HotKey> programsMenuHotKeys = new List<HotKey>();
 
-        //private static LowLevelKeyboardListener keyboardListener; // temporarily removed due to stuck key issue, commented out to prevent warnings
-        
         public MenuBar(ICairoApplication cairoApplication, AppBarEventService appBarEventService, ShellManager shellManager, IWindowManager windowManager, IHost host, IAppGrabber appGrabber, IApplicationUpdateService applicationUpdateService, ISettingsUIService settingsUiService, ICommandService commandService, Settings settings, AppBarScreen screen, AppBarEdge edge, AppBarMode mode) : base(cairoApplication, shellManager, windowManager, screen, edge, mode, 23)
         {
             _appBarEventService = appBarEventService;
@@ -74,11 +72,13 @@ namespace CairoDesktop.MenuBar
             stacksContainer.MenuBar = this;
             programsMenuControl.MenuBar = this;
 
-            if (!_settings.EnableProgramsMenu)
-                ProgramsMenu.Visibility = Visibility.Collapsed;
+            setupPlacesMenu();
+            setupProgramsMenu();
+        }
 
-            if (!_settings.EnablePlacesMenu)
-                PlacesMenu.Visibility = Visibility.Collapsed;
+        private void setupPlacesMenu()
+        {
+            PlacesMenu.Visibility = _settings.EnablePlacesMenu ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void SetupMenuBarExtensions()
@@ -91,6 +91,7 @@ namespace CairoDesktop.MenuBar
                     if (menuExtra != null)
                     {
                         MenuExtrasHost.Children.Add(menuExtra);
+                        _loadedMenuExtras.Add(userControlMenuBarExtension, menuExtra);
                     }
                 }
                 catch (Exception ex)
@@ -98,6 +99,36 @@ namespace CairoDesktop.MenuBar
                     ShellLogger.Error($"Unable to start UserControl menu bar extension due to exception in {ex.TargetSite?.Module}: {ex.Message}");
                 }
             }
+        }
+
+        private void StopMenuBarExtensions()
+        {
+            MenuExtrasHost.Children.Clear();
+
+            foreach (var extra in _loadedMenuExtras)
+            {
+                try
+                {
+                    extra.Key.StopControl(this, extra.Value);
+                }
+                catch (Exception ex)
+                {
+                    ShellLogger.Error($"Unable to stop UserControl menu bar extension due to exception in {ex.TargetSite?.Module}: {ex.Message}");
+                }
+            }
+
+            _loadedMenuExtras.Clear();
+        }
+
+        private void ClearCommandHandlers()
+        {
+            foreach (var handler in _commandPropertyChangedHandlers)
+            {
+                handler.Key.PropertyChanged -= handler.Value;
+            }
+
+            _commandPropertyChangedHandlers.Clear();
+            isCairoMenuInitialized = false;
         }
 
         private void CairoMenu_Opened(object sender, RoutedEventArgs e)
@@ -155,7 +186,7 @@ namespace CairoDesktop.MenuBar
                 menuItem.Click += (_sender, _e) => _commandService.InvokeCommand(command.Identifier);
                 if (command is INotifyPropertyChanged notifyPropertyChangedCommand)
                 {
-                    notifyPropertyChangedCommand.PropertyChanged += (_sender, _e) =>
+                    PropertyChangedEventHandler changeHandler = (_sender, _e) =>
                     {
                         if (_e.PropertyName == "Label")
                         {
@@ -167,6 +198,8 @@ namespace CairoDesktop.MenuBar
                             DeduplicateSeparators();
                         }
                     };
+                    notifyPropertyChangedCommand.PropertyChanged += changeHandler;
+                    _commandPropertyChangedHandlers.Add(notifyPropertyChangedCommand, changeHandler);
                 }
                 CairoMenu.Items.Add(menuItem);
             }
@@ -302,81 +335,17 @@ namespace CairoDesktop.MenuBar
             
             SetupMenuBarExtensions();
 
-            registerCairoMenuHotKey();
-            registerWinKey();
-
             SetBlur(_settings.EnableMenuBarBlur);
 
             setupShadow();
         }
 
-        private void registerCairoMenuHotKey()
-        {
-            if (_settings.EnableCairoMenuHotKey && Screen.Primary && cairoMenuHotKey == null)
-            {
-                cairoMenuHotKey = HotKeyManager.RegisterHotKey(_settings.CairoMenuHotKey, OnShowCairoMenu);
-            }
-            else if (_settings.EnableCairoMenuHotKey && Screen.Primary)
-            {
-                cairoMenuHotKey.Action = OnShowCairoMenu;
-            }
-        }
-
-        private void unregisterCairoMenuHotKey()
-        {
-            if (Screen.Primary)
-            {
-                cairoMenuHotKey?.Dispose();
-                cairoMenuHotKey = null;
-            }
-        }
-
-        private void registerWinKey()
-        {
-            if (!EnvironmentHelper.IsAppRunningAsShell || !Screen.Primary || !_settings.EnableWinKey)
-            {
-                return;
-            }
-
-            // Register L+R Windows key to open Programs menu
-            if (programsMenuHotKeys.Count < 1)
-            {
-                /*if (keyboardListener == null)
-                    keyboardListener = new LowLevelKeyboardListener();
-
-                keyboardListener.OnKeyPressed += keyboardListener_OnKeyPressed;
-                keyboardListener.HookKeyboard();*/
-
-                programsMenuHotKeys.Add(new HotKey(Key.LWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
-                programsMenuHotKeys.Add(new HotKey(Key.RWin, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
-                programsMenuHotKeys.Add(new HotKey(Key.Escape, HotKeyModifier.Ctrl | HotKeyModifier.NoRepeat, OnShowProgramsMenu));
-            }
-            else
-            {
-                // We replaced another primary monitor instance, register our handler instead
-                foreach (var hotkey in programsMenuHotKeys)
-                {
-                    hotkey.Action = OnShowProgramsMenu;
-                }
-            }
-        }
-
-        private void unregisterWinKey()
-        {
-            if (!Screen.Primary)
-            {
-                return;
-            }
-
-            foreach (var hotkey in programsMenuHotKeys)
-            {
-                hotkey.Unregister();
-            }
-
-            programsMenuHotKeys.Clear();
-        }
-
         #region Programs menu
+        private void setupProgramsMenu()
+        {
+            ProgramsMenu.Visibility = _settings.EnableProgramsMenu ? Visibility.Visible : Visibility.Collapsed;
+        }
+
         internal void OpenProgramsMenu()
         {
             if (ProgramsMenu.IsSubmenuOpen || !_settings.EnableProgramsMenu) { return; }
@@ -385,12 +354,7 @@ namespace CairoDesktop.MenuBar
             UnAutoHideBeforeAction(() => ProgramsMenu.IsSubmenuOpen = true);
         }
 
-        private void OnShowProgramsMenu(HotKey hotKey)
-        {
-            ToggleProgramsMenu();
-        }
-
-        private void ToggleProgramsMenu()
+        internal void ToggleProgramsMenu()
         {
             if (!ProgramsMenu.IsSubmenuOpen)
             {
@@ -475,6 +439,8 @@ namespace CairoDesktop.MenuBar
 
             closeShadow();
             _settings.PropertyChanged -= Settings_PropertyChanged;
+            StopMenuBarExtensions();
+            ClearCommandHandlers();
         }
 
         private void UnAutoHideBeforeAction(Action action)
@@ -498,7 +464,7 @@ namespace CairoDesktop.MenuBar
             }
         }
 
-        private void OnShowCairoMenu(HotKey hotKey)
+        internal void ToggleCairoMenu()
         {
             if (!CairoMenu.IsSubmenuOpen)
             {
@@ -537,35 +503,6 @@ namespace CairoDesktop.MenuBar
             {
                 switch (e.PropertyName)
                 {
-                    case "EnableCairoMenuHotKey" when Screen.Primary:
-                        if (_settings.EnableCairoMenuHotKey)
-                        {
-                            registerCairoMenuHotKey();
-                        }
-                        else
-                        {
-                            unregisterCairoMenuHotKey();
-                        }
-
-                        break;
-                    case "CairoMenuHotKey" when Screen.Primary:
-                        if (_settings.EnableCairoMenuHotKey)
-                        {
-                            unregisterCairoMenuHotKey();
-                            registerCairoMenuHotKey();
-                        }
-
-                        break;
-                    case "EnableWinKey":
-                        if (_settings.EnableWinKey)
-                        {
-                            registerWinKey();
-                        }
-                        else
-                        {
-                            unregisterWinKey();
-                        }
-                        break;
                     case "EnableMenuBarBlur":
                         SetBlur(_settings.EnableMenuBarBlur);
                         break;
@@ -601,6 +538,19 @@ namespace CairoDesktop.MenuBar
                         AppBarEdge = _settings.MenuBarEdge;
                         UpdatePosition();
                         if (EnvironmentHelper.IsAppRunningAsShell) _appBarManager.SetWorkArea(Screen);
+                        break;
+                    case nameof(_settings.EnableMenuExtraActionCenter):
+                    case nameof(_settings.EnableMenuExtraClock):
+                    case nameof(_settings.EnableMenuExtraSearch):
+                    case nameof(_settings.EnableMenuExtraVolume):
+                        StopMenuBarExtensions();
+                        SetupMenuBarExtensions();
+                        break;
+                    case nameof(_settings.EnablePlacesMenu):
+                        setupPlacesMenu();
+                        break;
+                    case nameof(_settings.EnableProgramsMenu):
+                        setupProgramsMenu();
                         break;
                 }
             }

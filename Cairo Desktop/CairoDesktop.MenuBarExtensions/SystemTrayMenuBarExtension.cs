@@ -1,8 +1,9 @@
-﻿using CairoDesktop.Common;
-using System.Windows.Controls;
-using CairoDesktop.Application.Interfaces;
+﻿using CairoDesktop.Application.Interfaces;
+using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.WindowsTray;
+using System.Collections.Generic;
+using System.Windows.Controls;
 
 namespace CairoDesktop.MenuBarExtensions
 {
@@ -10,7 +11,7 @@ namespace CairoDesktop.MenuBarExtensions
     {
         private readonly NotificationArea _notificationArea;
         private readonly Settings _settings;
-        private SystemTray _systemTray;
+        private readonly List<SystemTray> _systemTrays = new List<SystemTray>();
 
         internal SystemTrayMenuBarExtension(NotificationArea notificationArea, Settings settings)
         {
@@ -25,8 +26,18 @@ namespace CairoDesktop.MenuBarExtensions
                 return null;
             }
 
-            _systemTray = new SystemTray(host, _notificationArea, _settings);
-            return _systemTray;
+            SystemTray tray = new SystemTray(host, _notificationArea, _settings);
+            _systemTrays.Add(tray);
+            return tray;
+        }
+
+        public override void StopControl(IMenuBar host, UserControl control)
+        {
+            if (control is SystemTray tray && _systemTrays.Contains(tray))
+            {
+                tray.Host = null;
+                _systemTrays.Remove(tray);
+            }
         }
     }
 }
