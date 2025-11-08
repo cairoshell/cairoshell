@@ -2,14 +2,12 @@
 using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
 using System.Windows.Threading;
 using CairoDesktop.Common.Helpers;
 
@@ -27,15 +25,6 @@ namespace CairoDesktop.MenuBarExtensions
         {
             _cairoApplication = cairoApplication;
             _settings = settings;
-
-            try
-            {
-                new HotKey(Key.S, HotKeyModifier.Win | HotKeyModifier.NoRepeat, OnShowSearchHotkey);
-            }
-            catch (Exception ex)
-            {
-                ShellLogger.Warning($"Search: Unable to bind hotkey: {ex.Message}");
-            }
 
             if (_settings.EnableMenuExtraSearch)
             {
@@ -134,7 +123,7 @@ namespace CairoDesktop.MenuBarExtensions
             thread.Start();
         }
 
-        private void OnShowSearchHotkey(HotKey hotKey)
+        internal void OnShowSearch()
         {
             foreach (Search search in _searchList)
             {

@@ -310,6 +310,8 @@ namespace CairoDesktop.Common.Localization
             { "sCommand_AddToQuickLaunch", "Add to quick launch" },
             { "sCommand_ToggleCairoMenu", "Toggle Cairo Menu" },
             { "sCommand_ToggleProgramsMenu", "Toggle Programs Menu" },
+            { "sCommand_ToggleCalendar", "Toggle Calendar" },
+            { "sCommand_ToggleSearch", "Toggle Search" },
         };
 
         public static Dictionary<string, string> pt_BR = new Dictionary<string, string>

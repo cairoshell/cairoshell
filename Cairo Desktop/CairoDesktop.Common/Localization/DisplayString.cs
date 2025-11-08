@@ -734,5 +734,9 @@ namespace CairoDesktop.Common.Localization
         public static string sCommand_ToggleCairoMenu => getString();
 
         public static string sCommand_ToggleProgramsMenu => getString();
+
+        public static string sCommand_ToggleCalendar => getString();
+
+        public static string sCommand_ToggleSearch => getString();
     }
 }

@@ -4,7 +4,6 @@ using CairoDesktop.Infrastructure.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
-using System.Windows.Input;
 using CairoDesktop.Common.Helpers;
 
 namespace CairoDesktop.MenuBarExtensions
@@ -19,12 +18,6 @@ namespace CairoDesktop.MenuBarExtensions
         {
             _commandService = commandService;
             _settings = settings;
-
-            try
-            {
-                new HotKey(Key.D, HotKeyModifier.Win | HotKeyModifier.Alt | HotKeyModifier.NoRepeat, OnShowClock);
-            }
-            catch { }
 
             // register time changed handler to receive time zone updates for the clock to update correctly
             Microsoft.Win32.SystemEvents.TimeChanged += new EventHandler(TimeChanged);
@@ -51,7 +44,7 @@ namespace CairoDesktop.MenuBarExtensions
             }
         }
 
-        private void OnShowClock(HotKey hotKey)
+        internal void OnShowClock()
         {
             foreach (Clock clock in _clocks)
             {
