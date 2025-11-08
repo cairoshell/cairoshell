@@ -20,6 +20,8 @@ using CairoDesktop.MenuBar.Services;
 using CairoDesktop.Taskbar.Services;
 using CairoDesktop.AppGrabber.Commands;
 using CairoDesktop.MenuBar.Commands;
+using CairoDesktop.MenuBarExtensions.Commands;
+using CairoDesktop.MenuBarExtensions.Services;
 
 namespace CairoDesktop
 {
@@ -64,6 +66,7 @@ namespace CairoDesktop
                     services.AddSingleton<ISettingsUIService, SettingsUIService>();
 
                     services.AddHostedService<MenuBarHotKeyService>();
+                    services.AddHostedService<MenuExtraHotKeyService>();
                     services.AddHostedService<ShellHotKeyService>();
 
                     services.AddSingleton<IThemeService, CairoApplicationThemeService>();
@@ -123,6 +126,8 @@ namespace CairoDesktop
                     services.AddSingleton<ICairoCommand, AddToQuickLaunchCommand>();
                     services.AddSingleton<ICairoCommand, ToggleCairoMenuCommand>();
                     services.AddSingleton<ICairoCommand, ToggleProgramsMenuCommand>();
+                    services.AddSingleton<ICairoCommand, ToggleCalendarCommand>();
+                    services.AddSingleton<ICairoCommand, ToggleSearchCommand>();
                 })
                 .ConfigureLogging((context, logging) =>
                 {
