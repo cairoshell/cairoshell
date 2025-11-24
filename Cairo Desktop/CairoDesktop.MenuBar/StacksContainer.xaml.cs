@@ -51,27 +51,6 @@ namespace CairoDesktop.MenuBar
             if (e.ChangedButton == MouseButton.Left && MenuBar != null)
             {
                 PopupWidth = MenuBar.Width;
-                // ensure the quick preview uses the scroller (so sorting is applied) by wiring the scroller early
-                try
-                {
-                    if (sender is ICommandSource cmdsrc && cmdsrc.CommandParameter is ShellFolder)
-                    {
-                        // the template creates an empty MenuItem as the submenu placeholder; replace its Header with the scroller
-                        if (cmdsrc is MenuItem menuItem && menuItem.Items.Count > 0 && menuItem.Items[0] is MenuItem subMenuItem)
-                        {
-                            if (!(subMenuItem.Header is StacksScroller))
-                            {
-                                if (menuItem.DataContext is ShellFolder sf)
-                                {
-                                    sf.Refresh(); // ensure contents are up-to-date
-                                    StacksScroller scroller = new StacksScroller(sf, this, menuItem, MenuBar._commandService);
-                                    subMenuItem.Header = scroller;
-                                }
-                            }
-                        }
-                    }
-                }
-                catch { }
             }
         }
 
@@ -288,16 +267,14 @@ namespace CairoDesktop.MenuBar
                 {
                     if (!(subMenuItem.Header is StacksScroller))
                     {
-                        try
+                        StacksScroller scroller = new StacksScroller()
                         {
-                            if (menuItem.DataContext is ShellFolder sf)
-                            {
-                                sf.Refresh(); // ensure contents are up-to-date
-                                StacksScroller scroller = new StacksScroller(sf, this, menuItem, MenuBar._commandService);
-                                subMenuItem.Header = scroller;
-                            }
-                        }
-                        catch { }
+                            DataContext = menuItem.DataContext,
+                            ParentContainer = this,
+                            ParentMenuItem = menuItem,
+                            _commandService = MenuBar._commandService
+                        };
+                        subMenuItem.Header = scroller;
                     }
                 }
             }
