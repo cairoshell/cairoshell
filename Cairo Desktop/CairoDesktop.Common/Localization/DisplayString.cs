@@ -516,6 +516,8 @@ namespace CairoDesktop.Common.Localization
 
         public static string sSettings_MenuBar_ProgramsMenuLayoutLeft => getString();
 
+        public static string sSettings_MenuBar_CairoMenuOnRight => getString();
+
         public static string sSettings_MenuBar_MenuExtras => getString();
 
         public static string sSettings_MenuBar_EnableMenuExtraVolume => getString();
