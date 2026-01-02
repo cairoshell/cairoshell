@@ -69,7 +69,7 @@ jobs:
       run: makensis Installer\CairoShell_${{ matrix.profile }}.nsi
 
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: "Installer ${{ matrix.installer }}"
         path: "Installer\\*.exe"
