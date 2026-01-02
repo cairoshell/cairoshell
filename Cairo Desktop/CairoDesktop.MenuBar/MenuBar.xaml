@@ -4,6 +4,7 @@
         xmlns="http://schemas.microsoft.com/netfx/2007/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l10n="clr-namespace:CairoDesktop.Common.Localization;assembly=CairoDesktop.Common"
+        xmlns:Settings="clr-namespace:CairoDesktop.Common;assembly=CairoDesktop.Common"
         xmlns:control="clr-namespace:CairoDesktop.MenuBar"
         x:Class="CairoDesktop.MenuBar.MenuBar"
         x:Name="MenuBarWindow"
@@ -21,22 +22,70 @@
     </Window.DataContext>
     <DockPanel Style="{StaticResource MenuBarStyle}"
                x:Name="CairoMenuBarContainer">
+        <!-- Cairo Menu rechts (alleen zichtbaar als CairoMenuOnRight=true) -->
+        <StackPanel Orientation="Horizontal"
+                    DockPanel.Dock="Right"
+                    VerticalAlignment="Top"
+                    Height="24"
+                    HorizontalAlignment="Right"
+                    x:Name="CairoMenuRight">
+            <StackPanel.Style>
+                <Style TargetType="StackPanel">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuOnRight}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
+            <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
+                <MenuItem Style="{StaticResource CairoMenuItemCairoMenuStyle}"
+                          Name="CairoMenuAlt"
+                          SubmenuOpened="CairoMenu_Opened">
+                    <MenuItem.Header>
+                        <Image Source="{DynamicResource MenuIcon}"
+                               Width="38"
+                               Height="22" />
+                    </MenuItem.Header>
+                    <MenuItem />
+                </MenuItem>
+            </Menu>
+        </StackPanel>
+        <!-- Systray items -->
+        <StackPanel Orientation="Horizontal"
+                    DockPanel.Dock="Right"
+                    VerticalAlignment="Top"
+                    Height="24"
+                    HorizontalAlignment="Right"
+                    x:Name="MenuExtrasHost">
+        </StackPanel>
+        <!-- Cairo Menu, Programs en Places links -->
         <StackPanel Orientation="Horizontal"
                     VerticalAlignment="Top"
                     Height="24"
                     Width="Auto"
                     x:Name="CairoMenuBar">
             <Menu Style="{StaticResource CairoMenuBarMainContainerStyle}">
-                <MenuItem Style="{StaticResource CairoMenuItemCairoMenuStyle}"
-                          Name="CairoMenu"
-						  SubmenuOpened="CairoMenu_Opened">
+                <!-- Cairo Menu links (standaard, verborgen als CairoMenuOnRight=true) -->
+                <MenuItem Name="CairoMenu"
+                          SubmenuOpened="CairoMenu_Opened">
+                    <MenuItem.Style>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource CairoMenuItemCairoMenuStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Source={x:Static Settings:Settings.Instance}, Path=CairoMenuOnRight}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Style>
                     <MenuItem.Header>
                         <Image Name="MenuIcon"
                                Source="{DynamicResource MenuIcon}"
                                Width="38"
                                Height="22" />
                     </MenuItem.Header>
-					<MenuItem />
+                    <MenuItem />
                 </MenuItem>
                 <MenuItem Header="{Binding Path=(l10n:DisplayString.sProgramsMenu)}"
                           Name="ProgramsMenu"
@@ -52,21 +101,13 @@
                         </MenuItem.Header>
                     </MenuItem>
                 </MenuItem>
-				<MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu)}"
-						  Name="PlacesMenu"
-						  SubmenuOpened="PlacesMenu_Opened"
+                <MenuItem Header="{Binding Path=(l10n:DisplayString.sPlacesMenu)}"
+                          Name="PlacesMenu"
+                          SubmenuOpened="PlacesMenu_Opened"
                           TextBlock.FontWeight="SemiBold">
-					<MenuItem />
-				</MenuItem>
+                    <MenuItem />
+                </MenuItem>
             </Menu>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal"
-                    DockPanel.Dock="Right"
-                    VerticalAlignment="Top"
-                    Height="24"
-                    HorizontalAlignment="Right"
-                    x:Name="MenuExtrasHost"
-                    Margin="0,0,0,0">
         </StackPanel>
         <!-- Last item added to DockPanel fills the remaining space! -->
         <control:StacksContainer x:Name="stacksContainer" />
