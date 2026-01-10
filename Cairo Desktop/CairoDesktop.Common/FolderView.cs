@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Data;
 using ManagedShell.ShellFolders;
 
@@ -33,23 +35,26 @@ namespace CairoDesktop.Common
 
             ICollectionView cvs = CollectionViewSource.GetDefaultView(location.Files);
 
-            if (location.IsFileSystem)
+            // Use DeferRefresh to batch all view changes and prevent intermediate UI updates
+            using (cvs.DeferRefresh())
             {
-                cvs.SortDescriptions.Add(new SortDescription("IsFolder", ListSortDirection.Descending));
-            }
-            cvs.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+                cvs.Filter += IconsSource_Filter;
 
-            cvs.Filter += IconsSource_Filter;
-
-            if (cvs is ICollectionViewLiveShaping cvls)
-            {
-                cvls.IsLiveSorting = true;
                 if (location.IsFileSystem)
                 {
-                    cvls.LiveSortingProperties.Add("IsFolder");
+                    // Use custom sort for date-based sorting (newest first)
+                    if (cvs is ListCollectionView lcv)
+                    {
+                        lcv.CustomSort = new DateModifiedComparer();
+                    }
                 }
-                cvls.LiveSortingProperties.Add("DisplayName");
-            }
+                else
+                {
+                    // non-filesystem: fall back to name sorting
+                    cvs.SortDescriptions.Clear();
+                    cvs.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+                }
+            } // DeferRefresh is disposed here, triggering a single refresh with all changes applied
 
             return cvs;
         }
@@ -81,6 +86,80 @@ namespace CairoDesktop.Common
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Custom comparer that sorts by DateModified property (newest first)
+        /// Caches file dates to improve performance
+        /// </summary>
+        private class DateModifiedComparer : IComparer
+        {
+            private readonly Dictionary<string, DateTime> _dateCache = new Dictionary<string, DateTime>();
+
+            public int Compare(object x, object y)
+            {
+                if (x is ShellFile fileX && y is ShellFile fileY)
+                {
+                    // Get cached dates or fetch from filesystem
+                    DateTime dateX = GetDateModifiedCached(fileX);
+                    DateTime dateY = GetDateModifiedCached(fileY);
+
+                    // Compare newest first (descending)
+                    int result = dateY.CompareTo(dateX);
+
+                    // If dates are equal, sort by name
+                    if (result == 0)
+                    {
+                        return string.Compare(fileX.DisplayName, fileY.DisplayName, StringComparison.CurrentCultureIgnoreCase);
+                    }
+
+                    return result;
+                }
+
+                // Fallback to name comparison for non-ShellFile items
+                if (x is ShellItem itemX && y is ShellItem itemY)
+                {
+                    return string.Compare(itemX.DisplayName, itemY.DisplayName, StringComparison.CurrentCultureIgnoreCase);
+                }
+
+                return 0;
+            }
+
+            private DateTime GetDateModifiedCached(ShellFile file)
+            {
+                // Check cache first
+                if (_dateCache.TryGetValue(file.Path, out DateTime cachedDate))
+                {
+                    return cachedDate;
+                }
+
+                // Not in cache, get from filesystem
+                DateTime date = GetDateModified(file);
+                _dateCache[file.Path] = date;
+                return date;
+            }
+
+            private DateTime GetDateModified(ShellFile file)
+            {
+                try
+                {
+                    // Get the file modification date from the filesystem using the Path property
+                    if (!string.IsNullOrEmpty(file.Path) && System.IO.File.Exists(file.Path))
+                    {
+                        return System.IO.File.GetLastWriteTime(file.Path);
+                    }
+                    else if (!string.IsNullOrEmpty(file.Path) && System.IO.Directory.Exists(file.Path))
+                    {
+                        return System.IO.Directory.GetLastWriteTime(file.Path);
+                    }
+                }
+                catch
+                {
+                    // Ignore errors and return MinValue
+                }
+
+                return DateTime.MinValue;
+            }
         }
     }
 }
