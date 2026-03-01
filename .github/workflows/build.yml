@@ -51,7 +51,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install Nerdbank.GitVersioning
-      uses: dotnet/nbgv@v0.4.2
+      uses: dotnet/nbgv@v0.5.1
       id: nbgv
 
     - name: Publish app
