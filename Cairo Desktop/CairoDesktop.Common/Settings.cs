@@ -537,6 +537,13 @@ namespace CairoDesktop.Common
             get => _enableWinKey;
             set => Set(ref _enableWinKey, value);
         }
+
+        private bool _cairoMenuOnRight;
+        public bool CairoMenuOnRight
+        {
+            get => _cairoMenuOnRight;
+            set => Set(ref _cairoMenuOnRight, value);
+        }
         #endregion
 
         #region Advanced
