@@ -1,13 +1,14 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-using CairoDesktop.Common;
-using System.Windows.Input;
+﻿using CairoDesktop.Common;
 using CairoDesktop.Infrastructure.ObjectModel;
 using ManagedShell.ShellFolders;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
-namespace CairoDesktop.MenuBar {
+namespace CairoDesktop.MenuBar
+{
     /// <summary>
     /// Interaction logic for StacksContainer.xaml
     /// </summary>
@@ -22,7 +23,7 @@ namespace CairoDesktop.MenuBar {
             set { SetValue(PopupWidthProperty, value); }
         }
 
-        public StacksContainer() 
+        public StacksContainer()
         {
             InitializeComponent();
 
@@ -33,7 +34,7 @@ namespace CairoDesktop.MenuBar {
         {
             StacksManager.Instance.RemoveLocation((sender as MenuItem).CommandParameter as ShellFolder);
         }
-        
+
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             OpenDir((sender as ICommandSource).CommandParameter.ToString(), true);
@@ -62,7 +63,7 @@ namespace CairoDesktop.MenuBar {
                 ICommandSource cmdsrc = sender as ICommandSource;
                 if (cmdsrc?.CommandParameter is ShellFolder cmdparam)
                 {
-                    OpenDir(cmdparam.Path, !Settings.Instance.FoldersOpenDesktopOverlay); 
+                    OpenDir(cmdparam.Path, !Settings.Instance.FoldersOpenDesktopOverlay);
                     e.Handled = true;
                 }
             }
@@ -73,7 +74,7 @@ namespace CairoDesktop.MenuBar {
         /// </summary>
         /// <param name="directoryPath">Directory to open.</param>
         /// <param name="alwaysOpenWithShell">If true, user preferences will not be honored and the shell will always be used to open the directory.</param>
-        internal void OpenDir(string directoryPath, bool alwaysOpenWithShell) 
+        internal void OpenDir(string directoryPath, bool alwaysOpenWithShell)
         {
             if (!MenuBar._commandService.InvokeCommand(alwaysOpenWithShell ? "OpenLocationInWindow" : "OpenLocation", ("Path", directoryPath)))
             {
@@ -264,14 +265,17 @@ namespace CairoDesktop.MenuBar {
             {
                 if (menuItem.Items.Count > 0 && menuItem.Items[0] is MenuItem subMenuItem)
                 {
-                    StacksScroller scroller = new StacksScroller()
+                    if (!(subMenuItem.Header is StacksScroller))
                     {
-                        DataContext = menuItem.DataContext,
-                        ParentContainer = this,
-                        ParentMenuItem = menuItem,
-                        _commandService = MenuBar._commandService
-                    };
-                    subMenuItem.Header = scroller;
+                        StacksScroller scroller = new StacksScroller()
+                        {
+                            DataContext = menuItem.DataContext,
+                            ParentContainer = this,
+                            ParentMenuItem = menuItem,
+                            _commandService = MenuBar._commandService
+                        };
+                        subMenuItem.Header = scroller;
+                    }
                 }
             }
         }
