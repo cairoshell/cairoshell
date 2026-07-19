@@ -230,7 +230,7 @@ namespace CairoDesktop.DynamicDesktop.Services
                 if (ShellWindow != null || AllowProgmanChild)
                 {
                     // set the desktop window as a child of the shell window
-                    NativeMethods.SetWindowLong(DesktopWindow.Handle, NativeMethods.GWL_STYLE, (NativeMethods.GetWindowLong(DesktopWindow.Handle, NativeMethods.GWL_STYLE) | (int)NativeMethods.WindowStyles.WS_CHILD) & ~unchecked((int)NativeMethods.WindowStyles.WS_OVERLAPPED));
+                    NativeMethods.SetWindowLongPtr(DesktopWindow.Handle, NativeMethods.WindowLongFlags.GWL_STYLE, (IntPtr)(((int)NativeMethods.GetWindowLongPtr(DesktopWindow.Handle, NativeMethods.WindowLongFlags.GWL_STYLE) | (int)NativeMethods.WindowStyles.WS_CHILD) & ~unchecked((int)NativeMethods.WindowStyles.WS_OVERLAPPED)));
                     NativeMethods.SetParent(DesktopWindow.Handle, ShellWindow?.Handle ?? WindowHelper.GetLowestDesktopChildHwnd());
                 }
 
