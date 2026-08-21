@@ -53,7 +53,7 @@ namespace CairoDesktop.DynamicDesktop
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (msg == (int)NativeMethods.WM.SYSKEYDOWN &&
-                KeyInterop.KeyFromVirtualKey(wParam.ToInt32()) == Key.F4 &&
+                wParam.ToInt32() == (int)NativeMethods.VK.F4 &&
                 Keyboard.Modifiers == ModifierKeys.Alt)
             {
                 // Same rationale as Desktop.xaml.cs: the desktop overlay (shown when the user presses

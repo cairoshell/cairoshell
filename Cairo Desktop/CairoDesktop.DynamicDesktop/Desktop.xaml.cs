@@ -127,7 +127,7 @@ namespace CairoDesktop.DynamicDesktop
                 handled = true;
             }
             else if (msg == (int)NativeMethods.WM.SYSKEYDOWN &&
-                    KeyInterop.KeyFromVirtualKey(wParam.ToInt32()) == Key.F4 &&
+                    wParam.ToInt32() == (int)NativeMethods.VK.F4 &&
                     Keyboard.Modifiers == ModifierKeys.Alt)
             {
                 // On the real Windows desktop, Alt+F4 shows the Shut Down Windows dialog rather than
