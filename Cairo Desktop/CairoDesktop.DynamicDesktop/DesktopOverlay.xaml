@@ -16,7 +16,6 @@
         Closing="Window_Closing"
         SourceInitialized="DesktopOverlayWindow_SourceInitialized"
         LocationChanged="DesktopOverlayWindow_LocationChanged"
-        KeyDown="DesktopOverlayWindow_KeyDown"
         MouseUp="DesktopOverlayWindow_MouseUp"
         MouseRightButtonUp="DesktopOverlayWindow_MouseRightButtonUp"
         DragOver="DesktopOverlayWindow_DragOver"
