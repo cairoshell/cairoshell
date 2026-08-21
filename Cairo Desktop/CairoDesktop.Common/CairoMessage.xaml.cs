@@ -175,8 +175,8 @@ namespace CairoDesktop.Common
         /// <param name="OkButtonText">The text for the OK button.</param>
         /// <param name="CancelButtonText">The text for the cancel button.</param>
         /// <param name="resultCallback">The delegate to execute upon user action.</param>
-        /// <returns>void</returns>
-        public static void ShowOkCancel(string message, string title, CairoMessageImage image, string OkButtonText, string CancelButtonText, DialogResultDelegate resultCallback)
+        /// <returns>The CairoMessage instance that was shown.</returns>
+        public static CairoMessage ShowOkCancel(string message, string title, CairoMessageImage image, string OkButtonText, string CancelButtonText, DialogResultDelegate resultCallback)
         {
             if (string.IsNullOrEmpty(CancelButtonText))
             {
@@ -196,8 +196,10 @@ namespace CairoDesktop.Common
             msgDialog.ResultCallback = resultCallback;
             msgDialog.OkButton.Content = OkButtonText;
             msgDialog.CancelButton.Content = CancelButtonText;
-            
+
             msgDialog.Show();
+
+            return msgDialog;
         }
 
         /// <summary>
