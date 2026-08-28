@@ -1,4 +1,5 @@
 ﻿using CairoDesktop.Common;
+using CairoDesktop.Common.Helpers;
 using Microsoft.Win32;
 using System;
 using System.Collections.Specialized;
@@ -850,9 +851,7 @@ namespace CairoDesktop.DynamicDesktop
 
             if (fileNames != null && _desktopManager.DesktopLocation != null && _fileWorker != null)
             {
-                _fileWorker.PerformOperation(isDropMove ? FileOperation.Move : FileOperation.Copy, 
-                    fileNames, 
-                    _desktopManager.DesktopLocation.Path);
+                FileDropHelper.PerformOperation(_fileWorker, fileNames, _desktopManager.DesktopLocation.Path, isDropMove);
 
                 e.Handled = true;
             }

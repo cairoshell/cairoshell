@@ -9,11 +9,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
+using CairoDesktop.Common.Helpers;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
-using ManagedShell.ShellFolders.Enums;
 
 namespace CairoDesktop.Common
 {
@@ -292,9 +292,8 @@ namespace CairoDesktop.Common
 
                 if (fileNames != null && _fileWorker != null)
                 {
-                    _fileWorker.PerformOperation(isDropMove ? FileOperation.Move : FileOperation.Copy, 
-                        fileNames, 
-                        File.IsFolder ? File.Path : Path.GetDirectoryName(File.Path));
+                    FileDropHelper.PerformOperation(_fileWorker, fileNames,
+                        File.IsFolder ? File.Path : Path.GetDirectoryName(File.Path), isDropMove);
 
                     e.Handled = true;
                 }

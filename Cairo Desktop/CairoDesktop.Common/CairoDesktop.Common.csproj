@@ -22,6 +22,10 @@
     <ProjectReference Include="..\CairoDesktop.Interop\CairoDesktop.Interop.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net480'">
+    <Reference Include="Microsoft.VisualBasic" />
+  </ItemGroup>
+
   <ItemGroup>
     <Resource Include="Resources\dialogIconCairo.png" />
     <Resource Include="Resources\dialogIconError.png" />
