@@ -364,6 +364,10 @@ namespace CairoDesktop.DynamicDesktop.Services
                 DesktopOverlayWindow.Show();
                 DesktopOverlayWindow.BringToFront();
 
+                // give the overlay keyboard focus, matching how Win+D moves focus to the desktop on
+                // real Windows - without this, Alt+F4 has no window to be delivered to and is ignored
+                DesktopOverlayWindow.Activate();
+
                 // migrate the desktop icons control
                 DesktopWindow.grid.Children.Clear();
                 DesktopOverlayWindow.grid.Children.Add(DesktopIconsControl);

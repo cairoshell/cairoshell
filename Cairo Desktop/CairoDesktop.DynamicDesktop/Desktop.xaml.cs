@@ -36,7 +36,6 @@ namespace CairoDesktop.DynamicDesktop
     public partial class Desktop : Window, INotifyPropertyChanged
     {
         private WindowInteropHelper helper;
-        private bool altF4Pressed;
         private readonly ICairoApplication _cairoApplication;
         private readonly ICommandService _commandService;
         private readonly DesktopManager _desktopManager;
@@ -127,19 +126,31 @@ namespace CairoDesktop.DynamicDesktop
                 WorkAreaChanged?.Invoke(this, new EventArgs());
                 handled = true;
             }
+            else if (msg == (int)NativeMethods.WM.SYSKEYDOWN &&
+                    wParam.ToInt32() == (int)NativeMethods.VK.F4 &&
+                    Keyboard.Modifiers == ModifierKeys.Alt)
+            {
+                // On the real Windows desktop, Alt+F4 shows the Shut Down Windows dialog rather than
+                // closing anything. We handle this directly from the raw window message (instead of
+                // WPF's KeyDown routed event) because WM_SYSKEYDOWN is delivered to this window whenever
+                // it is the active desktop surface, even if it never received WPF keyboard focus - e.g.
+                // when the user hasn't clicked an icon first. This matches how explorer.exe's desktop
+                // responds to Alt+F4 without requiring a prior click.
+                //
+                // We check the live Alt key state via Keyboard.Modifiers rather than the WM_SYSKEYDOWN
+                // lParam's context-code bit: per MSDN, that bit is 0 (not 1) precisely when this message
+                // is being delivered to us because no window currently has keyboard focus - i.e. exactly
+                // the "bare desktop, nothing clicked" case this handler exists for.
+                SystemPower.ShowShutdownConfirmation();
+                handled = true;
+            }
 
             return IntPtr.Zero;
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (altF4Pressed) // Show the Shutdown Confirmation Window
-            {
-                SystemPower.ShowShutdownConfirmation();
-                altF4Pressed = false;
-                e.Cancel = true;
-            }
-            else if (!AllowClose) // Eat it !!!
+            if (!AllowClose) // Eat it !!!
             {
                 e.Cancel = true;
             }
@@ -150,14 +161,6 @@ namespace CairoDesktop.DynamicDesktop
             // unsubscribe from things
             _settings.PropertyChanged -= Settings_PropertyChanged;
             _fullScreenHelper.FullScreenApps.CollectionChanged -= FullScreenApps_CollectionChanged;
-        }
-
-        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (Keyboard.Modifiers == ModifierKeys.Alt && e.SystemKey == Key.F4)
-            {
-                altF4Pressed = true;
-            }
         }
 
         private void Window_SourceInitialized(object sender, EventArgs e)

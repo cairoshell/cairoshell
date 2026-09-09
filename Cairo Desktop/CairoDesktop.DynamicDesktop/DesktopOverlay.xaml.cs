@@ -3,6 +3,7 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using CairoDesktop.Common;
 using CairoDesktop.DynamicDesktop.Services;
 using ManagedShell.Common.Helpers;
 
@@ -49,6 +50,22 @@ namespace CairoDesktop.DynamicDesktop
             _desktopManager.IsOverlayOpen = false;
         }
 
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == (int)NativeMethods.WM.SYSKEYDOWN &&
+                wParam.ToInt32() == (int)NativeMethods.VK.F4 &&
+                Keyboard.Modifiers == ModifierKeys.Alt)
+            {
+                // Same rationale as Desktop.xaml.cs: the desktop overlay (shown when the user presses
+                // Win+D, since we dim over open windows rather than truly minimizing them) should also
+                // respond to Alt+F4 like the real Windows desktop does.
+                SystemPower.ShowShutdownConfirmation();
+                handled = true;
+            }
+
+            return IntPtr.Zero;
+        }
+
         private void DesktopOverlayWindow_SourceInitialized(object sender, EventArgs e)
         {
             WindowInteropHelper helper = new WindowInteropHelper(this);
@@ -56,17 +73,14 @@ namespace CairoDesktop.DynamicDesktop
 
             WindowHelper.HideWindowFromTasks(Handle);
 
+            HwndSource.FromHwnd(Handle).AddHook(new HwndSourceHook(WndProc));
+
             ResetPosition();
         }
 
         private void DesktopOverlayWindow_LocationChanged(object sender, EventArgs e)
         {
             ResetPosition();
-        }
-
-        private void DesktopOverlayWindow_KeyDown(object sender, KeyEventArgs e)
-        {
-            _desktopManager.DesktopWindow?.RaiseEvent(e);
         }
 
         private void DesktopOverlayWindow_MouseUp(object sender, MouseButtonEventArgs e)
