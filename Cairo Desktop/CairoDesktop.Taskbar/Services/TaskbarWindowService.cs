@@ -5,7 +5,14 @@ using CairoDesktop.Infrastructure.ObjectModel;
 using CairoDesktop.Infrastructure.Services;
 using CairoDesktop.Taskbar.SupportingClasses;
 using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace CairoDesktop.Taskbar.Services
 {
@@ -15,7 +22,9 @@ namespace CairoDesktop.Taskbar.Services
         private readonly IDesktopManager _desktopManager;
         private readonly ICommandService _commandService;
 
+        private static readonly TimeSpan[] _taskbarButtonResyncDelays = { TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(30) };
         private bool tasksInitialized;
+        private CancellationTokenSource _taskbarButtonResyncCancellationTokenSource;
 
         public TaskbarWindowService(ICairoApplication cairoApplication,
             AppBarEventService appBarEventService,
@@ -109,6 +118,9 @@ namespace CairoDesktop.Taskbar.Services
 
         public override void Dispose()
         {
+            _taskbarButtonResyncCancellationTokenSource?.Cancel();
+            _taskbarButtonResyncCancellationTokenSource?.Dispose();
+
             base.Dispose();
 
             _appBarEventService.AppBarEvent -= AppBarEvent;
@@ -127,7 +139,83 @@ namespace CairoDesktop.Taskbar.Services
             }
 
             _shellManager.Tasks.Initialize(getTaskCategoryProvider(), true);
+            scheduleTaskbarButtonResync();
             tasksInitialized = true;
+        }
+
+        private void scheduleTaskbarButtonResync()
+        {
+            if (EnvironmentHelper.IsServerCore || EnvironmentHelper.IsAppRunningAsShell)
+            {
+                return;
+            }
+
+            _taskbarButtonResyncCancellationTokenSource?.Cancel();
+            _taskbarButtonResyncCancellationTokenSource?.Dispose();
+
+            _taskbarButtonResyncCancellationTokenSource = new CancellationTokenSource();
+            CancellationToken token = _taskbarButtonResyncCancellationTokenSource.Token;
+
+            _ = Task.Run(async () =>
+            {
+                // Some apps cache taskbar hookup state during startup; replay the message a few times to recover missed badges.
+                foreach (TimeSpan delay in _taskbarButtonResyncDelays)
+                {
+                    try
+                    {
+                        await Task.Delay(delay, token).ConfigureAwait(false);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        return;
+                    }
+
+                    if (token.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    sendTaskbarButtonCreatedMessageToKnownWindows();
+                }
+            }, token);
+        }
+
+        private void sendTaskbarButtonCreatedMessageToKnownWindows()
+        {
+            int taskbarButtonCreatedMessage = NativeMethods.RegisterWindowMessage("TaskbarButtonCreated");
+
+            if (taskbarButtonCreatedMessage <= 0)
+            {
+                return;
+            }
+
+            void sendMessages()
+            {
+                ApplicationWindow[] windows = _shellManager.Tasks.GroupedWindows
+                    .Where(window => window.ShowInTaskbar)
+                    .ToArray();
+
+                foreach (ApplicationWindow window in windows)
+                {
+                    NativeMethods.SendNotifyMessage(window.Handle, (uint)taskbarButtonCreatedMessage, UIntPtr.Zero, IntPtr.Zero);
+                }
+            }
+
+            var dispatcher = Application.Current?.Dispatcher;
+
+            if (dispatcher == null)
+            {
+                return;
+            }
+
+            if (dispatcher.CheckAccess())
+            {
+                sendMessages();
+            }
+            else
+            {
+                dispatcher.BeginInvoke((Action)sendMessages);
+            }
         }
 
         private ITaskCategoryProvider getTaskCategoryProvider()
