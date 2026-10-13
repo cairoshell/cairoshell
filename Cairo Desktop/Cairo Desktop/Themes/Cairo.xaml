@@ -1362,6 +1362,8 @@
                 Value="{DynamicResource ResourceKey=LargeFontSize}" />
         <Setter Property="FontFamily"
                 Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
+		<Setter Property="FontWeight"
+                Value="Normal" />
         <Setter Property="Margin"
                 Value="0" />
         <Setter Property="Padding"
@@ -1412,6 +1414,8 @@
                             <Setter TargetName="Border"
                                     Property="Background"
                                     Value="{DynamicResource ResourceKey=SearchResultBackground0}" />
+							<Setter Property="Foreground"
+									Value="{DynamicResource ResourceKey=SearchResultText}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -1434,6 +1438,55 @@
         <Setter Property="Padding"
                 Value="7,1,4,1" />
     </Style>
+	<Style x:Key="ProgramsSearchTextBox"
+           TargetType="TextBox"
+           BasedOn="{StaticResource SearchTextBox}">
+		<Setter Property="Background"
+                Value="Transparent" />
+		<Setter Property="CaretBrush"
+                Value="{DynamicResource ResourceKey=MenuItemForeground}" />
+		<Setter Property="Foreground"
+                Value="{DynamicResource ResourceKey=MenuItemForeground}" />
+		<Setter Property="FontSize"
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
+		<Setter Property="Padding"
+                Value="0,1" />
+		<Setter Property="Width"
+                Value="200" />
+	</Style>
+	<Style x:Key="ProgramsSearchTextBoxPlaceholder"
+           TargetType="TextBlock">
+		<Setter Property="Foreground"
+                Value="{DynamicResource ResourceKey=ProgramsMenuCategoryForeground}" />
+		<Setter Property="FontSize"
+                Value="{DynamicResource ResourceKey=MediumFontSize}" />
+		<Setter Property="FontFamily"
+                Value="{DynamicResource ResourceKey=GlobalFontFamily}" />
+		<Setter Property="FontWeight"
+                Value="Normal" />
+		<Setter Property="Margin"
+                Value="2,0,0,0" />
+		<Setter Property="VerticalAlignment"
+                Value="Center" />
+	</Style>
+	<Style x:Key="ProgramsSearchBoxBorderStyle"
+           TargetType="{x:Type Border}"
+           BasedOn="{StaticResource SearchBoxBorderStyle}">
+		<Setter Property="Background"
+                Value="#aa000000" />
+		<Setter Property="BorderBrush"
+                Value="{DynamicResource ResourceKey=MenuBorderBrush}" />
+		<Setter Property="BorderThickness"
+                Value="1" />
+		<Setter Property="Margin"
+                Value="6,6,6,3" />
+	</Style>
+	<Style x:Key="ProgramsSearchTextBoxClearButton"
+           TargetType="Button"
+           BasedOn="{StaticResource SearchTextBoxClearButton}">
+		<Setter Property="Foreground"
+                Value="{DynamicResource ResourceKey=MenuItemForeground}" />
+	</Style>
     <Style x:Key="CairoSearchResultsItemStyle"
            TargetType="ListViewItem">
         <Setter Property="Height"
