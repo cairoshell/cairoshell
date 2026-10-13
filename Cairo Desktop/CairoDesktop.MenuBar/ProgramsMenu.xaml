@@ -187,24 +187,19 @@
     </UserControl.Resources>
     <DockPanel>
         <Border DockPanel.Dock="Top"
-                Style="{StaticResource SearchBoxBorderStyle}"
-                Margin="6,6,6,3">
+                Style="{StaticResource ProgramsSearchBoxBorderStyle}">
             <StackPanel Orientation="Horizontal">
                 <Grid>
                     <TextBox Name="txtProgramsSearch"
-                             Style="{StaticResource SearchTextBox}"
-                             Width="205"
+                             Style="{StaticResource ProgramsSearchTextBox}"
                              TextChanged="txtProgramsSearch_TextChanged"
                              PreviewKeyDown="txtProgramsSearch_PreviewKeyDown" />
                     <TextBlock Name="txtProgramsSearchPlaceholder"
                                Text="{Binding Path=(l10n:DisplayString.sProgramsMenu_SearchPlaceholder)}"
-                               Foreground="{DynamicResource ResourceKey=SearchResultText}"
-                               Opacity="0.5"
-                               Margin="4,0,0,0"
-                               VerticalAlignment="Center"
+                               Style="{StaticResource ProgramsSearchTextBoxPlaceholder}"
                                IsHitTestVisible="False" />
                 </Grid>
-                <Button Style="{StaticResource SearchTextBoxClearButton}"
+                <Button Style="{StaticResource ProgramsSearchTextBoxClearButton}"
                         Content="r"
                         Name="btnClearProgramsSearch"
                         Click="btnClearProgramsSearch_Click" />
