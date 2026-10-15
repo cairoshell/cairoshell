@@ -133,12 +133,16 @@ namespace CairoDesktop.MenuBar
 
         private void CairoMenu_Opened(object sender, RoutedEventArgs e)
         {
-            if (isCairoMenuInitialized)
+            var menu = sender as MenuItem;
+            if (menu == null) return;
+
+            // Only initialize if menu is empty (first open)
+            if (menu.Items.Count > 1)
             {
                 return;
             }
 
-            CairoMenu.Items.Clear();
+            menu.Items.Clear();
 
             // TODO: Make configurable
             var cairoMenuItems = new string[]
@@ -169,7 +173,7 @@ namespace CairoDesktop.MenuBar
             {
                 if (string.IsNullOrEmpty(identifier))
                 {
-                    CairoMenu.Items.Add(new Separator());
+                    menu.Items.Add(new Separator());
                     continue;
                 }
 
@@ -184,7 +188,8 @@ namespace CairoDesktop.MenuBar
                     Visibility = command.IsAvailable ? Visibility.Visible : Visibility.Collapsed
                 };
                 menuItem.Click += (_sender, _e) => _commandService.InvokeCommand(command.Identifier);
-                if (command is INotifyPropertyChanged notifyPropertyChangedCommand)
+                if (command is INotifyPropertyChanged notifyPropertyChangedCommand &&
+                    !_commandPropertyChangedHandlers.ContainsKey(notifyPropertyChangedCommand))
                 {
                     PropertyChangedEventHandler changeHandler = (_sender, _e) =>
                     {
@@ -195,13 +200,13 @@ namespace CairoDesktop.MenuBar
                         if (_e.PropertyName == "IsAvailable")
                         {
                             menuItem.Visibility = command.IsAvailable ? Visibility.Visible : Visibility.Collapsed;
-                            DeduplicateSeparators();
+                            DeduplicateSeparators(menu);
                         }
                     };
                     notifyPropertyChangedCommand.PropertyChanged += changeHandler;
                     _commandPropertyChangedHandlers.Add(notifyPropertyChangedCommand, changeHandler);
                 }
-                CairoMenu.Items.Add(menuItem);
+                menu.Items.Add(menuItem);
             }
 
             // Add CairoMenu MenuItems
@@ -209,25 +214,23 @@ namespace CairoDesktop.MenuBar
             if (_cairoApplication.CairoMenu.Count > 0)
             {
                 var insertIndex = Array.IndexOf(cairoMenuItems, "OpenWindowsSettings") + 1;
-                CairoMenu.Items.Insert(insertIndex, new Separator());
+                menu.Items.Insert(insertIndex, new Separator());
                 foreach (var cairoMenuItem in _cairoApplication.CairoMenu)
                 {
                     insertIndex += 1;
                     var menuItem = new MenuItem { Header = cairoMenuItem.Header };
                     menuItem.Click += cairoMenuItem.MenuItem_Click;
-                    CairoMenu.Items.Insert(insertIndex, menuItem);
+                    menu.Items.Insert(insertIndex, menuItem);
                 }
             }
 
-            DeduplicateSeparators();
-
-            isCairoMenuInitialized = true;
+            DeduplicateSeparators(menu);
         }
 
-        private void DeduplicateSeparators()
+        private void DeduplicateSeparators(MenuItem menu)
         {
             Type previousType = null;
-            foreach (UIElement item in CairoMenu.Items)
+            foreach (UIElement item in menu.Items)
             {
                 Type currentType = item.GetType();
                 if (previousType == typeof(Separator) && currentType == typeof(Separator))

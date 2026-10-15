@@ -431,6 +431,10 @@
                             </RadioButton>
                         </StackPanel>
                     </StackPanel>
+                    <CheckBox IsChecked="{Binding Path=CairoMenuOnRight, UpdateSourceTrigger=PropertyChanged}"
+                              Name="chkCairoMenuOnRight">
+                        <Label Content="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_CairoMenuOnRight)}" />
+                    </CheckBox>
                     <TextBlock Text="{Binding Path=(l10n:DisplayString.sSettings_MenuBar_MenuExtras)}"
                                Style="{StaticResource SettingGroupHeader}" />
                     <StackPanel Orientation="Horizontal">
